@@ -1,0 +1,50 @@
+{
+  "API": "tools.gpu_sys.canonical_qwen_local_cohorts_terminal_ready",
+  "TOP": "ot_gpu_qwen_kv_local_cohorts_terminal_ready",
+  "actual_tested_command": "python3 -m unittest discover -s tests -p test_canonical_qwen_local_cohorts.py -v",
+  "actual_tested_commit": "3896b4df9a543834748e7c1b3c40e138937e1703",
+  "actual_tested_host": "ot-agidock128",
+  "actual_tests": 8,
+  "actual_verdict": "PASS",
+  "scope": "namespace-only successor; exact whole-source normalization to actual passed389 sources; not a new runtime/hardware claim",
+  "sourcebook": [
+    {
+      "actual_tested_source_archive": "results/uarch/qwen_kv_connections_20261003/local_cohorts_terminal_ready_successor/ot_gpu_qwen_kv_local_cohorts.sv.actual389.txt",
+      "normalized_logic_byteidentical": true,
+      "original288_sha256": "f378ec13e11d760abc25c710e2936a1b2d8be43a7b322a6d4fe235cd14684a03",
+      "original_path": "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts.sv",
+      "successor_path": "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv",
+      "successor_sha256": "df8651408e4005cf7fb5ad8939995e01f5aa82734a65d714a7ffb4210b37aa9c",
+      "tested389_sha256": "5b5aacc6e141df20e08f0ec61ff3ccdb3957c2197c4bb5bbb01b9d4fba594a09"
+    },
+    {
+      "actual_tested_source_archive": "results/uarch/qwen_kv_connections_20261003/local_cohorts_terminal_ready_successor/canonical_qwen_local_cohorts.py.actual389.txt",
+      "normalized_logic_byteidentical": true,
+      "original288_sha256": "c203ede841c7cebf803b40ca3acc9ed8bd4de3e01453307a13054c94b910d478",
+      "original_path": "tools/gpu_sys/canonical_qwen_local_cohorts.py",
+      "successor_path": "tools/gpu_sys/canonical_qwen_local_cohorts_terminal_ready.py",
+      "successor_sha256": "06fa22288fcf1dd612cdb9aee970855d5391030ee27c7709c16f9f61107f3ea7",
+      "tested389_sha256": "fb63e99c4c33fdf267518864fd8c1bd5d3899531e4db74591c5613b4e0e01cef"
+    },
+    {
+      "actual_tested_source_archive": "results/uarch/qwen_kv_connections_20261003/local_cohorts_terminal_ready_successor/canonical_qwen_local_cohorts_model.py.actual389.txt",
+      "normalized_logic_byteidentical": true,
+      "original288_sha256": "24887c40079520eace319476a35f52e6876d4016057145b987a2e48783ebe7c9",
+      "original_path": "tools/gpu_sys/canonical_qwen_local_cohorts_model.py",
+      "successor_path": "tools/gpu_sys/canonical_qwen_local_cohorts_terminal_ready_model.py",
+      "successor_sha256": "404c7ad217b94a6a0b9494e0ad4545013fb3863ba8bb58155e53a5a6c21b3e9d",
+      "tested389_sha256": "404c7ad217b94a6a0b9494e0ad4545013fb3863ba8bb58155e53a5a6c21b3e9d"
+    },
+    {
+      "actual_tested_source_archive": "results/uarch/qwen_kv_connections_20261003/local_cohorts_terminal_ready_successor/test_canonical_qwen_local_cohorts.py.actual389.txt",
+      "normalized_logic_byteidentical": true,
+      "original288_sha256": "8c91f6e57965675b01d140a96203d4bcd1619e76f6cb8e79fc3d20d74027ad92",
+      "original_path": "tests/test_canonical_qwen_local_cohorts.py",
+      "successor_path": "tests/test_canonical_qwen_local_cohorts_terminal_ready.py",
+      "successor_sha256": "2945ae131ced4351805d16d19d57486ce084b155b3860fa6d859e802125f0631",
+      "tested389_sha256": "5bb97df8fdf19c4e7d43322a38d10a6ae9be7bf28026df08788aea0bd803d9a4"
+    }
+  ],
+  "successor_HDL_rerun": false,
+  "successor_command": "python3 -m unittest discover -s tests -p test_canonical_qwen_local_cohorts_terminal_ready.py -v"
+}

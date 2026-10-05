@@ -1,0 +1,227 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": false,
+        "hold_violating_paths": 9,
+        "hold_wns_ns": -0.004818222229353864,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 3219,
+        "setup_wns_ns": -6.515896293026022,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-03T02:17:03.011870+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 1668.798,
+    "block": "ot_qwen_tp_seq_w12",
+    "cells": 11217,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": 0.833,
+    "clock_port": "clk",
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": "static_timing.fmax_hz (pre-layout)",
+    "fmax_hz": 136074855.3424251,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE_AR256": 0,
+      "N": 4,
+      "NW": 18,
+      "QWEN_FULLSHAPE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/rom/ot_qwen_tp_seq_w12.sv",
+        "sha256": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+        "size_bytes": 10096
+      }
+    ],
+    "top": "ot_qwen_tp_seq_w12"
+  },
+  "elapsed_seconds": 9.462,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-10-03T02:16:53.549465+00:00",
+  "git": {
+    "commit": "c5ae2f69dcd64f042d1c75d0d0d92c3005295605",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? rtl/test/tb_qwen_tp4_ar256_vl.sv",
+      "?? tools/qwen_rom_ar256_stage_images.py",
+      "?? tools/qwen_tp4_ar256_verilator_gate.py"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_tp_seq_w12",
+      "--source",
+      "rtl/rom/ot_qwen_tp_seq_w12.sv",
+      "--param",
+      "ENABLE_AR256=0",
+      "--param",
+      "N=4",
+      "--param",
+      "NW=18",
+      "--param",
+      "QWEN_FULLSHAPE=1",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--stages",
+      "synth,sta",
+      "--nickname-tag",
+      "ar256e0",
+      "--output",
+      "/tmp/claude-review-20261003/allreduce/phys/seq_ar256_0.json"
+    ],
+    "driver": {
+      "commit": "c5ae2f69dcd64f042d1c75d0d0d92c3005295605",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/qwen-allreduce-oneseg-20261003/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+      "tree": "/home/ubuntu/qwen-allreduce-oneseg-20261003"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/qwen-allreduce-oneseg-20261003"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 0.833,
+    "critical_path_ns": 7.348896293026022,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 136074855.3424251,
+    "hold_violating_paths": 9,
+    "hold_wns_ns": -0.004818222229353864,
+    "library_time_unit_ns": 0.001,
+    "raw_library_units": {
+      "hold_wns": -4.8182222293538635,
+      "setup_tns": -10291680.196329065,
+      "setup_wns": -6515.896293026021
+    },
+    "sdc_clock_period_library_units": 833.0,
+    "setup_tns_ns": -10291.680196329065,
+    "setup_violating_paths": 3219,
+    "setup_wns_ns": -6.515896293026022,
+    "timing_met": false
+  },
+  "status": "not_met",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 1668.798,
+    "cell_count": 11217,
+    "cell_types_used": 33,
+    "chip_area_um2": 1668.79764,
+    "combinational_cell_count": 8408,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "9627a7e95b5d71e1816e37fb79f31dc0dda9dbb050cb6984fc1a2a44f51c8590",
+      "raw_netlist_sha256": "9627a7e95b5d71e1816e37fb79f31dc0dda9dbb050cb6984fc1a2a44f51c8590",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 885.677,
+    "sequential_cell_count": 2809,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

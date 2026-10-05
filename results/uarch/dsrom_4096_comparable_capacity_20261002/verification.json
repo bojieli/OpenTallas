@@ -1,0 +1,17 @@
+{
+  "BF16_1024pairs_not_shrunk": true,
+  "RNE_WAKEmacro_context_SSFF_verified": false,
+  "all_integer4096_macro_storage_capacities_sufficient": true,
+  "compiler_ownership_verified": false,
+  "fullBF_minus_mixed_at41_mm2": 292.9708625976001,
+  "model_sha256": "f48a5866432fa45a6f70aa822cae7607b100919ef1a397ff6e7a72e2eda02087",
+  "new_builds_or_OpenROAD_invocations": 0,
+  "optimal_per_user_latency_certified": false,
+  "reported_r4_reproduced": false,
+  "return_bits_included_without_unproved_credit": 138469120,
+  "schema": "opentallas.DSROM4096.comparable-static-verification.v1",
+  "source_stage_fraction_mass_preserved": true,
+  "stage65_field_excess_mm2": 0.1588745690490896,
+  "stage66_field_margin_mm2": 3.4514677468614536,
+  "verdict": "PASS_COMPARABLE_SIZING_CHECKS_ONLY"
+}

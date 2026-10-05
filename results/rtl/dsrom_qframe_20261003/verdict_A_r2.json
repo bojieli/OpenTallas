@@ -1,0 +1,17 @@
+{
+ "cause": "foreign ~95 GB load on shared ot-agidock128; not a design verdict",
+ "design_evidence_before_kill": {
+  "drt_0255": 0,
+  "drt_0419_offtrack_pin_warnings": 0,
+  "instance_utilisation": 0.603292,
+  "post_cts_hold_wns_ps_SS": -1.11583,
+  "post_cts_setup_tns_ps": -426724,
+  "post_cts_setup_wns_ps": -239.752
+ },
+ "follow_up": "A_r3 on ot-pve1 (identical args, commit b128da83), launched 2026-10-03T05:27:05Z",
+ "remote_preserved": "ot-agidock128:/home/ubuntu/otjobs/dsrom_qframe_20261003/A_r2/",
+ "run": "A_r2",
+ "schema": "opentallas.dsrom_qframe.verdict.v1",
+ "stage_failed": "5_2_route killed by the host global OOM killer at 2026-10-03T05:25:31Z (openroad anon-rss 17.7 GB; make Error 247), after \"Completing 10% with 0 violations\"",
+ "verdict": "FAIL_INFRASTRUCTURE_OOM"
+}

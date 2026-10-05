@@ -1,0 +1,1063 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "admission": {
+    "admitted_families": [
+      {
+        "family": 16,
+        "sub": 2
+      },
+      {
+        "family": 16,
+        "sub": 3
+      },
+      {
+        "family": 32,
+        "sub": 0
+      },
+      {
+        "family": 48,
+        "sub": 0
+      },
+      {
+        "family": 48,
+        "sub": 1
+      },
+      {
+        "family": 48,
+        "sub": 2
+      },
+      {
+        "family": 48,
+        "sub": 3
+      },
+      {
+        "family": 48,
+        "sub": 4
+      },
+      {
+        "family": 64,
+        "sub": 1
+      },
+      {
+        "family": 112,
+        "sub": 0
+      },
+      {
+        "family": 112,
+        "sub": 1
+      }
+    ],
+    "admitted_family_count": 11,
+    "capability_trapped_family_count": 0,
+    "governed_program_counters": [
+      1,
+      8,
+      14,
+      17,
+      20,
+      23,
+      26,
+      29,
+      32,
+      35,
+      38,
+      44,
+      47,
+      56,
+      62,
+      66,
+      68,
+      70,
+      72
+    ],
+    "object_keyed_families_also_issued": [
+      {
+        "family": 16,
+        "sub": 2
+      },
+      {
+        "family": 32,
+        "sub": 0
+      },
+      {
+        "family": 48,
+        "sub": 0
+      },
+      {
+        "family": 48,
+        "sub": 1
+      },
+      {
+        "family": 48,
+        "sub": 2
+      }
+    ],
+    "object_keyed_families_note": "families outside the six, issued here because they resolve their operands through the SAME object table the six mapped families use and name objects the six never do; the placement block below is what they are for.  TENSOR.MATMUL and the two head-span forms were already admitted; the BF16 dense-row DMA.GATHER was not, and its admission is the one predicate this campaign widened",
+    "previously_capability_trapped_families": [
+      "DMA.SCATTER",
+      "ATTENTION.GQA",
+      "VECTOR.ADD",
+      "VECTOR.SILU_MUL",
+      "SELECTION.ARGMAX",
+      "SELECTION.TOKEN_APPEND"
+    ],
+    "previously_capability_trapped_families_admitted": [
+      {
+        "family": 16,
+        "sub": 3
+      },
+      {
+        "family": 48,
+        "sub": 3
+      },
+      {
+        "family": 48,
+        "sub": 4
+      },
+      {
+        "family": 64,
+        "sub": 1
+      },
+      {
+        "family": 112,
+        "sub": 0
+      },
+      {
+        "family": 112,
+        "sub": 1
+      }
+    ],
+    "previously_capability_trapped_family_count": 6,
+    "still_refused": [
+      "VECTOR.SOFTMAX, checked in this campaign: an opcode with no datapath is still a CAPABILITY trap",
+      "PC 68's DMA.GATHER is NO LONGER refused: it was, on a dense-row source dtype pinned to FP32 by the one gather the predicate had been written against, and it is issued as a passing case in this campaign now",
+      "the three MLP projections of the governed layer, PCs 50, 53 and 59, are NO LONGER REFUSED and are no longer checked here.  They were, on an admitted TENSOR.MATMUL weight view of [n <= 4096, 4096] against their [12288, 4096], [12288, 4096] and [4096, 12288]; f6afec5 raised that bound to desc_view_dim0 <= 65535 so the reduced decode's head could run unpartitioned, which put all three inside it.  The three refusal cases were retired rather than repaired: they cannot become passing cases without staging a 12,288 x 4,096 projection this vehicle does not carry -- 50.3 x 10^6 MACs against the admitted pair's 4.2 -- and they cannot be re-aimed past 65,535 because a case's weight dims come from the deployment's own descriptor records and no shipped operator declares one above it.  The consequence is that NOTHING IN THIS CAMPAIGN NOW EXERCISES THE MATMUL WEIGHT-ROW BOUND, which the vector manifest records as uncovered_after_bound_change",
+      "any of the six, on an instance that has not bound its operand banks: cfg_extended_placement_valid low keeps the previous TRAP_CAPABILITY exactly, which is what leaves an unwired integration's behaviour unchanged"
+    ]
+  },
+  "aggregate": {
+    "admission_case_count": 30,
+    "admission_negative_case_count": 7,
+    "admission_positive_case_count": 23,
+    "admission_words_compared": 62021,
+    "admission_write_beats": 139523,
+    "append_case_count": 13,
+    "checks_per_simulator": 64234,
+    "silu_case_count": 5,
+    "silu_elements_compared": 1217
+  },
+  "contexts_covered": [
+    17,
+    19
+  ],
+  "deployment_sha256": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+  "log_sha256": {
+    "ot_a3_selection_token_append_yosys": "896795808b2d6b62c21ae360f01296b49335e5fe144ad6931134c6cd5d6051a2",
+    "ot_a3_vector_silu_mul_yosys": "6ab75de5c5fb6e6174b1b5e57ac67efa845c735d4e6cec19e47b6bb7d89664f7",
+    "tb_a3_operator_admission_iverilog": "55e6e283c8bd6bbc026504aec41af3217797b2229511cbd3c87b9bdb0261e48e",
+    "tb_a3_operator_admission_verilator": "f4dc259af1077273636e8bcd7252df91f47a8f99d233575a2a2b18f8816eea42",
+    "tb_a3_operator_admission_verilator_compile": "202299c4278ada19ce610331f5c988cfcf2af4c3d4c068b7d81e0dec241fb377",
+    "tb_a3_selection_token_append_iverilog": "f4377328d66945d8c85e54d0747770a23f61f44eee71350c5c800ce2213e400b",
+    "tb_a3_selection_token_append_verilator": "a26d5c354c024264f674bccf36eccc38ccb067f5bbf038dc7dfb12df5bb289af",
+    "tb_a3_selection_token_append_verilator_compile": "a6f40b281194e3b23ba789f09304cddef39b938c94cd194cddb23f74890c2366",
+    "tb_a3_vector_silu_mul_iverilog": "301a66e3c56916d101c040ae8a1f5e1543f00bfd228bf2c859ea9e1eab243944",
+    "tb_a3_vector_silu_mul_verilator": "e249d96599abc8d97e2ea4c85d168caf9c8db620e531dbf36a5bae1c75ca38dd",
+    "tb_a3_vector_silu_mul_verilator_compile": "adbb8930bff2f4c30e4c6d7efca69e94e97e806b45c30d29f3e66649dcab4357"
+  },
+  "normalized": {
+    "tb_a3_operator_admission": {
+      "cases": [
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 0,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 32986,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 1,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 4196797,
+          "work": 4194304,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 2,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 4196801,
+          "work": 4194304,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 3,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 34076,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 4,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 8660,
+          "work": 1024,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 5,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 21198,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 6,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 21198,
+          "work": 1024,
+          "writes": 1024
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 7,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61638,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 8,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61642,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 9,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 327559,
+          "work": 69632,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 10,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 16574,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 11,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 32991,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 12,
+          "result": 12288,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 1339515,
+          "work": 24576,
+          "writes": 12288
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 13,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 16574,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 14,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 32991,
+          "work": 4096,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 15,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 12483,
+          "work": 1,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 16,
+          "result": 256,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 963,
+          "work": 1,
+          "writes": 256
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 17,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61638,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 18,
+          "result": 1024,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 61642,
+          "work": 1,
+          "writes": 20480
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 19,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 0,
+          "verification_cycles": 364809,
+          "work": 77824,
+          "writes": 4096
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 20,
+          "result": 1,
+          "ties": 2,
+          "token": 151645,
+          "trap": 0,
+          "verification_cycles": 456002,
+          "work": 151936,
+          "writes": 1
+        },
+        {
+          "eos": 1,
+          "fault": 0,
+          "index": 21,
+          "result": 1,
+          "ties": 0,
+          "token": 151645,
+          "trap": 0,
+          "verification_cycles": 207,
+          "work": 1,
+          "writes": 1
+        },
+        {
+          "eos": 0,
+          "fault": 0,
+          "index": 22,
+          "result": 1,
+          "ties": 0,
+          "token": 12345,
+          "trap": 0,
+          "verification_cycles": 207,
+          "work": 1,
+          "writes": 1
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 23,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 99,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 24,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 130,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 25,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 128,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 26,
+          "result": 1,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 99,
+          "work": 151936,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 27,
+          "result": 4096,
+          "ties": 0,
+          "token": 0,
+          "trap": 3,
+          "verification_cycles": 145,
+          "work": 77824,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 28,
+          "result": 0,
+          "ties": 0,
+          "token": 0,
+          "trap": 8,
+          "verification_cycles": 138,
+          "work": 0,
+          "writes": 0
+        },
+        {
+          "eos": 0,
+          "fault": 1,
+          "index": 29,
+          "result": 0,
+          "ties": 0,
+          "token": 0,
+          "trap": 4,
+          "verification_cycles": 135,
+          "work": 0,
+          "writes": 0
+        }
+      ],
+      "geometry": {
+        "bank_words": 247426,
+        "case_words": 128,
+        "cases": 30,
+        "descriptor_records": 218,
+        "expected_words": 62021,
+        "index_words": 64,
+        "map_base": 64,
+        "map_entries": 32,
+        "preload_words": 12291,
+        "source_words": 16640,
+        "view_slots": 5,
+        "view_words": 8,
+        "weight_words": 8388608
+      },
+      "pass": {
+        "cases": 30,
+        "checks": 62837,
+        "positive": 23,
+        "words": 62021
+      }
+    },
+    "tb_a3_selection_token_append": {
+      "cases": [
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 0,
+          "out": 1,
+          "reads": 1,
+          "token": 12345,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 1,
+          "out": 1,
+          "reads": 1,
+          "token": 151645,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 2,
+          "out": 1,
+          "reads": 1,
+          "token": 151643,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 3,
+          "out": 1,
+          "reads": 1,
+          "token": 151643,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 2,
+          "error": 0,
+          "index": 4,
+          "out": 1,
+          "reads": 1,
+          "token": 12345,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 1,
+          "error": 0,
+          "index": 5,
+          "out": 1,
+          "reads": 1,
+          "token": 151645,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 1,
+          "capability": 0,
+          "eos": 0,
+          "error": 0,
+          "index": 6,
+          "out": 0,
+          "reads": 1,
+          "token": 777,
+          "verification_cycles": 5
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 4,
+          "index": 7,
+          "out": 0,
+          "reads": 1,
+          "token": 0,
+          "verification_cycles": 4
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 8,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 9,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 1,
+          "eos": 0,
+          "error": 7,
+          "index": 10,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 7,
+          "index": 11,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        },
+        {
+          "appended": 0,
+          "capability": 0,
+          "eos": 0,
+          "error": 7,
+          "index": 12,
+          "out": 0,
+          "reads": 0,
+          "token": 0,
+          "verification_cycles": 1
+        }
+      ],
+      "geometry": {
+        "cases": 13
+      },
+      "pass": {
+        "cases": 13,
+        "checks": 130
+      }
+    },
+    "tb_a3_vector_silu_mul": {
+      "cases": [
+        {
+          "activation_saturations": 0,
+          "error": 0,
+          "index": 0,
+          "out": 1217,
+          "saturations": 1,
+          "verification_cycles": 129869,
+          "work": 2434
+        },
+        {
+          "activation_saturations": 0,
+          "error": 1,
+          "index": 1,
+          "out": 3,
+          "saturations": 0,
+          "verification_cycles": 133,
+          "work": 6
+        },
+        {
+          "activation_saturations": 0,
+          "error": 1,
+          "index": 2,
+          "out": 5,
+          "saturations": 0,
+          "verification_cycles": 219,
+          "work": 10
+        },
+        {
+          "activation_saturations": 0,
+          "error": 2,
+          "index": 3,
+          "out": 2,
+          "saturations": 0,
+          "verification_cycles": 129,
+          "work": 5
+        },
+        {
+          "activation_saturations": 0,
+          "error": 7,
+          "index": 4,
+          "out": 0,
+          "saturations": 0,
+          "verification_cycles": 1,
+          "work": 0
+        }
+      ],
+      "geometry": {
+        "cases": 5,
+        "elements": 1217
+      },
+      "pass": {
+        "cases": 5,
+        "checks": 1267,
+        "elements": 1217
+      }
+    }
+  },
+  "operands": {
+    "attention_projections": "the key and value projections at PCs 14 and 17 are ISSUED here, in RTL, against the real checkpoint k_proj and v_proj of layer zero -- the shard, offset and SHA-256 the deployment's own object record declares, re-read and re-hashed at build time, every code consumed -- and their 1,024-word results are required to equal the shipped prefix's golden write stream for those same program counters.  The query projection at PC 11 is not issued and its output is the retained golden value, staged",
+    "attention_query_key_value": "retained causal RTL results of shipped decode PCs 26, 29 and 17",
+    "head_gather_source_row": "the row PC 68 selects is staged in the source bank because cfg_source_base is not keyed by object; the staged row is required at build time to be word for word the PC 66 result the preceding case's RTL wrote into object 45",
+    "normalization_gains": "the PC 8, PC 20 and PC 23 gains are the real checkpoint gains the retained shipped-prefix source bank carries, at their own objects' bases; the PC 47 and PC 66 gains are a seeded spread because the shipped prefix stops at PC 32 and never staged them",
+    "prior_kv_context": "deterministic permutations of the authentic current row; not model history",
+    "residual_swiglu_logits": "seeded deterministic BF16 spread over the governed shapes; not checkpoint activations",
+    "rope_coefficient_gather_source_row": "PC 1 is issued here so ONE campaign drives both operator descriptors of the ROM lowering's merged DMA.GATHER class, which G1a decides per campaign.  The row it selects is NOT the checkpoint RoPE coefficient table: this bridge addresses a gather's source by launch ordinal, so both gathers read the row staged at 0 and the shipped PC 1 view's own 256-wide row selects that row's leading 256 words -- the PC 66 result the RTL produced.  The coefficient table row itself is gathered only by the integrated shipped-prefix vehicle, and this case does not restate that measurement.  The case runs after both RoPE cases because it publishes into the object they read",
+    "rope_coefficients": "the FP32 coefficient row the shipped PC 1 gather published, taken from the retained golden write stream and narrowed to BF16 by the same round-to-nearest-even the datapath performs. It is staged into the coefficient object and read there by both RoPE cases; the PC 1 gather case, which runs after them, then overwrites that object with the row it selects"
+  },
+  "oracles": {
+    "attention_gqa": "runtime/reference/tensor_accelerator_attention.py",
+    "cross_checked_against_the_retained_golden_write_stream": [
+      8,
+      14,
+      17,
+      20,
+      23,
+      26,
+      29
+    ],
+    "dma_gather": "byte-preserving row selection, computed here",
+    "dma_scatter": "byte-preserving row placement, computed here",
+    "independent_of_dut": true,
+    "selection_argmax": "greedy_lowest_token_id_argmax_v1, computed here",
+    "selection_token_append": "runtime/sim/engines/selection.py semantics",
+    "tensor_matmul": "runtime/reference/tensor_accelerator_bf16.py",
+    "vector_add": "runtime/reference/tensor_accelerator_elementwise.py",
+    "vector_head_rms_norm": "runtime/reference/tensor_accelerator_rmsnorm.py",
+    "vector_rms_norm": "runtime/reference/tensor_accelerator_rmsnorm.py",
+    "vector_rope": "runtime/reference/tensor_accelerator_rope.py",
+    "vector_silu_mul": "runtime/reference/tensor_accelerator_elementwise.py"
+  },
+  "placement": {
+    "bridge": "rtl/abi3/ot_a3_engine_issue_bridge.sv",
+    "bridge_sha256": "a103c46da8d718b09f6f37af029347855e00b4c3f380f8b33c76584e204e3a98",
+    "cases_credited": [
+      "vector_rms_norm_attention_input",
+      "tensor_matmul_key_projection",
+      "tensor_matmul_value_projection",
+      "vector_head_rms_norm_query",
+      "vector_head_rms_norm_key",
+      "vector_rope_query",
+      "vector_rope_key",
+      "dma_scatter_key_position16",
+      "dma_scatter_value_position16",
+      "attention_gqa_context17",
+      "vector_add_attention_residual",
+      "vector_rms_norm_mlp_input",
+      "vector_silu_mul_swiglu",
+      "vector_add_mlp_residual_read_modify_write",
+      "vector_rms_norm_final",
+      "dma_gather_head_row_select",
+      "dma_gather_rope_coefficient_row_select",
+      "dma_scatter_key_position18",
+      "dma_scatter_value_position18",
+      "attention_gqa_context19",
+      "selection_argmax_lowest_tied_id",
+      "selection_token_append_official_eos",
+      "selection_token_append_continues"
+    ],
+    "definition": "the largest number of distinct ABI objects one byte-identical binding of the bridge's object table held while the design resolved every one of them, on cases that issued without fault, wrote the declared number of beats and had their whole result region compared word by word at its own address",
+    "measured_simultaneous_objects": 23,
+    "objects_bound": [
+      2,
+      4,
+      6,
+      7,
+      8,
+      10,
+      13,
+      17,
+      23,
+      27,
+      36,
+      45,
+      55,
+      64,
+      71,
+      84,
+      149,
+      156,
+      162,
+      186,
+      194,
+      200,
+      209
+    ],
+    "objects_resolved_and_compared": [
+      2,
+      4,
+      6,
+      7,
+      8,
+      10,
+      13,
+      17,
+      23,
+      27,
+      36,
+      45,
+      55,
+      64,
+      71,
+      84,
+      149,
+      156,
+      162,
+      186,
+      194,
+      200,
+      209
+    ],
+    "simulators": [
+      "iverilog",
+      "verilator"
+    ],
+    "table_entries_bound": 23,
+    "vector_format_entries": 32,
+    "vector_format_entries_note": "how many entries the CASE RECORD can carry, echoed by the run's own GEOMETRY line and checked against the vector manifest. It is a bound on the measurement below, never a substitute for it",
+    "vehicle": "rtl/test/tb_a3_operator_admission.sv",
+    "vehicle_sha256": "fc99a559fc67fbb7078067238f4f04b1deffc1a01304d74090095dc324bc6335"
+  },
+  "schema": "opentallas.rtl.a3_operator_admission_campaign.v1",
+  "scope": {
+    "authentic_prior_context_kv": false,
+    "bit_exact_against_independent_reference": true,
+    "checkpoint_residual_swiglu_logits": false,
+    "complete_layer": false,
+    "dual_simulator": true,
+    "exact_resolved_view_stream": true,
+    "exact_shipped_operator_records": true,
+    "fail_closed_matrix": true,
+    "layer_matmul_count": 7,
+    "layer_matmuls_issued": false,
+    "layer_matmuls_issued_count": 2,
+    "model_token_generation": false,
+    "object_keyed_families_issued_through_one_shared_table": true,
+    "read_modify_write_placement": true,
+    "real_checkpoint_normalization_gains": false,
+    "real_checkpoint_projection_weights": true,
+    "runtime_context_length": true,
+    "simulator_cycles_are_verification_cost_only": true,
+    "six_previously_capability_trapped_families_admitted": true,
+    "synthesizable_elaboration": true,
+    "three_of_five_normalization_gains_are_checkpoint": true,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_attention_av_walk.sv": "2e5d45f9dcb80303e3b5d46acb37a64a391f429d8c977bf7503101ed4c50e42e",
+    "rtl/abi3/ot_a3_attention_denominator.sv": "fb46aa837b7d860f6a2cc606406cbc2f7506be84410a44c61b80405e1e891eaa",
+    "rtl/abi3/ot_a3_attention_epilogue.sv": "c961df1134df1f7ffda885388748698ad784a913269eb45bff53c9713c27d421",
+    "rtl/abi3/ot_a3_attention_kv_index.sv": "8ce0a9fb8ac89dd697e203d31986b6c30f441d99d3e3ff390478774c5200d555",
+    "rtl/abi3/ot_a3_attention_qk_walk.sv": "6dd460362c0253cadfade71d6590a4a73d6120fbf56868ca2479d2e5a1cebb8c",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv": "681b1c2fb6c4e21de68ddd6343478a270623bc226a4c9bdee3608664488a225a",
+    "rtl/abi3/ot_a3_attention_sparse.sv": "7d576ff2c3e5c0b7734be29623fa70c32fa8c199bf9de5cd68f71621cc6e8d84",
+    "rtl/abi3/ot_a3_dma_index_mover.sv": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64",
+    "rtl/abi3/ot_a3_engine_array.sv": "3d3ed3333516d592c17c023ef9c2cdaa6d08f5d5c512ea7de8146fc395dec9f5",
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": "a103c46da8d718b09f6f37af029347855e00b4c3f380f8b33c76584e204e3a98",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv": "63c6c786ace5062b865949c139b252e7227c7638aeb98b69cba1e8c05caf866f",
+    "rtl/abi3/ot_a3_fp32_sqrt_rne.sv": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "005ff4d9237548ed76d732b097616523ebec755d86ccbd7417f66baf1452f175",
+    "rtl/abi3/ot_a3_mac_lane.sv": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+    "rtl/abi3/ot_a3_mac_lane_pipe.sv": "9fa13df6e934783b2bd5a7fb5348e33f262322381c87a926145d9bfef41bb454",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "rtl/abi3/ot_a3_place_table.sv": "e99b729ea55ab4cbc073dd4e93bc73dcd3eba1f9926f0be6aa1bdcf720d10adf",
+    "rtl/abi3/ot_a3_qwen_gqa.sv": "f4abf66c4e623053328186987034fce4e0c438cd28d658745e86ac1fab5614ff",
+    "rtl/abi3/ot_a3_reduction_balanced_sum.sv": "52821cf9dfb2d487cf2de6ccd9ec61d5a4d3bba47b0ab9f9973a79b5523f3279",
+    "rtl/abi3/ot_a3_reduction_expert_sum.sv": "16bec8d8d5c1b8d583a685664566e756a43065f8a0373279fa454c7c4b39e086",
+    "rtl/abi3/ot_a3_rope_lane_pipe.sv": "5473a7a506053f8501c79dc042bac3ca142677ed51ebe4c0cf5542c9ae6a0ebe",
+    "rtl/abi3/ot_a3_route_biased_topk.sv": "46e93ff4c3c5522155fbb2f69ee83c335fd80a06d16f89e137b66e1cee93e124",
+    "rtl/abi3/ot_a3_route_weight_normalize.sv": "5533fbceb04a8176b68630466356c6ec1ecd9b884c8aab0fd15f764147b22620",
+    "rtl/abi3/ot_a3_route_window_index.sv": "b2432ad9934709aa278dd62aaa3861c93a735654c6599412bc5025e480cad748",
+    "rtl/abi3/ot_a3_selection_argmax.sv": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543",
+    "rtl/abi3/ot_a3_selection_token_append.sv": "3fdd18591e159c3d8301dcd249628324e4ea1e32427baa445bfa7ab03996f227",
+    "rtl/abi3/ot_a3_vector_add.sv": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9",
+    "rtl/abi3/ot_a3_vector_compress_project.sv": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2",
+    "rtl/abi3/ot_a3_vector_convert.sv": "a8586be6018ad8d1cb81904f37a1a00f1099b1978c9b79327678719b704d5fda",
+    "rtl/abi3/ot_a3_vector_hadamard.sv": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162",
+    "rtl/abi3/ot_a3_vector_index_score.sv": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb",
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071",
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": "12ed12b1fc2adf97588ef96c670fed07115b27e753f5357280eab39f11c6b297",
+    "rtl/abi3/ot_a3_vector_rope.sv": "4f010e3829542b9624e97890bcd174a49171534408651a949e483f8cbf40404a",
+    "rtl/abi3/ot_a3_vector_scale.sv": "42063b0ae30faa3f9de063e825e1f7e14468bb5a0fb2eefc23f121c77c800d71",
+    "rtl/abi3/ot_a3_vector_silu_mul.sv": "802be87ea7c75bf70a4a42397c549912c293602bb77c4b1a70a9ade8f0b593a4",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus.sv": "a85d44ee35095ae23333c1bea4b6331b81236ca56de76f592b0ec7bb2a4659b3",
+    "rtl/abi3/ot_a3_vector_sqrt_softplus_row.sv": "b3174aa08d967fe6712e43bed6a086f3dfe53ce7fcb9834f6fa3e62676d2f73f",
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/ot_fp32_rsqrt_rne.sv": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b",
+    "rtl/ot_ta_command_decoder.sv": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": "964ceb0f043941315565c35b62c3e2a4d132ab8679a7e605c3f1a194589248dd",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/proto/ot_mac_bf16_fp32_pipe.sv": "533f82e3f3973ee5c3eadbaa448e55e440fe4f40aa7996814819b8ec041e3949",
+    "rtl/test/tb_a3_operator_admission.sv": "fc99a559fc67fbb7078067238f4f04b1deffc1a01304d74090095dc324bc6335",
+    "rtl/test/tb_a3_selection_token_append.sv": "d8d980a9d6d81f44555d40680f64be92e2588f7ec617a6a20f6737e5f6914ec9",
+    "rtl/test/tb_a3_vector_silu_mul.sv": "faa0f7283193c353eecd1d536e04ca10e0a617e83cbf691eb6a2d92151ce5e6c",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/tensor_accelerator_attention.py": "beecc3c76b3cc9ba69ddcd5661acebdffbb7c2547dcb509ff861032de53ead0c",
+    "runtime/reference/tensor_accelerator_elementwise.py": "e15b1855c30ad9a49fbcf1c9d7d1fd751e995e30fa21e98ce407e00511bf6f4d",
+    "runtime/reference/tensor_accelerator_rmsnorm.py": "a9e5cb021251f39269ba3a5703cd91aa428b9726316b05c88676607e6e79f6ae",
+    "runtime/reference/tensor_accelerator_rope.py": "be71d1a65ba0fc3d98d52ad50e1783b326e9874d9a949b97acb75245454c51a7",
+    "runtime/sim/engines/selection.py": "751240f24f79e48a25ff055908fa82592ad74fd98d48c63e71624069feca1708",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "40e86c4d788dab2e9638339ba4bdbe8c5895ff0a335b6b60f05f6666740ac6eb",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "ad1c8a031d95e6c1d115fa58ec6563a4f6d04286576c12d68295aea9bd38c39c",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06679cce0d33bdb4a043060f0aa7f3000ac94cd4d417fd64edb9f8089e447a5c",
+    "testdata/compiler/abi3_shipped_prefix/p3_expect.hex": "ad2838f3143c069b0a02bac3405b09169044fae6f75cdea2e1485507de8146c0",
+    "testdata/compiler/abi3_shipped_prefix/p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9",
+    "testdata/compiler/abi3_shipped_prefix/p3_writes.hex": "af8be9b7044097a2a11cc5be1ab5beac2f66b4226b72b189f6de770a772d97c5",
+    "tools/build_a3_operator_admission_vectors.py": "679cc537b4a791c1b8df3a5e6b9390f867e2e26d5ebed6a9c1f7c9aff60c4eb0",
+    "tools/build_a3_operator_unit_vectors.py": "1e641882bbdd6bb41d14f645b78983780a19491e76492483c1b630b8ceaa289c",
+    "tools/run_a3_operator_admission_rtl_campaign.py": "4641bcd33e5c23496f554a9fb43eb304fa5840947f67942f4c14e0dc2156cb36"
+  },
+  "status": "pass",
+  "storage_class": "rom",
+  "synthesis_frontend": {
+    "note": "generic synthesizable elaboration of the two new datapaths only; no library mapping, PPA, token-latency or TPOT claim. The whole issue bridge does not elaborate under the pinned Yosys 0.68 for a reason that predates this campaign: the frontend rejects a non-constant procedural for-loop bound in rtl/ot_fp32_rne_pkg.sv reached through ot_a3_vector_index_score",
+    "tops": [
+      {
+        "check_problems": 0,
+        "top": "ot_a3_vector_silu_mul"
+      },
+      {
+        "check_problems": 0,
+        "top": "ot_a3_selection_token_append"
+      }
+    ]
+  },
+  "target": "qwen3-8b-rom-single-chip",
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "unit_oracles": {
+    "independent_of_dut": true,
+    "silu_expected_bf16_sha256": "b62ff9e34b2dea3f76e535b489713f4274f891b541e48e7e6d1daec69caae8b9",
+    "silu_mul": "runtime/reference/tensor_accelerator_elementwise.py::qwen3_silu_mul_bf16",
+    "token_append": "runtime/sim/engines/selection.py::token_append"
+  },
+  "vector_sha256": {
+    "a3_operator_admission/bank.hex": "aefaf27a75ca9ecfded9a3a051d1b9ec6ba56c547d58de860c1ebe6d3a4ac815",
+    "a3_operator_admission/cases.hex": "85af952bb64764853b2589f6d3a1bca9b8e3318b7f4dffab4d462b917ccd4fe6",
+    "a3_operator_admission/descriptors.hex": "0787952ceba50aed8cc23abb0543c8c594963132041135671b8697197386879e",
+    "a3_operator_admission/expected.hex": "f3d84d6eb0978d2ab6db3ed04dc06bc2d0e8aad761e259a17268d43c0d002b8c",
+    "a3_operator_admission/index.hex": "53b72ddae6376d72462eaab4464eef2548eec252e836bdfecb78d84c8647d864",
+    "a3_operator_admission/index.json": "e61273e2d17b4dd1dc633c190f6cf20d09c011ae2dabd93f450edf6576c8a9b4",
+    "a3_operator_admission/preload.hex": "3cd2d65e694e5e52e3441e91362a5f0c22525ed544c8df2ac687d0d442bd8b8c",
+    "a3_operator_admission/source.hex": "8d48f1d1da1ae55a7594d48363e81dd2e7a500b9afb318ed2362ca5a192208cb",
+    "a3_operator_admission/views.hex": "e3c7e1d6398587ab551b16a1a5c4ab21e77e53a712dce7b9f5d9a61e0a5d3571",
+    "a3_operator_admission/weights.hex": "14a41091f0303795889f44a95774fb0672e287ad5d8421eb39c09dd0a71449e9",
+    "a3_operator_units/append_cases.hex": "1ff87442ce048d5829ad655dbf6394708049457e7750b4b72faafe63c23a59c7",
+    "a3_operator_units/index.json": "c2ed9527772d7ef32474f6881935b9b25c71802533765c95b31b17a5683f9d17",
+    "a3_operator_units/silu_cases.hex": "b8eb33d987f5e7cf66acee5ed647b3ffaaf5e2e162c54bcd07562b6f12d0b358",
+    "a3_operator_units/silu_expected.hex": "13f74f3cf2cee0157c786d97f5937f5deba84d94fbb6a5b59070becbbd7b9835",
+    "a3_operator_units/silu_gate.hex": "848ed3958f685b514dcee54be33c631582eb24af799da76c086d3524e109a231",
+    "a3_operator_units/silu_up.hex": "b8e3261c0def5944a14335a726375b1303bef909b34823322cb726c098dd6f00"
+  },
+  "verification_wall_seconds": {
+    "ot_a3_selection_token_append_yosys_elaboration": 0.025782974204048514,
+    "ot_a3_vector_silu_mul_yosys_elaboration": 14.084655001061037,
+    "tb_a3_operator_admission_iverilog_compile": 0.13405294506810606,
+    "tb_a3_operator_admission_iverilog_simulation": 11258.320045850938,
+    "tb_a3_operator_admission_verilator_compile": 25.781828538980335,
+    "tb_a3_operator_admission_verilator_simulation": 146.3204090029467,
+    "tb_a3_selection_token_append_iverilog_compile": 0.007082642987370491,
+    "tb_a3_selection_token_append_iverilog_simulation": 0.005668955156579614,
+    "tb_a3_selection_token_append_verilator_compile": 4.083623698912561,
+    "tb_a3_selection_token_append_verilator_simulation": 0.0017474379856139421,
+    "tb_a3_vector_silu_mul_iverilog_compile": 0.018864460987970233,
+    "tb_a3_vector_silu_mul_iverilog_simulation": 19.42353938985616,
+    "tb_a3_vector_silu_mul_verilator_compile": 8.024223768152297,
+    "tb_a3_vector_silu_mul_verilator_simulation": 0.2713306478690356
+  }
+}

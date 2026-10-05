@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.parent.dsrom.prerequisite-review.v1",
+  "reviewed_intake": "5ff7d8eaa",
+  "pinned_contract_source": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84"
+  },
+  "checkpoint_payload_reads": false,
+  "QDQ4E_saturation_witness": {
+    "input_FP32": 6144,
+    "elements": 32,
+    "actual_pinned_golden_output_all": [
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0,
+      2688.0
+    ],
+    "golden_scale": 448,
+    "retained_RTL_static_S3_n": 8,
+    "retained_RTL_static_S3_qs": 7,
+    "retained_RTL_static_scale": 1024,
+    "retained_RTL_static_code": 7,
+    "retained_RTL_static_output": 6144,
+    "RTL_executed": false,
+    "verdict": "CORRECTNESS_GAP_EXISTING_GOLDEN_SCALE_SATURATION",
+    "requirement": "Correct scale before thresholds, codes and dequantisation; same corrected raw sideband. No changed golden, unreachable assumption or sideband-only clamp."
+  },
+  "focused_checks": [
+    {
+      "path": "tests/test_observer_hierarchy_source_plan.py",
+      "passed": 16,
+      "scope": "static real-parent binding only"
+    },
+    {
+      "path": "tools/test_hbm_tc_retained_placement.py",
+      "passed": 8,
+      "scope": "retained DEF metadata/model; two required retained LEFs materialized before final PASS"
+    },
+    {
+      "path": "tests/test_w17_window_recovery_prepare.py",
+      "passed": 4,
+      "scope": "default-off recovery preparation, no simulation"
+    },
+    {
+      "path": "tests/test_w17_window_qdq8_connected_model.py",
+      "passed": 6,
+      "scope": "connected actual full512 QE model/preparation, no compilation"
+    }
+  ],
+  "focused_check_count_this_review": 34,
+  "cumulative_distinct_focused_checks": 1209,
+  "L20_monolithic_service_screen": {
+    "area_mm2_per_rank": 4.6808656872,
+    "available_mm2_per_rank_approx": 1.64,
+    "required_tracks": 9229,
+    "available_tracks": 5250,
+    "verdict": "FAIL_RETAINED_SLOT_SCREEN",
+    "next": "Banked SRAM model with five writer/four reader concurrency, finite conflict/backpressure schedule and real abstract/OBS slot proof before engine build"
+  },
+  "retained_TC_placement": {
+    "vacant_rows": false,
+    "safe_decap_removal_proven": false,
+    "alignment_flop_sites_missing": 19,
+    "next": "Price dedicated perimeter register strip with CTS/hold and actual parent endpoint capacity before build"
+  },
+  "actual_bounded_passes": [
+    {
+      "owner_commit": "45dbff240",
+      "intake": "9586003a6",
+      "scope": "full q/BF rowfix reference differential plus independent config row oracle; not full numerical golden/signoff/token"
+    },
+    {
+      "owner_commit": "c03f2942070f834d7772bbc403fa8d88e0a64a58",
+      "intake": "20a0e1b40",
+      "scope": "actual full512 QDQ8 arithmetic to producer/guard; not connected backend/token"
+    }
+  ],
+  "pending_gates": {
+    "recovery": "review shared cap-verified runner before compile; selected-owner closed-provider only, actual PHY visibility and producer cancellation absent",
+    "connected_QE": "independent event/hash reproduction and shared cap-verified runner before compile",
+    "observer": "exact full hierarchy parameter/source resolution and capped lint runner before GO",
+    "field": "independent actual ROM/walker/fastPP numerical oracle and context ICG wake/timing model"
+  },
+  "protected_live_observation": {
+    "L0": "CYC63200 allPC24; PID1968071 live; no terminal",
+    "attention": "PID2069324 live; final route/SSFF pending",
+    "TP96": "PID791936 live; no terminal"
+  },
+  "hardware_admission": false,
+  "full_token_credit": false,
+  "main_modified": false,
+  "AGIdock_dispatch": false,
+  "connected_QE_independent_reproduction": {
+    "equal_generated_artifacts": 43,
+    "compared_model_fields": [
+      "cases",
+      "event_sha256",
+      "source_sha256",
+      "dependencies_sha256",
+      "fixture_sha256",
+      "resources",
+      "producer",
+      "visibility",
+      "descriptor_stress"
+    ],
+    "path_only_command_differences_excluded": true,
+    "new_compile": false
+  }
+}

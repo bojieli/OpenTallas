@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.local/schemas/compiler/deepseek_v4_generation_trace_v1.schema.json",
+  "title": "OpenTallas DeepSeek V4 target-only generation trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "control_scope",
+    "request",
+    "sampling",
+    "schema",
+    "sessions",
+    "source",
+    "termination",
+    "trace",
+    "trace_id"
+  ],
+  "properties": {
+    "schema": {"const": "opentallas.deepseek_v4_generation_trace.v1"},
+    "source": {"$ref": "#/$defs/source"},
+    "control_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["covered", "execution_status", "unresolved"],
+      "properties": {
+        "covered": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "execution_status": {
+          "const": "control_trace_only_pending_model_operator_execution"
+        },
+        "unresolved": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_size",
+        "config",
+        "maximum_prompt_length",
+        "minimum_prompt_length",
+        "prompt_rows",
+        "request_id",
+        "total_loop_length"
+      ],
+      "properties": {
+        "batch_size": {"type": "integer", "minimum": 1},
+        "config": {"$ref": "#/$defs/config"},
+        "maximum_prompt_length": {"type": "integer", "minimum": 1},
+        "minimum_prompt_length": {"type": "integer", "minimum": 1},
+        "prompt_rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/tokenStreamIdentity"}
+        },
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "total_loop_length": {"type": "integer", "minimum": 2}
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "exact_replay_status",
+        "official_expression",
+        "rng_seed"
+      ],
+      "properties": {
+        "algorithm": {
+          "enum": ["greedy_argmax", "pytorch_cuda_exponential_race"]
+        },
+        "exact_replay_status": {
+          "enum": [
+            "deterministic_no_rng",
+            "blocked_pending_pinned_torch_cuda_rng_stack"
+          ]
+        },
+        "official_expression": {"type": "string", "minLength": 1},
+        "rng_seed": {
+          "oneOf": [
+            {"type": "null"},
+            {"const": 33377335}
+          ]
+        }
+      }
+    },
+    "sessions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/session"}
+    },
+    "termination": {
+      "enum": ["all_rows_generated_eos", "length_limit"]
+    },
+    "trace": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/invocation"}
+    },
+    "trace_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tokenId": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 129279
+    },
+    "tokenIds": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/tokenId"}
+    },
+    "bools": {
+      "type": "array",
+      "items": {"type": "boolean"}
+    },
+    "hashes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/sha256"}
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generate_sha256",
+        "model_sha256",
+        "repository",
+        "revision"
+      ],
+      "properties": {
+        "repository": {"const": "deepseek-ai/DeepSeek-V4-Flash-0731"},
+        "revision": {"const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"},
+        "generate_sha256": {
+          "const": "775fcfee2344e21a7b02c73161c517763e4348b84cf2eb266353e0857b9c8812"
+        },
+        "model_sha256": {
+          "const": "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bos_token_id",
+        "decode_mode",
+        "eos_token_id",
+        "max_batch_size",
+        "max_context_tokens",
+        "max_new_tokens",
+        "rng_seed",
+        "temperature",
+        "top_p",
+        "vocab_size"
+      ],
+      "properties": {
+        "bos_token_id": {"const": 0},
+        "decode_mode": {"const": "target_only"},
+        "eos_token_id": {"const": 1},
+        "max_batch_size": {"type": "integer", "minimum": 1},
+        "max_context_tokens": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1048576
+        },
+        "max_new_tokens": {"type": "integer", "minimum": 1},
+        "rng_seed": {"const": 33377335},
+        "temperature": {"type": "number", "minimum": 0},
+        "top_p": {"const": 1.0},
+        "vocab_size": {"const": 129280}
+      }
+    },
+    "tokenStreamIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["length", "token_ids_sha256"],
+      "properties": {
+        "length": {"type": "integer", "minimum": 1},
+        "token_ids_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "completion_token_count",
+        "completion_token_ids",
+        "completion_token_ids_sha256",
+        "eos_origin",
+        "model_eos_committed_to_state",
+        "model_eos_position",
+        "post_eos_positions_committed",
+        "prompt_length",
+        "row",
+        "state_committed_through_exclusive",
+        "stop_reason"
+      ],
+      "properties": {
+        "completion_token_count": {"type": "integer", "minimum": 1},
+        "completion_token_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/tokenId"}
+        },
+        "completion_token_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "eos_origin": {
+          "enum": [
+            "model_generated",
+            "host_appended_like_official_generate_py"
+          ]
+        },
+        "model_eos_committed_to_state": {"type": "boolean"},
+        "model_eos_position": {
+          "oneOf": [
+            {"type": "null"},
+            {"type": "integer", "minimum": 1}
+          ]
+        },
+        "post_eos_positions_committed": {"type": "integer", "minimum": 0},
+        "prompt_length": {"type": "integer", "minimum": 1},
+        "row": {"type": "integer", "minimum": 0},
+        "state_committed_through_exclusive": {"type": "integer", "minimum": 1},
+        "stop_reason": {"enum": ["eos", "max_context_tokens", "max_new_tokens"]}
+      }
+    },
+    "invocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "argmax_token_ids",
+        "candidate_position",
+        "candidate_token_ids",
+        "finished_after_mask",
+        "finished_before_mask",
+        "input_ids_sha256",
+        "input_length",
+        "invocation_id",
+        "invocation_index",
+        "logits_sha256",
+        "new_eos_mask",
+        "phase",
+        "prompt_override_mask",
+        "request_id",
+        "required_state_scopes",
+        "rng_state_after_sha256",
+        "rng_state_before_sha256",
+        "sample_value_count",
+        "schema",
+        "selected_token_ids",
+        "start_pos",
+        "state_commit_sha256",
+        "state_commit_status",
+        "stop_pos_exclusive"
+      ],
+      "properties": {
+        "schema": {"const": "opentallas.deepseek_v4_model_invocation.v1"},
+        "argmax_token_ids": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/tokenIds"}
+          ]
+        },
+        "candidate_position": {"type": "integer", "minimum": 1},
+        "candidate_token_ids": {"$ref": "#/$defs/tokenIds"},
+        "finished_after_mask": {"$ref": "#/$defs/bools"},
+        "finished_before_mask": {"$ref": "#/$defs/bools"},
+        "input_ids_sha256": {"$ref": "#/$defs/hashes"},
+        "input_length": {"type": "integer", "minimum": 1},
+        "invocation_id": {"$ref": "#/$defs/sha256"},
+        "invocation_index": {"type": "integer", "minimum": 0},
+        "logits_sha256": {"$ref": "#/$defs/sha256"},
+        "new_eos_mask": {"$ref": "#/$defs/bools"},
+        "phase": {"enum": ["prefill", "decode"]},
+        "prompt_override_mask": {"$ref": "#/$defs/bools"},
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "required_state_scopes": {
+          "type": "array",
+          "prefixItems": [
+            {"const": "main_attention_kv_all_layers"},
+            {"const": "main_compressor_state_all_compressed_layers"}
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rng_state_after_sha256": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]
+        },
+        "rng_state_before_sha256": {
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sha256"}]
+        },
+        "sample_value_count": {"type": "integer", "minimum": 0},
+        "selected_token_ids": {"$ref": "#/$defs/tokenIds"},
+        "start_pos": {"type": "integer", "minimum": 0},
+        "state_commit_sha256": {"$ref": "#/$defs/sha256"},
+        "state_commit_status": {"const": "committed"},
+        "stop_pos_exclusive": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

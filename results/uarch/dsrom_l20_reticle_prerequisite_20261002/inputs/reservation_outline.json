@@ -1,0 +1,699 @@
+{
+  "allocation_verdict": "PASS_COMPONENT_AREA_AND_CLEAR_CHANNEL_CAPACITY_MODEL_ONLY",
+  "bbox_um": [
+    9974.880000000001,
+    9577.439999999997
+  ],
+  "clear_route_bands": [
+    {
+      "bbox_um": [
+        9974.880000000001,
+        1522.8000000000002
+      ],
+      "gross_mm2": 15.189747264000005,
+      "kind": "M2_M4_50pct_capacity",
+      "name": "index_HBM_all128responses_CLEAR_ROUTE_BAND",
+      "origin_um": [
+        8500.896,
+        15722.64
+      ],
+      "required_proxy_mm2": 0
+    },
+    {
+      "bbox_um": [
+        9974.880000000001,
+        1496.88
+      ],
+      "gross_mm2": 14.931198374400003,
+      "kind": "M2_M4_50pct_capacity",
+      "name": "index_quarter_join_to_batch_CLEAR_ROUTE_BAND",
+      "origin_um": [
+        8500.896,
+        17245.44
+      ],
+      "required_proxy_mm2": 0
+    },
+    {
+      "bbox_um": [
+        9974.880000000001,
+        727.9200000000001
+      ],
+      "gross_mm2": 7.260914649600001,
+      "kind": "M2_M4_50pct_capacity",
+      "name": "mergedKV_to_stage_CLEAR_ROUTE_BAND",
+      "origin_um": [
+        8500.896,
+        18742.32
+      ],
+      "required_proxy_mm2": 0
+    },
+    {
+      "bbox_um": [
+        9974.880000000001,
+        10.8
+      ],
+      "gross_mm2": 0.10772870400000001,
+      "kind": "M2_M4_50pct_capacity",
+      "name": "directproducer_registered_boundary_CLEAR_ROUTE_BAND",
+      "origin_um": [
+        8500.896,
+        19470.239999999998
+      ],
+      "required_proxy_mm2": 0
+    }
+  ],
+  "collector36_macro_origins": [
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8503.056,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 0
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8680.176000000001,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 1
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8857.296,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 2
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8503.056,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 3
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8680.176000000001,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 4
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8857.296,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 5
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8503.056,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 6
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8680.176000000001,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 7
+    },
+    {
+      "bank": 0,
+      "orientation": "R0",
+      "origin_um": [
+        8857.296,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 8
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9034.416000000001,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 0
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9211.536000000002,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 1
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9388.656,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 2
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9034.416000000001,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 3
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9211.536000000002,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 4
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9388.656,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 5
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9034.416000000001,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 6
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9211.536000000002,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 7
+    },
+    {
+      "bank": 1,
+      "orientation": "R0",
+      "origin_um": [
+        9388.656,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 8
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9565.776,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 0
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9742.896,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 1
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9920.016,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 2
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9565.776,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 3
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9742.896,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 4
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9920.016,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 5
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9565.776,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 6
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9742.896,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 7
+    },
+    {
+      "bank": 2,
+      "orientation": "R0",
+      "origin_um": [
+        9920.016,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 8
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10097.136,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 0
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10274.256000000001,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 1
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10451.376,
+        9905.76
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 2
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10097.136,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 3
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10274.256000000001,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 4
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10451.376,
+        9951.12
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 5
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10097.136,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 6
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10274.256000000001,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 7
+    },
+    {
+      "bank": 3,
+      "orientation": "R0",
+      "origin_um": [
+        10451.376,
+        9996.48
+      ],
+      "size_um": [
+        172.8,
+        41.04
+      ],
+      "slice": 8
+    }
+  ],
+  "collector_macro_OBS": "  OBS\n    LAYER M1 ;\n    RECT 0 0 172.800 41.040 ;\n    LAYER M2 ;\n    RECT 0 0 172.800 41.040 ;\n    LAYER M3 ;\n    RECT 0 0 172.800 41.040 ;\n    LAYER M4 ;\n    RECT 0.072 0 172.728 41.040 ;\n  END\nEND ot_sram_1r1w_256x256_m2_r2c2\n\nEND LIBRARY\n",
+  "components": [
+    {
+      "bbox_um": [
+        2125.44,
+        1030.9679999999998
+      ],
+      "gross_mm2": 2.1912606259199996,
+      "kind": "36SRAM_M1-M4_OBS",
+      "name": "BANKED_COLLECTOR_MACROS_AND_CLEAR20909TRACK_BAND",
+      "origin_um": [
+        8500.896,
+        9903.6
+      ],
+      "required_proxy_mm2": 2.11780541952
+    },
+    {
+      "bbox_um": [
+        2125.44,
+        3520.8
+      ],
+      "gross_mm2": 7.483249152000001,
+      "kind": "sourceFF+mux+arithmetic",
+      "name": "ACTUAL_POOLED_INDEXER_AND4RING_READERS",
+      "origin_um": [
+        8500.896,
+        10934.568
+      ],
+      "required_proxy_mm2": 7.4812529744
+    },
+    {
+      "bbox_um": [
+        2125.44,
+        144.72
+      ],
+      "gross_mm2": 0.3075936768,
+      "kind": "sourceFF",
+      "name": "X_SEL_TOPK_STORE",
+      "origin_um": [
+        8500.896,
+        14455.368
+      ],
+      "required_proxy_mm2": 0.30576476160000005
+    },
+    {
+      "bbox_um": [
+        2125.44,
+        38.88
+      ],
+      "gross_mm2": 0.08263710720000002,
+      "kind": "diagnostic_only",
+      "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+      "origin_um": [
+        8500.896,
+        14600.088
+      ],
+      "required_proxy_mm2": 0.0824539824
+    },
+    {
+      "bbox_um": [
+        7849.4400000000005,
+        5819.04
+      ],
+      "gross_mm2": 45.6762053376,
+      "kind": "full_source_inventory_proxy",
+      "name": "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+      "origin_um": [
+        10626.336000000001,
+        9903.6
+      ],
+      "required_proxy_mm2": 45.67074679799998
+    }
+  ],
+  "field_preservation_obligation": "Translate right-side field/co-residents by delta_width and bottom-side field/co-residents by delta_height, then enumerate every source instance and channel. This adequate rectangular envelope is a proposal, not a legal placement receipt.",
+  "fixed815_field_debit_mm2": 54.44031285503998,
+  "gross_mm2": 95.53381470719998,
+  "grow_rectangular_die_bbox_um": [
+    34712.928,
+    29386.8
+  ],
+  "grow_rectangular_die_mm2": 1020.1018725504,
+  "origin_um": [
+    8500.896,
+    9903.6
+  ],
+  "other_hub_regions_preserved_and_explicitly_shifted": [
+    {
+      "bbox_um": [
+        630.72,
+        2203.2
+      ],
+      "gross_mm2": 1.389602304,
+      "kind": "COLLECTIVE",
+      "name": "HUB_COLLECTIVE",
+      "origin_um": [
+        18475.775999999998,
+        9903.6
+      ]
+    },
+    {
+      "bbox_um": [
+        630.72,
+        1414.8
+      ],
+      "gross_mm2": 0.892342656,
+      "kind": "VM",
+      "name": "HUB_VM",
+      "origin_um": [
+        18475.775999999998,
+        12106.8
+      ]
+    },
+    {
+      "bbox_um": [
+        630.72,
+        2201.04
+      ],
+      "gross_mm2": 1.3882399488000001,
+      "kind": "GATHER",
+      "name": "HUB_GATHER",
+      "origin_um": [
+        18475.775999999998,
+        13521.6
+      ]
+    },
+    {
+      "bbox_um": [
+        2200.608,
+        5819.04
+      ],
+      "gross_mm2": 12.80542597632,
+      "kind": "SU_VECTOR",
+      "name": "HUB_SU_VECTOR",
+      "origin_um": [
+        19106.496,
+        9903.6
+      ]
+    },
+    {
+      "bbox_um": [
+        3147.12,
+        5819.04
+      ],
+      "gross_mm2": 18.3132171648,
+      "kind": "HC",
+      "name": "HUB_HC",
+      "origin_um": [
+        21307.104,
+        9903.6
+      ]
+    }
+  ],
+  "per_user_parallelism": {
+    "HBM_reader_PC_ports": 128,
+    "attention_tiles": 64,
+    "collector_banks_1R1W": 4,
+    "index_MACs_per_cycle": 1024,
+    "peerTXskids": 3,
+    "selected_seats": 512
+  },
+  "physical_obligations": "Current4096ROMelement mustreplicateinremainingfield; source-matched SSFF andproviderlatency bind endpoints beforeengineRTL. No historicalclockqualification transfer.",
+  "physical_route_fit_verdict": "NOT_ROUTED_NOT_CERTIFIED",
+  "schema": "opentallas.dsrom.L20-source-counted-hub-outline.v1",
+  "source_timing_claim": false
+}

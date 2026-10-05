@@ -1,0 +1,247 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "qwen3-8b",
+ "repo": "Qwen/Qwen3-8B",
+ "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+ "original_repo": "Qwen/Qwen3-8B",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30",
+ "index_sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc",
+ "shards": 5,
+ "tensors": 399,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 16381470720
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "qwen3",
+ "architectures": [
+  "Qwen3ForCausalLM"
+ ],
+ "layers": 36,
+ "hidden": 4096,
+ "heads": 32,
+ "kv_heads": 8,
+ "head_dim": 128,
+ "vocab": 151936,
+ "tied_embeddings": false,
+ "max_context": 40960,
+ "intermediate": 12288,
+ "moe_intermediate": null,
+ "moe": {
+  "experts": 0,
+  "top_k": 0,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 6946075648,
+  "routed": 0,
+  "embed": 622329856,
+  "head": 622329856,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 8190735360,
+  "total_all": 8190735360,
+  "active_per_token": 7568405504,
+  "active_routed": 0,
+  "head_streamed": 622329856
+ },
+ "header_bytes": {
+  "embed": 1244659712,
+  "dense": 13892151296,
+  "head": 1244659712
+ },
+ "layer_count_in_headers": 36,
+ "kv_layers": [
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "dflash": "z-lab/Qwen3-8B-DFlash-b16",
+  "eagle3": "RedHatAI/Qwen3-8B-speculator.eagle3"
+ },
+ "quantization": null
+}

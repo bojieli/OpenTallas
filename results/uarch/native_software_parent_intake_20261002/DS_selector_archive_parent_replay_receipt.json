@@ -1,0 +1,29 @@
+{
+  "PR_admitted": false,
+  "RTL_admitted": false,
+  "actual_repository_inventory_checked": true,
+  "actual_repository_inventory_sha256": "a8cc34e17f0886493431f5267f33fcb923af4bd5d9618da8bdfe74c3c723ce4b",
+  "archive_bytes_verified": 1034717,
+  "baseline_generator_sha256": "77800eea381bb5c81d1a6da381c3714398d5b8fdc815d82514932caced8062a6",
+  "byte_exact_preserved_model": true,
+  "jobs_launched": 0,
+  "manifest_sha256": "b8caa84da075e8380cf9fec886e5de09ad2a19940ea4631b2dc85dd144c3488a",
+  "origin_modes": {
+    "1d8304647ceb7a1b64d96217c6dfa075b5704f0a:results/uarch/topk_integer_tree_service_model_20261002/model.json": "explicit_verified_archive_only",
+    "4b6708348f3938e0830c3549fbbecadbce18e798:results/uarch/dsrom_l20_hierarchical_reservation_20261002/grid_inputs/DS_grid.json": "explicit_verified_archive_only",
+    "aa745a879e20e3db598f7be9345cb7ad3b1d5d2f:results/uarch/topk_balanced_filter_successor_model_20261002/model.json": "explicit_verified_archive_only",
+    "aa745a879e20e3db598f7be9345cb7ad3b1d5d2f:tools/uarch_model.py": "explicit_verified_archive_only",
+    "aa745a879e20e3db598f7be9345cb7ad3b1d5d2f:tools/uarch_topk_integer_tree_model.py": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/bands.json.gz": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/cfg.json.gz": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/field.json.gz": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/macros.json.gz": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/model.json": "explicit_verified_archive_only",
+    "d2b3fde765a9cb1b97ec03864dbf7e48f0cf51f4:results/uarch/dsrom_noECC_complete_parent_map_20261002/r2/services.json.gz": "explicit_verified_archive_only",
+    "d4b9a4a6966bf211df81136b3df886a980f4bd36:results/uarch/ds_mtp_agentic_headline_policy_20261002.json": "explicit_verified_archive_only"
+  },
+  "origins_verified": 12,
+  "regenerated_model_sha256": "d2add26b19ab9161b22a559eb27bfa29760e950b0eb9df3db24098b0e6244c2a",
+  "schema": "TOPK_EXACT_ORIGIN_ARCHIVE_REPLAY_RECEIPT_V1",
+  "source_mode": "archive-only"
+}

@@ -1,0 +1,18 @@
+{
+  "scope": "source installer checks only; no token/readback/runtime gate",
+  "selected_parameters": {
+    "KV_COMPLETION": 1
+  },
+  "original_sha256": "947a723e0f217cad9646d5cd3f7a681d5383681e06b579fdb3393264efe1ccd0",
+  "checks": [
+    "off preserves actual source/list and emits nothing",
+    "enabled joins actual backend metadata and K ACK",
+    "parent done waits actual queue+journal quiet",
+    "actual originals byte-identical",
+    "credit/prefetch generated copies byte-identical",
+    "actual mux pending fences frontend-to-physical accepted debt",
+    "static selected system copy equals installer output"
+  ],
+  "old_b8c_gate_repeated": false,
+  "actual_system_runtime": false
+}

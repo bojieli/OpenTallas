@@ -1,0 +1,737 @@
+{
+  "G0": {
+    "PR_admitted": false,
+    "decision": "MODEL_SIZED_SUCCESSOR_WAIT_FULL_SLOT_AND_CONTEXT_REVIEW",
+    "engine_RTL_admitted": false,
+    "mandatory_correctness_scope": "repair original unclosing comb chains; no optimization/adoption/frequency credit",
+    "missing": [
+      "accepted full selector reservation/slot and routed channel allocation",
+      "source-construction whole-instance and SS-stage arc/context review",
+      "HBM full2048 GPU provider ownership/ACK leases"
+    ],
+    "next_action": "Archimedes reconciles this complete proposed selector rectangle, adjacent displacement and translated routes/clock/PG; Maxwell binds serial caller residence; independently review feedback/pipeline exactness then source-bound G0. No RTL before that decision."
+  },
+  "PVE2_PVE3": "drain-only, no new jobs/restarts",
+  "RTL_or_PR_launched": false,
+  "composition": {
+    "HBM_conditional_same_provider": {
+      "added_cycles_per_position": 1575,
+      "added_ns_at_policy_1p2GHz": 1312.5,
+      "calls": 9,
+      "cost_relative_to_existing_DIG4_cycles": -981,
+      "full_token_latency_credit": false
+    },
+    "ROM": {
+      "added_cycles_per_position": 1278,
+      "added_ns_at_policy_1p2GHz": 1065.0,
+      "calls": 9,
+      "cost_relative_to_existing_DIG4_cycles": -510,
+      "full_token_latency_credit": false
+    }
+  },
+  "exact_contract": {
+    "FP": "original signedzero/NaN/Inf/key conversion and threshold equality unchanged",
+    "compaction": "sort unsigned(valid-first,original-lane) key; preserve original rank-major lane order, ID payload unchanged modulo32. Invalid payload zero.",
+    "drain": "all new prefix/sort/count valid carriers included in fpipe; no done before last public output and empty staging",
+    "quota": "consume all row equal flags in source row order after prefix pipeline; saturate eq_left by row total, valid bubbles do not consume quota",
+    "reset": "reset every new valid carrier; no phantom quota or output after async reset; old busy/fault/public contract preserved",
+    "row_II": 1,
+    "tag": "no new external tag/port; row ordinal internal causal order, no extra command contexts"
+  },
+  "four_design_scope": "existing argmax provider unchanged; this selector does not implement current ROM op3; no automatic replacement",
+  "no_ROM_ECC_source_calendar": {
+    "PVE2_PVE3": "drain-only/no new jobs",
+    "actual_LAT8_evidence": {
+      "accepted_FIFO_cycles": [
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120,
+        128,
+        136,
+        144,
+        152,
+        160,
+        168,
+        176,
+        184
+      ],
+      "accepted_FIFO_events": 16,
+      "commit": "3e3cc7e501872cd5f9d42586d26d3014dcf1856a",
+      "consumer_deadline_cycles": null,
+      "issue_pop_cycles": [
+        65,
+        73,
+        81,
+        89,
+        97,
+        105,
+        113,
+        121,
+        129,
+        137,
+        145,
+        153,
+        161,
+        169,
+        177,
+        185
+      ],
+      "issue_pop_events": 16,
+      "observed_root_return_events": 0,
+      "observed_write_events": 0,
+      "physical_clock_qualified": false,
+      "root_return_and_write_connectivity": "root inputs tied0/write ports unconnected in historical fixture; no consumer-ACK/drain completion proof",
+      "scope": "passing selected pair only; no full-field/full-token extrapolation",
+      "source_artifact_sha256": {
+        "results/rtl/dsrom_LAT8_actual_event_profile_20261002/consumer_contract.json": "71b95c4b9250676c74038e7213dd9a19638ec4041800ab99d93f28fce1320db0",
+        "results/rtl/dsrom_LAT8_actual_event_profile_20261002/events.jsonl": "82e20c040ea7573b8d358a71e362d6a1bfa736767d7ad73803f5721fda2dc63a",
+        "results/rtl/dsrom_LAT8_actual_event_profile_20261002/input_issue_relationships.json": "b4dcb7cd78dbd0b99733142ebd55edc181d352f8732377d5255c0000dfdeab32",
+        "results/rtl/dsrom_LAT8_actual_event_profile_20261002/profile.json": "fc2a9b32dfbca9e0d1575a925fca002aa4b20e278e7515f5077bc2026c8f0a33"
+      }
+    },
+    "authority": "user removes ROM ECC requirement, 2026-10-02; subsequent policy supersedes ECC requirements in historical models without editing historical pins",
+    "hardware_execution_or_launch": false,
+    "next_source_calendar_requirements": [
+      "remove mandatory ROM parity sidecar gather/checker wait from successor admission and ownership ledger",
+      "retain actual capture/consumer acceptance, tags, arithmetic/golden order and finite ownership/release rules",
+      "bind connected root-return/write/consumer credits independently; selected-pair observations do not supply those events",
+      "price source changes/removed resources in successor model; retain all original failed/PASS records and pinned files"
+    ],
+    "owners": [
+      "Nash",
+      "Maxwell"
+    ],
+    "policy": {
+      "ECC_checker_wait_required": false,
+      "ROM_ECC_required": false,
+      "capture_and_consumer_credits": "actual source accepted data/capture plus real consumer ownership/release only; no ECC sidecar or checker-wait dependency",
+      "offered_profile_grants_acceptance_or_timing_credit": false,
+      "parity_sidecar_gather_required": false,
+      "source_arithmetic_and_order": "unchanged"
+    },
+    "publication": "owner handoff now; consolidate repository changes with next substantive validated milestone",
+    "schema": "DS_LAT8_NO_ROM_ECC_OWNER_HANDOFF_V1",
+    "topk_G0": "unchanged; no-ROM-ECC does not grant selector slot or SS/FF admission"
+  },
+  "original_records_unchanged": true,
+  "schema": "TOPK_BALANCED_FILTER_STAGED_DIG8_SUCCESSOR_G0_V1",
+  "shapes": [
+    {
+      "added_state_bits_vs_original": 127140,
+      "area": {
+        "FF_um2": 203640.02640000003,
+        "accounted_cell_master_sum_um2": 841209.80868,
+        "basis": "explicit source gate/FF construction, not mapped area. Allowances are declared rather than hidden; no embedded/alias credit. Clock/PG/repair and final whole-instance netlist audit remain open.",
+        "hold_mux_um2": 38927.7252,
+        "integer_hist_suffix_choice_logic_um2": 53393.94288,
+        "other_source_construction_allowances_um2": {
+          "candidate_data_buffer_tree": 8778.79296,
+          "candidate_word_address_decode": 1254.11328,
+          "control_compare_add_and_counter_construction": 322.88868000000014,
+          "control_zero_equal_and_mode_predicates": 31.492800000000003,
+          "load_order_key_and_NaN_detection": 2127.5136,
+          "load_variable_rank_stride_address": 164.81232,
+          "other_declared_register_hold_allowance": 14363.516160000001,
+          "staging_and_output_masks": 15586.83648
+        },
+        "proposed_source_50pct_proxy_core_mm2": 1.6824196173600001,
+        "replaced_prior_cones": [
+          "filter_equal_quota_serial_prefix_and_compare",
+          "filter_take_serial_prefix",
+          "filter_triangular_compactor"
+        ],
+        "retained_shared_cones_um2": {
+          "candidate_write_hold_muxes": 160526.49984,
+          "explicit_fanout4_buffer_construction": 13409.86752,
+          "filter_RF_score_and_ID_read_mux": 159272.38656,
+          "filter_compare_and_global_ID_add": 6634.483200000001,
+          "filter_equal_quota_subtract_and_hold": 20.9952,
+          "hist_RF_score_read_mux": 79636.19328,
+          "hist_accumulate": 4277.42208,
+          "hist_bin_decode": 34398.53568,
+          "hist_key_two_32bit_barrels": 6270.5664,
+          "hist_prefix_match": 531.8784,
+          "staging_variable_word_append_and_shift": 12899.45088
+        }
+      },
+      "clock": {
+        "SS_FF_closed": false,
+        "hold_uncertainty_ps": 25,
+        "open_context": "hist decode/carry, quota feedback, key compare+mux, RF read, staging mask/append, CTS/hold all require source-sized context",
+        "period_ps": 833,
+        "setup_uncertainty_ps": 60
+      },
+      "compiled": {
+        "CB": 14,
+        "DIG": 8,
+        "LDW": 4,
+        "N": 4,
+        "NBIN": 256,
+        "NMAX": 2048,
+        "P": 64,
+        "PF": 64
+      },
+      "cycle_envelope": 339,
+      "extra_cycles_vs_original_DIG8": 142,
+      "filter": {
+        "FB": 7,
+        "PF": 64,
+        "additional_bits": {
+          "equal_prefix_ID_gt_eq_carriers": 13056,
+          "equal_prefix_count_vectors": 1728,
+          "equal_prefix_valid": 6,
+          "parallel_take_popcount_internal": 176,
+          "sort_internal_records": 49920,
+          "sort_total_count_carrier": 105,
+          "sort_valid": 20,
+          "total": 65011
+        },
+        "bounds": {
+          "clock_or_SS_FF_qualification": false,
+          "comparator_select_fanout_sinks": 78,
+          "largest_prefix_adder_width": 7,
+          "quota_feedback_width": 14,
+          "record_source_fanout": "constant-neighbor compare/mux consumers per stage, replacing triangular PF fanout",
+          "record_stage_payload_bits": 2496,
+          "sort_compare_width": 7
+        },
+        "equal_prefix_stages": 6,
+        "extra_filter_cycles": 26,
+        "initiation_interval_rows": 1,
+        "logic_area_um2": {
+          "equal_prefix_network": 1049.49756,
+          "final_invalid_payload_zero": 181.9584,
+          "key_comparator_and_two_record_muxes": 20457.72288,
+          "parallel_take_popcount": 118.36044000000001,
+          "quota_lane_compare": 1080.55296,
+          "sort_fanout4_buffer_construction": 1851.77664
+        },
+        "network_counts": {
+          "prefix_add_nodes": 321,
+          "sort_buffers": 18144,
+          "sort_compare_exchange_nodes": 672
+        },
+        "new_combinational_stage_scope": {
+          "final": "one comparison/mux plus explicit invalid-output zero",
+          "prefix": "one narrow integer CLA per registered level",
+          "quota": "CB comparison and saturating subtraction in parallel; one feedback edge, actual SS/FF unknown",
+          "sort": "one FB key comparison then two record muxes per edge; no FP compare or ID arithmetic"
+        },
+        "old_retained_state_credit": 0,
+        "prepare_stages_reuses_f3": 1,
+        "quota_consume_stages": 1,
+        "reused_registers": {
+          "f2_id_take": "quota output",
+          "f3_id_take_tp": "prepare ID/take/key; f3_tp FB bits become valid/lane key",
+          "f4_c_n_v": "final sorted zero-padded IDs/count/valid"
+        },
+        "sort_stages": 21
+      },
+      "ports": {
+        "MACs_per_cycle": 0,
+        "filter_read_B_per_edge": 512,
+        "hist_read_B_per_edge": 256,
+        "load_B_per_edge": 256,
+        "load_bits_per_edge": 2048,
+        "minimum_accepted_load_edges_scores_plus_IDs": 64,
+        "new_ports": 0,
+        "result_B_per_edge": 256,
+        "result_bits_per_edge": 2048
+      },
+      "replicas_per_participating_group": 4,
+      "routing": {
+        "actual_translated_channel_capacity": null,
+        "equal_prefix_max_distributed_bits": 2624,
+        "external_load_and_output_tracks": 4096,
+        "histogram_256bin_decode_fanout": "same explicit source construction remains priced; no clock exemption",
+        "scope": "distributed buses and external boundary bits; not an asserted physical bisection or routed fit",
+        "sort_stage_distributed_bits": 2496
+      },
+      "runtime": {
+        "k_for_this_service": 512,
+        "n": 512
+      },
+      "state_bits": 698354,
+      "system_replicas": null
+    },
+    {
+      "added_state_bits_vs_original": 127140,
+      "area": {
+        "FF_um2": 203640.02640000003,
+        "accounted_cell_master_sum_um2": 841209.80868,
+        "basis": "explicit source gate/FF construction, not mapped area. Allowances are declared rather than hidden; no embedded/alias credit. Clock/PG/repair and final whole-instance netlist audit remain open.",
+        "hold_mux_um2": 38927.7252,
+        "integer_hist_suffix_choice_logic_um2": 53393.94288,
+        "other_source_construction_allowances_um2": {
+          "candidate_data_buffer_tree": 8778.79296,
+          "candidate_word_address_decode": 1254.11328,
+          "control_compare_add_and_counter_construction": 322.88868000000014,
+          "control_zero_equal_and_mode_predicates": 31.492800000000003,
+          "load_order_key_and_NaN_detection": 2127.5136,
+          "load_variable_rank_stride_address": 164.81232,
+          "other_declared_register_hold_allowance": 14363.516160000001,
+          "staging_and_output_masks": 15586.83648
+        },
+        "proposed_source_50pct_proxy_core_mm2": 1.6824196173600001,
+        "replaced_prior_cones": [
+          "filter_equal_quota_serial_prefix_and_compare",
+          "filter_take_serial_prefix",
+          "filter_triangular_compactor"
+        ],
+        "retained_shared_cones_um2": {
+          "candidate_write_hold_muxes": 160526.49984,
+          "explicit_fanout4_buffer_construction": 13409.86752,
+          "filter_RF_score_and_ID_read_mux": 159272.38656,
+          "filter_compare_and_global_ID_add": 6634.483200000001,
+          "filter_equal_quota_subtract_and_hold": 20.9952,
+          "hist_RF_score_read_mux": 79636.19328,
+          "hist_accumulate": 4277.42208,
+          "hist_bin_decode": 34398.53568,
+          "hist_key_two_32bit_barrels": 6270.5664,
+          "hist_prefix_match": 531.8784,
+          "staging_variable_word_append_and_shift": 12899.45088
+        }
+      },
+      "clock": {
+        "SS_FF_closed": false,
+        "hold_uncertainty_ps": 25,
+        "open_context": "hist decode/carry, quota feedback, key compare+mux, RF read, staging mask/append, CTS/hold all require source-sized context",
+        "period_ps": 833,
+        "setup_uncertainty_ps": 60
+      },
+      "compiled": {
+        "CB": 14,
+        "DIG": 8,
+        "LDW": 4,
+        "N": 4,
+        "NBIN": 256,
+        "NMAX": 2048,
+        "P": 64,
+        "PF": 64
+      },
+      "cycle_envelope": 819,
+      "extra_cycles_vs_original_DIG8": 142,
+      "filter": {
+        "FB": 7,
+        "PF": 64,
+        "additional_bits": {
+          "equal_prefix_ID_gt_eq_carriers": 13056,
+          "equal_prefix_count_vectors": 1728,
+          "equal_prefix_valid": 6,
+          "parallel_take_popcount_internal": 176,
+          "sort_internal_records": 49920,
+          "sort_total_count_carrier": 105,
+          "sort_valid": 20,
+          "total": 65011
+        },
+        "bounds": {
+          "clock_or_SS_FF_qualification": false,
+          "comparator_select_fanout_sinks": 78,
+          "largest_prefix_adder_width": 7,
+          "quota_feedback_width": 14,
+          "record_source_fanout": "constant-neighbor compare/mux consumers per stage, replacing triangular PF fanout",
+          "record_stage_payload_bits": 2496,
+          "sort_compare_width": 7
+        },
+        "equal_prefix_stages": 6,
+        "extra_filter_cycles": 26,
+        "initiation_interval_rows": 1,
+        "logic_area_um2": {
+          "equal_prefix_network": 1049.49756,
+          "final_invalid_payload_zero": 181.9584,
+          "key_comparator_and_two_record_muxes": 20457.72288,
+          "parallel_take_popcount": 118.36044000000001,
+          "quota_lane_compare": 1080.55296,
+          "sort_fanout4_buffer_construction": 1851.77664
+        },
+        "network_counts": {
+          "prefix_add_nodes": 321,
+          "sort_buffers": 18144,
+          "sort_compare_exchange_nodes": 672
+        },
+        "new_combinational_stage_scope": {
+          "final": "one comparison/mux plus explicit invalid-output zero",
+          "prefix": "one narrow integer CLA per registered level",
+          "quota": "CB comparison and saturating subtraction in parallel; one feedback edge, actual SS/FF unknown",
+          "sort": "one FB key comparison then two record muxes per edge; no FP compare or ID arithmetic"
+        },
+        "old_retained_state_credit": 0,
+        "prepare_stages_reuses_f3": 1,
+        "quota_consume_stages": 1,
+        "reused_registers": {
+          "f2_id_take": "quota output",
+          "f3_id_take_tp": "prepare ID/take/key; f3_tp FB bits become valid/lane key",
+          "f4_c_n_v": "final sorted zero-padded IDs/count/valid"
+        },
+        "sort_stages": 21
+      },
+      "ports": {
+        "MACs_per_cycle": 0,
+        "filter_read_B_per_edge": 512,
+        "hist_read_B_per_edge": 256,
+        "load_B_per_edge": 256,
+        "load_bits_per_edge": 2048,
+        "minimum_accepted_load_edges_scores_plus_IDs": 256,
+        "new_ports": 0,
+        "result_B_per_edge": 256,
+        "result_bits_per_edge": 2048
+      },
+      "replicas_per_participating_group": 4,
+      "routing": {
+        "actual_translated_channel_capacity": null,
+        "equal_prefix_max_distributed_bits": 2624,
+        "external_load_and_output_tracks": 4096,
+        "histogram_256bin_decode_fanout": "same explicit source construction remains priced; no clock exemption",
+        "scope": "distributed buses and external boundary bits; not an asserted physical bisection or routed fit",
+        "sort_stage_distributed_bits": 2496
+      },
+      "runtime": {
+        "k_for_this_service": 2048,
+        "n": 2048
+      },
+      "state_bits": 698354,
+      "system_replicas": null
+    },
+    {
+      "added_state_bits_vs_original": 1250740,
+      "area": {
+        "FF_um2": 4145996.2104,
+        "accounted_cell_master_sum_um2": 16387089.289920002,
+        "basis": "explicit source gate/FF construction, not mapped area. Allowances are declared rather than hidden; no embedded/alias credit. Clock/PG/repair and final whole-instance netlist audit remain open.",
+        "hold_mux_um2": 382951.5732,
+        "integer_hist_suffix_choice_logic_um2": 550568.502,
+        "other_source_construction_allowances_um2": {
+          "candidate_data_buffer_tree": 213983.0784,
+          "candidate_word_address_decode": 46223.032320000006,
+          "control_compare_add_and_counter_construction": 370.3903200000001,
+          "control_zero_equal_and_mode_predicates": 38.57868000000001,
+          "load_order_key_and_NaN_detection": 531.8784,
+          "load_variable_rank_stride_address": 241.44480000000001,
+          "other_declared_register_hold_allowance": 117702.94032000001,
+          "staging_and_output_masks": 77396.70528
+        },
+        "proposed_source_50pct_proxy_core_mm2": 32.774178579840004,
+        "replaced_prior_cones": [
+          "filter_equal_quota_serial_prefix_and_compare",
+          "filter_take_serial_prefix",
+          "filter_triangular_compactor"
+        ],
+        "retained_shared_cones_um2": {
+          "candidate_write_hold_muxes": 3852635.99616,
+          "explicit_fanout4_buffer_construction": 283984.80768,
+          "filter_RF_score_and_ID_read_mux": 3847619.54304,
+          "filter_compare_and_global_ID_add": 26537.932800000002,
+          "filter_equal_quota_subtract_and_hold": 28.69344,
+          "hist_RF_score_read_mux": 1916285.0918400001,
+          "hist_accumulate": 5934.6431999999995,
+          "hist_bin_decode": 550376.57088,
+          "hist_key_two_32bit_barrels": 100329.0624,
+          "hist_prefix_match": 8510.0544,
+          "staging_variable_word_append_and_shift": 71663.61600000001
+        }
+      },
+      "clock": {
+        "SS_FF_closed": false,
+        "hold_uncertainty_ps": 25,
+        "open_context": "hist decode/carry, quota feedback, key compare+mux, RF read, staging mask/append, CTS/hold all require source-sized context",
+        "period_ps": 833,
+        "setup_uncertainty_ps": 60
+      },
+      "compiled": {
+        "CB": 18,
+        "DIG": 8,
+        "LDW": 1,
+        "N": 96,
+        "NBIN": 256,
+        "NMAX": 2048,
+        "P": 1024,
+        "PF": 256
+      },
+      "cycle_envelope": 596,
+      "extra_cycles_vs_original_DIG8": 175,
+      "filter": {
+        "FB": 9,
+        "PF": 256,
+        "additional_bits": {
+          "equal_prefix_ID_gt_eq_carriers": 69632,
+          "equal_prefix_count_vectors": 11264,
+          "equal_prefix_valid": 8,
+          "parallel_take_popcount_internal": 748,
+          "sort_internal_records": 367360,
+          "sort_total_count_carrier": 252,
+          "sort_valid": 35,
+          "total": 449299
+        },
+        "bounds": {
+          "clock_or_SS_FF_qualification": false,
+          "comparator_select_fanout_sinks": 82,
+          "largest_prefix_adder_width": 9,
+          "quota_feedback_width": 18,
+          "record_source_fanout": "constant-neighbor compare/mux consumers per stage, replacing triangular PF fanout",
+          "record_stage_payload_bits": 10496,
+          "sort_compare_width": 9
+        },
+        "equal_prefix_stages": 8,
+        "extra_filter_cycles": 43,
+        "initiation_interval_rows": 1,
+        "logic_area_um2": {
+          "equal_prefix_network": 7913.52828,
+          "final_invalid_payload_zero": 727.8336,
+          "key_comparator_and_two_record_muxes": 158421.38112,
+          "parallel_take_popcount": 498.28608,
+          "quota_lane_compare": 5979.432959999999,
+          "sort_fanout4_buffer_construction": 13638.48192
+        },
+        "network_counts": {
+          "prefix_add_nodes": 1793,
+          "sort_buffers": 133632,
+          "sort_compare_exchange_nodes": 4608
+        },
+        "new_combinational_stage_scope": {
+          "final": "one comparison/mux plus explicit invalid-output zero",
+          "prefix": "one narrow integer CLA per registered level",
+          "quota": "CB comparison and saturating subtraction in parallel; one feedback edge, actual SS/FF unknown",
+          "sort": "one FB key comparison then two record muxes per edge; no FP compare or ID arithmetic"
+        },
+        "old_retained_state_credit": 0,
+        "prepare_stages_reuses_f3": 1,
+        "quota_consume_stages": 1,
+        "reused_registers": {
+          "f2_id_take": "quota output",
+          "f3_id_take_tp": "prepare ID/take/key; f3_tp FB bits become valid/lane key",
+          "f4_c_n_v": "final sorted zero-padded IDs/count/valid"
+        },
+        "sort_stages": 36
+      },
+      "ports": {
+        "MACs_per_cycle": 0,
+        "filter_read_B_per_edge": 2048,
+        "hist_read_B_per_edge": 4096,
+        "load_B_per_edge": 64,
+        "load_bits_per_edge": 512,
+        "minimum_accepted_load_edges_scores_plus_IDs": 6144,
+        "new_ports": 0,
+        "result_B_per_edge": 1024,
+        "result_bits_per_edge": 8192
+      },
+      "replicas_per_participating_group": 96,
+      "routing": {
+        "actual_translated_channel_capacity": null,
+        "equal_prefix_max_distributed_bits": 11008,
+        "external_load_and_output_tracks": 8704,
+        "histogram_256bin_decode_fanout": "same explicit source construction remains priced; no clock exemption",
+        "scope": "distributed buses and external boundary bits; not an asserted physical bisection or routed fit",
+        "sort_stage_distributed_bits": 10496
+      },
+      "runtime": {
+        "k_for_this_service": 512,
+        "n": 512
+      },
+      "state_bits": 14218094,
+      "system_replicas": null
+    },
+    {
+      "added_state_bits_vs_original": 1250740,
+      "area": {
+        "FF_um2": 4145996.2104,
+        "accounted_cell_master_sum_um2": 16387089.289920002,
+        "basis": "explicit source gate/FF construction, not mapped area. Allowances are declared rather than hidden; no embedded/alias credit. Clock/PG/repair and final whole-instance netlist audit remain open.",
+        "hold_mux_um2": 382951.5732,
+        "integer_hist_suffix_choice_logic_um2": 550568.502,
+        "other_source_construction_allowances_um2": {
+          "candidate_data_buffer_tree": 213983.0784,
+          "candidate_word_address_decode": 46223.032320000006,
+          "control_compare_add_and_counter_construction": 370.3903200000001,
+          "control_zero_equal_and_mode_predicates": 38.57868000000001,
+          "load_order_key_and_NaN_detection": 531.8784,
+          "load_variable_rank_stride_address": 241.44480000000001,
+          "other_declared_register_hold_allowance": 117702.94032000001,
+          "staging_and_output_masks": 77396.70528
+        },
+        "proposed_source_50pct_proxy_core_mm2": 32.774178579840004,
+        "replaced_prior_cones": [
+          "filter_equal_quota_serial_prefix_and_compare",
+          "filter_take_serial_prefix",
+          "filter_triangular_compactor"
+        ],
+        "retained_shared_cones_um2": {
+          "candidate_write_hold_muxes": 3852635.99616,
+          "explicit_fanout4_buffer_construction": 283984.80768,
+          "filter_RF_score_and_ID_read_mux": 3847619.54304,
+          "filter_compare_and_global_ID_add": 26537.932800000002,
+          "filter_equal_quota_subtract_and_hold": 28.69344,
+          "hist_RF_score_read_mux": 1916285.0918400001,
+          "hist_accumulate": 5934.6431999999995,
+          "hist_bin_decode": 550376.57088,
+          "hist_key_two_32bit_barrels": 100329.0624,
+          "hist_prefix_match": 8510.0544,
+          "staging_variable_word_append_and_shift": 71663.61600000001
+        }
+      },
+      "clock": {
+        "SS_FF_closed": false,
+        "hold_uncertainty_ps": 25,
+        "open_context": "hist decode/carry, quota feedback, key compare+mux, RF read, staging mask/append, CTS/hold all require source-sized context",
+        "period_ps": 833,
+        "setup_uncertainty_ps": 60
+      },
+      "compiled": {
+        "CB": 18,
+        "DIG": 8,
+        "LDW": 1,
+        "N": 96,
+        "NBIN": 256,
+        "NMAX": 2048,
+        "P": 1024,
+        "PF": 256
+      },
+      "cycle_envelope": 1748,
+      "extra_cycles_vs_original_DIG8": 175,
+      "filter": {
+        "FB": 9,
+        "PF": 256,
+        "additional_bits": {
+          "equal_prefix_ID_gt_eq_carriers": 69632,
+          "equal_prefix_count_vectors": 11264,
+          "equal_prefix_valid": 8,
+          "parallel_take_popcount_internal": 748,
+          "sort_internal_records": 367360,
+          "sort_total_count_carrier": 252,
+          "sort_valid": 35,
+          "total": 449299
+        },
+        "bounds": {
+          "clock_or_SS_FF_qualification": false,
+          "comparator_select_fanout_sinks": 82,
+          "largest_prefix_adder_width": 9,
+          "quota_feedback_width": 18,
+          "record_source_fanout": "constant-neighbor compare/mux consumers per stage, replacing triangular PF fanout",
+          "record_stage_payload_bits": 10496,
+          "sort_compare_width": 9
+        },
+        "equal_prefix_stages": 8,
+        "extra_filter_cycles": 43,
+        "initiation_interval_rows": 1,
+        "logic_area_um2": {
+          "equal_prefix_network": 7913.52828,
+          "final_invalid_payload_zero": 727.8336,
+          "key_comparator_and_two_record_muxes": 158421.38112,
+          "parallel_take_popcount": 498.28608,
+          "quota_lane_compare": 5979.432959999999,
+          "sort_fanout4_buffer_construction": 13638.48192
+        },
+        "network_counts": {
+          "prefix_add_nodes": 1793,
+          "sort_buffers": 133632,
+          "sort_compare_exchange_nodes": 4608
+        },
+        "new_combinational_stage_scope": {
+          "final": "one comparison/mux plus explicit invalid-output zero",
+          "prefix": "one narrow integer CLA per registered level",
+          "quota": "CB comparison and saturating subtraction in parallel; one feedback edge, actual SS/FF unknown",
+          "sort": "one FB key comparison then two record muxes per edge; no FP compare or ID arithmetic"
+        },
+        "old_retained_state_credit": 0,
+        "prepare_stages_reuses_f3": 1,
+        "quota_consume_stages": 1,
+        "reused_registers": {
+          "f2_id_take": "quota output",
+          "f3_id_take_tp": "prepare ID/take/key; f3_tp FB bits become valid/lane key",
+          "f4_c_n_v": "final sorted zero-padded IDs/count/valid"
+        },
+        "sort_stages": 36
+      },
+      "ports": {
+        "MACs_per_cycle": 0,
+        "filter_read_B_per_edge": 2048,
+        "hist_read_B_per_edge": 4096,
+        "load_B_per_edge": 64,
+        "load_bits_per_edge": 512,
+        "minimum_accepted_load_edges_scores_plus_IDs": 24576,
+        "new_ports": 0,
+        "result_B_per_edge": 1024,
+        "result_bits_per_edge": 8192
+      },
+      "replicas_per_participating_group": 96,
+      "routing": {
+        "actual_translated_channel_capacity": null,
+        "equal_prefix_max_distributed_bits": 11008,
+        "external_load_and_output_tracks": 8704,
+        "histogram_256bin_decode_fanout": "same explicit source construction remains priced; no clock exemption",
+        "scope": "distributed buses and external boundary bits; not an asserted physical bisection or routed fit",
+        "sort_stage_distributed_bits": 10496
+      },
+      "runtime": {
+        "k_for_this_service": 2048,
+        "n": 2048
+      },
+      "state_bits": 14218094,
+      "system_replicas": null
+    }
+  ],
+  "slot_proposal": {
+    "additional_height_um": 646.8429786585366,
+    "additional_proxy_area_mm2": 1.37482594056,
+    "already_included_candidate_memory_bits": 524288,
+    "containment_rule": "replace whole existing selector rectangle once, not add candidate storage twice; move/reconcile affected adjacent controller and attention/hub route reservations",
+    "existing": {
+      "area_mm2": 0.3075936768,
+      "bbox_DBU": [
+        1000000,
+        20620888,
+        3125440,
+        20765608
+      ],
+      "name": "X_SEL_TOPK_STORE",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    "known_service_overlay": {
+      "TP4_group_area_delta_mm2_if_four_services": 5.49930376224,
+      "known_service_only_no_overlap": true,
+      "ownership_scope": "source retained service rectangles only; unknown outside-service allocations are NOT assumed free. Owner must bind containment/exclusions, channels and clock/PG.",
+      "positive_area_overlaps": [],
+      "revised_rectangles": [
+        {
+          "area_mm2": 1.6824196173600001,
+          "bbox_DBU": [
+            1000000,
+            20620888,
+            3125440,
+            21412451
+          ],
+          "name": "PROPOSED_COMPLETE_TOPK_SELECTOR",
+          "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+        },
+        {
+          "area_mm2": 0.08263710720000002,
+          "bbox_DBU": [
+            1000000,
+            21412451,
+            3125440,
+            21451331
+          ],
+          "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+          "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+        }
+      ],
+      "selector_budget_delta_mm2_per_die": 1.37482594056,
+      "whole_system_area_delta_mm2": null
+    },
+    "owner_accepted": false,
+    "proposed_bbox_DBU": [
+      1000000,
+      20620888,
+      3125440,
+      21412451
+    ],
+    "proposed_proxy_height_um": 791.5629786585366,
+    "proposed_same_width_um": 2125.44,
+    "translated_routing_clock_PG_fit": false
+  },
+  "sourcepins": "sourcepins.json"
+}

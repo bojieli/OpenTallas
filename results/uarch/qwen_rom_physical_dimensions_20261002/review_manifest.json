@@ -1,0 +1,28 @@
+{
+  "L34_not_recaptured": true,
+  "at": "2026-10-02T08:27:04.121848+00:00",
+  "authoritative_record": "blocked_dimensions_r2.json",
+  "docs_edited": false,
+  "expected_exit": 1,
+  "heavy_jobs_launched": 0,
+  "latest_passive_poll": {
+    "active": "L35",
+    "head_complete": false,
+    "last_completed": "L34",
+    "terminal_receipt_present": false
+  },
+  "mandatory_decision": "Bind legal persistent 36-layer KV homes, selected local-window lifetime/refill policy and finite transport dimensions. Then compose measured/priced service and physical costs in unified model before implementation.",
+  "model_scope": "Separate source-pinned dimension/lower-bound analysis for Maxwell R0/P1; unified model unchanged. Conditional reload is not automatically added to latency because existing KV/HBM terms must be reconciled first.",
+  "preliminary_status": "superseded; initial record conflated addressed-transport candidate bits with actual tile port bits and used floor context/16 at small contexts. Neither record permits build/adoption; r2 separates transport selection and fixes geometry validation.",
+  "preserved_preliminary_record": "blocked_dimensions.json",
+  "processes_signalled": [],
+  "ready_command": "python3 tools/qwen_rom_physical_dimension_gate.py --result /tmp/NEW-qwen-dimensions.json",
+  "record_sha256": "16f93da04f3826c51f945ff49a75cbb5e90967cc714e07cffec4790b56f3b132",
+  "schema": "opentallas.qwen-rom-physical-dimensions-review.v1",
+  "source_base_ref": "fcd0f74f66d3f3698ba20d223152c591a5f1fd25",
+  "tests": {
+    "passed": 9,
+    "path": "tests/test_qwen_rom_physical_dimension_gate.py"
+  },
+  "verifier_sha256": "ab1f2a9c9282c337361670400c43bd4ab416855125532474680ceb3c9294e3f3"
+}

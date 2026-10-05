@@ -1,0 +1,330 @@
+{
+ "schema": "opentallas-stream-pc-r8b-bench-v1",
+ "simulator": "Verilator 5.050 (tests/rtl/run_hbm_stream_bw.sh), ot-epyc1tb",
+ "sources_sha256": {
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "72c9ee6fa4ae1f147064f0d2c0e0a455e2369f27135d5e7facadfe50a08740a4",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "109133bfc08191d432e80fc92021884f157fd61ab73e980d878d5e395c418672",
+  "rtl/test/model_ready_hbm_r14/tb_hbm_stream_bw.sv": "f3f8432e294ff9be2fe9590ec8dc58dd377ddce581973f78482563b8ae9dd9fe"
+ },
+ "r6_reference": "52ce3e9c1 results/uarch/qwen_hbm_sustained_bw_20261003/logs-r6/*.log",
+ "comparison": "every non-runtime log line (per-layer, SUMMARY, VIOLATION) byte-identical to r6",
+ "cases": [
+  {
+   "case": "pb_h320_p0",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1092608 mean_stream_ps=1084188 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=959700093721 mean_Bps=967152901669",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p15",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=15\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1092608 mean_stream_ps=1084245 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=959700093721 mean_Bps=967102156462",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36865 PRE=36865 PREab=0 REF=48790 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p30",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=30\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1093632 mean_stream_ps=1084046 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=958801498127 mean_Bps=967279787988",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48790 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p45",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=45\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1091584 mean_stream_ps=1084046 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=960600375235 mean_Bps=967279787988",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p60",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=60\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1093632 mean_stream_ps=1084387 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=958801498127 mean_Bps=966975316738",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p75",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=75\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1093632 mean_stream_ps=1083562 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=958801498127 mean_Bps=967711450622",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48788 RD=1179648 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p90",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=90\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1094656 mean_stream_ps=1083704 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=957904583723 mean_Bps=967584451035",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48788 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p105",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=105\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1093632 mean_stream_ps=1084359 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=958801498127 mean_Bps=967000682021",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48788 RD=1179648 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h200_p0",
+   "args": "-GREF_MODE=1 -GHINT=200 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1148928 mean_stream_ps=1091953 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=912655971480 mean_Bps=960275078799",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h200_p41",
+   "args": "-GREF_MODE=1 -GHINT=200 -GPHASE=41\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1147904 mean_stream_ps=1091953 first_data_ps_min=24576 first_data_ps_max=35840 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=913470115968 mean_Bps=960275078799",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h200_p83",
+   "args": "-GREF_MODE=1 -GHINT=200 -GPHASE=83\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1152000 mean_stream_ps=1091811 first_data_ps_min=24576 first_data_ps_max=78848 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=910222222222 mean_Bps=960400166736",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48788 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h100_p0",
+   "args": "-GREF_MODE=1 -GHINT=100 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1250304 mean_stream_ps=1112035 first_data_ps_min=24576 first_data_ps_max=180224 layers_over_need=5",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=838656838657 mean_Bps=942933879013",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h100_p41",
+   "args": "-GREF_MODE=1 -GHINT=100 -GPHASE=41\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1254400 mean_stream_ps=1111552 first_data_ps_min=24576 first_data_ps_max=35840 layers_over_need=5",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=835918367347 mean_Bps=943344081069",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48790 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h100_p83",
+   "args": "-GREF_MODE=1 -GHINT=100 -GPHASE=83\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1251328 mean_stream_ps=1111921 first_data_ps_min=24576 first_data_ps_max=78848 layers_over_need=5",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=837970540098 mean_Bps=943030365046",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48788 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h0_p0",
+   "args": "-GREF_MODE=1 -GHINT=0 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1351680 mean_stream_ps=1169834 first_data_ps_min=43008 first_data_ps_max=227328 layers_over_need=10",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=775757575758 mean_Bps=896345466482",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36868 PRE=36868 PREab=0 REF=48801 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h0_p41",
+   "args": "-GREF_MODE=1 -GHINT=0 -GPHASE=41\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1354752 mean_stream_ps=1169408 first_data_ps_min=43008 first_data_ps_max=270336 layers_over_need=10",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=773998488284 mean_Bps=896672504378",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36867 PRE=36867 PREab=0 REF=48800 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h0_p83",
+   "args": "-GREF_MODE=1 -GHINT=0 -GPHASE=83\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1350656 mean_stream_ps=1169635 first_data_ps_min=43008 first_data_ps_max=264192 layers_over_need=10",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=776345716452 mean_Bps=896498054475",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48801 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "ab_h320_p0",
+   "args": "-GREF_MODE=0 -GHINT=320 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=11720704 mean_stream_ps=11424426 first_data_ps_min=24576 first_data_ps_max=44032 layers_over_need=35",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=89463568059 mean_Bps=91783686884",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=60606 PRE=36864 PREab=3257 REF=3372 RD=1179648 max_ref_gap_ps=3899392 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "ab_h320_p977",
+   "args": "-GREF_MODE=0 -GHINT=320 -GPHASE=977\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=11726848 mean_stream_ps=11426161 first_data_ps_min=24576 first_data_ps_max=44032 layers_over_need=35",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=89416695774 mean_Bps=91769749142",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=60707 PRE=36864 PREab=3257 REF=3372 RD=1179648 max_ref_gap_ps=3899392 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "ab_h320_p1953",
+   "args": "-GREF_MODE=0 -GHINT=320 -GPHASE=1953\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=11748352 mean_stream_ps=11423857 first_data_ps_min=24576 first_data_ps_max=44032 layers_over_need=35",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=89253028850 mean_Bps=91788257557",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=60546 PRE=36864 PREab=3258 REF=3372 RD=1179648 max_ref_gap_ps=3899392 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "ab_h320_p2930",
+   "args": "-GREF_MODE=0 -GHINT=320 -GPHASE=2930\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=11773952 mean_stream_ps=11425536 first_data_ps_min=24576 first_data_ps_max=44032 layers_over_need=35",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=89058966777 mean_Bps=91774775380",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=60649 PRE=36864 PREab=3258 REF=3372 RD=1179648 max_ref_gap_ps=3899392 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_b2b_p0",
+   "args": "-GREF_MODE=1 -GB2B=1 -GPHASE=0\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1593344 mean_stream_ps=1244216 first_data_ps_min=43008 first_data_ps_max=60416 layers_over_need=10",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=658097686375 mean_Bps=842759818938",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=37195 PRE=37195 PREab=0 REF=11851 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_b2b_p41",
+   "args": "-GREF_MODE=1 -GB2B=1 -GPHASE=41\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1576960 mean_stream_ps=1245866 first_data_ps_min=43008 first_data_ps_max=57344 layers_over_need=11",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=664935064935 mean_Bps=841643835616",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=37184 PRE=37184 PREab=0 REF=11866 RD=1179648 max_ref_gap_ps=120832 max_landing=32",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p0_cred24",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=0 -GCRED=24\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1243136 mean_stream_ps=1243136 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=36",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=843492586491 mean_Bps=843492586491",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48831 RD=1179648 max_ref_gap_ps=120832 max_landing=7",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "pb_h320_p0_cred64",
+   "args": "-GREF_MODE=1 -GHINT=320 -GPHASE=0 -GCRED=64\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1087488 mean_stream_ps=1082965 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=964218455744 mean_Bps=968245213143",
+    "SUMMARY sectors_good=1179648 sectors_bad=0 violations=0 cmds ACT=36866 PRE=36866 PREab=0 REF=48789 RD=1179648 max_ref_gap_ps=120832 max_landing=18",
+    "SUMMARY verdict=PASS"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "mut1",
+   "args": "-GLAYERS=2 -GMUT=1\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1092608 mean_stream_ps=1088512 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=959700093721 mean_Bps=963311382879",
+    "SUMMARY sectors_good=65536 sectors_bad=0 violations=17 cmds ACT=2048 PRE=2048 PREab=0 REF=1659 RD=65536 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=FAIL"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "mut2",
+   "args": "-GLAYERS=2 -GMUT=2\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1092608 mean_stream_ps=1088512 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=959700093721 mean_Bps=963311382879",
+    "SUMMARY sectors_good=65535 sectors_bad=1 violations=0 cmds ACT=2048 PRE=2048 PREab=0 REF=1659 RD=65536 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=FAIL"
+   ],
+   "identical_to_r6_log": true
+  },
+  {
+   "case": "mut3",
+   "args": "-GLAYERS=2 -GMUT=3\n",
+   "summary": [
+    "SUMMARY worst_stream_ps=1092608 mean_stream_ps=1088512 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0",
+    "SUMMARY bytes_per_layer=1048576 worst_Bps=959700093721 mean_Bps=963311382879",
+    "SUMMARY sectors_good=65536 sectors_bad=0 violations=1659 cmds ACT=2048 PRE=2048 PREab=0 REF=1659 RD=65536 max_ref_gap_ps=120832 max_landing=17",
+    "SUMMARY verdict=FAIL"
+   ],
+   "identical_to_r6_log": true
+  }
+ ],
+ "identical": 28,
+ "total": 28,
+ "negative_controls_fail": true,
+ "lockstep": {
+  "bench": "results/rtl/hbm_clock_loops_20261004/stream/tb_stream_pc_lockstep.sv",
+  "reference": "results/rtl/hbm_clock_loops_20261004/stream/ot_hbm_r14_stream_pc_r6_ref.sv (52ce3e9c1 r6 PC, renamed)",
+  "runs": "REF_MODE 0/1 x PC 0/1 x seeds 1-4, 400,000 cycles each, every output compared every cycle",
+  "mismatches": 0
+ }
+}

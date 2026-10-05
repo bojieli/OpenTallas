@@ -1,0 +1,24 @@
+{
+  "RTL_launches": 0,
+  "added_only": true,
+  "base": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+  "files_sha256": {
+    "results/uarch/h3_exact_scalar_contract_20261002/handoff.txt": "30764d143f052bdd08401f913b6df5a775ddd30f467abe2d880e1aec384a5197",
+    "results/uarch/h3_exact_scalar_contract_20261002/model.json": "b2fb680c8daee22d0f0fb3f480507862d59284c26e0f6f3fd8d632b3f89a52d4",
+    "results/uarch/h3_exact_scalar_contract_20261002/preparation_failures.json": "0465f9e90bf1431579ab0e4b5635ac4e9c90694f50e35c37cbf741893fb6e628",
+    "results/uarch/h3_exact_scalar_contract_20261002/replay.log": "c3c94b9622e2d570eb1ac2c82263750dc8cc49b3f59f7f11f0cd0627a8c1e226",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_final.log": "db6459326265ad38b92765853e4f08293f822aeca43fdbb0ebb2d7d7d3f8bde3",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r1.log": "ea0245c1ad299cf6b50ca35cec3f34a515b708e6e1d51f9ce5fe564f83a0a420",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r2.log": "a352e462e2739a5f4d1528f676e8e4f62dedbd5eb08661fbf0da74014c491a32",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r3.log": "336d702ef54c3fe13a2ba85485abdd68eec7440ec67504308c0a9171ac686c95",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r4.log": "e3483def39ff5645dce078321552ae28e95983c54f71eeed648ca252710658e2",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r5.log": "495ee2241ec2a0781b6f8a01e14a4a1cea3126688468721ed76aba95de5b5c9d",
+    "results/uarch/h3_exact_scalar_contract_20261002/static_tests_r6.log": "d0e4d2d3d7338acfb3f4e3d8f449ce02017d8e79d6d286bcc819ec4f72fe75d0",
+    "tests/test_h3_exact_scalar_contract.py": "39ae39c57c2cdfc49a38f5a15510c16fae2615740eaee2601ca753aa1f9c5202",
+    "tools/h3_exact_scalar_contract.py": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132"
+  },
+  "model_replay": "exact",
+  "required_handoff": "cd9a7781052d2a6b870fcbe781553f50a0baf350",
+  "schema": "H3_EXACT_SCALAR_SOURCE_MODEL_V1",
+  "tests": 12
+}

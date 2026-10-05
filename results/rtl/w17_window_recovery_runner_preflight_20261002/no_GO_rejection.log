@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 322, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 319, in main
+    return worker(args) if args.worker else launch(args)
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 294, in launch
+    go=read_go(args.go_commit,args.go_path);validate_go(go,plan,args.plan)
+  File "/tmp/window-fault-recovery/worktree/tools/w17_window_recovery_gate_run.py", line 164, in read_go
+    if not re.fullmatch('[0-9a-f]{40}',commit or ''):raise ValueError('full40SHA GO commit required')
+ValueError: full40SHA GO commit required

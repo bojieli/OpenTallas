@@ -1,0 +1,18 @@
+2026-10-04T03:19:17Z chain start src=d4b597eabaf30b483673f47191dbec20dfa54055
+2026-10-04T03:19:17Z PHYS START route_a1p
+2026-10-04T03:29:42Z GATE rc=0
+2026-10-04T03:44:49Z A build rc=0
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-seqfix/plans/sb
+  epyc1tb: 37 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/qwen-async-seqfix/plans/sb-poison
+  epyc1tb: 37 jobs x 1 threads
+2026-10-04T03:44:51Z A launched sb
+2026-10-04T03:44:53Z A launched sb-poison
+2026-10-04T04:06:54Z B build rc=0
+2026-10-04T04:06:54Z B START rm_sb_p0
+2026-10-04T04:06:54Z B START rm_sb_p255
+2026-10-04T04:41:04Z A verified sb rc=1
+2026-10-04T04:41:05Z A verified sb-poison rc=1
+2026-10-04T04:41:05Z A sb final verdict with poison rc=0
+2026-10-04T05:07:47Z B END rm_sb_p0 rc=0
+2026-10-04T05:09:04Z B END rm_sb_p255 rc=0

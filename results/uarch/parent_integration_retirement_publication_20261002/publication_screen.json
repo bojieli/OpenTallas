@@ -1,0 +1,20 @@
+{
+  "time_utc": "2026-10-02T23:49:12.017188+00:00",
+  "screened_original_commits": [
+    "196168854d3407f6f5c0fcff33fc3bd0cf39078d",
+    "cd2a7fdf77acc5fc0d066f12ec399bc83702037d"
+  ],
+  "screened_files": 73,
+  "screened_bytes": 2478202,
+  "credential_pattern_flags": 0,
+  "recorded_environment_value_fields": 0,
+  "committed_docker_fields": [
+    "Id",
+    "Mounts",
+    "Name",
+    "State"
+  ],
+  "committed_docker_Config_Env_present": false,
+  "actual_secret_values_printed": false,
+  "scope_limit": "Pattern screening cannot prove absence of every secret format. Publication export uses whitelisted receipt and hash fields; no raw argv, process environment, containers, patches or archive contents."
+}

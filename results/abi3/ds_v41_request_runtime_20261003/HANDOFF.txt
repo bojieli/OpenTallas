@@ -1,0 +1,88 @@
+DS V4.1 request runtime implementation, additive r2
+
+Prerequisite: 86c5f4e61bedb84dff6a5da703c1d8d86ee0a119. Its three pinned
+tool/test files and request-sizing record are unchanged. Existing generic
+frontend, planner, emitter, independent checker and CLI are unchanged.
+
+Usable production interfaces:
+  compiler.frontends.v3.deepseek_v41_request_r2.specialize_request
+  compiler.backends.hbm_sram.request_plan_r2.build_request_plan
+  compiler.backends.hbm_sram.request_deployment.build_request_deployment
+  runtime.requests.ds_v41_prompt.ingest_prompt(device, session, token_ids)
+  tools/build_ds_v41_request_deployment.py
+
+This is the actual archived 40-layer, 3250-kernel released AR KernelIR graph,
+not the distinct 2213-PC native program or an MTP draft iteration. The prompt
+program keeps all 3247 non-SAMPLE source kernels and removes only the released
+SCALE/ARGMAX/TOKEN_APPEND tail. Source kernels, numeric contracts, reduction
+orders, state initialization and predicates otherwise remain unchanged. The
+existing backend numeric-contract substitutions remain visible in deployment
+notes; numerical execution against released checkpoint bytes is NOT qualified.
+
+The opt-in planner separates query maxima (decode1 / initial prefill32) from
+retained context262144. Both neutral entrypoints remain. The actual emitted
+program traps a query exceeding its compiled bound before issuing state/math.
+Independent ABI verifier and original checker both PASS for both programs.
+
+Exact compiled artifacts, including plans, are under decode/ and prompt32/.
+JSON gzip files preserve the complete original bytes; archive_manifest.json
+binds compressed and uncompressed SHA256, with program/descriptors uncompressed.
+Earlier capacity, geometry and checker failures remain in this directory.
+The preliminary decode_planning_r2 plan is historical and undercharged; use the
+final decode/physical_plan.json.gz proof, not its earlier figures.
+
+Final decode plan: 1345 kernel templates, 4082 instructions, 9839 descriptors,
+9748 maximum retired work; 18,201,616,384 B HBM per node / 103,079,215,104 B
+available. Final prompt32: 4078 instructions, 10018 descriptors, 18982 maximum
+retired work; 18,497,167,360 B HBM/node. Both pay 536,870,912 B communication
+scratch/node and 33,554,432 B SRAM. The actual cluster-n-comparator64 profile
+also requires 204,081,859,600 B declared host weight residency against its
+222,085,385,232 B bound. No host checkpoint allocation or inference was run.
+These compiler capacity proofs confer no physical service/routing/rate credit.
+
+Persistent candidate mask and index-selection capacity is query rows, while
+retained KV/Engram/compressor context capacity is preserved. The selected actual
+emitted CANDIDATE_MASK operator executes in the existing simulator at absolute
+positions9/100000; its writer and actual later INDEX_TOPK mask consumer resolve
+the same state slice. The second publication replaces the prior query's flags.
+This selected address/reuse gate supplies external block-ID stimuli and does
+not execute a complete state-commit transaction or checkpoint numerical prefix.
+
+Prompt driver: one bounded position-zero PREFILL, then single-token DECODE
+continuations required by the released Compressor's start_pos>0 branch. It
+reuses the same real device/session/persistent state; stages each current token
+slice at HOST input element0; publishes no intermediate generated token; stops
+on actual transaction failure. No host activation arithmetic, oracle callbacks,
+state clearing or cursor fabrication. The false automatic_prefill_chunk_driver
+field belongs to frontend specialization alone: execution is explicitly through
+ingest_prompt. Multirow continuation is intentionally refused by source semantics,
+not disguised as legal arbitrary chunking. This path does not claim bit equality
+to a single large prefill's floating-point association.
+
+Validation: 13 distinct focused cases covered in split runs (10 original, then
+3 added actual artifact/engine gates); corrected input-window driver cases3
+rerun. Full source/model inference was not repeated. Syntax and CLI help pass.
+No RTL, P&R, live build changes or expensive checkpoint run.
+
+Reproduce the actual compiler from the archived graph, in a NEW output directory:
+  python3 tools/build_ds_v41_request_deployment.py \
+    --ir results/abi3/ds_v41_request_runtime_20261003/released_graph.json.gz \
+    --capability results/abi3/ds_v41_request_runtime_20261003/capability_comparator.json \
+    --phase decode --out /tmp/ds-request-decode-new
+  python3 tools/build_ds_v41_request_deployment.py \
+    --ir results/abi3/ds_v41_request_runtime_20261003/released_graph.json.gz \
+    --capability results/abi3/ds_v41_request_runtime_20261003/capability_comparator.json \
+    --phase prefill --prefill-chunk-tokens 32 --prompt-ingestion \
+    --out /tmp/ds-request-prompt32-new
+  PYTHONPATH=.:src pytest -q tests/compiler/test_ds_v41_request_runtime.py
+
+Owner split / remaining integration:
+  Epicurus: existing frontend and tools/build_deepseek_v4_kernel_ir_v3.py CLI.
+  Popper: these additive frontend/planning/lowering/driver APIs and unresolved
+    prompt-only -> generation-program state/layout handoff. No CLI overlap.
+  Claude whole-system/runtime integrator: consume these APIs with actual Device
+    and checkpoint bindings; numerical prompt/state/causal-mask execution and
+    production caller adoption remain unqualified, coordinated with Popper.
+  Production generation must NOT blindly replace the prompt deployment: layout
+    equivalence/state migration and last-logit sampling are not established here.
+No MTP, full-token, actual hardware latency, SS/FF or physical admission claim.

@@ -1,0 +1,13 @@
+{
+  "schema": "opentallas.ha5-analytical-negative.v1",
+  "source_commit": "bf672a096fdb399c9ac62358a875e99356bd48dc",
+  "evidence": "terminal_r3.json",
+  "verdict": "REJECT_SERIAL_BEFORE_FETCH_SCHEDULE",
+  "measurement_class": "analytical, NOT actual system RTL",
+  "baseline_ar_us": 442.14,
+  "serial_candidate_ar_us": 446.74,
+  "delta_us": 4.60,
+  "cause": "Issuing the shared prefix before expert_fetch breaks the existing SM batch and adds a drain/barrier. Fetch initiation must retain its original location, with shared compute first after that request.",
+  "adopt": false,
+  "historical_record_retained": true
+}

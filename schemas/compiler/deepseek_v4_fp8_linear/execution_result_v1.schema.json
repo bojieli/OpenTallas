@@ -1,0 +1,144 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/execution_result_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": { "$ref": "#/$defs/sha256" },
+    "counter_reconciliation": { "const": "exact" },
+    "counters": { "$ref": "#/$defs/counters" },
+    "deployment_status": {
+      "enum": [
+        "development_fixture_selected_fp8_linear_rows_not_release_evidence",
+        "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
+      ]
+    },
+    "evidence_scope": {
+      "enum": ["development_fixture", "official_checkpoint"]
+    },
+    "execution_scope": {
+      "const": "selected_output_rows_arithmetic_slice_only"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_status": { "$ref": "#/$defs/numericStatus" },
+    "outputs": {
+      "items": { "$ref": "#/$defs/output" },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
+    },
+    "request_sha256": { "$ref": "#/$defs/sha256" },
+    "schema": { "const": "opentallas.deepseek_v4_fp8_linear_result.v1" },
+    "source_application_status": {
+      "enum": [
+        "complete_official_transform_application",
+        "development_fixture_application_not_release_evidence",
+        "partial_official_transform_application_not_release_evidence"
+      ]
+    },
+    "status": { "const": "pass" }
+  },
+  "required": [
+    "build_id",
+    "counter_reconciliation",
+    "counters",
+    "deployment_status",
+    "evidence_scope",
+    "execution_scope",
+    "model_id",
+    "numeric_status",
+    "outputs",
+    "request_sha256",
+    "schema",
+    "source_application_status",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 execution result v1",
+  "type": "object",
+  "$defs": {
+    "bf16": { "maximum": 65535, "minimum": 0, "type": "integer" },
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_blocks_quantized": { "$ref": "#/$defs/nonnegative" },
+        "activation_values_quantized": { "$ref": "#/$defs/nonnegative" },
+        "bf16_outputs_written": { "$ref": "#/$defs/nonnegative" },
+        "binary32_block_reduction_adds": { "$ref": "#/$defs/nonnegative" },
+        "binary32_product_accumulates": { "$ref": "#/$defs/nonnegative" },
+        "completion_events": { "const": 1 },
+        "logical_input_bytes_read": { "$ref": "#/$defs/nonnegative" },
+        "logical_output_bytes_written": { "$ref": "#/$defs/nonnegative" },
+        "logical_rom_bytes_read": { "$ref": "#/$defs/nonnegative" },
+        "matrix_block_dots": { "$ref": "#/$defs/nonnegative" },
+        "micro_ops_executed": { "const": 2 },
+        "semantic_operations_executed": { "const": 1 }
+      },
+      "required": [
+        "activation_blocks_quantized",
+        "activation_values_quantized",
+        "bf16_outputs_written",
+        "binary32_block_reduction_adds",
+        "binary32_product_accumulates",
+        "completion_events",
+        "logical_input_bytes_read",
+        "logical_output_bytes_written",
+        "logical_rom_bytes_read",
+        "matrix_block_dots",
+        "micro_ops_executed",
+        "semantic_operations_executed"
+      ],
+      "type": "object"
+    },
+    "nonnegative": { "minimum": 0, "type": "integer" },
+    "numericStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_saturated_block_count": { "$ref": "#/$defs/nonnegative" },
+        "output_saturated_element_count": { "$ref": "#/$defs/nonnegative" },
+        "poison": { "const": false }
+      },
+      "required": [
+        "activation_saturated_block_count",
+        "output_saturated_element_count",
+        "poison"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "BF16_BITS" },
+        "id": { "const": "output_bf16_codes" },
+        "logical_output_rows": {
+          "items": { "minimum": 0, "type": "integer" },
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "shape": {
+          "items": { "minimum": 1, "type": "integer" },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "items": { "$ref": "#/$defs/bf16" },
+            "maxItems": 64,
+            "minItems": 1,
+            "type": "array"
+          },
+          "maxItems": 4,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": ["dtype", "id", "logical_output_rows", "shape", "values"],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

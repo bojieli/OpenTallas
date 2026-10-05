@@ -1,0 +1,22 @@
+{
+  "status": "PASS_SOURCE_AND_ARCHIVED_L0_L1_REVIEW",
+  "owner_commit": "7d736e8e6f5078ae1be4ce28ebb7080d245577bd",
+  "gate_source_pins": 6,
+  "gate_cases": 18,
+  "generator_cases": 8,
+  "measured_layer_saving_cycles": 738,
+  "same_binary_AB": true,
+  "depth256_matches1024": true,
+  "fresh_runtime_launched": false,
+  "full_token": false,
+  "SS_FF_context": false,
+  "real_memory_service": false,
+  "rate_adopted": false,
+  "future_runner_note": "Historical gate has a 3600s per-case timeout; expensive future runs must use an uncapped successor per owner policy.",
+  "runtime_source_pin_counts_current": {
+    "runtime/runA_split128_d1024.json": 39,
+    "runtime/runB_one256_d1024.json": 39,
+    "runtime/runC_one256_d256.json": 39
+  },
+  "all_24_layer_rank_state_checks_exact": true
+}

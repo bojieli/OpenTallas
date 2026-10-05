@@ -1,0 +1,17 @@
+.............F....                                                       [100%]
+=================================== FAILURES ===================================
+_ KVFiniteDAGTests.test_metadata_bitmap_cannot_precede_record_and_sector_reverse _
+
+self = <test_h3_complete_native_calendar_grants_r1.KVFiniteDAGTests testMethod=test_metadata_bitmap_cannot_precede_record_and_sector_reverse>
+
+    def test_metadata_bitmap_cannot_precede_record_and_sector_reverse(self):
+        nodes={n['id']:n for n in self.dag['nodes']}
+        bitmap=next(n for n in nodes.values() if n['phase']=='KV_state_bitmap_visible')
+>       self.assertEqual(nodes[bitmap['dependencies'][0]]['phase'],'KV_state_record_visible')
+E       AssertionError: 'KV_metadata_reverse' != 'KV_state_record_visible'
+E       - KV_metadata_reverse
+E       + KV_state_record_visible
+
+tests/test_h3_complete_native_calendar_grants_r1.py:224: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_h3_complete_native_calendar_grants_r1.py::KVFiniteDAGTests::test_metadata_bitmap_cannot_precede_record_and_sector_reverse

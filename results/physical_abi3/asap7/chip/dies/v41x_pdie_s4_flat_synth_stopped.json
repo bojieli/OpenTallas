@@ -1,0 +1,17 @@
+{
+ "container": "85dbe72b1713",
+ "design": "ot_chip_v41x_pdie (reduced-scale s4, tools/v41x_die_pnr.py die_s4, worktree commit 15a915bb)",
+ "historical": true,
+ "host": "ot-pve2",
+ "log_tail_sha256": "d9379a761f106773fc909dc6ee76bc90e907a54238bdcc2e032af977d903c92b",
+ "netlist_to_abc": {
+  "blif_bytes": 188478940,
+  "gates_latches": 1449394
+ },
+ "reason": "flat synthesis of the die top with the monolithic ot_chip_v41x_hbm_karb and ot_chip_v41x_kv_prefetch flattened in; 21 h of yosys before ABC and 3 h inside one ABC call; the die must be assembled hierarchically from cluster abstracts (tools/chip_assembly/v41_die.py)",
+ "schema": "opentallas.v41.die_synth_attempt.v1",
+ "stage": "ORFS 1_2_yosys (SYNTH_HIERARCHICAL=0), ABC pass 15 on module ot_chip_v41x_pdie",
+ "started_utc": "2026-09-28T09:10:21Z",
+ "status": "stopped_nonconverging",
+ "stopped_utc": "2026-09-29T09:30:57Z"
+}

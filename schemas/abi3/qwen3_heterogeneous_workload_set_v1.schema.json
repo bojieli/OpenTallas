@@ -1,0 +1,331 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/qwen3_heterogeneous_workload_set_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "abi_version": {"const": "3.0"},
+    "batch_profiles": {
+      "items": {"$ref": "#/$defs/batchProfile"},
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    },
+    "campaign_name": {"const": "qwen3-heterogeneous-exact-8k-v1"},
+    "claim_boundary": {"$ref": "#/$defs/claimBoundary"},
+    "execution_contract": {"$ref": "#/$defs/executionContract"},
+    "generation": {"$ref": "#/$defs/generation"},
+    "lanes": {
+      "items": {"$ref": "#/$defs/lane"},
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array"
+    },
+    "model": {"$ref": "#/$defs/model"},
+    "schema": {
+      "const": "opentallas.abi3.qwen3_heterogeneous_workload_set.v1"
+    },
+    "sources": {"$ref": "#/$defs/sources"},
+    "status": {"const": "preparation_pending_oracles"},
+    "version": {"const": "1.0.0"},
+    "workload_index": {"$ref": "#/$defs/campaignFile"},
+    "workload_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "abi_version",
+    "batch_profiles",
+    "campaign_name",
+    "claim_boundary",
+    "execution_contract",
+    "generation",
+    "lanes",
+    "model",
+    "schema",
+    "sources",
+    "status",
+    "version",
+    "workload_index",
+    "workload_set_id"
+  ],
+  "title": "Qwen3-8B exact-8K heterogeneous ABI 3.0 workload set v1",
+  "type": "object",
+  "$defs": {
+    "agentProtocol": {
+      "additionalProperties": false,
+      "properties": {
+        "bash_tool_sha256": {"$ref": "#/$defs/sha256"},
+        "suite_id": {"$ref": "#/$defs/sha256"},
+        "system_prompt_sha256": {"$ref": "#/$defs/sha256"},
+        "terminalbench_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "bash_tool_sha256",
+        "suite_id",
+        "system_prompt_sha256",
+        "terminalbench_commit"
+      ],
+      "type": "object"
+    },
+    "batchProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "batch_size": {"enum": [1, 2, 4, 8]},
+        "profile_id": {"$ref": "#/$defs/identifier"},
+        "sequence_ids": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["batch_size", "profile_id", "sequence_ids"],
+      "type": "object"
+    },
+    "campaignFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "claimBoundary": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerator_executed": {"const": false},
+        "gate1_correctness_passed": {"const": false},
+        "model_executed": {"const": false},
+        "oracle_results_frozen": {"const": false},
+        "runnable_batch_request": {"const": false},
+        "tokenizer_only_construction": {"const": true},
+        "tpot_claim": {"const": false}
+      },
+      "required": [
+        "accelerator_executed",
+        "gate1_correctness_passed",
+        "model_executed",
+        "oracle_results_frozen",
+        "runnable_batch_request",
+        "tokenizer_only_construction",
+        "tpot_claim"
+      ],
+      "type": "object"
+    },
+    "executionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "homogeneous_comparison_contract_permitted": {"const": false},
+        "one_physical_batch_required": {"const": true},
+        "required_request_schema": {
+          "const": "opentallas.abi3.heterogeneous_batch_request.v1"
+        }
+      },
+      "required": [
+        "homogeneous_comparison_contract_permitted",
+        "one_physical_batch_required",
+        "required_request_schema"
+      ],
+      "type": "object"
+    },
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "prefixItems": [{"const": 151645}, {"const": 151643}],
+          "items": false,
+          "type": "array"
+        },
+        "include_eos_in_output": {"const": true},
+        "max_new_tokens": {"const": 256},
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "stop_rule": {"const": "first_official_eos_or_exact_cap"}
+      },
+      "required": [
+        "eos_token_ids",
+        "include_eos_in_output",
+        "max_new_tokens",
+        "selection",
+        "stop_rule"
+      ],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "lane": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "enum": ["agentic_tool", "natural_chat", "reasoning", "stress"]
+        },
+        "enable_thinking": {"type": "boolean"},
+        "lane_index": {"maximum": 7, "minimum": 0, "type": "integer"},
+        "oracle_binding": {"$ref": "#/$defs/oracleBinding"},
+        "sequence_id": {"$ref": "#/$defs/identifier"},
+        "source_id": {"$ref": "#/$defs/identifier"},
+        "workload": {"$ref": "#/$defs/workloadBinding"}
+      },
+      "required": [
+        "category",
+        "enable_thinking",
+        "lane_index",
+        "oracle_binding",
+        "sequence_id",
+        "source_id",
+        "workload"
+      ],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_lock": {"$ref": "#/$defs/checkpointLock"},
+        "eos_token_ids": {
+          "prefixItems": [{"const": 151645}, {"const": 151643}],
+          "items": false,
+          "type": "array"
+        },
+        "explicit_vocabulary_size": {"const": 151669},
+        "id": {"const": "qwen3-8b"},
+        "model_vocabulary_size": {"const": 151936},
+        "official_chat_template_sha256": {"$ref": "#/$defs/sha256"},
+        "repository": {"const": "Qwen/Qwen3-8B"},
+        "revision": {"const": "b968826d9c46dd6066d109eabc6255188de91218"},
+        "tokenizer_config_sha256": {"$ref": "#/$defs/sha256"},
+        "tokenizer_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "checkpoint_lock",
+        "eos_token_ids",
+        "explicit_vocabulary_size",
+        "id",
+        "model_vocabulary_size",
+        "official_chat_template_sha256",
+        "repository",
+        "revision",
+        "tokenizer_config_sha256",
+        "tokenizer_sha256"
+      ],
+      "type": "object"
+    },
+    "checkpointLock": {
+      "additionalProperties": false,
+      "properties": {
+        "lock_id": {"$ref": "#/$defs/sha256"},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["lock_id", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "nullableCampaignFile": {
+      "oneOf": [{"$ref": "#/$defs/campaignFile"}, {"type": "null"}]
+    },
+    "nullableSha256": {
+      "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "oracleBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_path": {"$ref": "#/$defs/relativePath"},
+        "file": {"$ref": "#/$defs/nullableCampaignFile"},
+        "oracle_result_sha256": {"$ref": "#/$defs/nullableSha256"},
+        "producer": {"const": "tools/run_qwen3_reference_oracle.py"},
+        "required_schema": {"const": "opentallas.abi3.reference_oracle.v1"},
+        "selected_workload_ids": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "status": {"enum": ["frozen", "pending_production_oracle"]}
+      },
+      "required": [
+        "expected_path",
+        "file",
+        "oracle_result_sha256",
+        "producer",
+        "required_schema",
+        "selected_workload_ids",
+        "status"
+      ],
+      "type": "object",
+      "oneOf": [
+        {
+          "properties": {
+            "file": {"type": "null"},
+            "oracle_result_sha256": {"type": "null"},
+            "status": {"const": "pending_production_oracle"}
+          }
+        },
+        {
+          "properties": {
+            "file": {"$ref": "#/$defs/campaignFile"},
+            "oracle_result_sha256": {"$ref": "#/$defs/sha256"},
+            "status": {"const": "frozen"}
+          }
+        }
+      ]
+    },
+    "relativePath": {
+      "minLength": 1,
+      "not": {"pattern": "(^/)|(^|/)\\.\\.?(/|$)|\\\\"},
+      "type": "string"
+    },
+    "repositoryFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "sources": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_protocol": {"$ref": "#/$defs/agentProtocol"},
+        "corpus": {"$ref": "#/$defs/repositoryFile"},
+        "exact_8k_construction": {"$ref": "#/$defs/repositoryFile"},
+        "shared_semantics": {"$ref": "#/$defs/repositoryFile"},
+        "terminalbench_suite": {"$ref": "#/$defs/repositoryFile"}
+      },
+      "required": [
+        "agent_protocol",
+        "corpus",
+        "exact_8k_construction",
+        "shared_semantics",
+        "terminalbench_suite"
+      ],
+      "type": "object"
+    },
+    "workloadBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {"$ref": "#/$defs/campaignFile"},
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "file",
+        "prompt_token_sha256",
+        "workload_digest",
+        "workload_id"
+      ],
+      "type": "object"
+    }
+  }
+}

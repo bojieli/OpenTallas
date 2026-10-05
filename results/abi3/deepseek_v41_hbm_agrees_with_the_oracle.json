@@ -1,0 +1,42 @@
+{
+ "answer": "the device AGREES.  On the pinned 8-token workload the V4.1 HBM cell emits [14, 1320] and the oracle's gold is [14, 1320, 16, 42250]: agreement true, first divergence none, and the oracle-prefix terminal contract ACCEPTED with no failed checks.",
+ "not_a_claim": [
+  "the cell is not closed on the 32-token workload, and this record does not claim it",
+  "two tokens, not four: the third is blocked by the DMA.GATHER extent above",
+  "512 positions is a declared maximum context, not a shortened model"
+ ],
+ "question": "the shipped V4.1 cells emit 305 where the 32-token oracle emits 13806.  The oracle's INTERMEDIATES are not reproducible past position 7, so the comparison was being made in a region the comparator cannot repeat.  What happens where it CAN?",
+ "schema": "opentallas.result.v41_hbm_agrees_with_the_oracle.v1",
+ "the_run": {
+  "admission": "admitted=True instructions=4759 work=163723/163723",
+  "cell": "deepseek-v4.1-flash, HBM/SRAM cluster-n comparator, 8 nodes, 512 positions",
+  "compared_tokens": 2,
+  "device_tokens": [
+   14,
+   1320
+  ],
+  "first_divergence_index": null,
+  "oracle_agreement": true,
+  "oracle_tokens": [
+   14,
+   1320,
+   16,
+   42250
+  ],
+  "terminal_acceptance": {
+   "accepted": true,
+   "contract": "oracle_prefix",
+   "failed_checks": [],
+   "oracle_token_identity": true
+  },
+  "then_it_stopped": "decode step 2 failed: DMA.GATHER output view 3115 dims (1, 512) differ from the gathered shape (2, 512) -- an extent off by one at the third token, the same family as the join extents already fixed",
+  "token_legitimacy_problems": [],
+  "wall_seconds": 2444.5,
+  "workload": "TA-DS41-CHAT-1-P8 (the first 8 tokens of the same chat, pinned)"
+ },
+ "what_this_changes": {
+  "the_305_reading": "305 against 13806 can no longer be read as 'the V4.1 datapath computes the wrong function'.  The same datapath, the same lowering and the same store agree with the oracle where the oracle is reproducible.  Whatever separates them at 32 tokens appears only past the first candidate block -- which is also exactly where the oracle stops repeating itself.",
+  "the_nine_cell_matrix": "this is the first V4.1 cell to produce ORACLE-MATCHING tokens.  It is two tokens on an 8-token prompt rather than four on 32, so it is not the same evidence as a closed V4-Flash cell -- but it is agreement, not execution."
+ },
+ "why_the_8_token_workload_is_the_right_one": "the oracle is bit-identical to itself at positions 0-7 and not beyond, measured row by row.  An 8-token prompt keeps the whole comparison inside the reproducible region, so a disagreement there would be the device's and an agreement there is real.  At 32 tokens the gold comes from a comparator that gave three different answers for the same intermediate row."
+}

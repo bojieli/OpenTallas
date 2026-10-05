@@ -1,0 +1,981 @@
+{
+ "schema": "opentallas.probe.v41_ngram_hash_agreement.v1",
+ "workload": "build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json",
+ "prompt_token_ids": [
+  0,
+  128803,
+  35,
+  2237,
+  17171,
+  12927,
+  223,
+  22,
+  14,
+  6884
+ ],
+ "columns": 48,
+ "columns_with_disagreement": 0,
+ "agree": true,
+ "per_column": [
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 0,
+   "column": 0,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    5702652,
+    3695168,
+    9066059,
+    7171239
+   ],
+   "vendor_head": [
+    5702652,
+    3695168,
+    9066059,
+    7171239
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 1,
+   "column": 1,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    24393184,
+    27059552,
+    27374980,
+    19458551
+   ],
+   "vendor_head": [
+    24393184,
+    27059552,
+    27374980,
+    19458551
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 2,
+   "column": 2,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    39183301,
+    42236950,
+    46583049,
+    38057641
+   ],
+   "vendor_head": [
+    39183301,
+    42236950,
+    46583049,
+    38057641
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 3,
+   "column": 3,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    61503783,
+    60157199,
+    56780808,
+    59014305
+   ],
+   "vendor_head": [
+    61503783,
+    60157199,
+    56780808,
+    59014305
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 4,
+   "column": 4,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    78984481,
+    75376026,
+    65857142,
+    74997796
+   ],
+   "vendor_head": [
+    78984481,
+    75376026,
+    65857142,
+    74997796
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 5,
+   "column": 5,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    90144770,
+    93339318,
+    80023934,
+    85805288
+   ],
+   "vendor_head": [
+    90144770,
+    93339318,
+    80023934,
+    85805288
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 6,
+   "column": 6,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    103724983,
+    103737896,
+    103196451,
+    107236595
+   ],
+   "vendor_head": [
+    103724983,
+    103737896,
+    103196451,
+    107236595
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 2,
+   "head": 7,
+   "column": 7,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    121476532,
+    121420525,
+    117856136,
+    112668588
+   ],
+   "vendor_head": [
+    121476532,
+    121420525,
+    117856136,
+    112668588
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 0,
+   "column": 8,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    131476717,
+    138321737,
+    129838316,
+    130181984
+   ],
+   "vendor_head": [
+    131476717,
+    138321737,
+    129838316,
+    130181984
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 1,
+   "column": 9,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    152385926,
+    144335154,
+    150585559,
+    153735477
+   ],
+   "vendor_head": [
+    152385926,
+    144335154,
+    150585559,
+    153735477
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 2,
+   "column": 10,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    164143652,
+    171380587,
+    174915014,
+    172682188
+   ],
+   "vendor_head": [
+    164143652,
+    171380587,
+    174915014,
+    172682188
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 3,
+   "column": 11,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    191599181,
+    184384562,
+    185952739,
+    183457867
+   ],
+   "vendor_head": [
+    191599181,
+    184384562,
+    185952739,
+    183457867
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 4,
+   "column": 12,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    198145581,
+    202001830,
+    192910780,
+    207867609
+   ],
+   "vendor_head": [
+    198145581,
+    202001830,
+    192910780,
+    207867609
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 5,
+   "column": 13,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    217419202,
+    223562732,
+    221191096,
+    210296831
+   ],
+   "vendor_head": [
+    217419202,
+    223562732,
+    221191096,
+    210296831
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 6,
+   "column": 14,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    238329687,
+    239843803,
+    232612098,
+    237721723
+   ],
+   "vendor_head": [
+    238329687,
+    239843803,
+    232612098,
+    237721723
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 3,
+   "head": 7,
+   "column": 15,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    247482304,
+    253286687,
+    251214695,
+    242395788
+   ],
+   "vendor_head": [
+    247482304,
+    253286687,
+    251214695,
+    242395788
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 0,
+   "column": 16,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    257520185,
+    267086655,
+    261544332,
+    270419319
+   ],
+   "vendor_head": [
+    257520185,
+    267086655,
+    261544332,
+    270419319
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 1,
+   "column": 17,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    283540304,
+    278689864,
+    275458728,
+    276115490
+   ],
+   "vendor_head": [
+    283540304,
+    278689864,
+    275458728,
+    276115490
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 2,
+   "column": 18,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    288689443,
+    289704715,
+    294350550,
+    298508639
+   ],
+   "vendor_head": [
+    288689443,
+    289704715,
+    294350550,
+    298508639
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 3,
+   "column": 19,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    315264704,
+    306400413,
+    319997140,
+    319261552
+   ],
+   "vendor_head": [
+    315264704,
+    306400413,
+    319997140,
+    319261552
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 4,
+   "column": 20,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    322314652,
+    329378583,
+    326502114,
+    328339709
+   ],
+   "vendor_head": [
+    322314652,
+    329378583,
+    326502114,
+    328339709
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 5,
+   "column": 21,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    348890037,
+    349616593,
+    336370839,
+    350821668
+   ],
+   "vendor_head": [
+    348890037,
+    349616593,
+    336370839,
+    350821668
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 6,
+   "column": 22,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    367865216,
+    356475509,
+    353972109,
+    362627952
+   ],
+   "vendor_head": [
+    367865216,
+    356475509,
+    353972109,
+    362627952
+   ]
+  },
+  {
+   "layer": 1,
+   "order": 4,
+   "head": 7,
+   "column": 23,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    380066193,
+    371393845,
+    383196485,
+    375837367
+   ],
+   "vendor_head": [
+    380066193,
+    371393845,
+    383196485,
+    375837367
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 0,
+   "column": 0,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    14361964,
+    5519679,
+    1338477,
+    11721997
+   ],
+   "vendor_head": [
+    14361964,
+    5519679,
+    1338477,
+    11721997
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 1,
+   "column": 1,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    29977809,
+    29666556,
+    24094986,
+    27738839
+   ],
+   "vendor_head": [
+    29977809,
+    29666556,
+    24094986,
+    27738839
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 2,
+   "column": 2,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    32716444,
+    46328400,
+    34237919,
+    43892680
+   ],
+   "vendor_head": [
+    32716444,
+    46328400,
+    34237919,
+    43892680
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 3,
+   "column": 3,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    61209771,
+    61609728,
+    49506582,
+    60076455
+   ],
+   "vendor_head": [
+    61209771,
+    61609728,
+    49506582,
+    60076455
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 4,
+   "column": 4,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    67456205,
+    70502420,
+    66093131,
+    76192912
+   ],
+   "vendor_head": [
+    67456205,
+    70502420,
+    66093131,
+    76192912
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 5,
+   "column": 5,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    84275051,
+    91066790,
+    92329018,
+    80062673
+   ],
+   "vendor_head": [
+    84275051,
+    91066790,
+    92329018,
+    80062673
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 6,
+   "column": 6,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    108494439,
+    101091852,
+    102689997,
+    100097136
+   ],
+   "vendor_head": [
+    108494439,
+    101091852,
+    102689997,
+    100097136
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 2,
+   "head": 7,
+   "column": 7,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    120604547,
+    115457008,
+    119147156,
+    118607008
+   ],
+   "vendor_head": [
+    120604547,
+    115457008,
+    119147156,
+    118607008
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 0,
+   "column": 8,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    132225184,
+    132034959,
+    135948945,
+    142627902
+   ],
+   "vendor_head": [
+    132225184,
+    132034959,
+    135948945,
+    142627902
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 1,
+   "column": 9,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    150270452,
+    154153581,
+    148855370,
+    155025395
+   ],
+   "vendor_head": [
+    150270452,
+    154153581,
+    148855370,
+    155025395
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 2,
+   "column": 10,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    174805952,
+    163841656,
+    172101689,
+    167449586
+   ],
+   "vendor_head": [
+    174805952,
+    163841656,
+    172101689,
+    167449586
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 3,
+   "column": 11,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    178895254,
+    181711574,
+    186197618,
+    178895555
+   ],
+   "vendor_head": [
+    178895254,
+    181711574,
+    186197618,
+    178895555
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 4,
+   "column": 12,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    193207923,
+    202827182,
+    200529305,
+    198048981
+   ],
+   "vendor_head": [
+    193207923,
+    202827182,
+    200529305,
+    198048981
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 5,
+   "column": 13,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    211610196,
+    210712499,
+    209806649,
+    220602581
+   ],
+   "vendor_head": [
+    211610196,
+    210712499,
+    209806649,
+    220602581
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 6,
+   "column": 14,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    226280582,
+    229412906,
+    237826180,
+    238534380
+   ],
+   "vendor_head": [
+    226280582,
+    229412906,
+    237826180,
+    238534380
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 3,
+   "head": 7,
+   "column": 15,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    252505246,
+    246079605,
+    244431621,
+    244088460
+   ],
+   "vendor_head": [
+    252505246,
+    246079605,
+    244431621,
+    244088460
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 0,
+   "column": 16,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    261362261,
+    270734617,
+    269106604,
+    269994989
+   ],
+   "vendor_head": [
+    261362261,
+    270734617,
+    269106604,
+    269994989
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 1,
+   "column": 17,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    279862797,
+    284654929,
+    275390712,
+    275481852
+   ],
+   "vendor_head": [
+    279862797,
+    284654929,
+    275390712,
+    275481852
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 2,
+   "column": 18,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    301364059,
+    296499501,
+    303385670,
+    297694098
+   ],
+   "vendor_head": [
+    301364059,
+    296499501,
+    303385670,
+    297694098
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 3,
+   "column": 19,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    312864848,
+    309277277,
+    306334101,
+    308686746
+   ],
+   "vendor_head": [
+    312864848,
+    309277277,
+    306334101,
+    308686746
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 4,
+   "column": 20,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    328367036,
+    334860522,
+    334694605,
+    324553434
+   ],
+   "vendor_head": [
+    328367036,
+    334860522,
+    334694605,
+    324553434
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 5,
+   "column": 21,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    349372619,
+    348270033,
+    349778915,
+    348511289
+   ],
+   "vendor_head": [
+    349372619,
+    348270033,
+    349778915,
+    348511289
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 6,
+   "column": 22,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    363873742,
+    364331308,
+    366347094,
+    355219933
+   ],
+   "vendor_head": [
+    363873742,
+    364331308,
+    366347094,
+    355219933
+   ]
+  },
+  {
+   "layer": 14,
+   "order": 4,
+   "head": 7,
+   "column": 23,
+   "positions": 10,
+   "positions_that_differ": 0,
+   "ours_head": [
+    372375971,
+    383764017,
+    371563314,
+    374235374
+   ],
+   "vendor_head": [
+    372375971,
+    383764017,
+    371563314,
+    374235374
+   ]
+  }
+ ]
+}

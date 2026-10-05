@@ -1,0 +1,11 @@
+Running as unit: run-u50428.service
+PASS bf16 cycles=745 outputs=24 error_outputs=24
+- tb_field_common_wrappers.sv:245: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 621ns; walltime 0.006 s; speed 102.402 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 8 MB
+RESOURCE {"memory.max": "4294967296", "memory.swap.max": "0", "memory.peak": "8548352", "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0", "returncode": 0, "cpus": [0, 1], "elapsed_seconds": 0.007}
+Finished with result: success
+Main processes terminated with: code=exited/status=0
+Service runtime: 31ms
+CPU time consumed: 31ms

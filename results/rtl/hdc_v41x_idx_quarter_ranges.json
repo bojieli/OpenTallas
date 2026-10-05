@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.hdc-v41x-idx-quarter-ranges.v1",
+  "status": "pass",
+  "scan_lengths": 138,
+  "contexts_checked": 2208,
+  "largest_scan_keys": 1048576,
+  "coverage": "Sixteen (stack,quarter) contiguous local-key ranges, exact base-block/skip, per-stack adjacency, exhaustive 1..128 key ownership and sampled 1M geometry; includes Qs mod16=8 and 1024-key boundary.",
+  "limitation": "Geometry only. No multi-context HBM arbiter, skip/shift collector, four-stack throughput, token gate or physical closure.",
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_ranges.sv": "d6956ae3b1519df1cbac709e2c65134fc6c4e81ba4188d9acf073371407fc065",
+    "rtl/test/tb_hdc_v41x_idx_quarter_ranges.sv": "e3b40018cad267aa61505539c6358a1b32c687fcfe73617641ac40223b5a3665",
+    "tools/rtl_v41x_idx_quarter_ranges.py": "22b2b90046780897dff1fe61b3152c13a77b220718850b5d023ddf266839b1a0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PREPARED_CAP_VERIFIED_NO_COMPILER_EXECUTION",
+  "tests_passed": 77,
+  "new_runner_tests": 24,
+  "preserved_tests": 53,
+  "compiler_invocations": 0,
+  "go_decision": "PENDING",
+  "plan_sha256": "f37c5d7e968ddcc90a2cb6d1bff4b0e7c7dcdf6a078c54784c2b529aa0daa175",
+  "cap_receipt": "cap_checks_final/receipt.json",
+  "limits": {
+    "baseline_seconds": 60,
+    "mutant_seconds": 30,
+    "memory_bytes": 4294967296,
+    "cpu_affinity_count": 2,
+    "total_compiler_log_bytes": 16777216,
+    "bounded_kill_reap_grace_seconds": 2.1
+  },
+  "engine_edits": false,
+  "hardware_qualification": false,
+  "causal_deadlines": "BOUND_MISSING"
+}

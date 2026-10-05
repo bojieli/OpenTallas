@@ -1,0 +1,19 @@
+{
+  "owner_commit": "cda48d1f7b71d10dad73d86059eea1b8e8703f2e",
+  "independent_byte_exact_replay": true,
+  "receipt_sha256": "c6f54e5ff64feff70150a3e7d2dd64da0042adaabe3437d873666669b7db9a80",
+  "focused_tests_passed": 3,
+  "two_operand_two_slot_payload_bits": 131072,
+  "storage_bits_priced": 475402,
+  "additional_FF_bits": 24576,
+  "conditional_cell_plus_macro_area_mm2": "1.28852662896",
+  "priced_clock_leak_data_pin_subtotal_W": "31.37439486271613896",
+  "unresolved_output_load_ceiling_W": "121.7093232402432",
+  "unresolved_requirements": [
+    "New emit field prices operand payload only; slot addresses/tags/selector/credit state require separate source-bound reservation",
+    "Actual encoded burst mapping and finite credit/route state must join schedule before admission",
+    "No contextual routes/SSFF or actual dynamic power established"
+  ],
+  "whole_CROM_budget_ready": false,
+  "hardware_admission": false
+}

@@ -1,0 +1,55 @@
+{
+  "Russell_model_sha256": "92dc5be81daf5dc488e55afaa904a8994729b7455ca0d6ae647410a889112e2e",
+  "Russell_owner_commit": "101a084a822dc1f149a8852704648fd317c632c9",
+  "base": "6bb3ac9e7b05185e3e87ca0cdbe2dd8df1909359",
+  "bundle_canonical_sha256": "8a3e5e8554c318419c2f69a07ce410033a0845a67398827ca8c0f986290110d4",
+  "closed": [
+    "Fresh read-only recovery of all148 retained programs and descriptors, exact against terminal740 pins",
+    "All148 stage programs/descriptors independently reproduced from current emitter at historicalSU64/AR128",
+    "Opt-in currentSU1024/AR256 source-owned program builder and decoded diff",
+    "Strict full36layer4rank accepted-PC/379bit/KV-producer-state journal consumer"
+  ],
+  "counts": {
+    "KV_producer_instructions_static": 432,
+    "ME_all_ranks_static": 880,
+    "ME_field_changes": {
+      "chase_n": 448
+    },
+    "ME_per_rank_static": 220,
+    "accepted_counts": null
+  },
+  "current_bundle": "current-SU1024-AR256-programs-final.json.gz",
+  "explicit_blockers": [
+    "Actual accepted core.issue/PC/379bit exports absent; fetch is not acceptance",
+    "Actual producer512bytes/layer/rank absent; no synthesized zero state",
+    "Current36layer program bundle has no numerical successor qualification",
+    "Finite provider returns/grants/globalfill/window journal still absent; instruction-level ME demands do not prove accepted provider traffic",
+    "Historical payload manifest pins are not fresh payload rehashes",
+    "Initialized startup/global-ready owner graph and actual x line/tag alignment unqualified",
+    "Complete contextual tile clock/reset/parentIO/SSFF and selector physical source admission remainFAIL/open"
+  ],
+  "handoff_policy": "No baseline model/RTL edits, no transfer of oldSMIN7/BD41 token timing to SMIN6/+55 physical source, preserve all FAILs",
+  "issue_induction": {
+    "base12": "PASS_LITERAL_LOCKSTEP_BASE12_ONLY",
+    "no_duplicate": true,
+    "out": "/tmp/qrom-issue-lockstep-760a-r2",
+    "solver_PID": 1998275,
+    "status": "LIVE_at_readonly_poll",
+    "supervisor_PID": 1995254
+  },
+  "journal_source_pins": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tools/qwen_rom_program_kv_journal.py": "d5c26866f37ad7a7b616d36b2b6dc2ccb5d56632028731139b513889abadfa69"
+  },
+  "next_receipt": "Source exporter must bind accepted core.issue/PC/379bit and every KV lane write to these program bytes; feed actual instruction-demand/state journal to Russell finite calendar. No full-token/second-position rerun is admitted by this packet.",
+  "owner": "Euclid",
+  "resource": {
+    "fleet_job_requested": false,
+    "new_P_and_R": false,
+    "new_engine_build": false,
+    "preparation_used": "Local small-file compiler/validation; read-only PVE1 recovery only"
+  },
+  "test_harness_failure": "fixture_owner_alias_failure.log captures test event aliasing vars(owner); fixed fixture dict copy, not an RTL failure or passed hardware mutant"
+}

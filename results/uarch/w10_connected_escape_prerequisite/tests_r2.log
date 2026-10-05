@@ -1,0 +1,14 @@
+test_EOL_enclosure_and_union_semantics_remain_missing (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_all_ports_connected_without_claiming_legality (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_cut_default_is34_not_zero (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_explicit_cut_table_override_rejects_default_only_evaluator (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_mirrored_union_is_not_rectangle_diagnostic (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_one_lane_negative_catches_adjacent_pad_ends (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_rule_source_mutant_is_rejected (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_short_pad_negative_fails_minarea (test_w10_connected_escape_audit.EscapeTests) ... ok
+test_wide_PDN_uses_PRL_row_not_scalar (test_w10_connected_escape_audit.EscapeTests) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 46.574s
+
+OK

@@ -1,0 +1,44 @@
+Breakpoint 1 at 0x11251
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000011251 <Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2(Vtb_D1_scope_core___024root*)::_Z59Vtb_D1_scope_core___024root___eval_initial__TOP__Vtiming__2P27Vtb_D1_scope_core___024root.Frame*) [clone .actor]+2333>
+        silent
+        set $frame = *(unsigned long long*)($rbp-0x48)
+        set $root = *(unsigned long long*)($frame+0x40)
+        printf "D1_ACTUAL_FATAL_MASK fault_r=0x%02x dbg_fs=0x%06x violations=0x%02x\n", *(unsigned char*)($root+0x28021), *(unsigned int*)($root+0x5f0fc), *(unsigned char*)($root+0x27fe2)
+        continue
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+D1_HEARTBEAT evals=1 time_ps=0 cycles=0
+D1_HEARTBEAT evals=2 time_ps=500 cycles=0
+D1_HEARTBEAT evals=3 time_ps=1000 cycles=0
+D1_HEARTBEAT evals=4 time_ps=1500 cycles=0
+D1_HEARTBEAT evals=5 time_ps=2000 cycles=0
+D1_HEARTBEAT evals=6 time_ps=2500 cycles=0
+D1_HEARTBEAT evals=7 time_ps=3000 cycles=0
+D1_HEARTBEAT evals=8 time_ps=3500 cycles=0
+D1_HEARTBEAT evals=9 time_ps=4000 cycles=0
+D1_HEARTBEAT evals=10 time_ps=4500 cycles=1
+D1_HEARTBEAT evals=11 time_ps=4501 cycles=1
+D1_HEARTBEAT evals=12 time_ps=5000 cycles=1
+D1_HEARTBEAT evals=13 time_ps=5500 cycles=2
+D1_HEARTBEAT evals=14 time_ps=5501 cycles=2
+D1_HEARTBEAT evals=15 time_ps=6000 cycles=2
+D1_HEARTBEAT evals=16 time_ps=6500 cycles=3
+D1_HEARTBEAT evals=64 time_ps=22500 cycles=19
+D1_HEARTBEAT evals=128 time_ps=43501 cycles=40
+D1_HEARTBEAT evals=192 time_ps=65000 cycles=61
+D1_HEARTBEAT evals=256 time_ps=86500 cycles=83
+D1_HEARTBEAT evals=320 time_ps=107501 cycles=104
+D1_HEARTBEAT evals=384 time_ps=129000 cycles=125
+D1_REAL_GATE time=140000 pc=0 me_ready=1 kv_ok=0 kvd_v=1 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_REAL_DESCRIPTOR time=140000 generation=1 rows=128
+D1_REAL_DROP_KV_OK_COUNTEREXAMPLE source_issue=0 mutated_predicate=1
+D1_REAL_GATE time=141000 pc=0 me_ready=1 kv_ok=0 kvd_v=0 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_REAL_DROP_KV_OK_COUNTEREXAMPLE source_issue=0 mutated_predicate=1
+D1_REAL_GATE time=142000 pc=0 me_ready=1 kv_ok=0 kvd_v=0 win_idle=1 waited=1 q_gate=1 m0_gate=1
+D1_ACTUAL_FATAL_MASK fault_r=0x40 dbg_fs=0x000000 violations=0x00
+[142000] %Fatal: ot_v41_rt_die_D1_scope.sv:263: Assertion failed in TOP.tb_D1_scope_core.probe.g_D1_current: D1_SOURCE_OR_LEDGER_FAULT
+%Error: /tmp/opentallas-D1-parent-scope-frontend-20261002-r2/rtl/test/w17_D1_scope_corrected_probe/ot_v41_rt_die_D1_scope.sv:263: Verilog $stop
+Aborting...
+[Inferior 1 (process 1462375) exited with code 01]
+D1_INFERIOR_EXIT code=1

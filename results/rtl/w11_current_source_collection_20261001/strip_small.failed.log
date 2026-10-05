@@ -1,0 +1,109 @@
+[remote_gate] worker 155.103.253.16 (floor 20 GB), job 48a11e3810: /tmp/claude-1000/w11crot/jobs/su_gate.sh strip_small su,lat
+  random N=16 seed=7 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1289
+  random N=16 seed=1 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1419
+  random N=16 seed=4 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1178
+  random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=882
+  random N=16 seed=6 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1381
+  random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1305
+  random N=16 seed=5 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1518
+  random N=16 seed=8 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1389
+  random N=16 seed=9 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1520
+  random N=16 seed=10 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1107
+  random N=16 seed=11 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1278
+  random N=16 seed=14 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1355
+  random N=16 seed=15 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1070
+  random N=16 seed=12 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1174
+  random N=16 seed=13 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1189
+  random N=16 seed=16 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1163
+  random N=16 seed=18 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1192
+  random N=16 seed=17 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1408
+  random N=16 seed=19 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1203
+  random N=16 seed=22 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=885
+  random N=16 seed=20 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1178
+  random N=16 seed=21 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1326
+  random N=16 seed=24 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1096
+  random N=16 seed=23 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1341
+  random N=64 seed=108 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1274
+  random N=64 seed=104 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1094
+  random N=64 seed=106 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1381
+  random N=64 seed=101 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1322
+  random N=64 seed=102 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1460
+  random N=64 seed=107 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=855
+  random N=64 seed=105 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1619
+  random N=64 seed=103 ops=34 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1192
+  random N=64 seed=111 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1358
+  random N=64 seed=112 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1141
+  random N=64 seed=109 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1301
+  random N=64 seed=110 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1127
+  random N=64 seed=113 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1230
+  random N=64 seed=114 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=960
+  random N=64 seed=116 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1532
+  random N=64 seed=115 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1662
+su campaigns vm_dist_0 {'random_N16_M8': (24, 24), 'random_N64_M16': (16, 16), 'vehicle_N64_M16': (56, 56)}
+  random N=16 seed=7 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1497
+  random N=16 seed=2 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1042
+  random N=16 seed=4 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1416
+  random N=16 seed=3 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1419
+  random N=16 seed=5 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1772
+  random N=16 seed=1 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1672
+  random N=16 seed=6 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1566
+  random N=16 seed=8 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1564
+  random N=16 seed=11 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1416
+  random N=16 seed=9 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1729
+  random N=16 seed=10 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1277
+  random N=16 seed=15 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1220
+  random N=16 seed=12 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1392
+  random N=16 seed=13 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1399
+  random N=16 seed=16 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1312
+  random N=16 seed=14 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1538
+  random N=16 seed=17 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1617
+  random N=16 seed=18 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1392
+  random N=16 seed=20 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1349
+  random N=16 seed=19 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1390
+  random N=16 seed=21 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1471
+  random N=16 seed=22 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1069
+  random N=16 seed=24 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1338
+  random N=16 seed=23 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1575
+  random N=64 seed=108 ops=40 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1423
+  random N=64 seed=104 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1211
+  random N=64 seed=106 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1485
+  random N=64 seed=102 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1600
+  random N=64 seed=101 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1562
+  random N=64 seed=107 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=951
+  random N=64 seed=105 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1733
+  random N=64 seed=103 ops=34 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1361
+  random N=64 seed=109 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1461
+  random N=64 seed=110 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1344
+  random N=64 seed=112 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1327
+  random N=64 seed=111 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1585
+  random N=64 seed=114 ops=39 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1231
+  random N=64 seed=113 ops=37 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1484
+  random N=64 seed=116 ops=36 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1627
+  random N=64 seed=115 ops=38 pass=True vm_bad=0 kv_bad=0 faults=0 order=0 cycles=1871
+su campaigns vm_dist_1 {'random_N16_M8': (24, 24), 'random_N64_M16': (16, 16), 'vehicle_N64_M16': (56, 56)}
+softmax 16 8 0 128 serial_vec True 1826
+softmax 16 8 0 128 chained True 1818
+softmax 16 8 0 640 serial_vec True 3386
+softmax 16 8 0 640 chained True 3378
+softmax 16 8 1 128 serial_vec True 1974
+softmax 16 8 1 128 chained True 1959
+softmax 16 8 1 640 serial_vec True 3534
+softmax 16 8 1 640 chained True 3519
+su {'cases': 192, 'passed': 192, 'softmax': 8, 'softmax_passed': 8, 'lead_hazards': 0}
+Traceback (most recent call last):
+  File "/tmp/claude-1000/wt/w11-cr5d/tools/w11_vm_crot_gate.py", line 395, in <module>
+    main()
+  File "/tmp/claude-1000/wt/w11-cr5d/tools/w11_vm_crot_gate.py", line 376, in main
+    exes = dict(flat=fl.result()[0], crot=cr.result()[0])
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/usr/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+  File "/usr/lib/python3.10/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/tmp/claude-1000/wt/w11-cr5d/tools/w11_vm_dist_gate.py", line 226, in su_build
+    raise RuntimeError(r.stdout[-4000:] + r.stderr[-4000:])
+RuntimeError: %Error: Verilator threw signal 9. Suggest trying --debug --gdbbt
+%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --cc --exe --build -O2 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -GVM_DIST=0 -GSU_RES_STAGES=7 -GRET_SCATTER_STAGES=7 -GMLAT=5 -GALAT=4 --top-module tb_hdc_v41x_vec --prefix Vtb -Mdir /home/ubuntu/w11crot_su_strip_small/lat_vd0_N64 -GN=64 -GM=16 -GPMAX=4096 -GVMA=18 -GKVA=19 -GCRA=15 -GWRA=16 -GXBA=14 -I/tmp/claude-1000/wt/w11-cr5d/rtl/test /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_delay.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fpu.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /tmp/claude-1000/wt/w11-cr5d/rtl/proto/ot_fp32_add_rne_pipe.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_sfu.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fastfp.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fastfp_lat.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fp32_mul_lat.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_fp32_add_lat.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/ot_hdc_prefix.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41/ot_hdc_fsqrt.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41/ot_hdc_fdiv.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41/ot_hdc_softplus.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv /tmp/claude-1000/wt/w11-cr5d/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv /tmp/claude-1000/wt/w11-cr5d/rtl/w11crot/ot_hdc_v41x_vec.sv /tmp/claude-1000/wt/w11-cr5d/rtl/chip/ot_v41_vm_dist_bank.sv /tmp/claude-1000/wt/w11-cr5d/rtl/chip/ot_v41_vm_dist_group.sv /tmp/claude-1000/wt/w11-cr5d/rtl/chip/ot_v41_vm_dist.sv /tmp/claude-1000/wt/w11-cr5d/rtl/chip/ot_v41_vm_dist_pipe.sv /tmp/claude-1000/wt/w11-cr5d/rtl/chip/ot_v41_vm_crot.sv /tmp/claude-1000/wt/w11-cr5d/rtl/v41rom/ot_v41_ret.sv /tmp/claude-1000/wt/w11-cr5d/rtl/w11crot/tb_hdc_v41x_vec.sv /tmp/claude-1000/wt/w11-cr5d/rtl/test/hdc_v41_harness.cpp -CFLAGS -O1 -j 8
+
+[remote_gate] worker 155.103.253.16 job 48a11e3810 finished rc=1; 12 worktree files returned

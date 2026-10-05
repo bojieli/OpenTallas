@@ -1,0 +1,56 @@
+{
+  "argv": [
+    "./obj_positive/Vtb_bmul_rne_primitive",
+    "+MUTANT=5"
+  ],
+  "caps": {
+    "cgroup.procs": "3067280",
+    "cpu.max": null,
+    "cpu_affinity": [
+      0
+    ],
+    "memory.current": "15798272",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "536870912",
+    "memory.peak": "391897088",
+    "memory.swap.current": "0",
+    "memory.swap.max": "0"
+  },
+  "case": "old_range",
+  "completion": {
+    "DIFF_lines": [
+      [
+        "5",
+        "product",
+        "0",
+        "000008000",
+        "00000000/1"
+      ]
+    ],
+    "expected_counts": [
+      [
+        5,
+        1416,
+        840,
+        2
+      ]
+    ],
+    "explicit_mutant_DIFF": true,
+    "fatal_or_crash": false,
+    "pass_counts": [
+      [
+        5,
+        1416,
+        840,
+        2
+      ]
+    ],
+    "valid": true
+  },
+  "elapsed_seconds": 0.001975475810468197,
+  "log_sha256": "2b6fcbf402826cdba9870a9f5302e7f4ce56aae67021c2508417f1760edd695c",
+  "mode": 5,
+  "phase": "simulate",
+  "remaining_seconds_at_start": 9.98914402583614,
+  "returncode": 0
+}

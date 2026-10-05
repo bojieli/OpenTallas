@@ -1,0 +1,151 @@
+{
+ "schema": "opentallas.dsrom-integration.elaborate.v1",
+ "tool": "Verilator 5.050 2026-07-01 rev v5.050",
+ "flags": "-Wno-fatal (errors fail)",
+ "all_on_flags": [
+  "-GX_IDX=2",
+  "-GX_SEL=1",
+  "-GIDX_RING=1",
+  "-GSUN=256",
+  "-GSUM=64",
+  "+define+V41_ATT_CUT",
+  "+define+V41_L20",
+  "-GPKG_WAVE=1",
+  "-GPKG_WAVE_WIN=6"
+ ],
+ "designs": {
+  "die_c0_selection": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_v41_rt_die_l20_c8 -GCOLL_ACCEPTED_POP=1 -GIDX_DRAIN_LOOKAHEAD=0 -GS81_COMMAND_TRACE=1 -GS81_TRACE_STAGE=37 -GS81_HOST_WORKSPACE=1 -GS81_CAPTURE=1 -GC8_CONTEXT=1 -GC8_PUBLICATION=1 -GROM_R=128 -GROM_PHW=10 -GWINDOW_REFILL_OWNER_SAFE=1 -GWINDOW_REFILL_CREDITS=8 -GPKG_WAVE_WIN=6 -Irtl/hdc/v41 -GPKG_WAVE=0 -f rtl/dsrom_sys/wavefront_parent/sources.f",
+   "returncode": 137,
+   "status": "killed_oom (signal 9, no RTL error; not a verdict)",
+   "errors": [
+    "%Error: Verilator threw signal 9. Suggest trying --debug --gdbbt",
+    "%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --lint-only -Wno-fatal --top-module ot_v41_rt_die_l20_c8 -GCOLL_ACCEPTED_POP=1 -GIDX_DRAIN_LOOKAHEAD=0 -GS81_COMMAND_TRACE=1 -GS81_TRACE_STAGE=37 -GS81_HOST_WORKSPACE=1 -GS81_CAPTURE=1 -GC8_CONTEXT=1 -GC8_PUBLICATION=1 -GROM_R=128 -GROM_PHW=10 -GWINDOW_REFILL_OWNER_SAFE=1 -GWINDOW_REFILL_CREDITS=8 -GPKG_WAVE_WIN=6 -Irtl/hdc/v41 -GPKG_WAVE=0 -f rtl/dsrom_sys/wavefront_parent/sources.f"
+   ],
+   "error_count": 2,
+   "warning_count": 1249,
+   "warning_kinds": {
+    "PINMISSING": 27,
+    "WIDTHTRUNC": 643,
+    "WIDTHEXPAND": 563,
+    "SELRANGE": 10,
+    "WIDTHCONCAT": 4,
+    "CMPCONST": 1,
+    "UNSIGNED": 1
+   },
+   "seconds": 1170.91,
+   "peak_rss_GB": 81.06
+  },
+  "die_c1_wave": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_v41_rt_die_l20_c8 -GCOLL_ACCEPTED_POP=1 -GIDX_DRAIN_LOOKAHEAD=0 -GS81_COMMAND_TRACE=1 -GS81_TRACE_STAGE=37 -GS81_HOST_WORKSPACE=1 -GS81_CAPTURE=1 -GC8_CONTEXT=1 -GC8_PUBLICATION=1 -GROM_R=128 -GROM_PHW=10 -GWINDOW_REFILL_OWNER_SAFE=1 -GWINDOW_REFILL_CREDITS=8 -GPKG_WAVE_WIN=6 -Irtl/hdc/v41 -GPKG_WAVE=1 -f rtl/dsrom_sys/wavefront_parent/sources.f",
+   "returncode": 137,
+   "status": "killed_oom (signal 9, no RTL error; not a verdict)",
+   "errors": [
+    "%Error: Verilator threw signal 9. Suggest trying --debug --gdbbt",
+    "%Error: Command Failed ulimit -s unlimited 2>/dev/null; exec /home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin --lint-only -Wno-fatal --top-module ot_v41_rt_die_l20_c8 -GCOLL_ACCEPTED_POP=1 -GIDX_DRAIN_LOOKAHEAD=0 -GS81_COMMAND_TRACE=1 -GS81_TRACE_STAGE=37 -GS81_HOST_WORKSPACE=1 -GS81_CAPTURE=1 -GC8_CONTEXT=1 -GC8_PUBLICATION=1 -GROM_R=128 -GROM_PHW=10 -GWINDOW_REFILL_OWNER_SAFE=1 -GWINDOW_REFILL_CREDITS=8 -GPKG_WAVE_WIN=6 -Irtl/hdc/v41 -GPKG_WAVE=1 -f rtl/dsrom_sys/wavefront_parent/sources.f"
+   ],
+   "error_count": 2,
+   "warning_count": 1249,
+   "warning_kinds": {
+    "PINMISSING": 27,
+    "WIDTHTRUNC": 643,
+    "WIDTHEXPAND": 563,
+    "SELRANGE": 10,
+    "WIDTHCONCAT": 4,
+    "CMPCONST": 1,
+    "UNSIGNED": 1
+   },
+   "seconds": 1036.42,
+   "peak_rss_GB": 83.54
+  },
+  "die_c2_allon": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_v41_rt_die_l20_c8 -GCOLL_ACCEPTED_POP=1 -GIDX_DRAIN_LOOKAHEAD=0 -GS81_COMMAND_TRACE=1 -GS81_TRACE_STAGE=37 -GS81_HOST_WORKSPACE=1 -GS81_CAPTURE=1 -GC8_CONTEXT=1 -GC8_PUBLICATION=1 -GROM_R=128 -GROM_PHW=10 -GWINDOW_REFILL_OWNER_SAFE=1 -GWINDOW_REFILL_CREDITS=8 -GPKG_WAVE_WIN=6 -Irtl/hdc/v41 -GPKG_WAVE=1 -GX_IDX=2 -GX_SEL=1 -GIDX_RING=1 -GSUN=256 -GSUM=64 +define+V41_ATT_CUT +define+V41_L20 -f rtl/dsrom_sys/wavefront_parent/sources.f",
+   "returncode": 0,
+   "status": "pass",
+   "errors": [],
+   "error_count": 0,
+   "warning_count": 1375,
+   "warning_kinds": {
+    "PINMISSING": 27,
+    "WIDTHTRUNC": 673,
+    "WIDTHEXPAND": 657,
+    "SELRANGE": 10,
+    "WIDTHCONCAT": 3,
+    "CMPCONST": 1,
+    "UNSIGNED": 1,
+    "UNOPTFLAT": 3
+   },
+   "seconds": 1677.04,
+   "peak_rss_GB": 33.48
+  },
+  "elem_q_qp": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_v41_rom_elem_q_qp_w10 rtl/v41rom/ot_v41_rom_elem_q_w10.sv rtl/v41rom/ot_v41_rom_elem_q_qp_w10.sv rtl/v41rom/ot_v41_rom_elem_w10.sv rtl/v41rom/ot_v41_rom_elem_qp_w10.sv rtl/v41rom/ot_v41_bterm.sv rtl/v41rom/ot_v41_chain.sv rtl/v41rom/ot_v41_segtree.sv rtl/v41rom/ot_v41_bf16_lanes.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_v41_bterm2_w10.sv rtl/v41rom/ot_v41_chain2.sv rtl/v41rom/ot_v41_segtree2.sv rtl/v41rom/ot_v41_bf16_lanes2.sv rtl/v41rom/ot_v41_bterm3_w10.sv rtl/v41rom/ot_v41_segtree3.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_cg.sv rtl/common/ot_prefix.sv rtl/proto/ot_fp32_add_rne_pipe.sv physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+   "returncode": 0,
+   "status": "pass",
+   "errors": [],
+   "error_count": 0,
+   "warning_count": 42,
+   "warning_kinds": {
+    "WIDTHTRUNC": 6,
+    "WIDTHEXPAND": 36
+   },
+   "seconds": 0.84,
+   "peak_rss_GB": 0.05
+  },
+  "head_tp4": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_s81_native_head_tp4 rtl/rom/collectives/ot_rom_coll_pkg.sv rtl/hdc/ot_hdc_fastfp.sv rtl/test/s81_native_head_terminal/native_head_carried.sv rtl/dsrom_sys/s81_native_head_connect/ot_s81_native_head_tp4.sv -y rtl/rom/collectives -y rtl/dsrom_sys/s81_native_head",
+   "returncode": 0,
+   "status": "pass",
+   "errors": [],
+   "error_count": 0,
+   "warning_count": 25,
+   "warning_kinds": {
+    "WIDTHEXPAND": 12,
+    "WIDTHTRUNC": 13
+   },
+   "seconds": 2.37,
+   "peak_rss_GB": 0.14
+  },
+  "head_tp4_native_on": {
+   "command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wno-fatal --top-module ot_s81_native_head_tp4 -GOPT_NATIVE_HEAD=1 rtl/rom/collectives/ot_rom_coll_pkg.sv rtl/hdc/ot_hdc_fastfp.sv rtl/test/s81_native_head_terminal/native_head_carried.sv rtl/dsrom_sys/s81_native_head_connect/ot_s81_native_head_tp4.sv -y rtl/rom/collectives -y rtl/dsrom_sys/s81_native_head",
+   "returncode": 0,
+   "status": "pass",
+   "errors": [],
+   "error_count": 0,
+   "warning_count": 25,
+   "warning_kinds": {
+    "WIDTHEXPAND": 12,
+    "WIDTHTRUNC": 13
+   },
+   "seconds": 2.54,
+   "peak_rss_GB": 0.14
+  }
+ },
+ "yosys_elem_q_qp": {
+  "tool": "yosys 0.68",
+  "cmd": "read_verilog -sv + hierarchy -check -top ot_v41_rom_elem_q_qp_w10 (macro, ICG blackboxed)",
+  "exit": 0
+ },
+ "integration_modules_lint": {
+  "tool": "Verilator 5.050 --lint-only -Wno-fatal",
+  "top": "ot_dsrom_reindex_chain (LSW 0 and 3) incl. ot_hdc_v41x_idx_kgather_ps, ot_hdc_v41x_sel_mdrop_top; ot_dsrom_s81_head_amax_fh (FH 0 and 1)",
+  "errors": 0,
+  "warnings": "WIDTHEXPAND only, as in the as-built sources"
+ },
+ "levers_in_die_top": {
+  "ot_rom_pkg_ctrl_wf_s81 (wavefront)": "instantiated, PKG_WAVE parameter",
+  "ot_hdc_v41x_idx_kgather": "NOT instantiated (binding: claude/dsrom-s81-window-bind-20261004, wmux client 1)",
+  "ot_hdc_v41x_sel_mdrop": "NOT instantiated (XU select is ot_hdc_v41x_sel)",
+  "ot_dsrom_window_stream_la": "NOT instantiated (same binding branch)",
+  "S81 head argmax": "head die path (ot_s81_native_head_tp4) is a separate top; FH successor ot_dsrom_s81_head_amax_fh"
+ },
+ "widths": {
+  "controller NW": 21,
+  "core NW": 21,
+  "position 1,048,575 + WIN-1": "fits 21 bits",
+  "select IW (xu_adapt, chain)": "20 bits: max 1,048,575 = the 1M capacity; positions beyond the 1M context would not fit (none exist at the target)",
+  "kgather LBW / LMW": "14 (8,192 blocks a stack) / 11 (2,048 candidate blocks = the candidate cap)",
+  "head ids": "17 bits (129,280) in NW 21"
+ },
+ "notes": "die lints need 35-190 GB. die_c2_allon (PKG_WAVE=1 WIN 6 + the adopted W11 indexer/select flags: every adopted flag the die carries) lints with 0 errors at 35 GB peak. die_c0_selection (PKG_WAVE=0 control) and die_c1_wave (PKG_WAVE=1 alone) were killed by memory (signal 9 at ~85 GB locally; the c1 rerun on ot-epyc1tb reached ~188 GB and was stopped as redundant under host memory pressure): no RTL error was reported before the kill; c2 is the superset configuration"
+}

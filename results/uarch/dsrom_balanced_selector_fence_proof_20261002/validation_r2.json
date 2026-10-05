@@ -1,0 +1,14 @@
+{
+  "command": [
+    "python3",
+    "tests/test_prove_dsrom_balanced_selector_fence.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "explicit_selection_fence_mutants": 3,
+  "fullshape_source_cases": 37,
+  "log_sha256": "6793d80fb8078edbf5f6ee320ef05d1f85a12d7727ba268c9c8f75b5ba42bc89",
+  "physical_inventory_refusal_mutants": 8,
+  "scope": "Source arithmetic, fence event algebra and element clone inventory only; not HDL or physical qualification",
+  "tests": 12
+}

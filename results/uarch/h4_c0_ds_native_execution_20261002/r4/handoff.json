@@ -1,0 +1,70 @@
+{
+  "actual_publication": {
+    "PID": 1701339,
+    "actual_initializer_operand_lease_missing": true,
+    "exec_session": 83903,
+    "integrated_production_execution": false,
+    "manual_tracking_entry_removed": true,
+    "native_arithmetic_reexecuted": false,
+    "publications": 4,
+    "rank0_PC0_only": true,
+    "scope_correction": "r4/scope_correction.json",
+    "source": "r4/reviewed_publication/record.json",
+    "source_lease_released": false,
+    "status": "TERMINAL_PASS"
+  },
+  "actual_publication_phase_metrics": "r4/actual_phase_metrics.json",
+  "base_commit": "8f56fd34abf69f73fc2c706bc0bbdd7860a4bc7b",
+  "caps": {
+    "future_launcher_injects_AS_CPU_FSIZE_wall_memory_swap_caps": false,
+    "historical_PC0_receipts_retained": true,
+    "journal_reservations_are_separate_priced_data_capacity": true
+  },
+  "dispatch_sha256": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+  "exactness": {
+    "allPC_drain_without_reference_is_uncompared": true,
+    "byte_exact_includes_signed_zero": true,
+    "expected_sources_bytes_verified": true,
+    "full_driver_requires_expected_full_logits_and_token": true,
+    "prefix_preserves_future_last_use_versions": true
+  },
+  "failed_partial_publication_journal_preserved": "/tmp/claude-1000/queue/h4-c0-bridge-20261002/native-execution-history/failed-r3-journal",
+  "full_token_qualified": false,
+  "group_staging_bytes_unchanged": 41472,
+  "hardware_qualified": false,
+  "historical_source_pin": {
+    "path": "tools/h4_c0_ds_checkpoint_first_producer.py",
+    "sha256": "29920f3cea51206b9c2b90cf4fc073003786e490d12ed454172cd50d8ce31173",
+    "unchanged_from_parent_golden_seal": true
+  },
+  "invocation": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 python tools/h4_c0_ds_native_execution.py --native <c65-native.json.gz> --dispatch <bcf7-dispatch.json.gz> --provider-module <Kepler-reviewed-r37.py> --manifest <actual-input-GO.json> --homes <actual-homes.json.gz> --homes-sha256 <sealed-home-sha256> --expected <independent-complete-logits-token.json> --out <fresh-output>",
+  "native_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+  "original_PC0_stage_phase_counts": "r4/source_phase_counts.json",
+  "parent_golden": {
+    "elements_compared": 20504,
+    "mismatches": 0,
+    "receipt": "r2/independent_golden_comparison.json",
+    "status": "PASS_PC0_GOLDEN_EXACT"
+  },
+  "prefix_invocation_note": "Use --prefix-stop 10 with separately source-bound Kepler prefix_GO/prefix_inputs_bound/prefix_stop and reviewed create_prefix_provider(manifest,native,dispatch,homes,stopPC). No final reference or full-token GO required for separately scoped prefix.",
+  "production_group_calls_closed": 0,
+  "provider_owner": {
+    "actual_input_GO": false,
+    "draft_not_modified": true,
+    "owner": "Kepler",
+    "r37_draft_source_path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/tools/h3_ds_connected_provider_r37.py",
+    "r37_draft_source_sha256": "085b86a67e53fa1ae2b9c43c3d346cea514944601d2ea89477928f9d2990ffe3",
+    "ready_manifest_sha256": "51c27a4428d467ad0b7625c06d854bf7efd2921ce18249aaf281af4661a3a341"
+  },
+  "remaining_actual_work": [
+    "Earliest prefix binding: Kepler ready manifest currently has full-token GO=False and no separately scoped prefix GO/constructor. Owner must bind actual initial embedding/383 immutable auxiliaries/history/dynamic versions for PC0-10 and publish create_prefix_provider plus prefix_inputs_bound/prefix_GO/prefix_stop=10. No synthetic callback or false whole-input claim.",
+    "Dewey composes exact RD7/WR8 stage event counts, partial-sector RMW reads and encoded/page/index costs separately by namespace. Original staged PC0 all96ranks is1097849568 nominal events before RF publication; do not reuse217.0035B/event blindly.",
+    "Execute actual96rank source prefix through PC9 wo_a_part and corrected PC10, with original numerical kernels and preserved input leases; rank0 PC0 publication is not that prefix.",
+    "Execute actual compressor/index_q numerical kernels and route their computed new_ckv/new_ik/iqf/query_codes/query_exp through unchanged r36 writer/append hooks.",
+    "Commit independent final logits/token expected-output assets with exact checkpoint/input/source pins before full-run exactness qualification; all2213PC drain alone never qualifies.",
+    "All primitive intermediate movement, installed hardware translation/AtomicV1/shared-port qualifications remain open."
+  ],
+  "status": "READY_REAL_PC0_GOLDEN_AND_ACTUAL_PUBLICATION_PLUS_UNCAPPED_NATIVE_DRIVER",
+  "tests_PASS": 8,
+  "unknown_movement_calls_retained": 193316
+}

@@ -1,0 +1,553 @@
+{
+  "schema": "opentallas.w19.gpu-attention-dot-calendars.v1",
+  "status": "PARTIAL_KERNEL_MODEL_NOT_ADMITTED",
+  "source_pins": {
+    "tools/w19_gpu_attention_dots.py": "705649029db93f577ffa2e95ae73b0afeb85cac1825453abc2feaad4b3b1d362",
+    "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+  },
+  "source_graph_binding": [
+    {
+      "layer": 0,
+      "op": 8,
+      "profile_rows": 128,
+      "owners": "heads"
+    },
+    {
+      "layer": 1,
+      "op": 13,
+      "profile_rows": 128,
+      "owners": "heads"
+    },
+    {
+      "layer": 2,
+      "op": 18,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 3,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 4,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 5,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 6,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 7,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 8,
+      "op": 18,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 9,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 10,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 11,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 12,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 13,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 14,
+      "op": 23,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 15,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 16,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 17,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 18,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 19,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 20,
+      "op": 21,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 21,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 22,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 23,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 24,
+      "op": 17,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 25,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 26,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 27,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 28,
+      "op": 17,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 29,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 30,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 31,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 32,
+      "op": 17,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 33,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 34,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 35,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 36,
+      "op": 17,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 37,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 38,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    },
+    {
+      "layer": 39,
+      "op": 8,
+      "profile_rows": 640,
+      "owners": "heads"
+    }
+  ],
+  "profiles": [
+    {
+      "rows": 128,
+      "head_width": 512,
+      "active_head_owners": 64,
+      "SMs_per_rank": 32,
+      "QK": {
+        "assignment": "SMs0..31 contiguous local_rows; two contiguous chunk32 warp subtrees/key",
+        "chunks_per_key": 64,
+        "waves": [
+          {
+            "rows": 4,
+            "warps": 8,
+            "calendar": {
+              "cycles": 264,
+              "instructions": {
+                "LDS32": 64,
+                "LDS_PACKED_BF16": 32,
+                "BF16_WIDEN": 64,
+                "FMUL": 64,
+                "FADD": 104,
+                "SHFL_PAIR": 40,
+                "STS_PARTIAL": 8
+              },
+              "shared_issue_cycles": 104,
+              "rf_write_slots": [
+                92,
+                92,
+                92,
+                92
+              ],
+              "resident_warps": 8,
+              "scalar_products": 2048,
+              "scalar_chunk_adds": 2048,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          }
+        ],
+        "compute_cycles_candidate": 280,
+        "products_per_rank": 65536,
+        "final_two_partial_collector_cycles_per_wave_candidate": 16
+      },
+      "PV": {
+        "assignment": "SMs0..31 each16 consecutive output dims; contiguous key order/window then selection",
+        "outputs_per_SM": 16,
+        "chunks_per_output": 16,
+        "waves": [
+          {
+            "chunk_start": 0,
+            "chunks_per_output": 16,
+            "warp_subtree": 16,
+            "calendar": {
+              "cycles": 252,
+              "instructions": {
+                "LDS32": 64,
+                "LDS_PACKED_BF16": 32,
+                "BF16_WIDEN": 64,
+                "FMUL": 64,
+                "FADD": 96,
+                "SHFL_PAIR": 32,
+                "STS_PARTIAL": 8
+              },
+              "shared_issue_cycles": 104,
+              "rf_write_slots": [
+                88,
+                88,
+                88,
+                88
+              ],
+              "resident_warps": 8,
+              "scalar_products": 2048,
+              "scalar_chunk_adds": 2048,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          }
+        ],
+        "padded_chunk_count": 16,
+        "compute_cycles_candidate": 252,
+        "products_per_rank": 65536,
+        "padded_tail": "for640rows, last16chunks growto32+0 thento64+0, then combine first64 onleft"
+      },
+      "staging": {
+        "source_QK_key_bytes_SM": 4096,
+        "destination_PV_key_bytes_SM": 4096,
+        "rounded_Q_as_F32_bytes_SM": 2048,
+        "rounded_EXP_as_F32_bytes_SM": 512,
+        "partial_scratch_bytes_SM": 8192,
+        "control_bytes_SM": 4096,
+        "total_live_bytes_SM": 23040,
+        "key_transpose_bytes_rank": 131072,
+        "Q_broadcast_bytes_rank": 65536,
+        "EXP_broadcast_bytes_rank": 16384,
+        "byte_format": "keys BF16 from actual decoded window/selected rows; Q and EXP explicitly goldenBF16 rounded then widened before dot; coefficients stagedF32 views"
+      },
+      "barriers": [
+        "actual KV commit/publication epoch validated before row reads",
+        "Q BF16 rounding+staging beforeQK",
+        "allQK scores retired beforemax/EXP",
+        "max+EXP+denominator completed beforePV/outputDIV",
+        "keytranspose writes consumed/ACK before source reuse",
+        "PV+DIV+BF16+inverseRoPE retire beforeWoa activation publish"
+      ],
+      "unpriced": [
+        "Q and EXP BF16round/widen instruction calendars",
+        "max/EXP/denominator,DIV512,outputBF16,inverseRoPE",
+        "KV decode/fetch,transpose bank arbitration/NoC,DMA,CDC,collector broadcast/fences",
+        "shared byteenable/ports/area/routes +RF/register allocation +fullshape physical admission"
+      ],
+      "full_attention_cycles": null,
+      "connected_exactness": false
+    },
+    {
+      "rows": 640,
+      "head_width": 512,
+      "active_head_owners": 64,
+      "SMs_per_rank": 32,
+      "QK": {
+        "assignment": "SMs0..31 contiguous local_rows; two contiguous chunk32 warp subtrees/key",
+        "chunks_per_key": 64,
+        "waves": [
+          {
+            "rows": 16,
+            "warps": 32,
+            "calendar": {
+              "cycles": 704,
+              "instructions": {
+                "LDS32": 256,
+                "LDS_PACKED_BF16": 128,
+                "BF16_WIDEN": 256,
+                "FMUL": 256,
+                "FADD": 416,
+                "SHFL_PAIR": 160,
+                "STS_PARTIAL": 32
+              },
+              "shared_issue_cycles": 416,
+              "rf_write_slots": [
+                368,
+                368,
+                368,
+                368
+              ],
+              "resident_warps": 32,
+              "scalar_products": 8192,
+              "scalar_chunk_adds": 8192,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          },
+          {
+            "rows": 4,
+            "warps": 8,
+            "calendar": {
+              "cycles": 264,
+              "instructions": {
+                "LDS32": 64,
+                "LDS_PACKED_BF16": 32,
+                "BF16_WIDEN": 64,
+                "FMUL": 64,
+                "FADD": 104,
+                "SHFL_PAIR": 40,
+                "STS_PARTIAL": 8
+              },
+              "shared_issue_cycles": 104,
+              "rf_write_slots": [
+                92,
+                92,
+                92,
+                92
+              ],
+              "resident_warps": 8,
+              "scalar_products": 2048,
+              "scalar_chunk_adds": 2048,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          }
+        ],
+        "compute_cycles_candidate": 1000,
+        "products_per_rank": 327680,
+        "final_two_partial_collector_cycles_per_wave_candidate": 16
+      },
+      "PV": {
+        "assignment": "SMs0..31 each16 consecutive output dims; contiguous key order/window then selection",
+        "outputs_per_SM": 16,
+        "chunks_per_output": 80,
+        "waves": [
+          {
+            "chunk_start": 0,
+            "chunks_per_output": 64,
+            "warp_subtree": 32,
+            "calendar": {
+              "cycles": 704,
+              "instructions": {
+                "LDS32": 256,
+                "LDS_PACKED_BF16": 128,
+                "BF16_WIDEN": 256,
+                "FMUL": 256,
+                "FADD": 416,
+                "SHFL_PAIR": 160,
+                "STS_PARTIAL": 32
+              },
+              "shared_issue_cycles": 416,
+              "rf_write_slots": [
+                368,
+                368,
+                368,
+                368
+              ],
+              "resident_warps": 32,
+              "scalar_products": 8192,
+              "scalar_chunk_adds": 8192,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          },
+          {
+            "chunk_start": 64,
+            "chunks_per_output": 16,
+            "warp_subtree": 16,
+            "calendar": {
+              "cycles": 252,
+              "instructions": {
+                "LDS32": 64,
+                "LDS_PACKED_BF16": 32,
+                "BF16_WIDEN": 64,
+                "FMUL": 64,
+                "FADD": 96,
+                "SHFL_PAIR": 32,
+                "STS_PARTIAL": 8
+              },
+              "shared_issue_cycles": 104,
+              "rf_write_slots": [
+                88,
+                88,
+                88,
+                88
+              ],
+              "resident_warps": 8,
+              "scalar_products": 2048,
+              "scalar_chunk_adds": 2048,
+              "peak_live_value_registers": 16,
+              "reserved_address_loop_registers": 8,
+              "RF_read_ports": 2,
+              "RF_write_ports": 1
+            }
+          }
+        ],
+        "padded_chunk_count": 128,
+        "compute_cycles_candidate": 1011,
+        "products_per_rank": 327680,
+        "padded_tail": "for640rows, last16chunks growto32+0 thento64+0, then combine first64 onleft"
+      },
+      "staging": {
+        "source_QK_key_bytes_SM": 20480,
+        "destination_PV_key_bytes_SM": 20480,
+        "rounded_Q_as_F32_bytes_SM": 2048,
+        "rounded_EXP_as_F32_bytes_SM": 2560,
+        "partial_scratch_bytes_SM": 8192,
+        "control_bytes_SM": 4096,
+        "total_live_bytes_SM": 57856,
+        "key_transpose_bytes_rank": 655360,
+        "Q_broadcast_bytes_rank": 65536,
+        "EXP_broadcast_bytes_rank": 81920,
+        "byte_format": "keys BF16 from actual decoded window/selected rows; Q and EXP explicitly goldenBF16 rounded then widened before dot; coefficients stagedF32 views"
+      },
+      "barriers": [
+        "actual KV commit/publication epoch validated before row reads",
+        "Q BF16 rounding+staging beforeQK",
+        "allQK scores retired beforemax/EXP",
+        "max+EXP+denominator completed beforePV/outputDIV",
+        "keytranspose writes consumed/ACK before source reuse",
+        "PV+DIV+BF16+inverseRoPE retire beforeWoa activation publish"
+      ],
+      "unpriced": [
+        "Q and EXP BF16round/widen instruction calendars",
+        "max/EXP/denominator,DIV512,outputBF16,inverseRoPE",
+        "KV decode/fetch,transpose bank arbitration/NoC,DMA,CDC,collector broadcast/fences",
+        "shared byteenable/ports/area/routes +RF/register allocation +fullshape physical admission"
+      ],
+      "full_attention_cycles": null,
+      "connected_exactness": false
+    }
+  ],
+  "clock_GHz": 0.9,
+  "full_token_cycles": null,
+  "adopted": false,
+  "physical_qualified": false
+}

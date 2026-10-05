@@ -1,0 +1,38 @@
+{
+  "answer": "No.  All 82 pre-date every commit of this session.",
+  "counts_at_head": {
+    "errors": 2,
+    "failed": 82
+  },
+  "dominant_cause": "Source-currency pin drift.  19 failures name `source_current` outright and the `test_retained_*_is_bound_to_these_sources` family accounts for most of the rest: a certificate records the SHA-256 of an input, the input has since moved, and the producer refuses rather than regenerating silently.  That is the pins working as designed on a tree whose artifacts were not re-taken, not a code defect.",
+  "failing_families_at_head": {
+    "test_a3_hc_pre_t1_rtl.py": 2,
+    "test_a3_hc_softmax_sinkhorn20_rtl.py": 2,
+    "test_a3_hc_stable_softmax_rtl.py": 3,
+    "test_a3_mhc_pre_tile_rtl.py": 2,
+    "test_a3_qwen_kv_scatter_rtl.py": 3,
+    "test_abi3_shipped_prefix_descriptor_identity.py": 9,
+    "test_abi3_tensor_lane_mapper.py": 3,
+    "test_deepseek_v41_kernel_ir.py": 3,
+    "test_rtl_a3_link.py": 4,
+    "test_rtl_abi3.py": 17,
+    "test_rtl_abi3_shipped_prefix.py": 4,
+    "test_rtl_abi3_shipped_prefix_multicast.py": 4
+  },
+  "how_the_comparison_was_done_and_the_trap_in_it": {
+    "how_it_was_settled_without_the_worktree": "By digest, in the main checkout.  The failing pin is `results/abi3/rom_schedule_checks.json.source.campaign_tool`, which records e9ab077a... for tools/check_rom_schedules.py while the file hashes 49a6d5d1...  Both the tool AND the certificate are BYTE-IDENTICAL at d995c8b and at HEAD -- `git diff d995c8b HEAD` on the certificate is empty and `git show <rev>:<tool>` hashes the same both ways -- so the mismatch exists at both revisions and cannot be caused by any commit between them.  The tool's last commit is b8ec2db, five days before this session.",
+    "method": "The same suite run in a worktree at d995c8b -- the commit before this session's first -- and the FAILING NAME SETS compared.",
+    "the_trap": "A worktree carries neither build/ nor the ignored fixtures, so every test gated on `skipif(not _deployment_bundles_present())` is SKIPPED there.  A skip prints no FAILED line, so set-differencing 'failed at head' against 'failed at base' reads a skip as a PASS.  Three tests looked like regressions of mine for exactly that reason: test_a_lowered_work_bound_bounds_both_sides, test_deployment_target_certificates_match_every_current_input and test_deployment_vector_set_is_reproducible.",
+    "the_two_families_that_could_plausibly_have_been_mine": {
+      "test_deepseek_v41_kernel_ir.py": "3 failures.  My Engram row-scale-width fix deliberately MOVES the shipped V4.1 IR, so this was the first thing to suspect.  The same 3 fail identically at d995c8b.",
+      "test_rtl_abi3.py": "17 failures.  My two new RTL files could stale a source digest.  14 of the 17 fail at base standalone; the other 3 are the skip artefact above.  None of the failing tests reference either new module."
+    }
+  },
+  "not_a_claim": [
+    "this does not say the suite is healthy: 82 failures is 82 failures, and the pins are refusing for a real reason -- the artifacts they bind have moved",
+    "the base worktree's 94 failures and 62 errors are NOT comparable to head's totals, because build/ is absent there; only the name-set intersection is meaningful, and only after accounting for skips",
+    "tests/ outside tests/compiler was not run here"
+  ],
+  "question": "tests/compiler reports 82 failures and 2 errors at HEAD.  I had just added two RTL files, which in this tree is exactly the shape that stales a pinned artifact -- one file can stale 21.  Are any of them mine?",
+  "schema": "opentallas.result.compiler_suite_state.v1"
+}

@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.dshbm-1m.su-n2048-wire-stages.v1",
+ "rule": "tools/uarch_model.wire_cycles(um, 1e12/920, WIRE_PS_PER_UM_LOADED 0.76) -- the rule that gives N1024's BCAST 4 / RET 5 (SU_FARTHEST_LANE_UM 3,458, SU_RETURN_UM 3,850)",
+ "n1024": {"lane_array_mm2": 11.96, "side_um": 3458, "bcast": 4, "ret": 5},
+ "n2048": {"lane_array_mm2": 19.46, "added_mm2": 7.5, "side_um": 4411.3, "return_um": 4803.3, "bcast": 6, "ret": 6},
+ "note": "square lane array, controller at the centre -> farthest corner = side (Manhattan), return adds the 392 um to the VM edge; the earlier dshbm_local_chains N2048 runs kept 4/5 (UNVALIDATED); these runs use 6/6",
+ "runs": {"p1": "su_N2048_M256_b6r6m4a3_dpi_beh_su_cases_v2_ildr.json (38 chains exact, build 1:00:53, peak RSS 9.6 GB, ot-epyc1tb)",
+          "p6": "su_N2048_M256_b6r6m4a3_dpi_beh_su_cases_p6om_ildr.json (38 chains exact)"}
+}

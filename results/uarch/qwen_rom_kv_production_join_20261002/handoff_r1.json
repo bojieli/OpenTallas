@@ -1,0 +1,123 @@
+{
+  "status": "G0_BLOCKED_WITH_IMPLEMENTED_PRODUCER_STATE_RECEIPT_AND_RESIDENCE_CANDIDATE",
+  "received_commit": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe",
+  "parent_verified_reference": "c1f8fbd75e5db67dfa470fff6b885d9f5ad72a91",
+  "source_pin": "16 production dependency files byte-identical to parent c1f8fbd75; all28 original received pins unchanged",
+  "tests": {
+    "previous_adapter_source": 15,
+    "identity": 5,
+    "new_production_join": 13,
+    "total": 33,
+    "all_PASS": true
+  },
+  "negative_fixture": {
+    "expected_returncode": 1,
+    "record": "negative_orphan_credit_FAILURE_r1.json",
+    "qualification": "Directed protocol fixture only"
+  },
+  "implemented": [
+    "Canonical source FP8-rounded F32 inverse; image-bound accepted PC and exact512B row join",
+    "Actual allocated physical tags quarantined through per-beat backing/return/read drain/credit/consumed grant",
+    "Finite16 burst slots and4 write residents per stack,1024 assembly readers; owner/sector/beat/generation validation",
+    "Explicit source tail recovery through existing provider validate/read_byte, open K bypass and closed exact payload",
+    "Full-sector V/K write demand using source-pinned Homes; each sector binds accepted producer PC",
+    "Demand-only bounded sector window: hits preserved, layer/user/epoch owner identities, no forced layer refill",
+    "Source macro/bank/LOG_TW9 tail sizing; per-rank area/ports and SS capture budget before mux/route/setup"
+  ],
+  "production_policy_selected": false,
+  "full_service_admitted": false,
+  "hardware_launched": false,
+  "docs_edited": false,
+  "new_numerical_positions": 0,
+  "peer_delivery": "Unavailable: no peer/agent message tools or established local transport; contracts committed, not sent.",
+  "contracts": {
+    "Euclid": "euclid_dependency_r2.json",
+    "Kepler": "kepler_dependency_r2.json",
+    "Ampere": "ampere_dependency_r2.json"
+  },
+  "next_required_inputs": {
+    "Euclid": {
+      "provide": "Pinned stage program.hex SHA256, user16/rank2/layer6/epoch32/position13; accepted su_go PC12 (not fetch), cycle and domain; every kv_we lane address24/value32 with immutable issue ticket; descriptor accepted K/V read coordinates and consumer acquire/drain receipts.",
+      "consume": "ProducerJoin exact 512B row and source PC partition; canonical FP8 inverse rejects unrounded payload; resident ownership survives layer hops.",
+      "blocker": "Wrapper kv_ok=1 and kv_write_drained=1 cannot supply state/visibility."
+    },
+    "Kepler": {
+      "provide": "ALLOC on actual av&&ar: endpoint1, stack2, physical_tag12, identity192, LEN count1..32, write1, service_cycle; accepted WR command then backing commit at least8 provider cycles later with exact written bytes; owned returns beat5/sector34/payload256; reverse-credit accept and grant_consumed; physical retirement after all beats/drains/grants. Preserve generation32.",
+      "consume": "Receipts rejects cross-owner/stale/duplicate/missing allocations, read credits without returns, and physical tag reuse before consumed grant.",
+      "blocker": "Current owner frees physical tag at final PC return and provider accepts read credits unconditionally; allocation receipt is not exported."
+    },
+    "Ampere": {
+      "provide": "Selected production stage/descriptor demand trace plus actual backing state callback and initial resident/open-tail state, timed receipts for shared channels; area/slot and mux/CDC/assembly dimensions; policy selection pin.",
+      "consume": "Demand missing sectors only; no compulsory layer refill; open K tail 4KiB/owner, closed flush128 sectors per16 rows; V8 sectors perrow. 64B V beat split into two32B requests before one-sector adapter; retained producer state and receipt credit bound priced separately.",
+      "blocker": "Cold serialized calendar r8 is reference only; no selected sustainable schedule or production payload trace exists in this join."
+    }
+  },
+  "cold_reference": {
+    "parent_byte_identical_verified": true,
+    "delivery_cycles": 387403068,
+    "mandatory_refill": false,
+    "aggregate_HBM_bandwidth_inferred": false
+  },
+  "physical_context": {
+    "state": "analytical_candidate_not_admitted",
+    "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+    "source_SW": 64,
+    "required_LOG_TW": 9,
+    "source_prototype_LOG_TW_default": 2,
+    "banks_per_rank": 128,
+    "owner_rows_per_bank": 144,
+    "row_equation": "layer*4 + head*2 + dim//64; bank=(tile%2)*64 + dim%64",
+    "mutable_state_bytes_per_rank": 294912,
+    "macro_capacity_bytes_per_rank": 1048576,
+    "macro_area_mm2_per_rank": 0.661843328,
+    "macro_area_mm2_TP4": 2.647373312,
+    "ports_per_bank": {
+      "read_bytes_per_stream_cycle": 16,
+      "write_bytes_per_stream_cycle": 16
+    },
+    "aggregate_write_bytes_per_cycle_max": 64,
+    "flush_read_bytes_per_cycle_candidate": 32,
+    "port_arbitration": "Consumer reads and closed-tail flush share each 1R port; source tail_collision must reject simultaneous bank use. No overlap credited without accepted port calendar.",
+    "SS_macro_min_period_ps": 480.3,
+    "SS_macro_clk_to_q_ps": 524.1,
+    "stream_period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "capture_budget_ps_before_cell_setup_route_mux": 249.23333333333335,
+    "row_mask_bits_per_bank": 16,
+    "excluded_from_macro_area": "Owner directory, lane conversion, masks, SRAM protection, read/write muxes, serial/stream CDC, capture, CTS, routes.",
+    "area_slot_fit": null,
+    "channel_tracks": null,
+    "per_user_latency": null,
+    "admission": "Full service/calendar model and measured SS/FF closure required before hardware."
+  },
+  "model_composition": "Replace existing KV/HBM read bytes and cycles once with actual missing-sector service; charge writes/CDC/port arbitration/visibility/drain explicitly. No overlap without accepted timed trace.",
+  "replay": [
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_persistent_kv*.py' -v",
+    "python3 -m unittest discover -s tests -p 'test_qwen_rom_kv*.py' -v",
+    "python3 tools/qwen_rom_kv_production_join.py --result /tmp/qwen_kv_production_join_fresh.json",
+    "python3 tools/qwen_rom_kv_production_join.py --receipts results/uarch/qwen_rom_kv_production_join_20261002/negative_orphan_credit_fixture_r1.jsonl --result /tmp/qwen_kv_orphan_credit_fresh.json"
+  ],
+  "replay_fresh_paths_required": true,
+  "artifact_sha256": {
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tests/test_qwen_rom_kv_production_join.py": "eb95bc98007945e7ee800e90e350c6ab2de1b0312cd239346423978e9e4fbb03",
+    "results/uarch/qwen_rom_kv_production_join_20261002/actual_capture_inventory_r1.json": "c937592ad727f0141992905ef31e45cd6d9fe0c9e564e07fe43ddff2ec65b00d",
+    "results/uarch/qwen_rom_kv_production_join_20261002/ampere_dependency_r1.json": "08e7801b70ce023045f425db8d8bc9b3364ac98e80a69feb303c75c27588c1d4",
+    "results/uarch/qwen_rom_kv_production_join_20261002/ampere_dependency_r2.json": "df8e97eeef36dbf67179112788eb07e428b50c3cbda20ef7202eaf3bbe6fd434",
+    "results/uarch/qwen_rom_kv_production_join_20261002/contract_r1.json": "23b09ba5407ce6f37b9e47bc9747f3314828fb5800653e84d5b67ff4e57efa15",
+    "results/uarch/qwen_rom_kv_production_join_20261002/contract_r2.json": "23b09ba5407ce6f37b9e47bc9747f3314828fb5800653e84d5b67ff4e57efa15",
+    "results/uarch/qwen_rom_kv_production_join_20261002/contract_r3.json": "e6757abba4b5ae79b97d9b69bc871002aaa71666fd07763a54dde1edcd9ab9ad",
+    "results/uarch/qwen_rom_kv_production_join_20261002/euclid_dependency_r1.json": "43a573a10762e4d045809451b71a314b16b3236c53663648ba7a0c151702fe9b",
+    "results/uarch/qwen_rom_kv_production_join_20261002/euclid_dependency_r2.json": "ad85e6c92da2beb713b4903976f6720242f0e90c3baab73e4b5bd724ec9ffb44",
+    "results/uarch/qwen_rom_kv_production_join_20261002/identity_production_tests_r1.log": "b3ec2f4ed04f12428896a9df735e4792549a60363bff89971269295ae41dc988",
+    "results/uarch/qwen_rom_kv_production_join_20261002/identity_production_tests_r2.log": "0c4a7d35e63bb060a7992cafaaa9521d01997b868a5528b3dd977d0263c27b7a",
+    "results/uarch/qwen_rom_kv_production_join_20261002/identity_production_tests_r3.log": "6fed74b96ce9a624d8c44ab0c6e133f6186bad6adc9c7517fcc6381184c78211",
+    "results/uarch/qwen_rom_kv_production_join_20261002/identity_production_tests_r4.log": "b2fd980eab0630cc42c870885b77d463349b692d33427104befde1f6b45e59aa",
+    "results/uarch/qwen_rom_kv_production_join_20261002/kepler_dependency_r1.json": "0e37911a9c2f91784761b89600e4426ebf236335f4fc86d7db413ebb9ca51b27",
+    "results/uarch/qwen_rom_kv_production_join_20261002/kepler_dependency_r2.json": "3c9d9b187fd03bf09120782dba263bd4f9f1f187cfae30e18cb24681a834a787",
+    "results/uarch/qwen_rom_kv_production_join_20261002/negative_orphan_credit_FAILURE_r1.json": "bfb2a80adb4f3fc8d24460c80a79b9cda6558fa6170f405269ad6de0ade18675",
+    "results/uarch/qwen_rom_kv_production_join_20261002/negative_orphan_credit_fixture_r1.jsonl": "006a766b728af42f7b6a67e88003c05ec519fafbe2a22f7c8c1743befe5d6272",
+    "results/uarch/qwen_rom_kv_production_join_20261002/persistent_source_tests_r1.log": "632e3085f12c149ade4c96be74a16207c792dd0163ceb7c0292595ddd87e3873",
+    "results/uarch/qwen_rom_kv_production_join_20261002/source_binding_r1.json": "5708aee11f537f530fb174c1988545f023b3bc0fe5cb75044a9f3fb660c696a7"
+  }
+}

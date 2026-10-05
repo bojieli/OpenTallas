@@ -1,0 +1,89 @@
+{
+  "slot": {
+    "existing": {
+      "area_mm2": 0.3075936768,
+      "bbox_DBU": [
+        1000000,
+        20620888,
+        3125440,
+        20765608
+      ],
+      "name": "X_SEL_TOPK_STORE",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    "proposed_same_width_um": 2125.44,
+    "proposed_proxy_height_um": 791.5629786585366,
+    "proposed_bbox_DBU": [
+      1000000,
+      20620888,
+      3125440,
+      21412451
+    ],
+    "additional_proxy_area_mm2": 1.37482594056,
+    "additional_height_um": 646.8429786585366,
+    "already_included_candidate_memory_bits": 524288,
+    "containment_rule": "replace whole existing selector rectangle once, not add candidate storage twice; move/reconcile affected adjacent controller and attention/hub route reservations",
+    "owner_accepted": false,
+    "translated_routing_clock_PG_fit": false,
+    "known_service_overlay": {
+      "revised_rectangles": [
+        {
+          "area_mm2": 1.6824196173600001,
+          "bbox_DBU": [
+            1000000,
+            20620888,
+            3125440,
+            21412451
+          ],
+          "name": "PROPOSED_COMPLETE_TOPK_SELECTOR",
+          "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+        },
+        {
+          "area_mm2": 0.08263710720000002,
+          "bbox_DBU": [
+            1000000,
+            21412451,
+            3125440,
+            21451331
+          ],
+          "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+          "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+        }
+      ],
+      "positive_area_overlaps": [],
+      "known_service_only_no_overlap": true,
+      "ownership_scope": "source retained service rectangles only; unknown outside-service allocations are NOT assumed free. Owner must bind containment/exclusions, channels and clock/PG.",
+      "selector_budget_delta_mm2_per_die": 1.37482594056,
+      "TP4_group_area_delta_mm2_if_four_services": 5.49930376224,
+      "whole_system_area_delta_mm2": null
+    }
+  },
+  "composition": {
+    "ROM": {
+      "calls": 9,
+      "added_cycles_per_position": 1278,
+      "added_ns_at_policy_1p2GHz": 1065.0,
+      "cost_relative_to_existing_DIG4_cycles": -510,
+      "full_token_latency_credit": false
+    },
+    "HBM_conditional_same_provider": {
+      "calls": 9,
+      "added_cycles_per_position": 1575,
+      "added_ns_at_policy_1p2GHz": 1312.5,
+      "cost_relative_to_existing_DIG4_cycles": -981,
+      "full_token_latency_credit": false
+    }
+  },
+  "G0": {
+    "engine_RTL_admitted": false,
+    "PR_admitted": false,
+    "decision": "MODEL_SIZED_SUCCESSOR_WAIT_FULL_SLOT_AND_CONTEXT_REVIEW",
+    "next_action": "Archimedes reconciles this complete proposed selector rectangle, adjacent displacement and translated routes/clock/PG; Maxwell binds serial caller residence; independently review feedback/pipeline exactness then source-bound G0. No RTL before that decision.",
+    "missing": [
+      "accepted full selector reservation/slot and routed channel allocation",
+      "source-construction whole-instance and SS-stage arc/context review",
+      "HBM full2048 GPU provider ownership/ACK leases"
+    ],
+    "mandatory_correctness_scope": "repair original unclosing comb chains; no optimization/adoption/frequency credit"
+  }
+}

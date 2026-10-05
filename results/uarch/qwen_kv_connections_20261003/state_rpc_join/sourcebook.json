@@ -1,0 +1,102 @@
+{
+  "OLD_transactions": {
+    "full_write": 1,
+    "mandatory_OLD_transaction_not_duplicated": true,
+    "partial_write": 1,
+    "read": 1,
+    "tap_issues_no_requests": true
+  },
+  "artifact_sha256": {
+    "driver_runtime.log": "70d570d03dd3df3f3cdf8c4fa96fb6719fb516c14b0d68e560bf1bc131063931",
+    "initial_inventory_failure.log": "b1079f23f90ca485ea43d831be6374561071d26995ebb5c6dbd10047d5ac487f",
+    "initial_inventory_failure.py.txt": "37f3d10f54b1e559d6071c31446ffab08921ec5eeab7f4b4988efe0a85d2c426",
+    "runtime.log": "282ffd16fc697e1add1bc0faf2f392bdcc38d8aba38f99fd7853e4d6f79a51ad"
+  },
+  "commands": [
+    "python3 -m unittest discover -s tests -p test_canonical_qwen_state_rpc_join.py -v",
+    "python3 -m unittest discover -s tests -p test_canonical_qwen_state_rpc_driver.py -v"
+  ],
+  "full_token_qualified": false,
+  "host": "ot-agidock128",
+  "initial_failure": "HDL protocol cases passed; test expected624 rawFF instead of actual summed524. Initial failed suite/log/test retained; RTL unchanged.",
+  "model": {
+    "OLD_NEW_service_cost": "reuse STATE tap; serial OLD then NEW for writes",
+    "added_CDC_bits": 0,
+    "added_SRAM_bytes": 0,
+    "added_W2_replicas": 0,
+    "byte_payload_bits": 256,
+    "canonical_write_bytes": [
+      8,
+      1,
+      16
+    ],
+    "final_sector_accept_to_parent_reply_min_edges": 1,
+    "implemented_write_port_bytes": 32,
+    "mapped_sector_bits": 116,
+    "mapped_sector_credits": 1,
+    "matched_existing_inclusion": null,
+    "maximum_sectors_per_RPC": 1172,
+    "partial_OLD_recharged": false,
+    "physical_qualified": false,
+    "ports_mux_area_mm2": null,
+    "prospective_streaming_clock_GHz": 1.2,
+    "protected_bits": null,
+    "raw_FF_area_proxy_mm2": 0.00030559680000000005,
+    "raw_bits": 524,
+    "replicas": 1,
+    "root_admission_bits": 65,
+    "root_retirement_bits": 65,
+    "root_to_first_sector_offer_min_edges": 1,
+    "routed_tracks": null,
+    "sector_reply_compare_bits": 145,
+    "slot_fit": null,
+    "source_RPC_credits": 1,
+    "source_mask_decode_outputs": 32,
+    "source_payload_byte_mux_inputs": 32,
+    "source_payload_byte_mux_output_bits": 256,
+    "source_service_upper_edges": null,
+    "state_bytes_per_rank": 37504,
+    "whole_token_cycles": null
+  },
+  "new_HDL_cases": 5,
+  "new_driver_protocol_cases": 4,
+  "old_STATE_cohort_controller_W2_gates_rerun": false,
+  "output_path": "/home/ubuntu/dewey-state-rpc-join-new-check-20261003/",
+  "physical_service_upper_bound": null,
+  "ports": {
+    "API": "tools.gpu_sys.canonical_qwen_state_rpc_join.StateRPCByteHandlers",
+    "NEW_reverse": "actual matching accepted write reverse; tap then offers held sector reply",
+    "OLD_reverse": "actual matching accepted read reverse; same retained grant advances to NEW phase",
+    "TOP": "ot_gpu_qwen_kv_state_rpc_join",
+    "completion_ready": "Actual raw W2 destination/tap capture capacity; MUST NOT wait for sector_capture_valid",
+    "consumer": "actual sector_capture_valid/source_addr/OLD equality then ready acceptance",
+    "enrollment": "replace ONLY kv_state_read/kv_state_write with StateRPCByteHandlers(authority,actual_state_rpc_pins,enabled=True).handlers[k] in Euclid existing sixteen-handler factory",
+    "mapper": "Nash actual retained sector grant; no Python/static grant",
+    "new_enclosing_component": "state_rpc",
+    "source_root": "actual rpc_valid && rpc_ready",
+    "terminal_root": "all source sectors captured AND matching parent reply/cohort retirement accepted"
+  },
+  "prerequisites": {
+    "STATE_tap": "2e8bf8edb882503979d7614d563c28d5616c6b86",
+    "original288_sources_byteidentical": true,
+    "terminal_ready_successor": "114d01633f692d8c11905c68c6655b06fdd3c9d6"
+  },
+  "read_extent_bytes": 37504,
+  "scope": "Actual source RPC join -> unchanged terminal-ready cohort RTL; tap/W2 physical replies provided by directed fixture. Driver tests use explicit test doubles. No full token/native arithmetic/physical qualification.",
+  "source_sha256": {
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_local_cohorts_terminal_ready.sv": "df8651408e4005cf7fb5ad8939995e01f5aa82734a65d714a7ffb4210b37aa9c",
+    "rtl/model/qwen_kv_connections_20261003/ot_gpu_qwen_kv_state_rpc_join.sv": "356042fa7868163744168b63937e58ce351fd2f24094ad1987b6826b5caa70f0",
+    "tests/test_canonical_qwen_state_rpc_driver.py": "7f8cc986dff25f52136504b3f12f034a83128941a9f7caf70a941bd3f39d65c4",
+    "tests/test_canonical_qwen_state_rpc_join.py": "9470d5ac9cd61be8c8ca7821b94ae5eb12cac7fff6c7360aa2138793ac302a57",
+    "tools/gpu_sys/canonical_qwen_kv_ports.py": "d1aa4e7adb3ef34f1c19a0519ac10e507b6cc439ce61cb582e5646b15d25d122",
+    "tools/gpu_sys/canonical_qwen_state_rpc_join.py": "9dfba5a3b111970b3438e7790332bc8733a10c4c0dc94dd71bd0274cb1ecb542",
+    "tools/gpu_sys/canonical_qwen_state_rpc_model.py": "de7c4e3d259bb867d774b42f1f00eef1049f7b15a0696fc70bd50de64d433b16",
+    "tools/gpu_sys/canonical_qwen_transport.py": "260b06f3fce070db8387b49b7a4640fa190326696dfc5b4d27fc1fbfd9ff8784",
+    "tools/h4_qwen_released_provider_delivery.py": "0ea16486aef5f60bf99edd3cb3dc922b7d2c27116f39269c5c7157e7444ba5c9"
+  },
+  "unsupported_semantics": [
+    "zero-byte RPC",
+    "write payload >32 bytes (explicit refusal, no truncation)"
+  ],
+  "verdict": "PASS"
+}

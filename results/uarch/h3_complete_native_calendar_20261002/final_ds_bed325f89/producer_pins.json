@@ -1,0 +1,95 @@
+{
+  "schema": "H3_PORTABLE_PRODUCER_PINS_V1",
+  "files": {
+    "program_final.json.gz": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+    },
+    "h3_deepseek_complete_native.py.source": {
+      "commit": "bed325f89",
+      "path": "tools/h3_deepseek_complete_native.py",
+      "sha256": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf"
+    },
+    "h3_exact_scalar_contract.py": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/dependencies/h3_exact_scalar_contract.py",
+      "sha256": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132"
+    },
+    "coverage.json": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/coverage.json",
+      "sha256": "d06564731ee314b46232541d4bb0ab8e60839d858cf16f68ef0be408629be7d9"
+    },
+    "producer_handoff.json": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/handoff.json",
+      "sha256": "81dd5b690d816c07f1f6f8aa58846dc9632b3b2b1da7ee370b1f9c9a5285f41d"
+    },
+    "calendar_provider_interface.json": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/calendar_provider_interface.json",
+      "sha256": "4382b70c261ab50c8823b96df14773fa3a80e4cad1a372f07ba73097d1277837"
+    },
+    "producer_tests.log": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/final_tests.log",
+      "sha256": "4bed8cc624113743771e380f4fea7f09ec8586d03d46684c5c3a9889a2038305"
+    },
+    "producer_replay.log": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/final_source_replay.log",
+      "sha256": "eb497465ea69449a76e8b15fa289322b09c13d179d40ec5b3f2922021cddb992"
+    },
+    "producer_numerical_tests.log": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/final_provider_numerical_tests.log",
+      "sha256": "3d62d17cda0245ac103dacbc19a54714f32a472955ffa1297184c4315837fbd1"
+    },
+    "producer_kernel_tests.log": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/final_kernel_tests.log",
+      "sha256": "b156e9922f76d25723911762a7fc411b0a8aeb840a9069496bef64f6b3877445"
+    },
+    "producer_sources/results/rtl/w19_hbm_tp96_program_oreduce.json": {
+      "commit": "bed325f89",
+      "path": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+      "sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+    },
+    "producer_sources/results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz": {
+      "commit": "bed325f89",
+      "path": "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz",
+      "sha256": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424"
+    },
+    "producer_sources/tools/h3_versioned_lowering.py": {
+      "commit": "bed325f89",
+      "path": "tools/h3_versioned_lowering.py",
+      "sha256": "900dec4186274cbe3e41cf2eea4abfa76d7d58182d96c3e6b55ea04409e58e91"
+    },
+    "producer_sources/tools/deepseek_hbm_complete_memory.py": {
+      "commit": "bed325f89",
+      "path": "tools/deepseek_hbm_complete_memory.py",
+      "sha256": "ea1bbe4f09973438323adad64154311d22bb493be13af2c68f3521af0aaa8719"
+    },
+    "producer_sources/tools/w19_hbm_tp96_isa.py": {
+      "commit": "bed325f89",
+      "path": "tools/w19_hbm_tp96_isa.py",
+      "sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6"
+    },
+    "producer_sources/tools/hdc_golden_v41.py": {
+      "commit": "bed325f89",
+      "path": "tools/hdc_golden_v41.py",
+      "sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+    },
+    "producer_sources/tools/hdc_golden.py": {
+      "commit": "bed325f89",
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+    },
+    "producer_sources/compiler/models/deepseek-v4.1-flash/inference_config.json": {
+      "commit": "bed325f89",
+      "path": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+      "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+    }
+  }
+}

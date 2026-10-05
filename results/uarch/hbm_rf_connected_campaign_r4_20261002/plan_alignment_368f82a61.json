@@ -1,0 +1,100 @@
+{
+  "G0": "Directed campaign has pinned native geometry,finite capture/RF/scratch and prebuild model. Complete workload/storage/service/config identity remains open under R0/H2/H3.",
+  "G1": "No complete program/token qualification supplied by this campaign.",
+  "G2": "Directed-chain actual execution pending after runner failure. A future directedPASS is a subsystem prerequisite only; full-token connectedRTL remains mandatory underH4.",
+  "G3": "Open: current fullSM/capture/memory/service parent SS60ps/FF25ps and routing/power/die feasibility required. Bench10ns gives no clock credit.",
+  "G4": "Open: first/last actualmatrix result -> ACKvisibility/retirement -> nextissue integer edges required, then same-program calibration. No blanket200ns or missing-service zero filling.",
+  "G5": "Open: common-workload optimizedGPU comparison and reproducibility package need prior gates.",
+  "GO": false,
+  "authoritative_plan_pins": {
+    "TASKS.md": {
+      "commit": "368f82a61c45a4431956ae267ed6746ec83e5f94",
+      "sha256": "bf907f5cb82d3e56f011afbe9652bc742e1ef223244944a027b46246fabcbd6d"
+    },
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": {
+      "commit": "368f82a61c45a4431956ae267ed6746ec83e5f94",
+      "sha256": "73df4bb9a1fc02739e596a86fcc35a55a80d07ffe2c9513b8a0d26a45f8f5424"
+    }
+  },
+  "dependencies_and_parallel_owners": {
+    "D1_D2_Q1": "Independent bounded streams; no duplicate jobs or competing sources introduced",
+    "H2": "Kepler actual controller/tag/writerACK/CDC/readerlease/partialRMW; finite7cycle testHBM stimulus is notH2qualification",
+    "H3": "Maxwell exceptionalGPUlowering, generalreducer/SFU and fullrank resources remain open",
+    "H4": "RequiresH1/H2/H3 then connectedlayers/fullrankAR and claimedMTP token",
+    "P1_P2": "Physical owners can audit pinnedfullSM interfaces inparallel; no newphysicalbuild admitted here",
+    "R0": "Maxwell same-configuration/calendar; H1 shares source pins and eventual measured causal traces"
+  },
+  "launches": 0,
+  "live_jobs_untouched": true,
+  "main_or_shared_docs_mutated": false,
+  "main_publisher_intake_refs": [
+    "3750161e0fa54cd78ac6a766156c8500308c690b",
+    "a206468c1ae989e4c4f539d4e51bd66af0834393",
+    "368f82a61c45a4431956ae267ed6746ec83e5f94"
+  ],
+  "mandatory_baseline_correctness_fix": true,
+  "new_PVE2_PVE3_jobs": 0,
+  "optional_levers_opened": false,
+  "owned_scope": "Actual native DS/Qwen matrix -> Maxwell finite capture -> mirrored RF ACK -> two dependent in-place full128 vector passes -> RF/optional scratch -> native nextmatrix issue. RF-side fence, aliases/leases/reset and trace adapters owned here.",
+  "parent_terminal_archive": {
+    "commit": "a206468c1ae989e4c4f539d4e51bd66af0834393",
+    "path": "results/rtl/hbm_connected_parent_terminal_20261002_r1/parent_review.json",
+    "sha256": "0cac10df998c9327f7797db3f7191e4b445993578c399ec9e8c11ec90615dfd4",
+    "six_receipt_hashes_match_owner_archive": true
+  },
+  "physical_credit": false,
+  "prepared_campaign_commit": "bb1970d682d41a217b93d83b94b87bfc5602146e",
+  "proposal_path": "results/uarch/hbm_rf_connected_campaign_r4_20261002/prepared_gate.json",
+  "proposal_sha256": "6d226e849b0638165c763819ad8cfb1624230f6edd4f522b1c7e3aba0928c0d4",
+  "resource_proposal": {
+    "CPU_enforcement": "Parent taskset24-27; exact sched_getaffinity verification and observed child/thread masks. No CPU controller/quota assumption.",
+    "CXX_time_and_memory_measured": false,
+    "GO": false,
+    "Qwen_frontend_time_and_memory_measured": false,
+    "actual_DS_frontend_s": 258.60486893728375,
+    "actual_frontend_output_report": "11383 C++ files /1704.698MB from Verilator report; output preserved. No CXX measurement.",
+    "aggregate_output_enforcement": "8GiB sampled1s; transient overshoot possible. FSIZE hard1GiB/file. Disk headroom12GiB.",
+    "caps": {
+      "aggregate_output_bytes": 8589934592,
+      "build_jobs": 4,
+      "cpus": [
+        24,
+        25,
+        26,
+        27
+      ],
+      "disk_headroom_bytes": 12884901888,
+      "kill_grace_s": 5,
+      "memory_bytes": 34359738368,
+      "per_file_bytes": 1073741824,
+      "poll_s": 1,
+      "sequential_targets": true,
+      "swap_bytes": 0,
+      "whole_wall_s": 2220
+    },
+    "launches": 0,
+    "memory_report": "Verilator allocated21264.930MB report; not final cgroup peak. Parent monitor retains final memory; owner samples lower-bound only.",
+    "no_new_PVE2_PVE3_jobs": true,
+    "phase_limits_s": {
+      "DS": {
+        "CXX": 600,
+        "frontend": 300,
+        "simulation": 180,
+        "trace": 30
+      },
+      "Qwen": {
+        "CXX": 600,
+        "frontend": 300,
+        "simulation": 180,
+        "trace": 30
+      }
+    },
+    "remaining_DS_frontend_budget_s": 41.395131062716246,
+    "retained_generated_DS_CXX": "Read-only prior artifacts preserved. This recipe uses fresh output/cold frontend; any reuse needs separate reviewed hashes/source/compiler/argv/GO binding.",
+    "risks": "DS frontend has41.4s margin; CXX600s and nativeQwen300s/32GiB still unqualified. Any cap failure is terminal and preserved; no automatic tuning.",
+    "scope": "Fresh parent review only; not admission. Hard caps are budgets, not completion predictions."
+  },
+  "status": "FAIL_INCOMPLETE_preserved; additive_launcher_PREPARED_for_independent_review; no fresh GO",
+  "task": "H1",
+  "token_credit": false
+}

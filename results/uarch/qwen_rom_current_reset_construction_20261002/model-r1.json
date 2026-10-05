@@ -1,0 +1,785 @@
+{
+  "actual_graph_reconciliation": {
+    "KV_and_high_address": "Source-provenance present; named-wire diagnostics do not prove missing hardware. Complete semantic source-to-driver join remains open.",
+    "actual_ROM_capture_FFs": 2560,
+    "actual_early_select_FFs": 5,
+    "admission": {
+      "PnR": false,
+      "contextual_SSFF": false,
+      "full_tile_construction": false,
+      "second_map": false
+    },
+    "bank_strobe_FFs": {
+      "actual": 2,
+      "missing": 3,
+      "required": 5
+    },
+    "complete_cell_ceiling_um2": 125000,
+    "corridor": {
+      "clock_reserved_tracks": 64,
+      "fill_tracks": 1048,
+      "reset_reserved_tracks": 64,
+      "spare_tracks": 184,
+      "width_um": 96.768
+    },
+    "finite_PG_and_cut_requirements": {
+      "PDN_via_OBS_share": 0.5,
+      "construction_not_a_routed_PG_proof": true,
+      "fill_channel_uses1048tracks": true,
+      "measured_PDN_cut_capacity": null,
+      "reserved_clock_reset_tracks_each": 64
+    },
+    "graph_gate_status": "FAIL_COMPLETE_MAPPED_SURVIVAL_RETAINED",
+    "hardware_source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "mask_FFs": {
+      "actual": 30,
+      "missing": 50,
+      "required": 80
+    },
+    "minimum_replica_preservation": {
+      "RTL_or_mapped_replica_restoration_performed": false,
+      "added_pin_load_fF": {
+        "ff": {
+          "CLK": 26.667056000000002,
+          "RESETN": 42.554176999999996
+        },
+        "ss": {
+          "CLK": 23.001046,
+          "RESETN": 37.313325
+        }
+      },
+      "additional_ASR_FFs": 53,
+      "metadata_reset_FFs": 90,
+      "new_mapping_run": false,
+      "nominal_cell_area_um2": 20.09124,
+      "repaired_ASR_FFs": 56683,
+      "repaired_clock_FFs": 102340,
+      "source_WIDTH_budget_unchanged": true
+    },
+    "named_wire_diagnostic_correction": "Missing cap/code_sel_q names do not imply missing FFs. Old r1 named-wire failures retained as diagnostic history only.",
+    "original_collector_FAIL_retained": true,
+    "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+    "original_standard_cell_area_um2": 65983.07303971479,
+    "physical_replica_retention": "FAIL_REQUIRED_PHYSICAL_REPLICA_RETENTION",
+    "schema": "QWEN_CURRENT_GRAPH_RECONCILIATION_V1",
+    "source_matched_after_preservation_distribution": {
+      "clock_buffers_before_wire_segmentation": 14651,
+      "fanout_ceiling": 8,
+      "metadata_clock": {
+        "buffers": 15,
+        "depth": 3,
+        "levels_leaf_to_root": [
+          12,
+          2,
+          1
+        ]
+      },
+      "new_cell_area_before_wire_segmentation_um2": 2322.4919400000003,
+      "original76BUF_retained": true,
+      "other_reset": {
+        "buffers": 8088,
+        "depth": 6,
+        "levels_leaf_to_root": [
+          7075,
+          885,
+          111,
+          14,
+          2,
+          1
+        ]
+      },
+      "paired_other_reset_clock_topology": true,
+      "physical_admission": false,
+      "plain_clock": {
+        "buffers": 6527,
+        "depth": 6,
+        "levels_leaf_to_root": [
+          5708,
+          714,
+          90,
+          12,
+          2,
+          1
+        ]
+      },
+      "reset_buffers_including4rootpads_before_wire_segmentation": 8095,
+      "source_tree_clock_depth": 6,
+      "wire_isolation_and_segments_must_be_constructed_and_added": true
+    },
+    "source_pin_requirements": {
+      "address_min_arrival_plus_wire_minus_clock_skew_ps": 42.422199,
+      "hold_uncertainty_ps": 25,
+      "metadata_reset_min_arrival_plus_wire_minus_clock_skew_ps": 50.049297,
+      "setup_uncertainty_ps": 60
+    }
+  },
+  "actual_mapped_sink_loads": {
+    "caps_are_pins_only": true,
+    "census_records": 158929,
+    "census_sha256": "bf4c7d2c6b83f73116a160c9f9193944eae9daa0e2b2d9fa60060fad671ad7fc",
+    "constant_reset_set_pins": 56630,
+    "groups": {
+      "KV_clock": {
+        "ff_cap_fF": 20.7464,
+        "pins": 2,
+        "ss_cap_fF": 17.3676
+      },
+      "ROM_clock": {
+        "ff_cap_fF": 103.73199999999999,
+        "pins": 10,
+        "ss_cap_fF": 86.83800000000001
+      },
+      "direct_parent_reset": {
+        "ff_cap_fF": 45439.0290370084,
+        "pins": 56593,
+        "ss_cap_fF": 39842.8868249592
+      },
+      "distributed_reset": {
+        "ff_cap_fF": 29.70763299999999,
+        "pins": 37,
+        "ss_cap_fF": 26.048925000000015
+      },
+      "logic_clock": {
+        "ff_cap_fF": 52326.90833002949,
+        "pins": 102287,
+        "ss_cap_fF": 44968.551826032184
+      }
+    },
+    "hardware_admission": false,
+    "mapped_survival_qualified": false,
+    "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+    "original_terminal": {
+      "commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+      "contextual_SSFF": false,
+      "current_SMIN6_async_reset_bits_preopt": 58160,
+      "current_SMIN6_clock_bits_preopt": 109984,
+      "error": "unmapped cell $scopeinfo",
+      "status": "FAIL_SOURCE_MAP_RETAINED",
+      "synthesis_map_only": true,
+      "tile_PR": false,
+      "work": "/tmp/qwen-fulltile-source-map-smin6-r1-20261002"
+    },
+    "persistent_KV_service_tail_clock_domain": "Independent service;384+128macro clock ports/rank remain separate from tile10ROM+2KV.",
+    "schema": "QWEN_CURRENT_MAPPED_SINK_LOADS_V1",
+    "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "wire_construction": "Prospective construction prices nominal RC separately. Failed survival forbids a complete instantiated tile."
+  },
+  "actual_surviving_sink_finite_allocation": {
+    "PG_via_OBS_reserved_fraction": 0.5,
+    "actual_plain_FF": 45657,
+    "actual_reset_FF": 56593,
+    "actual_reset_pin_classes": {
+      "RESETN": 56593
+    },
+    "added_buffers": 204656,
+    "allocation_sha256": "e02db1e7f0ceb56af07181ada7cdaf1c9c7d5b71223c521cf296cf2641744ec0",
+    "cell_area_ceiling_um2": 125000,
+    "clock_reset_tracks_reserved_each": 64,
+    "current_PDN_cut_capacity_measured": false,
+    "failed_source_survival_retained": true,
+    "final_area_includes_preservation_distribution": false,
+    "finite_graph_does_not_prove_route_or_complete_timing": true,
+    "installed_CTS_required": false,
+    "macro_CLK_sinks": 12,
+    "max_branch_load_fF": 25.876848,
+    "max_branch_slew_ps": 105.01674386458332,
+    "metadata_FF": 37,
+    "missing53_replicas_instantiated": false,
+    "new_RTL_or_map_run": false,
+    "nominal_area_after_preservation53_um2": 86891.79905971479,
+    "nominal_incremental_cell_area_um2": 20888.63478,
+    "nominal_not_extracted": true,
+    "nominal_wire_cap_fF": 1061898.7342193879,
+    "nominal_wire_elmore_bound_ps": 0.037720739510555636,
+    "old76BUF_internal_routes_not_in_this_new_branch_census": true,
+    "original_cell_area_um2": 65983.07303971479,
+    "original_mapped_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+    "physical_admission": false,
+    "provider_release_net": 556058,
+    "ready_for_contextual_STA": false,
+    "schema": "QWEN_ACTUAL_FAILED_MAP_FINITE_ALLOCATION_V1",
+    "scope": "Actual surviving mapped sinks; analytical branch construction only, not selected RTL or repaired map.",
+    "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "startup_two_edges_is_conditional_on_complete_distribution_timing": true,
+    "topology_is_nominal_allocation_not_routed_geometry": true,
+    "unique_new_branch_nets_crossing_vertical_cuts": {
+      "130.464": {
+        "clock": 36,
+        "reset": 7
+      },
+      "178.848": {
+        "clock": 34,
+        "reset": 7
+      },
+      "227.23200000000003": {
+        "clock": 44,
+        "reset": 17
+      }
+    },
+    "wire_cap_assigned": true,
+    "wire_edges": 363545
+  },
+  "admission": {
+    "PnR": false,
+    "actual_timed_production_KV_policy": false,
+    "cold_KV_calendar_is_production": false,
+    "contextual_SSFF": false,
+    "current_single_map_already_admitted": true,
+    "hardware_adoption": false,
+    "installed_CTS_required_before_context": false,
+    "mapped_survival": false,
+    "provider_source_constructed": true
+  },
+  "finite_construction": {
+    "clock_buffers_before_wire_segment_isolation": 15741,
+    "existing76BUF_preserved": true,
+    "fanout_ceiling": 8,
+    "final_cell_ceiling_um2": 125000,
+    "macro_clock_branches": 12,
+    "metadata_and_macro_clock_depth_padding": 3,
+    "metadata_clock": {
+      "buffers": 15,
+      "depth": 3,
+      "levels_leaf_to_root": [
+        12,
+        2,
+        1
+      ]
+    },
+    "nominal_unsegmented_base_area_um2": 2455.2720000000004,
+    "other_reset": {
+      "buffers": 8299,
+      "depth": 6,
+      "levels_leaf_to_root": [
+        7259,
+        908,
+        114,
+        15,
+        2,
+        1
+      ]
+    },
+    "paired_ASR_clock_reset_topology": true,
+    "plain_clock": {
+      "buffers": 7406,
+      "depth": 6,
+      "levels_leaf_to_root": [
+        6478,
+        810,
+        102,
+        13,
+        2,
+        1
+      ]
+    },
+    "reject_if_current_mapped_area_plus_all_constructed_cells_exceeds_ceiling": true,
+    "reset_buffers_before_wire_segment_isolation": 8306,
+    "wire_segment_buffer_area_must_be_added": true,
+    "wire_segmentation": "Each branch adds a driver at parent; RC segment splits until fanout pin+wire<=46.08fF; both clock/reset trees get identical segment/pad geometry. Actual counts from same map, not source WIDTH."
+  },
+  "launch_constraints": {
+    "SS_FF_CLKQ_and_distribution": "Characterized Liberty envelopes only; rejected mapped survival prevents contextual timing measurement. External pin bounds are implementation requirements, not observed arrivals.",
+    "actual_wrom_addr_register_bits": 24,
+    "actual_wrom_re_register_bits": 1,
+    "address_FF_min_arrival_plus_distribution_minus_skew_ps": 42.422199,
+    "cold_start_added_edges": 2,
+    "first_downstream_accept_edge": 3,
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833.3333333333334,
+    "reset_FF_min_arrival_plus_distribution_minus_skew_ps": 50.049297,
+    "root_external_pin_recovery_margin_ps": 11.502533333333417,
+    "root_external_pin_removal_margin_ps": 7.493600000000001,
+    "setup_uncertainty_ps": 60,
+    "steady_added_cycles": 0
+  },
+  "live_map": {
+    "additional_maps_launched": 0,
+    "gate_commit": "3c431937a07a16806825d39b7f6c33541f211691",
+    "reused": true,
+    "service": "qrom-fulltile-smin6-map-r1-20261002.service",
+    "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "supervisor": 1480247,
+    "survival_status": "FAIL_RETAINED_NO_CONTEXTUAL_ADMISSION",
+    "terminal_status": "FAIL_SOURCE_MAP_RETAINED",
+    "work": "/tmp/qwen-fulltile-source-map-smin6-r1-20261002",
+    "yosys": 1483691
+  },
+  "live_model": {
+    "admission": {
+      "contextual_SSFF": false,
+      "current_source_synthesis_map": true,
+      "engine_RTL": false,
+      "hardware_adoption": false,
+      "tile_PR": false
+    },
+    "boundary": {
+      "MACs_per_cycle": 64,
+      "fill_bits_per_cycle": 1048,
+      "fill_payload_bytes_per_cycle": 64,
+      "latency_credit": false,
+      "new_data_demuxes": 0,
+      "new_data_muxes": 0,
+      "new_rtl_cycles": 0,
+      "replicas_per_die": 1536,
+      "steady_latency_reference": "Pinned +55/MEM_EXTRA1; no changed RTL/program/rounding. Wider-slot delay awaits actual contextual measurement.",
+      "transport_wire_delay_cycles": null
+    },
+    "corridor": {
+      "PDN_vias_OBS_reserved_fraction": 0.5,
+      "actual_PDN_blockage_receipt": null,
+      "baseline_width_um": 60,
+      "capacity_by_layer": {
+        "M6": 756,
+        "M8": 604
+      },
+      "clock_reserved_tracks": 64,
+      "clock_reset_reservation_must_be_validated_downstream": true,
+      "fill_tracks": 1048,
+      "remaining_tracks": 184,
+      "reservation_is_not_measured_routed_capacity": true,
+      "reset_reserved_tracks": 64,
+      "signal_share": 0.5,
+      "width_um": 96.768
+    },
+    "historical_SMIN7_counts_transferred": false,
+    "macros": [
+      {
+        "OBS_layers": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ],
+        "PG_pins_present": true,
+        "area_um2": 76639.47839999999,
+        "count": 10,
+        "h_um": 62.91,
+        "name": "ot_rom_4096x266_m8",
+        "w_um": 121.824
+      },
+      {
+        "OBS_layers": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ],
+        "PG_pins_present": true,
+        "area_um2": 7783.15392,
+        "count": 2,
+        "h_um": 41.04,
+        "name": "ot_sram_1r1w_128x256_m1_r2c2",
+        "w_um": 94.824
+      }
+    ],
+    "map_acceptance": [
+      "ExactSMIN6 complete hierarchy10ROM2KV actual producer/RF/issue/capture",
+      "Current source proc widths under explicit200000clock/100000reset budgets",
+      "Complete mapped cell area <=125000um2; otherwise retainFAIL, no area-fit claim",
+      "Report actual FF/buffer survival and SS/FF pin classes; CTS/arrivals/PDN downstream"
+    ],
+    "owners": {
+      "persistent_KV": "Russell22ec26bd2",
+      "reset_model": "Ampere6dd340d3e",
+      "source_context": "Euclid"
+    },
+    "schema": "QWEN_FULLTILE_SLOT_SIZING_SUCCESSOR_V1",
+    "selection": "explicit opt-in; baseline model unchanged",
+    "slot": {
+      "area_um2": 486752.7168,
+      "array_area_mm2_per_1536tile_die": 747.6521730047999,
+      "available_cell_area_um2": 130324.09504000001,
+      "cell_budget_includes_RF_arithmetic_capture_control_reset_distribution": true,
+      "complete_cell_area_ceiling_um2": 125000,
+      "complete_die_and_persistent_service_fit_proven": false,
+      "die_other_services_remaining_mm2": 67.34782699520008,
+      "h_um": 1360.8,
+      "incremental_width_area_mm2_per_1536tile_die": 76.8520617984,
+      "incremental_width_area_um2": 50033.8944,
+      "logic_utilization": 0.5,
+      "macro_halo_reservation_um2": 10000,
+      "source_async_reset_bit_budget_ceiling": 100000,
+      "source_clock_bit_budget_ceiling": 200000,
+      "w_um": 357.696
+    },
+    "source_hashes": {
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+    },
+    "target": {
+      "ACC_LAT": 7,
+      "CODE_BANKS": 5,
+      "FAST_ISSUE": 1,
+      "KV_NH": 2,
+      "KV_PREP": 3,
+      "KV_VB": 131072,
+      "MEM_EXTRA": 1,
+      "MUL_LAT": 6,
+      "SMIN": 6,
+      "TREE_LAT": 7,
+      "arithmetic_extra": 55
+    }
+  },
+  "live_source": {
+    "SMIN": 6,
+    "commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+    "files": {
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+      "rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0",
+      "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+      "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+      "rtl/physical/ot_qwen_rom_bank5_control_distribution.sv": "7b1f5eacaec02856ab44d30df9b02ea2496594df75602e990ff433054ecbaa73",
+      "rtl/physical/ot_qwen_rom_fulltile_tp4_context_top.sv": "6f1f5118f97afe4b02494c60b5b1f9aec6ca227dd2e539d9bc6e7d60730f5a22",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "optin": 1,
+    "top": "ot_qwen_rom_fulltile_tp4_context_top"
+  },
+  "memory_clock_loads": {
+    "KV": {
+      "abstract_includes_PG_and_OBS": true,
+      "clock_cap_fF": {
+        "ff": 10.3732,
+        "ss": 8.6838
+      },
+      "clock_total_cap_fF": {
+        "ff": 20.7464,
+        "ss": 17.3676
+      },
+      "current_slot_PG_OBS_join": null,
+      "height_um": 41.04,
+      "name": "ot_sram_1r1w_128x256_m1_r2c2",
+      "obstruction_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "replicas": 2,
+      "reset_pins": 0,
+      "signal_pin_layers": [
+        "M4"
+      ],
+      "total_area_um2": 7783.15392,
+      "width_um": 94.824
+    },
+    "separate_service_tail": {
+      "assembly_logic_area_lower_bound_mm2_per_rank": 0.9399877632,
+      "boundary_bits_per_edge": {
+        "command_per_stack": 339,
+        "fill_lane": 1048,
+        "request_per_stack": 455,
+        "return_per_stack": 467,
+        "reverse_per_stack": 404
+      },
+      "channel_capacity": null,
+      "complete_area_mm2": null,
+      "inherited_slot_is_current_fit": false,
+      "inherited_slot_mm2_per_stack": 16.6015872,
+      "limits": "Tail row mapping sizes one active user/epoch per rank. Multiple users, old-epoch retention, protection and complete slot cost are not admitted.",
+      "new_tail_clock_macro_pins_per_rank": 128,
+      "reset_composition": "Existing384 service macro clocks/rank remain charged once. Add128 tail macro clocks/rank and actual owner/CDC/control sinks; the streaming startup price is once, never a per-layer refill.",
+      "service_SRAM_macros_per_rank": 384,
+      "service_and_tail_SRAM_macros_per_rank": 512,
+      "service_and_tail_macro_area_mm2_per_rank": 4.569720064,
+      "single_user_latency": null,
+      "slot_fit": null,
+      "tail_SRAM_macros_per_rank": 128,
+      "tail_geometry": {
+        "SS_macro_clk_to_q_ps": 524.1,
+        "SS_macro_min_period_ps": 480.3,
+        "admission": "Full service/calendar model and measured SS/FF closure required before hardware.",
+        "aggregate_write_bytes_per_cycle_max": 64,
+        "area_slot_fit": null,
+        "banks_per_rank": 128,
+        "capture_budget_ps_before_cell_setup_route_mux": 249.23333333333335,
+        "channel_tracks": null,
+        "excluded_from_macro_area": "Owner directory, lane conversion, masks, SRAM protection, read/write muxes, serial/stream CDC, capture, CTS, routes.",
+        "flush_read_bytes_per_cycle_candidate": 32,
+        "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+        "macro_area_mm2_TP4": 2.647373312,
+        "macro_area_mm2_per_rank": 0.661843328,
+        "macro_capacity_bytes_per_rank": 1048576,
+        "mutable_state_bytes_per_rank": 294912,
+        "owner_rows_per_bank": 144,
+        "per_user_latency": null,
+        "port_arbitration": "Consumer reads and closed-tail flush share each 1R port; source tail_collision must reject simultaneous bank use. No overlap credited without accepted port calendar.",
+        "ports_per_bank": {
+          "read_bytes_per_stream_cycle": 16,
+          "write_bytes_per_stream_cycle": 16
+        },
+        "required_LOG_TW": 9,
+        "row_equation": "layer*4 + head*2 + dim//64; bank=(tile%2)*64 + dim%64",
+        "row_mask_bits_per_bank": 16,
+        "setup_uncertainty_ps": 60,
+        "source_SW": 64,
+        "source_prototype_LOG_TW_default": 2,
+        "state": "analytical_candidate_not_admitted",
+        "stream_period_ps": 833.3333333333334
+      }
+    },
+    "tile": {
+      "abstract_includes_PG_and_OBS": true,
+      "clock_cap_fF": {
+        "ff": 10.3732,
+        "ss": 8.6838
+      },
+      "clock_total_cap_fF": {
+        "ff": 103.732,
+        "ss": 86.838
+      },
+      "current_slot_PG_OBS_join": null,
+      "height_um": 62.91,
+      "name": "ot_rom_4096x266_m8",
+      "obstruction_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "replicas": 10,
+      "reset_pins": 0,
+      "signal_pin_layers": [
+        "M4"
+      ],
+      "total_area_um2": 76639.47839999999,
+      "width_um": 121.824
+    }
+  },
+  "nominal_RC": {
+    "branch_load_cap_ceiling_fF": 46.08,
+    "buffer_stage_input_slew_range_ps": [
+      5,
+      80
+    ],
+    "extracted": false,
+    "pad_route_um": 32,
+    "signal_cap_fF_per_um": 0.16579,
+    "signal_resistance_ohm_per_um": 0.0265684,
+    "source": "results/uarch/qwen_rom_current_reset_construction_20261002/inputs/setRC.tcl",
+    "tree_branch_slew_limit_ps": 320,
+    "wire_cap_not_zero": true
+  },
+  "provider": {
+    "actual_ib_go_first_mapped_sink": {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": [
+          2
+        ],
+        "D": [
+          20
+        ],
+        "QN": [
+          146035
+        ],
+        "RESETN": [
+          3
+        ],
+        "SETN": [
+          "1"
+        ]
+      },
+      "instance": "$auto$ff.cc:337:slice$659080",
+      "pin": "D",
+      "src": "/tmp/opentallas-qwen-fulltile-map-smin6-r1-20261002/rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv:108.5-111.8"
+    },
+    "cells": {
+      "AND3x1_ASAP7_75t_R": 1,
+      "BUFx4_ASAP7_75t_R": 5,
+      "DFFASRHQNx1_ASAP7_75t_R": 2,
+      "INVx1_ASAP7_75t_R": 2
+    },
+    "clk_and_external_reset_input_slew_minmax_ps": [
+      5,
+      80
+    ],
+    "default": 0,
+    "external_reset_deassert_minmax_ps": [
+      100,
+      780
+    ],
+    "external_reset_low_pulse_min_ps": 330,
+    "launch32um_route_is_allocated_not_extracted": true,
+    "launch_driver_area_um2": 0.10206,
+    "launch_join_area_um2": 0.08748,
+    "launch_minmax_ps": [
+      50,
+      650
+    ],
+    "new_queue": false,
+    "parent_domains_ready": "Registered streaming-domain acknowledgment of serial/service release and owned-tag/read/fill retirement; never tie high without source evidence",
+    "protocol": "Asyncassert; stage1edge1/stage2edge2; held start firstacceptededge3 if numeric constraints and domainready pass",
+    "root_nominal_area_um2": 1.2538799999999999,
+    "source": "rtl/physical/ot_qwen_rom_reset_parent_provider.sv",
+    "source_sha256": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "start_or_data_may_not_be_dropped": true
+  },
+  "provider_LUT_envelopes": {
+    "ff": {
+      "INV_rise_minmax_ps": [
+        5.674257811222223,
+        16.971726771944446
+      ],
+      "last_pad_cap_bound_fF": 12.419909,
+      "last_pad_slew_minmax_ps": [
+        23.81303061480903,
+        25.596560541623262
+      ],
+      "last_pad_wire_total_um": 64,
+      "launch_arrival_from_external_go_ready_minmax_ps": [
+        87.47577725015626,
+        716.5582292652604
+      ],
+      "launch_driver_rise_minmax_ps": [
+        20.740848255711807,
+        37.74934130442709
+      ],
+      "launch_driver_slew_minmax_ps": [
+        14.341685410225695,
+        16.574738508003474
+      ],
+      "launch_driver_wire32um_cap_fF": 5.928709,
+      "launch_join_rise_minmax_ps": [
+        16.734928994444445,
+        28.80888796083333
+      ],
+      "launch_join_slew_minmax_ps": [
+        10.193481959027777,
+        11.592647906666667
+      ],
+      "launch_join_wire2um_cap_fF": 0.913546,
+      "pad_rise_minmax_ps": [
+        20.708468963993056,
+        37.715857772395836
+      ],
+      "pad_slew_minmax_ps": [
+        14.281304196631945,
+        16.517490054409723
+      ],
+      "release_before_distribution_minmax_ps": [
+        130.76771744478125,
+        224.25159455607638
+      ],
+      "reset_pad_wire32um_cap_fF": 5.887245999999999,
+      "root_CLKQ_fall_minmax_ps": [
+        37.227182444166665,
+        51.22300965833333
+      ],
+      "root_INV_wire2um_cap_fF": 0.913546,
+      "root_QN_wire1um_cap_fF": 0.849506,
+      "root_clock_pin_cap_fF": 1.006304,
+      "root_external_reset_pin_cap_fF": 1.605818,
+      "slew_limit_ps": 80,
+      "stage1_INV_rise_minmax_ps": [
+        5.786984190722222,
+        17.272465973194443
+      ],
+      "stage1_INV_to_stage2_D_wire2um_cap_fF": 0.955009,
+      "wire_RC_units": "fF/um and ohm/um under Liberty1ps/1fF; nominal installed platform RC, not extracted"
+    },
+    "ss": {
+      "INV_rise_minmax_ps": [
+        10.736544104930555,
+        28.31334763055556
+      ],
+      "last_pad_cap_bound_fF": 12.143673,
+      "last_pad_slew_minmax_ps": [
+        52.63917016148438,
+        53.724410971562506
+      ],
+      "last_pad_wire_total_um": 64,
+      "launch_arrival_from_external_go_ready_minmax_ps": [
+        122.97221408819445,
+        768.2866168621355
+      ],
+      "launch_driver_rise_minmax_ps": [
+        39.60375319305556,
+        66.00586158296876
+      ],
+      "launch_driver_slew_minmax_ps": [
+        31.106024097361107,
+        32.81044344399306
+      ],
+      "launch_driver_wire32um_cap_fF": 5.833091,
+      "launch_join_rise_minmax_ps": [
+        33.36846089513889,
+        52.28075527916667
+      ],
+      "launch_join_slew_minmax_ps": [
+        21.806512022916667,
+        23.670854244444445
+      ],
+      "launch_join_wire2um_cap_fF": 0.842965,
+      "pad_rise_minmax_ps": [
+        39.57434609027778,
+        65.97649754140625
+      ],
+      "pad_slew_minmax_ps": [
+        31.050104974305555,
+        32.75622794809028
+      ],
+      "release_before_distribution_minmax_ps": [
+        260.9436120520399,
+        407.56554469984377
+      ],
+      "reset_pad_wire32um_cap_fF": 5.8166649999999995,
+      "root_CLKQ_fall_minmax_ps": [
+        80.66429267166666,
+        104.12011474444444
+      ],
+      "root_INV_wire2um_cap_fF": 0.842965,
+      "root_QN_wire1um_cap_fF": 0.744556,
+      "root_clock_pin_cap_fF": 0.867964,
+      "root_external_reset_pin_cap_fF": 1.40805,
+      "slew_limit_ps": 80,
+      "stage1_INV_rise_minmax_ps": [
+        10.843478961902779,
+        28.524868882777778
+      ],
+      "stage1_INV_to_stage2_D_wire2um_cap_fF": 0.859391,
+      "wire_RC_units": "fF/um and ohm/um under Liberty1ps/1fF; nominal installed platform RC, not extracted"
+    }
+  },
+  "remaining_parent_composition": {
+    "current_r33_lowered_window": "Parent adapter integration is separate; this receipt provides no lowered-window timing or movement credit.",
+    "external_root_intervals": "Implemented provider has numeric pin requirements; actual parent source/route arrivals have not been observed.",
+    "once_only_calendar": "No selected production current once-only calendar is supplied by this provider; cold calendar remains reference.",
+    "ordered_movement": "Persistent KV causal/slot receipt is included; complete forward/reverse grant traversal and release remain unadmitted.",
+    "producer_arrivals": "ROM captures and early select proven by graph/source attribution. High-address and KV semantic joins remain open; physical mask/bank replicas failed retention. No producer launch timing admission.",
+    "rank_release": "parent_domains_ready requires owned retirement plus registered stream acknowledgment of serial/service release; source is not tied to an assumed constant."
+  },
+  "schema": "QWEN_CURRENT_RESET_CONSTRUCTION_V1",
+  "source_inventory": {
+    "clock_bits": 109984,
+    "mapped_counts": {
+      "clock_FF": 102287,
+      "direct_parent_reset_FF": 56593,
+      "distributed_metadata_reset_FF": 37,
+      "stream_clock_FF": 102287
+    },
+    "prior_SMlN_label_correction": "Preserved old proc isSMIN6, historical fullmap isSMIN7;6dd censusSMIN7 label was incorrect, retained as history.",
+    "reset_bits": 58160,
+    "scope": "Actual current source proc+opt at752fffd8a; does not substitute for mapped survival"
+  },
+  "unified_model_join": {
+    "baseline_import": "uarch_model",
+    "baseline_price_function": "qwen_rom_reset_context_price",
+    "extension": "qwen-current-physical-reset",
+    "historical_reset_record_preserved": true,
+    "originals_sha256": {
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/model-r5.json": "019e2fad554677501d66b024215ca048909fdfb73567ae936afe99c3003fb59e",
+      "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "tools/uarch_model_qwen_reset.py": "5f871efce428043502efa23b3f9864b4b5f5e248de4ef7d8b6a7be8998ee3cd8"
+    },
+    "selected_explicitly": true
+  }
+}

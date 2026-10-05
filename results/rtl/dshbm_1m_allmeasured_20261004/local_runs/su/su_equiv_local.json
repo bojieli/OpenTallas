@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.rtl.dshbm_baseline_su_fp_equiv.v1",
+ "generated_utc": "2026-10-04T16:51:19Z",
+ "source_commit": "",
+ "status": "pass",
+ "skipped_no_layout": [
+  "L1.engram_mix"
+ ],
+ "config": {
+  "rtl": {
+   "N": 64,
+   "M": 16,
+   "BCAST": 4,
+   "RET": 5,
+   "MLAT": 4,
+   "ALAT": 3,
+   "build_s": 376.9,
+   "fp": "rtl",
+   "fp_note": "every FP unit is the bit-level RTL"
+  },
+  "dpi": {
+   "N": 64,
+   "M": 16,
+   "BCAST": 4,
+   "RET": 5,
+   "MLAT": 4,
+   "ALAT": 3,
+   "build_s": 23.6,
+   "fp": "dpi_beh",
+   "fp_note": "as dpi, and the keep-prefix integer adders (rtl/hdc/ot_hdc_prefix.sv) are the behavioural `+` (rtl/test/sim_hdc_prefix_beh.sv, combinational, same function); equivalence: su-equiv at N 64."
+  }
+ },
+ "chains": [
+  {
+   "chain": "L2.index_q",
+   "identical": true,
+   "cycles_end": [
+    87,
+    87
+   ],
+   "vm_out_sha256": "4686c4bba912d8034f360cc50c3b202fac1b30b6f31a2e2456ad11cdcec03f73"
+  },
+  {
+   "chain": "L20.index_q",
+   "identical": true,
+   "cycles_end": [
+    87,
+    87
+   ],
+   "vm_out_sha256": "8b43e5f4b698c0d6a28afa21f9516c892d93082fc0ed4f0bfc071710255e0792"
+  },
+  {
+   "chain": "L24.index_q",
+   "identical": true,
+   "cycles_end": [
+    87,
+    87
+   ],
+   "vm_out_sha256": "9052e248e6fbad2c84712cbe18d5bc8b4a15a80d886adeccc6a5810f357d7388"
+  }
+ ],
+ "inputs": {
+  "su_N64_M16_b4r5m4a3_rtl_su_cases_local.json": "07014669cd597264ebd88077487e3b8e50bd85c996502d85bf5f67047fc79bfe",
+  "su_N64_M16_b4r5m4a3_dpi_beh_su_cases_local.json": "ad954c23d15dc6b96ea4508473e2ed5ef9c8b64a24a8636839e22144f592ebf3"
+ }
+}

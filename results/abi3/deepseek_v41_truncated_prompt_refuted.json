@@ -1,0 +1,51 @@
+{
+ "answer": "no.  No prefix of the prompt produces 305.",
+ "controls_that_make_the_table_readable": {
+  "no_prefix_gives_305": "the refutation",
+  "prefix_32": "13806 -- the oracle's committed first token for this workload, so the harness and the snapshot are the ones the gold came from"
+ },
+ "method": "one shipped-oracle forward per prefix length, greedy, one new token each -- eleven lengths from 1 to 32 at tens of seconds apiece.  If the device were attending to k of the 32 positions, 305 would be the oracle's answer at k.",
+ "not_a_claim": [
+  "the oracle side of this table is the external comparator over the vendor's own pinned code; no value from it reaches the device"
+ ],
+ "oracle_token_by_prefix_length": {
+  "1": [
+   5
+  ],
+  "12": [
+   343
+  ],
+  "16": [
+   270
+  ],
+  "2": [
+   2788
+  ],
+  "20": [
+   4343
+  ],
+  "24": [
+   7472
+  ],
+  "28": [
+   223
+  ],
+  "31": [
+   16
+  ],
+  "32": [
+   13806
+  ],
+  "4": [
+   17171
+  ],
+  "8": [
+   14
+  ]
+ },
+ "question": "both shipped V4.1 stores emit 305 where the oracle emits 13806.  Is the device effectively reading only PART of the prompt?  This repository has had exactly that failure: a gather addressed by launch counter rather than by the token id it had just validated, whose symptom is a run that completes correctly and quietly ignores its input.",
+ "schema": "opentallas.result.v41_truncated_prompt_refuted.v1",
+ "the_one_coincidence_and_why_it_is_not_evidence": "prefix 16 gives 270, which is the wafer's SECOND token.  Across eleven samples over a 129,280-entry vocabulary one collision is unremarkable, and 305 -- the token that actually needs explaining -- appears at no length at all.  Reading the 270 as a lead would be reading a single sample as structure.",
+ "what_it_eliminates": "the whole input-windowing class: a truncated prompt, a token stream read at the wrong offset, a gather addressed by launch counter, an attention mask that hides the tail.  Any of those would put the device's answer somewhere on this table, and it is not there.",
+ "what_remains": "the divergence is in the computation over the whole prompt, not in how much of the prompt reaches it.  The shipped-scale depth bisection is the instrument; it has been tracing the device for four hours."
+}

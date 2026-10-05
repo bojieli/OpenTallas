@@ -1,0 +1,9 @@
+{
+  "verdict": "STATIC_CONTROL_FAIL_PRESERVED",
+  "source_commit": "426e53018f66752d7b730bfc23078fe4c51786c5",
+  "test": "test_page_tamper_after_visibility",
+  "error": "DID NOT RAISE ValueError on immediate same-size rewritten source page",
+  "scope": "18 controls:17 pass/1 fail; no production execution",
+  "repair": "include inode ctime in open/visible page identity; adversarial identity mutation test explicitly advances mtime to avoid filesystem timestamp granularity ambiguity",
+  "assumption": "immutable producer image pages and clean pinned sources; source hashes verify each page on first visibility. Not an adversarial concurrent writer proof."
+}

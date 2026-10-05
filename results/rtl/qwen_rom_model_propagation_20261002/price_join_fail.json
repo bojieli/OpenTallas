@@ -1,0 +1,2263 @@
+{
+  "adoption": false,
+  "at": "2026-10-02T04:49:43.053018+00:00",
+  "build_ready": false,
+  "claim_boundary": "Analytical price-join FAIL, preserved independently of raw physical ERROR. The +217-cycle counterexample is not measured RTL timing, a failed new hardware lever, or rate adoption.",
+  "model_price_joined": false,
+  "new_jobs": 0,
+  "objective": "Keep current ROM die-count freedom; minimum single-user latency remains primary. This fixed TP4 replay binds the existing job and does not select a future die count.",
+  "physical_commit": "7c03aa062b9e995d9488491e12a92fece63ce736",
+  "physical_raw_status": "error",
+  "physical_target": {
+    "ACC_LAT": 7,
+    "FAST_ISSUE": 1,
+    "KV_PREP": 3,
+    "MUL_LAT": 6,
+    "TREE_LAT": 7
+  },
+  "priced_extra": 54,
+  "propagation_requirements": [
+    "Driver must pass ACC7/TREE7/MUL6/FAST1/KV_PREP3 to both tile and die.",
+    "Die and generated-core declarations and parameter forwarding must reach the spine with identical values.",
+    "The global-KV result does not qualify KV_LOCAL1, KV_NH2, KV_VB131072, actual slice fill/read/mask/collision behavior.",
+    "Model price must include MUL6: longest-tree +55, rather than +54; token replay delta must remain source-pinned.",
+    "Same-source connected numerical gate, contextual MAC/macro SS setup and FF hold at 60ps/25ps, hub routing and actual die fit/power remain required."
+  ],
+  "rows": [
+    {
+      "LV": 7,
+      "SU": 64,
+      "TP": 4,
+      "context": 1,
+      "expected_scope": "Python analytical sequencer replay, INT8 post-tree scale priced once. No cycle-exact RTL, collective/service/fill timing or published token-rate change.",
+      "groups": 6144,
+      "issued_me_instructions": 217,
+      "kv_me_instructions": 72,
+      "max_issue_time_shift": 216,
+      "me_issue_deltas": [
+        {
+          "instruction": 1,
+          "issue_shift": 0,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 11,
+          "issue_shift": 1,
+          "kind": "kv"
+        },
+        {
+          "instruction": 13,
+          "issue_shift": 2,
+          "kind": "kv"
+        },
+        {
+          "instruction": 16,
+          "issue_shift": 3,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 18,
+          "issue_shift": 4,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 22,
+          "issue_shift": 5,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 24,
+          "issue_shift": 6,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 34,
+          "issue_shift": 7,
+          "kind": "kv"
+        },
+        {
+          "instruction": 36,
+          "issue_shift": 8,
+          "kind": "kv"
+        },
+        {
+          "instruction": 39,
+          "issue_shift": 9,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 41,
+          "issue_shift": 10,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 45,
+          "issue_shift": 11,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 47,
+          "issue_shift": 12,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 57,
+          "issue_shift": 13,
+          "kind": "kv"
+        },
+        {
+          "instruction": 59,
+          "issue_shift": 14,
+          "kind": "kv"
+        },
+        {
+          "instruction": 62,
+          "issue_shift": 15,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 64,
+          "issue_shift": 16,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 68,
+          "issue_shift": 17,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 70,
+          "issue_shift": 18,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 80,
+          "issue_shift": 19,
+          "kind": "kv"
+        },
+        {
+          "instruction": 82,
+          "issue_shift": 20,
+          "kind": "kv"
+        },
+        {
+          "instruction": 85,
+          "issue_shift": 21,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 87,
+          "issue_shift": 22,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 91,
+          "issue_shift": 23,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 93,
+          "issue_shift": 24,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 103,
+          "issue_shift": 25,
+          "kind": "kv"
+        },
+        {
+          "instruction": 105,
+          "issue_shift": 26,
+          "kind": "kv"
+        },
+        {
+          "instruction": 108,
+          "issue_shift": 27,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 110,
+          "issue_shift": 28,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 114,
+          "issue_shift": 29,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 116,
+          "issue_shift": 30,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 126,
+          "issue_shift": 31,
+          "kind": "kv"
+        },
+        {
+          "instruction": 128,
+          "issue_shift": 32,
+          "kind": "kv"
+        },
+        {
+          "instruction": 131,
+          "issue_shift": 33,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 133,
+          "issue_shift": 34,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 137,
+          "issue_shift": 35,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 139,
+          "issue_shift": 36,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 149,
+          "issue_shift": 37,
+          "kind": "kv"
+        },
+        {
+          "instruction": 151,
+          "issue_shift": 38,
+          "kind": "kv"
+        },
+        {
+          "instruction": 154,
+          "issue_shift": 39,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 156,
+          "issue_shift": 40,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 160,
+          "issue_shift": 41,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 162,
+          "issue_shift": 42,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 172,
+          "issue_shift": 43,
+          "kind": "kv"
+        },
+        {
+          "instruction": 174,
+          "issue_shift": 44,
+          "kind": "kv"
+        },
+        {
+          "instruction": 177,
+          "issue_shift": 45,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 179,
+          "issue_shift": 46,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 183,
+          "issue_shift": 47,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 185,
+          "issue_shift": 48,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 195,
+          "issue_shift": 49,
+          "kind": "kv"
+        },
+        {
+          "instruction": 197,
+          "issue_shift": 50,
+          "kind": "kv"
+        },
+        {
+          "instruction": 200,
+          "issue_shift": 51,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 202,
+          "issue_shift": 52,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 206,
+          "issue_shift": 53,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 208,
+          "issue_shift": 54,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 218,
+          "issue_shift": 55,
+          "kind": "kv"
+        },
+        {
+          "instruction": 220,
+          "issue_shift": 56,
+          "kind": "kv"
+        },
+        {
+          "instruction": 223,
+          "issue_shift": 57,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 225,
+          "issue_shift": 58,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 229,
+          "issue_shift": 59,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 231,
+          "issue_shift": 60,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 241,
+          "issue_shift": 61,
+          "kind": "kv"
+        },
+        {
+          "instruction": 243,
+          "issue_shift": 62,
+          "kind": "kv"
+        },
+        {
+          "instruction": 246,
+          "issue_shift": 63,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 248,
+          "issue_shift": 64,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 252,
+          "issue_shift": 65,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 254,
+          "issue_shift": 66,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 264,
+          "issue_shift": 67,
+          "kind": "kv"
+        },
+        {
+          "instruction": 266,
+          "issue_shift": 68,
+          "kind": "kv"
+        },
+        {
+          "instruction": 269,
+          "issue_shift": 69,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 271,
+          "issue_shift": 70,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 275,
+          "issue_shift": 71,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 277,
+          "issue_shift": 72,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 287,
+          "issue_shift": 73,
+          "kind": "kv"
+        },
+        {
+          "instruction": 289,
+          "issue_shift": 74,
+          "kind": "kv"
+        },
+        {
+          "instruction": 292,
+          "issue_shift": 75,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 294,
+          "issue_shift": 76,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 298,
+          "issue_shift": 77,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 300,
+          "issue_shift": 78,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 310,
+          "issue_shift": 79,
+          "kind": "kv"
+        },
+        {
+          "instruction": 312,
+          "issue_shift": 80,
+          "kind": "kv"
+        },
+        {
+          "instruction": 315,
+          "issue_shift": 81,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 317,
+          "issue_shift": 82,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 321,
+          "issue_shift": 83,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 323,
+          "issue_shift": 84,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 333,
+          "issue_shift": 85,
+          "kind": "kv"
+        },
+        {
+          "instruction": 335,
+          "issue_shift": 86,
+          "kind": "kv"
+        },
+        {
+          "instruction": 338,
+          "issue_shift": 87,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 340,
+          "issue_shift": 88,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 344,
+          "issue_shift": 89,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 346,
+          "issue_shift": 90,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 356,
+          "issue_shift": 91,
+          "kind": "kv"
+        },
+        {
+          "instruction": 358,
+          "issue_shift": 92,
+          "kind": "kv"
+        },
+        {
+          "instruction": 361,
+          "issue_shift": 93,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 363,
+          "issue_shift": 94,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 367,
+          "issue_shift": 95,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 369,
+          "issue_shift": 96,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 379,
+          "issue_shift": 97,
+          "kind": "kv"
+        },
+        {
+          "instruction": 381,
+          "issue_shift": 98,
+          "kind": "kv"
+        },
+        {
+          "instruction": 384,
+          "issue_shift": 99,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 386,
+          "issue_shift": 100,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 390,
+          "issue_shift": 101,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 392,
+          "issue_shift": 102,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 402,
+          "issue_shift": 103,
+          "kind": "kv"
+        },
+        {
+          "instruction": 404,
+          "issue_shift": 104,
+          "kind": "kv"
+        },
+        {
+          "instruction": 407,
+          "issue_shift": 105,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 409,
+          "issue_shift": 106,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 413,
+          "issue_shift": 107,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 415,
+          "issue_shift": 108,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 425,
+          "issue_shift": 109,
+          "kind": "kv"
+        },
+        {
+          "instruction": 427,
+          "issue_shift": 110,
+          "kind": "kv"
+        },
+        {
+          "instruction": 430,
+          "issue_shift": 111,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 432,
+          "issue_shift": 112,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 436,
+          "issue_shift": 113,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 438,
+          "issue_shift": 114,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 448,
+          "issue_shift": 115,
+          "kind": "kv"
+        },
+        {
+          "instruction": 450,
+          "issue_shift": 116,
+          "kind": "kv"
+        },
+        {
+          "instruction": 453,
+          "issue_shift": 117,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 455,
+          "issue_shift": 118,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 459,
+          "issue_shift": 119,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 461,
+          "issue_shift": 120,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 471,
+          "issue_shift": 121,
+          "kind": "kv"
+        },
+        {
+          "instruction": 473,
+          "issue_shift": 122,
+          "kind": "kv"
+        },
+        {
+          "instruction": 476,
+          "issue_shift": 123,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 478,
+          "issue_shift": 124,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 482,
+          "issue_shift": 125,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 484,
+          "issue_shift": 126,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 494,
+          "issue_shift": 127,
+          "kind": "kv"
+        },
+        {
+          "instruction": 496,
+          "issue_shift": 128,
+          "kind": "kv"
+        },
+        {
+          "instruction": 499,
+          "issue_shift": 129,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 501,
+          "issue_shift": 130,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 505,
+          "issue_shift": 131,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 507,
+          "issue_shift": 132,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 517,
+          "issue_shift": 133,
+          "kind": "kv"
+        },
+        {
+          "instruction": 519,
+          "issue_shift": 134,
+          "kind": "kv"
+        },
+        {
+          "instruction": 522,
+          "issue_shift": 135,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 524,
+          "issue_shift": 136,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 528,
+          "issue_shift": 137,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 530,
+          "issue_shift": 138,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 540,
+          "issue_shift": 139,
+          "kind": "kv"
+        },
+        {
+          "instruction": 542,
+          "issue_shift": 140,
+          "kind": "kv"
+        },
+        {
+          "instruction": 545,
+          "issue_shift": 141,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 547,
+          "issue_shift": 142,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 551,
+          "issue_shift": 143,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 553,
+          "issue_shift": 144,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 563,
+          "issue_shift": 145,
+          "kind": "kv"
+        },
+        {
+          "instruction": 565,
+          "issue_shift": 146,
+          "kind": "kv"
+        },
+        {
+          "instruction": 568,
+          "issue_shift": 147,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 570,
+          "issue_shift": 148,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 574,
+          "issue_shift": 149,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 576,
+          "issue_shift": 150,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 586,
+          "issue_shift": 151,
+          "kind": "kv"
+        },
+        {
+          "instruction": 588,
+          "issue_shift": 152,
+          "kind": "kv"
+        },
+        {
+          "instruction": 591,
+          "issue_shift": 153,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 593,
+          "issue_shift": 154,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 597,
+          "issue_shift": 155,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 599,
+          "issue_shift": 156,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 609,
+          "issue_shift": 157,
+          "kind": "kv"
+        },
+        {
+          "instruction": 611,
+          "issue_shift": 158,
+          "kind": "kv"
+        },
+        {
+          "instruction": 614,
+          "issue_shift": 159,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 616,
+          "issue_shift": 160,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 620,
+          "issue_shift": 161,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 622,
+          "issue_shift": 162,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 632,
+          "issue_shift": 163,
+          "kind": "kv"
+        },
+        {
+          "instruction": 634,
+          "issue_shift": 164,
+          "kind": "kv"
+        },
+        {
+          "instruction": 637,
+          "issue_shift": 165,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 639,
+          "issue_shift": 166,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 643,
+          "issue_shift": 167,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 645,
+          "issue_shift": 168,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 655,
+          "issue_shift": 169,
+          "kind": "kv"
+        },
+        {
+          "instruction": 657,
+          "issue_shift": 170,
+          "kind": "kv"
+        },
+        {
+          "instruction": 660,
+          "issue_shift": 171,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 662,
+          "issue_shift": 172,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 666,
+          "issue_shift": 173,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 668,
+          "issue_shift": 174,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 678,
+          "issue_shift": 175,
+          "kind": "kv"
+        },
+        {
+          "instruction": 680,
+          "issue_shift": 176,
+          "kind": "kv"
+        },
+        {
+          "instruction": 683,
+          "issue_shift": 177,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 685,
+          "issue_shift": 178,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 689,
+          "issue_shift": 179,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 691,
+          "issue_shift": 180,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 701,
+          "issue_shift": 181,
+          "kind": "kv"
+        },
+        {
+          "instruction": 703,
+          "issue_shift": 182,
+          "kind": "kv"
+        },
+        {
+          "instruction": 706,
+          "issue_shift": 183,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 708,
+          "issue_shift": 184,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 712,
+          "issue_shift": 185,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 714,
+          "issue_shift": 186,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 724,
+          "issue_shift": 187,
+          "kind": "kv"
+        },
+        {
+          "instruction": 726,
+          "issue_shift": 188,
+          "kind": "kv"
+        },
+        {
+          "instruction": 729,
+          "issue_shift": 189,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 731,
+          "issue_shift": 190,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 735,
+          "issue_shift": 191,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 737,
+          "issue_shift": 192,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 747,
+          "issue_shift": 193,
+          "kind": "kv"
+        },
+        {
+          "instruction": 749,
+          "issue_shift": 194,
+          "kind": "kv"
+        },
+        {
+          "instruction": 752,
+          "issue_shift": 195,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 754,
+          "issue_shift": 196,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 758,
+          "issue_shift": 197,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 760,
+          "issue_shift": 198,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 770,
+          "issue_shift": 199,
+          "kind": "kv"
+        },
+        {
+          "instruction": 772,
+          "issue_shift": 200,
+          "kind": "kv"
+        },
+        {
+          "instruction": 775,
+          "issue_shift": 201,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 777,
+          "issue_shift": 202,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 781,
+          "issue_shift": 203,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 783,
+          "issue_shift": 204,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 793,
+          "issue_shift": 205,
+          "kind": "kv"
+        },
+        {
+          "instruction": 795,
+          "issue_shift": 206,
+          "kind": "kv"
+        },
+        {
+          "instruction": 798,
+          "issue_shift": 207,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 800,
+          "issue_shift": 208,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 804,
+          "issue_shift": 209,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 806,
+          "issue_shift": 210,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 816,
+          "issue_shift": 211,
+          "kind": "kv"
+        },
+        {
+          "instruction": 818,
+          "issue_shift": 212,
+          "kind": "kv"
+        },
+        {
+          "instruction": 821,
+          "issue_shift": 213,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 823,
+          "issue_shift": 214,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 827,
+          "issue_shift": 215,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 831,
+          "issue_shift": 216,
+          "kind": "weights_or_head"
+        }
+      ],
+      "priced_arithmetic_extra": 54,
+      "program_sha256": "86b63fe3c1086c8a02df9c07353d2497434b923ca4bec1df7e61d34a5a899770",
+      "target_arithmetic_extra": 55,
+      "total_cycles_delta": 217,
+      "weight_me_instructions": 145,
+      "wire_cycles": 112
+    },
+    {
+      "LV": 7,
+      "SU": 64,
+      "TP": 4,
+      "context": 8192,
+      "expected_scope": "Python analytical sequencer replay, INT8 post-tree scale priced once. No cycle-exact RTL, collective/service/fill timing or published token-rate change.",
+      "groups": 6144,
+      "issued_me_instructions": 217,
+      "kv_me_instructions": 72,
+      "max_issue_time_shift": 216,
+      "me_issue_deltas": [
+        {
+          "instruction": 1,
+          "issue_shift": 0,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 11,
+          "issue_shift": 1,
+          "kind": "kv"
+        },
+        {
+          "instruction": 13,
+          "issue_shift": 2,
+          "kind": "kv"
+        },
+        {
+          "instruction": 16,
+          "issue_shift": 3,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 18,
+          "issue_shift": 4,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 22,
+          "issue_shift": 5,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 24,
+          "issue_shift": 6,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 34,
+          "issue_shift": 7,
+          "kind": "kv"
+        },
+        {
+          "instruction": 36,
+          "issue_shift": 8,
+          "kind": "kv"
+        },
+        {
+          "instruction": 39,
+          "issue_shift": 9,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 41,
+          "issue_shift": 10,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 45,
+          "issue_shift": 11,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 47,
+          "issue_shift": 12,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 57,
+          "issue_shift": 13,
+          "kind": "kv"
+        },
+        {
+          "instruction": 59,
+          "issue_shift": 14,
+          "kind": "kv"
+        },
+        {
+          "instruction": 62,
+          "issue_shift": 15,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 64,
+          "issue_shift": 16,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 68,
+          "issue_shift": 17,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 70,
+          "issue_shift": 18,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 80,
+          "issue_shift": 19,
+          "kind": "kv"
+        },
+        {
+          "instruction": 82,
+          "issue_shift": 20,
+          "kind": "kv"
+        },
+        {
+          "instruction": 85,
+          "issue_shift": 21,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 87,
+          "issue_shift": 22,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 91,
+          "issue_shift": 23,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 93,
+          "issue_shift": 24,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 103,
+          "issue_shift": 25,
+          "kind": "kv"
+        },
+        {
+          "instruction": 105,
+          "issue_shift": 26,
+          "kind": "kv"
+        },
+        {
+          "instruction": 108,
+          "issue_shift": 27,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 110,
+          "issue_shift": 28,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 114,
+          "issue_shift": 29,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 116,
+          "issue_shift": 30,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 126,
+          "issue_shift": 31,
+          "kind": "kv"
+        },
+        {
+          "instruction": 128,
+          "issue_shift": 32,
+          "kind": "kv"
+        },
+        {
+          "instruction": 131,
+          "issue_shift": 33,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 133,
+          "issue_shift": 34,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 137,
+          "issue_shift": 35,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 139,
+          "issue_shift": 36,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 149,
+          "issue_shift": 37,
+          "kind": "kv"
+        },
+        {
+          "instruction": 151,
+          "issue_shift": 38,
+          "kind": "kv"
+        },
+        {
+          "instruction": 154,
+          "issue_shift": 39,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 156,
+          "issue_shift": 40,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 160,
+          "issue_shift": 41,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 162,
+          "issue_shift": 42,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 172,
+          "issue_shift": 43,
+          "kind": "kv"
+        },
+        {
+          "instruction": 174,
+          "issue_shift": 44,
+          "kind": "kv"
+        },
+        {
+          "instruction": 177,
+          "issue_shift": 45,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 179,
+          "issue_shift": 46,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 183,
+          "issue_shift": 47,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 185,
+          "issue_shift": 48,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 195,
+          "issue_shift": 49,
+          "kind": "kv"
+        },
+        {
+          "instruction": 197,
+          "issue_shift": 50,
+          "kind": "kv"
+        },
+        {
+          "instruction": 200,
+          "issue_shift": 51,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 202,
+          "issue_shift": 52,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 206,
+          "issue_shift": 53,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 208,
+          "issue_shift": 54,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 218,
+          "issue_shift": 55,
+          "kind": "kv"
+        },
+        {
+          "instruction": 220,
+          "issue_shift": 56,
+          "kind": "kv"
+        },
+        {
+          "instruction": 223,
+          "issue_shift": 57,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 225,
+          "issue_shift": 58,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 229,
+          "issue_shift": 59,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 231,
+          "issue_shift": 60,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 241,
+          "issue_shift": 61,
+          "kind": "kv"
+        },
+        {
+          "instruction": 243,
+          "issue_shift": 62,
+          "kind": "kv"
+        },
+        {
+          "instruction": 246,
+          "issue_shift": 63,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 248,
+          "issue_shift": 64,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 252,
+          "issue_shift": 65,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 254,
+          "issue_shift": 66,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 264,
+          "issue_shift": 67,
+          "kind": "kv"
+        },
+        {
+          "instruction": 266,
+          "issue_shift": 68,
+          "kind": "kv"
+        },
+        {
+          "instruction": 269,
+          "issue_shift": 69,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 271,
+          "issue_shift": 70,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 275,
+          "issue_shift": 71,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 277,
+          "issue_shift": 72,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 287,
+          "issue_shift": 73,
+          "kind": "kv"
+        },
+        {
+          "instruction": 289,
+          "issue_shift": 74,
+          "kind": "kv"
+        },
+        {
+          "instruction": 292,
+          "issue_shift": 75,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 294,
+          "issue_shift": 76,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 298,
+          "issue_shift": 77,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 300,
+          "issue_shift": 78,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 310,
+          "issue_shift": 79,
+          "kind": "kv"
+        },
+        {
+          "instruction": 312,
+          "issue_shift": 80,
+          "kind": "kv"
+        },
+        {
+          "instruction": 315,
+          "issue_shift": 81,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 317,
+          "issue_shift": 82,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 321,
+          "issue_shift": 83,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 323,
+          "issue_shift": 84,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 333,
+          "issue_shift": 85,
+          "kind": "kv"
+        },
+        {
+          "instruction": 335,
+          "issue_shift": 86,
+          "kind": "kv"
+        },
+        {
+          "instruction": 338,
+          "issue_shift": 87,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 340,
+          "issue_shift": 88,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 344,
+          "issue_shift": 89,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 346,
+          "issue_shift": 90,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 356,
+          "issue_shift": 91,
+          "kind": "kv"
+        },
+        {
+          "instruction": 358,
+          "issue_shift": 92,
+          "kind": "kv"
+        },
+        {
+          "instruction": 361,
+          "issue_shift": 93,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 363,
+          "issue_shift": 94,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 367,
+          "issue_shift": 95,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 369,
+          "issue_shift": 96,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 379,
+          "issue_shift": 97,
+          "kind": "kv"
+        },
+        {
+          "instruction": 381,
+          "issue_shift": 98,
+          "kind": "kv"
+        },
+        {
+          "instruction": 384,
+          "issue_shift": 99,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 386,
+          "issue_shift": 100,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 390,
+          "issue_shift": 101,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 392,
+          "issue_shift": 102,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 402,
+          "issue_shift": 103,
+          "kind": "kv"
+        },
+        {
+          "instruction": 404,
+          "issue_shift": 104,
+          "kind": "kv"
+        },
+        {
+          "instruction": 407,
+          "issue_shift": 105,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 409,
+          "issue_shift": 106,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 413,
+          "issue_shift": 107,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 415,
+          "issue_shift": 108,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 425,
+          "issue_shift": 109,
+          "kind": "kv"
+        },
+        {
+          "instruction": 427,
+          "issue_shift": 110,
+          "kind": "kv"
+        },
+        {
+          "instruction": 430,
+          "issue_shift": 111,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 432,
+          "issue_shift": 112,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 436,
+          "issue_shift": 113,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 438,
+          "issue_shift": 114,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 448,
+          "issue_shift": 115,
+          "kind": "kv"
+        },
+        {
+          "instruction": 450,
+          "issue_shift": 116,
+          "kind": "kv"
+        },
+        {
+          "instruction": 453,
+          "issue_shift": 117,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 455,
+          "issue_shift": 118,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 459,
+          "issue_shift": 119,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 461,
+          "issue_shift": 120,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 471,
+          "issue_shift": 121,
+          "kind": "kv"
+        },
+        {
+          "instruction": 473,
+          "issue_shift": 122,
+          "kind": "kv"
+        },
+        {
+          "instruction": 476,
+          "issue_shift": 123,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 478,
+          "issue_shift": 124,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 482,
+          "issue_shift": 125,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 484,
+          "issue_shift": 126,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 494,
+          "issue_shift": 127,
+          "kind": "kv"
+        },
+        {
+          "instruction": 496,
+          "issue_shift": 128,
+          "kind": "kv"
+        },
+        {
+          "instruction": 499,
+          "issue_shift": 129,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 501,
+          "issue_shift": 130,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 505,
+          "issue_shift": 131,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 507,
+          "issue_shift": 132,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 517,
+          "issue_shift": 133,
+          "kind": "kv"
+        },
+        {
+          "instruction": 519,
+          "issue_shift": 134,
+          "kind": "kv"
+        },
+        {
+          "instruction": 522,
+          "issue_shift": 135,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 524,
+          "issue_shift": 136,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 528,
+          "issue_shift": 137,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 530,
+          "issue_shift": 138,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 540,
+          "issue_shift": 139,
+          "kind": "kv"
+        },
+        {
+          "instruction": 542,
+          "issue_shift": 140,
+          "kind": "kv"
+        },
+        {
+          "instruction": 545,
+          "issue_shift": 141,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 547,
+          "issue_shift": 142,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 551,
+          "issue_shift": 143,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 553,
+          "issue_shift": 144,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 563,
+          "issue_shift": 145,
+          "kind": "kv"
+        },
+        {
+          "instruction": 565,
+          "issue_shift": 146,
+          "kind": "kv"
+        },
+        {
+          "instruction": 568,
+          "issue_shift": 147,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 570,
+          "issue_shift": 148,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 574,
+          "issue_shift": 149,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 576,
+          "issue_shift": 150,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 586,
+          "issue_shift": 151,
+          "kind": "kv"
+        },
+        {
+          "instruction": 588,
+          "issue_shift": 152,
+          "kind": "kv"
+        },
+        {
+          "instruction": 591,
+          "issue_shift": 153,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 593,
+          "issue_shift": 154,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 597,
+          "issue_shift": 155,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 599,
+          "issue_shift": 156,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 609,
+          "issue_shift": 157,
+          "kind": "kv"
+        },
+        {
+          "instruction": 611,
+          "issue_shift": 158,
+          "kind": "kv"
+        },
+        {
+          "instruction": 614,
+          "issue_shift": 159,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 616,
+          "issue_shift": 160,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 620,
+          "issue_shift": 161,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 622,
+          "issue_shift": 162,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 632,
+          "issue_shift": 163,
+          "kind": "kv"
+        },
+        {
+          "instruction": 634,
+          "issue_shift": 164,
+          "kind": "kv"
+        },
+        {
+          "instruction": 637,
+          "issue_shift": 165,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 639,
+          "issue_shift": 166,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 643,
+          "issue_shift": 167,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 645,
+          "issue_shift": 168,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 655,
+          "issue_shift": 169,
+          "kind": "kv"
+        },
+        {
+          "instruction": 657,
+          "issue_shift": 170,
+          "kind": "kv"
+        },
+        {
+          "instruction": 660,
+          "issue_shift": 171,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 662,
+          "issue_shift": 172,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 666,
+          "issue_shift": 173,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 668,
+          "issue_shift": 174,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 678,
+          "issue_shift": 175,
+          "kind": "kv"
+        },
+        {
+          "instruction": 680,
+          "issue_shift": 176,
+          "kind": "kv"
+        },
+        {
+          "instruction": 683,
+          "issue_shift": 177,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 685,
+          "issue_shift": 178,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 689,
+          "issue_shift": 179,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 691,
+          "issue_shift": 180,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 701,
+          "issue_shift": 181,
+          "kind": "kv"
+        },
+        {
+          "instruction": 703,
+          "issue_shift": 182,
+          "kind": "kv"
+        },
+        {
+          "instruction": 706,
+          "issue_shift": 183,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 708,
+          "issue_shift": 184,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 712,
+          "issue_shift": 185,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 714,
+          "issue_shift": 186,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 724,
+          "issue_shift": 187,
+          "kind": "kv"
+        },
+        {
+          "instruction": 726,
+          "issue_shift": 188,
+          "kind": "kv"
+        },
+        {
+          "instruction": 729,
+          "issue_shift": 189,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 731,
+          "issue_shift": 190,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 735,
+          "issue_shift": 191,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 737,
+          "issue_shift": 192,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 747,
+          "issue_shift": 193,
+          "kind": "kv"
+        },
+        {
+          "instruction": 749,
+          "issue_shift": 194,
+          "kind": "kv"
+        },
+        {
+          "instruction": 752,
+          "issue_shift": 195,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 754,
+          "issue_shift": 196,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 758,
+          "issue_shift": 197,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 760,
+          "issue_shift": 198,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 770,
+          "issue_shift": 199,
+          "kind": "kv"
+        },
+        {
+          "instruction": 772,
+          "issue_shift": 200,
+          "kind": "kv"
+        },
+        {
+          "instruction": 775,
+          "issue_shift": 201,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 777,
+          "issue_shift": 202,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 781,
+          "issue_shift": 203,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 783,
+          "issue_shift": 204,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 793,
+          "issue_shift": 205,
+          "kind": "kv"
+        },
+        {
+          "instruction": 795,
+          "issue_shift": 206,
+          "kind": "kv"
+        },
+        {
+          "instruction": 798,
+          "issue_shift": 207,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 800,
+          "issue_shift": 208,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 804,
+          "issue_shift": 209,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 806,
+          "issue_shift": 210,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 816,
+          "issue_shift": 211,
+          "kind": "kv"
+        },
+        {
+          "instruction": 818,
+          "issue_shift": 212,
+          "kind": "kv"
+        },
+        {
+          "instruction": 821,
+          "issue_shift": 213,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 823,
+          "issue_shift": 214,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 827,
+          "issue_shift": 215,
+          "kind": "weights_or_head"
+        },
+        {
+          "instruction": 831,
+          "issue_shift": 216,
+          "kind": "weights_or_head"
+        }
+      ],
+      "priced_arithmetic_extra": 54,
+      "program_sha256": "86b63fe3c1086c8a02df9c07353d2497434b923ca4bec1df7e61d34a5a899770",
+      "target_arithmetic_extra": 55,
+      "total_cycles_delta": 217,
+      "weight_me_instructions": 145,
+      "wire_cycles": 112
+    }
+  ],
+  "schema": "opentallas.qwen-rom-model-propagation-gate.v1",
+  "seven_runtime_gaps": [
+    "rtl/hdc/ot_hdc_matvec.sv",
+    "rtl/hdc/ot_qwen_me_array.sv",
+    "rtl/hdc/ot_qwen_rom_tile.sv",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp",
+    "tools/qwen_rom_rt_core_emit.py",
+    "tools/qwen_rom_rt_token.py"
+  ],
+  "source_sha256": {
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "results/rtl/qwen_rom_sidecar_20261002/tile_i518_terminal/00_physical.json": "8995649c1e0558f0e878fa05201b11b46e9ea965cecd319deb4d3409485472ce",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/test/tb_qwen_me_partition_w12.sv": "eacf140fecf87323076eb8cbb0b3ecfa8eb20c431e02f810a0182974a74821c2",
+    "tools/arch_budget_qwen3.py": "f16b7dae18ba600227e52cfc49e2ab95ee72b63765d851e7668400679ed64eaf",
+    "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+    "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+    "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+    "tools/qwen_rom_integration_preflight.py": "0d028e11103f04ad7f79fbf748c174ea75fbd12eb69c1fc729a02bfc4cf3abb7",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "source_stable": true,
+  "status": "fail",
+  "target_extra": 55,
+  "verifier_sha256": "bee9468f79b036bedec8c4b31ff2d01989a73dedfadc0b2fd33f96cb828856a2"
+}

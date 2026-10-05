@@ -1,0 +1,33 @@
+{
+  "host": "ot-agidock128",
+  "copy_before_launch": [
+    "exact proposal.json",
+    "reviewed GO.json"
+  ],
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=hbm-qwen-kv-operator-campaign-vm-20261002-r1.service",
+    "--property=WorkingDirectory=/home/ubuntu/OpenTallas-qwen-kv-operator-r1",
+    "--property=RuntimeMaxSec=infinity",
+    "--property=LimitCPU=infinity",
+    "--property=LimitFSIZE=infinity",
+    "--property=LimitAS=infinity",
+    "--property=CPUAffinity=0-7",
+    "--setenv=OMP_NUM_THREADS=8",
+    "--setenv=MKL_NUM_THREADS=8",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "/home/ubuntu/.local/qwen-trained-provider-py310/bin/python",
+    "-B",
+    "/home/ubuntu/OpenTallas-qwen-kv-operator-r1/tools/qwen_kv_campaign_launcher.py",
+    "--proposal",
+    "/home/ubuntu/otjobs/qwen-kv-operator-campaign-vm-20261002-r1/proposal.json",
+    "--admission",
+    "/home/ubuntu/otjobs/qwen-kv-operator-campaign-vm-20261002-r1/GO.json",
+    "--go-commit",
+    "<REVIEWED_GO_SHA>"
+  ],
+  "requires": "parent reviewed admitted=true GO, freshlease/capscheck thenruntimeprefight; no secondtoken",
+  "no_automatic_retry": true,
+  "memory_policy": "32GiB scheduling reservation only; no job memory/swap cap or forced OOM stop"
+}

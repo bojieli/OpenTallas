@@ -1,0 +1,49 @@
+{
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "debug_projection": {
+    "area_fanout_routing_timing_unpriced": true,
+    "bits_per_rank": 768,
+    "four_rank_bits": 3072,
+    "no_hardware_implemented": true,
+    "static_not_proven_minimum": true
+  },
+  "final_source_mapping": "r3/mapping.json",
+  "historical_artifact_source_archives": {
+    "tests/test_operation_deadline_provider_schema.py": "results/rtl/operation_deadline_hooks_4e383_20261001/initial_source_archive/test_operation_deadline_provider_schema.py.txt",
+    "tools/record_operation_deadline_hooks.py": "results/rtl/operation_deadline_hooks_4e383_20261001/initial_source_archive/record_operation_deadline_hooks.py.txt"
+  },
+  "limitations": [
+    "pure provider uses supplied synthetic association flags; actual binding/certificates not admitted",
+    "wire tag reuse cannot identify response epoch by current PC/state alone",
+    "selected CKV branch availability is conditional source scope, not proof of current live elaboration",
+    "no actual transport/service/operation bounds supplied; no universal deadline"
+  ],
+  "native_hook_count": 33,
+  "product_liveness": "BLOCKED_PENDING_ACTUAL_CAUSAL_SERVICE_BOUNDS",
+  "protected_driver_copy": {
+    "changed": false,
+    "commit": "2322ea612123360e6f3ea704062b8dd4f2ea2470",
+    "path": "rtl/test/v41_runtime/w17_future_validated_fastpp_die_rt.cpp",
+    "sha256": "194b6cf5550445dfc8cd389bfc888636c32fa182ca6d791bdf24064464484aca"
+  },
+  "retained_initial_mapping": "r1/r2 retained; r3 separately exposes merger child accept/done in final cost",
+  "schema": "schema.json",
+  "scope": {
+    "actual_hook_selected": false,
+    "fullbuild": false,
+    "hardware_claim": false,
+    "live_changes": false,
+    "new_getter_selected": false,
+    "non_mutating_provider": true,
+    "producer_or_fault_quiescence_repair": false,
+    "source_list_change": false
+  },
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins_verified": 13,
+  "status": "PASS_MODEL_SCHEMA_TESTS_ONLY",
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_operation_deadline_provider_schema.py",
+    "log": "pytest_final_v2.log",
+    "passed": 28
+  }
+}

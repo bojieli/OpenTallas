@@ -1,0 +1,123 @@
+{
+  "observed_utc": "2026-10-01T09:35:59.226746+00:00",
+  "basis": "8e5eae77e739f5c0c11a983d35c6d5084112df82",
+  "run_pin": "d2631dd9051c30d7ab1aeab6fdaab4f9200d3f5a",
+  "source_identity_verified": true,
+  "completed_inputs": {
+    "core": {
+      "directory": "/tmp/claude-1000/qcnam/runs/core",
+      "sha256": {
+        "run.json": "3f3cfc502dd82a82d3998de972144ff4a61c27f4e17a7e3f788b251e1acffe4e",
+        "raw.json": "d26ca51a53c2d9695103765024fc42c72219b56b677943bd57113d5c1f5d2eb2",
+        "status": "796af42d6604ba53ae231d0c9a52e8be468c3a819e7f5383d49cb675fda3e5eb",
+        "log.txt": "bb89ad4f92f5191ecb932fe2640fc10371224123653a57666c1bab7eb50b6b3c"
+      },
+      "validated_depth": 40,
+      "successful_completion": true
+    },
+    "mmlu1000": {
+      "directory": "/tmp/claude-1000/qcnam/runs/mmlu1000",
+      "sha256": {
+        "run.json": "d9f5dabe87ab6e05a0bdea9e3debebb5f9f8e031f71b384686388b98b40937e9",
+        "raw.json": "b65a177d7a21352109f81ea360600ca6849b6067c8d14977de9e24cb36efa1d2",
+        "status": "cea6e9cde7a6f260a3d31496bcbaa85a2eb5100242f01627569297f5b2a4c299",
+        "log.txt": "81e2cf82c99478e6c12277d39936ab816a9e5645a71903734dd28d3c7b9e1f04"
+      },
+      "validated_depth": 40,
+      "successful_completion": true
+    }
+  },
+  "mmlu_pool": {
+    "core_questions": 200,
+    "mmlu1000_questions": 1000,
+    "overlap_questions": 12,
+    "pooled_questions": 1188,
+    "replacement_order": [
+      "core",
+      "mmlu1000"
+    ]
+  },
+  "active_jobs": [
+    {
+      "pid": 366428,
+      "argv": [
+        "/bin/bash",
+        "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+      ],
+      "cwd": "/tmp/claude-1000/wt/qcnam-run",
+      "start_ticks": "304830223"
+    },
+    {
+      "pid": 366429,
+      "argv": [
+        "/usr/bin/python3",
+        "tools/deepseek_v41_greedy_reference.py",
+        "--prompts",
+        "8",
+        "--prompt-len",
+        "128",
+        "--gen",
+        "128",
+        "--out",
+        "/tmp/claude-1000/qcnam/runs/gen/gen.json"
+      ],
+      "cwd": "/tmp/claude-1000/wt/qcnam-run",
+      "start_ticks": "304830223"
+    },
+    {
+      "pid": 2637360,
+      "argv": [
+        "/bin/bash",
+        "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+      ],
+      "cwd": "/tmp",
+      "start_ticks": "303668157"
+    }
+  ],
+  "full_verdict": null,
+  "finalized": false,
+  "hardware_adopted": false,
+  "core_failure_record": "results/quality/qcnam_completed_core_audit_v2_20261001.json",
+  "model_treatment": "DeepSeek QC-NAM variant excluded as eligible gain by definitive core stability failure; no product rates changed.",
+  "calibration": {
+    "source": "results/rtl/w11_main_compatible_20261001/matched_pairs.json",
+    "sha256": "0483494e23113ea042e99753156d16a6a31a0d28527ce70a12f386bd5a9a6072",
+    "pairs": [
+      {
+        "unfused": "u00",
+        "fused": "f00",
+        "unfused_cycles": 326676,
+        "fused_cycles": 318034,
+        "saved_cycles": 8642,
+        "fraction_saved": 0.0264543462023534,
+        "unfused_SU_busy": 172533,
+        "fused_SU_busy": 163005,
+        "functional_exact": "PASS",
+        "original_overall": [
+          "fail",
+          "fail"
+        ],
+        "adoption": false
+      },
+      {
+        "unfused": "u2517",
+        "fused": "f2517",
+        "unfused_cycles": 398676,
+        "fused_cycles": 376638,
+        "saved_cycles": 22038,
+        "fraction_saved": 0.055277970080968006,
+        "unfused_SU_busy": 256096,
+        "fused_SU_busy": 233937,
+        "functional_exact": "PASS",
+        "original_overall": [
+          "fail",
+          "fail"
+        ],
+        "adoption": false
+      }
+    ],
+    "scope": "Terminal reduced die pairs with identical source input hashes and matching wire stages, all memories/logits and token exact. Original overall FAIL retained; source90b pin-equivalence gate separate. No SS/FF or hardware adoption.",
+    "product_multiplier_applied": false
+  },
+  "next_action": "Existing greedy reference then long lane; readiness watcher and unchanged full guard/finalizer only after all lanes complete."
+}

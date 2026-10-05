@@ -1,0 +1,21 @@
+{
+  "status": "LIVE_PARTIAL_LAYER_PROGRESS_NOT_FULL_TOKEN",
+  "observed_utc": "2026-10-02T03:39:55.829300+00:00",
+  "host": "ot-pve1",
+  "live_PID": 1220907,
+  "comm": "qwen_rom_rt",
+  "elapsed": "1-06:55:59",
+  "RSS_KiB": 1466820,
+  "log": "/home/ubuntu/w12/rt_tp4d/token.log",
+  "latest_completed_layer": 26,
+  "layer_cycles": 4668,
+  "start_cycle": 121402,
+  "end_cycle": 126070,
+  "seq_fault": 0,
+  "core_fault": 0,
+  "coll_fault": 0,
+  "next_layer": 27,
+  "qualification": "No fulltoken or physicalclosure inferred from partial layer progress",
+  "owner": "Euclid 01a0fab1-2dbc-74c3-a225-72b1f846f3aa",
+  "no_duplicate_run": true
+}

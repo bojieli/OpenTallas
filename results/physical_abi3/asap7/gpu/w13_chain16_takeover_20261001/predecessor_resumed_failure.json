@@ -1,0 +1,12 @@
+{
+  "observed_at": "2026-10-01T09:08:05.824236+00:00",
+  "verdict": "FAILED_PREDECESSOR_RESUMED",
+  "chain16_pid": 495285,
+  "failure": "predecessor no longer parked at pinned identity",
+  "recovery": "chain15 PID3047316 verified start304527912, no children/launch event, reparked with supervisor-only SIGSTOP",
+  "unknown_actor": "Actor that resumed chain15 not established; do not resume parked predecessors",
+  "columns_preserved": [
+    2089594,
+    1901598
+  ]
+}

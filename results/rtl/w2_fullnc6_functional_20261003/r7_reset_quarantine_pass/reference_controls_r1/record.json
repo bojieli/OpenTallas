@@ -1,0 +1,61 @@
+{
+  "pid": 60812,
+  "positive_record": "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/record.json",
+  "positive_record_sha256": "49c109ab556342f2b53a85382855317d8d764d00896f6eb98d8094d4fa8911a4",
+  "binary_sha256": "6f4fcf07970dabc9a7cfffb43731c43952de8085728ae7ad688e8d8fa849433b",
+  "binary_path": "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin",
+  "controls": [
+    {
+      "name": "omit",
+      "command": [
+        "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin",
+        "+oracle_reset_omit"
+      ],
+      "rc": 1,
+      "seconds": 8.597882516999562,
+      "expected_message": "rejected stale return retired reset-orphan debt",
+      "expected_failure_observed": true,
+      "log_sha256": "31d34f73d23308a8121fa12fe727375f88caff431f6d0e457ef07ada13153931"
+    },
+    {
+      "name": "drop",
+      "command": [
+        "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin",
+        "+oracle_reset_drop"
+      ],
+      "rc": 1,
+      "seconds": 8.59725624099974,
+      "expected_message": "reset orphan receipt dropped without provider disposal",
+      "expected_failure_observed": true,
+      "log_sha256": "39c759a23504a977e580f2e04c984cdac536db6a110f7a09e5bb1e5b948617cc"
+    },
+    {
+      "name": "drop_debt",
+      "command": [
+        "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin",
+        "+oracle_reset_drop_debt"
+      ],
+      "rc": 1,
+      "seconds": 8.515587111000059,
+      "expected_message": "external accepted receipt conservation",
+      "expected_failure_observed": false,
+      "log_sha256": "39c759a23504a977e580f2e04c984cdac536db6a110f7a09e5bb1e5b948617cc"
+    },
+    {
+      "name": "consume",
+      "command": [
+        "/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin",
+        "+oracle_reset_consume"
+      ],
+      "rc": 1,
+      "seconds": 8.551408324000477,
+      "expected_message": "client terminal consumed quarantined reset orphan",
+      "expected_failure_observed": true,
+      "log_sha256": "c2e6a6096a0a68d550b38c8b1ee5ebf705a1428dcb3c071356c2efc27c03f934"
+    }
+  ],
+  "status": "FAIL_REFERENCE_CONTROLS",
+  "physical_or_fulltoken_admission": false,
+  "compile_launched": false,
+  "binary_sha256_post": "6f4fcf07970dabc9a7cfffb43731c43952de8085728ae7ad688e8d8fa849433b"
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.abi3.v41_layer1_localisation.v1",
+  "producer": {
+    "tool": "ad-hoc probes recorded here; the reusable instruments are tools/bisect_deepseek_v41_oracle_divergence.py and tools/compare_v41_sparse_attention_operator.py",
+    "question": "after the rotary fix, what makes layer 1 collapse to cosine 0.445 when layer 0 is 0.996?"
+  },
+  "measurements": [
+    {
+      "probe": "which checkpoint layer's weights does the device read for layer 1's wq_a?",
+      "method": "tap every TENSOR operator's weight view of 5,120 elements in issue order and correlate against layers.L.attn.wq_a.weight for L in 0..5",
+      "result": "device views 0 and 1 match layer 0 at cosine 1.000000; views 4 and 5 match layer 1 at cosine 1.000000",
+      "reading": "the per-run weight base is CORRECT and the weight-addressing hypothesis is refuted; layer 1 reads layer 1's weights"
+    },
+    {
+      "probe": "does the activation entering layer 1's wq_a equal the vendor's layer-1 attn_norm output?",
+      "method": "tap the two TENSOR operators whose weight view matches layer 1's wq_a at cosine > 0.9999 and read their input view 0",
+      "result": "the activation view is [8, 160]; the best of its eight rows correlates with the vendor's attn_norm output at 0.140279 and the last row at -0.028117; none is identical",
+      "reading": "the input is wrong, not the weight, and it is wrong by a lot rather than by a rounding"
+    },
+    {
+      "probe": "where in layer 1 does the departure begin?",
+      "method": "deep taps on every named submodule of block 1, plus the block's hc_pre method",
+      "result": "engram.embed 1.0, engram.wkv 1.0, engram output 0.9872, hc_pre 0.4466, attn_norm 0.9875 (a nearest-neighbour match, not a confirmed identity), wq_a 0.2997",
+      "reading": "the engram's own two operators are bit-exact, so the engram is exonerated; the collapse begins at hc_pre"
+    }
+  ],
+  "conclusion": {
+    "fault_site": "the hyper-connection pre-mix (hc_pre) as consumed by layer 1",
+    "why_layer_1_and_not_layer_0": "layer 0's hc_pre reads the IDENTITY pre-mix that Transformer.forward builds with make_identity_pre_mix; from layer 1 onward it reads the mix the PREVIOUS layer computed, so layer 1 is the first layer whose pre-mix is a computed Sinkhorn-normalised matrix rather than a one-hot",
+    "what_that_predicts": "layer 0 correct, every later layer wrong, and the error entering through the branch/residual split rather than through any weight -- which is what all three probes measured",
+    "adjacent_evidence": "compiler/backends/rom/common/program.py refuses a token-invariant mHC weight row of 20 elements against 4 contributions per token (test_rom_short_horizon), which is the hc_mult+1 plane layout of this same mix; that refusal was left open earlier this session for want of the row semantics, and this is the reason to settle them"
+  },
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "a nearest-neighbour cosine is a localisation instrument; the two probes that name the fault site read the device's OWN views for a named operator and do not depend on matching",
+    "the token is still wrong (ROM 1242 against the oracle's 1638); this names the next fault, it does not close the cell"
+  ]
+}

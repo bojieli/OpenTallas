@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+"""Authorized wrapper verification; aggregate cgroup cap plus two-CPU affinity."""
+import argparse
+import importlib.util
+import json
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+import time
+
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('prepare',ROOT/'tools/prepare_field_common_wrapper_gate.py')
+P=importlib.util.module_from_spec(spec);spec.loader.exec_module(P)
+REVIEW='0917adb00'
+REVIEW_PATH='results/rtl/w11_field_prefix_sequential_gate_20261001/parent_review.json'
+
+
+def capped_child(command, timeout):
+    cgroup=Path('/sys/fs/cgroup')/Path('/proc/self/cgroup').read_text().strip().split('::',1)[1].lstrip('/')
+    if (cgroup/'memory.max').read_text().strip()!='4294967296' or (cgroup/'memory.swap.max').read_text().strip()!='0':
+        raise RuntimeError('aggregate memory limit not applied')
+    cpus=sorted(os.sched_getaffinity(0))[:2]
+    os.sched_setaffinity(0,cpus)
+    if len(os.sched_getaffinity(0))>2: raise RuntimeError('CPU bound not applied')
+    started=time.monotonic()
+    child=subprocess.Popen(command,start_new_session=True)
+    try: rc=child.wait(timeout=timeout)
+    except subprocess.TimeoutExpired:
+        os.killpg(child.pid,signal.SIGKILL);child.wait();rc=124
+    metrics={n:(cgroup/n).read_text().strip() for n in ('memory.max','memory.swap.max','memory.peak','memory.events')}
+    metrics.update(returncode=rc,cpus=cpus,elapsed_seconds=round(time.monotonic()-started,3))
+    print('RESOURCE '+json.dumps(metrics),flush=True)
+    return rc
+
+
+def run_gate(output, work, go):
+    if go!='parent-0917adb00-wrapper-verification-only': raise ValueError('explicit parent GO token required')
+    if output.exists() or work.exists(): raise FileExistsError('fresh record and work required')
+    raw=subprocess.check_output(['git','show',REVIEW+':'+REVIEW_PATH],cwd=ROOT)
+    review=json.loads(raw)
+    if not (review['result_matches_owner_exactly'] is True and review['source_pin']==P.SOURCE and
+            review['parameters']==dict(bmul_LAT=5,bterm_LAT=11,bterm_TW=17,fadd_CUT=379,fadd_LAT=8) and
+            review['mutant_failures']==4 and review['candidate_samples']==26565):
+        raise ValueError('prerequisite review mismatch')
+    output.mkdir(parents=True);work.mkdir(parents=True)
+    record={'status':'RUNNING','source_commit':P.SOURCE,'parent_review_commit':REVIEW,
+      'parent_review_sha256':P.sha(raw),'explicit_go':go,
+      'tools_sha256':{p:P.sha((ROOT/p).read_bytes()) for p in ('tools/run_field_common_wrapper_gate.py','tools/prepare_field_common_wrapper_gate.py','rtl/test/tb_field_common_wrappers.sv')},
+      'versions':{t:subprocess.check_output([t,'--version'],text=True).splitlines()[0] for t in ('/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator','g++')},
+      'runs':[],'hardware_qualification':False,'live_substitution':False,'adoption':False,
+      'limitations':['bounded deterministic two-state differential traces; not exhaustive sequential equivalence','unreset payloads have identical simulator initialization','full die and physical timing qualification remain required']}
+    try:
+      for variant in ('candidate','sum_mutant'):
+        wd=work/variant;prep=P.prepare(wd,variant=='sum_mutant')
+        record['runs'].append({'variant':variant,'generated':prep,'commands':[]})
+        entry=record['runs'][-1]
+        for top in (P.TOPS if variant=='candidate' else ('chain8',)):
+          for phase,command in P.commands(top).items():
+            # Keep mandatory aggregate cgroup; wrap the command with metrics and
+            # process-group timeout. Affinity restricts CPU even without delegated cpu.max.
+            idx=command.index('timeout')
+            inner=command[idx+3:]
+            bound=600 if phase=='compile' else 60
+            cmd=command[:idx]+['timeout','--kill-after=5s',str(bound+10)+'s',sys.executable,
+                   str(Path(__file__).resolve()),'--capped-child','--timeout',str(bound),'--',*inner]
+            log=output/(variant+'_'+top+'_'+phase+'.log')
+            with log.open('x') as f:
+              result=subprocess.run(cmd,cwd=wd,stdout=f,stderr=subprocess.STDOUT,timeout=bound+20)
+            text=log.read_text();metrics=[json.loads(s[9:]) for s in text.splitlines() if s.startswith('RESOURCE ')]
+            entry['commands'].append(dict(top=top,phase=phase,argv=cmd,returncode=result.returncode,
+                 log=log.name,log_sha256=P.sha(log.read_bytes()),resources=metrics))
+            mutant_fail=variant=='sum_mutant' and phase=='simulate'
+            if mutant_fail:
+              if result.returncode==0 or 'chain8 mismatch cycle=' not in text:
+                raise RuntimeError('actual sum mutant did not produce comparison failure')
+            elif result.returncode or (phase=='simulate' and 'PASS '+top not in text):
+              raise RuntimeError('wrapper command failed: '+variant+'/'+top+'/'+phase)
+            if len(metrics)!=1: raise RuntimeError('resource metrics missing')
+      record['status']='PASS'
+    except Exception as e:
+      record['status']='FAIL';record['failure']=str(e)
+      raise
+    finally:
+      with (output/'record.json').open('x') as f: json.dump(record,f,indent=2,sort_keys=True);f.write('\n')
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--capped-child',action='store_true')
+    parser.add_argument('--timeout',type=int)
+    parser.add_argument('--output',type=Path)
+    parser.add_argument('--work',type=Path)
+    parser.add_argument('--parent-go')
+    parser.add_argument('command',nargs=argparse.REMAINDER)
+    a=parser.parse_args()
+    if a.capped_child:
+      if a.timeout not in (60,600): parser.error('timeout outside approved bounds')
+      sys.exit(capped_child(a.command[1:] if a.command[:1]==['--'] else a.command,a.timeout))
+    if a.output is None or a.work is None: parser.error('--output and --work required')
+    run_gate(a.output.resolve(),a.work.resolve(),a.parent_go)

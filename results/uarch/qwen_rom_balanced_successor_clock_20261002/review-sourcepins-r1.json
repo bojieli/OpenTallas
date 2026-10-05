@@ -1,0 +1,22 @@
+{
+  "origins": {
+    "euclid-current-classification.json": {
+      "commit": "61feff51da3236dd7ac436985b90027cd75c5a11",
+      "sha256": "aa92dfdc942b873c01981a10e8987bbad01ebc8b18bf85e99fb7940e9ff1e970",
+      "source_path": "results/uarch/qwen_rom_bank5_control_20261002/producer_graph_join_r1/classification_and_admission.json"
+    },
+    "parent-current-graph-review.json": {
+      "commit": "077a8f103377405ef9ba971796fe24517f75ae4c",
+      "sha256": "dfb1a4a3a233085344012f0450c7aca00744af1fec08bb5669fdb400f01ecf77",
+      "source_path": "results/uarch/native_software_parent_intake_20261002/Qwen_complete_producer_graph_parent_review.json"
+    }
+  },
+  "sha256": {
+    "results/uarch/qwen_rom_balanced_successor_clock_20261002/admission-decision-r1.json": "2e96d9e5cdab56eda3213414500e5e4f6dd79a27d4b254be7b494fc3c98d0d81",
+    "results/uarch/qwen_rom_balanced_successor_clock_20261002/inputs/euclid-current-classification.json": "aa92dfdc942b873c01981a10e8987bbad01ebc8b18bf85e99fb7940e9ff1e970",
+    "results/uarch/qwen_rom_balanced_successor_clock_20261002/inputs/parent-current-graph-review.json": "dfb1a4a3a233085344012f0450c7aca00744af1fec08bb5669fdb400f01ecf77",
+    "results/uarch/qwen_rom_balanced_successor_clock_20261002/validation-r1.log": "e2289c230135b682d66e48107f8caab30f5b37878e8daf2e9fb92df9aebb1375",
+    "tests/test_qwen_rom_balanced_admission_decision.py": "f89bbdec2e546439750cd36d438dd6d51c17bd4c09d30d9989dbd0d04e36e2d5",
+    "tools/uarch_model_qwen_balanced_context.py": "32ce6e079a0da53dc1538f72b64541342e2ba26f13a4b26caa6730f02f7ec2eb"
+  }
+}

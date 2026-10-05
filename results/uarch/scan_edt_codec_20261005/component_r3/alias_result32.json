@@ -1,0 +1,48 @@
+{
+  "encodable": true,
+  "words": [
+    4,
+    1,
+    14,
+    10,
+    8,
+    4,
+    9,
+    14,
+    6,
+    13,
+    8,
+    9,
+    6,
+    10,
+    0,
+    5
+  ],
+  "care_bits": 512,
+  "rank": 64,
+  "care_mismatches": 0,
+  "shift_edges": 16,
+  "reset_edges": 1,
+  "total_shift_edges": 17,
+  "reset_shift_word": 0,
+  "channel_ratio": 8.0,
+  "source_pins": {},
+  "coverage_status": "FAIL_SUPPLIED_RESPONSE_SET",
+  "faults": {
+    "alias": {
+      "raw_detected": true,
+      "compact_detected": false,
+      "lost_detection": true
+    }
+  },
+  "expected_compact": [
+    [
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "integrated_atpg_coverage": "UNVALIDATED",
+  "edge_protocol": "scan_en1 pattern_reset1 first shift: zero chain inputs and observe captured OLD outputs; clear codec. Then pattern_reset0 and L encoded shifts. Responses begin on the first reset-shift edge; never extra functional capture."
+}

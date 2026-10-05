@@ -1,0 +1,95 @@
+{
+  "claim_boundary": "Existing connected subsystem RTL read diagnostic with a delayed behavioral sector endpoint and behavioral window/tail memories. No engine build, actual r14 transport, SRAM macro, second token, full-token, rate or physical credit.",
+  "fixture": {
+    "connected_to_tile_macro": false,
+    "external_writes_qualified": false,
+    "groups": 4,
+    "r14_provider_connected": false,
+    "read_service_cycles": 41,
+    "request_backpressure": "one edge in seven",
+    "second_token": false,
+    "sector_bytes": 32,
+    "sw": 16,
+    "tile_fill_word_bits": 512,
+    "window_word_bits": 256
+  },
+  "missing_actual_join": [
+    "BF16 streamer window -> FP8 masked 512-bit tile SRAM fill codec/ownership adapter",
+    "r14 tags, TP4 identity, backing write completion and reverse credit retirement",
+    "macro visibility/collision and layer-window lifetime bound to reader drain",
+    "unified finite-service price and source-matched SS/FF fit"
+  ],
+  "negative_control_rejected": true,
+  "parent_ref": "99da9b345cb7c9048b642f93517fb63729ff873a",
+  "resource_caps": {
+    "cpu_seconds_per_process": 60,
+    "memory_MiB": 2048,
+    "output_file_MiB": 256,
+    "wall_seconds_per_process": 60
+  },
+  "schema": "opentallas.qwen-rom-finite-window-diagnostic.v1",
+  "seven_runtime_source_matches": {
+    "rtl/hdc/ot_qwen_me_array_w12.sv": true,
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": true,
+    "rtl/hdc/ot_qwen_w12_matvec.sv": true,
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": true,
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": true,
+    "tools/qwen_rom_rt_core_emit_w12.py": true,
+    "tools/qwen_rom_rt_token_w12.py": true
+  },
+  "source_sha256": {
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "rtl/hdc/kv/ot_hdc_kv_stream.sv": "293895050e77e758692f6eeef29c02934935d092f4000ef8da92d23365bcbd1a",
+    "rtl/hdc/kv/ot_hdc_kv_walk.sv": "2e79a4bc0d7109302b421bc9e1f08ce7a8714028c375ba083612dc8e3df0c9b6",
+    "rtl/hdc/kv/ot_hdc_qwen_hbm_sector_bridge.sv": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_hbm_boot.sv": "7c2f0c3c1509522e4a6fbb06d033577419beb602afeb4a692ea1f660786fb807",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_phys_arbiter.sv": "ee3152a27ee64ff7382f3724f5700c865a7081085840e8e6c59a4cf65323564f",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_bank_port.sv": "24d973adf95ee82ee83dca2a511589b0f199959f51919b06df536b6d0f2d4bd5",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_group_port.sv": "18576d35141c7e559ffb1e790c0fc5eabf978b870ac791953aaf7b2e898b366c",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_tail_read_mux.sv": "c424d6a9299b12f93f2b569be7681839e48b5c24a5ee2c577312b9df91a7a892",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "rtl/test/tb_qwen_rom_kv_finite_window.sv": "5b7b345b7cca8ed31b6ad7c7d82493e162725653653ac6a7faf86d9419cd16a9",
+    "tools/qwen_rom_kv_finite_window_gate.py": "528c5c1cbd4ddf8d55aa2d3c205e96f9a00f2948fac53d0a0015b42a29294a0e",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1"
+  },
+  "source_stable": true,
+  "status": "PASS",
+  "steps": [
+    {
+      "case": "read_window",
+      "output": "/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 24 (kv_waddr) of ot_hdc_kv_stream expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 25 (kv_wdata) of ot_hdc_kv_stream expects 32 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 31 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 43 (boot_addr) of ot_hdc_kv_stream expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 44 (boot_data) of ot_hdc_kv_stream expects 128 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 127 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181: warning: Port 13 (fl_word_addr) of ot_hdc_qwen_kv_vector_bridge expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181: warning: Port 14 (fl_word_data) of ot_hdc_qwen_kv_vector_bridge expects 128 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181:        : Padding 127 high bits of the port.\n",
+      "phase": "build",
+      "returncode": 0,
+      "seconds": 0.029
+    },
+    {
+      "case": "read_window",
+      "output": "PASS QWEN_ROM_FINITE_WINDOW cycles=1214 reads=26 window_writes=25 service_cycles=41 SW=16\n",
+      "phase": "simulation",
+      "returncode": 0,
+      "seconds": 0.065
+    },
+    {
+      "case": "corrupt_return",
+      "output": "/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 24 (kv_waddr) of ot_hdc_kv_stream expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 25 (kv_wdata) of ot_hdc_kv_stream expects 32 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 31 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 43 (boot_addr) of ot_hdc_kv_stream expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142: warning: Port 44 (boot_data) of ot_hdc_kv_stream expects 128 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:142:        : Padding 127 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181: warning: Port 13 (fl_word_addr) of ot_hdc_qwen_kv_vector_bridge expects 24 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181:        : Padding 23 high bits of the port.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181: warning: Port 14 (fl_word_data) of ot_hdc_qwen_kv_vector_bridge expects 128 bits, got 1.\n/tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/hdc/kv/ot_hdc_qwen_kv_system.sv:181:        : Padding 127 high bits of the port.\n",
+      "phase": "build",
+      "returncode": 0,
+      "seconds": 0.029
+    },
+    {
+      "case": "corrupt_return",
+      "output": "FATAL: /tmp/opentallas-qwen-rom-q2-integration-20261002/rtl/test/tb_qwen_rom_kv_finite_window.sv:160: KV physical read mismatch SW=16 V=0 got=3f900000 fault=0 hq=0\n       Time: 11736000 Scope: tb_qwen_rom_kv_finite_window\n",
+      "phase": "simulation",
+      "returncode": 1,
+      "seconds": 0.069
+    }
+  ]
+}

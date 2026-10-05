@@ -1,0 +1,940 @@
+{
+  "$defs": {
+    "attentionCombination": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "attention_combination"
+        },
+        "path": {
+          "const": "outputs/attention_combination.f32le"
+        },
+        "register": {
+          "const": "ATTENTION_COMBINATION"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            },
+            {
+              "const": 4
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 256,
+          "minimum": 64,
+          "multipleOf": 64,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "attentionInput": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16"
+        },
+        "encoding": {
+          "const": "bfloat16_little_endian"
+        },
+        "id": {
+          "const": "attention_input"
+        },
+        "path": {
+          "const": "outputs/attention_input.bf16le"
+        },
+        "register": {
+          "const": "ATTENTION_INPUT"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4096
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 32768,
+          "minimum": 8192,
+          "multipleOf": 8192,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "attentionPost": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "attention_post"
+        },
+        "path": {
+          "const": "outputs/attention_post.f32le"
+        },
+        "register": {
+          "const": "ATTENTION_POST"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 64,
+          "minimum": 16,
+          "multipleOf": 16,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "attentionPre": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "attention_pre"
+        },
+        "path": {
+          "const": "outputs/attention_pre.f32le"
+        },
+        "register": {
+          "const": "ATTENTION_PRE"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 64,
+          "minimum": 16,
+          "multipleOf": 16,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "attentionResidual": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16"
+        },
+        "encoding": {
+          "const": "bfloat16_little_endian"
+        },
+        "id": {
+          "const": "attention_residual"
+        },
+        "path": {
+          "const": "outputs/attention_residual.bf16le"
+        },
+        "register": {
+          "const": "ATTENTION_RESIDUAL"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            },
+            {
+              "const": 4096
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 131072,
+          "minimum": 32768,
+          "multipleOf": 32768,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "diagnostics": {
+      "additionalProperties": false,
+      "properties": {
+        "mix_codes": {
+          "$ref": "#/$defs/mixCodes"
+        },
+        "projection_codes": {
+          "$ref": "#/$defs/projectionCodes"
+        },
+        "rms_inverse_codes": {
+          "$ref": "#/$defs/rmsInverseCodes"
+        },
+        "rms_mean_codes": {
+          "$ref": "#/$defs/rmsMeanCodes"
+        },
+        "stable_softmax_codes": {
+          "$ref": "#/$defs/stableSoftmaxCodes"
+        }
+      },
+      "required": [
+        "mix_codes",
+        "projection_codes",
+        "rms_inverse_codes",
+        "rms_mean_codes",
+        "stable_softmax_codes"
+      ],
+      "type": "object"
+    },
+    "logicalCounters": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_pre_branch_bf16_conversions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_branch_bf16_saturations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_branch_coefficient_multiplies": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_branch_reduction_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_coefficient_epsilon_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_exp_evaluations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_field_affine_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_field_affine_multiplies": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_input_bf16_values": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_post_factor_multiplies": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_projection_product_accumulates": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_projection_rms_multiplies": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_residual_bf16_values_preserved": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_rms_divides": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_rms_epsilon_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_rms_reduction_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_rms_square_multiplies": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_rsqrt_evaluations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sigmoid_evaluations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_column_reduction_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_column_stages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_divides": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_epsilon_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_row_reduction_adds": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_sinkhorn_row_stages": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_softmax_max_comparisons": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "hc_pre_softmax_subtracts": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "hc_pre_branch_bf16_conversions",
+        "hc_pre_branch_bf16_saturations",
+        "hc_pre_branch_coefficient_multiplies",
+        "hc_pre_branch_reduction_adds",
+        "hc_pre_coefficient_epsilon_adds",
+        "hc_pre_exp_evaluations",
+        "hc_pre_field_affine_adds",
+        "hc_pre_field_affine_multiplies",
+        "hc_pre_input_bf16_values",
+        "hc_pre_post_factor_multiplies",
+        "hc_pre_projection_product_accumulates",
+        "hc_pre_projection_rms_multiplies",
+        "hc_pre_residual_bf16_values_preserved",
+        "hc_pre_rms_divides",
+        "hc_pre_rms_epsilon_adds",
+        "hc_pre_rms_reduction_adds",
+        "hc_pre_rms_square_multiplies",
+        "hc_pre_rsqrt_evaluations",
+        "hc_pre_sigmoid_evaluations",
+        "hc_pre_sinkhorn_column_reduction_adds",
+        "hc_pre_sinkhorn_column_stages",
+        "hc_pre_sinkhorn_divides",
+        "hc_pre_sinkhorn_epsilon_adds",
+        "hc_pre_sinkhorn_row_reduction_adds",
+        "hc_pre_sinkhorn_row_stages",
+        "hc_pre_softmax_max_comparisons",
+        "hc_pre_softmax_subtracts"
+      ],
+      "type": "object"
+    },
+    "mixCodes": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "mix_codes"
+        },
+        "path": {
+          "const": "diagnostics/mix.f32le"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 24
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 384,
+          "minimum": 96,
+          "multipleOf": 96,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "numericStatus": {
+      "additionalProperties": false,
+      "properties": {
+        "branch_saturation_count": {
+          "maximum": 16384,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "poison": {
+          "const": false
+        }
+      },
+      "required": [
+        "branch_saturation_count",
+        "poison"
+      ],
+      "type": "object"
+    },
+    "projectionCodes": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "projection_codes"
+        },
+        "path": {
+          "const": "diagnostics/projection.f32le"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 3,
+          "minItems": 3,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 24
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 384,
+          "minimum": 96,
+          "multipleOf": 96,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "rmsInverseCodes": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "rms_inverse_codes"
+        },
+        "path": {
+          "const": "diagnostics/rms_inverse.f32le"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 16,
+          "minimum": 4,
+          "multipleOf": 4,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "rmsMeanCodes": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "rms_mean_codes"
+        },
+        "path": {
+          "const": "diagnostics/rms_mean.f32le"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 16,
+          "minimum": 4,
+          "multipleOf": 4,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "stableSoftmaxCodes": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "F32"
+        },
+        "encoding": {
+          "const": "ieee754_binary32_little_endian"
+        },
+        "id": {
+          "const": "stable_softmax_codes"
+        },
+        "path": {
+          "const": "diagnostics/stable_softmax.f32le"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            },
+            {
+              "const": 4
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 256,
+          "minimum": 64,
+          "multipleOf": 64,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/execution_result_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "else": {
+        "properties": {
+          "deployment_status": {
+            "const": "development_fixture_complete_hc_pre_parameters_not_release_evidence"
+          },
+          "source_application_status": {
+            "const": "development_fixture_application_not_release_evidence"
+          }
+        }
+      },
+      "if": {
+        "properties": {
+          "evidence_scope": {
+            "const": "official_checkpoint"
+          }
+        },
+        "required": [
+          "evidence_scope"
+        ]
+      },
+      "then": {
+        "properties": {
+          "deployment_status": {
+            "const": "official_checkpoint_complete_hc_pre_parameters_not_execution_evidence"
+          },
+          "source_application_status": {
+            "const": "partial_official_transform_application_not_release_evidence"
+          }
+        }
+      }
+    }
+  ],
+  "properties": {
+    "batch_size": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "counter_reconciliation": {
+      "const": "exact"
+    },
+    "deployment_status": {
+      "enum": [
+        "development_fixture_complete_hc_pre_parameters_not_release_evidence",
+        "official_checkpoint_complete_hc_pre_parameters_not_execution_evidence"
+      ]
+    },
+    "diagnostics": {
+      "$ref": "#/$defs/diagnostics"
+    },
+    "evidence_scope": {
+      "enum": [
+        "development_fixture",
+        "official_checkpoint"
+      ]
+    },
+    "execution_scope": {
+      "const": "exact_hc_pre_site_only"
+    },
+    "logical_counters": {
+      "$ref": "#/$defs/logicalCounters"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "numeric_status": {
+      "$ref": "#/$defs/numericStatus"
+    },
+    "outputs": {
+      "items": false,
+      "maxItems": 5,
+      "minItems": 5,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/attentionInput"
+        },
+        {
+          "$ref": "#/$defs/attentionPre"
+        },
+        {
+          "$ref": "#/$defs/attentionPost"
+        },
+        {
+          "$ref": "#/$defs/attentionCombination"
+        },
+        {
+          "$ref": "#/$defs/attentionResidual"
+        }
+      ],
+      "type": "array"
+    },
+    "program_sha256": {
+      "const": "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+    },
+    "request_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_hc_pre_execution_result.v1"
+    },
+    "sequence_length": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "source_application_status": {
+      "enum": [
+        "development_fixture_application_not_release_evidence",
+        "partial_official_transform_application_not_release_evidence"
+      ]
+    },
+    "status": {
+      "const": "pass"
+    },
+    "token_count": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "batch_size",
+    "build_id",
+    "counter_reconciliation",
+    "deployment_status",
+    "diagnostics",
+    "evidence_scope",
+    "execution_scope",
+    "model_id",
+    "numeric_status",
+    "outputs",
+    "program_sha256",
+    "request_sha256",
+    "schema",
+    "logical_counters",
+    "sequence_length",
+    "source_application_status",
+    "status",
+    "token_count"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE artifact-only execution result v1",
+  "type": "object"
+}

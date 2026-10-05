@@ -1,0 +1,28 @@
+{
+  "Arch_source_union_commit": "8d6baed75d4beb596c02b10de6242b3fa43a6237",
+  "additional_state_or_cycles": 0,
+  "area_delta_mm2_at50pct": 0.027770817600000004,
+  "default_off": true,
+  "model": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/model.json",
+  "no_policy_relaxation": true,
+  "one_candidate_no_sweep": true,
+  "owner_model_ACK_pending": true,
+  "physical_admission": false,
+  "purpose": "Single allowed terminal repair model; fixed226 and full-selector HDL next-source gate",
+  "recipients": [
+    "parent",
+    "Archimedes",
+    "Maxwell"
+  ],
+  "remaining_evidence": [
+    "Actual new BUF terminal pin/sink/load and slew including at least.72fF/5ps domains, not ideal inserted delay",
+    "108DBU extra width(2source sites) per terminal in disjoint legal station placement",
+    "Same matched launch/capture source clock, reset recovery/removal, PG and every signal pin/via escape",
+    "Existing source/core/final-sink boundary arcs and19 terminal guard gates; intermediate station screen is not full endpoint timing",
+    "Independent full compiled selector/caller HDL equivalence after model/package admission"
+  ],
+  "sender": "Epicurus",
+  "source_parent": "8356bdb264c88bed19e09f60cbbc813e3367b150",
+  "sourceplan": "results/uarch/dsrom_selector_allowed_terminal_model_20261002/full_selector_HDL_gate_sourceplan.json",
+  "station_cell_reserve_mm2_at50pct": 0.6233792432399998
+}

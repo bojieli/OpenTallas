@@ -1,0 +1,133 @@
+{
+ "comparisons": [
+  {
+   "lookup_call": 0,
+   "per_token": [
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 0,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 0,
+     "token_position": 0
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 1,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 3563,
+     "token_position": 1
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 2,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 3745,
+     "token_position": 2
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 3,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 418,
+     "token_position": 3
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 4,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 170,
+     "token_position": 4
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 5,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 16,
+     "token_position": 5
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 6,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 3564,
+     "token_position": 6
+    },
+    {
+     "closest_is_itself": true,
+     "closest_oracle_row": 7,
+     "exact": true,
+     "max_relative_difference": 0.0,
+     "token_id": 3582,
+     "token_position": 7
+    }
+   ],
+   "rows": 8,
+   "tokens_exact": 8
+  },
+  {
+   "lookup_call": 1,
+   "per_token": [],
+   "rows": 8,
+   "tokens_exact": 0
+  },
+  {
+   "lookup_call": 2,
+   "per_token": [],
+   "rows": 8,
+   "tokens_exact": 0
+  },
+  {
+   "lookup_call": 3,
+   "per_token": [],
+   "rows": 8,
+   "tokens_exact": 0
+  },
+  {
+   "lookup_call": 4,
+   "per_token": [],
+   "rows": 8,
+   "tokens_exact": 0
+  }
+ ],
+ "device_embed_lookup_calls": 5,
+ "device_emitted_token_ids": [
+  1126
+ ],
+ "duplicate_captures_dropped": 5,
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "``closest_oracle_row`` is a nearest-row search over this prompt's eight embeddings only; it identifies a swapped index, it does not prove one"
+ ],
+ "oracle_embedding_shape": [
+  8,
+  160
+ ],
+ "producer": {
+  "git": {
+   "commit": "eae341c329f051f2034d04e3c82a28c0ce3578d9"
+  },
+  "tool": "tools/compare_v41_embedding_rows.py"
+ },
+ "question": "is the device's embedding row bit-identical to the oracle's, per token?",
+ "schema": "opentallas.abi3.v41_embedding_rows.v1",
+ "workload": {
+  "token_ids": [
+   0,
+   3563,
+   3745,
+   418,
+   170,
+   16,
+   3564,
+   3582
+  ],
+  "workload_id": "TA-DS41-REDUCED-EOS-1"
+ }
+}

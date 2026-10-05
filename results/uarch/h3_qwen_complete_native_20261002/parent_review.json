@@ -1,0 +1,28 @@
+{
+  "PCs": 1737,
+  "artifact_sha256": "75a3997b07b492c4c1f8eeec55488c8ef754a49987aa297e1cc16648e49c3674",
+  "classes": 21,
+  "compiler_command": "python3 tools/h3_qwen_complete_native.py --verify",
+  "compiler_exit_code": 0,
+  "hardware_or_rate_credit": false,
+  "implementation_sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+  "null_native_lowerings": 0,
+  "owner_commit": "8fab955601787476da770a202c2721eb0c412d1c",
+  "remaining": [
+    "final calendar consumes this exact package instead of captured WIP",
+    "additional temporary workspace provider/service qualification",
+    "trained checkpoint numerical execution",
+    "connected provider/RTL and SS/FF physical qualification"
+  ],
+  "reviewed_test_scope": [
+    "actual full-program compile/version/provider identities",
+    "blocked source/golden callbacks during native execution",
+    "per-PC reduced numerical outputs vs source oracle",
+    "rounding/Newton/conversion and KV boundary controls",
+    "concrete homes and workspace extent controls"
+  ],
+  "status": "PASS_PARENT_SOFTWARE_NATIVE_REVIEW_ONLY",
+  "test_command": "python3 -m pytest -q -ra tests/test_h3_qwen_complete_native.py",
+  "test_exit_code": 0,
+  "tests": 31
+}

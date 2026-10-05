@@ -1,0 +1,133 @@
+{
+  "schema": "DS_CHECKPOINT_ADDITIVE_SUCCESSOR_SHARED_QUERY_RUN_SCOPE_V2",
+  "base_commit": "7a26263e35e74cfdf5383fc99ed56741ec6555b8",
+  "supersedes_for_intake": "458f6c2fbd82ed8ee199e74ae99e121afa77cd9b; no cherry-pick of that original-path change is required",
+  "legacy_byteinverse": {
+    "tools/ds_producer_checkpoint_resume.py": {
+      "base_sha256": "712c45c1267302e4e408fe41a9300474d00810482217e6e4713925b2768c694e",
+      "current_sha256": "712c45c1267302e4e408fe41a9300474d00810482217e6e4713925b2768c694e",
+      "byteidentical": true
+    },
+    "tests/test_ds_producer_checkpoint_resume.py": {
+      "base_sha256": "f0cc900b9aa5e904b102ce0a936234aad0110b01a56a52ca71a368012a3434f8",
+      "current_sha256": "f0cc900b9aa5e904b102ce0a936234aad0110b01a56a52ca71a368012a3434f8",
+      "byteidentical": true
+    }
+  },
+  "source_sha256": {
+    "tools/ds_producer_checkpoint_resume_v2.py": "0a6ce36d0357adbb32ce16408702cfc6927608e5b6124b5ab82b8f9250d969c1",
+    "tools/ds_producer_checkpoint_helper_select.py": "73666cc051cfe095eeaf9e66ced54494a55b7d9845784cecd62460d3dd6c711d",
+    "tests/test_ds_producer_checkpoint_resume_v2.py": "e815fdac419fda403715abe279771b2cc2396ff86761116699a29f120e88406c",
+    "tools/h4_hbm_w19_pc10_endpoints.py": "5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc",
+    "tools/h3_ds_query_provider_r36.py": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9",
+    "tools/ds_hbm_history_codec_r36.py": "24e0a760b926b0b439120e757fbfffe5f42a2f72198e8794510b4acaf9b53dcf",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+  },
+  "entrypoint": "tools/ds_producer_checkpoint_resume_v2.py",
+  "selection_module": "tools/ds_producer_checkpoint_helper_select.py",
+  "selection_example": "Checkpoint = select_checkpoint_helper('quiescent_v2', expected_sha256=PLAN_HELPER_SHA256)",
+  "default_selection": "legacy_v1; successor never selected implicitly; no fallback on successor refusal",
+  "APIs": [
+    "project_checkpoint",
+    "capture_quiescent",
+    "verify_checkpoint",
+    "restore_quiescent",
+    "join_storage_projection",
+    "plan_run_scope_transition"
+  ],
+  "successor_artifact_schema": "DS_ACTUAL_PRODUCER_QUIESCENT_RESUME_V2; source and constructor enrollment exact; no automatic legacy payload migration",
+  "tests": {
+    "legacy": 26,
+    "successor": 56,
+    "total": 82,
+    "log": "tests_final_milestone.log",
+    "sha256": "4bed8cc624113743771e380f4fea7f09ec8586d03d46684c5c3a9889a2038305",
+    "command": "python3 -m pytest -q tests/test_ds_producer_checkpoint_resume.py tests/test_ds_producer_checkpoint_resume_v2.py"
+  },
+  "shared_schema": {
+    "factory": "original ProductionSharedFactory, same actual JournalBudget object; cold memories empty",
+    "extent_per_SM_bytes": 65536,
+    "operand_double_buffer_distinct_bytes": 8192,
+    "maximum_existing_extent_bytes": 201326592,
+    "saved_memory_fields": [
+      "extent",
+      "owner",
+      "serial",
+      "p.PORT_STATE"
+    ],
+    "owner_fields": [
+      "PC",
+      "rank",
+      "SM",
+      "generation",
+      "tile",
+      "template"
+    ],
+    "quiescence": "PC10 retired; live/queue/calendar/resident/faults zero; source class/bundle exact; unknown fields refused",
+    "actual_component_evidence": "Original512B shared write/read then source-consistent small11operator retirement, capture/verify/restore/read; all PORT_STATE and completed-set object identity preserved; zero restore-generated transaction/ACK events. This is not an actual production PC0..10 replay."
+  },
+  "compound_schema": {
+    "actual_source": "original QueryMixin publication and addressed backing; full32x128 iqf parent/32x64 codes/32x4 exp",
+    "validation": "Manifest home identity/PC/gen/shape/dtype/extent + visible RF parent/home; addressed actual field bytes decoded with original FP4E8 codec and compared bitwise to actual RF data; no requests/ACKs from checkpoint validation",
+    "forms": [
+      "U32 two complement exponent",
+      "I64 signed exponent"
+    ],
+    "actual_produced_payload_only": true
+  },
+  "run_scope_transition": {
+    "fields_only": [
+      "prefix_stop",
+      "journal_root",
+      "journal_capacity_bytes"
+    ],
+    "normal_identity": "strict original manifest hash remains; exemptions only through explicit sealed transition",
+    "role_proof": "Pinned r30 JournalBudget construction and exact SQLite event journal; original cap is host evidence admission/reservation, never extent/tags/qd/write-cap/costs. Classes referring to these evidence controls outside reviewed base are rejected. Test coupling cap to physical tags is rejected.",
+    "extension": "new bound >= old bound and nextPC, below complete native instruction count; distinct actual fresh journal root; typed positive journal capacity",
+    "preserved_identity": [
+      "complete native",
+      "all homes",
+      "dispatch",
+      "full future last_use",
+      "allocations",
+      "retention policy",
+      "all other manifest fields",
+      "source class files",
+      "immutable source images",
+      "revision",
+      "generation",
+      "shared source bundle",
+      "helper source"
+    ],
+    "seal": "Exact old/new scope and identity + trusted actual producer prefix receipt + role proof; revalidated against cold constructor on restore; restored output receipt checkpoint_restore_scope.json fsynced in new journal directory",
+    "legacy_root_only": "Existing strict identity path permits root-only evidence relocation, now emitting exact sealed old/new restore scope; stop/capacity changes require explicit plan",
+    "permission": "ordinary user-authorized continuation requires no new permission; does not override source constructor admission or grant hardware/fulltoken qualification"
+  },
+  "Kepler_call_sequence": [
+    "Explicit pinned successor selection before source-model projection",
+    "project_checkpoint on actual quiescent producer; join checkpoint reservation with Dewey/Kepler incremental journal/index/dictionary demand",
+    "capture_quiescent while actual bytes and owners remain live in process; retain trusted RUNNER_COMPLETE receipt",
+    "Construct exact cold source provider/engine with new evidence root and extension bound/capacity",
+    "plan_run_scope_transition(... source_contract, checkpoint_receipt, provider, engine, next_pc)",
+    "verify_checkpoint(... constructor_contract={identity,run_scope,run_scope_transition,checkpoint_receipt})",
+    "restore_quiescent then original execute_remaining or explicitly bound original runner continuation; skip only verified actual contiguous retired prefix"
+  ],
+  "resource_accounting": "Actual shared sectors included in serializer inventory/projection; do not reserve full sparse extent as if populated; checkpoint output/metadata/restored scope receipt and incremental continuation journals separate; existing journal disk already used; no wall/file/AS/CPU-time caps",
+  "preserved_failures": [
+    "tests_shared_query_attempt1.log:8MiB toy journal exhaustion before query checkpoint; successor component journal priced4096*65536B metadata",
+    "staging_failure_preserved.json:copy attempted before worktree checkout completed; no HDL or numerical execution"
+  ],
+  "remaining_production_requirements": [
+    "Kepler R50 exact current source constructor/calendar pin and reviewed incremental storage reservation",
+    "Real in-process capture: no R45 produced-payload checkpoint survives; witnesses/reference outputs cannot substitute",
+    "Fresh actual full-model restore/continuation gate before production prefix-skipping or cache grants"
+  ],
+  "production_restore": false,
+  "fulltoken_qualified": false,
+  "hardware_qualified": false,
+  "RTL_changed": false,
+  "actual_prefix_duplicate": false,
+  "live_jobs_changed": false
+}

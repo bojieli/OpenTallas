@@ -1,0 +1,247 @@
+{
+  "artifact_pins": {
+    "results/rtl/dsrom_upstream_pair_cadence_prepare_20261002/model.json": "dbb108e80d3a4ae75de57bf0cdc3d2b05d3a6bd2a885a939a4f56e5f19119b5b",
+    "results/rtl/dsrom_upstream_pair_cadence_prepare_20261002/sourceplan.json": "2fda2347c8ab3abed2b2b39eeb9a2bb478e57ad50059bcdf584ba8b2568f3fa1",
+    "results/rtl/dsrom_upstream_pair_cadence_runner_prepare_r3_20261002/expected_contract.json": "a993bc9fe8bf2dd30ad11a2fe05fa848d5ef04d63aac7368779028e66219257b",
+    "results/rtl/dsrom_upstream_pair_cadence_runner_prepare_r3_20261002/sourceplan.json": "19810c925473e6ea6c18993ad068266abfdc4e96938b562ecf6b95a46662beae",
+    "rtl/test/tb_dsrom_upstream_pair_cadence.sv": "380eb3b19fe2be2bef13a6a19aa622b31edec5a1fa38a39dc8184d77998b6be8",
+    "tests/test_dsrom_upstream_pair_cadence_runner_r3.py": "ddd89d2389ef21260b400866db2336b98672d20b73f3141c06f9938be5809d97",
+    "tools/prepare_dsrom_actual_element_gate.py": "3e5b6cc9f5ceeb0860c3d9295c9e894c321e848d976a95a1bfb73a8be6734237",
+    "tools/prepare_dsrom_actual_element_numerical.py": "a2b1f70cb0368158c5c38b0b76b3ab443c0443a6c5f3ddb7a8cf3ec6d4e3ffa7",
+    "tools/prepare_dsrom_actual_element_rne_wake.py": "d61475040ff8ceb862770700467b8c9da2420fd4390529d354a43dd1c8dc2a43",
+    "tools/prepare_dsrom_bmul_rne_primitive.py": "ab5c67491288c867ec8d3c7e7bd4be82e7f0094e60b1d1de25a27ad6fe6a7846",
+    "tools/prepare_dsrom_upstream_pair_cadence.py": "b1b86cf82ab986f02f5082f82d40af820219b36a6bddbce3afaba3c3fd578998",
+    "tools/run_dsrom_upstream_pair_cadence.py": "40afc1e5cf5b24c1aee76797fb2a587b59ebabbfa1674c765d618ddf59980144",
+    "tools/run_dsrom_upstream_pair_cadence_r2.py": "f53f7fd465f71bc1227a49111a65cdafffe0cf306d44c25f0293fbcb0314d71a",
+    "tools/run_dsrom_upstream_pair_cadence_r3.py": "fd6c3d7ab783b337704b3964c688472c38ea716c02ee9d70343818d0e7d2c148"
+  },
+  "caps": {
+    "affinity_log_hard_bytes": 16777216,
+    "automatic_retries": 0,
+    "build_log_hard_bytes": 16777216,
+    "build_summed_seconds": 600,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_bound_policy": "KERNEL_INHERITED_TASK_AFFINITY_CPUS_0_1",
+    "cpu_quota_enforced": false,
+    "cpu_quota_property_advisory_only": true,
+    "cpu_quota_property_percent": 200,
+    "disk_is_hard_aggregate_quota": false,
+    "disk_poll_seconds": 0.1,
+    "fallback": false,
+    "launcher_log_hard_bytes": 1048576,
+    "memory_max_bytes": 4294967296,
+    "memory_swap_max_bytes": 0,
+    "output_bound": "stored stream bytes hard bounded; inherited RLIMIT_FSIZE128MiB/core0. Combined generated/output disk and file counts sampled at0.1s, may overshoot before whole kill; not hard aggregate disk quota.",
+    "per_file_hard_bytes": 134217728,
+    "sampled_aggregate_disk_bytes": 2147483648,
+    "sampled_aggregate_files": 4096,
+    "simulate_log_hard_bytes": 8388608,
+    "simulate_summed_seconds": 60,
+    "task_affinity_verification": "Check every enumerated live cgroup thread including descendants before each launch, after each phase and every0.1s. Main affinity exactly0/1; each live task nonempty subset0/1. Explicit direct-child inherited affinity verification. Vanished short-lived tasks recorded; not falsely claimed sampled. Kernel restriction comes from inherited per-task scheduler masks, not cgroupCPUQuota. No automatic fallback.",
+    "whole_cgroup_seconds": 660,
+    "whole_kill": "cgroup.kill=1, in finally even if receipt fails; independent phase and whole timers; service RuntimeMaxSec660 and KillSignalSIGKILL/KillModecontrolgroup"
+  },
+  "cases": [
+    "production5",
+    "existing_fast8"
+  ],
+  "claim_limits": {
+    "adoption": false,
+    "arithmetic_domain_qualification": false,
+    "fullfield": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "compile_argv": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "--build",
+    "-j",
+    "2",
+    "-Wno-fatal",
+    "-MAKEFLAGS",
+    "VM_PARALLEL_BUILDS=0",
+    "--top-module",
+    "tb_dsrom_upstream_pair_cadence",
+    "--Mdir",
+    "obj",
+    "ot_fp32_add_rne_pipe.sv",
+    "ot_hdc_actquant.sv",
+    "ot_hdc_cg.sv",
+    "ot_hdc_delay.sv",
+    "ot_hdc_fp32_mul_pipe.sv",
+    "ot_hdc_fpu.sv",
+    "ot_prefix.sv",
+    "ot_rom_4096x274_m8_rt.sv",
+    "ot_rom_8192x274_m8_rt.sv",
+    "ot_v41_bf16_lanes.sv",
+    "ot_v41_bf16_lanes2.sv",
+    "ot_v41_bmul2.sv",
+    "ot_v41_bmul2_rne_prepare.sv",
+    "ot_v41_bmul_subnormal_rne_prepare.sv",
+    "ot_v41_bterm.sv",
+    "ot_v41_bterm2_w10.sv",
+    "ot_v41_chain.sv",
+    "ot_v41_chain2.sv",
+    "ot_v41_fadd.sv",
+    "ot_v41_pair_w17w10.sv",
+    "ot_v41_rom_adapt.sv",
+    "ot_v41_rom_elem_w10.sv",
+    "ot_v41_segtree.sv",
+    "ot_v41_segtree2.sv",
+    "ot_v41_spine_w17w10.sv",
+    "tb_dsrom_upstream_pair_cadence.sv",
+    "dsrom_upstream_pair_ROM.cpp"
+  ],
+  "expected_contract": {
+    "activation_e10": 1016,
+    "activation_proof": "independent G.quant_fp8([1]*512): q values256 -> G.E4M3[0x78]=256; signed exponent-8 ->10bit3f8. Expected bits only parser/assertions, never input activation injection.",
+    "activation_qword": "7878787878787878787878787878787878787878787878787878787878787878",
+    "control_active_ticks": "4ready gap +1 q_go tick +1024 observation =1029 edges; fixture total1032ticks",
+    "control_edge_count": 1029,
+    "control_reset_ticks_excluded": 3,
+    "control_terminal": {
+      "emitted": 16,
+      "issues": 16,
+      "pops": 16,
+      "pushes": 16,
+      "rows": 2
+    },
+    "fatal_or_crash_is_never_DIAG_PASS": true,
+    "first_failure_preserved_control_is_still_planned": true,
+    "malformed_duplicate_or_foreign_markers_rejected": true,
+    "negative_fault_cycle": null,
+    "negative_fault_proof": "Preedgegate1 cnt4 npush1 pop0; unique sticky ffault transition, pairfault1 spinefault0, final EDGE cycle matches unique FIRST_FAULT and REPRODUCED profile5. Replay exact FIFO recurrence; source BF0/BP0 eliminates other ffault set path. Preserve absent overflow/different cause.",
+    "ordered_case_list": [
+      "production5",
+      "existing_fast8"
+    ],
+    "public_oracle": {
+      "FP32": "44000000",
+      "activation_code_values": [
+        256.0
+      ],
+      "activation_exponents": [
+        -8
+      ],
+      "block_dots": [
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0,
+        32.0
+      ],
+      "chunks": [
+        256.0,
+        256.0
+      ],
+      "err": 0,
+      "nseg": 1,
+      "positions": [
+        0,
+        1
+      ],
+      "row": 256,
+      "seg": 0
+    }
+  },
+  "generated_package_sha256": "b1eb791657126a0ba60be89395ce70e204100494bda26900454e5342e16c89d1",
+  "host_admission": {
+    "CPU_load_policy": "Fresh headroom as before; user service actual kernel main affinity0/1+task inheritance/verification. CPUQuota advisory200% is not enforced in current user branch; never accepted as quota proof.",
+    "delegation_policy": "Read-only verify user app.slice cgroup.kill writable before service launch; verify exact new execution leaf cgroup.kill writable and memory.oom.group1 inside child. Never write other cgroups or inspect writable parent as substitute for child.",
+    "hostname": "ubuntu",
+    "minimum_available_memory_bytes": 8589934592,
+    "minimum_free_disk_bytes": 3221225472,
+    "systemd_service_manual": "/usr/share/man/man5/systemd.service.5.gz",
+    "systemd_service_manual_sha256": "2f6e1f68504236057ccb1ef512cea4d1ac7ec5f964d3f5322b9a727c0b30e2de"
+  },
+  "prepared_source_commit": "6649e1759b9bdd170a8abba15cc0f70aefd15fa8",
+  "prior_runner_commit": "4131c60d7468bbeff48f74022f094e6edd565f7b",
+  "r3_change": "Preserve r2 missingCPUcontroller refusal. New explicit fixed user-service resource proposal: kernel inherited per-task affinity on0/1 bounds execution to2cores; all live tasks verified. CPUQuota200 property is non-enforced/advisory, cpu.max observed when available, never required or claimed quota proof. No global delegation/config/permission edits, no system-service/root route, no automatic fallback. Same fullsource/package/bench/parser/oracle/ROM/VM/commands. New GO kind/pins required.",
+  "resource_calibration": {
+    "parent_PASS_commit": "613ee1484004d7c6180150438329b84429be6bbc",
+    "prior_joined_peak_bytes": 2776899584,
+    "prior_joined_q_BF_total_build_seconds": 265.0648988,
+    "scope": "one full-sized q pair, actual fullwidth adapter/spine, VM testarray2MiB, two39file profile inputs; no narrow lane/pipeline model; new source compile memory/time not measured;4GiB caps unchanged",
+    "this_diagnostic_measured": false,
+    "timing_credit": false
+  },
+  "simulate_argv": {
+    "existing_fast8": [
+      "./obj/Vtb_dsrom_upstream_pair_cadence",
+      "+PROFILE=8",
+      "+OT_ROM_DIR=existing_fast8"
+    ],
+    "production5": [
+      "./obj/Vtb_dsrom_upstream_pair_cadence",
+      "+PROFILE=5",
+      "+OT_ROM_DIR=production5"
+    ]
+  },
+  "single_GO_claim": "Exclusive local /tmp approval_id record; launch refuses reuse. No remote launch or cap fallback.",
+  "tools": {
+    "environment": {
+      "CC": null,
+      "CPPFLAGS": null,
+      "CXX": null,
+      "CXXFLAGS": null,
+      "LDFLAGS": null,
+      "MAKEFLAGS": null,
+      "OBJCACHE": null,
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "PATH": "/home/ubuntu/rlvp/leanprove/.elan/bin:/home/ubuntu/.local/bin:/home/ubuntu/bin:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.160.0-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0YtwzSo:/home/ubuntu/.codex/tmp/arg0/codex-arg0G39EEv:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.159.3-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0fqLjZj:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.159.2-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg07J5Gej:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.159.1-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0btNVr6:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.159.0-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0dx6Y5Q:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.158.0-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0A0eUwQ:/home/ubuntu/.codex/packages/app-server-daemon/releases/0.157.1-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/.codex/tmp/arg0/codex-arg0KhehdH:/home/ubuntu/.codex/packages/standalone/releases/0.157.1-x86_64-unknown-linux-musl/codex-path:/home/ubuntu/rlvp/leanprove/.elan/bin:/home/ubuntu/.local/bin:/home/ubuntu/bin:/home/ubuntu/.local/opt/node-24/bin:/home/ubuntu/.kimi-code/bin:/home/ubuntu/.local/bin:/home/ubuntu/rlvp/leanprove/.elan/bin:/home/ubuntu/.local/bin:/home/ubuntu/bin:/home/ubuntu/.local/opt/node-24/bin:/home/ubuntu/.deno/bin:/home/ubuntu/.kimi-code/bin:/home/ubuntu/.cargo/bin:/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
+      "VERILATOR_BIN": null,
+      "VERILATOR_ROOT": null
+    },
+    "files_sha256": {
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk": "bd0d8c21debce6afe65db69b9b8721711ff3422f985617e8fce0bc5a2ac809e0",
+      "/usr/bin/make": "92f646030615cd98490a68a94c0aefd87b552be3158b941c02e43b0bfdb576db",
+      "/usr/bin/python3.10": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae",
+      "/usr/bin/systemd-run": "a8bf17a15ed28195c76fc70c7f23cbff607cd38ee1ce49e9939ce89bf40334fd",
+      "/usr/bin/x86_64-linux-gnu-g++-11": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    },
+    "help_option_tokens": [
+      "--binary",
+      "--timing",
+      "--build",
+      "-j <jobs>",
+      "-Wno-fatal",
+      "--top-module",
+      "--Mdir",
+      "-MAKEFLAGS <flags>"
+    ],
+    "help_sha256": "163792edc666155765bbb78b29afb77bc1d5191a6093dff1d3827c184929a0be",
+    "resolved_commands": {
+      "g++": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "make": "/usr/bin/make",
+      "python3": "/usr/bin/python3.10",
+      "systemd-run": "/usr/bin/systemd-run"
+    },
+    "verilator_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "verilator_version": "Verilator 5.050 2026-07-01 rev v5.050",
+    "versions": {
+      "g++": "x86_64-linux-gnu-g++-11 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+      "make": "GNU Make 4.3",
+      "python3": "Python 3.10.12",
+      "systemd-run": "systemd 249 (249.11-0ubuntu3.22)"
+    }
+  }
+}

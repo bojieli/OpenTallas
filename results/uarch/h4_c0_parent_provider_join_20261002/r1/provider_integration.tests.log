@@ -1,0 +1,16 @@
+test_actual_DS_source_operand_provider_and_V1_owner_composition (test_h4_c0_provider_movement.MovementTests) ... ok
+test_actual_payload_mismatch_retains_atomic_provider_debt (test_h4_c0_provider_movement.MovementTests) ... ok
+test_actual_provider_refill_drives_atomic_owner_and_keeps_calendar (test_h4_c0_provider_movement.MovementTests) ... ok
+test_failure_retains_source_journal_and_quarantines (test_h4_c0_provider_movement.MovementTests) ... ok
+test_missing_reverse_never_drained (test_h4_c0_provider_movement.MovementTests) ... ok
+test_partial_beat_RMW_preserved (test_h4_c0_provider_movement.MovementTests) ... ok
+test_provider_tap_consumes_real_receipt (test_h4_c0_provider_movement.MovementTests) ... ok
+test_qwen_boolean_ACK_not_promoted_to_addressed_receipt (test_h4_c0_provider_movement.MovementTests) ... ok
+test_real_read_write_64B_beats_and_tag_reuse (test_h4_c0_provider_movement.MovementTests) ... ok
+test_stale_reverse_tag_generation_rejected (test_h4_c0_provider_movement.MovementTests) ... ok
+test_wrong_source_PC_fail_closed (test_h4_c0_provider_movement.MovementTests) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 8.554s
+
+OK

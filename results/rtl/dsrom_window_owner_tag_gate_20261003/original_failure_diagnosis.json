@@ -1,0 +1,20 @@
+{
+  "status": "ACTUAL_RTL_OWNER_BUDGET_FAILURE_CONFIRMED",
+  "scope": "full128 WINDOW service and both actual tag-owner muxes, synthetic memory only",
+  "receipt": "original_r1_evidence/record.json",
+  "source_SHA": "a53ddc4e11e8013d8e325fb29900d83d4b9f3080",
+  "first_failure": {
+    "refill": 512,
+    "completed": 511,
+    "sector": 0,
+    "tag": "4000",
+    "decoded_owner": "01 reserved CKV",
+    "mux_fault": true,
+    "WINDOW_request_accepted": false,
+    "HBM_request_valid": false,
+    "prefetch_fault": false
+  },
+  "mechanism": "refill_epoch11 shifted5 overwrites client-owner bit14; WINDOW mux denies request; no observed data misdelivery",
+  "physical_credit": false,
+  "fulltoken_credit": false
+}

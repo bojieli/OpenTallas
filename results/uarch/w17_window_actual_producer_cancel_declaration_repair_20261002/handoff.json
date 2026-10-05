@@ -1,0 +1,39 @@
+{
+  "status": "ADDITIVE_DECLARATION_REPAIR_PREPARATION_ONLY_NO_RTL_SYNTAX_QUALIFICATION",
+  "preserved_parent_pin": "99bff7fb2ac2a9d3186a6c4514e92ff5fe7528c8",
+  "preserved_owner_pin": "9f43716639c5d6184b38f057c2cbd6ef59786567",
+  "old_source_path": "rtl/test/w17_window_actual_producer_cancel_prepared/ot_hdc_v41x_window_kv_blocks_cancel.sv",
+  "old_source_sha256": "343e71b6c28e19af5be3240990f7a66411c5289333e26d12650b6c51ff980ec9",
+  "confirmed_source_preflight_failure": "Unanchored index(module ) matched comment prose, emitting illegal module text before wrapper/legacy/enabled modules. Prior staticPASS remains preserved, not syntax qualification.",
+  "old_invalid_prose_lines": [
+    1,
+    111,
+    221
+  ],
+  "new_source_path": "rtl/test/w17_window_actual_producer_cancel_declaration_repaired/ot_hdc_v41x_window_kv_blocks_cancel.sv",
+  "new_source_sha256": "c9c7bbec16601faf19723768bd1d159a4319c2291348ef77a05f5cf5c5252f5e",
+  "new_generator_path": "tools/w17_window_actual_producer_cancel_declaration_repair.py",
+  "new_generator_sha256": "05151e7dca8205003306342c769777bc18db3952d7a51057681cc3e065fb0ffd",
+  "new_module_declarations": [
+    "ot_hdc_v41x_window_kv_blocks_cancel",
+    "ot_hdc_v41x_window_kv_blocks_cancel_legacy",
+    "ot_hdc_v41x_window_kv_blocks_cancel_enabled"
+  ],
+  "extractor": "^module <exact pinned name> #( and ^endmodule multiline anchors, exactly one actual origin module",
+  "real_default_inverse_byte_identical": true,
+  "enabled_body_unchanged": true,
+  "only_source_changes": "Remove three prose fragments and retain original timescale directive; no enabled producer behavior change.",
+  "tests_passed": 7,
+  "new_control_or_storage_delta": 0,
+  "accounting": "2localACKregs +8future suffix/freezecore =10 within prior19 envelope; no19+10. Earlier21bit composition is not silently reused for this parent-selected allocation.",
+  "VM_policy": "Raw QE/VM suffix continues; only capture commit freezes. Repair touches producer declaration extraction only.",
+  "core_same_edge_requirement": "S_ISSUE + physical QEgo + S_GO PCadvance must be gated for fault between registeredgo and acceptance; preserve SU scalar suppression for already accepted SU. No core edit here.",
+  "prior_runtime_PASS_unchanged": "618ab551661f0383409c861f49c4ebb975a79fd4",
+  "static_attempt1_generator_FAIL_preserved": true,
+  "compiler_count": 0,
+  "simulation_count": 0,
+  "service_count": 0,
+  "physical_provider": false,
+  "live_producer_safe": false,
+  "fulltoken": false
+}

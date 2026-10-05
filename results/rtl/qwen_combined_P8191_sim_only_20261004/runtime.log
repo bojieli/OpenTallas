@@ -1,0 +1,31 @@
+SIM_ONLY layer L0 P8191: actual fullshape core/program/weights; cached near RTL exact math; unfinished STREAM4 shared-memory controller timing stand-in; timing excluded
+images loaded in 14.7 s
+models constructed and preloaded in 16.3 s (tiles/die=1536, kv_ideal=0, pos=8191 token=24)
+progress tick=0 cyc=0 pc_base=0/0 me_busy=0/0 kv_ok=0 drained=1 wall=0s passes=3
+progress tick=4096 cyc=1016 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=0 wall=387s passes=10088
+progress tick=8192 cyc=2040 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=0 wall=659s passes=20240
+progress tick=12288 cyc=3064 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=0 wall=865s passes=30309
+progress tick=16384 cyc=4088 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=0 wall=1011s passes=40385
+progress tick=20480 cyc=5112 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=0 wall=1162s passes=50588
+progress tick=24576 cyc=6136 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=1 wall=1306s passes=60829
+progress tick=28672 cyc=7160 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=1 wall=1484s passes=71070
+progress tick=32768 cyc=8184 pc_base=0/0 me_busy=260/260 kv_ok=0 drained=1 wall=1631s passes=81311
+SIM_ONLY_PREFIX done native_cycles=8741 actual_QR=15104 actual_ATTN=88944
+SIM_ONLY_NEAR rank=0 outputs=1024 cycles=1784 service=shared_actual_KV_functional_rows timing_excluded=1
+SIM_ONLY_NEAR rank=1 outputs=1024 cycles=1784 service=shared_actual_KV_functional_rows timing_excluded=1
+SIM_ONLY_NEAR rank=2 outputs=1024 cycles=1784 service=shared_actual_KV_functional_rows timing_excluded=1
+SIM_ONLY_NEAR rank=3 outputs=1024 cycles=1784 service=shared_actual_KV_functional_rows timing_excluded=1
+SIM_ONLY_SUFFIX launch original OAR/MLPAR descriptors; near_cycles=1784 timing_excluded=1
+progress tick=36864 cyc=9208 pc_base=12/12 me_busy=496/496 kv_ok=0 drained=1 wall=1950s passes=91477
+progress tick=40960 cyc=10232 pc_base=14/14 me_busy=1024/1024 kv_ok=0 drained=1 wall=2313s passes=101718
+progress tick=45056 cyc=11256 pc_base=14/14 me_busy=1504/1504 kv_ok=0 drained=1 wall=2656s passes=111959
+progress tick=49152 cyc=12280 pc_base=22/22 me_busy=1504/1504 kv_ok=0 drained=1 wall=2804s passes=122200
+progress tick=53248 cyc=13304 pc_base=22/22 me_busy=1504/1504 kv_ok=0 drained=1 wall=2958s passes=132441
+progress tick=57344 cyc=14328 pc_base=22/22 me_busy=1504/1504 kv_ok=0 drained=1 wall=3122s passes=142682
+progress tick=61440 cyc=15352 pc_base=22/22 me_busy=1504/1504 kv_ok=0 drained=1 wall=3273s passes=152922
+progress tick=65536 cyc=16376 pc_base=22/22 me_busy=1504/1504 kv_ok=0 drained=1 wall=3413s passes=163163
+STAGE L0 done cycles=17387 start_cyc=0 end_cyc=17387 me_busy=1504/1504 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=3535s
+MEMSTAT L0 die0 fill_cycles=8632 fill_sectors=262128 wr_sectors=136 rsp_tile_stall=255 kvok_low_with_desc=0 drain_low=4685 wr_lat_max=400 stall_kv=0 stall_drain=4240 stall_bridge=357 stall_retire=434 stall_mem=0 tile_edges=16692
+MEMSTAT L0 die1 fill_cycles=8632 fill_sectors=262128 wr_sectors=136 rsp_tile_stall=255 kvok_low_with_desc=0 drain_low=4685 wr_lat_max=400 stall_kv=0 stall_drain=4240 stall_bridge=357 stall_retire=434 stall_mem=0 tile_edges=16692
+MEMSTAT L0 die2 fill_cycles=8632 fill_sectors=262128 wr_sectors=136 rsp_tile_stall=255 kvok_low_with_desc=0 drain_low=4685 wr_lat_max=400 stall_kv=0 stall_drain=4240 stall_bridge=357 stall_retire=434 stall_mem=0 tile_edges=16692
+MEMSTAT L0 die3 fill_cycles=8632 fill_sectors=262128 wr_sectors=136 rsp_tile_stall=255 kvok_low_with_desc=0 drain_low=4685 wr_lat_max=400 stall_kv=0 stall_drain=4240 stall_bridge=357 stall_retire=434 stall_mem=0 tile_edges=16692

@@ -1,0 +1,44 @@
+{
+  "from": "Archimedes",
+  "to": [
+    "Claude",
+    "Maxwell",
+    "Epicurus",
+    "Hubble",
+    "parent"
+  ],
+  "component_owner": "Claude / claude/two-clock-rtl-20261003",
+  "DS_parent_model_owner": "Archimedes",
+  "worktree": "/home/ubuntu/w17-dsrom-ratio-fifo-gap-20261003",
+  "tool": "tools/dsrom_split_domain_parent_model.py",
+  "model": "results/uarch/dsrom_split_domain_parent_20261003/model.json",
+  "source_pin": "09984efcab74873e6e03352607ab3d2c6442eccb",
+  "status": "FROZEN_SOURCE_INVENTORY_PROSPECTIVE_CONSTRUCTION_NO_G0",
+  "component_interface_requirements": {
+    "packet": "Data payload + epoch32 + transaction16. Parameterize actual W per endpoint; source_model lists widths, no W64 parent proxy. Separate command/reply/visibleACK/retirement/credit bundles.",
+    "handshake": "w_valid/w_ready and r_valid/r_ready; hold packet stable until accepted; acceptance cannot mean VM write-visible or engine retired. Explicit flush/drain/reset receipt and current epoch; timeout is fault, never fabricated successful completion.",
+    "rate": "Equal-width f2s <=0.9Gpacket/s, 3 of4 fast cycles; 8 seats modeled prospectively, not prescribed FIFO depth. No width-converter or full-rate claim.",
+    "reset": "Stop admission, drain accepted and visible writes, exchange epoch empty+retired, reset release synchronous per domain, fresh nonreused epoch, both ready before admission. Forced reset quarantines stale replies. No independent pointer reset.",
+    "timing": "Time full source FF->destination capture and pointer/control cones at actual related3:4 SS60/FF25. No unproved multicycle/phase exceptions. Keep phase qualification physical paths real.",
+    "results": "Nonstall field needs full AR journal64roots*64rows*69=282624bits per shard and GO credits; bridges alone cannot make unstallable producer safe.",
+    "CKV": "Epic6675 owns full512 receive READY/generation immutable lease. RX offered != accepted, 9 owner visible completions, QK/PV retirement and reverse drain, not mergerdone. No duplicate successor edits.",
+    "mixed_XU": "Only OP_SEL0 with X_SEL1 and BF16 crosses as fast subtree; OP_SINK1/EHASH2 local chain; X_EG0 frozen caller. No blind module clock transfer."
+  },
+  "open_owner_contracts": {
+    "Archimedes": "Complete mixed XU/decoder routing and reverse credit/control pricing; no engine RTL yet",
+    "Maxwell": "Peredge finite VMbank owner service, selected physical slot/clockPG/track union and whole-token calendar",
+    "Hubble": "Actual installed caller source/binary/defines lease + RX/staging/engine/output hooks",
+    "Epicurus": "CKV lease/readiness successor"
+  },
+  "global_solver": "PID2629663 untouched; no duplicate search/launch",
+  "macro_pin_claim": "Claude owns macro audit; DRT0419 all288pins/Ymirror/6nmM4 report not transferred to historical failure cause pending original log review",
+  "actual_source_command_bits": {
+    "collective_command": 167,
+    "field_command": 492,
+    "ME_attention_index_command": 465,
+    "QE_command": 271,
+    "XU_fast_subtree_command": 141
+  },
+  "prospective_endpoint_bundles": 90,
+  "receipt": "Local codex_notes queue file written; no callable peer-ACK tool; receipt pending."
+}

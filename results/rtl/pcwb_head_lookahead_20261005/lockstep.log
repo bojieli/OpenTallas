@@ -1,0 +1,5 @@
+PASS seed=26 cycles=100000 WA_LATE=1 REF_MODE=1 PC=0 WQ=8 pushes=1457 acks=1449 acts=2387 pres=2374 refs=847 overlap=538 stalled=297 mismatches=0
+- tb_pcwb_command_match_lockstep.sv:83: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 83us; walltime 0.949 s; speed 87.797 us/s
+- Verilator: cpu 0.949 s on 1 threads; allocated 8 MB

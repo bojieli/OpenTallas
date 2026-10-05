@@ -1,0 +1,56 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_downstream_source_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attention_execution_report_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "compiler_version": {"const": "tensor-accelerator-production-layer-downstream-0.1.0"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.layer_downstream_source_lock.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "sources": {
+      "items": {"$ref": "#/$defs/source"},
+      "maxItems": 5,
+      "minItems": 5,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "attention_execution_report_id",
+    "capability_id",
+    "checkpoint_lock_id",
+    "compiler_version",
+    "graph_id",
+    "qualification_report_id",
+    "schema",
+    "source_lock_id",
+    "sources"
+  ],
+  "title": "Layer downstream authenticated source lock v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "enum": [
+            "model_graph",
+            "checkpoint_lock",
+            "hardware_capability",
+            "qualification_report",
+            "attention_execution"
+          ]
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["role", "sha256", "size_bytes"],
+      "type": "object"
+    }
+  }
+}

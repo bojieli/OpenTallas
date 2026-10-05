@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.weight_tile_prefetch.v1",
+  "status": "pass",
+  "scope": "SRAM-backed bounded weight prefetch only; no LQ8/cluster integration or physical timing claim. Behavioral single-port SRAM model.",
+  "sources": {
+    "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+    "rtl/abi3/ot_a3_runtime_weight_banks.sv": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+    "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "d078480246a623fcbf0021b8ceaf6efc6abbc903805c2e2705232fc7bf645bd6",
+    "rtl/test/tb_a3_runtime_weight_banks.sv": "bca837fd6c317b28b5983d4a084d0c850c62058993b119c3787c5309fcd863ff",
+    "rtl/test/tb_a3_weight_tile_prefetch.sv": "565c139fc9a14a86734109996d1a3a99160c7a1d37ed8a025f0cb92058cbf206",
+    "tests/test_weight_tile_prefetch.py": "58512e6554bd99192dec79c0b2a46fbabc6b1ff537f43bedf5e0a78c45ba34ac"
+  },
+  "runs": [
+    {
+      "simulator": "Icarus",
+      "fifo_depth": 3,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_a3_weight_tile_prefetch",
+        "-Ptb_a3_weight_tile_prefetch.FIFO_DEPTH=3",
+        "-o",
+        "/tmp/ot-prefetch-3",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/test/tb_a3_runtime_weight_banks.sv",
+        "rtl/test/tb_a3_weight_tile_prefetch.sv"
+      ],
+      "stdout": "PASS tile prefetch words=76 max_contiguous=32 refill_consume_overlap=2 depth=3\n"
+    },
+    {
+      "simulator": "Icarus",
+      "fifo_depth": 4,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_a3_weight_tile_prefetch",
+        "-Ptb_a3_weight_tile_prefetch.FIFO_DEPTH=4",
+        "-o",
+        "/tmp/ot-prefetch-4",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/test/tb_a3_runtime_weight_banks.sv",
+        "rtl/test/tb_a3_weight_tile_prefetch.sv"
+      ],
+      "stdout": "PASS tile prefetch words=76 max_contiguous=32 refill_consume_overlap=2 depth=4\n"
+    },
+    {
+      "simulator": "Icarus",
+      "fifo_depth": 8,
+      "compile_command": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_a3_weight_tile_prefetch",
+        "-Ptb_a3_weight_tile_prefetch.FIFO_DEPTH=8",
+        "-o",
+        "/tmp/ot-prefetch-8",
+        "rtl/abi3/ot_a3_operand_bank_owner.sv",
+        "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+        "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+        "rtl/test/tb_a3_runtime_weight_banks.sv",
+        "rtl/test/tb_a3_weight_tile_prefetch.sv"
+      ],
+      "stdout": "PASS tile prefetch words=76 max_contiguous=32 refill_consume_overlap=2 depth=8\n"
+    },
+    {
+      "simulator": "Verilator 5.050",
+      "fifo_depth": 4,
+      "stdout": "PASS tile prefetch words=76 max_contiguous=32 refill_consume_overlap=2 depth=4\n- rtl/test/tb_a3_weight_tile_prefetch.sv:105: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 2us; walltime 0.000 s; speed 8.285 ms/s\n- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB\n"
+    }
+  ],
+  "checks": [
+    "extent mismatch refusal",
+    "bounded outstanding reservation",
+    "opposite-bank refill/consume overlap",
+    "held output stability",
+    "queued copies survive bank overwrite",
+    "retained replay without refill",
+    "reset during outstanding read and new-generation restart"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "GO": false,
+  "actual_RTL_launches": 0,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "tools/test_hbm_rf_connected_preparation.py"
+      ],
+      "exit_code": 0,
+      "log": "test_hbm_rf_connected_preparation.py.log",
+      "sha256": "d29ab4637bdf779fa6cc18fd7b3d11be5f44d60143e945b1afe14bb5112f75a7"
+    },
+    {
+      "command": [
+        "python3",
+        "tools/test_hbm_rf_connected_campaign_r4.py"
+      ],
+      "exit_code": 0,
+      "log": "test_hbm_rf_connected_campaign_r4.py.log",
+      "sha256": "c900bb372e3d0a667e1485ccd52719b46580267de3b3673f41700bd3b8506d9f"
+    }
+  ],
+  "existing_sources_changed": false,
+  "failure_scope": "DS frontendPASS258.60s; runner path TypeError before CXX, not RTL or arithmetic PASS/FAIL",
+  "physical_credit": false,
+  "prior_failed_output_changed": false,
+  "tests": {
+    "additive_diagnosis_and_runner": 17,
+    "existing_preparation": 9
+  },
+  "token_credit": false,
+  "verdict": "PASS_26_STATIC_DIAGNOSIS_AND_MOCKED_LIFECYCLE_TESTS_ONLY"
+}

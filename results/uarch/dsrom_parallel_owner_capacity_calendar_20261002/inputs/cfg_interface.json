@@ -1,0 +1,808 @@
+{
+  "NBF": 724,
+  "PHW": 10,
+  "R": 128,
+  "RTL_builds_PR_or_sim_jobs": 0,
+  "actual_phase_counts_by_stage": {
+    "0": 874,
+    "1": 854,
+    "2": 870,
+    "3": 891,
+    "4": 874,
+    "5": 874,
+    "6": 874,
+    "7": 870,
+    "8": 877,
+    "9": 874,
+    "10": 870,
+    "11": 870,
+    "12": 877,
+    "13": 874,
+    "14": 874,
+    "15": 862,
+    "16": 882,
+    "17": 874,
+    "18": 850,
+    "19": 885,
+    "20": 877,
+    "21": 874,
+    "22": 874,
+    "23": 862,
+    "24": 882,
+    "25": 874,
+    "26": 872,
+    "27": 862,
+    "28": 882,
+    "29": 874,
+    "30": 874,
+    "31": 856,
+    "32": 878,
+    "33": 874,
+    "34": 874,
+    "35": 862,
+    "36": 882,
+    "37": 870,
+    "38": 874,
+    "39": 862,
+    "40": 882,
+    "41": 874,
+    "42": 870,
+    "43": 862,
+    "44": 882,
+    "45": 874,
+    "46": 874,
+    "47": 856,
+    "48": 878,
+    "49": 874,
+    "50": 874,
+    "51": 862,
+    "52": 882,
+    "53": 276
+  },
+  "actual_phase_directory_count": 46509,
+  "actual_source_port_tables": {
+    "ot_rom_4096x72_m8.v": [
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "clk"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "ce_in"
+      },
+      {
+        "bits": 12,
+        "direction": "input",
+        "name": "addr_in"
+      },
+      {
+        "bits": 72,
+        "direction": "output",
+        "name": "rd_out"
+      }
+    ],
+    "ot_v41_pair_w17w10_rne_wake_prepare.sv": [
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "clk"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "rst_n"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "cfg_go"
+      },
+      {
+        "bits": 10,
+        "direction": "input",
+        "name": "cfg_ph"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "cfg_np"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "go"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "go_bf"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "xs_v"
+      },
+      {
+        "bits": 8,
+        "direction": "input",
+        "name": "xs_p"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xs_b"
+      },
+      {
+        "bits": 2,
+        "direction": "input",
+        "name": "xs_sv"
+      },
+      {
+        "bits": 256,
+        "direction": "input",
+        "name": "xs_q0"
+      },
+      {
+        "bits": 10,
+        "direction": "input",
+        "name": "xs_e0"
+      },
+      {
+        "bits": 256,
+        "direction": "input",
+        "name": "xs_q1"
+      },
+      {
+        "bits": 10,
+        "direction": "input",
+        "name": "xs_e1"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xs_pos"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xb_pos"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "xb_v"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xb_b"
+      },
+      {
+        "bits": 4,
+        "direction": "input",
+        "name": "xb_sv"
+      },
+      {
+        "bits": 32,
+        "direction": "input",
+        "name": "xb_u"
+      },
+      {
+        "bits": 1024,
+        "direction": "input",
+        "name": "xb_d"
+      },
+      {
+        "bits": 2,
+        "direction": "output",
+        "name": "pv"
+      },
+      {
+        "bits": 64,
+        "direction": "output",
+        "name": "pval"
+      },
+      {
+        "bits": 32,
+        "direction": "output",
+        "name": "prow"
+      },
+      {
+        "bits": 10,
+        "direction": "output",
+        "name": "pseg"
+      },
+      {
+        "bits": 10,
+        "direction": "output",
+        "name": "pnseg"
+      },
+      {
+        "bits": 2,
+        "direction": "output",
+        "name": "perr"
+      },
+      {
+        "bits": 6,
+        "direction": "output",
+        "name": "ppos"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "busy"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "fault"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "quiet"
+      }
+    ],
+    "ot_v41_rom_adapt.sv": [
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "clk"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "rst_n"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "q_go"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "q_xbase"
+      },
+      {
+        "bits": 8,
+        "direction": "input",
+        "name": "q_nb"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "q_wbase"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "q_ind"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "q_ibase"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "q_istride"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "q_obase"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "q_unrounded"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "m_go"
+      },
+      {
+        "bits": 21,
+        "direction": "input",
+        "name": "m_k"
+      },
+      {
+        "bits": 2,
+        "direction": "input",
+        "name": "m_split"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_wbase"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_xbase"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_xks"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_xcs"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_xjs"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_obase"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_ots"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "m_ojs"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "m_round"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "m_amax"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "m_mmode"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "i_m"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "i_xps"
+      },
+      {
+        "bits": 30,
+        "direction": "input",
+        "name": "i_ops"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "ready"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "idle"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "vi_re"
+      },
+      {
+        "bits": 30,
+        "direction": "output",
+        "name": "vi_addr"
+      },
+      {
+        "bits": 32,
+        "direction": "input",
+        "name": "vi_q"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "s_go"
+      },
+      {
+        "bits": 10,
+        "direction": "output",
+        "name": "s_ph"
+      },
+      {
+        "bits": 3,
+        "direction": "output",
+        "name": "s_np"
+      },
+      {
+        "bits": 19,
+        "direction": "output",
+        "name": "s_xbase"
+      },
+      {
+        "bits": 19,
+        "direction": "output",
+        "name": "s_xps"
+      },
+      {
+        "bits": 19,
+        "direction": "output",
+        "name": "s_obase"
+      },
+      {
+        "bits": 19,
+        "direction": "output",
+        "name": "s_ops"
+      },
+      {
+        "bits": 2,
+        "direction": "output",
+        "name": "s_fmt"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "s_ready"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "s_idle"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "fault"
+      }
+    ],
+    "ot_v41_rom_elem_w10_rne_wake_prepare.sv": [
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "clk"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "rst_n"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "cfg_v"
+      },
+      {
+        "bits": 5,
+        "direction": "input",
+        "name": "cfg_a"
+      },
+      {
+        "bits": 48,
+        "direction": "input",
+        "name": "cfg_d"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "go"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "go_bf"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "xs_v"
+      },
+      {
+        "bits": 8,
+        "direction": "input",
+        "name": "xs_p"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xs_b"
+      },
+      {
+        "bits": 2,
+        "direction": "input",
+        "name": "xs_sv"
+      },
+      {
+        "bits": 256,
+        "direction": "input",
+        "name": "xs_q0"
+      },
+      {
+        "bits": 10,
+        "direction": "input",
+        "name": "xs_e0"
+      },
+      {
+        "bits": 256,
+        "direction": "input",
+        "name": "xs_q1"
+      },
+      {
+        "bits": 10,
+        "direction": "input",
+        "name": "xs_e1"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xs_pos"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xb_pos"
+      },
+      {
+        "bits": 1,
+        "direction": "input",
+        "name": "xb_v"
+      },
+      {
+        "bits": 3,
+        "direction": "input",
+        "name": "xb_b"
+      },
+      {
+        "bits": 4,
+        "direction": "input",
+        "name": "xb_sv"
+      },
+      {
+        "bits": 32,
+        "direction": "input",
+        "name": "xb_u"
+      },
+      {
+        "bits": 1024,
+        "direction": "input",
+        "name": "xb_d"
+      },
+      {
+        "bits": 2,
+        "direction": "output",
+        "name": "pv"
+      },
+      {
+        "bits": 64,
+        "direction": "output",
+        "name": "pval"
+      },
+      {
+        "bits": 32,
+        "direction": "output",
+        "name": "prow"
+      },
+      {
+        "bits": 10,
+        "direction": "output",
+        "name": "pseg"
+      },
+      {
+        "bits": 10,
+        "direction": "output",
+        "name": "pnseg"
+      },
+      {
+        "bits": 2,
+        "direction": "output",
+        "name": "perr"
+      },
+      {
+        "bits": 6,
+        "direction": "output",
+        "name": "ppos"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "busy"
+      },
+      {
+        "bits": 1,
+        "direction": "output",
+        "name": "fault"
+      }
+    ]
+  },
+  "all58x4rank_macro_instances_if_uniform_provider": 6651904,
+  "all58x4rank_physical_cfg_pins_if_uniform_provider": 585367552,
+  "candidate": "DS4096-TP4-S58-PAIR1",
+  "cfg_adapter_required_contract": {
+    "consumer_delivery": [
+      "c_a[4:0]",
+      "c_d[47:0]",
+      "c_v_aligned_to_good_terminal"
+    ],
+    "decoder_terminal": [
+      "decoded_payload48",
+      "good_or_corrected",
+      "uncorrectable_cfgfault",
+      "word_identity"
+    ],
+    "fault_rule": "No act/go authorization from poison, stale, duplicate, mismatched, missing or reset-era returns; cfgfault must be separately surfaced and held through owner drain.",
+    "final_fence": "All25 words delivered to element with actual last-word/act visibility before go_e; no timer or generic c_v as causal hard-provider completion.",
+    "macro_command": [
+      "clk",
+      "onehot_slice_ce_in[7]",
+      "addr_in[11:0]"
+    ],
+    "macro_return": [
+      "rd_out[7][71:0]",
+      "selected_slice_identity",
+      "capture_valid"
+    ],
+    "ports_generation_ready_and_fault_plumbing_not_implemented": true,
+    "request_identity": [
+      "pair",
+      "phase",
+      "word_index",
+      "logical_address",
+      "reset_or_lease_generation"
+    ]
+  },
+  "cfg_physical_timing_fault_ECC_admission": false,
+  "cfg_requests_and_returns_are_model_identities_not_measured_events": true,
+  "cfg_words_per_phase_per_pair": 25,
+  "checkpoint_payload_reads": 0,
+  "compiled_NP": 4096,
+  "compiler_sha256": "ba64180725768c98ef22481a692f66d6fb0a0346a46b82e0a9d8b69383055358",
+  "containment_commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+  "full_descriptor_finite_calendar_bound": false,
+  "generic_source_loader": {
+    "act_accumulates_class_valid_from_words8..15": true,
+    "c_a_bits": 5,
+    "c_d_bits": 48,
+    "c_v_is_source_valid_not_provider_ack": true,
+    "cm_payload_bits": 48,
+    "go_e": "go && act",
+    "hard_provider_or_cfg_ECC_or_cfg_fault_path_present": false,
+    "ld_a_bits_required": 15,
+    "ld_run_drives_unbackpressured_read_cadence": true,
+    "pair_fault_current_owner": "u_e.fault",
+    "source27cycle_schedule_only_generic_model": "CW+2; physical macro/capture/ECC alignment must be independently bounded"
+  },
+  "input_sha256": {
+    "results/uarch/dsrom_owner_cfg_interface_20261002/inputs/containment_model.json": "a9082fdb10cfe1dc3c98586e2f694b08a6943cb41a1803fc0e982e1965a1ef5d",
+    "results/uarch/dsrom_owner_cfg_interface_20261002/inputs/containment_verification.json": "9457a5180b1b4b34f6f75692622ee484655c5974b816de4370cb4365fe2fd518",
+    "results/uarch/dsrom_owner_cfg_interface_20261002/inputs/source_receipt.json": "d1bcf43951f46b7d2e0b1381f6da1a71dae82ee77cc161a4d058ffa0740ec571",
+    "results/uarch/dsrom_owner_provider_first_20261002/r1/assignments.jsonl.gz": "c91855b5b33c21c56dac3ea9ebc69a201ff582a3a6ad67a19024e89cd113881f",
+    "results/uarch/dsrom_owner_provider_first_20261002/r1/provider_assignment.jsonl.gz": "99b3e4d23c743fd7b3909d4d602cc496f35afa6887646462a96d6936c4a3a207",
+    "results/uarch/dsrom_owner_provider_first_20261002/readback_r1/model.json": "6e84455f28b6a1ac30ff31a31793c331c57217e81a29187d0d08bf3dbd71f497"
+  },
+  "key_table_schema": {
+    "ME_BF16_bit": 30,
+    "expert_key": "layer<<24 | family<<21 | expertID<<12",
+    "expert_stride": 4096,
+    "key_bits": [
+      0,
+      30
+    ],
+    "lookup_source": "adapt.keyrom:32bit entries; parallel compare and priority over all1024 slots",
+    "new_hardware_tables_loaded_or_run": false,
+    "same_tables_repeat_per4_rank_geometry": true,
+    "valid_bit": 31
+  },
+  "matrix_phase_formats": {
+    "bf16": 139,
+    "fp4": 46080,
+    "fp8": 290
+  },
+  "older_packed274_cfg_screen_is_not_this_provider": true,
+  "owner_commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+  "parent_whole_budget": {
+    "RNE_BF724_upper_proxy": 12.987328389120002,
+    "WAKE_full_compiled_upper_proxy": 1.63214534656,
+    "already_inside_inherited_named_service_proxy_do_not_add_again": 90.44685198583997,
+    "composed_priced_field_terms": 458.81144120512,
+    "config_prospective_body_plus_local_mux": 69.19074349056,
+    "conservative_no_containment_credit_die_total": 924.2886185238459,
+    "conservative_no_containment_credit_reticle_margin": -66.28861852384591,
+    "counterfactual_unknown_native_residual_disjoint_total": 506.0194543837759,
+    "declared_return_FF50_proxy": 52.897587425279994,
+    "earlier_unidentified_native_residual_proxy_47_208": {
+      "excluded_from_named_component_sum_until_containment_reconciled": "No provider identity proves disjointness from new cfg/ECC/raw/dispatch/control terms; conservative counterfactual adding it is recorded separately.",
+      "mm2": 47.208013178655904,
+      "not_silently_removed": true
+    },
+    "fit_verdict": "NOT_QUALIFIED_mix_of_source_macro_body_and_conservative_frame_return_RNE_WAKE_proxies_not_minimum_or_impossibility",
+    "full_compiled_q_BF_catalog_frames": 322.1036365536,
+    "inherited_service_routes_clockPG_debit": 418.26916414007,
+    "remaining_against_corrected_inherited_field_allowance": -19.08060534519,
+    "reticle": 858,
+    "service_clock_PG_actual_shapes_bound": false,
+    "unpriced_nonzero_terms": [
+      "qFP4 separateECC provider/decoder",
+      "actualHE/CROM/shared dispatch provider",
+      "cfgmux/capture/PHW fanout decode area and routes",
+      "currentRNEWAKE dualcompute outline growth",
+      "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
+    ]
+  },
+  "partition_or_geometry_selected": false,
+  "prospective_physical_cfg_provider": {
+    "ECC_candidate": {
+      "SECDED_bits_required": 7,
+      "existing_source_ECC_path": false,
+      "payload_bits": 48,
+      "payload_decode_and_fault_visibility_bound": false,
+      "physical_word72_spare_bits_after_ECC": 17
+    },
+    "LEF_pin_count_per_macro": 88,
+    "OBS_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "actual_provider_instances_in_retained_pair_source": 0,
+    "actual_source_provider": "Generic48bit cm array/registered loader; no hard macro or cfgECC decoder instantiation",
+    "compiled_pairs": 4096,
+    "depth_select_bits": 3,
+    "expanded_physical_macro_pin_count": 2523136,
+    "macro_body_mm2": 68.57156984832,
+    "macro_outline_um": [
+      38.016,
+      62.91
+    ],
+    "per_pair_raw_read_bus_bits": 504,
+    "per_pair_selected_payload_bits": 48,
+    "physical_macro_address_bits": 12,
+    "physical_read_pipeline": "Source generic cm is1cycle loader assumption. Actual macroSS/PP/capture/ECC path needs bounded service;27cycle source schedule cannot be inherited without provider proof.",
+    "prospective_macro_instances": 28672,
+    "prospective_per_pair_4096x72_depth_slices": 7,
+    "simultaneous_read_contract": "One word per pair per loader cycle. Seven macro outputs require select/gating; independent pairs cannot silently share ports.",
+    "source_fault_path": "u_e fault directly drives pair fault; no cfg read/decode fault or visibility ACK endpoint",
+    "source_final_write_guard": "Loader c_v/c_a/c_d from ld_run/ld_k/cmr; act from class-valid writes. Configuration must finish before go_e. Replacing cmr requires address/word/valid alignment and final-word visible fence.",
+    "source_logical_address_bits": 15
+  },
+  "raw_provider_adaptations": [
+    {
+      "actual_native_HROM768_consumer_not_equivalent": true,
+      "kind": "HE",
+      "mapping_API": "provider_tensor_address + source tensor rank slices",
+      "packing_reference": "8banks x256-bit pack_he_fp32 HHW8",
+      "required_binding": "native accepted address -> readbank/address/FP32lane -> exact native output schedule and reply ownership"
+    },
+    {
+      "actual_consumer_64bit_interface_not_equivalent": true,
+      "kind": "CROM",
+      "required_binding": "native address/half -> packed word/lane -> source precision/rank -> exact native reply ownership",
+      "storage": "8FP32 per256bitword"
+    },
+    {
+      "candidate_extra_sidecar_bits": 8,
+      "candidate_inline_bits": 2,
+      "current_decoder_or_sidecar_ports_present": false,
+      "kind": "FP4_ECC",
+      "required_SECDED_bits": 10,
+      "required_binding": "Accept real paired codeword+sidecar read; align ECC parity to same codeword/row/epoch; terminal good/corrected/fault before arithmetic acceptance",
+      "sidecar_address_API": "sidecar_address(provider,linear_bit)",
+      "source_code_scale_payload_bits": 272
+    }
+  ],
+  "schema": "opentallas.dsrom.cfg-provider-interface.v1",
+  "snapshot_storage_verdict": "PASS_SYMBOLIC_STORAGE_PLACEMENT",
+  "uniform_cm_words_per_pair": 25600,
+  "uniform_phases_per_stage": 1024
+}

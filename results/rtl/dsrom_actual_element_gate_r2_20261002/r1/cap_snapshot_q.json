@@ -1,0 +1,38 @@
+{
+  "kind": "single_read_cap_snapshot_during_q_build",
+  "utc": "2026-10-01T23:56:09Z",
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-actual-element-r2-bounded-2554264.service",
+  "files": {
+    "memory.max": "4294967296",
+    "memory.swap.max": "0",
+    "memory.peak": "1121812480",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu.max": null
+  },
+  "processes": [
+    {
+      "pid": 2554368,
+      "comm": "python3",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2556117,
+      "comm": "perl",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    },
+    {
+      "pid": 2556120,
+      "comm": "verilator_bin",
+      "cpu_affinity": [
+        0,
+        1
+      ]
+    }
+  ]
+}

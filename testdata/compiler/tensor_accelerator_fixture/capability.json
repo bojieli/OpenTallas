@@ -1,0 +1,51 @@
+{
+  "capability_id": "008bd0847205c24b6918776923d440bb1d1528780add8908c9a8ba96cba72609",
+  "clock_hz": 100000000,
+  "engines": {
+    "dma": {
+      "count": 1,
+      "issue_bytes_per_cycle": 16
+    },
+    "tensor": {
+      "count": 1,
+      "macs_per_cycle": 8,
+      "max_k": 256,
+      "max_m": 256,
+      "max_n": 256,
+      "setup_cycles": 2
+    },
+    "vector": {
+      "count": 1,
+      "elements_per_cycle": 4,
+      "setup_cycles": 1
+    }
+  },
+  "hbm": {
+    "burst_bytes": 32,
+    "capacity_bytes": 1048576,
+    "channels": 2,
+    "max_outstanding_per_channel": 8,
+    "pseudo_channels_per_channel": 2,
+    "read_latency_cycles": 12,
+    "write_latency_cycles": 12
+  },
+  "limits": {
+    "max_commands": 1024,
+    "max_rank": 8,
+    "max_runtime_symbols": 8,
+    "max_tensor_bytes": 1048576
+  },
+  "numeric_profiles": [
+    "int_exact_tensor_accelerator_v1"
+  ],
+  "schema": "opentallas.tensor_accelerator.capability.v1",
+  "sram": {
+    "banks": 4,
+    "bytes_per_bank": 4096,
+    "read_latency_cycles": 1,
+    "read_ports_per_bank": 1,
+    "word_bytes": 4,
+    "write_latency_cycles": 1,
+    "write_ports_per_bank": 1
+  }
+}

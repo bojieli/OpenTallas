@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.field_source_gate_independent_replay.v1",
+  "source_commit": "f06c71a87fc02ff3fb0a7ea9412eac3c0bdc85c0",
+  "command": [
+    "/usr/bin/python3",
+    "/tmp/opentallas-field-source-gate-f06-20261003/tools/v41_field_rt_gate.py",
+    "--snapshot",
+    "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+    "--workdir",
+    "/tmp/field-source-gate-f06-actual-20261003/work",
+    "--jobs",
+    "1",
+    "--threads",
+    "1"
+  ],
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v": "47659841275cfe94391679cc4d83f5af1c85aa5298f66a280b231dd86100387d",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/test/qwen_runtime/qwen_rt_matvec.hpp": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b",
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f",
+    "rtl/test/v41_runtime/v41_field_rt_gate.cpp": "7d6bb3c320cc73316c931142264310c34d973960106338bbb89d0e8b8ef26b63",
+    "rtl/v41die/ot_v41_field.sv": "eaafdbcf4533ca5424a2c40eb6a0761409680c59c4b5924641aaaac6356fb15c",
+    "rtl/v41die/ot_v41_fieldtop.sv": "9792dd8fc91624e5f4ce972301e349d766ea259fcbf6c635cd6e1a1556e88cc5",
+    "rtl/v41die/ot_v41_pair.sv": "beccb0ec60e2449e157139fe7a53036ee0162d47de39e62148a647e88ab6902f",
+    "rtl/v41die/ot_v41_retn.sv": "5e3138012b07ad2664cbbf3f3d0d53263174d29f6c52b90a1ff37708e65dedcb",
+    "rtl/v41die/ot_v41_spine.sv": "ab328d181e6ecef768c708a6d322c14ac51dca2a55a0559e7e90456f7de29e46",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/v41rom/ot_v41_rom_elem.sv": "2a2695256f941a78cc3b51f0f20aaf28c9ba24945fb7c800e1f29ef3254620cd",
+    "rtl/v41rom/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/rtl_v41_rom_array.py": "66f7c8aa94336c1e2aa46858a94d965a539a4f6ddc706866cd46dd024b8084c1",
+    "tools/v41_die_images.py": "3efd61fdebcbaa393366a353eff65137ee0ad7f9603caba3118b963cb39ed2d0",
+    "tools/v41_field_rt_gate.py": "9be5a58f7a7cb0f9e87e3dbd934950196f4f7c6894b6350d286d412741238635",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+  },
+  "pid": 3584738,
+  "headroom": {
+    "meminfo": "MemTotal:       197661924 kB\nMemFree:         4204100 kB\nMemAvailable:   31356296 kB\nBuffers:          268028 kB\nCached:         55163368 kB\nSwapCached:        71220 kB\nActive:         88016128 kB\nInactive:       94049964 kB\nActive(anon):   80306080 kB\nInactive(anon): 79074308 kB\nActive(file):    7710048 kB\nInactive(file): 14975656 kB\nUnevictable:       27996 kB\nMlocked:           27996 kB\nSwapTotal:       8388604 kB\nSwapFree:             60 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:             10024 kB\nWriteback:             0 kB\nAnonPages:      126595836 kB\nMapped:         24333684 kB\nShmem:          32736592 kB\nKReclaimable:    6239432 kB\nSlab:            7633780 kB\nSReclaimable:    6239432 kB\nSUnreclaim:      1394348 kB\nKernelStack:       67216 kB\nPageTables:       501456 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    107219564 kB\nCommitted_AS:   258610696 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:      317548 kB\nVmallocChunk:          0 kB\nPercpu:            50304 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:   1239040 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:    77665740 kB\nDirectMap2M:    121364480 kB\nDirectMap1G:     2097152 kB\n",
+    "loadavg": "127.17 128.20 114.75 158/4180 3585180\n",
+    "disk_free": 318458101760
+  },
+  "source_unmodified_before": true,
+  "tool": {
+    "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "version": "Verilator 5.050 2026-07-01 rev v5.050"
+  },
+  "parameters": {
+    "np": 16,
+    "regions": 4,
+    "nbf": 4,
+    "phw": 4,
+    "vaw": 16,
+    "jobs": 1,
+    "threads": 1
+  },
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "child_pid": 3585263,
+  "returncode": 1,
+  "wall_seconds": 44.00958913099021,
+  "source_unmodified_after": true,
+  "max_child_rss_kib": 213888,
+  "classification": "FRONTEND_MISSING_MODULE",
+  "functional_comparison_reached": false,
+  "artifacts": {
+    "gate.log": "eead71883fefb9bf5125def4b923b05a5d2ee99ed154af288d0f0fca09e89185",
+    "work/verilate_flat.log": "66297ad2edcd58993fa2205ca0609a24c0eb632ab22883997aa8b572a6164685",
+    "work/verilate_flat.rss": "fbdfd69f285f86b269e5b3994ac84d902a87e6847aa6cc74f12f1d3a290720ab",
+    "work/ops.txt": "9d011c0cee49ab9f1d780eb3d01152da1ee4ede995dfd4cbff044fb2b8809acd"
+  }
+}

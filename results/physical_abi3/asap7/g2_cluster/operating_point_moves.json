@@ -1,0 +1,43 @@
+{
+  "answer": "Declaring the asynchronous reset out of timing scope.  The violating path is a REMOVAL check from the rst_n input port to a flip-flop's asynchronous RESETN, whose arrival is dominated by a declared 900 ps input external delay.  With `set_false_path -from [get_ports rst_n]` the same 4.5 ns / 55% slew point closes: hold goes from -1.62 ps to +3.22 ps and every other check is already zero.",
+  "consequence_for_the_limiter": "The ABI 3.0 control plane's closed operating point moves 220.6 -> 302.5 MHz, and the datapath limiter moves with it: ot_a3_fp32_div_rne at 283.5 MHz is now the slowest closed ABI 3.0 block.  That was predicted from the divider's own measurement before this route finished, and a bit-exact pipelined replacement for it already closes at 418.5 MHz -- though nothing instantiates it yet.",
+  "not_a_claim": [
+    "area is 4.6% larger (84,773 -> 88,658 um2): the tighter period costs cells, and that is the price of the 1.37x",
+    "ASAP7 is a predictive, non-manufacturable academic PDK",
+    "this is one island's clock.  ot_a3_g2_cluster reaches 24 modules of 103, and no single top integrates the design, so this is not a whole-chip frequency"
+  ],
+  "operating_point": {
+    "area_cost": 1.0458,
+    "clock_gain": 1.371,
+    "new_closed": {
+      "area_um2": 88658.3,
+      "drc_errors": 0,
+      "fmax_mhz": 302.5,
+      "hold_wns_ns": 0.0032180399999999997,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "reset_false_path": true,
+      "setup_wns_ns": 1.19373,
+      "slew_margin_percent": 55.0,
+      "target_ns": 4.5
+    },
+    "previous_closed": {
+      "area_um2": 84773.4,
+      "fmax_mhz": 220.6,
+      "hold_wns_ns": 0.0203746,
+      "reset_false_path": false,
+      "setup_wns_ns": 0.217458,
+      "slew_margin_percent": 40.0,
+      "target_ns": 4.75
+    }
+  },
+  "question": "G2 routed clean at 4.5 ns on every signal-integrity check and was denied `closed` by a 1.62 ps hold violation, which a 20 ps hold margin could not move because hold repair runs under global-route ESTIMATED parasitics where the path already met.  What closes it?",
+  "schema": "opentallas.result.g2_operating_point_moves.v1",
+  "what_the_false_path_is_and_is_not": {
+    "is": "The standard treatment of an ASYNCHRONOUS reset, whose release is synchronised rather than timed against the clock.  The path runs from a top-level input port through five buffers to a DFFASRHQNx1's RESETN, and 900 of its 1,106 ps of arrival is the declared input external delay -- an I/O modelling assumption, not a datapath property.",
+    "is_not": "A fix.  The 1.62 ps removal violation is not repaired; it is declared out of scope.  Saying otherwise would be dressing a constraint change as a logic improvement.",
+    "precedent_in_this_tree": "89 committed physical records across 24 tops already pass --false-path-from, three blocks declare `false_path_from_ports: ['rst_n']` as their built-in default in tools/run_abi3_physical.py, and ot_a3_g2_cluster ITSELF has one such record (g_4.75.json) -- which is where the evidence for this run came from: it showed hold at +13.1 ps with 8 slew violations, while the 55% slew point showed slew 0 with hold at -1.62 ps.  Two records bracketing one answer.",
+    "what_would_make_it_rigorous": "A reset synchroniser in the RTL, so the release is genuinely synchronous and the removal check is met rather than waived.  That is a design change across every block and is not done here."
+  }
+}

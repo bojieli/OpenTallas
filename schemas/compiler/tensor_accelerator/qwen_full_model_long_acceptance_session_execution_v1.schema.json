@@ -1,0 +1,264 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_long_acceptance_session_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aggregate_counter_sha256": {"$ref": "#/$defs/sha256"},
+    "aggregate_counters": {
+      "additionalProperties": false,
+      "maxProperties": 70,
+      "minProperties": 70,
+      "patternProperties": {
+        "^(arithmetic|commands|hbm|matrix|sram|state)\\.[A-Za-z0-9_.]+$": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "build_id": {"const": "6445ef52a940af167f3bde52e0a326258bb8c8da013d4bb25a3b16e18f171bad"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_only_full_acceptance_executed": {"const": true},
+        "exact_8000_prompt_executed": {"const": true},
+        "generated_32_token_decisions_executed": {"const": true},
+        "official_golden_verified": {"const": false},
+        "target_precision_reference_verified": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "artifact_only_full_acceptance_executed",
+        "exact_8000_prompt_executed",
+        "generated_32_token_decisions_executed",
+        "official_golden_verified",
+        "target_precision_reference_verified",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"const": "dfc7ee4d89a091aea616f602174f8bd41cae319ceec92d31fda4cb43636dce6d"},
+    "decode_transaction_count": {"const": 31},
+    "decoded": {
+      "additionalProperties": false,
+      "properties": {
+        "full_text": {"type": "string"},
+        "generated_text": {"type": "string"},
+        "prompt_text": {"type": "string"}
+      },
+      "required": ["full_text", "generated_text", "prompt_text"],
+      "type": "object"
+    },
+    "eos_observed": {"const": false},
+    "final_state": {
+      "items": {"$ref": "#/$defs/state"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "generated_token_count": {"const": 32},
+    "generated_token_ids": {
+      "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+      "maxItems": 32,
+      "minItems": 32,
+      "type": "array"
+    },
+    "graph_id": {"const": "738f3cd8cb5db1ce400c0a44c12385cef6c42ddb2854e22d473251e97a1a51e3"},
+    "mode": {"const": "artifact_only_data_bearing_long_acceptance_candidate"},
+    "prefill_transaction_count": {"const": 8000},
+    "prompt": {"$ref": "#/$defs/prompt"},
+    "runner_version": {"const": "tensor-accelerator-qwen-long-acceptance-runner-0.1.0"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_long_acceptance_session_execution.v1"},
+    "session_execution_id": {"$ref": "#/$defs/sha256"},
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "execution_complete_reference_pending"},
+    "step_chain_sha256": {"$ref": "#/$defs/sha256"},
+    "steps": {
+      "items": {"$ref": "#/$defs/step"},
+      "maxItems": 8031,
+      "minItems": 8031,
+      "type": "array"
+    },
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "tokenizer": {"$ref": "#/$defs/tokenizer"},
+    "transaction_count": {"const": 8031},
+    "workload_fixture": {"$ref": "#/$defs/workload_fixture"}
+  },
+  "required": [
+    "aggregate_counter_sha256",
+    "aggregate_counters",
+    "build_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "decode_transaction_count",
+    "decoded",
+    "eos_observed",
+    "final_state",
+    "generated_token_count",
+    "generated_token_ids",
+    "graph_id",
+    "mode",
+    "prefill_transaction_count",
+    "prompt",
+    "runner_version",
+    "schema",
+    "session_execution_id",
+    "session_id",
+    "status",
+    "step_chain_sha256",
+    "steps",
+    "timing",
+    "tokenizer",
+    "transaction_count",
+    "workload_fixture"
+  ],
+  "title": "Qwen complete artifact-only 8,000+32 candidate execution v1",
+  "type": "object",
+  "$defs": {
+    "prompt": {
+      "additionalProperties": false,
+      "properties": {
+        "encoding": {"const": "repeated_token_id_v1"},
+        "token_count": {"const": 8000},
+        "token_id": {"const": 151643},
+        "token_ids_sha256": {"const": "8dcbc057d9f4bb2657755ffc4419dae1189837343c093964ed329ad95e43d461"}
+      },
+      "required": ["encoding", "token_count", "token_id", "token_ids_sha256"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {"const": 8031},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "length": {"const": 8031},
+        "resource_id": {"pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$", "type": "string"},
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "generation",
+        "key_payload_sha256",
+        "layer",
+        "length",
+        "resource_id",
+        "value_payload_sha256"
+      ],
+      "type": "object"
+    },
+    "step": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_token_index": {
+          "oneOf": [
+            {"maximum": 31, "minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "input_role": {"enum": ["generated", "prompt"]},
+        "input_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "logits_sha256": {"$ref": "#/$defs/sha256"},
+        "output_role": {"enum": ["generated_token", "prefill_intermediate"]},
+        "output_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "phase": {"enum": ["decode", "prefill"]},
+        "previous_report_id": {
+          "oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "report_sha256": {"$ref": "#/$defs/sha256"},
+        "report_size_bytes": {"minimum": 1, "type": "integer"},
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "state_generation": {"maximum": 8031, "minimum": 1, "type": "integer"},
+        "state_length": {"maximum": 8031, "minimum": 1, "type": "integer"},
+        "state_metadata_after_sha256": {"$ref": "#/$defs/sha256"},
+        "state_metadata_before_sha256": {"$ref": "#/$defs/sha256"},
+        "step_index": {"maximum": 8030, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "generated_token_index",
+        "input_role",
+        "input_token_id",
+        "logits_sha256",
+        "output_role",
+        "output_token_id",
+        "phase",
+        "previous_report_id",
+        "report_id",
+        "report_sha256",
+        "report_size_bytes",
+        "request_id",
+        "state_generation",
+        "state_length",
+        "state_metadata_after_sha256",
+        "state_metadata_before_sha256",
+        "step_index"
+      ],
+      "type": "object"
+    },
+    "tokenizer": {
+      "additionalProperties": false,
+      "properties": {
+        "explicit_vocabulary_size": {"const": 151669},
+        "library": {"const": "tokenizers"},
+        "library_version": {"const": "0.22.2"},
+        "model_vocabulary_size": {"const": 151936},
+        "path": {"const": "tokenizer.json"},
+        "prompt_source": {"const": "authenticated_token_id_fixture_no_retokenization"},
+        "sha256": {"const": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"}
+      },
+      "required": [
+        "explicit_vocabulary_size",
+        "library",
+        "library_version",
+        "model_vocabulary_size",
+        "path",
+        "prompt_source",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "workload_fixture": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"const": "3a985ffcecfd17fb8642cdef819c22e16d8e9f4c"},
+        "file_sha256": {"const": "124fad68b395250caf87e1ee37e7914d87ba9b23fc85fc23ef1cce92a9e11f84"},
+        "file_size_bytes": {"const": 4768},
+        "git_blob": {"const": "ddb325754b103ce04aa9e09a0aa5f529c9d43878"},
+        "git_tree": {"const": "71613b6eb97390884b8c409d11b05d85b6f19a79"},
+        "long_context_release_report_id": {"const": "a79d454e73d3566c9d6f9a44d87eb5c1d14470bc3cadbdf79beb8c2529738267"},
+        "path": {"const": "testdata/compiler/qwen3_8b/workload_manifest.json"},
+        "release_file_sha256": {"const": "257263925d380047546b51c3211404d00882e5873a269e7b8356ea1c907c6b59"},
+        "release_file_size_bytes": {"const": 185656},
+        "release_git_blob": {"const": "f3464f2f77abab75cfae074ff647e3c44ab8f72e"},
+        "release_path": {"const": "results/compiler/qwen3-8b/release_gate.json"},
+        "schema": {"const": "opentallas.qwen3.workload_manifest.v1"},
+        "workload_id": {"const": "340ec91558350b2e52259bcf9dedd919bd6022473a7ad24318afd99f1e55183e"}
+      },
+      "required": [
+        "commit",
+        "file_sha256",
+        "file_size_bytes",
+        "git_blob",
+        "git_tree",
+        "long_context_release_report_id",
+        "path",
+        "release_file_sha256",
+        "release_file_size_bytes",
+        "release_git_blob",
+        "release_path",
+        "schema",
+        "workload_id"
+      ],
+      "type": "object"
+    }
+  }
+}

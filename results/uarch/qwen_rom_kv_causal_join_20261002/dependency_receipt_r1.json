@@ -1,0 +1,293 @@
+{
+  "schema": "opentallas.qwen-rom-kv-causal-dependency-receipt.v1",
+  "status": "BLOCKED_ACTUAL_PRODUCER_PROVIDER_POLICY_AND_PHYSICAL_SLOT",
+  "implementation_predecessor": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+  "implementation_source_sha256": {
+    "tools/qwen_rom_kv_causal_join.py": "2a014b225d6d559f93cbdf3e655117f9f111d6a7b94ce9ff553a5070e82ebe4c",
+    "tests/test_qwen_rom_kv_causal_join.py": "d0b643058d35cde07c3c6bd7873878e659fa613c310095ddd7110e701301c9cd",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tools/qwen_rom_kv_identity_binding.py": "ea1ba23b6abdc707b5a017c0fd54ff1e9757b96c8de2e63f092f50b5e825c361",
+    "tools/qwen_rom_persistent_kv_g0.py": "4ec0ca483a2a93e426d973467f45ca8fab69f4d642daa0f1920b45d810e0dc7c"
+  },
+  "inspected_parent": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+  "parent_source_pins": {
+    "tools/hdc_program.py": {
+      "parent_sha256": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+      "received_sha256": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+      "same_as_received": true
+    },
+    "tools/hdc_isa.py": {
+      "parent_sha256": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+      "received_sha256": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+      "same_as_received": true
+    },
+    "tools/hdc_qwen_fullshape_isa_w12.py": {
+      "parent_sha256": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+      "received_sha256": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+      "same_as_received": true
+    },
+    "tools/hdc_qwen_fullshape_program_w12.py": {
+      "parent_sha256": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+      "received_sha256": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+      "same_as_received": true
+    },
+    "rtl/hdc/ot_hdc_vstream_lane.sv": {
+      "parent_sha256": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+      "received_sha256": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+      "same_as_received": true
+    },
+    "tools/qwen_rom_rt_core_emit_w12.py": {
+      "parent_sha256": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+      "received_sha256": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+      "same_as_received": true
+    },
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": {
+      "parent_sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "received_sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "same_as_received": true
+    },
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": {
+      "parent_sha256": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+      "received_sha256": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+      "same_as_received": true
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": {
+      "parent_sha256": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+      "received_sha256": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+      "same_as_received": true
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": {
+      "parent_sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "received_sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "same_as_received": true
+    },
+    "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": {
+      "parent_sha256": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+      "received_sha256": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+      "same_as_received": true
+    },
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": {
+      "parent_sha256": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+      "received_sha256": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+      "same_as_received": true
+    },
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": {
+      "parent_sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "received_sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "same_as_received": true
+    },
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": {
+      "parent_sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+      "received_sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+      "same_as_received": true
+    },
+    "physical/asap7_memory_macros/index.json": {
+      "parent_sha256": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+      "received_sha256": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+      "same_as_received": true
+    },
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": {
+      "parent_sha256": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+      "received_sha256": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+      "same_as_received": true
+    }
+  },
+  "reset_extension_pins": {
+    "tools/qwen_rom_reset_context_g0.py": "8a667e8b43fa8dfd34628c4935d558547342bfb43818f98c23781e8f0bb0af23",
+    "tools/uarch_model_qwen_reset.py": "5f871efce428043502efa23b3f9864b4b5f5e248de4ef7d8b6a7be8998ee3cd8",
+    "results/uarch/qwen_rom_reset_producer_g0_20261002/model-r5.json": "019e2fad554677501d66b024215ca048909fdfb73567ae936afe99c3003fb59e"
+  },
+  "anchors": {
+    "allocation": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+      "anchor": "if(av&&ar)",
+      "requires": "Export immutable identity192/base/LEN and actual allocated_tag12 at handshake.",
+      "lines": [
+        61
+      ]
+    },
+    "returned_identity": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+      "anchor": "output_reg.id.sector<=restored.sector+34'(beat_saved)",
+      "requires": "Retain base allocation; every owned/reverse receipt identity must carry base+beat, all other identity fields unchanged.",
+      "lines": [
+        80
+      ]
+    },
+    "tag_retirement": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+      "anchor": "live[tag_saved]<=0",
+      "requires": "Final PC output acceptance is not consumer drain/credit/grant retirement.",
+      "lines": [
+        94
+      ]
+    },
+    "reverse": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "anchor": "if(!credit_we)begin credit_match=1",
+      "requires": "Validate literal404bit credit against actual tag/identity/beat/write and consumed return before grant.",
+      "lines": [
+        133
+      ]
+    },
+    "write_payload": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv",
+      "anchor": "data:accepted.data",
+      "requires": "Current data256 is one sector; LEN1 heterogeneous writes. No fabricated per-beat write port.",
+      "lines": [
+        48
+      ]
+    },
+    "producer_visibility": {
+      "path": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv",
+      "anchor": ".kv_write_drained(1'b1)",
+      "requires": "Actual visibility/drain provider must replace fixture constants through a model-admitted successor.",
+      "lines": [
+        151
+      ]
+    }
+  },
+  "causal_API": "CausalJoin.submit(actual_ProducerJoin); expect_reads(owner,issued_pc,homes,actual32Bprovider); apply(literal_wire_event); debts()",
+  "input_receipts": {
+    "common": [
+      "event",
+      "service_cycle",
+      "endpoint",
+      "stack",
+      "physical_tag",
+      "identity(hex192)",
+      "owner(user,rank,layer,epoch)",
+      "producer_pc"
+    ],
+    "allocate": [
+      "sectors(count1..32)",
+      "write",
+      "payload_hex(required_for_write)"
+    ],
+    "per_beat": [
+      "beat",
+      "sector(base+beat)"
+    ],
+    "events": [
+      "allocate",
+      "write_command",
+      "backing",
+      "return",
+      "acquire",
+      "drain",
+      "credit",
+      "grant_consumed",
+      "retire"
+    ],
+    "readers": "acquire/drain require reader10; 1024 concurrent assembly readers per stack max",
+    "data": "backing requires exact allocated32B beat; read return requires actual32B payload",
+    "clock": "service_cycle is provider clk cycle; accepted WR to backing minimum8 source cycles"
+  },
+  "wire_rules": {
+    "allocation": "immutable identity192 sector=burst base",
+    "beat_receipts": "identity192 sector=base+beat, beat5 and tag12 must match retained allocation",
+    "reverse_ack": "credit event additionally carries reverse_wire_hex; exact404bit packing including reserved zeros",
+    "write": "LEN1; payload must equal canonical actual producer row at pinned home and issued PC",
+    "read": "Declared descriptor sector demand + actual state callback required; returned bytes must match",
+    "retire": "Immutable base identity; backing/returns, reader drain, accepted credit, consumed grant all required"
+  },
+  "peers": {
+    "Euclid": {
+      "required": [
+        "Actual selected stage image bytes/SHA and TP4 parameters",
+        "Accepted SU issue PC/ticket and domain/cycle, every KV lane address24/value32",
+        "Accepted K/V descriptor coordinates and consumer acquire/drain",
+        "Actual initial persistent prefix, open-tail and window state provider"
+      ],
+      "blocker": "Current wrapper hard-wires kv_ok and drained; capture contains no KV payload/program images. No actual persistent producer receipt supplied."
+    },
+    "Kepler": {
+      "required": [
+        "Handshake allocation tag/base/LEN receipt",
+        "WR command/backing receipts with exact producer-bound payload",
+        "Owned returns with literal rewritten identity; actual404bit reverse credit and consumed grant",
+        "Per-beat reader drain and tag quarantine until retirement"
+      ],
+      "blocker": "Actual r14 early-free/unvalidated-read-credit path unchanged; allocation receipt not exported. Current write data port only supports heterogeneous LEN1."
+    },
+    "Ampere": {
+      "required": [
+        "Per-domain physical reset release/readiness receipt with held-tag/credit drain",
+        "Actual controller/tail/assembly macro instances, pin/OBS/halo/PG/clock reservations",
+        "Chosen service slot outline and routed boundary capacities",
+        "SS60ps/FF25ps contextual timing and complete control/mux/CDC area"
+      ],
+      "blocker": "Reset composition retains prior cold r8 contract; current_slot_fit and channel_capacity are null. Tail addition and causal obligations not yet joined."
+    },
+    "Russell": {
+      "required": [
+        "Bind supplied producer/state/descriptor receipts to one explicitly selected persistent policy",
+        "Timed finite calendar across shared ports/channels, assembly, return, ACK and drain",
+        "Replace existing KV/HBM read charge once, explicitly price writes/CDC/tail/mux/control and single-user latency"
+      ],
+      "blocker": "Cannot select or qualify actual production policy without source-owned payload/state/descriptor and safe provider receipts. Cold reference is not production."
+    }
+  },
+  "physical_service_slot": {
+    "service_SRAM_macros_per_rank": 384,
+    "tail_SRAM_macros_per_rank": 128,
+    "service_and_tail_SRAM_macros_per_rank": 512,
+    "service_and_tail_macro_area_mm2_per_rank": 4.569720064,
+    "assembly_logic_area_lower_bound_mm2_per_rank": 0.9399877632,
+    "inherited_slot_mm2_per_stack": 16.6015872,
+    "inherited_slot_is_current_fit": false,
+    "complete_area_mm2": null,
+    "slot_fit": null,
+    "channel_capacity": null,
+    "single_user_latency": null,
+    "tail_geometry": {
+      "state": "analytical_candidate_not_admitted",
+      "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+      "source_SW": 64,
+      "required_LOG_TW": 9,
+      "source_prototype_LOG_TW_default": 2,
+      "banks_per_rank": 128,
+      "owner_rows_per_bank": 144,
+      "row_equation": "layer*4 + head*2 + dim//64; bank=(tile%2)*64 + dim%64",
+      "mutable_state_bytes_per_rank": 294912,
+      "macro_capacity_bytes_per_rank": 1048576,
+      "macro_area_mm2_per_rank": 0.661843328,
+      "macro_area_mm2_TP4": 2.647373312,
+      "ports_per_bank": {
+        "read_bytes_per_stream_cycle": 16,
+        "write_bytes_per_stream_cycle": 16
+      },
+      "aggregate_write_bytes_per_cycle_max": 64,
+      "flush_read_bytes_per_cycle_candidate": 32,
+      "port_arbitration": "Consumer reads and closed-tail flush share each 1R port; source tail_collision must reject simultaneous bank use. No overlap credited without accepted port calendar.",
+      "SS_macro_min_period_ps": 480.3,
+      "SS_macro_clk_to_q_ps": 524.1,
+      "stream_period_ps": 833.3333333333334,
+      "setup_uncertainty_ps": 60,
+      "capture_budget_ps_before_cell_setup_route_mux": 249.23333333333335,
+      "row_mask_bits_per_bank": 16,
+      "excluded_from_macro_area": "Owner directory, lane conversion, masks, SRAM protection, read/write muxes, serial/stream CDC, capture, CTS, routes.",
+      "area_slot_fit": null,
+      "channel_tracks": null,
+      "per_user_latency": null,
+      "admission": "Full service/calendar model and measured SS/FF closure required before hardware."
+    },
+    "limits": "Tail row mapping sizes one active user/epoch per rank. Multiple users, old-epoch retention, protection and complete slot cost are not admitted.",
+    "boundary_bits_per_edge": {
+      "command_per_stack": 339,
+      "fill_lane": 1048,
+      "request_per_stack": 455,
+      "return_per_stack": 467,
+      "reverse_per_stack": 404
+    }
+  },
+  "production_policy_selected": false,
+  "physical_build_ready": false,
+  "new_numerical_positions": 0,
+  "cold_calendar": {
+    "parent_verified": true,
+    "cycles": 387403068,
+    "selected_policy": false
+  },
+  "delivery": "COMMITTED_FOR_PARENT_RELAY_NO_PEER_MESSAGE_TRANSPORT_EXPOSED"
+}

@@ -1,0 +1,31 @@
+{
+  "scope": "Sinkhorn parent protocol qualification with reference and pipelined divider choices. No RTL change or frequency claim.",
+  "status": "pass",
+  "command": "python3 -m pytest -q tests/test_divider_pipeline_equivalence.py -k sinkhorn_reset",
+  "sources": {
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/abi3/ot_a3_fp32_div_rne.sv": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/proto/ot_fp32_add_positive_rne_pipe.sv": "92b592877ecab0517d1f7009dc8f2b4b47124e5f18854012fd99578c74fb2f0e",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne.sv": "a935cd5b6a82d1be73ff396ec86d9c60bfc58d31dd0012fd7c4b8bcaaa63524e",
+    "rtl/abi3/ot_a3_hc_sinkhorn20_rne_pipe.sv": "1d0f3e62b508554c5f2946c7d6578b9a0a17151d2894f7cdaad02fbfb1a4cc03",
+    "rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv": "5e4ae1b7c04a693e97febec1558a780cd845cfe40346ec3f6cca057f1bce1d10",
+    "tests/test_divider_pipeline_equivalence.py": "707f54bb978a7ee3950d9ceb352c10eee3bba75ad2f065e4f436421f8177e138"
+  },
+  "runs": [
+    {
+      "pipelined_divider": 0,
+      "stdout": "PASS Sinkhorn protocol divider=0 resets=11 recoveries=11 stalls=108 handoffs=6085\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv:62: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 3ms; walltime 0.246 s; speed 12.735 ms/s\n- Verilator: cpu 0.245 s on 1 threads; allocated 6 MB\n",
+      "reset_points": 11,
+      "recovery_comparisons": 11,
+      "stalled_cycles": 108
+    },
+    {
+      "pipelined_divider": 1,
+      "stdout": "PASS Sinkhorn protocol divider=1 resets=11 recoveries=11 stalls=108 handoffs=6085\n- /home/ubuntu/OpenTallas/rtl/test/tb_a3_hc_sinkhorn20_pipe_protocol.sv:62: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 5ms; walltime 0.324 s; speed 14.421 ms/s\n- Verilator: cpu 0.317 s on 1 threads; allocated 6 MB\n",
+      "reset_points": 11,
+      "recovery_comparisons": 11,
+      "stalled_cycles": 108
+    }
+  ]
+}

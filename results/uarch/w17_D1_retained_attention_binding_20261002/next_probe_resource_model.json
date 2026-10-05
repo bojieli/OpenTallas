@@ -1,0 +1,67 @@
+{
+  "budget_status": "NOT_FROZEN_UNTIL_EXACT_CORE_CLOSURE_AND_ABI_NATIVE_COMMAND",
+  "causal_service_bound": "BOUND_MISSING",
+  "current_core_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "current_core_path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+  "geometry_required": {
+    "CL_DEPTH": 512,
+    "ROM_PHW": 6,
+    "SU": {
+      "SUM": 64,
+      "SUN": 256
+    },
+    "attention": {
+      "D": 512,
+      "H": 16,
+      "NL": 4,
+      "PWORDS": 1,
+      "TD": 32,
+      "TROWS": 640,
+      "tiles": 64
+    }
+  },
+  "minimal_scope": {
+    "additional_context": [
+      "waited",
+      "q_gate",
+      "m0_gate",
+      "fault",
+      "owned request identity",
+      "qualified selected owner return"
+    ],
+    "cold_start_delay_12300": false,
+    "four_predicates": [
+      "me_ready",
+      "kv_ok",
+      "!kvd_v",
+      "win_idle"
+    ],
+    "prime_actual_WINDOW_before_controlled_instruction": true,
+    "qualified_callback_completion_not_guaranteed": true,
+    "whole_L0_restart": false
+  },
+  "original_cause": "UNOBSERVED",
+  "pricing_references_only": {
+    "baseline_CXX_seconds": 389.972,
+    "conditional_512_cycle_original_context_seconds": 162.21391457586088,
+    "conditional_512_cycle_pilot_seconds": 18.91172159488,
+    "core_profile_correction_commit": "8f9bf400ecb8122b1bb613bcf6448e877480cf14",
+    "full_SUN_frontend_peak_bytes": 5686992896,
+    "full_SUN_frontend_seconds": 99.381,
+    "generated_bytes": 706497643,
+    "original_full_L0_terminal_seconds_per_cycle": 0.3168240519059783,
+    "pilot_archive_commit": "a3361e4eec360b64e8a7a831ff64f6c6c5adf875",
+    "pilot_seconds_per_clock_period": 0.03693695624,
+    "reference_not_new_endpoint_measurement": true
+  },
+  "purpose": "Actual submitted core four admission predicates plus qualified WINDOW owner read accept/return; stop after first causal predicate witness, no full token completion",
+  "runtime_launch_authorized": false,
+  "source_required_before_GO": [
+    "Freeze complete actual runtime-core dependency closure and exact defines",
+    "Use recovered historical full attention only with explicit mixed-version diagnostic scope or prove current-source equivalence separately",
+    "Freeze host mapping preserving both rising evaluations before transfer and falling settling",
+    "Provide controlled real owned descriptor acceptance/response, no projected completion",
+    "Inventory and enroll exact archive/header/Verilator runtime support ABI and native link command"
+  ],
+  "status": "SOURCE_ENDPOINT_IDENTIFIED_NO_EXECUTION_PLAN_OR_GO"
+}

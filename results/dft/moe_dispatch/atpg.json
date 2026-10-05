@@ -1,0 +1,156 @@
+{
+ "aborted_by_pin": {
+  "A1": 2,
+  "A2": 2,
+  "B": 3,
+  "B1": 2,
+  "B2": 2,
+  "C": 1,
+  "Y": 1
+ },
+ "block": "ot_rom_moe_dispatch",
+ "classes": {
+  "AU": 13,
+  "DS": 10827,
+  "DT": 59960,
+  "ND": 0,
+  "UT": 356
+ },
+ "engine": {
+  "binary_source_sha256": "3b639ac42a3eb520dab25b0f73eda39624d3d878399fe3eab4deba9461dd220d",
+  "capture": {
+   "abort_retry_backtrack_limit": 4096,
+   "aborted": 13,
+   "aborted_retried": 72,
+   "backtrack_limit": 256,
+   "detected": 59960,
+   "detected_after_random": 57925,
+   "faults_targeted": 66846,
+   "log": [
+    "otatpg: PODEM 7210 calls, 6873 untestable, 13 aborted, 250 deterministic patterns, 0 unconfirmed (0.455934 s)",
+    "otatpg: compaction 468 -> 296 patterns (0.504808 s)",
+    "otatpg: 59960 detected, 6873 untestable, 13 aborted, 0 other; 296 patterns (0.563753 s)"
+   ],
+   "max_level": 65,
+   "nodes": 74938,
+   "observed": 2770,
+   "patterns": 296,
+   "patterns_before_compaction": 468,
+   "podem_backtracks": 166265,
+   "podem_calls": 7210,
+   "podem_unconfirmed": 0,
+   "primary_inputs": 521,
+   "random_blocks": 21,
+   "random_patterns_kept": 218,
+   "seconds": 0.560612,
+   "seed": 1,
+   "sources": 2676,
+   "threads": 8,
+   "undetected_other": 0,
+   "untestable": 6873,
+   "untestable_but_detected": 0,
+   "wall_seconds": 0.6
+  },
+  "shift": {
+   "cycles": 1440,
+   "detected": 10827,
+   "faults_simulated": 11196,
+   "first_divergence_faults": 11078,
+   "full_simulation_faults": 112,
+   "log": [
+    "otatpg: flush 1440 cycles, 10827/11196 faults detected (4.73656 s)"
+   ],
+   "longest_chain": 719,
+   "mode": "flush",
+   "scan_out_faults": 6,
+   "seconds": 4.73656,
+   "wall_seconds": 4.8
+  }
+ },
+ "fault_coverage": 0.994814,
+ "fault_model": "single stuck-at, every pin of every cell (uncollapsed), clock pins included",
+ "faults_total": 71156,
+ "gate_level": {
+  "build": "lean (-j 4 -fno-inline --output-split 5000 --output-split-cfuncs 500 -CFLAGS -O1)",
+  "capture_faults_confirmed": 100,
+  "capture_faults_injected": 100,
+  "chain_faults_confirmed": 30,
+  "chain_faults_injected": 30,
+  "good_machine_mismatches": 0,
+  "good_machine_patterns": 51,
+  "sampling": {
+   "capture_faults_sampled_from": 59960,
+   "chain_faults_sampled_from": 10827,
+   "method": "patterns 0..N-1 plus each sampled fault's detecting pattern; faults drawn uniformly without replacement with random.Random(seed)",
+   "patterns_replayed": 51,
+   "patterns_total": 296,
+   "seed": 1
+  },
+  "seconds": 505.9,
+  "simulator": "Verilator 5 (--timing), cell models generated from Liberty",
+  "unconfirmed": []
+ },
+ "model": {
+  "clock_pin_faults": 4310,
+  "clock_ports": [
+   "clk"
+  ],
+  "instances": 8867,
+  "lockup_latches": 0,
+  "node_types": {
+   "AND": 11302,
+   "BUF": 35578,
+   "CONST1": 1,
+   "INPUT": 2676,
+   "NOT": 17944,
+   "OR": 7437
+  },
+  "nodes": 74938,
+  "pin_faults_modelled": 66846,
+  "primary_inputs": 521,
+  "primary_outputs": 615,
+  "scan_cells": 2155,
+  "top": "ot_rom_moe_dispatch",
+  "undriven_net_count": 0,
+  "undriven_nets": []
+ },
+ "netlist": {
+  "origin": "host Yosys 0.68 synthesis (run_abi3_physical --stages synth), scan inserted by tools/dft/scan_insert.py --max-length 1024",
+  "path": "scan.v",
+  "sha256": "610c05189ee0b0ee386dee285e294c981ce7b51a143dda10293e79e66d9ca81c"
+ },
+ "patterns": {
+  "before_compaction": 468,
+  "capture": 296,
+  "chain_test": 1,
+  "note": "tester cycles = one load/unload of the longest chain per pattern, overlapped, plus the capture cycle",
+  "random_kept": 218,
+  "tester_cycles": 214559
+ },
+ "scan": {
+  "capture_constraints": {
+   "rst_n": 1,
+   "scan_en": 0
+  },
+  "chains": 3,
+  "max_chain_length": 719,
+  "scan_cells": 2155
+ },
+ "schema": "opentallas.dft.atpg.v1",
+ "seconds": 519.9,
+ "test_coverage": 0.999816,
+ "top": "ot_rom_moe_dispatch",
+ "untestable_by_pin": {
+  "A": 20,
+  "A1": 11,
+  "A2": 14,
+  "B": 18,
+  "B1": 8,
+  "B2": 10,
+  "C": 12,
+  "RESETN": 103,
+  "SE": 51,
+  "SETN": 103,
+  "Y": 6
+ }
+}

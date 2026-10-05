@@ -1,0 +1,30 @@
+{
+ "prompts": 30,
+ "cycles": 508,
+ "generated_tokens": 2160,
+ "tau_pooled": 4.012,
+ "tau_pooled_ci95": [
+  3.767,
+  4.313
+ ],
+ "tau_median_of_prompts": 3.917,
+ "tau_median_of_prompts_ci95": [
+  3.721,
+  4.367
+ ],
+ "tau_equal_tokens_per_workload": 3.989,
+ "tau_equal_tokens_per_workload_ci95": [
+  3.773,
+  4.247
+ ],
+ "per_cycle_committed_median": 4.0,
+ "conditional_acceptance_by_position": [
+  0.8819,
+  0.8371,
+  0.808,
+  0.7426,
+  0.7956
+ ],
+ "alpha_equivalent_geometric": 0.8356,
+ "alpha_equivalent_geometric_median": 0.8254
+}

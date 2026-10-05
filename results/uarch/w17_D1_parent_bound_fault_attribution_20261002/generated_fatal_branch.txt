@@ -1,0 +1,17 @@
+            if (VL_UNLIKELY(((0U != vlSelfRef.tb_D1_scope_core__DOT__probe__DOT__dut__DOT__g_hbm__BRA__0__KET____DOT__g_karb__DOT__u_arb__DOT__kwd)))) {
+                VL_WRITEF_NX("D1_REAL_WRITER_ACK time=%0t\n",2, 'T',-9
+                             , '#',64,VL_TIME_UNITED_Q(1000));
+            }
+            co_await vlSelfRef.__VdlySched.delay(1ULL, 
+                                                 nullptr, 
+                                                 "/tmp/opentallas-D1-parent-scope-frontend-20261002-r2/rtl/test/w17_D1_scope_corrected_probe/ot_v41_rt_die_D1_scope.sv", 
+                                                 261);
+            if (VL_UNLIKELY(((((0U != (IData)(vlSelfRef.tb_D1_scope_core__DOT__probe__DOT__dut__DOT__fault_r)) 
+                               | (0U != vlSelfRef.tb_D1_scope_core__DOT__dbg_fs)) 
+                              | (0U != (IData)(vlSelfRef.tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__violations)))))) {
+                VL_WRITEF_NX("[%0t] %%Fatal: ot_v41_rt_die_D1_scope.sv:263: Assertion failed in %m: D1_SOURCE_OR_LEDGER_FAULT\n",3, 'M',vlSymsp->name(),"tb_D1_scope_core.probe.g_D1_current", 'T',-9
+                             , '#',64,VL_TIME_UNITED_Q(1000));
+                VL_STOP_MT("/tmp/opentallas-D1-parent-scope-frontend-20261002-r2/rtl/test/w17_D1_scope_corrected_probe/ot_v41_rt_die_D1_scope.sv", 263, "", false);
+            }
+            if (VL_UNLIKELY((((IData)(vlSelfRef.tb_D1_scope_core__DOT__probe__DOT__g_D1_current__DOT__target) 
+                              & ((IData)(vlSelfRef.tb_D1_scope_core__DOT__probe__DOT__dut__DOT__u_tile__DOT__u_core__DOT__me_go) 

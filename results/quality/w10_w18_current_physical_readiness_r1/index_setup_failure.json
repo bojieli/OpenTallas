@@ -1,0 +1,9 @@
+{
+  "cause": "git worktree add --no-checkout leaves empty index; sparse setup did not initialize base index before explicit additions",
+  "failed_local_commit": "7380acf4d",
+  "lesson": "Initialize sparse no-checkout index from pinned tree before edits; verify staged diff contains only explicit intended paths.",
+  "main_or_live_sources_modified": false,
+  "repair": "reset isolated branch/index to pinned base454f29; reapply sparse; explicitly add four audit files; resulting diff four additions only",
+  "schema": "w10_sparse_worktree_index_failure_v1",
+  "verdict": "REJECTED_NEVER_INTEGRATE"
+}

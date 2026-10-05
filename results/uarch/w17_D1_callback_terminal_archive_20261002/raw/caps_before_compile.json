@@ -1,0 +1,21 @@
+{
+  "systemd": {
+    "RuntimeMaxUSec": "15min",
+    "OOMPolicy": "stop",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/w17-D1-callback-fixture-parent-20261002-r1.service",
+    "MemoryMax": "12884901888",
+    "MemorySwapMax": "0",
+    "LimitFSIZE": "268435456",
+    "LimitCORE": "0",
+    "CPUAffinity": "0-1",
+    "KillMode": "control-group",
+    "KillSignal": "9"
+  },
+  "kernel_cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-D1-callback-fixture-parent-20261002-r1.service",
+  "memory_max": "12884901888",
+  "swap_max": "0",
+  "affinity": [
+    0,
+    1
+  ]
+}

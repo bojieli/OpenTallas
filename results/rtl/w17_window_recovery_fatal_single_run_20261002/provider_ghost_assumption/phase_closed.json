@@ -1,0 +1,243 @@
+{
+  "status": "PHASE_SEMANTIC_RECEIPTS_CLOSED",
+  "job": {
+    "label": "provider_ghost_assumption",
+    "compile_command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "--assert",
+      "--top-module",
+      "tb_provider_fence_ghost",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "--Mdir",
+      "{run}/provider_ghost_assumption/obj",
+      "{run}/provider_ghost_assumption/sources/tb_provider_fence_ghost.sv"
+    ],
+    "compile_seconds": 10,
+    "cases": [
+      {
+        "args": [],
+        "seconds": 1,
+        "expected": "PASS",
+        "marker": "CLOSED_PROVIDER_ASSUMPTION_CHECK_ONLY"
+      },
+      {
+        "args": [],
+        "seconds": 1,
+        "expected": "FAIL",
+        "marker": "FAIL_PROVIDER_FENCE_ASSUMPTION_VIOLATION; NOT_WINDOW_DETECTION",
+        "fatal_receipt": {
+          "basename": "tb_provider_fence_ghost.sv",
+          "line": 17,
+          "top": "tb_provider_fence_ghost",
+          "bench_sha256": "5313503167cf9759476d8a9220fabe0daf80a32f5e5c0dc688ec9c2edb6aab22",
+          "returncode": 1
+        }
+      }
+    ],
+    "ghost_two_configurations": "Use one runtime-selectable plusarg ghost witness, no second compile."
+  },
+  "steps": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb_provider_fence_ghost",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources/tb_provider_fence_ghost.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.198148077353835,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/compile.log",
+      "log_sha256": "87e8a7dbc522c9ca7e13b2805fc09787422c0db0449331d451c9c28c85df7c50"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj/Vtb_provider_fence_ghost"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10342098027467728,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/case0.log",
+      "log_sha256": "666bbf2c904015e88410040b058f2049443a40b4205313efeb682a14d49404c4",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj/Vtb_provider_fence_ghost",
+        "+VIOLATE_FENCE"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.11621369002386928,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/case1.log",
+      "log_sha256": "905020125a5f19d1f4115b3a3375929dc5cdcdeaebf7ad701190c3eb94b23551",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources"
+    }
+  ],
+  "plan_sha256": "ea163e263e427c5c2a50a8e0cdb2e4e57af1ed7b7f9a4d52a2f5627b4c43ec1c",
+  "GO_commit": "7f51aa993c956e0e28abb49c0e3039ebc5d01bfa",
+  "binary": {
+    "sha256": "2e9a28ed96e497d61a9bcca27815a8014366ce854fc30c34a28596d748388799",
+    "bytes": 237544
+  },
+  "generated_files": {
+    "Vtb_provider_fence_ghost": {
+      "bytes": 237544,
+      "sha256": "2e9a28ed96e497d61a9bcca27815a8014366ce854fc30c34a28596d748388799"
+    },
+    "Vtb_provider_fence_ghost.cpp": {
+      "bytes": 3755,
+      "sha256": "d1471279108db483c0f710fdba85a5aa1a48154c199f058385bb0dbabcef4766"
+    },
+    "Vtb_provider_fence_ghost.h": {
+      "bytes": 3618,
+      "sha256": "3867a3cd651b8ce1d5cc106daab38731146fd09cb3a69a010171e2f639b62be6"
+    },
+    "Vtb_provider_fence_ghost.mk": {
+      "bytes": 2041,
+      "sha256": "5429d5cc206f84931f8a670e40504d9bbade4167f18c0f32dfdd828d3f713bc8"
+    },
+    "Vtb_provider_fence_ghost__ALL.a": {
+      "bytes": 38574,
+      "sha256": "0cc1aeb5c1dddef852af00a6e55efc74ff645a2dabb89c42551c999f64b7def4"
+    },
+    "Vtb_provider_fence_ghost__ALL.cpp": {
+      "bytes": 398,
+      "sha256": "ea5c063cb3575b60c61b536c4c9732dc6f242faa8a6125f56d3f91a1f52ed750"
+    },
+    "Vtb_provider_fence_ghost__ALL.d": {
+      "bytes": 1132,
+      "sha256": "630e3c93919f05c461d2dcc57d6a1f303c3074f5c6f5c26d86a038460440c4dc"
+    },
+    "Vtb_provider_fence_ghost__ALL.o": {
+      "bytes": 33864,
+      "sha256": "dc4558ad9eca744616ed3ea37bf951f8759c8c5a315eef96439d9f7c51315528"
+    },
+    "Vtb_provider_fence_ghost__Syms.h": {
+      "bytes": 1104,
+      "sha256": "4513d756b337d223ee8b26462653f0e9d23d97fd7dee545bca476d043860c134"
+    },
+    "Vtb_provider_fence_ghost__Syms__Slow.cpp": {
+      "bytes": 971,
+      "sha256": "b3c395dc6e53de9e7d0846bcdd6528582494a95af713039c06f0526b84e8b878"
+    },
+    "Vtb_provider_fence_ghost___024root.h": {
+      "bytes": 1272,
+      "sha256": "59b951c29ff6493482d905a2a8c150d42b90daf8e163d47d66fb05fadf5b5621"
+    },
+    "Vtb_provider_fence_ghost___024root__0.cpp": {
+      "bytes": 9575,
+      "sha256": "4031b6e79f37c634327113d792c26d5f1b986fe1432f88f81320291c2a025fa4"
+    },
+    "Vtb_provider_fence_ghost___024root__0__Slow.cpp": {
+      "bytes": 2903,
+      "sha256": "a79a6f20ab64113798a5d8500b138f3637d23a585925e9a2290d64b27c8ccd07"
+    },
+    "Vtb_provider_fence_ghost___024root__Slow.cpp": {
+      "bytes": 894,
+      "sha256": "0b1f0a77877f35ee1a8cd5cd8c157020b9403649c5abeaebe1d2ebd141f85c4f"
+    },
+    "Vtb_provider_fence_ghost__main.cpp": {
+      "bytes": 1164,
+      "sha256": "38806f47cf1a2de1dd0f7030d8108e94f3d1ab5928410b295ce5dfe5b082d670"
+    },
+    "Vtb_provider_fence_ghost__pch.h": {
+      "bytes": 845,
+      "sha256": "20205957aec089d9d6c32441b64e1ed30aaca2f8a2d5059c528fb4cc9d436468"
+    },
+    "Vtb_provider_fence_ghost__ver.d": {
+      "bytes": 1958,
+      "sha256": "ed7d5b25a98a190d9aba872ccec3042553302f00fd402ff1f0c43b17ca1ac346"
+    },
+    "Vtb_provider_fence_ghost__verFiles.dat": {
+      "bytes": 3957,
+      "sha256": "3a1176d0c45f1dcb6e3c7aa7ab549810786608a3c14d78a3fb93176f856bf18c"
+    },
+    "Vtb_provider_fence_ghost_classes.mk": {
+      "bytes": 1835,
+      "sha256": "84a06139fb14e2fd0769bfa7f7cc7c0db04065d9658870d38d72a87aa4f5a374"
+    },
+    "verilated.d": {
+      "bytes": 1177,
+      "sha256": "22847bd077c0eb293aa1e871ceafe053037479645bfc18ec6354afc638b67e5a"
+    },
+    "verilated.o": {
+      "bytes": 283176,
+      "sha256": "e1bfbea77f32f1488af066a40da7d11f452ef4522c55a7c7246eec1a71a5d254"
+    },
+    "verilated_threads.d": {
+      "bytes": 704,
+      "sha256": "59d0aa0b830bfad4bd336191fb195e99c04e6399033e36c143e2aabaa57cea84"
+    },
+    "verilated_threads.o": {
+      "bytes": 60240,
+      "sha256": "20e39a91341e70ea7416b7b001c43c5e96c868db98048de8be855b03bd1282c4"
+    },
+    "verilated_timing.d": {
+      "bytes": 701,
+      "sha256": "748002c51e1364120e32107d264c8cfe01c57db3f0e1bb1c224d7918ef773d24"
+    },
+    "verilated_timing.o": {
+      "bytes": 18192,
+      "sha256": "24cdf5d8a25bca5f58a3e40ea57db0c1eda8d058e62c6c096fd47e797a7efd74"
+    }
+  },
+  "source_files": {
+    "tb_provider_fence_ghost.sv": {
+      "bytes": 962,
+      "sha256": "5313503167cf9759476d8a9220fabe0daf80a32f5e5c0dc688ec9c2edb6aab22"
+    }
+  },
+  "retained_evidence_files": {
+    "binary_receipt.json": {
+      "bytes": 102,
+      "sha256": "690f83137967e4ee321f364e69d5cd0b836f442ece5a335ac5a9cc8bddc2b5c6"
+    },
+    "case0.log": {
+      "bytes": 393,
+      "sha256": "666bbf2c904015e88410040b058f2049443a40b4205313efeb682a14d49404c4"
+    },
+    "case1.log": {
+      "bytes": 303,
+      "sha256": "905020125a5f19d1f4115b3a3375929dc5cdcdeaebf7ad701190c3eb94b23551"
+    },
+    "compile.log": {
+      "bytes": 4057,
+      "sha256": "87e8a7dbc522c9ca7e13b2805fc09787422c0db0449331d451c9c28c85df7c50"
+    },
+    "snapshot_sha256.json": {
+      "bytes": 103,
+      "sha256": "ce5701bff8368ae6016110c32e49d77e1abc04bd0be81e0bbc2f2c7a3802447b"
+    }
+  },
+  "generated_inventory_sha256": "728a48af5ea868f1cf4f1317ab964195ad5e84b2ebe09d771bc3e98d0797fc07",
+  "generated_bytes": 711594,
+  "live_output_bytes_before_closure": 1926548,
+  "sampled_output_peak_bytes": 156503446,
+  "no_source_or_expectation_change": true
+}

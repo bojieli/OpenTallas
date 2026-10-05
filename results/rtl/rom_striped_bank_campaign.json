@@ -1,0 +1,1096 @@
+{
+  "cases": [
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "label": "spread",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        0,
+        8,
+        1,
+        9,
+        2,
+        10
+      ],
+      "label": "paired",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        0,
+        8,
+        16,
+        24,
+        32,
+        40
+      ],
+      "label": "concentrated",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 12,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 12,
+      "expected_words": 64,
+      "experts": [
+        7
+      ],
+      "label": "single",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 64
+    },
+    {
+      "cycles": 68,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 68,
+      "expected_words": 384,
+      "experts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "label": "spread",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 3,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        0,
+        8,
+        1,
+        9,
+        2,
+        10
+      ],
+      "label": "paired",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 388,
+      "dedicated_serialised_experts": 5,
+      "expected_cycles": 388,
+      "expected_words": 384,
+      "experts": [
+        0,
+        8,
+        16,
+        24,
+        32,
+        40
+      ],
+      "label": "concentrated",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 68,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 68,
+      "expected_words": 64,
+      "experts": [
+        7
+      ],
+      "label": "single",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 64
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        21,
+        20,
+        10,
+        12,
+        11,
+        32
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        21,
+        20,
+        10,
+        12,
+        11,
+        32
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        33,
+        1,
+        30,
+        7,
+        31,
+        20
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        33,
+        1,
+        30,
+        7,
+        31,
+        20
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        40,
+        41,
+        26,
+        30,
+        13,
+        14
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        40,
+        41,
+        26,
+        30,
+        13,
+        14
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        18,
+        27,
+        4,
+        28,
+        1,
+        41
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        18,
+        27,
+        4,
+        28,
+        1,
+        41
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        43,
+        2,
+        21,
+        9,
+        27,
+        30
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        43,
+        2,
+        21,
+        9,
+        27,
+        30
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        9,
+        41,
+        17,
+        43,
+        1,
+        42
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 260,
+      "dedicated_serialised_experts": 3,
+      "expected_cycles": 260,
+      "expected_words": 384,
+      "experts": [
+        9,
+        41,
+        17,
+        43,
+        1,
+        42
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        45,
+        7,
+        44,
+        5,
+        20,
+        21
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 196,
+      "dedicated_serialised_experts": 3,
+      "expected_cycles": 196,
+      "expected_words": 384,
+      "experts": [
+        45,
+        7,
+        44,
+        5,
+        20,
+        21
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        19,
+        18,
+        39,
+        38,
+        23,
+        44
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        19,
+        18,
+        39,
+        38,
+        23,
+        44
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        44,
+        0,
+        24,
+        26,
+        31,
+        34
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        44,
+        0,
+        24,
+        26,
+        31,
+        34
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        45,
+        36,
+        31,
+        38,
+        4,
+        39
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        45,
+        36,
+        31,
+        38,
+        4,
+        39
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        7,
+        22,
+        14,
+        43,
+        13,
+        3
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        7,
+        22,
+        14,
+        43,
+        13,
+        3
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        28,
+        12,
+        9,
+        11,
+        27,
+        38
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        28,
+        12,
+        9,
+        11,
+        27,
+        38
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        25,
+        9,
+        16,
+        27,
+        34,
+        29
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        25,
+        9,
+        16,
+        27,
+        34,
+        29
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        45,
+        3,
+        46,
+        13,
+        28,
+        14
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        45,
+        3,
+        46,
+        13,
+        28,
+        14
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        4,
+        24,
+        8,
+        41,
+        13,
+        29
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        4,
+        24,
+        8,
+        41,
+        13,
+        29
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        1,
+        14,
+        26,
+        38,
+        13,
+        18
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        1,
+        14,
+        26,
+        38,
+        13,
+        18
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        32,
+        37,
+        41,
+        30,
+        46,
+        45
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        32,
+        37,
+        41,
+        30,
+        46,
+        45
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        14,
+        22,
+        19,
+        7,
+        6,
+        40
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 196,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 196,
+      "expected_words": 384,
+      "experts": [
+        14,
+        22,
+        19,
+        7,
+        6,
+        40
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        36,
+        47,
+        4,
+        18,
+        10,
+        8
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        36,
+        47,
+        4,
+        18,
+        10,
+        8
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        18,
+        10,
+        27,
+        28,
+        19,
+        29
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        18,
+        10,
+        27,
+        28,
+        19,
+        29
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        46,
+        39,
+        23,
+        38,
+        20,
+        1
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        46,
+        39,
+        23,
+        38,
+        20,
+        1
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        24,
+        4,
+        10,
+        22,
+        42,
+        20
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 2,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        24,
+        4,
+        10,
+        22,
+        42,
+        20
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        1,
+        31,
+        11,
+        10,
+        40,
+        2
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 132,
+      "dedicated_serialised_experts": 1,
+      "expected_cycles": 132,
+      "expected_words": 384,
+      "experts": [
+        1,
+        31,
+        11,
+        10,
+        40,
+        2
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 52,
+      "dedicated_serialised_experts": 0,
+      "expected_cycles": 52,
+      "expected_words": 384,
+      "experts": [
+        13,
+        25,
+        29,
+        45,
+        21,
+        14
+      ],
+      "label": "random",
+      "mode": "striped",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    },
+    {
+      "cycles": 260,
+      "dedicated_serialised_experts": 3,
+      "expected_cycles": 260,
+      "expected_words": 384,
+      "experts": [
+        13,
+        25,
+        29,
+        45,
+        21,
+        14
+      ],
+      "label": "random",
+      "mode": "dedicated",
+      "pass": true,
+      "scoreboard_errors": 0,
+      "words": 384
+    }
+  ],
+  "claim_boundary": "functional RTL simulation of the striped-bank address map and stream schedule; behavioural banks, no macro, area, timing or read energy",
+  "dedicated_cycles_six_experts": [
+    68,
+    132,
+    196,
+    260,
+    388
+  ],
+  "input_sha256": {
+    "rtl/rom/ot_rom_striped_expert_reader.sv": "2d9198e7eb78d3f755763b0057868a81fa51ae3b58b9cda93b686267c5ec6513",
+    "rtl/test/tb_rom_striped_expert_reader.sv": "4cccd148b136ba60e90c3308b9cf3cdad93370a9c20096c4f1ce72f68ec0efc2",
+    "tools/rtl_rom_striped_bank_campaign.py": "e0720c20d2ccc342cd45e5f5d016039e93207fcf1d5311c6609d4e0fa722f6cb"
+  },
+  "parameters": {
+    "banks": 8,
+    "expert_words": 64,
+    "experts": 48,
+    "max_select": 6,
+    "overhead_cycles": 4,
+    "sense_latency": 2
+  },
+  "schema": "opentallas.rom-striped-bank-campaign.v1",
+  "status": "pass",
+  "striped_cycles_six_experts": [
+    52
+  ],
+  "verilator_lint": {
+    "flags": [
+      "-Wall",
+      "-Wno-DECLFILENAME",
+      "-Wno-UNUSED",
+      "-Wno-WIDTH",
+      "-Wno-BLKSEQ"
+    ],
+    "messages": [],
+    "returncode": 0
+  },
+  "worst_dedicated_over_striped": 7.461538461538462
+}

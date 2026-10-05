@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/workload_manifest_v1.schema.json",
+  "title": "OpenTallas Qwen3-8B 8K workload and golden manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "evidence_boundary",
+    "generation_policy",
+    "long_context",
+    "model",
+    "schema",
+    "short_chat",
+    "short_differential",
+    "workload_id"
+  ],
+  "properties": {
+    "evidence_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closed_functional_gates",
+        "open_system_gates"
+      ],
+      "properties": {
+        "closed_functional_gates": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "open_system_gates": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      }
+    },
+    "generation_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_size",
+        "eos_token_ids",
+        "generated_tokens",
+        "mode",
+        "speculative"
+      ],
+      "properties": {
+        "batch_size": {
+          "const": 1
+        },
+        "eos_token_ids": {
+          "prefixItems": [
+            {
+              "const": 151645
+            },
+            {
+              "const": 151643
+            }
+          ],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "generated_tokens": {
+          "const": 32
+        },
+        "mode": {
+          "const": "greedy"
+        },
+        "speculative": {
+          "const": false
+        }
+      }
+    },
+    "long_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_tokens",
+        "expected_argmax_token_id",
+        "expected_counters",
+        "expected_layer_boundary_count",
+        "expected_logits_sha256",
+        "input_token_sha256",
+        "release_report_id",
+        "token_generator"
+      ],
+      "properties": {
+        "context_tokens": {
+          "const": 8000
+        },
+        "expected_argmax_token_id": {
+          "maximum": 151935,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "expected_counters": {
+          "$ref": "#/$defs/counters"
+        },
+        "expected_layer_boundary_count": {
+          "const": 36
+        },
+        "expected_logits_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "input_token_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "release_report_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "token_generator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repeat_count",
+            "token_id"
+          ],
+          "properties": {
+            "repeat_count": {
+              "const": 8000
+            },
+            "token_id": {
+              "const": 151643
+            }
+          }
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "build_id",
+        "checkpoint_lock_id",
+        "graph_id",
+        "id",
+        "repository",
+        "revision",
+        "target_context_tokens",
+        "tokenizer_config_sha256",
+        "tokenizer_sha256"
+      ],
+      "properties": {
+        "build_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checkpoint_lock_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "graph_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "id": {
+          "const": "qwen3-8b"
+        },
+        "repository": {
+          "const": "Qwen/Qwen3-8B"
+        },
+        "revision": {
+          "const": "b968826d9c46dd6066d109eabc6255188de91218"
+        },
+        "target_context_tokens": {
+          "const": 8000
+        },
+        "tokenizer_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "tokenizer_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "schema": {
+      "const": "opentallas.qwen3.workload_manifest.v1"
+    },
+    "short_chat": {
+      "$ref": "#/$defs/short_workload"
+    },
+    "short_differential": {
+      "$ref": "#/$defs/short_workload"
+    },
+    "workload_id": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "token_ids": {
+      "items": {
+        "maximum": 151935,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "short_workload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "expected_context_tokens_committed",
+        "expected_generated_text",
+        "expected_generated_token_ids",
+        "expected_span_count",
+        "prompt_token_ids",
+        "prompt_token_sha256"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "expected_context_tokens_committed": {
+          "maximum": 8000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "expected_generated_text": {
+          "type": "string"
+        },
+        "expected_generated_token_ids": {
+          "$ref": "#/$defs/token_ids"
+        },
+        "expected_span_count": {
+          "const": 32
+        },
+        "prompt_file_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "prompt_path": {
+          "pattern": "^testdata/compiler/qwen3_8b/[A-Za-z0-9_.-]+$",
+          "type": "string"
+        },
+        "prompt_token_ids": {
+          "$ref": "#/$defs/token_ids"
+        },
+        "prompt_token_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "counters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attention_calls",
+        "attention_multiply_add_operations",
+        "embedding_payload_bytes_read",
+        "host_to_device_weight_bytes",
+        "instructions_executed",
+        "kv_bytes_read",
+        "kv_bytes_written",
+        "matrix_multiplications",
+        "matrix_multiply_add_operations",
+        "output_logit_elements",
+        "rom_weight_bytes_addressed",
+        "tokens_processed",
+        "vector_elements_processed"
+      ],
+      "properties": {
+        "attention_calls": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "attention_multiply_add_operations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "embedding_payload_bytes_read": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "host_to_device_weight_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "instructions_executed": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "kv_bytes_read": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "kv_bytes_written": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "matrix_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "matrix_multiply_add_operations": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "output_logit_elements": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "rom_weight_bytes_addressed": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tokens_processed": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "vector_elements_processed": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

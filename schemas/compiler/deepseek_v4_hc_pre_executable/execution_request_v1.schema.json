@@ -1,0 +1,119 @@
+{
+  "$defs": {
+    "inputDescriptor": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16"
+        },
+        "encoding": {
+          "const": "bfloat16_little_endian"
+        },
+        "id": {
+          "const": "hc_hidden"
+        },
+        "path": {
+          "const": "input/hc_hidden.bf16le"
+        },
+        "register": {
+          "const": "HC_HIDDEN"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": false,
+          "maxItems": 4,
+          "minItems": 4,
+          "prefixItems": [
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "const": 4
+            },
+            {
+              "const": 4096
+            }
+          ],
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 131072,
+          "minimum": 32768,
+          "multipleOf": 32768,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "encoding",
+        "id",
+        "path",
+        "register",
+        "sha256",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/execution_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "batch_size": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "input": {
+      "$ref": "#/$defs/inputDescriptor"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "program_sha256": {
+      "const": "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_hc_pre_execution_request.v1"
+    },
+    "sequence_length": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "token_count": {
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "batch_size",
+    "build_id",
+    "input",
+    "model_id",
+    "program_sha256",
+    "schema",
+    "sequence_length",
+    "token_count"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE execution request v1",
+  "type": "object"
+}

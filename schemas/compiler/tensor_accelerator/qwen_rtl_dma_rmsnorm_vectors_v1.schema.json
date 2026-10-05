@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_dma_rmsnorm_vectors_v1.schema.json",
+  "title": "Qwen source-bound adjacent DMA plus RMSNorm RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "commands",
+    "composition",
+    "dma_payload_hex",
+    "dma_source_vector_id",
+    "expected_codes",
+    "graph_id",
+    "input_codes",
+    "input_source_vector_id",
+    "kernel_ir_id",
+    "normalized_codes",
+    "numeric_contract",
+    "qualification_report_id",
+    "schema",
+    "vector_set_id"
+  ],
+  "properties": {
+    "build_id": {
+      "const": "3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f"
+    },
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "const": {
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_layer_execution": false,
+        "complete_rmsnorm_graph_operation": true,
+        "graph_valid_qwen_operation_sequence": true,
+        "preloaded_hidden_input": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "command_vector_set_id": {
+      "const": "420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2"
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {"$ref": "#/$defs/dma_command"},
+        {"$ref": "#/$defs/rmsnorm_command"}
+      ],
+      "items": false
+    },
+    "composition": {
+      "const": {
+        "dma_destination_address": 2097152,
+        "expected_normalized_payload_sha256": "bf4b81b7e711157b4e8c91bde7294d3be647844dbd7336d462201a246a1da28d",
+        "expected_normalized_saturation_count": 0,
+        "expected_output_payload_sha256": "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58",
+        "expected_output_saturation_count": 0,
+        "graph_operation_id": "node.0001",
+        "input_address": 1048576,
+        "input_payload_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+        "inverse_rms_binary32_code": 1107952279,
+        "mean_square_binary32_code": 979104458,
+        "output_address": 3145728,
+        "rmsnorm_element_count": 4096,
+        "submitted_command_indices": [1, 2],
+        "weight_address": 2097152,
+        "weight_payload_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530"
+      }
+    },
+    "dma_payload_hex": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{16384}$"
+    },
+    "dma_source_vector_id": {
+      "const": "98806ae5e1b8f3dbe1e516084b099a5f592f98acf6adb74edb0198d82ae10216"
+    },
+    "expected_codes": {"$ref": "#/$defs/codes"},
+    "graph_id": {
+      "const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"
+    },
+    "input_codes": {"$ref": "#/$defs/codes"},
+    "input_source_vector_id": {
+      "const": "e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413"
+    },
+    "kernel_ir_id": {
+      "const": "270b7609f2ea101593b3870a498bda3320336c94b27862dca7f991352727e050"
+    },
+    "normalized_codes": {"$ref": "#/$defs/codes"},
+    "numeric_contract": {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
+    "qualification_report_id": {
+      "const": "542afccabfde8b5f9628a1b27ba394312305780db5f850a276f651c64e7dd972"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_dma_rmsnorm_vectors.v1"
+    },
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "auxiliary", "destination", "engine", "flags", "index",
+        "kernel_index", "opcode", "size0", "size1", "size2", "size3",
+        "source0", "source1"
+      ],
+      "properties": {
+        "auxiliary": {"type": "integer", "minimum": 0},
+        "destination": {"type": "integer", "minimum": 0},
+        "engine": {"type": "integer", "minimum": 0},
+        "flags": {"type": "integer", "minimum": 0},
+        "index": {"type": "integer", "minimum": 0},
+        "kernel_index": {"type": "integer", "minimum": 0},
+        "opcode": {"type": "integer", "minimum": 0},
+        "size0": {"type": "integer", "minimum": 0},
+        "size1": {"type": "integer", "minimum": 0},
+        "size2": {"type": "integer", "minimum": 0},
+        "size3": {"type": "integer", "minimum": 0},
+        "source0": {"type": "integer", "minimum": 0},
+        "source1": {"type": "integer", "minimum": 0}
+      }
+    },
+    "command_base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major", "abi_minor", "expected_error", "expected_fields",
+        "expected_index", "last", "name", "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {"$ref": "#/$defs/fields"},
+        "expected_index": {"type": "integer", "minimum": 0},
+        "last": {"type": "boolean"},
+        "name": {"type": "string", "minLength": 1},
+        "record_hex": {"type": "string", "pattern": "^[0-9a-f]{128}$"}
+      }
+    },
+    "dma_command": {
+      "allOf": [
+        {"$ref": "#/$defs/command_base"},
+        {
+          "properties": {
+            "expected_fields": {
+              "const": {
+                "auxiliary": 0,
+                "destination": 2097152,
+                "engine": 1,
+                "flags": 0,
+                "index": 1,
+                "kernel_index": 1,
+                "opcode": 1,
+                "size0": 8192,
+                "size1": 0,
+                "size2": 0,
+                "size3": 0,
+                "source0": 1244659712,
+                "source1": 0
+              }
+            },
+            "expected_index": {"const": 1},
+            "last": {"const": false},
+            "name": {"const": "dma_hbm_to_sram"},
+            "record_hex": {
+              "const": "b5d7c76d00000000000000000000000000002000000000000000000000000000002000000000000000000000000000004a300000000000010000000100000101"
+            }
+          }
+        }
+      ]
+    },
+    "rmsnorm_command": {
+      "allOf": [
+        {"$ref": "#/$defs/command_base"},
+        {
+          "properties": {
+            "expected_fields": {
+              "const": {
+                "auxiliary": 0,
+                "destination": 3145728,
+                "engine": 3,
+                "flags": 0,
+                "index": 2,
+                "kernel_index": 1,
+                "opcode": 32,
+                "size0": 1,
+                "size1": 4096,
+                "size2": 897988541,
+                "size3": 0,
+                "source0": 1048576,
+                "source1": 2097152
+              }
+            },
+            "expected_index": {"const": 2},
+            "last": {"const": true},
+            "name": {"const": "rmsnorm_bf16"},
+            "record_hex": {
+              "const": "ea9b35a400000000358637bd00001000000000010000000000000000000000000030000000000000002000000000000000100000000000010000000200000320"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

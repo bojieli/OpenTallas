@@ -1,0 +1,39 @@
+Generated file: /tmp/dsrom-actual-element-r2-bounded-build-r1-20261002/obj_bfcolumn/Vtb_bfcolumn___024root__0.cpp
+Full file SHA256: 1b6ef3c483209a500e659099709799cc7c4b687f06df5a25e057f3cc2fa2743e
+3699:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__issues 
+3700:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__issues);
+3701:             }
+3702:             if (vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__c_v) {
+3703:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__loads 
+3704:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__loads);
+3705:             }
+3706:             if (vlSymsp->TOP__tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__g_bf__DOT__g_f__DOT__u_bf.clk) {
+3707:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__opened 
+3708:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__opened);
+3709:             } else {
+3710:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__gated 
+3711:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__gated);
+3712:             }
+3713:             if (vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_v) {
+3714:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__partials 
+3715:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__partials);
+3716:                 vlSelfRef.tb_bfcolumn__DOT__test__DOT__phase_outputs 
+3717:                     = ((IData)(1U) + vlSelfRef.tb_bfcolumn__DOT__test__DOT__phase_outputs);
+3718:                 if (VL_UNLIKELY(((((((0x0100U > (IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_row)) 
+3719:                                      | (0x0107U < (IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_row))) 
+3720:                                     | (0U != (IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_seg))) 
+3721:                                    | (1U != (IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_n))) 
+3722:                                   | ((IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__0__KET____DOT__o_pos) 
+3723:                                      >= vlSelfRef.tb_bfcolumn__DOT__test__DOT__np))))) {
+3724:                     VL_WRITEF_NX("[%0t] %%Fatal: tb_dsrom_actual_element_gate_r2.sv:137: Assertion failed in %m: tag/walk scoreboard\n",3, 'M',vlSymsp->name(),"tb_bfcolumn.test.tick", 'T',-12
+3725:                                  , '#',64,VL_TIME_UNITED_Q(1));
+3726:                     VL_STOP_MT("tb_dsrom_actual_element_gate_r2.sv", 137, "", false);
+3727:                 }
+3728:             }
+3729:             if (VL_UNLIKELY((((4U == vlSelfRef.tb_bfcolumn__DOT__test__DOT__ph) 
+3730:                               & (IData)(vlSelfRef.tb_bfcolumn__DOT__test__DOT__ref_dut__DOT__u_e__DOT__g_mac__BRA__1__KET____DOT__o_v))))) {
+3731:                 VL_WRITEF_NX("[%0t] %%Fatal: tb_dsrom_actual_element_gate_r2.sv:139: Assertion failed in %m: inactive second row emitted\n",3, 'M',vlSymsp->name(),"tb_bfcolumn.test.tick", 'T',-12
+3732:                              , '#',64,VL_TIME_UNITED_Q(1));
+3733:                 VL_STOP_MT("tb_dsrom_actual_element_gate_r2.sv", 139, "", false);
+3734:             }
+3735:         }

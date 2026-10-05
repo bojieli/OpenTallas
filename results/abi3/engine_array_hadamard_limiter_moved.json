@@ -1,0 +1,43 @@
+{
+  "answer": "YES, and it is no longer in the hadamard at all. At clock-tree-synthesis exit the worst endpoint moves from hadamard.values to tie_multiplicity, the violating endpoint count falls 319 -> 84, and total negative slack falls by 84x. The new worst path is an INPUT-to-register path -- cfg_view_ranks[16] through 292 cells to tie_multiplicity[12] -- which is the descriptor-admission predicate, not the token datapath.",
+  "at_cts_exit": {
+    "baseline": {
+      "endpoints_considered": 17897,
+      "tns_ps": -21555384.0,
+      "violating_endpoints": 319,
+      "wns_ps": -3804.033,
+      "worst_endpoint": "hadamard.values[452][22]$_DFFE_PP_/D"
+    },
+    "with_fix": {
+      "endpoints_considered": 1215,
+      "tns_ps": -257354.8,
+      "violating_endpoints": 84,
+      "wns_ps": -1534.907,
+      "worst_endpoint": "tie_multiplicity[12]$_DFFE_PN0P_/D"
+    }
+  },
+  "clock_period_ns": 3.4,
+  "comparison_is_clean_because": "both runs synthesise the SAME ot_a3_engine_array source and the same nine other members; ea_head's yosys ran at 12:52:48 with the pre-rewrite hadamard and index_score, ea_fix's at 15:45:08 with both rewritten, and both carried the same ot_a3_vector_mhc_post. ORFS reads /src only at synthesis, so neither is affected by later edits.",
+  "derived": {
+    "fmax_at_cts_baseline_mhz": 138.8,
+    "fmax_at_cts_with_fix_mhz": 202.6,
+    "tns_improvement": 83.8,
+    "wns_improvement": 2.478
+  },
+  "not_a_claim": [
+    "CTS exit is NOT a routed record: global and detailed route follow and both runs are still in them. This is the A/B at a common stage, not closure.",
+    "the new worst path starts at an INPUT PORT, and the SDC gives inputs 20% of the target period as input delay, so its slack moves with the target; inside the shipped device that signal comes from the issue bridge's registers rather than a port"
+  ],
+  "producer": {
+    "git": {
+      "commit": "f77a181b983c3192924ef79b20cdbb5ea36dbaf4"
+    },
+    "tool": "manual A/B of two run_abi3_physical pnr runs"
+  },
+  "question": "routing ot_a3_engine_array at a 3.4 ns target put every violating endpoint inside ot_a3_vector_hadamard's buffer and clock-tree repair could not move it. Does issuing a butterfly per cycle move the array's limiter?",
+  "schema": "opentallas.result.engine_array_hadamard_limiter_moved.v1",
+  "synthesis_area_um2": {
+    "baseline": 54478.8261,
+    "with_fix": 53850.82176
+  }
+}

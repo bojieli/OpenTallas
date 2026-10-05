@@ -1,0 +1,39 @@
+{
+  "actual_journal_root_exists_at_inspection": false,
+  "actual_parent_movement_journals": null,
+  "additional_actual_provider_cost": null,
+  "additional_native_C0_I64_RF_or_provider_charge": 0,
+  "declared_journal_capacity_bytes": 8589934592,
+  "entering_reference_state_digest": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+  "full_token_GO": false,
+  "full_token_inputs_bound": false,
+  "full_token_launch_ready": false,
+  "hardware_admitted": false,
+  "native_program_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+  "persistent_fragment_extent": {
+    "AW": 27,
+    "base": 33554432,
+    "bytes": 33554432,
+    "capacity_charge_bytes_all96_ranks": 3221225472
+  },
+  "r34_source_counts_and_costs_apply_without_native_reprice": true,
+  "r35_manifest_snapshot_sha256": "2c557507b04ee0898b7b4b624827ab2b6a47e8ecb8c66eb334c3f6737890ff7f",
+  "schema": "H4_R35_SAME_NATIVE_COST_AND_ACTUAL_JOURNAL_SCOPE_V1",
+  "source_descriptor_address_namespace": "checkpoint file byte offsets, not physical HBM addresses",
+  "source_pins": {
+    "results/uarch/ds_hbm_checkpoint_payloads_r35_20261002/entering_state_terminal.json": {
+      "commit": "240c18471c91fe53ac50131db63f87c50dc6fed8",
+      "sha256": "091a5eb6d83caec7eac53e65ef056a55fe143d3ac9fbd2a424347218e2117e3e"
+    },
+    "results/uarch/ds_hbm_checkpoint_payloads_r35_20261002/handoff.json": {
+      "commit": "240c18471c91fe53ac50131db63f87c50dc6fed8",
+      "sha256": "758bf2193ae7491a730dcd91d4329824c34b22254a1cbe154c30f72aff95d83c"
+    },
+    "results/uarch/ds_hbm_checkpoint_payloads_r35_20261002/model_and_split.json": {
+      "commit": "240c18471c91fe53ac50131db63f87c50dc6fed8",
+      "sha256": "3d1f9c71d0449e1ec582e8af9eb5b11e91330e7d8f17af6bf00526d0e0383330"
+    }
+  },
+  "state_provenance": "exact seeded source benchmark entering state, not decoded prefix",
+  "whole_token_latency": null
+}

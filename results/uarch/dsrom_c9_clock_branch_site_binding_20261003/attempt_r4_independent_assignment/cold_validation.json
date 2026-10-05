@@ -1,0 +1,57 @@
+{
+  "artifact_replays": [
+    {
+      "byte_identical": true,
+      "path": "model.json",
+      "sha256": "b03e4c66cda2c36c927303bc1dc2be1c6032bff2497cd95a4659891159ff5cdc"
+    },
+    {
+      "byte_identical": true,
+      "path": "access_model.json",
+      "sha256": "53f5fea32596d07dfca7041609154d1c7c908eeb77708b85daa916206c8eb627"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assigned_cells.jsonl.gz",
+      "sha256": "3816f39fa35947f03f33cf89f7593cd9aa2b1d7119f1c6dbf0d54e23e0698821"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assigned_edges.jsonl.gz",
+      "sha256": "de0f4a82302f6f483afa089a5f9aba76233d4739b9988e065cb6261beedb7691"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_assignment_failures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard0_enclosed_VIA12_failures.jsonl.gz",
+      "sha256": "2b56658336267859d1ec06acfd4cfcb54eeb5f5353db265486d83f3fa1468c71"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assigned_cells.jsonl.gz",
+      "sha256": "fc34a17bb3777e70cc61e4689453408620c9e04c76886e771b6317d0cf8aab83"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assigned_edges.jsonl.gz",
+      "sha256": "b51ca8274760570a42cc27d01196656a9a6c30ee3e6f6545563d2e8e97f45088"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_assignment_failures.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "byte_identical": true,
+      "path": "shard1_enclosed_VIA12_failures.jsonl.gz",
+      "sha256": "24a13f2afcda97ca29869df6f4fca7c41c3974bb2fc70530883c046853ea11eb"
+    }
+  ],
+  "cold_input_files": 97,
+  "source": "independent_fixed_count_diagnostic_not_selected_Maxwell_layout",
+  "tests_passed": 8
+}

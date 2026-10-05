@@ -1,0 +1,13 @@
+headlines 204: bound 204 (derived 5), unbound 0; occurrences 409, agreeing 399; records 38; pins {'current': 476, 'path-only': 3, 'stale': 159}
+
+10 problem(s):
+  atlas-drift: qwen.cap_A: anchor not in the atlas: 'Qwen3-8B without speculation, at specification widths'
+  atlas-drift: qwen.cap_B_air: anchor not in the atlas: 'Qwen3-8B without speculation, at specification widths'
+  atlas-drift: qwen.cooling_limit_w: anchor not in the atlas: 'Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash'
+  atlas-drift: qwen.dflash: anchor not in the atlas: 'Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash'
+  atlas-drift: qwen.dflash_cap_A: anchor not in the atlas: 'Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash'
+  atlas-drift: qwen.dflash_cap_B_air: anchor not in the atlas: 'Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash'
+  atlas-drift: qwen.dflash_speedup: anchor not in the atlas: 'Qwen3-8B headline: two-reticle package, 8K, per user, batch 1, DFlash'
+  atlas-drift: qwen.kv_floor: anchor not in the atlas: 'Qwen3-8B without speculation, at specification widths'
+  atlas-drift: qwen.rate_8k: anchor not in the atlas: 'Qwen3-8B without speculation, at specification widths'
+  atlas-drift: qwen.target: anchor not in the atlas: 'Qwen3-8B without speculation, at specification widths'

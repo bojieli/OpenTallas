@@ -1,0 +1,10 @@
+%Error-TIMESCALEMOD: rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv:54:30: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:2:9: ... Location of module with timescale
+    2 | package ot_hbm_r14_pkg;
+      |         ^~~~~~~~~~~~~~
+%Error-TIMESCALEMOD: rtl/hbm_accel/service/ot_hbm_accel_causal_command_provider.sv:62:25: Timescale missing on this module as other modules have it (IEEE 1800-2017 3.14.2.2)
+                     rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:2:9: ... Location of module with timescale
+    2 | package ot_hbm_r14_pkg;
+      |         ^~~~~~~~~~~~~~
+%Error: Exiting due to 2 error(s)
+        ... See the manual and https://verilator.org for more assistance.

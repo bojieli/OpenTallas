@@ -1,0 +1,60 @@
+{
+  "accepted_service_calendar": false,
+  "physical_or_numerical_adoption": false,
+  "profiles": [
+    {
+      "file": "L1_engram_wkv.json",
+      "name": "L1_engram_wkv",
+      "offered_words": 192,
+      "valid_words": 96
+    },
+    {
+      "file": "first_bf16.json",
+      "name": "first_bf16",
+      "offered_words": 256,
+      "valid_words": 64
+    },
+    {
+      "file": "first_fp4.json",
+      "name": "first_fp4",
+      "offered_words": 192,
+      "valid_words": 80
+    },
+    {
+      "file": "first_fp8.json",
+      "name": "first_fp8",
+      "offered_words": 192,
+      "valid_words": 80
+    },
+    {
+      "file": "max_issue_bf16.json",
+      "name": "max_issue_bf16",
+      "offered_words": 256,
+      "valid_words": 64
+    },
+    {
+      "file": "max_issue_fp4.json",
+      "name": "max_issue_fp4",
+      "offered_words": 192,
+      "valid_words": 80
+    },
+    {
+      "file": "max_issue_fp8.json",
+      "name": "max_issue_fp8",
+      "offered_words": 192,
+      "valid_words": 80
+    }
+  ],
+  "recurrence_cycles": 8,
+  "scanned_resident_phases": 46509,
+  "schema": "opentallas.dsrom.offered-source-stream.v1",
+  "source_sha256": {
+    "results/uarch/dsrom_owner_provider_first_20261002/r1/assignments.jsonl.gz": "c91855b5b33c21c56dac3ea9ebc69a201ff582a3a6ad67a19024e89cd113881f",
+    "rtl/v41die/ot_v41_pair_w17w10.sv": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+    "rtl/v41die/ot_v41_spine_w17w10.sv": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd",
+    "tools/dsrom_full_owner_compiler.py": "cd6aa9d94575df565d5c0bd807229db65a0cf5971d6a0f2fe724e0266103f68b",
+    "tools/dsrom_source_stream_events.py": "58b47a307a8b95b83f5ff82dc3fbc2f09d5c287d3d6527a35ca9b68d6205b99a",
+    "tools/v41_die_images.py": "3efd61fdebcbaa393366a353eff65137ee0ad7f9603caba3118b963cb39ed2d0",
+    "tools/v41_rom_ksplit_bankmap.py": "890634fb2f9e07f3578f800282cb7588112ff59a900fb79268629babbd40a47e"
+  }
+}

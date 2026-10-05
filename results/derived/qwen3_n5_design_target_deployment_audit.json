@@ -1,0 +1,6305 @@
+{
+  "allowlist": {},
+  "allowlist_unused": [],
+  "asymmetries": [
+    {
+      "allowlisted": false,
+      "cost_bearing": false,
+      "effect_x": 1.0,
+      "enters": "nothing",
+      "family": "attention",
+      "favours": "neither",
+      "field": "resource_bound",
+      "hbm": {
+        "64": 36
+      },
+      "hbm_value": 64,
+      "justification": null,
+      "magnitude_x": 21.333333333333332,
+      "rom": {
+        "3": 36
+      },
+      "rom_value": 3,
+      "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+    },
+    {
+      "allowlisted": false,
+      "cost_bearing": false,
+      "effect_x": 1.0,
+      "enters": "nothing",
+      "family": "dma",
+      "favours": "neither",
+      "field": "resource_bound",
+      "hbm": {
+        "8": 74
+      },
+      "hbm_value": 8,
+      "justification": null,
+      "magnitude_x": 2.6666666666666665,
+      "rom": {
+        "3": 74
+      },
+      "rom_value": 3,
+      "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+    },
+    {
+      "allowlisted": false,
+      "cost_bearing": false,
+      "effect_x": 1.0,
+      "enters": "nothing",
+      "family": "selection",
+      "favours": "neither",
+      "field": "resource_bound",
+      "hbm": {
+        "8": 2
+      },
+      "hbm_value": 8,
+      "justification": null,
+      "magnitude_x": 1.3333333333333333,
+      "rom": {
+        "6": 2
+      },
+      "rom_value": 6,
+      "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+    },
+    {
+      "allowlisted": false,
+      "cost_bearing": false,
+      "effect_x": 1.0,
+      "enters": "nothing",
+      "family": "tensor",
+      "favours": "neither",
+      "field": "resource_bound",
+      "hbm": {
+        "256": 254
+      },
+      "hbm_value": 256,
+      "justification": null,
+      "magnitude_x": 256.0,
+      "rom": {
+        "1": 254
+      },
+      "rom_value": 1,
+      "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+    },
+    {
+      "allowlisted": false,
+      "cost_bearing": false,
+      "effect_x": 1.0,
+      "enters": "nothing",
+      "family": "vector",
+      "favours": "neither",
+      "field": "resource_bound",
+      "hbm": {
+        "128": 325
+      },
+      "hbm_value": 128,
+      "justification": null,
+      "magnitude_x": 42.666666666666664,
+      "rom": {
+        "3": 325
+      },
+      "rom_value": 3,
+      "why": "resource_bound is copied into the tile mapping and read by nothing that costs a cycle"
+    }
+  ],
+  "basis": "SCHEDULE fields at lanes=1024, charged with the cycle model's own _compute_cycles",
+  "column_group_spans_match": true,
+  "comparable": true,
+  "deployments": {
+    "hbm": {
+      "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+      "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+      "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "evidence": [
+        "results/derived/qwen3_e9_deployment_audit.json",
+        "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+        "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+        "commit b7441e8 (AM-E9 v2: one activation-buffer placement, one bank_mask)"
+      ],
+      "model_id": "qwen3-8b",
+      "registered_deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+      "role": "hbm",
+      "root": "build/abi3/qwen3-8b-hbm-e9",
+      "status": "bound"
+    },
+    "rom": {
+      "base_capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+      "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+      "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "evidence": [
+        "results/derived/qwen3_e9_deployment_audit.json",
+        "results/abi3/rom_schedule_checks_e9.json",
+        "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+        "commit b7441e8 (AM-E9 v2: one activation-buffer placement, one bank_mask)"
+      ],
+      "model_id": "qwen3-8b",
+      "registered_deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+      "role": "rom",
+      "root": "build/abi3/qwen3-8b-rom-e9",
+      "status": "bound"
+    }
+  },
+  "families": {
+    "attention": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 13824,
+        "magnitude_x": 1.0,
+        "rom": 13824
+      },
+      "issued_work": {
+        "favours": "neither",
+        "hbm": 19327352832,
+        "magnitude_x": 1.0,
+        "rom": 19327352832
+      },
+      "operations": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "padding_fraction": {
+        "favours": "neither",
+        "hbm": 0.9375,
+        "magnitude_x": 1.0,
+        "rom": 0.9375
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 4608,
+        "magnitude_x": 1.0,
+        "rom": 4608
+      },
+      "tiles": {
+        "favours": "neither",
+        "hbm": 4608,
+        "magnitude_x": 1.0,
+        "rom": 4608
+      },
+      "useful_work": {
+        "hbm": 1207959552,
+        "rom": 1207959552
+      }
+    },
+    "dma": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 18644,
+        "magnitude_x": 1.0,
+        "rom": 18644
+      },
+      "issued_work": {
+        "favours": "neither",
+        "hbm": 608833536,
+        "magnitude_x": 1.0,
+        "rom": 608833536
+      },
+      "machine": {
+        "bytes_per_cycle": 95424.0,
+        "rule": "a DMA operator costs tiles x max(ceil(bytes_transferred / tiles / bytes_per_cycle), tile_issue_cycles); at this rate every tile of these deployments is at the issue floor, so the DMA charge is the tile count",
+        "tile_issue_cycles": 1
+      },
+      "operations": {
+        "hbm": 74,
+        "rom": 74
+      },
+      "padding_fraction": {
+        "favours": "neither",
+        "hbm": 0.000215,
+        "magnitude_x": 1.0,
+        "rom": 0.000215
+      },
+      "payload_bytes": {
+        "hbm": 156672,
+        "rom": 156672
+      },
+      "payload_bytes_per_tile": {
+        "hbm": 8.403,
+        "rom": 8.403
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 18644,
+        "magnitude_x": 1.0,
+        "rom": 18644
+      },
+      "tiles": {
+        "favours": "neither",
+        "hbm": 18644,
+        "magnitude_x": 1.0,
+        "rom": 18644
+      },
+      "useful_work": {
+        "hbm": 608702720,
+        "rom": 608702720
+      }
+    },
+    "selection": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
+      },
+      "issued_work": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
+      },
+      "operations": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "padding_fraction": {
+        "favours": "neither",
+        "hbm": 0.0,
+        "magnitude_x": 1.0,
+        "rom": 0.0
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
+      },
+      "tiles": {
+        "favours": "neither",
+        "hbm": 2,
+        "magnitude_x": 1.0,
+        "rom": 2
+      },
+      "useful_work": {
+        "hbm": 2,
+        "rom": 2
+      }
+    },
+    "tensor": {
+      "column_groups": {
+        "favours": "neither",
+        "hbm": 1521,
+        "magnitude_x": 1.0,
+        "rom": 1521
+      },
+      "cycles": {
+        "favours": "neither",
+        "hbm": 173280,
+        "magnitude_x": 1.0,
+        "rom": 173280
+      },
+      "effective_tensor_width_caps": {
+        "hbm": [
+          1024
+        ],
+        "rom": [
+          1024
+        ]
+      },
+      "issued_work": {
+        "favours": "neither",
+        "hbm": 7568101376,
+        "magnitude_x": 1.0,
+        "rom": 7568101376
+      },
+      "operations": {
+        "hbm": 254,
+        "rom": 254
+      },
+      "output_waves": {
+        "favours": "neither",
+        "hbm": 1521,
+        "magnitude_x": 1.0,
+        "rom": 1521
+      },
+      "padding_fraction": {
+        "favours": "neither",
+        "hbm": 0.0,
+        "magnitude_x": 1.0,
+        "rom": 0.0
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 57760,
+        "magnitude_x": 1.0,
+        "rom": 57760
+      },
+      "tiles": {
+        "favours": "neither",
+        "hbm": 57764,
+        "magnitude_x": 1.0,
+        "rom": 57764
+      },
+      "useful_work": {
+        "hbm": 7568101376,
+        "rom": 7568101376
+      }
+    },
+    "vector": {
+      "cycles": {
+        "favours": "neither",
+        "hbm": 16480,
+        "magnitude_x": 1.0,
+        "rom": 16480
+      },
+      "issued_work": {
+        "favours": "neither",
+        "hbm": 540016640,
+        "magnitude_x": 1.0,
+        "rom": 540016640
+      },
+      "operations": {
+        "hbm": 325,
+        "rom": 325
+      },
+      "padding_fraction": {
+        "favours": "neither",
+        "hbm": 0.997398,
+        "magnitude_x": 1.0,
+        "rom": 0.997398
+      },
+      "tile_issue_cycles": {
+        "favours": "neither",
+        "hbm": 16480,
+        "magnitude_x": 1.0,
+        "rom": 16480
+      },
+      "tiles": {
+        "favours": "neither",
+        "hbm": 16480,
+        "magnitude_x": 1.0,
+        "rom": 16480
+      },
+      "useful_work": {
+        "hbm": 1404928,
+        "rom": 1404928
+      }
+    }
+  },
+  "fields_compared": 55,
+  "gate": "C2",
+  "generator": "tools/derive_cycle_machine.py",
+  "hbm": {
+    "backend": "hbm-sram-abi3",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "column_group_spans": [
+      1024
+    ],
+    "deployment_sha256": "cb9067f5fbf67f7df4212399aee6ba75ced4ca5c8f2dc8c1631372a4068cea2c",
+    "effective_tensor_width_caps": [
+      1024
+    ],
+    "families": {
+      "attention": {
+        "cycles": 13824,
+        "issued_work": 19327352832,
+        "operations": 36,
+        "operators": 1,
+        "padding_fraction": 0.9375,
+        "padding_work": 18119393280,
+        "tile_errors": 0,
+        "tile_issue_cycles": 4608,
+        "tiles": 4608,
+        "useful_work": 1207959552
+      },
+      "dma": {
+        "cycles": 18644,
+        "issued_work": 608833536,
+        "operations": 74,
+        "operators": 4,
+        "padding_fraction": 0.000215,
+        "padding_work": 130816,
+        "payload_bytes": 156672,
+        "tile_errors": 0,
+        "tile_issue_cycles": 18644,
+        "tiles": 18644,
+        "useful_work": 608702720
+      },
+      "selection": {
+        "cycles": 2,
+        "issued_work": 2,
+        "operations": 2,
+        "operators": 2,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "tile_errors": 0,
+        "tile_issue_cycles": 2,
+        "tiles": 2,
+        "useful_work": 2
+      },
+      "tensor": {
+        "column_groups": 1521,
+        "cycles": 173280,
+        "issued_work": 7568101376,
+        "operations": 254,
+        "operators": 9,
+        "output_waves": 1521,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "tile_errors": 0,
+        "tile_issue_cycles": 57760,
+        "tiles": 57764,
+        "useful_work": 7568101376
+      },
+      "vector": {
+        "cycles": 16480,
+        "issued_work": 540016640,
+        "operations": 325,
+        "operators": 10,
+        "padding_fraction": 0.997398,
+        "padding_work": 538611712,
+        "tile_errors": 0,
+        "tile_issue_cycles": 16480,
+        "tiles": 16480,
+        "useful_work": 1404928
+      }
+    },
+    "max_column_group_span": 1024,
+    "model_id": "qwen3-8b",
+    "operators": [
+      {
+        "col_tiles": 4,
+        "column_group_span": 256,
+        "cycles_per_issue": 4,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 256,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 4,
+        "issued_work": 131072,
+        "issues": 1,
+        "max_outstanding": 4,
+        "mnemonic": "DMA.GATHER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 15,
+            "view_id": 41
+          },
+          "in1": {
+            "bytes": 8454144,
+            "dims": [
+              8256,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 16,
+            "view_id": 42
+          },
+          "out0": {
+            "bytes": 1024,
+            "dims": [
+              1,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 17,
+            "view_id": 43
+          }
+        },
+        "operator_id": 46,
+        "padding_fraction": 0.998047,
+        "padding_work": 130816,
+        "payload_bytes": 1024,
+        "payload_bytes_per_tile": 256.0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 4,
+          "max_outstanding": 4,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 8,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 45,
+        "schedule_tiles": 4,
+        "surface_bytes": 1024,
+        "tile_issue_cycles_per_issue": 4,
+        "tiles": 4,
+        "transferred_bytes_static": 2064,
+        "useful_work": 256
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "depth_tiles": 1,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4096,
+        "issues": 1,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.EMBED_LOOKUP",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 36,
+            "view_id": 49
+          },
+          "in1": {
+            "bytes": 1244659712,
+            "dims": [
+              151936,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 12,
+            "view_id": 50
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 18,
+            "view_id": 51
+          }
+        },
+        "operator_id": 54,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 53,
+        "schedule_tiles": 64,
+        "tiles": 4,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 18,
+            "view_id": 59
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 1,
+            "view_id": 60
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 61
+          }
+        },
+        "operator_id": 64,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 63,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 384,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 16777216,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 67
+          },
+          "in1": {
+            "bytes": 33554432,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 2,
+            "view_id": 68
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 69
+          }
+        },
+        "operator_id": 72,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 71,
+        "schedule_tiles": 2048,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 16777216
+      },
+      {
+        "col_tiles": 16,
+        "column_group_span": 1024,
+        "column_groups": 1,
+        "cycles_per_issue": 96,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 1024,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4194304,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 75
+          },
+          "in1": {
+            "bytes": 8388608,
+            "dims": [
+              1024,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 3,
+            "view_id": 76
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              1024
+            ],
+            "dtype": 16,
+            "object_id": 21,
+            "view_id": 77
+          }
+        },
+        "operator_id": 79,
+        "output_waves": 1,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 78,
+        "schedule_tiles": 512,
+        "tile_issue_cycles_per_issue": 32,
+        "tiles": 32,
+        "useful_work": 4194304
+      },
+      {
+        "col_tiles": 16,
+        "column_group_span": 1024,
+        "column_groups": 1,
+        "cycles_per_issue": 96,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 1024,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4194304,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 81
+          },
+          "in1": {
+            "bytes": 8388608,
+            "dims": [
+              1024,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 4,
+            "view_id": 82
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              1024
+            ],
+            "dtype": 16,
+            "object_id": 22,
+            "view_id": 83
+          }
+        },
+        "operator_id": 84,
+        "output_waves": 1,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 71,
+        "schedule_tiles": 512,
+        "tile_issue_cycles_per_issue": 32,
+        "tiles": 32,
+        "useful_work": 4194304
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 32
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.HEAD_RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 86
+          },
+          "in1": {
+            "bytes": 256,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "object_id": 5,
+            "view_id": 87
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 88
+          }
+        },
+        "operator_id": 90,
+        "padding_fraction": 0.9375,
+        "padding_work": 61440,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 89,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 8
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.HEAD_RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 21,
+            "view_id": 93
+          },
+          "in1": {
+            "bytes": 256,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "object_id": 6,
+            "view_id": 94
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 23,
+            "view_id": 95
+          }
+        },
+        "operator_id": 97,
+        "padding_fraction": 0.984375,
+        "padding_work": 64512,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 96,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 1024
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 32
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.ROPE",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 100
+          },
+          "in1": {
+            "bytes": 32768,
+            "dims": [
+              1,
+              32,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 17,
+            "view_id": 101
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 102
+          }
+        },
+        "operator_id": 104,
+        "padding_fraction": 0.9375,
+        "padding_work": 61440,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 89,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 8
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.ROPE",
+        "operands": {
+          "in0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 23,
+            "view_id": 107
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              8,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 17,
+            "view_id": 108
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 21,
+            "view_id": 109
+          }
+        },
+        "operator_id": 110,
+        "padding_fraction": 0.984375,
+        "padding_work": 64512,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 96,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 1024
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 258,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 66048
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 2,
+        "issued_work": 8454144,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "DMA.SCATTER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 15,
+            "view_id": 113
+          },
+          "in1": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 21,
+            "view_id": 114
+          },
+          "out0": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 38,
+            "view_id": 115
+          }
+        },
+        "operator_id": 118,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 2048,
+        "payload_bytes_per_tile": 7.938,
+        "row_tiles": 129,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 8,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 117,
+        "schedule_tiles": 258,
+        "surface_bytes": 16908288,
+        "tile_issue_cycles_per_issue": 258,
+        "tiles": 258,
+        "transferred_bytes_static": 266248,
+        "useful_work": 8454144
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 258,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 66048
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 2,
+        "issued_work": 8454144,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "DMA.SCATTER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 15,
+            "view_id": 121
+          },
+          "in1": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 22,
+            "view_id": 122
+          },
+          "out0": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 38,
+            "view_id": 123
+          }
+        },
+        "operator_id": 125,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 2048,
+        "payload_bytes_per_tile": 7.938,
+        "row_tiles": 129,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 8,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 124,
+        "schedule_tiles": 258,
+        "surface_bytes": 16908288,
+        "tile_issue_cycles_per_issue": 258,
+        "tiles": 258,
+        "transferred_bytes_static": 266248,
+        "useful_work": 8454144
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 1024,
+        "cycles_per_issue": 384,
+        "depth_tiles": 64,
+        "extent": {
+          "cols": 128,
+          "depth": 8192,
+          "rows": 32
+        },
+        "family": "attention",
+        "issue_window": 16,
+        "issued_work": 536870912,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "ATTENTION.GQA",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 129
+          },
+          "in1": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 38,
+            "view_id": 130
+          },
+          "in2": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 38,
+            "view_id": 131
+          },
+          "in3": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 15,
+            "view_id": 132
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 133
+          }
+        },
+        "operator_id": 136,
+        "padding_fraction": 0.9375,
+        "padding_work": 503316480,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 16,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 64,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 135,
+        "schedule_tiles": 128,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 33554432
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 384,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 16777216,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 139
+          },
+          "in1": {
+            "bytes": 33554432,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 7,
+            "view_id": 140
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 141
+          }
+        },
+        "operator_id": 142,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 78,
+        "schedule_tiles": 2048,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 16777216
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.ADD",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 18,
+            "view_id": 145
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 146
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 147
+          }
+        },
+        "operator_id": 150,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 149,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 153
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 8,
+            "view_id": 154
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 155
+          }
+        },
+        "operator_id": 156,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 63,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "column_groups": 12,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 12288,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 159
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              12288,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 9,
+            "view_id": 160
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 24,
+            "view_id": 161
+          }
+        },
+        "operator_id": 162,
+        "output_waves": 12,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 71,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "column_groups": 12,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 12288,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 165
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              12288,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 10,
+            "view_id": 166
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 25,
+            "view_id": 167
+          }
+        },
+        "operator_id": 168,
+        "output_waves": 12,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 78,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "cycles_per_issue": 192,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 12288,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 6291456,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.SILU_MUL",
+        "operands": {
+          "in0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 24,
+            "view_id": 170
+          },
+          "in1": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 25,
+            "view_id": 171
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 26,
+            "view_id": 172
+          }
+        },
+        "operator_id": 174,
+        "padding_fraction": 0.998047,
+        "padding_work": 6279168,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 149,
+        "schedule_tiles": 192,
+        "tile_issue_cycles_per_issue": 192,
+        "tiles": 192,
+        "useful_work": 12288
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 96,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 12288,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 26,
+            "view_id": 177
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              4096,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 11,
+            "view_id": 178
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 179
+          }
+        },
+        "operator_id": 180,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 71,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.ADD",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 183
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 20,
+            "view_id": 184
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 18,
+            "view_id": 185
+          }
+        },
+        "operator_id": 186,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 63,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 1,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 18,
+            "view_id": 189
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 13,
+            "view_id": 190
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 191
+          }
+        },
+        "operator_id": 192,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 128,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 63,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 16,
+        "issued_work": 4096,
+        "issues": 1,
+        "max_outstanding": 16,
+        "mnemonic": "DMA.GATHER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 15,
+            "view_id": 193
+          },
+          "in1": {
+            "bytes": 71303168,
+            "dims": [
+              8704,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 19,
+            "view_id": 194
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 27,
+            "view_id": 195
+          }
+        },
+        "operator_id": 198,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 8192,
+        "payload_bytes_per_tile": 128.0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 8,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 197,
+        "schedule_tiles": 64,
+        "surface_bytes": 8192,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "transferred_bytes_static": 16640,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2374,
+        "column_group_span": 1024,
+        "column_groups": 149,
+        "cycles_per_issue": 14304,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 151936,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 622329856,
+        "issues": 1,
+        "masked_lane_slots": 640,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 27,
+            "view_id": 200
+          },
+          "in1": {
+            "bytes": 1244659712,
+            "dims": [
+              151936,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 14,
+            "view_id": 201
+          },
+          "out0": {
+            "bytes": 303872,
+            "dims": [
+              1,
+              151936
+            ],
+            "dtype": 16,
+            "object_id": 37,
+            "view_id": 202
+          }
+        },
+        "operator_id": 204,
+        "output_waves": 149,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 256,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 1
+        },
+        "schedule_id": 203,
+        "schedule_tiles": 75968,
+        "tile_issue_cycles_per_issue": 4768,
+        "tiles": 4768,
+        "useful_work": 622329856
+      },
+      {
+        "col_tiles": 1,
+        "column_group_span": 1,
+        "cycles_per_issue": 1,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 1,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "selection",
+        "issue_window": 1,
+        "issued_work": 1,
+        "issues": 1,
+        "max_outstanding": 1,
+        "mnemonic": "SELECTION.ARGMAX",
+        "operands": {
+          "in0": {
+            "bytes": 303872,
+            "dims": [
+              151936
+            ],
+            "dtype": 16,
+            "object_id": 37,
+            "view_id": 206
+          },
+          "out0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 28,
+            "view_id": 207
+          }
+        },
+        "operator_id": 211,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 1,
+          "max_outstanding": 1,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 8,
+          "tile_cols": 1,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 209,
+        "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
+        "tiles": 1,
+        "useful_work": 1
+      },
+      {
+        "col_tiles": 1,
+        "column_group_span": 1,
+        "cycles_per_issue": 1,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 1,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "selection",
+        "issue_window": 1,
+        "issued_work": 1,
+        "issues": 1,
+        "max_outstanding": 1,
+        "mnemonic": "SELECTION.TOKEN_APPEND",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 28,
+            "view_id": 214
+          },
+          "out0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 36,
+            "view_id": 215
+          }
+        },
+        "operator_id": 217,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 1,
+          "max_outstanding": 1,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 8,
+          "tile_cols": 1,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 209,
+        "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
+        "tiles": 1,
+        "useful_work": 1
+      }
+    ],
+    "request_symbols": {
+      "BATCH": 1,
+      "CONTEXT_LENGTH": 8192,
+      "GENERATION_INDEX": 1,
+      "MAX_NEW_TOKENS": 1,
+      "NODE_COUNT": 1,
+      "NODE_ID": 0,
+      "PHASE": 1,
+      "POSITION_END": 8192,
+      "POSITION_START": 8191,
+      "SPAN_LAST_INDEX": 0,
+      "SPAN_TOKENS": 1
+    },
+    "root": "build/abi3/qwen3-8b-hbm-e9",
+    "schedule_shapes": {
+      "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
+      "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+      "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+      "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=4": 1,
+      "engine_family=32,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=16": 1,
+      "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
+      "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 2,
+      "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 2,
+      "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+      "engine_family=64,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 1
+    },
+    "static_walk": "complete",
+    "storage_class_counts": {
+      "0": 2,
+      "1": 29,
+      "2": 7
+    },
+    "topology_class": 0
+  },
+  "lanes": 1024,
+  "machine": {
+    "capability": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
+    "cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json",
+    "dma_bytes_per_cycle": 95424.0,
+    "queue_depth": 8,
+    "tensor_lanes": 1024,
+    "tensor_work_per_lane_cycle": 93.1932963683953
+  },
+  "operator_asymmetries": [],
+  "operators": [
+    {
+      "column_group_span": {
+        "hbm": 256,
+        "rom": 256
+      },
+      "cycles_per_issue": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "extent": {
+        "cols": 256,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "dma",
+      "hbm_operator_id": 46,
+      "issued_work": {
+        "hbm": 131072,
+        "rom": 131072
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "DMA.GATHER",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "payload_bytes_per_tile": {
+        "hbm": 256.0,
+        "rom": 256.0
+      },
+      "rom_operator_id": 32,
+      "schedule": {
+        "issue_window": {
+          "hbm": 4,
+          "rom": 4
+        },
+        "max_outstanding": {
+          "hbm": 4,
+          "rom": 4
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "tiles": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "useful_work": 256
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 54,
+      "issued_work": {
+        "hbm": 4096,
+        "rom": 4096
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "TENSOR.EMBED_LOOKUP",
+      "output_waves": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 41,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tiles": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 64,
+      "issued_work": {
+        "hbm": 2097152,
+        "rom": 2097152
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.RMS_NORM",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 50,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 72,
+      "issued_work": {
+        "hbm": 16777216,
+        "rom": 16777216
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 59,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "tiles": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "useful_work": 16777216
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_issue": {
+        "hbm": 96,
+        "rom": 96
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 1024,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 79,
+      "issued_work": {
+        "hbm": 4194304,
+        "rom": 4194304
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 67,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 32,
+        "rom": 32
+      },
+      "tiles": {
+        "hbm": 32,
+        "rom": 32
+      },
+      "useful_work": 4194304
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_issue": {
+        "hbm": 96,
+        "rom": 96
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 1024,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 84,
+      "issued_work": {
+        "hbm": 4194304,
+        "rom": 4194304
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 73,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 32,
+        "rom": 32
+      },
+      "tiles": {
+        "hbm": 32,
+        "rom": 32
+      },
+      "useful_work": 4194304
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 32
+      },
+      "family": "vector",
+      "hbm_operator_id": 90,
+      "issued_work": {
+        "hbm": 65536,
+        "rom": 65536
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.HEAD_RMS_NORM",
+      "padding_fraction": {
+        "hbm": 0.9375,
+        "rom": 0.9375
+      },
+      "rom_operator_id": 79,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "tiles": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 8
+      },
+      "family": "vector",
+      "hbm_operator_id": 97,
+      "issued_work": {
+        "hbm": 65536,
+        "rom": 65536
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.HEAD_RMS_NORM",
+      "padding_fraction": {
+        "hbm": 0.984375,
+        "rom": 0.984375
+      },
+      "rom_operator_id": 87,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "tiles": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "useful_work": 1024
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 32
+      },
+      "family": "vector",
+      "hbm_operator_id": 104,
+      "issued_work": {
+        "hbm": 65536,
+        "rom": 65536
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.ROPE",
+      "padding_fraction": {
+        "hbm": 0.9375,
+        "rom": 0.9375
+      },
+      "rom_operator_id": 94,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "tiles": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 8
+      },
+      "family": "vector",
+      "hbm_operator_id": 110,
+      "issued_work": {
+        "hbm": 65536,
+        "rom": 65536
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.ROPE",
+      "padding_fraction": {
+        "hbm": 0.984375,
+        "rom": 0.984375
+      },
+      "rom_operator_id": 100,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "tiles": {
+        "hbm": 2,
+        "rom": 2
+      },
+      "useful_work": 1024
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 66048
+      },
+      "family": "dma",
+      "hbm_operator_id": 118,
+      "issued_work": {
+        "hbm": 8454144,
+        "rom": 8454144
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "DMA.SCATTER",
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "payload_bytes_per_tile": {
+        "hbm": 7.938,
+        "rom": 7.938
+      },
+      "rom_operator_id": 108,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "tiles": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "useful_work": 8454144
+    },
+    {
+      "column_group_span": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "cycles_per_issue": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 1,
+        "rows": 66048
+      },
+      "family": "dma",
+      "hbm_operator_id": 125,
+      "issued_work": {
+        "hbm": 8454144,
+        "rom": 8454144
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "DMA.SCATTER",
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "payload_bytes_per_tile": {
+        "hbm": 7.938,
+        "rom": 7.938
+      },
+      "rom_operator_id": 115,
+      "schedule": {
+        "issue_window": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "max_outstanding": {
+          "hbm": 2,
+          "rom": 2
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "tiles": {
+        "hbm": 258,
+        "rom": 258
+      },
+      "useful_work": 8454144
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "extent": {
+        "cols": 128,
+        "depth": 8192,
+        "rows": 32
+      },
+      "family": "attention",
+      "hbm_operator_id": 136,
+      "issued_work": {
+        "hbm": 536870912,
+        "rom": 536870912
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "ATTENTION.GQA",
+      "padding_fraction": {
+        "hbm": 0.9375,
+        "rom": 0.9375
+      },
+      "rom_operator_id": 124,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "tiles": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "useful_work": 33554432
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 142,
+      "issued_work": {
+        "hbm": 16777216,
+        "rom": 16777216
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 130,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "tiles": {
+        "hbm": 128,
+        "rom": 128
+      },
+      "useful_work": 16777216
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 150,
+      "issued_work": {
+        "hbm": 2097152,
+        "rom": 2097152
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.ADD",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 138,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 156,
+      "issued_work": {
+        "hbm": 2097152,
+        "rom": 2097152
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.RMS_NORM",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 144,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 12,
+        "rom": 12
+      },
+      "cycles_per_issue": {
+        "hbm": 1152,
+        "rom": 1152
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 12288,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 162,
+      "issued_work": {
+        "hbm": 50331648,
+        "rom": 50331648
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 12,
+        "rom": 12
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 151,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "tiles": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "useful_work": 50331648
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 12,
+        "rom": 12
+      },
+      "cycles_per_issue": {
+        "hbm": 1152,
+        "rom": 1152
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 12288,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 168,
+      "issued_work": {
+        "hbm": 50331648,
+        "rom": 50331648
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 12,
+        "rom": 12
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 158,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "tiles": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "useful_work": 50331648
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 192,
+        "rom": 192
+      },
+      "extent": {
+        "cols": 12288,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 174,
+      "issued_work": {
+        "hbm": 6291456,
+        "rom": 6291456
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.SILU_MUL",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 165,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 192,
+        "rom": 192
+      },
+      "tiles": {
+        "hbm": 192,
+        "rom": 192
+      },
+      "useful_work": 12288
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "cycles_per_issue": {
+        "hbm": 1152,
+        "rom": 1152
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 12288,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 180,
+      "issued_work": {
+        "hbm": 50331648,
+        "rom": 50331648
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 4,
+        "rom": 4
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 171,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "tiles": {
+        "hbm": 384,
+        "rom": 384
+      },
+      "useful_work": 50331648
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 186,
+      "issued_work": {
+        "hbm": 2097152,
+        "rom": 2097152
+      },
+      "issues": {
+        "hbm": 36,
+        "rom": 36
+      },
+      "mnemonic": "VECTOR.ADD",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 177,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "vector",
+      "hbm_operator_id": 192,
+      "issued_work": {
+        "hbm": 2097152,
+        "rom": 2097152
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "VECTOR.RMS_NORM",
+      "padding_fraction": {
+        "hbm": 0.998047,
+        "rom": 0.998047
+      },
+      "rom_operator_id": 183,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 512,
+          "rom": 512
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "extent": {
+        "cols": 4096,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "dma",
+      "hbm_operator_id": 198,
+      "issued_work": {
+        "hbm": 4096,
+        "rom": 4096
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "DMA.GATHER",
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "payload_bytes_per_tile": {
+        "hbm": 128.0,
+        "rom": 128.0
+      },
+      "rom_operator_id": 190,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 1,
+          "rom": 1
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "tiles": {
+        "hbm": 64,
+        "rom": 64
+      },
+      "useful_work": 4096
+    },
+    {
+      "column_group_span": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "column_groups": {
+        "hbm": 149,
+        "rom": 149
+      },
+      "cycles_per_issue": {
+        "hbm": 14304,
+        "rom": 14304
+      },
+      "effective_tensor_width": {
+        "hbm": 1024,
+        "rom": 1024
+      },
+      "extent": {
+        "cols": 151936,
+        "depth": 4096,
+        "rows": 1
+      },
+      "family": "tensor",
+      "hbm_operator_id": 204,
+      "issued_work": {
+        "hbm": 622329856,
+        "rom": 622329856
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "TENSOR.MATMUL",
+      "output_waves": {
+        "hbm": 149,
+        "rom": 149
+      },
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 197,
+      "schedule": {
+        "issue_window": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "max_outstanding": {
+          "hbm": 16,
+          "rom": 16
+        },
+        "queue_index": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_cols": {
+          "hbm": 64,
+          "rom": 64
+        },
+        "tile_depth": {
+          "hbm": 128,
+          "rom": 128
+        },
+        "tile_rows": {
+          "hbm": 1,
+          "rom": 1
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 4768,
+        "rom": 4768
+      },
+      "tiles": {
+        "hbm": 4768,
+        "rom": 4768
+      },
+      "useful_work": 622329856
+    },
+    {
+      "column_group_span": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "extent": {
+        "cols": 1,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "selection",
+      "hbm_operator_id": 211,
+      "issued_work": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "SELECTION.ARGMAX",
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 205,
+      "schedule": {
+        "issue_window": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "max_outstanding": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 1,
+          "rom": 1
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "tiles": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "useful_work": 1
+    },
+    {
+      "column_group_span": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "extent": {
+        "cols": 1,
+        "depth": 1,
+        "rows": 1
+      },
+      "family": "selection",
+      "hbm_operator_id": 217,
+      "issued_work": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "issues": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "mnemonic": "SELECTION.TOKEN_APPEND",
+      "padding_fraction": {
+        "hbm": 0.0,
+        "rom": 0.0
+      },
+      "rom_operator_id": 212,
+      "schedule": {
+        "issue_window": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "max_outstanding": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "queue_index": {
+          "hbm": 0,
+          "rom": 0
+        },
+        "tile_cols": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_depth": {
+          "hbm": 1,
+          "rom": 1
+        },
+        "tile_rows": {
+          "hbm": 1,
+          "rom": 1
+        }
+      },
+      "tile_issue_cycles_per_issue": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "tiles": {
+        "hbm": 1,
+        "rom": 1
+      },
+      "useful_work": 1
+    }
+  ],
+  "operators_unmatched": {
+    "hbm": [],
+    "rom": []
+  },
+  "pair_id": "qwen3-8b__rom-n5-native-sramkv-array-pipeline-x5-romfill__b200-sxm-x3-tensor",
+  "reason": "comparable",
+  "request_symbols": {
+    "BATCH": 1,
+    "CONTEXT_LENGTH": 8192,
+    "GENERATION_INDEX": 1,
+    "MAX_NEW_TOKENS": 1,
+    "NODE_COUNT": 1,
+    "NODE_ID": 0,
+    "PHASE": 1,
+    "POSITION_END": 8192,
+    "POSITION_START": 8191,
+    "SPAN_LAST_INDEX": 0,
+    "SPAN_TOKENS": 1
+  },
+  "rom": {
+    "backend": "rom.single_chip",
+    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "column_group_spans": [
+      1024
+    ],
+    "deployment_sha256": "133afc13e1fcd2aade2e40530883c9986b0e920d99853990d9032fd777f26243",
+    "effective_tensor_width_caps": [
+      1024
+    ],
+    "families": {
+      "attention": {
+        "cycles": 13824,
+        "issued_work": 19327352832,
+        "operations": 36,
+        "operators": 1,
+        "padding_fraction": 0.9375,
+        "padding_work": 18119393280,
+        "tile_errors": 0,
+        "tile_issue_cycles": 4608,
+        "tiles": 4608,
+        "useful_work": 1207959552
+      },
+      "dma": {
+        "cycles": 18644,
+        "issued_work": 608833536,
+        "operations": 74,
+        "operators": 4,
+        "padding_fraction": 0.000215,
+        "padding_work": 130816,
+        "payload_bytes": 156672,
+        "tile_errors": 0,
+        "tile_issue_cycles": 18644,
+        "tiles": 18644,
+        "useful_work": 608702720
+      },
+      "selection": {
+        "cycles": 2,
+        "issued_work": 2,
+        "operations": 2,
+        "operators": 2,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "tile_errors": 0,
+        "tile_issue_cycles": 2,
+        "tiles": 2,
+        "useful_work": 2
+      },
+      "tensor": {
+        "column_groups": 1521,
+        "cycles": 173280,
+        "issued_work": 7568101376,
+        "operations": 254,
+        "operators": 9,
+        "output_waves": 1521,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "tile_errors": 0,
+        "tile_issue_cycles": 57760,
+        "tiles": 57764,
+        "useful_work": 7568101376
+      },
+      "vector": {
+        "cycles": 16480,
+        "issued_work": 540016640,
+        "operations": 325,
+        "operators": 10,
+        "padding_fraction": 0.997398,
+        "padding_work": 538611712,
+        "tile_errors": 0,
+        "tile_issue_cycles": 16480,
+        "tiles": 16480,
+        "useful_work": 1404928
+      }
+    },
+    "max_column_group_span": 1024,
+    "model_id": "qwen3-8b",
+    "operators": [
+      {
+        "col_tiles": 4,
+        "column_group_span": 256,
+        "cycles_per_issue": 4,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 256,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 4,
+        "issued_work": 131072,
+        "issues": 1,
+        "max_outstanding": 4,
+        "mnemonic": "DMA.GATHER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 23,
+            "view_id": 24
+          },
+          "in1": {
+            "bytes": 8454144,
+            "dims": [
+              8256,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 25,
+            "view_id": 26
+          },
+          "out0": {
+            "bytes": 1024,
+            "dims": [
+              1,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 27,
+            "view_id": 28
+          }
+        },
+        "operator_id": 32,
+        "padding_fraction": 0.998047,
+        "padding_work": 130816,
+        "payload_bytes": 1024,
+        "payload_bytes_per_tile": 256.0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 4,
+          "max_outstanding": 4,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 30,
+        "schedule_tiles": 4,
+        "surface_bytes": 1024,
+        "tile_issue_cycles_per_issue": 4,
+        "tiles": 4,
+        "transferred_bytes_static": 2064,
+        "useful_work": 256
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "depth_tiles": 1,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4096,
+        "issues": 1,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.EMBED_LOOKUP",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 20,
+            "view_id": 34
+          },
+          "in1": {
+            "bytes": 1244659712,
+            "dims": [
+              151936,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 1,
+            "view_id": 35
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 36,
+            "view_id": 37
+          }
+        },
+        "operator_id": 41,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 39,
+        "schedule_tiles": 64,
+        "tiles": 4,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 36,
+            "view_id": 43
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 4,
+            "view_id": 44
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 46
+          }
+        },
+        "operator_id": 50,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 48,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 384,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 16777216,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 53
+          },
+          "in1": {
+            "bytes": 33554432,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 5,
+            "view_id": 54
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 56
+          }
+        },
+        "operator_id": 59,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 58,
+        "schedule_tiles": 2048,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 16777216
+      },
+      {
+        "col_tiles": 16,
+        "column_group_span": 1024,
+        "column_groups": 1,
+        "cycles_per_issue": 96,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 1024,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4194304,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 62
+          },
+          "in1": {
+            "bytes": 8388608,
+            "dims": [
+              1024,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 6,
+            "view_id": 63
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              1024
+            ],
+            "dtype": 16,
+            "object_id": 64,
+            "view_id": 65
+          }
+        },
+        "operator_id": 67,
+        "output_waves": 1,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 66,
+        "schedule_tiles": 512,
+        "tile_issue_cycles_per_issue": 32,
+        "tiles": 32,
+        "useful_work": 4194304
+      },
+      {
+        "col_tiles": 16,
+        "column_group_span": 1024,
+        "column_groups": 1,
+        "cycles_per_issue": 96,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 1024,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 4194304,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 69
+          },
+          "in1": {
+            "bytes": 8388608,
+            "dims": [
+              1024,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 7,
+            "view_id": 70
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              1024
+            ],
+            "dtype": 16,
+            "object_id": 71,
+            "view_id": 72
+          }
+        },
+        "operator_id": 73,
+        "output_waves": 1,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 58,
+        "schedule_tiles": 512,
+        "tile_issue_cycles_per_issue": 32,
+        "tiles": 32,
+        "useful_work": 4194304
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 32
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.HEAD_RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 75
+          },
+          "in1": {
+            "bytes": 256,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "object_id": 8,
+            "view_id": 76
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 77
+          }
+        },
+        "operator_id": 79,
+        "padding_fraction": 0.9375,
+        "padding_work": 61440,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 78,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 8
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.HEAD_RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 64,
+            "view_id": 82
+          },
+          "in1": {
+            "bytes": 256,
+            "dims": [
+              128
+            ],
+            "dtype": 16,
+            "object_id": 10,
+            "view_id": 83
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 84,
+            "view_id": 85
+          }
+        },
+        "operator_id": 87,
+        "padding_fraction": 0.984375,
+        "padding_work": 64512,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 86,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 1024
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 32
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.ROPE",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 90
+          },
+          "in1": {
+            "bytes": 32768,
+            "dims": [
+              1,
+              32,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 27,
+            "view_id": 91
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 92
+          }
+        },
+        "operator_id": 94,
+        "padding_fraction": 0.9375,
+        "padding_work": 61440,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 78,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 2,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 8
+        },
+        "family": "vector",
+        "issue_window": 2,
+        "issued_work": 65536,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "VECTOR.ROPE",
+        "operands": {
+          "in0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 84,
+            "view_id": 97
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              8,
+              256
+            ],
+            "dtype": 18,
+            "object_id": 27,
+            "view_id": 98
+          },
+          "out0": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 64,
+            "view_id": 99
+          }
+        },
+        "operator_id": 100,
+        "padding_fraction": 0.984375,
+        "padding_work": 64512,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 86,
+        "schedule_tiles": 2,
+        "tile_issue_cycles_per_issue": 2,
+        "tiles": 2,
+        "useful_work": 1024
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 258,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 66048
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 2,
+        "issued_work": 8454144,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "DMA.SCATTER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 23,
+            "view_id": 103
+          },
+          "in1": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 64,
+            "view_id": 104
+          },
+          "out0": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 17,
+            "view_id": 105
+          }
+        },
+        "operator_id": 108,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 2048,
+        "payload_bytes_per_tile": 7.938,
+        "row_tiles": 129,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 107,
+        "schedule_tiles": 258,
+        "surface_bytes": 16908288,
+        "tile_issue_cycles_per_issue": 258,
+        "tiles": 258,
+        "transferred_bytes_static": 266248,
+        "useful_work": 8454144
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 128,
+        "cycles_per_issue": 258,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 128,
+          "depth": 1,
+          "rows": 66048
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 2,
+        "issued_work": 8454144,
+        "issues": 36,
+        "max_outstanding": 2,
+        "mnemonic": "DMA.SCATTER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 23,
+            "view_id": 111
+          },
+          "in1": {
+            "bytes": 2048,
+            "dims": [
+              1,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 71,
+            "view_id": 112
+          },
+          "out0": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 17,
+            "view_id": 113
+          }
+        },
+        "operator_id": 115,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 2048,
+        "payload_bytes_per_tile": 7.938,
+        "row_tiles": 129,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 2,
+          "max_outstanding": 2,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 114,
+        "schedule_tiles": 258,
+        "surface_bytes": 16908288,
+        "tile_issue_cycles_per_issue": 258,
+        "tiles": 258,
+        "transferred_bytes_static": 266248,
+        "useful_work": 8454144
+      },
+      {
+        "col_tiles": 2,
+        "column_group_span": 1024,
+        "cycles_per_issue": 384,
+        "depth_tiles": 64,
+        "extent": {
+          "cols": 128,
+          "depth": 8192,
+          "rows": 32
+        },
+        "family": "attention",
+        "issue_window": 16,
+        "issued_work": 536870912,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "ATTENTION.GQA",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 118
+          },
+          "in1": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 17,
+            "view_id": 105
+          },
+          "in2": {
+            "bytes": 16908288,
+            "dims": [
+              8256,
+              8,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 17,
+            "view_id": 113
+          },
+          "in3": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 23,
+            "view_id": 119
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              32,
+              128
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 120
+          }
+        },
+        "operator_id": 124,
+        "padding_fraction": 0.9375,
+        "padding_work": 503316480,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 16,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 122,
+        "schedule_tiles": 128,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 33554432
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 384,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 16777216,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 127
+          },
+          "in1": {
+            "bytes": 33554432,
+            "dims": [
+              4096,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 12,
+            "view_id": 128
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 129
+          }
+        },
+        "operator_id": 130,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 66,
+        "schedule_tiles": 2048,
+        "tile_issue_cycles_per_issue": 128,
+        "tiles": 128,
+        "useful_work": 16777216
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.ADD",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 36,
+            "view_id": 133
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 134
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 135
+          }
+        },
+        "operator_id": 138,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 137,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 141
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 13,
+            "view_id": 142
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 143
+          }
+        },
+        "operator_id": 144,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 48,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "column_groups": 12,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 12288,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 147
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              12288,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 14,
+            "view_id": 148
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 149,
+            "view_id": 150
+          }
+        },
+        "operator_id": 151,
+        "output_waves": 12,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 58,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "column_groups": 12,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 12288,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 154
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              12288,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 15,
+            "view_id": 155
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 156,
+            "view_id": 157
+          }
+        },
+        "operator_id": 158,
+        "output_waves": 12,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 66,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 192,
+        "column_group_span": 1024,
+        "cycles_per_issue": 192,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 12288,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 6291456,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.SILU_MUL",
+        "operands": {
+          "in0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 149,
+            "view_id": 160
+          },
+          "in1": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 156,
+            "view_id": 161
+          },
+          "out0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 162,
+            "view_id": 163
+          }
+        },
+        "operator_id": 165,
+        "padding_fraction": 0.998047,
+        "padding_work": 6279168,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 137,
+        "schedule_tiles": 192,
+        "tile_issue_cycles_per_issue": 192,
+        "tiles": 192,
+        "useful_work": 12288
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "column_groups": 4,
+        "cycles_per_issue": 1152,
+        "depth_tiles": 96,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 4096,
+          "depth": 12288,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 50331648,
+        "issues": 36,
+        "masked_lane_slots": 0,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 24576,
+            "dims": [
+              1,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 162,
+            "view_id": 168
+          },
+          "in1": {
+            "bytes": 100663296,
+            "dims": [
+              4096,
+              12288
+            ],
+            "dtype": 16,
+            "object_id": 16,
+            "view_id": 169
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 170
+          }
+        },
+        "operator_id": 171,
+        "output_waves": 4,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 512
+        },
+        "schedule_id": 58,
+        "schedule_tiles": 6144,
+        "tile_issue_cycles_per_issue": 384,
+        "tiles": 384,
+        "useful_work": 50331648
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 36,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.ADD",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 174
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 55,
+            "view_id": 175
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 36,
+            "view_id": 176
+          }
+        },
+        "operator_id": 177,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 48,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "vector",
+        "issue_window": 16,
+        "issued_work": 2097152,
+        "issues": 1,
+        "max_outstanding": 16,
+        "mnemonic": "VECTOR.RMS_NORM",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 36,
+            "view_id": 180
+          },
+          "in1": {
+            "bytes": 8192,
+            "dims": [
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 2,
+            "view_id": 181
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 182
+          }
+        },
+        "operator_id": 183,
+        "padding_fraction": 0.998047,
+        "padding_work": 2093056,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 512
+        },
+        "schedule_id": 48,
+        "schedule_tiles": 64,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 64,
+        "column_group_span": 1024,
+        "cycles_per_issue": 64,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 4096,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "dma",
+        "index_bytes": 4,
+        "issue_window": 16,
+        "issued_work": 4096,
+        "issues": 1,
+        "max_outstanding": 16,
+        "mnemonic": "DMA.GATHER",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 23,
+            "view_id": 184
+          },
+          "in1": {
+            "bytes": 67633152,
+            "dims": [
+              8256,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 45,
+            "view_id": 185
+          },
+          "out0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 186,
+            "view_id": 187
+          }
+        },
+        "operator_id": 190,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "payload_bytes": 8192,
+        "payload_bytes_per_tile": 128.0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 3,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 3,
+          "tile_cols": 64,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 189,
+        "schedule_tiles": 64,
+        "surface_bytes": 8192,
+        "tile_issue_cycles_per_issue": 64,
+        "tiles": 64,
+        "transferred_bytes_static": 16640,
+        "useful_work": 4096
+      },
+      {
+        "col_tiles": 2374,
+        "column_group_span": 1024,
+        "column_groups": 149,
+        "cycles_per_issue": 14304,
+        "depth_tiles": 32,
+        "effective_tensor_width": 1024,
+        "extent": {
+          "cols": 151936,
+          "depth": 4096,
+          "rows": 1
+        },
+        "family": "tensor",
+        "issue_window": 16,
+        "issued_work": 622329856,
+        "issues": 1,
+        "masked_lane_slots": 640,
+        "max_outstanding": 16,
+        "mnemonic": "TENSOR.MATMUL",
+        "operands": {
+          "in0": {
+            "bytes": 8192,
+            "dims": [
+              1,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 186,
+            "view_id": 192
+          },
+          "in1": {
+            "bytes": 1244659712,
+            "dims": [
+              151936,
+              4096
+            ],
+            "dtype": 16,
+            "object_id": 3,
+            "view_id": 193
+          },
+          "out0": {
+            "bytes": 303872,
+            "dims": [
+              1,
+              151936
+            ],
+            "dtype": 16,
+            "object_id": 194,
+            "view_id": 195
+          }
+        },
+        "operator_id": 197,
+        "output_waves": 149,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 7,
+          "issue_window": 16,
+          "max_outstanding": 16,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 1,
+          "resource_bound": 1,
+          "tile_cols": 64,
+          "tile_depth": 128,
+          "tile_rows": 1
+        },
+        "schedule_id": 196,
+        "schedule_tiles": 75968,
+        "tile_issue_cycles_per_issue": 4768,
+        "tiles": 4768,
+        "useful_work": 622329856
+      },
+      {
+        "col_tiles": 1,
+        "column_group_span": 1,
+        "cycles_per_issue": 1,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 1,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "selection",
+        "issue_window": 1,
+        "issued_work": 1,
+        "issues": 1,
+        "max_outstanding": 1,
+        "mnemonic": "SELECTION.ARGMAX",
+        "operands": {
+          "in0": {
+            "bytes": 303872,
+            "dims": [
+              151936
+            ],
+            "dtype": 16,
+            "object_id": 194,
+            "view_id": 199
+          },
+          "out0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 200,
+            "view_id": 201
+          }
+        },
+        "operator_id": 205,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 1,
+          "max_outstanding": 1,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 6,
+          "tile_cols": 1,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 203,
+        "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
+        "tiles": 1,
+        "useful_work": 1
+      },
+      {
+        "col_tiles": 1,
+        "column_group_span": 1,
+        "cycles_per_issue": 1,
+        "depth_tiles": 1,
+        "extent": {
+          "cols": 1,
+          "depth": 1,
+          "rows": 1
+        },
+        "family": "selection",
+        "issue_window": 1,
+        "issued_work": 1,
+        "issues": 1,
+        "max_outstanding": 1,
+        "mnemonic": "SELECTION.TOKEN_APPEND",
+        "operands": {
+          "in0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 200,
+            "view_id": 208
+          },
+          "out0": {
+            "bytes": 4,
+            "dims": [
+              1
+            ],
+            "dtype": 4,
+            "object_id": 209,
+            "view_id": 210
+          }
+        },
+        "operator_id": 212,
+        "padding_fraction": 0.0,
+        "padding_work": 0,
+        "row_tiles": 1,
+        "schedule": {
+          "bank_mask": 8,
+          "issue_window": 1,
+          "max_outstanding": 1,
+          "noc_route_class": 0,
+          "port_mask": 3,
+          "priority": 0,
+          "queue_index": 0,
+          "resource_bound": 6,
+          "tile_cols": 1,
+          "tile_depth": 1,
+          "tile_rows": 1
+        },
+        "schedule_id": 203,
+        "schedule_tiles": 1,
+        "tile_issue_cycles_per_issue": 1,
+        "tiles": 1,
+        "useful_work": 1
+      }
+    ],
+    "request_symbols": {
+      "BATCH": 1,
+      "CONTEXT_LENGTH": 8192,
+      "GENERATION_INDEX": 1,
+      "MAX_NEW_TOKENS": 1,
+      "NODE_COUNT": 1,
+      "NODE_ID": 0,
+      "PHASE": 1,
+      "POSITION_END": 8192,
+      "POSITION_START": 8191,
+      "SPAN_LAST_INDEX": 0,
+      "SPAN_TOKENS": 1
+    },
+    "root": "build/abi3/qwen3-8b-rom-e9",
+    "schedule_shapes": {
+      "engine_family=112,tile_rows=1,tile_cols=1,tile_depth=1,issue_window=1": 1,
+      "engine_family=16,tile_rows=1,tile_cols=64,tile_depth=1,issue_window=16": 1,
+      "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+      "engine_family=16,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=4": 1,
+      "engine_family=32,tile_rows=1,tile_cols=64,tile_depth=128,issue_window=16": 1,
+      "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 1,
+      "engine_family=32,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 2,
+      "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=16": 2,
+      "engine_family=48,tile_rows=512,tile_cols=64,tile_depth=1,issue_window=2": 2,
+      "engine_family=64,tile_rows=512,tile_cols=64,tile_depth=128,issue_window=16": 1
+    },
+    "static_walk": "complete",
+    "storage_class_counts": {
+      "0": 3,
+      "1": 6,
+      "2": 7,
+      "3": 18
+    },
+    "topology_class": 0
+  },
+  "rule": "compare, per engine family and per operator, every SCHEDULE field runtime.cycle.model.tile_mapping reads, the tile counts and padding those fields produce for the same useful work at the same request, and for DMA the tile count and bytes per tile; comparable only when no cost-bearing field differs outside the cited allowlist",
+  "schema": "opentallas.deployment_audit.v2",
+  "storage_classes_differ_as_expected": true,
+  "tensor_parity_band": {
+    "band": [
+      85.33333333333333,
+      128.0
+    ],
+    "cycles_per_full_depth_tile": {
+      "hbm": 3,
+      "rom": 3
+    },
+    "cycles_per_unit_depth": {
+      "hbm": 0.0234375,
+      "rom": 0.0234375
+    },
+    "favours": "neither",
+    "hbm_tile_depth": 128,
+    "magnitude_x": 1.0,
+    "note": "rates on which the two depths are charged alike per unit of depth; the machine rate sits inside it",
+    "parity": true,
+    "rom_tile_depth": 128,
+    "tile_issue_cycles": 1,
+    "work_per_lane_cycle": 93.1932963683953,
+    "work_units_per_mac": 2.0
+  },
+  "unexplained_asymmetries": [],
+  "verdict": "COMPARABLE: 26 operators matched operator-for-operator with identical SCHEDULE fields in every family (55 fields compared); tiles per step equal in every family.  The machine files alone decide the rate."
+}

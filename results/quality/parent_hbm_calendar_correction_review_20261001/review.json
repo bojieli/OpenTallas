@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.parent.hbm.calendar_correction.review.v1",
+  "owner_commit": "213b64f5b",
+  "source_sha256": {
+    "tools/w13_gpu_calendar_gate.py": "8aa98051a5f1f47c59947ce3ad423344191ae20a8daef41faf6c53a5ac7674a1",
+    "tests/test_w13_gpu_calendar_gate.py": "2d3f93a6dbacf80aa0449b248e2670071a6a9c838acd02a81b319f1be85b07c8"
+  },
+  "focused_tests": "9 PASS",
+  "previous_failure_review": "7c236cdc6 retained",
+  "regression_coverage": [
+    "Callback cannotomit sourcebound0->1dependency; actual delayed dependency positive",
+    "Graphblob hash mismatch and IDs-only input rejected",
+    "Future/negative service or write visibility afterconsumption rejected",
+    "Readresponse requires matchingrequest and orderedservice",
+    "RF/shared/DIV/lane/combinedservice finitecredit conflicts"
+  ],
+  "candidate_cost_scope": "RF read2serial plus CORE latency; compute FADD/FMUL/IADD/FCMP7 =>total9;SHFL5=>7;DIV19=>21; scalar DIV one issue perSM percycle remainsmodelhypothesis",
+  "verdict": "PASS_SCOPED_CALENDAR_VALIDATOR_CORRECTION",
+  "full_program_callbacks_bound": false,
+  "actual_HBM_service_qualified": false,
+  "context_SS_FF_qualified": false,
+  "physical_admission": false,
+  "speed_credit": 0
+}

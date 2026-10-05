@@ -1,0 +1,69 @@
+{
+  "archive_sha256": "a80c2036022bb0e6d4f47e11daf82f36bbb9e3c566e188a40a4876e428b617f3",
+  "checkpoint_payload": false,
+  "entries": [
+    {
+      "bytes": 208246,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz",
+      "path": "results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz",
+      "sha256": "97539f0ec3337bd0ea810528dd40bc1c8894098a46b03a77facc0bcb5b33d33a"
+    },
+    {
+      "bytes": 576584,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/results/uarch/h3_distributed_norm_endpoint_20261002/Qwen.json.gz",
+      "path": "results/uarch/h3_distributed_norm_endpoint_20261002/Qwen.json.gz",
+      "sha256": "b0332a1b379b3288c98d26dd0bdff22f007ade4c03d3b2bc92844db802bf150e"
+    },
+    {
+      "bytes": 729,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/compiler/models/qwen3-8b/config.json",
+      "path": "compiler/models/qwen3-8b/config.json",
+      "sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb"
+    },
+    {
+      "bytes": 16102,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/tools/qwen_hbm_complete_program.py",
+      "path": "tools/qwen_hbm_complete_program.py",
+      "sha256": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1"
+    },
+    {
+      "bytes": 20599,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/tools/qwen_hbm_complete_executor.py",
+      "path": "tools/qwen_hbm_complete_executor.py",
+      "sha256": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203"
+    },
+    {
+      "bytes": 35383,
+      "commit": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+      "member": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d/tools/qwen_hbm_controller_calendar_r2.py",
+      "path": "tools/qwen_hbm_controller_calendar_r2.py",
+      "sha256": "2111028214842c439fec168d2df04c9913b261c0e68428a53715065ccdf46d86"
+    },
+    {
+      "bytes": 6616,
+      "commit": "693bba78d04ec371d9fb8dc8eb9e0d19437dddaf",
+      "member": "693bba78d04ec371d9fb8dc8eb9e0d19437dddaf/rtl/model_ready_hbm_r15/ot_hbm_r15_tag_owner.sv",
+      "path": "rtl/model_ready_hbm_r15/ot_hbm_r15_tag_owner.sv",
+      "sha256": "11a37cc5f1ada6fcfe93d05b5da71a12db5aa19066fc0ce3e3a8e3ce632f9d7f"
+    },
+    {
+      "bytes": 18524,
+      "commit": "e03c40e40cbaad54a3d3389195516fc4bfad2c4f",
+      "member": "e03c40e40cbaad54a3d3389195516fc4bfad2c4f/tools/h3_exact_scalar_contract.py",
+      "path": "tools/h3_exact_scalar_contract.py",
+      "sha256": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132"
+    },
+    {
+      "bytes": 200791,
+      "commit": "693bba78d04ec371d9fb8dc8eb9e0d19437dddaf",
+      "member": "693bba78d04ec371d9fb8dc8eb9e0d19437dddaf/results/uarch/qwen_hbm_retirement_r15_20261002/cost_before_build_r6.json",
+      "path": "results/uarch/qwen_hbm_retirement_r15_20261002/cost_before_build_r6.json",
+      "sha256": "283e3366b4362fb312bca16d4104a1e9818b132307db609020a7204fc07a805a"
+    }
+  ]
+}

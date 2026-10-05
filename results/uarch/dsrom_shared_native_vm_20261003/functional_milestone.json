@@ -1,0 +1,37 @@
+{
+  "source_build_commit": "05861cfed",
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_dsrom_shared_native.py tests/test_dsrom_layer_entry_state.py",
+    "passed": 24
+  },
+  "terminals": {
+    "ds-collective-agidock128-r5": {
+      "archive": "ds-collective-agidock128-r5.tgz",
+      "sha256": "75a27e7f574a7f0825b52eece9db78e15f2ef52da6f136068594ecc81c144af4",
+      "terminal": "PASS DMA_GATHER_NATIVE words=266 writes=1064 reads=266 visible_retirement=1 held=3831\nPASS DMA_TOPK_NATIVE K=8192 NMAX=2048 queue=128 output_words=512 read_words=256 exact_order=1 visible_retirement=1\n- /home/ubuntu/otjobs/dsrom-shared-native/collective-r5/sources/0_tb_coll_parent.sv:101: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 105us; walltime 2.323 s; speed 45.319 us/s\n- Verilator: cpu 2.323 s on 1 threads; allocated 11 MB\n",
+      "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
+    },
+    "ds-ID-agidock128-r2": {
+      "archive": "ds-ID-agidock128-r2.tgz",
+      "sha256": "19c230e1df4f861e632447056d4ba9f04ad1827046adeca1fa44f5fa002b1fe1",
+      "terminal": "ID_BOUNDARY fault0 requests1 replies1 hbm457 len17 rom221 held9\nPASS ID_NATIVE held_request=1 matching_reply=1 macros=256 expertID=3 rom=221 hbm=457 requests=1\nPASS ID_NATIVE_WRONG_COOKIE debt_held=1 no_publication=1 no_unchecked_retirement=1\n/home/ubuntu/otjobs/dsrom-shared-native/ID-r2/sources/0_tb_id_parent.sv:61: $finish called at 537000 (1ps)\n",
+      "scope": "raw functional only; no protected VM, full-token, loaded parent clock, or physical credit"
+    }
+  },
+  "launch_failure_preserved": {
+    "archive": "evidence/ds-collective-agidock128-r4-launch-failure.tgz",
+    "sha256": "37b638d0f73fefbc8f489395c367514b85a034ada54f9fadc46be252e569eb47",
+    "reason": "Verilator absent PATH before compiler launch; installed5.050 selected explicitly on next distinct output; no live job restarted"
+  },
+  "source_files": {
+    "tools/dsrom_layer_entry_state.py": "242c380d9405bb35d8e53fee5d0100f5537461763e7210c4e12d6e1c775e265b",
+    "tests/test_dsrom_layer_entry_state.py": "6236d88a73e7e9c0f1f3ad567c9062e0ac56e5d70c87398543608b4aac06241c"
+  },
+  "PAR2_changed": false,
+  "wire_stage_charges_changed": false,
+  "source_layer_entry": "exporter reuses actual golden csum tree and captured state, includes compressor open slots, fails closed on wrong source/digest/globalID/cadence;127prior rows leave one current-row seat inWINDOW128; typed global IDs reject bool identities",
+  "physical_admitted": false,
+  "protected_VM_admitted": false,
+  "whole_parent_swapped": false,
+  "full_token_rate_credit": false
+}

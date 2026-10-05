@@ -1,0 +1,1074 @@
+{
+  "adversarial_witness": {
+    "current_fullprogram_failure_proven": false,
+    "first_overflow": [
+      64,
+      1,
+      "FIFO_OVERFLOW"
+    ],
+    "kind": "SOURCE_CONTROL_PORT_WITNESS_NOT_ACTUAL_COMPILED_PHASE",
+    "original_fault_and_writes_not_suppressed": true,
+    "peak": [
+      1,
+      70
+    ],
+    "source_A_priority_starves_B": true
+  },
+  "boundary_ports": {
+    "BF_activation_includingvalid": 1067,
+    "PHW": 10,
+    "actual_ready_ACK_ports": false,
+    "cfg_local_word": 48,
+    "full_broadcast": 1632,
+    "q_activation_includingvalid": 549,
+    "root_ports_per_shard": 64,
+    "source_root": 69,
+    "tree_record": 65,
+    "tree_record_includingvalid": 66,
+    "writer_per_port_address_data_valid": 63
+  },
+  "build_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "default_off": true,
+  "engine_RTL_written": false,
+  "existing_return": {
+    "already_charged": true,
+    "bridge_must_not_recharge": true,
+    "existing_declaration_lower_bound_bits": 69771008,
+    "node_link_record_bits": 65,
+    "node_output_alignment_lower_bound_bits": 532224,
+    "node_queue_bits": 67092480,
+    "node_valid_plus_record_bits": 66,
+    "nodes": 8064,
+    "root_held_bits": 1081344,
+    "root_input_queue_bits": 1064960,
+    "roots": 128
+  },
+  "fault_vector": [
+    {
+      "NP": 4096,
+      "R": 128,
+      "leaves": 8192,
+      "levels": 6,
+      "node_count": 8064,
+      "node_fault_driven": [
+        0,
+        8063
+      ],
+      "tied_zero": 8191,
+      "undriven": [
+        8064,
+        8065,
+        8066,
+        8067,
+        8068,
+        8069,
+        8070,
+        8071,
+        8072,
+        8073,
+        8074,
+        8075,
+        8076,
+        8077,
+        8078,
+        8079,
+        8080,
+        8081,
+        8082,
+        8083,
+        8084,
+        8085,
+        8086,
+        8087,
+        8088,
+        8089,
+        8090,
+        8091,
+        8092,
+        8093,
+        8094,
+        8095,
+        8096,
+        8097,
+        8098,
+        8099,
+        8100,
+        8101,
+        8102,
+        8103,
+        8104,
+        8105,
+        8106,
+        8107,
+        8108,
+        8109,
+        8110,
+        8111,
+        8112,
+        8113,
+        8114,
+        8115,
+        8116,
+        8117,
+        8118,
+        8119,
+        8120,
+        8121,
+        8122,
+        8123,
+        8124,
+        8125,
+        8126,
+        8127,
+        8128,
+        8129,
+        8130,
+        8131,
+        8132,
+        8133,
+        8134,
+        8135,
+        8136,
+        8137,
+        8138,
+        8139,
+        8140,
+        8141,
+        8142,
+        8143,
+        8144,
+        8145,
+        8146,
+        8147,
+        8148,
+        8149,
+        8150,
+        8151,
+        8152,
+        8153,
+        8154,
+        8155,
+        8156,
+        8157,
+        8158,
+        8159,
+        8160,
+        8161,
+        8162,
+        8163,
+        8164,
+        8165,
+        8166,
+        8167,
+        8168,
+        8169,
+        8170,
+        8171,
+        8172,
+        8173,
+        8174,
+        8175,
+        8176,
+        8177,
+        8178,
+        8179,
+        8180,
+        8181,
+        8182,
+        8183,
+        8184,
+        8185,
+        8186,
+        8187,
+        8188,
+        8189,
+        8190
+      ],
+      "undriven_count": 127
+    },
+    {
+      "NP": 2048,
+      "R": 64,
+      "leaves": 4096,
+      "levels": 6,
+      "node_count": 4032,
+      "node_fault_driven": [
+        0,
+        4031
+      ],
+      "tied_zero": 4095,
+      "undriven": [
+        4032,
+        4033,
+        4034,
+        4035,
+        4036,
+        4037,
+        4038,
+        4039,
+        4040,
+        4041,
+        4042,
+        4043,
+        4044,
+        4045,
+        4046,
+        4047,
+        4048,
+        4049,
+        4050,
+        4051,
+        4052,
+        4053,
+        4054,
+        4055,
+        4056,
+        4057,
+        4058,
+        4059,
+        4060,
+        4061,
+        4062,
+        4063,
+        4064,
+        4065,
+        4066,
+        4067,
+        4068,
+        4069,
+        4070,
+        4071,
+        4072,
+        4073,
+        4074,
+        4075,
+        4076,
+        4077,
+        4078,
+        4079,
+        4080,
+        4081,
+        4082,
+        4083,
+        4084,
+        4085,
+        4086,
+        4087,
+        4088,
+        4089,
+        4090,
+        4091,
+        4092,
+        4093,
+        4094
+      ],
+      "undriven_count": 63
+    }
+  ],
+  "fulltoken": false,
+  "latency": {
+    "actual_exposed_per_token": null,
+    "conditional_service576_P1_parallel128": {
+      "actual_token_exposed_cycles": null,
+      "drain_if_all_payload_ready_and_all_grants_succeed_cycles": 9,
+      "field_internal_midphase_backpressure": false,
+      "may_stall_phase_admission": true,
+      "parallelism": 128,
+      "required_issue_intervals": 6,
+      "status": "CONDITIONAL_SUCCESSFUL_SERVICE_ENVELOPE_NOT_ACTUAL",
+      "words": 576
+    },
+    "conditional_service576_P1_scalar1": {
+      "actual_token_exposed_cycles": null,
+      "drain_if_all_payload_ready_and_all_grants_succeed_cycles": 579,
+      "field_internal_midphase_backpressure": false,
+      "may_stall_phase_admission": true,
+      "parallelism": 1,
+      "required_issue_intervals": 576,
+      "status": "CONDITIONAL_SUCCESSFUL_SERVICE_ENVELOPE_NOT_ACTUAL",
+      "words": 576
+    },
+    "conditional_service8192_P6_parallel128": {
+      "actual_token_exposed_cycles": null,
+      "drain_if_all_payload_ready_and_all_grants_succeed_cycles": 387,
+      "field_internal_midphase_backpressure": false,
+      "may_stall_phase_admission": true,
+      "parallelism": 128,
+      "required_issue_intervals": 384,
+      "status": "CONDITIONAL_SUCCESSFUL_SERVICE_ENVELOPE_NOT_ACTUAL",
+      "words": 49152
+    },
+    "conditional_service8192_P6_scalar1": {
+      "actual_token_exposed_cycles": null,
+      "drain_if_all_payload_ready_and_all_grants_succeed_cycles": 49155,
+      "field_internal_midphase_backpressure": false,
+      "may_stall_phase_admission": true,
+      "parallelism": 1,
+      "required_issue_intervals": 49152,
+      "status": "CONDITIONAL_SUCCESSFUL_SERVICE_ENVELOPE_NOT_ACTUAL",
+      "words": 49152
+    },
+    "event_join_equation": "For each actual phase, admission=max(activation/config_ready, reservation_ready); rearm=max(native_idle, last_VM_visible, captured_credit_and_packet_retired)+qualified_control_latency. Propagate these added dependencies in ordered program; only nonoverlapped critical-path displacement is token delta.",
+    "scope": "3forward+1positivecredit is a model minimum candidate, not characterized route/provider. Counts are work fromall-ready payload,not measured end-to-end or tokencriticalpath. ActualF/C/fullcontextmaxstayNone.",
+    "stall_policy": "Stall new cfg/GO while reservation or previous publication debt is unavailable; never stall an already admitted native tree.",
+    "stream_cycle_ns": 0.8333333333333334,
+    "violation_set": "UNAVAILABLE"
+  },
+  "model_before_engine_RTL": true,
+  "new_jobs": [],
+  "originals_untouched": true,
+  "parallel_plan": {
+    "Archimedes": "parallel fixedclockPGsolve/context endpoint cuts remainscurrent; no q/BF reframe or placement authority change",
+    "Claude": "disjoint qreframe/PAR2boundaryproposal only; noadoption",
+    "Hubble": "onecurrentPHW10 passiveactualtrace: cfg/go/activationaccepted, pairpv/tags, nodeFIFOac/bc/ap/vp, rootqc/held/tag/errors, postNBAallwriters; samecompiledsource/rank/epoch; no duplicate run",
+    "Maxwell": "current fieldbridge source/fault/no-ready capacity/latency model; source/port contract; noengineRTL untilcomposedG0",
+    "Nash": "lifetime/addresslease/readR+2 constraints handoffonly; W2HBM activework notduplicated; consume immutable915selected bounds withoutcallingthemfullcontextcapacity"
+  },
+  "physical_fit": false,
+  "rate_adopted": false,
+  "runtime_scope": "C++host ORs actual node/root/pair faults, not flat n_fault; localPASS cannot qualifyflat vector",
+  "source_boundaries": [
+    "cfg_go -> ROMword register -> configcapture, generic lastcapture26 safeGO27",
+    "go&&act -> element walker;issue=w_run&&f_cnt&&!hazard&&!pp_block; no externalready",
+    "pair pv/tag32/value32/error -> node inputFIFO65bits; overflowfault does not suppresswrite",
+    "golden sibling add5cycles or bypass1 +RST1; eachnode output<=1/cycle",
+    "root i_v -> Q128; prioradderresult blocksQservice; held128sibling slots; no ready",
+    "root r_v -> spine w_we/data/address register -> original tile VMpostNBA nextedge; noACK",
+    "spine rows_left counts rawr_v,not acceptedVMdelivery;fieldbusy pairOR,not treedrain"
+  ],
+  "source_sha256": {
+    "results/uarch/dsrom_field_tree_bridge_20261003/inputs/R49_physical_union.json.gz": "b31172114eb15eec7388a6ec17b18d11771247ff98b706e9554150354189c5a0",
+    "results/uarch/dsrom_parallel_owner_binding_20261002/r1/native_shard_choices.jsonl.gz": "a723482a46ab7843a83399f666c9c3571c499891d02a449c6d8d89eb356eb2b3",
+    "results/uarch/dsrom_parallel_owner_binding_20261002/r1/phase_shard_bindings.jsonl.gz": "e22b2080c32cf14d2fcbda03057497fedcbf177927aee4163f636c2c9bcec979",
+    "rtl/test/v41_runtime/v41_die_rt.cpp": "fa94f887148628e496c7e6c9388a4870b8d0e4a23269ec686f727398fa9412b5",
+    "rtl/v41die/ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+    "rtl/v41die/ot_v41_pair_w17w10.sv": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+    "rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+    "rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "rtl/w17_runtime/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "rtl/w17_runtime/v41die/ot_v41_spine.sv": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+    "tools/model_dsrom_issue_return_calendar.py": "2c2764dff035ce8231045456449256099a603ac8ee112a8a87f5d867eb214b21",
+    "tools/model_dsrom_return_calendar.py": "7e6e77f0b57479d4ba4f263803a09576ff27303ebd14b13f83c40360f8fda9a3",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/uarch_model_dsrom_return_prepare.py": "2451183d82778c0c9d30093adf8be17ff51d11d9cc6343c14f7c2a8cc5048bbb"
+  },
+  "successor": {
+    "CDC": "actual streaming1.2/serial.9 andresetphase timestamps missing; never use oldfailedratioFIFO as qualifiedservice",
+    "acceptance": "reserve sameowner entirephase outputcapacity and exclusive nativewriter range BEFORE cfg/GO; no new ready inside golden tree",
+    "buffer_singleposition": {
+      "R49_feedback_repaired_raw_record_reservation_mm2": 0.9065447424,
+      "actual_slot_fit": false,
+      "excludes": [
+        "read/write mux and comparators",
+        "codec/leases/arbitration",
+        "forward hold",
+        "clock/reset/PG/OBS/pin access",
+        "route/CDC/reverse-credit station state"
+      ],
+      "existing_576_capture_or_return_storage_credit_mm2": 0,
+      "logical_seats": 8192,
+      "mapped_area": false,
+      "max_rows_per_rank": 8192,
+      "per_root_depth": [
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64,
+        64
+      ],
+      "per_shard_seats": [
+        4096,
+        4096
+      ],
+      "positions": 1,
+      "raw_record_bits": 565248,
+      "raw_record_reservation_per_shard_mm2": [
+        0.4532723712,
+        0.4532723712
+      ],
+      "shared_owner_and_pointer_FF_lower_bound": 2774,
+      "unified_FF_at50pct_lower_bound_mm2": 0.3312704304,
+      "unified_FF_body_lower_bound_mm2": 0.1656352152
+    },
+    "buffer_verify6": {
+      "R49_feedback_repaired_raw_record_reservation_mm2": 5.4392684544,
+      "actual_slot_fit": false,
+      "excludes": [
+        "read/write mux and comparators",
+        "codec/leases/arbitration",
+        "forward hold",
+        "clock/reset/PG/OBS/pin access",
+        "route/CDC/reverse-credit station state"
+      ],
+      "existing_576_capture_or_return_storage_credit_mm2": 0,
+      "logical_seats": 49152,
+      "mapped_area": false,
+      "max_rows_per_rank": 8192,
+      "per_root_depth": [
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384,
+        384
+      ],
+      "per_shard_seats": [
+        24576,
+        24576
+      ],
+      "positions": 6,
+      "raw_record_bits": 3391488,
+      "raw_record_reservation_per_shard_mm2": [
+        2.7196342272,
+        2.7196342272
+      ],
+      "shared_owner_and_pointer_FF_lower_bound": 3798,
+      "unified_FF_at50pct_lower_bound_mm2": 1.9801307952,
+      "unified_FF_body_lower_bound_mm2": 0.9900653976
+    },
+    "fault_fix": "bindonlyunusedR-1nodefault bits to0 inadditive selectedwrapper; noactualnode fault masked,0latency; originals pinned",
+    "internal_queue_gate": "reuse current tagwalker/ReturnNode/ReturnRoot classes, current622 plans+actualacceptedLAT8 events; assert every64/128queue/holdslot/drain. Bridge cannotfix element/node/root overflow. Reject uncertifiedphase ratherthan assume safety.",
+    "name": "ONE_PHASE_RESERVED_NO_READY_OUTPUT_BRIDGE_DEFAULT_OFF",
+    "output": "128 independentroot banks across2dies; phase-shared full169+physicalshard owner; retain rawrow/pos/fp32/bf16/error; reserve-before-launch avoidsmidphase backpressure. No crossdie readmux.",
+    "positive_provider_contract": {
+      "actual_guarantee": false,
+      "captured_credit_cycles": null,
+      "forward_data_cycles": null,
+      "grant_gap_cycles": 1,
+      "parallel_publish_ports": 128
+    },
+    "publication": "sourceformatter and exclusive all12writer exclusion, actualVMpostNBA completion; W2 nativeoutputs given actualphase-specific budget,never576seatassumption.",
+    "readmux_clockreset_routes_SSFF_not_qualified": true,
+    "retirement": "no phase rearm untilallactualrows captured+published+positivecapturedcredits/packetdebts0; qualifiedpreF; VMversion lease separatelythrough actualSUreadR+2",
+    "smallest_per_phase_required_seats": "sum positions*actual compiledrows; uniform fulltarget bound uses8192maxrows and6selectedpositions; source3bit positionraw8cap separate, not silentlyused"
+  },
+  "traffic": {
+    "actual_accepted_traffic": null,
+    "cfg_bits_per_phase_per_shard": 2457600,
+    "cfg_local_parallel_ports_per_shard": 2048,
+    "cfg_parallel_cycles": 25,
+    "cfg_words_per_phase_per_shard": 51200,
+    "choice_alternatives": 276909,
+    "formats": {
+      "bf16": 139,
+      "fp4": 46080,
+      "fp8": 290
+    },
+    "head_provider_not_included": true,
+    "largest": {
+      "K": 1280,
+      "alias": "wq_b",
+      "format": "fp8",
+      "phase": 2,
+      "rows": 8192,
+      "shards": [
+        4096,
+        4096
+      ],
+      "stage": 0,
+      "words": 327680
+    },
+    "per_alias": {
+      "compressor.wgate": {
+        "calls": 3,
+        "rows": 384
+      },
+      "compressor.wkv": {
+        "calls": 4,
+        "rows": 512
+      },
+      "engram.wkv": {
+        "calls": 2,
+        "rows": 12800
+      },
+      "gate": {
+        "calls": 40,
+        "rows": 3840
+      },
+      "indexer.weights_proj": {
+        "calls": 8,
+        "rows": 256
+      },
+      "indexer.wk": {
+        "calls": 4,
+        "rows": 512
+      },
+      "indexer.wq_b": {
+        "calls": 8,
+        "rows": 32768
+      },
+      "shared.w1": {
+        "calls": 40,
+        "rows": 23040
+      },
+      "shared.w2": {
+        "calls": 40,
+        "rows": 51200
+      },
+      "shared.w3": {
+        "calls": 40,
+        "rows": 23040
+      },
+      "w1": {
+        "calls": 240,
+        "rows": 138240
+      },
+      "w2": {
+        "calls": 240,
+        "rows": 307200
+      },
+      "w3": {
+        "calls": 240,
+        "rows": 138240
+      },
+      "wkv": {
+        "calls": 40,
+        "rows": 5120
+      },
+      "wo_a.group0": {
+        "calls": 40,
+        "rows": 40960
+      },
+      "wo_a.group1": {
+        "calls": 40,
+        "rows": 40960
+      },
+      "wo_b": {
+        "calls": 40,
+        "rows": 204800
+      },
+      "wq_a": {
+        "calls": 40,
+        "rows": 12800
+      },
+      "wq_b": {
+        "calls": 40,
+        "rows": 327680
+      }
+    },
+    "phases": 46509,
+    "potential_singleposition_perrank": {
+      "calls": 1149,
+      "potential_macro_words": 100900864,
+      "potential_raw_root_bits": 94140288,
+      "potential_rows": 1364352,
+      "remote_rows": 657664
+    },
+    "selected18": [
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I66",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I67",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I68",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I69",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I72",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I73",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I79",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I82",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I83",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I84",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I87",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I88",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I89",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I92",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 10,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": false,
+        "node": "L0.I93",
+        "per_shard_rows": [
+          320,
+          256
+        ],
+        "rows": 576,
+        "source_phase_example": 11,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I94",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I97",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      },
+      {
+        "choices": 384,
+        "native_W2": true,
+        "node": "L0.I100",
+        "per_shard_rows": [
+          640,
+          640
+        ],
+        "rows": 1280,
+        "source_phase_example": 12,
+        "stage_example": 0
+      }
+    ],
+    "source_native_admission_failures": [
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L2.I24"
+      },
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L2.I25"
+      },
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L8.I24"
+      },
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L8.I25"
+      },
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L14.I34"
+      },
+      {
+        "failures": [
+          "round"
+        ],
+        "node": "L14.I35"
+      }
+    ]
+  },
+  "unified_additive_terms": {
+    "added_MACs_per_cycle": 0,
+    "all_root_bytes_per_edge_peak": 1104.0,
+    "arithmetic_and_reduction_unchanged": true,
+    "clock_domain_CDC_latency": null,
+    "compiled_site_count_per_die": 2048,
+    "floorplan_admitted": false,
+    "root_bytes_per_edge_per_shard_peak": 552.0,
+    "tracks_available": null,
+    "tracks_required_before_controls": 8832,
+    "writer_address_data_valid_bits_per_edge_peak": 8064
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "capacity": {
+    "key_sectors_for_current_layout_users_per_stack": 306937856,
+    "key_sectors_for_model_users_per_stack": 482410496,
+    "key_sectors_for_model_users_per_stack_if_striped": 120602624,
+    "key_sectors_per_user_per_stack_replicated": 557056,
+    "key_sectors_per_user_per_stack_striped": 139264,
+    "max_replicated_users_with_28_bit_key_window": 481,
+    "max_striped_users_with_28_bit_key_window": 1927,
+    "model_users_fit_current_layout": false,
+    "usable_bytes_per_stack": 20250000000,
+    "users_current_replicated_keys": 551,
+    "users_model_striped_keys": 866
+  },
+  "inputs": {
+    "capacity_efficiency": 0.9,
+    "ckv_bytes_per_row": 288,
+    "context": 1048576,
+    "key_bytes_per_row": 68,
+    "rows_per_die_per_user": 262144,
+    "stack_capacity_bytes": 22500000000,
+    "stacks_per_die": 4,
+    "tp_dies": 4,
+    "window_bytes_per_die_per_user": 135168
+  },
+  "isolation": {
+    "multiuser_key_address_isolation": false,
+    "reason": "writer and scanner accept an early physical user base and a standalone two-user gate passes, but the die still ties that base low and no full-token namespace gate exists",
+    "ring_layout_die_multiuser_opt_in": true,
+    "ring_layout_note": "this record prices the replicated key layout (the die default); the W11 ring layout's opt-in IDX_RING_MU keys the base from the user id: results/arch/w11_v41_hbm_region_preflight_ring.json",
+    "standalone_two_user_key_address_isolation": true
+  },
+  "per_stack_per_user_bytes": {
+    "ckv_striped": 18874368,
+    "key_replicated": 17825792,
+    "key_striped": 4456448,
+    "model_striped_keys": 23364608,
+    "rtl_replicated_keys": 36733952,
+    "window": 33792
+  },
+  "region_arithmetic": {
+    "current_kv_sector_formula_uses_32_bit_integer": true,
+    "unpacked_example_exceeds_32_bit": true,
+    "unpacked_example_kv_aw": 26,
+    "unpacked_example_users": 866,
+    "unpacked_example_words": 58116276224
+  },
+  "schema": "v41_hbm_region_preflight_v1",
+  "scope": "1M ratio-1 layer-20 die; packed FP4 CKV striped across four stacks; active default key writer/reader replicated; opt-in sharded writer/reader has exact two-user timed-HBM roundtrip but no controller namespace, full-token or throughput claim",
+  "sharding": {
+    "controller_namespace_integrated": false,
+    "correctness_reader_opt_in_available": true,
+    "multiuser_slice_integrated": false,
+    "read_address_mapper_available": true,
+    "read_scheduler_integrated": false,
+    "two_user_physical_gate": true,
+    "writer_opt_in_available": true
+  },
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "rtl/chip/ot_chip_v41x_die.sv": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
+    "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735"
+  },
+  "status": "capacity_mismatch",
+  "widths": {
+    "controller_full_profile_header_overlap_bits": 0,
+    "controller_full_profile_user_id_bits": 10,
+    "current_controller_user_id_bits": 8,
+    "current_index_sector_address_bits": 28,
+    "full_mode_header_idx_val_overlap_bits": 0,
+    "full_mode_header_pos_idx_overlap_bits": 0,
+    "full_mode_header_tok_addr_overlap_bits": 0,
+    "historical_reduced_controller_user_id_bits": 8,
+    "index_sector_bits_for_current_layout_users": 29,
+    "user_id_bits_for_current_layout_users": 10,
+    "user_id_bits_for_model_users": 10
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "PASS_UNCHANGED_K512_CONSUMER_RETIREMENT",
+  "source": {
+    "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+    "path": "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv",
+    "sha256": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166"
+  },
+  "lifecycle_source": {
+    "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+    "path": "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+    "sha256": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d"
+  },
+  "bench_sha256": "d9d6d6416161174fc420424be2e5553a0d1e04543a5cf8180b01ceb15367acec",
+  "cases": {
+    "stalled_then_drained": {
+      "returncode": 0,
+      "log": "PASS_CONSUMER_RETIRED rows=512 beats=128 mode=0 last_stall=0 actual_desc_done=1\n",
+      "matched_expectation": true
+    },
+    "permanent_output_stall_rejected": {
+      "returncode": 1,
+      "log": "FATAL: /home/ubuntu/w17-consumer-retire-h5cq0e1w/tb.sv:46: finite consumer drain failed rows=8 beats=0 mode=1 merger=0\n       Time: 6000000 Scope: tb\n",
+      "matched_expectation": true
+    },
+    "final_beat_stall_then_drained": {
+      "returncode": 0,
+      "log": "PASS_CONSUMER_RETIRED rows=512 beats=128 mode=2 last_stall=20 actual_desc_done=1\n",
+      "matched_expectation": true
+    },
+    "engine_not_retired_rejected": {
+      "returncode": 1,
+      "log": "FATAL: /home/ubuntu/w17-consumer-retire-h5cq0e1w/tb.sv:46: finite consumer drain failed rows=512 beats=128 mode=3 merger=1\n       Time: 6000000 Scope: tb\n",
+      "matched_expectation": true
+    }
+  },
+  "scope": "actual fullK512 merger two-buffer drain and final emit handshake only; synthetic zero payload, actual descriptor DRAIN-to-IDLE exercised with fixture engine_idle delayed7cycles (test-only, NOT actual engine service bound); no attention arithmetic/storage-provider, peertransport, wholeprelease, fulltoken or physical qualification",
+  "hardware_admission": false
+}

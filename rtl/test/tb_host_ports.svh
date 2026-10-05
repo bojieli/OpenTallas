@@ -1,0 +1,38 @@
+// Host-side ports shared by the host-interface simulation tops (tb_host_*.sv):
+// the register BAR (AXI4-Lite slave), the DMA master (AXI4, single 64-bit
+// beats) and the interrupt.  rtl/test/host_bridge_harness.cpp drives them:
+// it is the host CPU's register accesses, host memory, and the interrupt
+// controller that receives MSI writes.
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        s_awvalid,
+    output wire        s_awready,
+    input  wire [11:0] s_awaddr,
+    input  wire        s_wvalid,
+    output wire        s_wready,
+    input  wire [31:0] s_wdata,
+    output wire        s_bvalid,
+    input  wire        s_bready,
+    input  wire        s_arvalid,
+    output wire        s_arready,
+    input  wire [11:0] s_araddr,
+    output wire        s_rvalid,
+    input  wire        s_rready,
+    output wire [31:0] s_rdata,
+    output wire        m_arvalid,
+    input  wire        m_arready,
+    output wire [63:0] m_araddr,
+    input  wire        m_rvalid,
+    input  wire [63:0] m_rdata,
+    input  wire [1:0]  m_rresp,
+    output wire        m_awvalid,
+    input  wire        m_awready,
+    output wire [63:0] m_awaddr,
+    output wire        m_wvalid,
+    input  wire        m_wready,
+    output wire [63:0] m_wdata,
+    output wire [7:0]  m_wstrb,
+    input  wire        m_bvalid,
+    input  wire [1:0]  m_bresp,
+    output wire        irq,
+    output wire        eng_busy

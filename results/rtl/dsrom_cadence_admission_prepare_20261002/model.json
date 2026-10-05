@@ -1,0 +1,26 @@
+{
+  "L0_schedule_delta_words_per_position": 224,
+  "L0_wholeprogram_cycles": null,
+  "L20_scope": "NOT_ENUMERATED: pinned existing phase metadata pending owner handoff; legacy runtime retired and not reconstructed from guesses",
+  "coordination": {
+    "Maxwell_endpoint": "unregistered; messages durable",
+    "Maxwell_message_ids": [
+      141,
+      143
+    ],
+    "parent_forward_message": 142
+  },
+  "engine_FIFO_change": 0,
+  "engine_ports_added": 0,
+  "engine_registers_added": 0,
+  "engine_stages_added": 0,
+  "fulltoken_qualified": false,
+  "next_review": "Review source diagnostic and strict admission; wholeprogram phase ledger joins Maxwell; runner pins and complete L20 metadata required before fresh execution GO",
+  "physical_frequency_qualified": false,
+  "selected_incremental_ns_at_fixture_833ps": 39.984,
+  "selected_incremental_schedule_cycles": 48,
+  "status": "SOURCE_READY_PHASE_JOIN_INCOMPLETE_NO_COMPILE",
+  "task": "D2",
+  "tests_passed": 14,
+  "wholefield_geometry_change": false
+}

@@ -1,0 +1,122 @@
+{
+  "R49_home_source": "4cc368a46",
+  "admissions": {
+    "PR": false,
+    "STA": false,
+    "engine_RTL": false,
+    "frontend": false,
+    "fulltoken": false,
+    "physical_fit": false
+  },
+  "area_or_timing_qualification_credit": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_source_wire_family_exceedances": {
+    "0": 428,
+    "1": 328
+  },
+  "cold_artifacts_byte_identical": 6,
+  "inherited_main_byte_identical_inputs": 18,
+  "jobs": {
+    "PVE2_new_jobs": 0,
+    "PVE3_new_jobs": 0,
+    "new_hardware_jobs": 0,
+    "new_remote_jobs": 0,
+    "other_owners_jobs_touched": false
+  },
+  "literal_PG_and_clock_pin_descriptors": "model.json and selector_core_clock_cells.jsonl.gz",
+  "main_baseline": "9fc38ba99",
+  "model_sha256": "67422d0104f488858cfd497b3515bd081c2824389514e43d17b0ea7ab72f3449",
+  "no_clock_uncertainty_relaxation": true,
+  "no_extra_capture_edge_selected": true,
+  "no_stage_die_capacity_changes": true,
+  "preserved_failures": [
+    "prior_home_control_overlap_FAIL.json",
+    "development_failure.json",
+    "prior_unadopted_enclosure.json",
+    "source capture-context timing FAIL",
+    "source1024cycletimeout FAIL; no4096deadline adoption"
+  ],
+  "raw_clock_buffers": 6521,
+  "raw_only_clock_cost_exceeds_previous_whole_owner_floor_by": 627,
+  "raw_primitive_instances": 285305,
+  "remaining_exact_bindings": [
+    {
+      "needed": "Accept one named additional clock bank and current core frame into disjoint instance/debit union; old transport containment not proven, common owner unselected.",
+      "owner": "Maxwell"
+    },
+    {
+      "needed": "Actual698354coreCLK sink assignment to70406sites,118413clockbuffer whole source union, RESETN/SETN sites and pin-via/PG/extractedRC/globalmatchedclock; source backend/model-only gates retained.",
+      "owner": "Epicurus/physical owner"
+    },
+    {
+      "needed": "Pinned separate64-root per-shard drain/control/selector cuts, typed feedback implementation, min/max loaded forward/feedback wire timing, finite accepted read-credit/result-seat counts and reset-safe retirement.",
+      "owner": "Nash"
+    },
+    {
+      "needed": "Causal home-visible/zero-delivery-debt release and accepted consumer deadline at source events; ACK is not visibility.",
+      "owner": "Kepler/Hubble/parent"
+    },
+    {
+      "needed": "Source upstreamCLK driver/phase and controlRESETN release, native signal/clock/PG contacts/vias/OBS, all supply feed/current bounds. M1localrail coverage is not externalPG closure.",
+      "owner": "physical owner/parent"
+    }
+  ],
+  "schema": "R49_NAMED_RAW_AND_SELECTOR_CLOCK_CONSTRUCTION_REVIEW_V1",
+  "selector_clock_allocation": {
+    "actual_core_sink_assignment_routes_parent_root_and_matched_skew_not_bound": true,
+    "already_priced_transport_clock_buffers": 48007,
+    "cell_artifact_sha256": "ab576968dddf57dacdd632b3e561dd2dca101c37b1e94239711cc802404c7b04",
+    "clock_cell_body_um2": 7185.6363599999995,
+    "columns": 48,
+    "complete_reservation_including_current_core_rectangle_headroom_mm2": 2.3226645088799995,
+    "complete_source_reservation_replacing_analytical_clock_floor_with_bank_mm2": 2.32021451484,
+    "conflicts_with_known_field_service_cfg_band_selector_rectangles": [],
+    "core_rectangle_local_colocation_deficit_mm2": 0.011921278680000036,
+    "current_core_rectangle_area_mm2": 1.6848787968,
+    "existing_selector_RESETN_SETN_union_still_required": true,
+    "full_bank_debited_not_only_core_rectangle_deficit": true,
+    "legal_site_reservation_mm2": 0.01438311168,
+    "literal_supply_pin_union_checked": true,
+    "minimum_selector_to_clock_bank_gap_DBU": 4346,
+    "named_clock_sites_are_not_routed_clock_tree_or_deadline_proof": true,
+    "named_site_bank_bbox_DBU": [
+      3129786,
+      8953200,
+      3147930,
+      9745920
+    ],
+    "no_corridor_borrowing_or_core_headroom_credit": true,
+    "no_new_resettable_cells": true,
+    "parent_PG_feed_vias_current_and_pin_escape_not_qualified": true,
+    "predecessor_Maxwell_selector_bbox_DBU": [
+      1000000,
+      8953200,
+      3125440,
+      9744840
+    ],
+    "row_pitch_DBU": 540,
+    "rows": 1468,
+    "separately_added_core_clock_buffers": 70406,
+    "source_additional_core_clock_50pct_mm2": 0.01437127272,
+    "source_commit": "5ff80ab93455caddfce7c2adaed91e0cef0e3b78",
+    "source_current_selector_bbox_DBU": [
+      1000000,
+      8953200,
+      3125440,
+      9745920
+    ],
+    "source_full_reservation_mm2": 2.3202026758800005,
+    "split_into_PAR2_shards_or_ownership_move_not_adopted": true,
+    "total_selector_state_bits": 1174534,
+    "unused_legal_sites": 58
+  },
+  "selector_clock_instances": 70406,
+  "selector_join_source": "5ff80ab93455caddfce7c2adaed91e0cef0e3b78",
+  "source_dependency_count": 36,
+  "source_owner_predecessor": "f082ef70a09d82bcc974d28423b0b40b5cb36dc0",
+  "tests": {
+    "cold": 19,
+    "local": 19,
+    "result": "PASS"
+  }
+}

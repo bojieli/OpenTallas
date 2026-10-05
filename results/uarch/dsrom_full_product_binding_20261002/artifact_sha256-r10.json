@@ -1,0 +1,28 @@
+{
+  "all_metadata_no_payload": true,
+  "build_admitted": false,
+  "candidate_FAIL_preserved": true,
+  "changed_snapshot_and_manifest_rejection_tests_PASS": true,
+  "files": {
+    "results/uarch/dsrom_full_product_binding_20261002/compiled_whole_budget-r7.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093.json": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/229aa835e9d8d9cafe0bb80418eb9c51e885b14e56f0dd369cb6901b553ed560.json": "229aa835e9d8d9cafe0bb80418eb9c51e885b14e56f0dd369cb6901b553ed560",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/38df2b82d4e805d486c1454bab1bf1f6c7cce6289ff310bf98264337f0117b98.json": "38df2b82d4e805d486c1454bab1bf1f6c7cce6289ff310bf98264337f0117b98",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606.json": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342.json": "848a7efb93614485844833877bcd3f2d7821f1ee3c549b70ba56f6ba028d2342",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50.json": "f00ae7314c96791da03f7179f7679ddbba5d7b06d12fe5406d2861c5ce7aaf50",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223.json": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223",
+    "results/uarch/dsrom_full_product_binding_20261002/inputs/pinned_budget_metadata/manifest.json": "907468438e48a34bf76b90d63895027d33211b4b55ed942a07e88c3ac2d47f31",
+    "results/uarch/dsrom_full_product_binding_20261002/tests-selfcontained-budget-r15.log": "7040371af15613c02e821ec0eecc1d1330f691ace4cef93a41bfa358822c4103",
+    "tests/test_dsrom_compiled_budget_join.py": "bb0682bb48c5010c7e6b4fb474a04b9e2a777cc1561f1dbbf26fa5f46b6f91ad",
+    "tools/dsrom_compiled_budget_join.py": "91ff797cd109ccd9a2a9c2ff2736deba9d2bba5ce8833b38157fa1963a0136f5"
+  },
+  "new_jobs": 0,
+  "no_git_lookup_and_no_current_receipt_path_test_PASS": true,
+  "prerequisite": "9fb6ee7012a3215156ddc87b2e8fc241be4a8b10",
+  "r6_r7_byteidentical": true,
+  "receipt_r4_sha256": "f8a2f1333f31dcded2bf068ce4a21a9741f9cf2e88e58baba0b71386802a4223",
+  "schema": "opentallas.dsrom.selfcontained-budget-input-review.v1",
+  "source_inputs_materialized": 7,
+  "tests_PASS": 10
+}

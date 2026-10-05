@@ -1,0 +1,139 @@
+{
+  "time_utc": "2026-10-03T00:44:04.523321+00:00",
+  "source_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "experiment_pid": 2006920,
+  "start_ticks": 53282142,
+  "gate": "CLOSED_NO_EXISTING_NONINTERFERING_SDC_WRITER",
+  "current_stage": "global_place.tcl",
+  "current_stage_write_sdc_calls": [],
+  "POST_GLOBAL_PLACE_TCL_preconfigured": false,
+  "stage_output_chain": [
+    {
+      "stage": "floorplan",
+      "input": "1_synth.odb+1_synth.sdc",
+      "writes": "2_1_floorplan.sdc;Makefile copies to2_floorplan.sdc",
+      "already_completed_and_deleted": true
+    },
+    {
+      "stage": "global_place",
+      "input": "3_2_place_iop.odb+2_floorplan.sdc",
+      "writes": "3_3_place_gp.odb,report,metrics;NO SDC"
+    },
+    {
+      "stage": "resize",
+      "input": "3_3_place_gp.odb+2_floorplan.sdc",
+      "writes": "3_4_place_resized.odb;NO SDC"
+    },
+    {
+      "stage": "detail_place",
+      "input": "3_4_place_resized.odb+2_floorplan.sdc",
+      "writes": "3_place.sdc",
+      "requires_missing_predecessor_first": true
+    }
+  ],
+  "make_sdc_alias_source": [
+    {
+      "line": 468,
+      "text": "$(RESULTS_DIR)/2_floorplan.sdc: $(RESULTS_DIR)/2_1_floorplan.odb"
+    },
+    {
+      "line": 469,
+      "text": ""
+    },
+    {
+      "line": 470,
+      "text": ".PHONY: do-floorplan"
+    },
+    {
+      "line": 515,
+      "text": "# detail_place writes 3_place.sdc alongside 3_5_place_dp.odb (constraints"
+    },
+    {
+      "line": 516,
+      "text": "# are unchanged during placement), mirroring how synth writes 1_synth.sdc."
+    },
+    {
+      "line": 517,
+      "text": "$(RESULTS_DIR)/3_place.sdc: $(RESULTS_DIR)/3_5_place_dp.odb"
+    },
+    {
+      "line": 518,
+      "text": ""
+    },
+    {
+      "line": 519,
+      "text": ".PHONY: do-place"
+    }
+  ],
+  "source_clock_intent": {
+    "time_unit": "ps",
+    "clock": "core_clk",
+    "clock_port": "clk",
+    "period": 1111,
+    "setup_uncertainty": 60,
+    "hold_uncertainty": 25,
+    "input_delay": 0,
+    "input_objects": "all_inputs -no_clocks",
+    "output_delay": 0,
+    "output_objects": "all_outputs",
+    "load": 3.898,
+    "load_unit": "source-view capacitance units",
+    "max_fanout": 32,
+    "max_fanout_objects": "current_design",
+    "false_path_from": "rst_n"
+  },
+  "source_constraint_sha256": "360040de16ad28c433a94d550c87806ce4cbe3237e9baea0604c0640ef1df044",
+  "actual_live_SDC_captured": false,
+  "clock_comparison_verdict": "NOT_RUN_NO_CAPTURE: source intent only,not equivalence of deletedSTA-produced SDC",
+  "complete_predecessor_condition": "Same-run actual full STA SDC capture or independently pinned exact prior artifact,then all clocks/uncertainties/delays/loads/fanout/exceptions/objectbindings reconciled;source preparedconstraint.sdc is never substituted",
+  "no_injection_pipes_debugger_signal_or_restart": true,
+  "Tcl_writer_sources": {
+    "global_place.tcl": {
+      "sha256": "05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33",
+      "bytes": 2478,
+      "write_sdc_calls": []
+    },
+    "floorplan.tcl": {
+      "sha256": "9ad31d01c305cbb9117f1579504950dde3810cd0de1d53bc0bbe8edc8b65db77",
+      "bytes": 6599,
+      "write_sdc_calls": [
+        {
+          "line": 172,
+          "text": "orfs_write_sdc $::env(RESULTS_DIR)/2_1_floorplan.sdc"
+        }
+      ]
+    },
+    "resize.tcl": {
+      "sha256": "94a124271b030d3a23caa7bcce2d46fc5b5fb997b7ec01f1fbb99ffde23dd4dd",
+      "bytes": 1341,
+      "write_sdc_calls": []
+    },
+    "detail_place.tcl": {
+      "sha256": "575dce950d84e8e7c8c8c0ad5fdfcee5111b1447354432aa380ca57d8a2b0ad6",
+      "bytes": 1278,
+      "write_sdc_calls": [
+        {
+          "line": 46,
+          "text": "orfs_write_sdc $::env(RESULTS_DIR)/3_place.sdc"
+        }
+      ]
+    },
+    "util.tcl": {
+      "sha256": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81",
+      "bytes": 10585,
+      "write_sdc_calls": []
+    },
+    "load.tcl": {
+      "sha256": "bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934",
+      "bytes": 1705,
+      "write_sdc_calls": []
+    },
+    "flow.sh": {
+      "sha256": "48f3911f8f90daa20e4cb07b1821d495744125e808ba14f5a1c1051c3b39bade",
+      "bytes": 747,
+      "write_sdc_calls": []
+    }
+  },
+  "current_process": "    PID STAT     TIME   RSS\n2006920 Rl   1-08:09:44 87280720\n",
+  "watcher_unit": "MainPID=2093643\nActiveState=active\n"
+}

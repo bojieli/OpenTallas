@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "scope": "Matched M6/N53/K80 full fault/recovery campaigns. First-success counter is cumulative from bench start, not pure inference latency. Different abort positions can affect aggregate work.",
+  "source_manifests_match": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "0566ec9a49f1f94eb839606f2ea9f9393fef9f5bdee8da194df50c949b9e3951",
+      "pass_first": false,
+      "campaign_cycles": 105552,
+      "first_success_cycle": 13734,
+      "first_weight_bytes": 17596,
+      "first_activation_fills": 720
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first.json",
+      "sha256": "89f967c4d6060cec468f64ba7089e85a49e738cf9b6a6a4731fdfc4aa9fbbf50",
+      "pass_first": true,
+      "campaign_cycles": 99777,
+      "first_success_cycle": 13600,
+      "first_weight_bytes": 17596,
+      "first_activation_fills": 1440
+    }
+  ],
+  "outputs_each": 2234,
+  "writes_and_acknowledgements_each": 295,
+  "campaign_cycle_reduction_percent": 5.471236925875401
+}

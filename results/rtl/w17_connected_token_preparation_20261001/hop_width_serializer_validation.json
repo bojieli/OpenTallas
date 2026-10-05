@@ -1,0 +1,101 @@
+{
+  "scope": "synthetic analytical port/calendar tests only; no actualhopbinding/timingclaim",
+  "original_source_commit": "3ff5049481934c5d2768a07999d749f1339d1458",
+  "original_source_sha256": "e43d91fb1d4ffd060b381cc33b95b838830c1bb5971d4ae00b64aec827e2f3f4",
+  "original_probe_retained": true,
+  "original_probe_errors": [
+    "hop calendar/ports/route/area/replica accounting incomplete"
+  ],
+  "explicit_per_replica_capacity": true,
+  "negative_cases": 5,
+  "serializer_positive": {
+    "beats": 2,
+    "final_valid_bits": 1024,
+    "high_water_beats": 1,
+    "blocked_source_edges": 0,
+    "completed_tick": 6144,
+    "completed_ns_exact": [
+      5120,
+      3
+    ],
+    "beat_calendar": [
+      {
+        "sequence": 0,
+        "source_tick": 0,
+        "destination_tick": 3072,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1024
+      },
+      {
+        "sequence": 1,
+        "source_tick": 3072,
+        "destination_tick": 6144,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1024
+      }
+    ],
+    "aggregate_wire_bits_per_source_cycle": 1,
+    "scope": "analytical registered finite queue with explicit serializer; provided latency includes transport/CDC, no RTL timing proof"
+  },
+  "consumer_held_packet_credit_positive": {
+    "beats": 2,
+    "final_valid_bits": 1024,
+    "high_water_beats": 1,
+    "blocked_source_edges": 1,
+    "completed_tick": 6147,
+    "completed_ns_exact": [
+      3415,
+      2
+    ],
+    "beat_calendar": [
+      {
+        "sequence": 0,
+        "source_tick": 0,
+        "destination_tick": 3075,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1024
+      },
+      {
+        "sequence": 1,
+        "source_tick": 3075,
+        "destination_tick": 6147,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1024
+      }
+    ],
+    "aggregate_wire_bits_per_source_cycle": 1,
+    "scope": "analytical registered finite queue with explicit serializer; provided latency includes transport/CDC, no RTL timing proof"
+  },
+  "four_replica_wide_positive": {
+    "beats": 2,
+    "final_valid_bits": 1024,
+    "high_water_beats": 1,
+    "blocked_source_edges": 0,
+    "completed_tick": 6,
+    "completed_ns_exact": [
+      5,
+      3
+    ],
+    "beat_calendar": [
+      {
+        "sequence": 0,
+        "source_tick": 0,
+        "destination_tick": 3,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1
+      },
+      {
+        "sequence": 1,
+        "source_tick": 3,
+        "destination_tick": 6,
+        "valid_bits": 1024,
+        "serialized_source_edges": 1
+      }
+    ],
+    "aggregate_wire_bits_per_source_cycle": 1024,
+    "scope": "analytical registered finite queue with explicit serializer; provided latency includes transport/CDC, no RTL timing proof"
+  },
+  "launch_allowed": false,
+  "adopt": false,
+  "source_sha256": "cc68cbccfbc7b24c08f868b1faa2d02a6cd0e699dca16f74d7fb70292a8e5ce0"
+}

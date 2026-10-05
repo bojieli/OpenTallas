@@ -1,0 +1,15 @@
+  first_block: max=409c0218 rescale=00000000 exps=64
+  later_block: max=4097e458 rescale=3dd8966c exps=65
+  padding_lanes: max=bed8427d rescale=3f0fad04 exps=8
+  all_padding_later: max=40500000 rescale=3f800000 exps=1
+  all_padding_negative_running: max=c0200000 rescale=3f800000 exps=1
+  max_is_negative_zero: max=00000000 rescale=00000000 exps=64
+  score_equals_max: max=3fc00000 rescale=00000000 exps=64
+  running_max_wins: max=40c00000 rescale=3f800000 exps=65
+  wide_offsets: max=00000000 rescale=3f800000 exps=65
+PROFILE reuse=1 cycles=1356253 physical_evals=276 hits=121
+PASS a3_softmax_block: 9 cases match exp_cr32 on max, rescale and every probability, and 2 refusals fail closed
+- rtl/test/tb_a3_softmax_block.sv:136: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3ms; walltime 12.339 s; speed 219.825 us/s
+- Verilator: cpu 12.203 s on 1 threads; allocated 7 MB

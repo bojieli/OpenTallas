@@ -1,0 +1,105 @@
+{
+  "selection": "FIXED_LATENCY_IN_ORDER_READ_PIPELINE",
+  "default_enabled": false,
+  "fulltile_adopted": false,
+  "read_issue_interval_core_edges": 1,
+  "leaf_read_response_core_edges": 2,
+  "leaf_old_read": true,
+  "original_read_core_edges": 1,
+  "added_edges_per_operation": 1,
+  "MEM_EXTRA": [
+    0,
+    1
+  ],
+  "total_memory_tag_delay": "original MEM_EXTRA + 1; preserve original arithmetic stages/reduction order",
+  "paired_read_bytes_per_core_edge": 64,
+  "read_boundary_bits_per_core_edge": 512,
+  "read_reserved_columns": 2,
+  "read_capacity": "leaf has 2 protected 288-bit column captures; fixed pipeline valid/bank tags exactly2 stages; no outstanding queue or unknown capacity",
+  "fault_policy": "GO requires actual installed span published retained. Any issued read not actually accepted or scheduled response missing faults/holds retirement; no fake ready, no dropped read. Caller cannot pause response consumption while requests in flight. Drain fixed readpipe before mode/operation turnover.",
+  "span_dependency": "actual virtual24 originalsegtable+held installed descriptor, no resident-sidx0 physical inference or virtualbank truncation",
+  "bank_tag_pipeline": {
+    "bank_payload_bits": 12,
+    "valid_payload_bits": 4,
+    "sticky_bits": 1,
+    "protected_control_bits": 72,
+    "control_encode_decode64_instances": 2
+  },
+  "extra_tile_state": {
+    "X_delay_bits": 128,
+    "KV_LOCAL0_delay_bits": 2048,
+    "KV_LOCAL1_delay_bits": 512,
+    "code_selection_bits": 5,
+    "code_valid_bits": 1,
+    "matvec_tag_delta": "TW=167 at AW24/NW18, u_mt174 +u_mtt18 +u_mv1; total193 FF per tile",
+    "FF_body_per_bit_um2": 0.2916,
+    "matvec_tag_bits": 174,
+    "matvec_round_bits": 18,
+    "matvec_valid_extra_bits": 1,
+    "bank_select_extra_bits": 5,
+    "code_valid_extra_bits": 1,
+    "per_tile_added_bits_KV_LOCAL0": 2375,
+    "per_tile_added_bits_KV_LOCAL1": 839,
+    "all1536_KV_LOCAL0_added_FF_floor_um2": 1063756.8,
+    "issued_response_fault_guard_bits": 3,
+    "issued_response_fault_guard_FF_body_floor_um2": 0.8748
+  },
+  "read_mux": {
+    "output_bits": 2660,
+    "payload_steering_bits": 2560,
+    "virtual_bank_compare_bits": 6,
+    "positive_logic_gate_um2_proxy": 4,
+    "steering_area_screen_um2": 10240,
+    "control_comparison_screen_um2": 120,
+    "codec_route_loaded_SSFF": false,
+    "bank_comparators": 10
+  },
+  "MEM_EXTRA_policy": "PIPE adapter always0; tile owns original optional CODE capture once. Original local/global KV request-qualified capture AND HOLD unchanged, followed by D1. X D(MEM_EXTRA+1). All matvec tag/valid/round/gm/first/wsrc originalMEM_EXTRA+1. No unconditional replacement of held KV capture.",
+  "clock": "same actual core clock for leaf+tile pipeline, no private clocks or active clockskip. GO admission fullselectedspan residency/publication; any external wholeengine stall requires complete pipeline drain or holding ALL memory/tag participants, not assumed.",
+  "single_user_price": {
+    "resident_selected_stage_added_tail_edges": 1,
+    "II_changed": false,
+    "II_baseline": 1,
+    "II_selected": 1,
+    "extra_tail_ns_at_1p2GHz": 0.8333333333333334,
+    "full_token_delta_unknown": true,
+    "whole_window_staging": "original HBM transfer bytes already charged; requiring publication before GO can expose additional wait, measured before whole adoption"
+  },
+  "rejected_alternative": "One outstanding elastic adapter II3/4 unsuitable for streaming ME; retained component source only, not adopted fulltile",
+  "original_source_pins": {
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+  },
+  "original_source_commit": "a59187cd5",
+  "minimal_parent": {
+    "module": "ot_qwen_hbm_code_tile_pair_parent",
+    "tile_id": 0,
+    "columns": [
+      0,
+      1
+    ],
+    "GT": 6144,
+    "TG": 4,
+    "SMIN": 7,
+    "CODE_BANKS": 5,
+    "extra_parent_state_bits": 2,
+    "extra_parent_FF_body_um2": 0.5832,
+    "extra_route_wires": "actual owned465+legacy/protectedROM2660+tag/control pins already component debit; new2-way legacy/protected mux2560steeringbits at4um2 screen10424incl46compare/muxcontrol allowance; buffers/loadedroute unknownpositive",
+    "new_protocol": false,
+    "publication": "real externalinstalled/published/retained sourcepins, no privatevisible->globalready tie",
+    "read_pipe_empty": "only two-edge request/response tail, not destination lease or fabric debt drain",
+    "writer_pending_and_mapper_fault_bits": 2,
+    "writer_pending_and_mapper_fault_FF_body_floor_um2": 0.5832
+  },
+  "service_controller_status": {
+    "Euclid_revised_service_SS_ps": -21.277,
+    "FF_ps": 7.988,
+    "DRV": 0,
+    "closes_1p2GHz": false,
+    "component_clock_bound_GHz": 1.17,
+    "whole_128_PC_rate_qualified": false,
+    "controller_selected_as_833ps": false,
+    "tile_gate_scope": "Manual actual returned-port stimulus through existing ownership crossing, no physical controller/signoff qualification"
+  }
+}

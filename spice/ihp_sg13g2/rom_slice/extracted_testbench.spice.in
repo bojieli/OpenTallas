@@ -1,0 +1,37 @@
+.title OpenTallas IHP SG13G2 extracted controlled-via ROM read
+.temp @TEMPERATURE_C@
+.lib "@CORNER_LIBRARY@" @CORNER_SECTION@
+.include "@PEX_NETLIST@"
+
+.param VDDVAL=@VDD_V@
+
+VDD VPWR 0 {VDDVAL}
+VSS VGND 0 0
+VPRE PRE 0 PULSE(0 {VDDVAL} 2n 40p 40p 20n 40n)
+VWL WL 0 PULSE(0 {VDDVAL} 2.2n 40p 40p 20n 40n)
+VEN_SELECTED EN_SELECTED 0 {VDDVAL}
+VEN_MASKED EN_MASKED 0 0
+
+* One selected copy proves programmed discharge and absent-via retention.
+XSELECTED VGND VPWR WL EN_SELECTED PRE Q_SELECTED_PRESENT WL EN_SELECTED PRE Q_SELECTED_ABSENT ihp_sg13g2_rom_slice
+* A matched copy with expert-enable low proves the physical masking path.
+XMASKED VGND VPWR WL EN_MASKED PRE Q_MASKED_PRESENT WL EN_MASKED PRE Q_MASKED_ABSENT ihp_sg13g2_rom_slice
+
+CLOAD_SELECTED_PRESENT Q_SELECTED_PRESENT 0 @OUTPUT_LOAD_FF@f
+CLOAD_SELECTED_ABSENT Q_SELECTED_ABSENT 0 @OUTPUT_LOAD_FF@f
+CLOAD_MASKED_PRESENT Q_MASKED_PRESENT 0 @OUTPUT_LOAD_FF@f
+CLOAD_MASKED_ABSENT Q_MASKED_ABSENT 0 @OUTPUT_LOAD_FF@f
+
+.tran 2p 8n
+.measure tran v_present FIND v(xselected.bl_present) AT=5n
+.measure tran v_absent FIND v(xselected.bl_absent) AT=5n
+.measure tran v_masked FIND v(xmasked.bl_present) AT=5n
+.measure tran sense_present_v FIND v(Q_SELECTED_PRESENT) AT=5n
+.measure tran sense_absent_v FIND v(Q_SELECTED_ABSENT) AT=5n
+.measure tran sense_masked_v FIND v(Q_MASKED_PRESENT) AT=5n
+.measure tran read_margin PARAM='v_absent-v_present'
+.measure tran discharge_delay TRIG v(WL) VAL='VDDVAL/2' RISE=1 TARG v(xselected.bl_present) VAL='VDDVAL/2' FALL=1
+.measure tran read_energy INTEG par('-v(VPWR)*i(VDD)') FROM=0n TO=5n
+.measure tran inactive_leakage RMS i(VDD) FROM=6n TO=7n
+
+.end

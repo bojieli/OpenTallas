@@ -1,0 +1,69 @@
+{
+  "status": "PASS_SELECTED_ACTUAL_GRAPH_SUBGATES_FULL_SOURCE_PHYSICAL_ADMISSION_OPEN",
+  "map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "source_commit": "752fffd8a7dd31742f383ca59b89598db51d7222",
+  "address": {
+    "actual_FFs": 24,
+    "low_address_FFs": 12,
+    "macro_low_address_pin_links": 120,
+    "high_address_FFs": 12,
+    "named_617884_to617895": "unused dangling net labels, not source constants or evidence of absent FFs",
+    "FF657178": "anonymous high-address decode FF; individual cur-bit identity not assumed",
+    "read_producer_FF": "$auto$ff.cc:337:slice$650591",
+    "bank_decode_truth_patterns": 8192,
+    "legal_range": [
+      0,
+      20479
+    ],
+    "all_other_addresses_inhibit_CE": true,
+    "individual_cur_to_address_transitions": "OPEN, no bank-independent bit-order claim for high zero-check group"
+  },
+  "KV": {
+    "raw_code_capture_FFs": 512,
+    "actual_raw_D_pin_and_hold_mux_unique_bit_witnesses": 512,
+    "named_cap_unique64": "insufficient labels; actual storage deficit not established",
+    "raw_code_width": 512,
+    "decoded_FP32_width": 2048,
+    "source_constant_zero_decoded_bits": 1280,
+    "meaningful_decoded_bits_at_actual_MEM_PIPE_D_QN_pins": 768,
+    "source_literal_values_per_code": 256,
+    "unused_decoder_labels_replaced_by_source_and_actual_pin_witnesses": 128,
+    "operand_Q_to_multiplier_bit_order": "OPEN"
+  },
+  "controls": {
+    "early_select_to_bank_term": 5,
+    "logical_mask_nextstate_and_reset_pin_links": 80,
+    "physical_mask_FFs": 30,
+    "physical_strobe_FFs": 2,
+    "required_counts": [
+      80,
+      5
+    ],
+    "masked_merge_bits": 512,
+    "assignments_per_merge_bit": 1024
+  },
+  "initialization_and_driven_admission": {
+    "actual_provider_drives_known_accepted_ib_and_start": "OPEN",
+    "actual_clock_reset_phase_pulse_slew": "OPEN",
+    "source_read_reset_zero": true,
+    "source_active_pend_reset_zero": true,
+    "source_cur_and_wsrc_initialized_on_accepted_go": true,
+    "source_address_word_not_reset": "must prove read qualification after initialization; do not zero-fill initial state",
+    "conditional_known_input_invariant": "proposal only; requires actual parent source/provider contract, not bench assumptions",
+    "stored_Z": "FAIL_RETAINED; no fullfourstate PASS"
+  },
+  "physical": {
+    "selected_cell_area_ceiling_um2": 125000,
+    "selected_corridor_um": 96.768,
+    "actual_SS_cell_area_um2": 65983.07303971479,
+    "clock_SS_pin_cap_fF": 45072.757426,
+    "reset_SS_pin_cap_fF": 39868.93575,
+    "85_explicit_FF_and_inversion_price": "Ampere pending; missing53copies already priced",
+    "finite_wires_clock_reset_PG_and_parent_IO": "OPEN",
+    "SSFF": "UNQUALIFIED",
+    "new_map": false,
+    "P_and_R_admitted": false
+  },
+  "Boolean_proofs_two_state_only": true,
+  "focused_tests": 34
+}

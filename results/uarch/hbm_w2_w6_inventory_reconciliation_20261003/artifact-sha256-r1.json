@@ -1,0 +1,33 @@
+{
+  "artifacts": {
+    "results/uarch/hbm_w2_w6_inventory_reconciliation_20261003/cold-replay-r1.json": {
+      "bytes": 535,
+      "sha256": "eaa09438cb21de972cc4767903590de4e6d6de3fa64f83c353f9b103ca374e9a"
+    },
+    "results/uarch/hbm_w2_w6_inventory_reconciliation_20261003/model-r1.json": {
+      "bytes": 8963,
+      "sha256": "9b1a3edd35f5e726766718bb49acd0cfb5eea6716e53140657a036112cfe4981"
+    },
+    "results/uarch/hbm_w2_w6_inventory_reconciliation_20261003/owner-handoff-r1.json": {
+      "bytes": 1596,
+      "sha256": "ca11e676a34545c0dc731a2987cc6c4bcf9fcb9e4e686c968df7677fe21226f1"
+    },
+    "results/uarch/hbm_w2_w6_inventory_reconciliation_20261003/source-pins-r1.json": {
+      "bytes": 2834,
+      "sha256": "d1b35ef162d129588ec267f87d5024a018196c92e0380de097d94ffbb821ff58"
+    },
+    "results/uarch/hbm_w2_w6_inventory_reconciliation_20261003/tests-r1.log": {
+      "bytes": 1613,
+      "sha256": "ed471b0468aa77c19a482ff867cb6318254da5906c0c7bed53a0cd76bb18db8a"
+    },
+    "tests/test_hbm_w2_w6_inventory_reconciliation_r1.py": {
+      "bytes": 5405,
+      "sha256": "2413a528d7ce388e5f6786be3b461c9abf1a39bab3cc4bb6eafb0b1f5cc94afb"
+    },
+    "tools/hbm_w2_w6_inventory_reconciliation_r1.py": {
+      "bytes": 12516,
+      "sha256": "4fe10a7197f975bcc9396da3594958281ad4f97da2b395254817b7c2332de006"
+    }
+  },
+  "schema": "opentallas.hbm.W2-W6-artifact-pins.v1"
+}

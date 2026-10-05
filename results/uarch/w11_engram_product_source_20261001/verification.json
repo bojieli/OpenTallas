@@ -1,0 +1,57 @@
+{
+  "L1_actual_source_pair": null,
+  "RTL_runs": 0,
+  "actual_L14_product": {
+    "CROM64_logical_slice_sha256": "f2297940486c2604a7a4baf8887ed319c264f77cb10ccc3f164c16e01182f377",
+    "FP32_sha256": "ab43ae81a7cc77c56b063a7ba730f5f1535c76d04d1dd8507cb6ad3bca22e9fe",
+    "actual_base": null,
+    "physical_image": false,
+    "read_source": "existing verified raw BF16 parameters only; no golden executor/injected activations"
+  },
+  "admission": false,
+  "checkpoint_payload_reads": 0,
+  "current_DUT_L1_provider": null,
+  "existing_SU_producer_lowering": {
+    "SUN1024_ideal_emits": 20,
+    "VM_C_D_bypassed_read_ports_also_require_pricing": true,
+    "actual_scratch_port_CDC_phase_binding": null,
+    "executed": false,
+    "k_input_bits_per_serial_emit": 32768,
+    "operation": "M1_AB,noBF16round,4x5120",
+    "opt_in_off_default": true,
+    "output_bits_per_serial_emit": 32768,
+    "per_lane_products": 20,
+    "q_input_bits_per_serial_emit": 32768
+  },
+  "full40_execution_bound": false,
+  "live_owner_scope": "145pinnedfiles L0only currentlaunch f741a93a13aacad45efd7d18fea86f7891de9c35ee44d6854dafd3bee3eceecc; nooverlay/restart",
+  "next_dependency": "ExactL1 q/k retained/source-provider authority first, then model/sourceports/scratch/residenthome+producer-consumer binding and runtime phase qualification",
+  "old_4778_program": {
+    "all8_actual_consumer_bases_unbound": true,
+    "qk_generated_consumer_roles": 8,
+    "qk_producer_operations": 0,
+    "symbolicappend_not_physicalimage": true
+  },
+  "producer_sha256": "b4492574c86380174c4dd74ea4b3998078c3f2f459fa0e2d59211fd0b99b5035",
+  "retained_parameter_bytes_per_source_read": 81920,
+  "schema": "opentallas.w11.Engram-generated-source-gate-receipt.v1",
+  "source_commits": [
+    "277279767fcb1b5efc82056db71b5fd3caf6ad04",
+    "65551834cf3a95c9777a2592d180df2273c1e20f"
+  ],
+  "status": "L14_ACTUAL_SOFTWARE_PRODUCT_PASS_L1_SOURCE_GAP_RUNTIME_UNBOUND",
+  "tests": {
+    "actual_L14_perlane_product_checks": 20480,
+    "guards": [
+      "immutable source layer/tensor/dtype/shape/SHA",
+      "no L14 substitute for L1",
+      "program/rank/CROMimage/layer/epoch identity",
+      "exact20480productbits/order",
+      "producer completion/outputquiet must be booleanTrue, X/None/1 rejected",
+      "consumer drain unknown rejected; no premature release"
+    ],
+    "integer_FP32_RNE_comparisons": 522240,
+    "log": "tests_strict_completion.log",
+    "passed": 10
+  }
+}

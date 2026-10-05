@@ -1,0 +1,29 @@
+{
+  "Maxwell_join_scope": "Use exact58stage charged cfg/provider/service identities and retained whole budget. This join audits current descriptor keys but does not invent missing executable address patches or calendars.",
+  "artifacts": [
+    {
+      "fresh_byteidentical": true,
+      "path": "output/join.json",
+      "sha256": "5ee14abf6b75fea4e53a6221ebcff824d9734ca0c3a4a15c666709d7fe86f4c0"
+    },
+    {
+      "fresh_byteidentical": true,
+      "path": "output/weight_descriptor_audit.json.gz",
+      "sha256": "78e3b2f19d5a682e6c07ff742837bff222363add4b2dbbd715f41ca393e79dcf"
+    }
+  ],
+  "commands": [
+    "python3 tools/dsrom_cfg_service_join_r19.py --output /tmp/FRESH_OUTPUT",
+    "python3 -m pytest -q tests/test_dsrom_cfg_service_join_r19.py"
+  ],
+  "dependencies": [
+    "tools/dsrom_cfg_service_join_r19.py",
+    "source_metadata.tar.gz",
+    "snapshot_manifest.json"
+  ],
+  "descriptor_address_patches_and_calendars_bound": false,
+  "jobs": [],
+  "no_successor_or_physical_or_rate_admission": true,
+  "status": "PASS_METADATA_JOIN_ONLY",
+  "tests": 5
+}

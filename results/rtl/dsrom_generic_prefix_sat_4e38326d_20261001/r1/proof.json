@@ -1,0 +1,426 @@
+{
+  "adoption": false,
+  "artifacts": {
+    "generic_drop_carry/witness.json": {
+      "bytes": 552,
+      "sha256": "1a6630edf6c6c4cd53fe06eea535a8b013688d5223c17ca39b4781ce99364b38"
+    },
+    "generic_drop_carry/yosys.log": {
+      "bytes": 280419,
+      "sha256": "34738fdf36b2ed900711e942aff17a593296c7e9211dbddc75793586a6d6ba6f"
+    },
+    "generic_flip_sum_bit0/witness.json": {
+      "bytes": 552,
+      "sha256": "2c933c30f12e90659e65e2d11bd1e7fe3daf4e21f87390d7189ae1bed0372858"
+    },
+    "generic_flip_sum_bit0/yosys.log": {
+      "bytes": 280422,
+      "sha256": "13c9a2fdb606339d75d4286e6fe6ea8e392e06f277c531503028ccae394efba8"
+    },
+    "ot_hdc_ksadd_k_w12/yosys.log": {
+      "bytes": 54844,
+      "sha256": "0add89ca90df58a241e75a918c2f33285565070324acbda06b58e473ea8e11a1"
+    },
+    "ot_hdc_ksadd_k_w24/yosys.log": {
+      "bytes": 122579,
+      "sha256": "41db0d41bedd363ef7ab9767b5334ed13f856c3d636cac7153e0d99ee748d071"
+    },
+    "ot_hdc_ksadd_k_w28/yosys.log": {
+      "bytes": 141179,
+      "sha256": "aa56937dc98d4559daaecccc6558980cac994922c9bf37e8ece6fda743a466d1"
+    },
+    "ot_hdc_ksadd_k_w31/yosys.log": {
+      "bytes": 155129,
+      "sha256": "74f215dda39d512a70f98263c96fcd1a61c3f4efab01487571932f4d6fb70d91"
+    },
+    "ot_hdc_ksadd_k_w48/yosys.log": {
+      "bytes": 279743,
+      "sha256": "e06d9e3f098e23730908430966e3c4eca46477480d05fe4eb7987e9ef4f0dc08"
+    },
+    "ot_hdc_ksadd_k_w8/yosys.log": {
+      "bytes": 40058,
+      "sha256": "ce448d77d8d08b36b8bff03107ffca3421d7cd133526ca11a4836d7f1c58502c"
+    }
+  },
+  "assumptions": [],
+  "cases": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w8/yosys.log",
+      "log_sha256": "ce448d77d8d08b36b8bff03107ffca3421d7cd133526ca11a4836d7f1c58502c",
+      "miter": "module proof(input wire [7:0] a, b, input wire cin,\n  output wire [8:0] actual, expected, output wire equal);\n  wire [7:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(8)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{8{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "097a12c12a7bd9ef8c3a50c9db630c981a285da1de01a4ce2847edb292a720fa",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 8,
+      "witness_sha256": null
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w12/yosys.log",
+      "log_sha256": "0add89ca90df58a241e75a918c2f33285565070324acbda06b58e473ea8e11a1",
+      "miter": "module proof(input wire [11:0] a, b, input wire cin,\n  output wire [12:0] actual, expected, output wire equal);\n  wire [11:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(12)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{12{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "48fd2f9e9f35c3dc4c594db6e542d19610a33aa08e34b8afcf102bed9ed0ff47",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 12,
+      "witness_sha256": null
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w24/yosys.log",
+      "log_sha256": "41db0d41bedd363ef7ab9767b5334ed13f856c3d636cac7153e0d99ee748d071",
+      "miter": "module proof(input wire [23:0] a, b, input wire cin,\n  output wire [24:0] actual, expected, output wire equal);\n  wire [23:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(24)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{24{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "626c3ebf7d9830069560c2834489bb651615e88cab637e32917434863905cba4",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 24,
+      "witness_sha256": null
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w28/yosys.log",
+      "log_sha256": "aa56937dc98d4559daaecccc6558980cac994922c9bf37e8ece6fda743a466d1",
+      "miter": "module proof(input wire [27:0] a, b, input wire cin,\n  output wire [28:0] actual, expected, output wire equal);\n  wire [27:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(28)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{28{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "ff8d05e91720e9b4182c7246ac89579ceac0e38330436ac2e7d1ca2d1fb7824b",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 28,
+      "witness_sha256": null
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w31/yosys.log",
+      "log_sha256": "74f215dda39d512a70f98263c96fcd1a61c3f4efab01487571932f4d6fb70d91",
+      "miter": "module proof(input wire [30:0] a, b, input wire cin,\n  output wire [31:0] actual, expected, output wire equal);\n  wire [30:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(31)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{31{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "3d86457d841156f48b4408f1e6427246e369e0875a0157cfe973297037a62d5d",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 31,
+      "witness_sha256": null
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "PASS",
+      "implementation_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksadd_k_w48/yosys.log",
+      "log_sha256": "e06d9e3f098e23730908430966e3c4eca46477480d05fe4eb7987e9ef4f0dc08",
+      "miter": "module proof(input wire [47:0] a, b, input wire cin,\n  output wire [48:0] actual, expected, output wire equal);\n  wire [47:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(48)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{48{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "049773e55043a809c6a3070b1f8d7e740f2f41f7e78b93bb6f33b9a0ea9493ba",
+      "module": "ot_hdc_ksadd_k",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "PASS",
+      "width": 48,
+      "witness_sha256": null
+    },
+    {
+      "after": "assign cout = 1'b0;",
+      "before": "assign cout = g[L][W];",
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "FAIL",
+      "implementation_sha256": "a696ebebff13f13e54a514a3cb2f7b64f8f9aaca7f8ed13a86666d7947a90aea",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/generic_drop_carry/yosys.log",
+      "log_sha256": "34738fdf36b2ed900711e942aff17a593296c7e9211dbddc75793586a6d6ba6f",
+      "miter": "module proof(input wire [47:0] a, b, input wire cin,\n  output wire [48:0] actual, expected, output wire equal);\n  wire [47:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(48)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{48{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "049773e55043a809c6a3070b1f8d7e740f2f41f7e78b93bb6f33b9a0ea9493ba",
+      "module": "ot_hdc_ksadd_k",
+      "mutation": "generic_drop_carry",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "FAIL",
+      "width": 48,
+      "witness_sha256": "1a6630edf6c6c4cd53fe06eea535a8b013688d5223c17ca39b4781ce99364b38"
+    },
+    {
+      "after": "assign s = ((a ^ b) ^ g[L][W-1:0]) ^ {{(W-1){1'b0}}, 1'b1};",
+      "before": "assign s = (a ^ b) ^ g[L][W-1:0];",
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "-Q",
+        "-T",
+        "-s",
+        "run.ys"
+      ],
+      "expected_verdict": "FAIL",
+      "implementation_sha256": "0fde5615bd6d5e3968d93a2f89c0691f58989eddd1524f0fe8cdd0446a9bff81",
+      "log_path": "results/rtl/dsrom_generic_prefix_sat_4e38326d_20261001/r1/generic_flip_sum_bit0/yosys.log",
+      "log_sha256": "13c9a2fdb606339d75d4286e6fe6ea8e392e06f277c531503028ccae394efba8",
+      "miter": "module proof(input wire [47:0] a, b, input wire cin,\n  output wire [48:0] actual, expected, output wire equal);\n  wire [47:0] s;\n  wire cout;\n  ot_hdc_ksadd_k #(.W(48)) dut (.a(a), .b(b), .cin(cin), .s(s), .cout(cout));\n  assign actual = {cout, s};\n  assign expected = {1'b0, a} + {1'b0, b} + {{48{1'b0}}, cin};\n  assign equal = (actual == expected);\nendmodule\n",
+      "miter_sha256": "049773e55043a809c6a3070b1f8d7e740f2f41f7e78b93bb6f33b9a0ea9493ba",
+      "module": "ot_hdc_ksadd_k",
+      "mutation": "generic_flip_sum_bit0",
+      "returncode": 0,
+      "script": "read_verilog -sv implementation.sv miter.sv\nhierarchy -check -top proof\nproc\nflatten\nopt\ncheck -assert\nsat -prove equal 1 -show a,b,cin,actual,expected,equal -dump_json witness.json -timeout 60\n",
+      "verdict": "FAIL",
+      "width": 48,
+      "witness_sha256": "2c933c30f12e90659e65e2d11bd1e7fe3daf4e21f87390d7189ae1bed0372858"
+    }
+  ],
+  "consumer_authority": "Parent confirms these consumers are in actual submitted live source list; literal sites independently checked at source pin. No full-die elaboration performed.",
+  "consumer_source_pins": {
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "instance_sites": [
+        {
+          "line": 56,
+          "text": "ot_hdc_ksadd_k #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));",
+          "width": 31
+        },
+        {
+          "line": 59,
+          "text": "ot_hdc_ksadd_k #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));",
+          "width": 8
+        },
+        {
+          "line": 60,
+          "text": "ot_hdc_ksadd_k #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));",
+          "width": 8
+        },
+        {
+          "line": 116,
+          "text": "ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));",
+          "width": 28
+        },
+        {
+          "line": 117,
+          "text": "ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));",
+          "width": 28
+        },
+        {
+          "line": 151,
+          "text": "ot_hdc_ksadd_k #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));",
+          "width": 8
+        },
+        {
+          "line": 152,
+          "text": "ot_hdc_ksadd_k #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));",
+          "width": 8
+        },
+        {
+          "line": 174,
+          "text": "ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));",
+          "width": 24
+        }
+      ],
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "instance_sites": [
+        {
+          "line": 76,
+          "text": "ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));",
+          "width": 12
+        },
+        {
+          "line": 137,
+          "text": "ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));",
+          "width": 48
+        },
+        {
+          "line": 182,
+          "text": "ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));",
+          "width": 24
+        }
+      ],
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    }
+  },
+  "excluded": [
+    "generic inc_k without confirmed live instance",
+    "multiplier and CSA substitutions"
+  ],
+  "first_proof_package_byte_identity_pins": {
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/cadd_drop_s0_overflow/witness.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "7139a6c31fdf4f0ea7881f6887327fa70f8235743d821a1edf46e5c0e3d987e6"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/cadd_drop_s0_overflow/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "0e8621017872957ae6da810b87a4ad5974e97cf54235335c0d957eaabcaabb37"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/cadd_drop_s1_overflow/witness.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "ad2f261546ae17d974a435218f0a72f02ca5640ec3ad4d09b420b78f046c7743"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/cadd_drop_s1_overflow/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "3d29ad89b34bd9d200a11f51b47dfaca1984e2c15ab6f0b2714d57471328fce9"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ksa_drop_carry/witness.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "d624e6f1aafafccc4a2c645700869c88933030fbcce99451e2ab108de2c94525"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ksa_drop_carry/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "7ba2158518ef46c1db36cb0450c673555fb4bf3edea357fac79f94d16bc47d71"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ksa_flip_sum_bit0/witness.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "2c933c30f12e90659e65e2d11bd1e7fe3daf4e21f87390d7189ae1bed0372858"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ksa_flip_sum_bit0/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "04e2a2c8fc168136e977495a0b75935ec64f960d358742026e5a9159e23c25e4"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w12/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "79b727e96fff46f9ab92d23c60fd3d9c955be6d6005e7accfc217bca12926c31"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w24/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "a4d7b06ef6ab2ee8811a3926b81bed62b362845729960d882318297dbc20fae2"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w28/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "3bb93fbcc7d8c648c6a5b4b319e3e9fc5f761c1bccc3128c3282274ee193b2e6"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w31/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "5a92dcce89d6a9cb506cc3bc17442aacfb82909d0b0fe0fac87b1d537147e5a5"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w48/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "51c3771d0f2900708183f95fa0d75a39118e28c1c122f35d89c99d8fd6c204d7"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_ksa_w8/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "4e42bfbffa60621094fad2ab78fd665f20c0a373a3b69bb5adfcaf57ba603b96"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w23/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "311f60553767b66f3afa7dcc8cdb720c0276af88d66515aba3338e82cffd6ff6"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w24/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "db7287c9243242e857d4cbad7abee81170abd3c3865387d04cc0a8f9eb866fe3"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w27/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "5595b2664890e4223c91d273046008f2809ddf893fcd7d696cc8bf1ac41ece0b"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w48/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "4f56c91d76408351bc72879f065fc9baacbd0fa82e5997b289c84a6e8f743c35"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w53/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "c13deb481bae28d40e0eb6057937b064faa78512406b3e35d98270cec503346f"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/ot_hdc_sk_cadd_w8/yosys.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "ee7f6f14a1dded29a02cbdf269b02734b14ba33d3029877d5ad69c2714594234"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/proof.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "85aca989a60f0a3b2a5f7693384d1684513a0dc3ee596bcc79c72ffa080ab8e8"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/pytest.log": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "a89067d4f49c8040dba9e0f72c65855141c6b89299afdaeccd1f4fbb4e7a4739"
+    },
+    "results/rtl/dsrom_prefix_sat_4e38326d_20261001/r1/validation.json": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "49313dd6284928652e68cb329df838802a30f564fc3e0a7e383152b61b1e1fea"
+    },
+    "tests/test_dsrom_prefix_sat.py": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "6be2e2b44573d34341e13fddd5c3aa802becedbad56527e376346806a2fd26c2"
+    },
+    "tools/prove_dsrom_prefix_sat.py": {
+      "commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+      "sha256": "f01c2525b97dd1986f97a646881bc5d942e0c30c40ed271376b54c39090d27f4"
+    }
+  },
+  "hardware_qualification": false,
+  "proof_tests_sha256": "f4ad3dba13172297d332869b6cd3edc851d217a59a09c3cf7c502b7e58068e4f",
+  "proof_tool_sha256": "75638c025cae77e349ec0006938b601f6965ad4169afc9585b54bf76aa61df51",
+  "rate_claim": false,
+  "remaining_gates": [
+    "Formal live reachability/source census by parent reviewer",
+    "Sequential FP reset/valid/error/result/cycle equivalence",
+    "Future full-die gate before stand-in use"
+  ],
+  "schema": "DSROM_generic_prefix_combinational_SAT_prerequisite_r1",
+  "scope": "All-input 2-state combinational equality of every sum bit plus carry to widened behavioral a+b+cin.",
+  "source_pin": {
+    "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "module": "ot_hdc_ksadd_k",
+    "module_sha256": "472d9284ac6060be5a11ac8bc17dd2b3eb33f98eba16551d824edeec6e6eebcf",
+    "module_text": "module ot_hdc_ksadd_k #(\n    parameter integer W = 28\n) (\n    input  wire [W-1:0] a,\n    input  wire [W-1:0] b,\n    input  wire         cin,\n    output wire [W-1:0] s,\n    output wire         cout\n);\n    localparam integer L = $clog2(W + 1);\n    // position 0 is the carry-in; bit i of the operands is position i + 1\n    (* keep *) wire [W:0] g [0:L];\n    (* keep *) wire [W:0] p [0:L];\n    assign g[0] = {a & b, cin};\n    assign p[0] = {a ^ b, 1'b0};\n    genvar l, i;\n    generate\n        for (l = 0; l < L; l = l + 1) begin : g_lv\n            for (i = 0; i <= W; i = i + 1) begin : g_b\n                if (i >= (1 << l)) begin : g_c\n                    assign g[l + 1][i] = g[l][i] | (p[l][i] & g[l][i - (1 << l)]);\n                    assign p[l + 1][i] = p[l][i] & p[l][i - (1 << l)];\n                end else begin : g_p\n                    assign g[l + 1][i] = g[l][i];\n                    assign p[l + 1][i] = p[l][i];\n                end\n            end\n        end\n    endgenerate\n    // carry into operand bit i = the group generate of positions [0, i]\n    assign s = (a ^ b) ^ g[L][W-1:0];\n    assign cout = g[L][W];\nendmodule\n",
+    "path": "rtl/hdc/ot_hdc_prefix.sv",
+    "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  "standins_installed": false,
+  "timing_claim": false,
+  "tools": {
+    "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+    "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+    "yosys_executable": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "yosys_executable_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50"
+  },
+  "verdict": "PASS_PREREQUISITE_ONLY"
+}

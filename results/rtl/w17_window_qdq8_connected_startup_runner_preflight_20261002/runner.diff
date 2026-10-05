@@ -1,0 +1,123 @@
+--- tools/w17_window_qdq8_connected_run.py
++++ tools/w17_window_qdq8_connected_startup_run.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Prepare/probe one GO-bound aggregate-budget connected QDQ8 service."""
++"""Prepare/probe startup-guard GO-bound aggregate-budget connected QDQ8 service."""
+ import argparse
+ import hashlib
+ import inspect
+@@ -13,15 +13,47 @@
+ import w17_window_epoch9_producer_run as trace_lib
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+-EVIDENCE=ROOT/'results/uarch/w17_window_qdq8_connected_preparation_20261002'
+-PREPARED=Path('/tmp/window-qdq8-connected-prepared-20261002-r2')
+-REVIEWED='2a0285f4e0ae15836e19e0882fdc47519c0b51ba'
++EVIDENCE=ROOT/'results/uarch/w17_window_qdq8_connected_startup_preparation_20261002'
++BASE=ROOT/'results/uarch/w17_window_qdq8_connected_preparation_20261002'
++PREPARED=Path('/tmp/window-qdq8-connected-startup-prepared-20261002-r2')
++REVIEWED='3b3920dd402342a28d25f386d0da1297bdb3f2ed'
+ SOURCE='4e38326d6f361bc85e660f48c59c355e2bb95274'
+ CAPS=caps_lib.CAPS
+ BUDGET=dict(whole_service_seconds=180,compile_total_seconds=150,compile_count=2,
+             case_seconds=5,cases=2,total_case_seconds=10,supervision_reserve_seconds=20)
+-DEPS=['tools/w17_window_qdq8_arithmetic_run.py','tools/w17_window_epoch9_producer_run.py']
++DEPS=['tools/w17_window_qdq8_arithmetic_run.py','tools/w17_window_epoch9_producer_run.py',
++      'tools/w17_window_qdq8_connected_run.py','tools/w17_window_qdq8_connected_startup_prepare.py']
+ sha=caps_lib.sha;objsha=caps_lib.objsha;write=caps_lib.write;git=caps_lib.git
++
++
++def verify_startup_repair(model,manifest):
++    import copy
++    import w17_window_qdq8_connected_startup_prepare as repair
++    old=json.loads((BASE/'model.json').read_bytes())
++    old_manifest=json.loads((BASE/'files_sha256.json').read_bytes())
++    assert model['startup_repair']['original_model_sha256']==sha(BASE/'model.json')
++    assert model['startup_repair']['preparation_tool_sha256']==sha(ROOT/'tools/w17_window_qdq8_connected_startup_prepare.py')
++    assert model['startup_repair']['failed_fixture_sha256']==sha(ROOT/repair.OLD)
++    assert git('show','9d42d5da8a4f5cf36d4e04668c6894eb9d9f37b4:'+repair.OLD)==(ROOT/repair.OLD).read_bytes()
++    text=(ROOT/repair.OLD).read_text()
++    assert text.count(repair.BEFORE)==1
++    assert (ROOT/repair.NEW).read_text()==text.replace(repair.BEFORE,repair.AFTER)
++    assert set(manifest)==set(old_manifest)
++    assert sorted(p for p in manifest if manifest[p]!=old_manifest[p])==['model.json','sources/tb.sv']
++    expected=copy.deepcopy(old)
++    expected['fixture_sha256'].pop(repair.OLD)
++    expected['fixture_sha256'][repair.NEW]=sha(ROOT/repair.NEW)
++    expected['preparation']['snapshot_sha256']['tb.sv']=sha(ROOT/repair.NEW)
++    expected['preparation']['source_bytes']=sum(p.stat().st_size for p in (PREPARED/'sources').iterdir())
++    previous_root=old['preparation']['commands']['retain0']['cwd']
++    for command in expected['preparation']['commands'].values():
++        command['compile']=[arg.replace(previous_root,str(PREPARED)) for arg in command['compile']]
++        command['runtime']=[arg.replace(previous_root,str(PREPARED)) for arg in command['runtime']]
++        command['cwd']=str(PREPARED)
++    actual=copy.deepcopy(model);actual.pop('startup_repair')
++    assert actual==expected,'Unexpected model, geometry, calendar or command modification'
++    receipt=PREPARED/'startup_repair_receipt.json'
++    assert sha(receipt)==sha(EVIDENCE/'startup_repair_receipt.json')
+ 
+ 
+ def provenance():
+@@ -33,10 +65,13 @@
+         diffs.append(dict(path=path,sha256=h,byteidentical=True))
+     for key in ('candidate_sha256','dependencies_sha256','fixture_sha256'):
+         for path,h in model[key].items():assert sha(ROOT/path)==h
+-    for path,h in manifest.items():assert sha(EVIDENCE/path)==h and sha(PREPARED/path)==h
++    for path,h in manifest.items():
++        archived=EVIDENCE/'model.json' if path=='model.json' else ROOT/'rtl/test/w17_window_qdq8_connected_startup_guard/tb.sv' if path=='sources/tb.sv' else BASE/path
++        assert sha(archived)==h and sha(PREPARED/path)==h
+     assert sha(EVIDENCE/'files_sha256.json')==sha(PREPARED/'files_sha256.json')
+-    assert {str(p.relative_to(PREPARED)) for p in PREPARED.rglob('*') if p.is_file()}==set(manifest)|{'files_sha256.json'},'Prior build/tree mutation; no retry'
++    assert {str(p.relative_to(PREPARED)) for p in PREPARED.rglob('*') if p.is_file()}==set(manifest)|{'files_sha256.json','startup_repair_receipt.json'},'Prior build/tree mutation; no retry'
+     assert sha(ROOT/'tools/w17_window_qdq8_connected_model.py')==model['generator_sha256']
++    verify_startup_repair(model,manifest)
+     assert model['actual_QE']==dict(AW=30,NW=21,BL=16,IL=8,NBMAX=192,CHUNK8=1,QLB=272,MP=1,mode=1,fp4=0,nb=16,xbase=54720,obase=55232,SEPARATE_ROWS=1,KVT_SH=13,POS_W=21)
+     assert [(n,c['pairs'],c['write_requests'],c['cold_rows']) for n,c in model['cases'].items()]==[('retain0',3,32,768),('retain1',5,32,640)]
+     assert list(model['preparation']['commands'])==['retain0','retain1']
+@@ -52,7 +87,7 @@
+       model_sha256=sha(EVIDENCE/'model.json'),manifest_sha256=sha(EVIDENCE/'files_sha256.json'),
+       prepared_file_sha256=manifest,source_diffs=diffs,compiler=compiler,commands=commands,
+       caps=CAPS,budget=BUDGET,healthy_added_guard_cycles=0,
+-      GO_status='PARENT_QDQ8_CONNECTED_SINGLE_SERVICE_GO',
++      GO_status='PARENT_QDQ8_CONNECTED_STARTUP_GUARD_SINGLE_SERVICE_GO',
+       scope='Actualfull512QE/32WR/128x17/mux/KARB/backend/QKPVnaturalwrap healthy only. Producerfreeze/cancel and downstream recovery unqualified. No fulltoken/hardware/clock claim.',
+       no_retry_no_fallback=True,state='PREPARED_NOT_COMPILED_NOT_RUN_FRESH_GO_REQUIRED')
+     out.mkdir(parents=True,exist_ok=False);write(out/'plan.json',plan)
+@@ -63,6 +98,9 @@
+ 
+ def validate_plan(path):
+     plan=json.loads(path.read_bytes());model,manifest,diffs=provenance()
++    assert plan['reviewed_commit']==REVIEWED
++    assert plan['GO_status']=='PARENT_QDQ8_CONNECTED_STARTUP_GUARD_SINGLE_SERVICE_GO'
++    assert plan['no_retry_no_fallback'] is True
+     assert plan['runner_sha256']==sha(Path(__file__))
+     assert plan['runner_dependencies_sha256']=={p:sha(ROOT/p) for p in DEPS}
+     assert plan['model_sha256']==sha(EVIDENCE/'model.json') and plan['manifest_sha256']==sha(EVIDENCE/'files_sha256.json')
+@@ -74,7 +112,7 @@
+ 
+ 
+ def validate_GO(go,plan,path):
+-    assert go['status']=='PARENT_QDQ8_CONNECTED_SINGLE_SERVICE_GO'
++    assert go['status']=='PARENT_QDQ8_CONNECTED_STARTUP_GUARD_SINGLE_SERVICE_GO'
+     for k in ('runner_sha256','runner_dependencies_sha256','model_sha256','manifest_sha256','caps','budget','healthy_added_guard_cycles'):assert go[k]==plan[k],k
+     assert go['plan_sha256']==sha(path)
+     assert go['commands_sha256']==objsha(plan['commands'])
+@@ -98,7 +136,7 @@
+     for old,new in edits.items():assert src.count(old)==1;src=src.replace(old,new)
+     ns={};exec(compile(src,'<connected full transport comparison>','exec'),trace_lib.__dict__,ns)
+     result=ns['compare'](log,summary,events)
+-    gold=json.loads((EVIDENCE/'oracle.json').read_bytes())
++    gold=json.loads((BASE/'oracle.json').read_bytes())
+     pack=lambda a,w:sum(x<<(i*w) for i,x in enumerate(a))
+     actual=[[int(a),int(b),int(c),int(d,16),int(e,16)] for a,b,c,d,e in re.findall(r'QE_CAPTURE cycle=(\d+) block=(\d+) address=(\d+) codes=([0-9a-fA-F]+) scale=([0-9a-fA-F]+)',log)]
+     expected=[[c,b,55232+32*b,pack(gold[b]['codes'],8),gold[b]['scale']] for b,c in enumerate(summary['QE_capture_cycles'])]
+@@ -142,7 +180,7 @@
+                 write(out/'in_progress.json',record)
+                 assert time.monotonic()-start+BUDGET['case_seconds']<180
+                 item['runtime']=caps_lib.execute(command['runtime'],Path(command['cwd']),out/(name+'_runtime.log'),BUDGET['case_seconds'])
+-                events=[json.loads(x) for x in (EVIDENCE/(name+'_events.jsonl')).read_text().splitlines()]
++                events=[json.loads(x) for x in (BASE/(name+'_events.jsonl')).read_text().splitlines()]
+                 item['comparison']=compare((out/(name+'_runtime.log')).read_text(),model['cases'][name],events)
+                 write(out/'in_progress.json',record)
+                 if item['runtime']['status']!=0 or item['comparison']['verdict']!='PASS':raise RuntimeError('Runtime/model mismatch: stop, no retry/fit')

@@ -1,0 +1,317 @@
+{
+  "authoritative_element_source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "authoritative_element_source_pins": {
+    "rtl/common/ot_prefix.sv": {
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    }
+  },
+  "claims": {
+    "adoption": false,
+    "fulltoken": false,
+    "hardware_timing": false,
+    "independent_full_arithmetic_golden": false,
+    "rate_credit": 0,
+    "real_field_PASS": false
+  },
+  "closed_gate": {
+    "classification": "Bounded reference/candidate differential plus independent configuration-row oracle",
+    "commit": "45dbff240244b123b8e58674437abba848cea12f",
+    "helper_delta": "ksadd/inc only; CSA unchanged; identical mandatory decoder repair",
+    "physical_clock": false,
+    "real_image_numerical_golden": false
+  },
+  "first_principles_sizing": {
+    "full8192slot_conditional_peak": {
+      "BF16_MACs_per_cycle_if_all1024BFslots_enabled": 32768,
+      "FP4_MACs_per_cycle": 1048576,
+      "FP8_MACs_per_cycle": 524288,
+      "ROM_bits_per_cycle": 4489216,
+      "ROM_bytes_per_cycle": 561152.0,
+      "partial_data_bits_per_cycle": 524288,
+      "partial_metadata_bits_per_cycle": 491520,
+      "physical_PP_ROM_read_ports": 32768
+    },
+    "latency": "No new stage/state/RTL change proposed. Config27 cycles, capture3, bterm11, LAT8, minimum chunk revisit64 cycles, DRAIN127 inherited. Field fill/return measured contributions and domain crossing need source-pinned composition before build.",
+    "local_config": {
+      "broadcast_CFG_bits": 10,
+      "fullslot_logical_bytes": 78643200,
+      "load_cycles": 27,
+      "logical_CFG_broadcast_sink_bits": 81920,
+      "logical_bytes_per_pair": 9600,
+      "logical_depth_per_pair": 1600,
+      "per_pair_internal_port_bits_per_cycle": 54,
+      "scope": "Logical ROM/data volume only. Current packed CROM45bank/rank service/capture/CDC mapping is a separate prerequisite; no fabricated macro/port qualification.",
+      "words_per_phase_per_pair": 25
+    },
+    "mandatory_decoder_area": {
+      "area_allowance_um2_per_pair": 23.328,
+      "basis": "Reuse rowfix analytical64-logic-equivalent plus16 restored DFF allowance, using pinned DFFarea0.2916 proxy; not measured technology area or physical upper bound.",
+      "declared_row_bits_per_pair": 256,
+      "fullslot_area_allowance_um2": 191102.976,
+      "fullslot_declared_row_bits": 2097152,
+      "fullslot_potential_restored_flops": 131072,
+      "no_new_declared_state_bits": true,
+      "per_pair_placement_allowance_at50pct_um2": 46.656,
+      "potential_restored_flops_per_pair": 16
+    },
+    "per_pair": {
+      "bf_payload_bits": 1024,
+      "bf_pipeline_cycles": 46,
+      "bterm_cycles": 11,
+      "channel_area_slot_fit": "Inherited exact pinned w10_baseline_model geometry; no new routing or floorplan qualification",
+      "config_bytes": 9600,
+      "config_depth": 1600,
+      "config_words": 25,
+      "issue_capture_cycles": 3,
+      "macs_per_pair_cycle": {
+        "bf16": 32,
+        "fp4": 128,
+        "fp8": 64
+      },
+      "minimum_chunk_round_cycles": 64,
+      "partial_metadata_bits": 60,
+      "partial_payload_bits": 64,
+      "per_port_read_bytes": 34.25,
+      "physical_read_ports": 4,
+      "pp_mux_bits": 548,
+      "pp_select_fanout": 274,
+      "quantized_payload_bits": 512,
+      "replicas_in_bench_per_case": 2,
+      "rom_bits_per_pair_cycle": 548,
+      "rom_bytes_per_pair_cycle": 68.5,
+      "single_user_latency_contribution": "unchanged LAT8 audit only; no measured full token or rate credit"
+    },
+    "replication_and_fanout": {
+      "BF_payload_bits_per_BFsink": 1024,
+      "PP_mux2to1_bits": 4489216,
+      "PP_select_logical_fanout_per_macro": 274,
+      "added_inter_element_bits": 0,
+      "element_slots": 8192,
+      "quantized_payload_bits_per_sink": 512,
+      "stream_broadcast": "Existing broadcast and return geometry retained; activation, region buffers and conditional simultaneous occupancy require source join."
+    },
+    "routing_and_slot_fit": "Reuse source-bound W10 outlines and model estimated local tracks (ROM548+BF1024=1572 local data tracks per BF pair); no added external tracks. Actual all-pin escape/local sites, clock/PG/IR and full-map fit remain unresolved. Whole field is not sized by linear extrapolation of compilation memory."
+  },
+  "geometry": {
+    "cases": {
+      "bfcolumn": {
+        "BF16": 1,
+        "XF": 8
+      },
+      "q": {
+        "BF16": 0,
+        "XF": 4
+      }
+    },
+    "element": {
+      "BP": 0,
+      "CG": 1,
+      "CUT": 379,
+      "DRAIN": 127,
+      "EARLY": 1,
+      "FAST": 1,
+      "FRONT_PAR": 0,
+      "LAT": 8,
+      "LV": 5,
+      "MTP": 1,
+      "NB": 2,
+      "NCH": 16,
+      "NCHB": 8,
+      "NSEG": 8,
+      "PHW": 6,
+      "PP": 1
+    },
+    "full_field_driver_defaults": {
+      "BF_capable_pair_slots": 1024,
+      "PHW": 6,
+      "image_active_pairs": 6899,
+      "logical_weight_depth": 8192,
+      "pair_slots": 8192,
+      "return_regions": 128
+    },
+    "geometry_scope": "Pinned v41_die_field defaults are full-field source inputs. Active6899 image packing is distinct from8192 padded slots. Field RTL instantiates NP slots; no assumption that historical active/floorplan dimensions qualify the current construction.",
+    "historical_small_gate": "w17_w10_field_rt_gate defaults NP16/R4/NBF8 are a finite checkpoint-slice comparator, not a full-field surrogate or permission to reduce element shape."
+  },
+  "next_parent_step": "Review remaining source/clock/model joins within existing field stream. Do not adopt helper into protected full-token runtime or change physical RTL solely from the bounded synthetic-element PASS.",
+  "remaining_gates": [
+    {
+      "authorization": "No real-image payload loading, field/die build or run performed or authorized by this record",
+      "name": "Current real-field arithmetic/source join",
+      "required": [
+        "Explicitly bind reviewed mandatory decoder repair on both original arithmetic and behavioral-helper field namespaces; current driver still selects original source. Preserve CSA and pinned originals.",
+        "Use existing real-field golden/composition methodology with actual source-case manifest, formats, row/segment classes, MTP positions, ROM phase/packing/scope and complete output/tag/fault/reset contract. Historical finite slice checks retain original scope.",
+        "Prove host simultaneous-edge/low-phase settling and quiet-skip/capture parity behavior against a flat connected reference; explicit wrong-edge controls must fail by DIFF, not crash.",
+        "Report each actually exercised shape/format and independent numerical-golden coverage separately; no full-token transfer from this synthetic leaf PASS."
+      ]
+    },
+    {
+      "authorization": "No synthesis/PnR/restart/new watcher/physical source edit proposed or launched",
+      "name": "Existing clockgate real-field interval and contextual join",
+      "required": [
+        "Separate CFG root clock from STREAM leaf clock; phase-resolved cfg/go/busy/drain interval union across actual resident/active pair and region counts. Do not double-count127 drain cycles or infer root-stop credit.",
+        "Source-match original existing ICG construction and any separately qualified wake variant. b046 WAKE1 physical-readiness records cannot transfer to4e rowfix runtime or imply new wake RTL.",
+        "Price actual mapped registers/ICGs/ROM ports, CROM service/CDC, local clock/hold/tap/endcap reserves, pin/wire activation, BF active DATA and nonexpert demand in the wholepoint model.",
+        "Only after model/floorplan/source qualification: contextual SS setup at60ps uncertainty and FF hold at25ps, macros own SS clk-q, route/power/IR and real final abstract. Retain rejected frontend/q-route/BF-c8 failures."
+      ]
+    }
+  ],
+  "resource_calibration": {
+    "actual_element_build_seconds": 155.08317171549425,
+    "actual_element_peak_bytes": 2533793792,
+    "actual_element_sim_seconds": 0.797376970294863,
+    "field_compile_estimate": null,
+    "field_run_authorized": false,
+    "reason": "Per-pair binary calibration is not flat-field resource sizing. Future package/host geometry and aggregate resources require their own reviewed model and GO; reuse parent-owned pinned live jobs, no duplicate builds.",
+    "simulation_cases": "Single q/BF attempt,2CPU4GiBswap0"
+  },
+  "schema": "opentallas.dsrom.realfield.remaining_prerequisite_model.v1",
+  "scope": "Follow-up of completed actual-element gate within existing W10/W17 stream. No new architecture or physical implementation proposal.",
+  "source_pins": {
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "bba16d609eb2c8ba6bb10f943af9c7f4597a9a1e1f7c4626c194f636459a48f7"
+    },
+    "results/quality/parent_dsrom_existing_icg_phase_review_20261001/review.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "927409c670b84c7bf130b31d356cb01985cf6a3f38a6db22c2789381b7817db9"
+    },
+    "results/quality/w10_w18_current_physical_readiness_r1/readiness.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "610c08d7dfa8a5763f79807bcbe0c4b2356eeafc99b2d94452e43e0786a5a945"
+    },
+    "results/rtl/dsrom_actual_element_rowfix_gate_20261002/r1/verdict.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "14c871056fc8da8726274bf797411013100a4a0496d71aea6bcd630d0268d640"
+    },
+    "results/rtl/dsrom_actual_element_rowfix_prepare_20261002/model.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "43daaeb259c1f3fc43782ec46a360570f41a6541777f15d6355070a09858a04b"
+    },
+    "results/rtl/dsrom_actual_element_rowfix_runner_prepare_20261002/runner_plan.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "1cf7fe3e290d211d9f02bf22b8817ecbdf540e9c88746b91f54092fdc944c626"
+    },
+    "results/uarch/w10_q_existing_icg_r1/clock.json": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    "rtl/test/v41_runtime/w17_w10_field_rt_gate.cpp": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "f0091cb7dfd53ce5ecfd21146bb7d1fabc3cb1551b17628a0f5ac95e438cd549"
+    },
+    "rtl/v41die/ot_v41_field_w17w10.sv": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811"
+    },
+    "rtl/v41die/ot_v41_fieldtop_w17w10.sv": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "e2d372c5388535c1cc08ae1648c367fcfc721ecb96579646b962edf3698d8ec8"
+    },
+    "tools/uarch_model.py": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "tools/v41_die_field.py": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "fdf62d1b9ecee3ccb3c8a67137bb75d3399a812f762df3651fffc37041a73d4a"
+    },
+    "tools/w17_current_fastpp_die_rt.py": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "0673907bef97ea383144e7aadb10b4c79b7807cf4453867aa074a7d965c27d70"
+    },
+    "tools/w17_w10_field_rt_gate.py": {
+      "commit": "45dbff240244b123b8e58674437abba848cea12f",
+      "sha256": "f71762fd434eaabd3268d229bdc8c7d2270e0fdbeba71aad0c85924946115d38"
+    }
+  },
+  "status": "MODEL_ONLY_PREREQUISITES_OPEN_NOT_READY_FOR_BUILD",
+  "unified_model": {
+    "analytical_block": "Reuse full-goal pair geometry and port/compute/routing/area model; remaining join needs actual source-matched field/clock/return counts before build.",
+    "composed_latency": "Existing audit LAT8 versus unchanged product LAT7; elem_fill78 remains inherited/unmeasured. No rate/headline update.",
+    "function": "w10_baseline_model",
+    "path": "tools/uarch_model.py",
+    "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274"
+  }
+}

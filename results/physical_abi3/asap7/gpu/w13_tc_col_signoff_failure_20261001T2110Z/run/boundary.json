@@ -1,0 +1,78 @@
+{
+  "basis": "OpenSTA, ideal clock, zero wire load, ASAP7 RVT TT liberty; inputs arrive at 0 and outputs are required at the period, so a port's worst slack gives in2reg = period - slack (setup included) for an input and reg2out = period - slack (clock-to-q included) for an output; a combinational input-to-output path, when present, is feedthrough_ps on both ends; unused_bits are ports with no connection inside the block",
+  "netlist_signed_stripped": 0,
+  "netlists": [
+    "/home/ubuntu/w13work/tc_col_13/results/asap7/chip_ot_gpu_tc_col/base/1_2_yosys.v"
+  ],
+  "period_ps": 833.0,
+  "ports": {
+    "fault": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "first": {
+      "direction": "input",
+      "in2reg_ps": 34.24,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "last": {
+      "direction": "input",
+      "in2reg_ps": 34.24,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "otag": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "ov": {
+      "direction": "output",
+      "reg2out_ps": 57.75,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "in2reg_ps": -11.45,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "tag": {
+      "direction": "input",
+      "in2reg_ps": 3.41,
+      "unused_bits": 0,
+      "width": 16
+    },
+    "v": {
+      "direction": "input",
+      "in2reg_ps": 34.89,
+      "unused_bits": 0,
+      "width": 1
+    },
+    "w": {
+      "direction": "input",
+      "in2reg_ps": 3.41,
+      "unused_bits": 0,
+      "width": 512
+    },
+    "x": {
+      "direction": "input",
+      "in2reg_ps": 3.41,
+      "unused_bits": 0,
+      "width": 512
+    },
+    "y": {
+      "direction": "output",
+      "reg2out_ps": 50.84,
+      "unused_bits": 0,
+      "width": 32
+    }
+  },
+  "through": {},
+  "top": "ot_gpu_tc_col"
+}

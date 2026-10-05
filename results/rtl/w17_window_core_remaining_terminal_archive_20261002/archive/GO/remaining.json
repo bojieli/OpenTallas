@@ -1,0 +1,127 @@
+{
+  "status": "PARENT_ACTUAL_CORE_ACCEPTANCE_EDGE_REMAINING_SINGLE_GO",
+  "requested_status": "PARENT_ACTUAL_CORE_ACCEPTANCE_EDGE_REMAINING_SINGLE_GO",
+  "plan_sha256": "379dae76d3d4aab890c2b0242c63955ac3bd8477ff79ebbec5de860548237d7c",
+  "runner_sha256": "3d73a4ea4f9325c76fea0dc5df895ca8eb78066435bd0880f384e4d967a82b1c",
+  "source_digest": "69b369d2170eae062a0ab66d8feee0a69448d4f205914ae49a455d382032fecf",
+  "campaign": "remaining",
+  "historical_baseline_digest": "4f0cba414519efcc3e81305acb96b88337bc95d720164a58821344ad1de67b0b",
+  "fresh_closure_required": true,
+  "binary_reuse": false,
+  "dependencies_digest": "262fb314e99a41de221badd6523b3a59db1578515e7d9e8e9f9ca985ea684b8d",
+  "build_toolchain_digest": "92293d8f73c47d81d8a2cbe38298aced7bd24df03f8337574c8f246f59c5ddf7",
+  "jobs_digest": "7e8277466dcc719784456c6b41a5c27e4000f7ccee99b993e8398cf2d7b58c38",
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 2250,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 1950,
+    "phase_compile_seconds": 650,
+    "frontend_phase_seconds": 300,
+    "runtime_shared_seconds": 150,
+    "short_case_seconds": 10,
+    "long_case_seconds": 120,
+    "supervision_reserve_seconds": 150,
+    "whole_seconds": 2250,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "automatic_retries": 0,
+    "phase_count": 3,
+    "baseline_frontend_repeats": 0,
+    "baseline_CXX_repeats": 0,
+    "new_frontend_processes": 3,
+    "CXX_processes": 3
+  },
+  "first_control_dependency": {
+    "status": "PARENT_REVIEWED_ACCEPTANCE_EDGE_FIRST_CONTROL_PASS",
+    "output": "/tmp/opentallas-core-first-acceptance-edge-parent-20261002-r1",
+    "record_sha256": "8df443062dda50247741378c3b4ddf112895f0a0f64d520d2c3ec3d92ca061f3",
+    "service_sha256": "cb932c9052f2e6c6cec726e417e968da6bab909133b9bea56ac5f496422b17b2",
+    "closure_sha256": "e6ed3e8b7a76f7a3932226226e29c920ae4c6292859ab1e2139b20980a689885"
+  },
+  "dependency_status": "PARENT_REVIEWED_FIRST_CONTROL_PASS",
+  "parent_review_commit": "cc7a4b094def983beef1850331d9b4e6dc3165cb",
+  "fleet_reservation": {
+    "utc": "2026-10-02T06:46:37.358736+00:00",
+    "host": "localhost",
+    "source_reference": "d932",
+    "runner": "Actual unchanged runner per parent; full source pin/clean check required at execution",
+    "first_PASS_parent_commit": "cc7a4b094",
+    "first_PASS_scope": "Source model binds first PASS raw closure/frame exact line1261; does not substitute for remaining three cases",
+    "reserved_cpus": [
+      30,
+      31
+    ],
+    "reservation_active": true,
+    "state": "PRE_GO_REMAINING_THREE_RESERVATION",
+    "caps": {
+      "memory_GiB": 32,
+      "swap_bytes": 0,
+      "whole_seconds": 2250,
+      "compile_seconds": 1950,
+      "per_compile_seconds": 650,
+      "compile_count": 3,
+      "runtime_seconds": 150,
+      "output_GiB": 8,
+      "per_file_GiB": 1
+    },
+    "resources": {
+      "mem_available_GiB": 158.06488037109375,
+      "root_available_GiB": 491.8547248840332,
+      "load": [
+        3.0771484375,
+        3.751953125,
+        4.39697265625
+      ]
+    },
+    "cpu_total_busy_equivalents": 3.1169743208786973,
+    "cpu30_31_busy_equivalents": 0.013289036544850499,
+    "active_reservations": [],
+    "conflicting_reservations": [],
+    "conservative_RAM_after_D1_and_future_H1_GiB": 94.06488037109375,
+    "planned_peak_threads_including_future_H1": 23,
+    "planned_peak_composition": {
+      "attention": 4,
+      "TP96": 1,
+      "D1": 2,
+      "future_H1": 16
+    },
+    "future_H1_cpu_set": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
+    ],
+    "exclusive_core_claim": false,
+    "existing_broadmask_contention": "Attention and TP96 may compete; existing affinities unchanged",
+    "wall_policy": "2250s hard stop, no performance guarantee or automatic extension",
+    "execution_started": false,
+    "existing_job_changes": 0,
+    "pve23_new_tasks": false,
+    "release_condition": "Matching remaining-three job authoritative terminal and owned processes drained, or explicit prelaunch cancellation"
+  }
+}

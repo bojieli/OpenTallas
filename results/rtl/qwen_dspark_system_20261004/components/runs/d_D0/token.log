@@ -1,0 +1,25 @@
+images loaded in 2.0 s
+models constructed and preloaded in 4.1 s (tiles/die=1536, stages=1, pos0=49 np0=3)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=0s passes=3
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=1498/1498 kv_ok=1 drained=1 wall=552s passes=9664
+FAULTTRACE core_fault die=0 cyc=4657 pc_base=0 stage=D0
+FAULTTRACE core_fault die=1 cyc=4657 pc_base=0 stage=D0
+FAULTTRACE core_fault die=2 cyc=4657 pc_base=0 stage=D0
+FAULTTRACE core_fault die=3 cyc=4657 pc_base=0 stage=D0
+FAULTTRACE seq_fault die=0 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0
+FAULTTRACE seq_fault die=1 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0
+FAULTTRACE seq_fault die=2 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0
+FAULTTRACE seq_fault die=3 cyc=6163 pc_base=0 core_fault=1 coll_err=0 coll_fault=0 stage=D0
+progress tick=8192 cyc=8193 pc_base=55/55 me_busy=3041/3041 kv_ok=1 drained=1 wall=1176s passes=20524
+progress tick=12288 cyc=12289 pc_base=55/55 me_busy=4458/4458 kv_ok=1 drained=1 wall=1758s passes=30133
+progress tick=16384 cyc=16385 pc_base=55/55 me_busy=4458/4458 kv_ok=1 drained=1 wall=1903s passes=38325
+STAGE D0 done cycles=20112 start_cyc=7 end_cyc=20119 me_busy=5557/5557 pos=49 np=3 layer=0 seq_fault=15 core_fault=0 coll_fault=0 wall=2302s
+MEMSTAT D0 die0 fill_cycles=247 fill_sectors=904 wr_sectors=408 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=900 wr_lat_max=71 stall_kv=19 stall_drain=770 stall_bridge=9406 stall_retire=867 stall_mem=0 tile_edges=5671
+VERIFY_TOKENS die=0 n=0
+MEMSTAT D0 die1 fill_cycles=247 fill_sectors=904 wr_sectors=408 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=900 wr_lat_max=71 stall_kv=19 stall_drain=770 stall_bridge=9406 stall_retire=867 stall_mem=0 tile_edges=5671
+VERIFY_TOKENS die=1 n=0
+MEMSTAT D0 die2 fill_cycles=247 fill_sectors=904 wr_sectors=408 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=900 wr_lat_max=71 stall_kv=19 stall_drain=770 stall_bridge=9406 stall_retire=867 stall_mem=0 tile_edges=5671
+VERIFY_TOKENS die=2 n=0
+MEMSTAT D0 die3 fill_cycles=247 fill_sectors=904 wr_sectors=408 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=900 wr_lat_max=71 stall_kv=19 stall_drain=770 stall_bridge=9406 stall_retire=867 stall_mem=0 tile_edges=5671
+VERIFY_TOKENS die=3 n=0
+TOKEN FAULT stage=D0

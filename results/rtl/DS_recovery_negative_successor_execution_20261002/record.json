@@ -1,0 +1,464 @@
+{
+  "verdict": "PASS_SUCCESSOR_RECOVERY_SIMULATION_ONLY",
+  "receipts": [
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "ISSUE",
+      "prefix": 8,
+      "stage": "baseline/runtime_0",
+      "args": [
+        "+CUT=ISSUE"
+      ],
+      "returncode": 0,
+      "log_sha256": "3f330d7bdbf2e889572adbd58aa87573a3529548b95cf3a09e823f612e5d1b14",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "GO",
+      "prefix": 8,
+      "stage": "baseline/runtime_1",
+      "args": [
+        "+CUT=GO"
+      ],
+      "returncode": 0,
+      "log_sha256": "ca634f55702998d2d1e28fb4251ca8fc2d44521e19ab2d3170ea2232a34f8be0",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "POISON",
+      "prefix": 8,
+      "stage": "baseline/runtime_2",
+      "args": [
+        "+CUT=POISON"
+      ],
+      "returncode": 0,
+      "log_sha256": "4d9c422d9472cf92e707ab661883051cf654efe7987070780f8e84ddcf9d5da7",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "SU_SUFFIX",
+      "prefix": 8,
+      "stage": "baseline/runtime_3",
+      "args": [
+        "+CUT=SU_SUFFIX"
+      ],
+      "returncode": 0,
+      "log_sha256": "7608a5aa210c1cbd48900bac681cc37726d87f5581f615e4b1f24b1333648103",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "WC",
+      "prefix": 8,
+      "stage": "baseline/runtime_4",
+      "args": [
+        "+CUT=WC"
+      ],
+      "returncode": 0,
+      "log_sha256": "b69adb2be9ad23a804ddd40208fc541ab1a1a73e57da2931a329eb468748b17c",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "WS",
+      "prefix": 8,
+      "stage": "baseline/runtime_5",
+      "args": [
+        "+CUT=WS"
+      ],
+      "returncode": 0,
+      "log_sha256": "52239e082632d3139cab753ba9e108ae8e3e0976996bb3110780db3d032c9876",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 0,
+      "stage": "baseline/runtime_6",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=0"
+      ],
+      "returncode": 0,
+      "log_sha256": "3cffa3a84fb0adab230aa586220a6faf5467096ba76d7e99fb1653e6cf754dc5",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 1,
+      "stage": "baseline/runtime_7",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=1"
+      ],
+      "returncode": 0,
+      "log_sha256": "0ab992ce9f1ae3bbc5bc3c2cd7ce1fda8fb87974e9b53c9bfb9c237d94220743",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 2,
+      "stage": "baseline/runtime_8",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=2"
+      ],
+      "returncode": 0,
+      "log_sha256": "4e81fd58cbceb9ecf590c7ffe6f196af87813667dacdb708578eae47dd62ce4d",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 3,
+      "stage": "baseline/runtime_9",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=3"
+      ],
+      "returncode": 0,
+      "log_sha256": "331cf66079baa5a05e22b17dd2e3a15e0e1417a23ecedad8c339b11dfa1ebd47",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 4,
+      "stage": "baseline/runtime_10",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=4"
+      ],
+      "returncode": 0,
+      "log_sha256": "2002bb338075c687f04409db42a3b0921485487f9c93e9bf7a802e136a8ca52b",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 5,
+      "stage": "baseline/runtime_11",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=5"
+      ],
+      "returncode": 0,
+      "log_sha256": "e1f3c5c95c8e6d5c5d5b34bca35a2a37a82fb3c711789fa25e73f2b2f275fbf5",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 6,
+      "stage": "baseline/runtime_12",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=6"
+      ],
+      "returncode": 0,
+      "log_sha256": "a4e6d053530f178cded2e43e3679b85ab0c20a62ebb7927faf7dcae5d368362d",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 7,
+      "stage": "baseline/runtime_13",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=7"
+      ],
+      "returncode": 0,
+      "log_sha256": "bdfbf037f2a4080fe53b9a6d35b71e964876c8529c809fb207f5563377a40c80",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 8,
+      "stage": "baseline/runtime_14",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=8"
+      ],
+      "returncode": 0,
+      "log_sha256": "834b153b0807342afd47f989bf8f1266457fb032dd6a8e62bc9bb134ad4cc6e8",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 9,
+      "stage": "baseline/runtime_15",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=9"
+      ],
+      "returncode": 0,
+      "log_sha256": "d17500e79b12079948e943adff7e75d99f1c508efcb88e53e1ff8a21516733b2",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 10,
+      "stage": "baseline/runtime_16",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=10"
+      ],
+      "returncode": 0,
+      "log_sha256": "0e7b5433e20227f9bb2debe62416b06b31f3d7a8112e271270008f039042ab60",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 11,
+      "stage": "baseline/runtime_17",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=11"
+      ],
+      "returncode": 0,
+      "log_sha256": "810b346e6257c114b091d531c5277b2838faf7c5b9bf4e1cc5ce3aa492edcdd9",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 12,
+      "stage": "baseline/runtime_18",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=12"
+      ],
+      "returncode": 0,
+      "log_sha256": "0bbbdac80a289b84f0f7f20d5ac67e6859a774f4521c190870b5ec02fb27373b",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 13,
+      "stage": "baseline/runtime_19",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=13"
+      ],
+      "returncode": 0,
+      "log_sha256": "8d50edd366a14a91eb0f3da68480b0ab33c5a997d270c765cce5bf3e084c7e28",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 14,
+      "stage": "baseline/runtime_20",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=14"
+      ],
+      "returncode": 0,
+      "log_sha256": "ee5a5f60c601ae85c6719c4fbc734a05dc930fcc61e864d19828f9f2a66dcfc1",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 15,
+      "stage": "baseline/runtime_21",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=15"
+      ],
+      "returncode": 0,
+      "log_sha256": "202beed025ea20563d79d85f06e799ecc32ac94f87903c7b0c6e298ff9ece882",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "POSITIVE_CONTROL_PASS",
+      "cut": "PREFIX",
+      "prefix": 16,
+      "stage": "baseline/runtime_22",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=16"
+      ],
+      "returncode": 0,
+      "log_sha256": "400e88aa3fac501d52c679e0e26eee82ff99ec2501b2e2ab7e28d99a561aa553",
+      "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+      "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+    },
+    {
+      "verdict": "EXPECTED_MUTATION_REFUSAL",
+      "witness": {
+        "cycles": 10,
+        "fault_cycle": 8,
+        "checking": 1,
+        "pc": 20,
+        "stopped_pc": 20,
+        "rec_active": 0,
+        "suffix_closed": 0,
+        "qe_idle": 0,
+        "win_idle": 1,
+        "qe_accepts": 1,
+        "terminals": 0,
+        "vm_stores": 0,
+        "sink_words": 0,
+        "written_words": 0,
+        "su_accepts": 0,
+        "suppress": 0,
+        "su_idle": 1,
+        "xs_we": 0,
+        "kv_we": 0
+      },
+      "fatal_time": 13000,
+      "fatal_line": 1353,
+      "stage": "physical_QE_gate/runtime_0",
+      "args": [
+        "+CUT=GO"
+      ],
+      "returncode": 1,
+      "log_sha256": "34fc822fb42faca6b539a794eaafc1b780650513eb58da380471b68d535ad546",
+      "binary_sha256": "0ed7c845a54bb0f4eddfb26b0eb088abf3aa5252ecc8c2215028cf690e8172b5",
+      "snapshot_digest": "f491c3a8aa3f7a27f20038904d70db243549b820163fba1c6f159d1c6b7f945b"
+    },
+    {
+      "verdict": "EXPECTED_MUTATION_REFUSAL",
+      "witness": {
+        "cycles": 10,
+        "fault_cycle": 8,
+        "checking": 1,
+        "pc": 21,
+        "stopped_pc": 20,
+        "rec_active": 0,
+        "suffix_closed": 1,
+        "qe_idle": 1,
+        "win_idle": 1,
+        "qe_accepts": 0,
+        "terminals": 0,
+        "vm_stores": 0,
+        "sink_words": 0,
+        "written_words": 0,
+        "su_accepts": 0,
+        "suppress": 0,
+        "su_idle": 1,
+        "xs_we": 0,
+        "kv_we": 0
+      },
+      "fatal_time": 13000,
+      "fatal_line": 1299,
+      "stage": "PC_advance/runtime_0",
+      "args": [
+        "+CUT=GO"
+      ],
+      "returncode": 1,
+      "log_sha256": "0004efe01be6f985bdca970eec76e2e5f4db43e6ac61cf48dc9b8649c46a65a8",
+      "binary_sha256": "8e7dd7b2593b66f21551ebc27ea2d3b950c76714e5f1877df223a4abc5b7cbd4",
+      "snapshot_digest": "97895091d87ec3b18019c9c9682b55f9d0b4c7be62d6c5e20b2df062d7a828aa"
+    },
+    {
+      "verdict": "EXPECTED_MUTATION_REFUSAL",
+      "witness": {
+        "cycles": 45,
+        "fault_cycle": 9,
+        "checking": 1,
+        "pc": 21,
+        "stopped_pc": 21,
+        "rec_active": 0,
+        "suffix_closed": 1,
+        "qe_idle": 1,
+        "win_idle": 1,
+        "qe_accepts": 1,
+        "terminals": 16,
+        "vm_stores": 16,
+        "sink_words": 0,
+        "written_words": 0,
+        "su_accepts": 0,
+        "suppress": 0,
+        "su_idle": 1,
+        "xs_we": 0,
+        "kv_we": 0
+      },
+      "fatal_time": 48000,
+      "fatal_line": 1366,
+      "stage": "VM_frozen_store_drop/runtime_0",
+      "args": [
+        "+CUT=PREFIX",
+        "+PREFIX=0"
+      ],
+      "returncode": 1,
+      "log_sha256": "f062b1e480cba27a2b358d7bc38ac93ec13c1fd8aa9259cd29431a29ae4ff475",
+      "binary_sha256": "e414edbd80b8e5f52bc6f5ace21cf4d979e6e9036c8ac666fc147a60b0d0c0be",
+      "snapshot_digest": "8ad9281c6a34b33ad89fd3de6bae4b0469047dcb05339fb7ce1ca63b4d1c7e0f"
+    },
+    {
+      "verdict": "EXPECTED_MUTATION_REFUSAL",
+      "witness": {
+        "cycles": 72,
+        "fault_cycle": 45,
+        "checking": 1,
+        "pc": 22,
+        "stopped_pc": 22,
+        "rec_active": 0,
+        "suffix_closed": 1,
+        "qe_idle": 1,
+        "win_idle": 1,
+        "qe_accepts": 1,
+        "terminals": 16,
+        "vm_stores": 16,
+        "sink_words": 512,
+        "written_words": 512,
+        "su_accepts": 1,
+        "suppress": 1,
+        "su_idle": 0,
+        "xs_we": 1,
+        "kv_we": 0
+      },
+      "fatal_time": 75000,
+      "fatal_line": 1305,
+      "stage": "scalar_suppression/runtime_0",
+      "args": [
+        "+CUT=SU_SUFFIX"
+      ],
+      "returncode": 1,
+      "log_sha256": "46f8447a2de2403cf26c05d471dfe06a39f7ae8817ede4c3e3a7998339c39e91",
+      "binary_sha256": "f7541cb220f9da47bed07aa4a6e7b35857f425211c83325ab1bfe00b3f9aea89",
+      "snapshot_digest": "fd902e3b05e66d972128679ab7b97e2453e167c6a14cc5e086cfa24ad65badb4"
+    }
+  ],
+  "historical_full27_verdict": "FAIL_UNCHANGED",
+  "plan_sha256": "dac18f2a5966332299b0111a0d5a6f09adddb1a9a8f61333762fc8db0b4118f4",
+  "runtime_qualification": true,
+  "fulltoken": false,
+  "adoption": false,
+  "hardware_admitted": false
+}

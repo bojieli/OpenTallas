@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.qrom-local-ready-service-parent-review.v1",
+  "status": "REPRODUCIBLE_MODEL_PHYSICAL_AND_PERFORMANCE_ADMISSION_FAIL",
+  "source_commits": [
+    "1be87692e",
+    "b7bf96fd7"
+  ],
+  "focused_tests": 19,
+  "pin_entries_verified": 71,
+  "cold_model_replay": [
+    "local parent exact JSON",
+    "owned readiness exact JSON",
+    "parallel owner screen exact JSON"
+  ],
+  "priced_tile_cell_area_um2": 94491.74069971479,
+  "retained_historical_global_area_um2": 157385.58875971477,
+  "readiness_FFs_per_rank": 1201,
+  "readiness_cell_area_lower_bound_um2": 543.52782,
+  "readiness_predicate_export_cost_complete": false,
+  "actual_provider_instantiated": false,
+  "physical_failures": {
+    "worst_collector_clock_tracks": 387,
+    "worst_collector_reset_tracks": 410,
+    "reserved_each": 64,
+    "SS_reset_phase_violations": 49,
+    "FF_reset_phase_violations": 77,
+    "legal_sites_PG_pin_routes_proven": false
+  },
+  "parallel_service_screen": {
+    "owners_per_stack": 14,
+    "additional_known_reservation_mm2_per_rank": 11.48153258304,
+    "single_fill_lane_unchanged": true,
+    "conditional_lower_bound_s": 0.00196224,
+    "conditional_rate_ceiling": 509.62165688193085,
+    "adopted_rate": null
+  },
+  "next_action": "legal source-sized collector topology and reset release; independently bind command/owner/fill and causal finite calendar with complete baseline area debit",
+  "hardware_qualified": false,
+  "new_numerical_positions": 0
+}

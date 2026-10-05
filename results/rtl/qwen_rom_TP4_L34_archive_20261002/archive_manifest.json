@@ -1,0 +1,74 @@
+{
+  "artifact_sha256": {
+    "Q2_dependency_audit.json": "cd11b778b13fa21ce9f4aec212ffe8e90d0486534cf6f66d1879f143acb02b31",
+    "capture.json": "83a9b06f4730bdd4cc5e80fc8fcc91bb4f1ce86da2e964b71dcd3f1ec7d0fd0a",
+    "verification_capture.json": "f3850475b2f0cd615747282495109099d5cf8951324b5cd0bfa01d196c5d250c",
+    "verification_replay.json": "f3850475b2f0cd615747282495109099d5cf8951324b5cd0bfa01d196c5d250c"
+  },
+  "at": "2026-10-02T08:19:48.092149+00:00",
+  "capture_equals_independent_replay": true,
+  "claim_boundary": "Original TP4 checkpoint exactness only; successor source, physical feasibility and calibration remain separately gated.",
+  "coll_fault": 0,
+  "core_fault": 0,
+  "cycles": 4668,
+  "docs_edited": false,
+  "end_cycle": 163422,
+  "end_identity": {
+    "live_pids": [
+      1217332,
+      1220907
+    ],
+    "state": "live"
+  },
+  "exact_vector_count": 140,
+  "expected_checkpoint_status": "bit_exact",
+  "expected_status": "pending",
+  "full_token_exact": false,
+  "head_complete": false,
+  "heavy_jobs_launched": 0,
+  "intaken_L33_not_recaptured": true,
+  "latest_completed": "L34",
+  "loaded_at_poll": "L35",
+  "new_checkpoint_checks": {
+    "L34_die0_x.hex": {
+      "actual_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "expected_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L34_die1_x.hex": {
+      "actual_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "expected_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L34_die2_x.hex": {
+      "actual_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "expected_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L34_die3_x.hex": {
+      "actual_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "expected_sha256": "dc677fdcc12f16c04fc5dcc56411848a6d3224c9df8994a73c4a4c866a7cc5de",
+      "mismatches": 0,
+      "words": 4096
+    }
+  },
+  "processes_signalled": [],
+  "remaining_stages": [
+    "L35",
+    "head"
+  ],
+  "replay_command": "python3 tools/qwen_rom_source_gate.py --package results/rtl/qwen_rom_TP4_L34_archive_20261002/capture.json --source-root /tmp/opentallas-qwen-rom-q2-integration-20261002 --result /tmp/NEW-qwen-L34-replay.json",
+  "replay_source_ref": "360e74a1e4f04f7d0cca3c33dfb4f72842e58cb8",
+  "runtime_pid": 1220907,
+  "runtime_supervisor": 1217332,
+  "schema": "opentallas.qwen-rom-L34-immutable-archive.v1",
+  "seq_fault": 0,
+  "source_pins_unchanged_from_L33": true,
+  "start_cycle": 158754,
+  "stdout": "/home/ubuntu/w12/rt_tp4d/token.log",
+  "terminal_receipt_present": false,
+  "verifier_sha256": "15ebd3267ec70968866456c6f0809fd89b05f12977642881e2acf0f416741d3a"
+}

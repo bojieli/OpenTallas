@@ -1,0 +1,180 @@
+{
+  "status": "SOURCE_COPY_INTERFACE_RECONCILIATION_ONLY_NO_RTL_NO_BUILD",
+  "candidate_commit": "69dedf4afd7e2994de57549df8d0c609403d9050",
+  "provider_contract_commit": "b781b8b91f92e656526fa36940326d47b6f3cb88",
+  "peer_cancel_commit": "8a156f62548aa927414d1d2e4f1a00baa2898bbf",
+  "peer_interfaces_sha256": "c98fa39529b2f86e3d0f2301681d9b50a44326f9d7457cdedda1ebe0fb93d5d5",
+  "source_pins": {
+    "window_prefetch_recovery.sv": {
+      "origin_commit": "c09f3fe1500e17f14f2f75e88c03e49bb82995e4",
+      "origin_path": "rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_kv_prefetch.sv",
+      "origin_sha256": "9d8b57e2c6d69af99386d4109af9591521717d266b0d646bc33b34884b046055",
+      "copy_sha256": "cb4d37b0a722b4cc4226779eaa5cdf9dd83d4bf104f74947ae3ad0b240538ea9",
+      "enabled_diff_sha256": "b5c6da81e66e52e1e11313fa766e5f9463f885ff0f62390b16bfb1a3b997ba67",
+      "default_branch_inverse_rename_byte_identical": true,
+      "module_names": [
+        "ot_chip_v41x_window_kv_prefetch_recovery",
+        "ot_chip_v41x_window_kv_prefetch_recovery_legacy",
+        "ot_chip_v41x_window_kv_prefetch_recovery_enabled"
+      ]
+    },
+    "kv_reqmux_recovery.sv": {
+      "origin_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "origin_path": "rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+      "origin_sha256": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+      "copy_sha256": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35",
+      "enabled_diff_sha256": "7e6a1ed5f06e054b52852cd07d4fe547d985a3a7d925eab5206ff2a060fbd780",
+      "default_branch_inverse_rename_byte_identical": true,
+      "module_names": [
+        "ot_chip_v41x_kv_reqmux_recovery",
+        "ot_chip_v41x_kv_reqmux_recovery_legacy",
+        "ot_chip_v41x_kv_reqmux_recovery_enabled"
+      ]
+    },
+    "kv_rope_reqmux_recovery.sv": {
+      "origin_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "origin_path": "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+      "origin_sha256": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+      "copy_sha256": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd",
+      "enabled_diff_sha256": "d4db139458e9399ee9d0222c8fc8ad9df93c066e20c83a1ed00a21b608cf2264",
+      "default_branch_inverse_rename_byte_identical": true,
+      "module_names": [
+        "ot_chip_v41x_kv_rope_reqmux_recovery",
+        "ot_chip_v41x_kv_rope_reqmux_recovery_legacy",
+        "ot_chip_v41x_kv_rope_reqmux_recovery_enabled"
+      ]
+    },
+    "hbm_karb_recovery.sv": {
+      "origin_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "origin_path": "rtl/chip/ot_chip_v41x_hbm_karb.sv",
+      "origin_sha256": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+      "copy_sha256": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8",
+      "enabled_diff_sha256": "3387734362c9a18226d7297a31966ee373b410cbc75df5d94308ef4857d103b3",
+      "default_branch_inverse_rename_byte_identical": true,
+      "module_names": [
+        "ot_chip_v41x_hbm_karb_recovery",
+        "ot_chip_v41x_hbm_karb_recovery_legacy",
+        "ot_chip_v41x_hbm_karb_recovery_enabled"
+      ]
+    },
+    "idx_hbm_recovery.sv": {
+      "origin_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "origin_path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "origin_sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+      "copy_sha256": "0ca7752f23094788eb7ef6e161ce18662dc4e324c290413a4908ba38cfc8ec3c",
+      "enabled_diff_sha256": "ff92b7a49b4bed8269dfee774118f0180ae514704b753420d0be80aad7eddb49",
+      "default_branch_inverse_rename_byte_identical": true,
+      "module_names": [
+        "ot_hdc_v41x_idx_hbm_recovery",
+        "ot_hdc_v41x_idx_hbm_recovery_legacy",
+        "ot_hdc_v41x_idx_hbm_recovery_enabled"
+      ]
+    }
+  },
+  "WIN_STACK": 2,
+  "SELECT_STACK": 2,
+  "TAG17_owner_high3": "100",
+  "wire_tag_fields": {
+    "route_owner": 3,
+    "epoch": 9,
+    "sector": 5
+  },
+  "fence_token_bits": 1,
+  "token_role": "Held alternating control handshake only; no end-to-end generation/serial on wire. Identical epoch/sector/beat ghost cannot be detected; closed-provider no-old-deliveries provenance must be certified.",
+  "prepared_provider_state_bits": {
+    "backend_read_counts32x4": 128,
+    "backend_unissued_write_counts32x2": 64,
+    "backend_visibility_deadline": 64,
+    "backend_visibility_valid": 1,
+    "backend_selected_issue_ACK_pending": 1,
+    "source_provenance_violation": 1
+  },
+  "total_prepared_provider_plus_source_bits": 259,
+  "state_semantics": {
+    "rec_reads32x4": "Increment exact selected READ acceptance; decrement exact selected rsp_v&&rsp_rdy handshake. Counts Q plus R. Held response aliases R head; do not add separate held entry. At most8 READs globally under selected WINDOW credit8 contract.",
+    "rec_writes32x2": "Increment selected WRITE acceptance; decrement actual backend WRissue. At most1 selected unissued write globally. Not an intent-cancel ledger; WINDOW maintains WC/WS state.",
+    "rec_ack_pending1": "WRissue sets1; cleared at next backend clock bookkeeping. Bridges issue-to-source ACK obligation; not PHY completion.",
+    "rec_visible_at64_and_valid1": "MAX projected h_tcol+CWL+BURST over selected WRissue; clear when model now>=projected deadline. Simulation shadow only, no causal physical provider.",
+    "rec_violation1": "Source provenance violation latch blocks restart; uses existing issued/received/pending bookkeeping for exact read retirement."
+  },
+  "existing_shared_storage_reused": {
+    "NPC": 32,
+    "QD_per_PC": 64,
+    "RQD_per_PC": 32,
+    "RW": 16,
+    "MAXSKIP": 16,
+    "REFPB": 3,
+    "added_payload_storage": 0,
+    "mux_KARB_PIPE": 0,
+    "added_mux_KARB_sequential_state": 0,
+    "no_additional_read_identity_slots": "Existing tagged Q/R entries provide identities; optional228bit ledger cannot be counted automatically as required extra hardware."
+  },
+  "ports": {
+    "WINDOW_inputs": {
+      "rec_request": 1,
+      "rec_token": 1,
+      "rec_commit": 1,
+      "rec_down_empty": 1,
+      "rec_down_visible": 1,
+      "rec_down_token_ack": 1
+    },
+    "WINDOW_outputs": {
+      "rec_freeze": 1,
+      "rec_owner_empty": 1,
+      "rec_restart_ready": 1
+    },
+    "mux_KARB_inputs": {
+      "rec_freeze": 1,
+      "rec_token": 1,
+      "rec_commit": 1,
+      "rec_down_empty": 1,
+      "rec_down_visible": 1,
+      "rec_down_token_ack": 1
+    },
+    "mux_KARB_outputs": {
+      "rec_owner_empty": 1,
+      "rec_visible_empty": 1,
+      "rec_token_ack": 1
+    },
+    "backend_inputs": {
+      "rec_freeze": 1,
+      "rec_token": 1,
+      "rec_commit": 1
+    },
+    "backend_outputs": {
+      "rec_owner_empty": 1,
+      "rec_visible_empty": 1,
+      "rec_token_ack": 1
+    }
+  },
+  "causal_event_mapping": {
+    "local_cancel_ack": "Producer-specific new adapter receipt only: freeze + all accepted16 QE terminal outputs drained/discarded + actual sourceidle + logical local metadata cancel. Must not remove accepted WINDOW/WCWS intents. Not implemented by prepared provider.",
+    "WINDOW_owner_empty": "Frozen; IDLE or FR_PIPE pending0; no selected offer/response/done_write. WC/WS continuation must complete first.",
+    "backend_owner_empty": "freeze && !rec_ack_pending && counts zero && no selected active rsp_v or req_v; includes selected held return and ACK bridge. Other clients may stay active.",
+    "route_owner_empty": "Downstream empty plus no selected offer/return/writeACK on stateless route. Outer route uses legacy inner mux; no hidden inner queue at PIPE0.",
+    "token_ack": "token equality only when localownerempty&&projectedvisibleempty&&downstream token matches. No certifiedphysicalfence newly created.",
+    "rec_restart_ready": "All source/downstream logical closure and matching token, no provenance violation or ambiguous fault and no new block/prime/prefetch/re/packed_re. Parent cancellation wrapper must additionally gate on local_cancel_ack/QEidle and ACTUAL causal visibility/delivery provenance.",
+    "rec_commit": "Source-local rearm only after readiness; no reset or cancellation of backend/other-client queues."
+  },
+  "composition": {
+    "prepared_recovery_state_bits": 259,
+    "separate_adapter_estimate_bits": 19,
+    "sum_if_both_selected": 278,
+    "sum_is_not_new_physical_hardware_qualification": true,
+    "peer278observer_not_additional_to_259plus19": true,
+    "optional228readobserver_not_automatically_added": true,
+    "adapter_dff_proxy_um2": 5.5404,
+    "recovery_area_estimate_um2": 638.7244,
+    "healthy_added_stages_intended": 0,
+    "fault_latency": "QE suffix and source idle + local cancel ack; downstream drain requires bounded fairness/readiness and causal fence provider. No timer-based numerical bound.",
+    "slot_and_routing": "unqualified; no actual PHY ledger selected/priced"
+  },
+  "qualification": {
+    "actual_physical_provider_hardware_bits": "UNRESOLVED; 259 is prepared simulated copy state, not implemented PHY provider",
+    "producer_cancel_implemented": false,
+    "physical_visibility": false,
+    "service_provider_admission": false,
+    "recovery_gate": "FAIL397202; negative marker matched but exit1 violates oldSIGABRT rule; later controls unqualified",
+    "fulltoken": false
+  }
+}

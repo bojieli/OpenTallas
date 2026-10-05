@@ -1,0 +1,33 @@
+{
+  "status": "ENCLOSING_SOURCE_CONNECTED_DIRECTED_ACCEPT_RESET_PASS_FULL_PARENT_UNMEASURED",
+  "source_selection": "rtl/dsrom_sys/s81_capture_parent/selection.json",
+  "directed_terminal": "PASS S81 actual VM accept/reset 5 cases",
+  "scope": "literal source-derived retained VM acceptance cone with unchanged fullR128 capture leaf; no arithmetic/return/system-token/SSFF claim",
+  "focused_tests": 15,
+  "full_parent_lint": {
+    "tool": "Verilator4.038",
+    "status": "FAILED_RETAINED_CW24_AW30_SLICES",
+    "source_errors": [
+      "ot_hdc_v41x_vec_lane.sv:205",
+      "ot_hdc_v41x_vec_lane.sv:388",
+      "ot_hdc_v41x_vec_lane.sv:389",
+      "ot_hdc_v41x_vec.sv:554"
+    ],
+    "first_failure": "retained C8 PHY port comma in comment; added-only syntax repair selected; missing ISA include supplied",
+    "metadata_warning_option": "-Wno-TIMESCALEMOD, mixed retained metadata only; no timing/uncertainty changes"
+  },
+  "remaining": "current full-parent compiler/source-width behavior and executable emitted canonical phase/CFG/context dispatch; sole combined bit-exact token run not launched",
+  "no_remote_launch": true,
+  "live_existing_jobs_untouched": true,
+  "physical_admission": false,
+  "full_token_PASS": false,
+  "artifact_sha256": {
+    "parent_legacy_width_failed.log": "d48fb28a2156fade96a0d0d7b759c543bca12aae5f5e22eda642c7dce2be39b0",
+    "assignment_reset_bench.sv": "1de35733a7cffdbe15a968317f4491a5caca89afcc6b5c32cdaecf6fa6d837e4",
+    "model.json": "95edc6c57b0c97e5fca9203f04daa36e0e97f98087378e4e1adda22c7bb5359e",
+    "tests.log": "511fb971caf59261241ec2a3919d9d10c7dcb9ec044ee07d50b2db465184f057",
+    "assignment_reset_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "first_parent_parse_failed.log": "f51d8df14de3be3946ea7c2685ea97c0f92cbeb4f76feac370c41dfe36f0744e",
+    "assignment_reset_run.log": "f64aebf1af1fa4330344157ad5e5a7acf51cd20bddd8f6cb30d16ad87ec39f19"
+  }
+}

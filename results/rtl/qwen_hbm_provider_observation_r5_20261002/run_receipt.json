@@ -1,0 +1,73 @@
+{
+  "no_retries": true,
+  "records": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "-Wno-fatal",
+        "--top-module",
+        "tb_actual_controller",
+        "-Mdir",
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/obj",
+        "-I/home/ubuntu/qwen-provider-observation-r5-20261002/source",
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/source/controller_observed.sv",
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/source/tb_actual_controller.sv"
+      ],
+      "elapsed_seconds": 18.57054510479793,
+      "exit_code": 0,
+      "limit_seconds": 120,
+      "log": "compile.log",
+      "log_sha256": "e79905e817b53a106ca9310b08ffd97ce6ccfabc1100f9f5e2d136ee0f0915ff",
+      "pid": 2640563,
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/obj/Vtb_actual_controller",
+        "+CASE=0",
+        "+QHP_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case0.tsv",
+        "+QHP_CLIENT_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case0_client.tsv"
+      ],
+      "elapsed_seconds": 0.004619062878191471,
+      "exit_code": 0,
+      "limit_seconds": 29.99999835435301,
+      "log": "case0.log",
+      "log_sha256": "0d87843eaa742677bec076d4fef2526ca32b518e99bc93b8cb9f24b6cb58bedd",
+      "pid": 2641295,
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/obj/Vtb_actual_controller",
+        "+CASE=1",
+        "+QHP_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case1.tsv",
+        "+QHP_CLIENT_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case1_client.tsv"
+      ],
+      "elapsed_seconds": 0.006845751311630011,
+      "exit_code": 0,
+      "limit_seconds": 29.9951751511544,
+      "log": "case1.log",
+      "log_sha256": "1e3ab2c6e5639e11e39fbbd228c9f994e095dd43935adaa4938e48aa2a4da392",
+      "pid": 2641296,
+      "timed_out": false
+    },
+    {
+      "command": [
+        "/home/ubuntu/qwen-provider-observation-r5-20261002/obj/Vtb_actual_controller",
+        "+CASE=2",
+        "+QHP_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case2.tsv",
+        "+QHP_CLIENT_JOURNAL=/home/ubuntu/qwen-provider-observation-r5-20261002/case2_client.tsv"
+      ],
+      "elapsed_seconds": 0.0016733859665691853,
+      "exit_code": 0,
+      "limit_seconds": 29.988141962327063,
+      "log": "case2.log",
+      "log_sha256": "f353651054a2def243b0d780b061eb2180e9a0bd02af9e3c9e79a681b9acfec2",
+      "pid": 2641297,
+      "timed_out": false
+    }
+  ],
+  "whole_elapsed_seconds": 18.802602525800467
+}

@@ -1,0 +1,62 @@
+{
+  "record": "results/physical_abi3/asap7/bf16_weight_gather/pnr_slots3_cts12_1ns.json",
+  "sha256": "0f59c64c3cb6c6eb09148427e1ef72b685c4f48db709b25fe31872a77b3f3fe0",
+  "view": "asap7",
+  "top": "ot_a3_bf16_weight_gather",
+  "parameters": {},
+  "corner": "TT",
+  "tested_period_ns": 1.0,
+  "verified_current_frequency_mhz": null,
+  "routed_checks_pass": false,
+  "current_source_and_artifact_verified": false,
+  "source_issues": [],
+  "artifact_issues": [],
+  "missing_metrics": [],
+  "violations": [
+    "setup_violations",
+    "max_slew_violations",
+    "max_cap_violations",
+    "setup_wns_ns"
+  ],
+  "setup_wns_ns": -0.0131266,
+  "hold_wns_ns": 0.0336196,
+  "standard_cell_area_um2": 4816.74,
+  "false_path_from_ports": [],
+  "signal_integrity_constraints": {
+    "basis": "explicit SDC signal-integrity constraints this route was repaired against; absent from a record means the SDC carried only set_max_fanout 32 and the liberty files' own max_transition limits",
+    "library_declares_fanout_limit": false,
+    "library_default_max_fanout": [
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "pin_max_fanout_count": 0
+      },
+      {
+        "default_max_fanout": null,
+        "liberty": "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "pin_max_fanout_count": 0
+      }
+    ],
+    "max_fanout": 16,
+    "max_fanout_source": "command line",
+    "sdc_lines": [
+      "set_max_fanout 16 [current_design]"
+    ]
+  },
+  "overall_record_status": "not_met"
+}

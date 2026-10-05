@@ -1,0 +1,3801 @@
+{
+  "PVE2_or_PVE3_used": false,
+  "actual_endpoint_inventory": {
+    "L2": {
+      "GU_scalar_producer_source": "rtl/gpu/ot_gpu_qwen_gu64_l2.sv",
+      "epoch_bits": 16,
+      "generic_word_read_write_endpoint_present": false,
+      "scalar_data_bits": 32
+    },
+    "RF": {
+      "owner_metadata_required_outside": true,
+      "read_vectors": 2,
+      "source": "rtl/gpu/ot_gpu_rf_service.sv",
+      "tag_port": false,
+      "write_vectors": 1
+    },
+    "bulk_copy": {
+      "DEPTH": 1024,
+      "MAX_OUT": 512,
+      "response_ready_port": false,
+      "source": "rtl/gpu/ot_gpu_bulk_copy.sv"
+    },
+    "shared": {
+      "generation_port": false,
+      "ports": [
+        "valid",
+        "ready",
+        "write",
+        "addr10",
+        "wdata512",
+        "done",
+        "done_ready",
+        "rdata512"
+      ],
+      "source": "rtl/gpu/ot_gpu_scratch_service.sv"
+    }
+  },
+  "byte_arithmetic_contract": "Opaque bytes only; NaN,Inf,signed zero and I64 word patterns unchanged. Numerical primitives not executed here.",
+  "connector_field_bits": {
+    "L2_request": 704,
+    "L2_response": 704,
+    "home_receipt": 256,
+    "line_assembly": 1216,
+    "shared_request": 704,
+    "shared_response": 704,
+    "state_and_counters": 128
+  },
+  "connector_gate_equivalents_assumed": 4096,
+  "connector_register_bits": 4416,
+  "enabled_default": false,
+  "hardware_admitted": false,
+  "hardware_opcode_coverage": [],
+  "models": {
+    "DeepSeek": {
+      "L2_controller_slots": [
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            5013.152,
+            1977.44,
+            5525.152,
+            2041.44
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 1977.44,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2s0/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                5013.152,
+                5525.152
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 0
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            23199.056,
+            1977.44,
+            23711.056,
+            2041.44
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 1977.44,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4001,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8001,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2s1/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                23199.056,
+                23711.056
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 1
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            5013.152,
+            23591.28,
+            5525.152,
+            23655.28
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 23591.28,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2n0/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                5013.152,
+                5525.152
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 2
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            23199.056,
+            23591.28,
+            23711.056,
+            23655.28
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 23591.28,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4001,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8001,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2n1/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                23199.056,
+                23711.056
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 3
+        }
+      ],
+      "L2_generic_word_endpoint_source_present": false,
+      "SM_connector_slots": [
+        {
+          "SM": 0,
+          "bbox_um": [
+            2192.7520000000004,
+            8109.930554519317,
+            3592.7520000000004,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 1,
+          "bbox_um": [
+            4219.552000000001,
+            8109.930554519317,
+            5619.552000000001,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 2,
+          "bbox_um": [
+            6246.352000000001,
+            8109.930554519317,
+            7646.352000000001,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 3,
+          "bbox_um": [
+            8273.152,
+            8109.930554519317,
+            9673.152,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 8,
+          "bbox_um": [
+            22526.847999999998,
+            8109.930554519317,
+            23926.847999999998,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 9,
+          "bbox_um": [
+            24553.647999999997,
+            8109.930554519317,
+            25953.647999999997,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 10,
+          "bbox_um": [
+            26580.447999999997,
+            8109.930554519317,
+            27980.447999999997,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 11,
+          "bbox_um": [
+            28607.248,
+            8109.930554519317,
+            30007.248,
+            8113.525562519318
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 4,
+          "bbox_um": [
+            2192.7520000000004,
+            12501.930554519318,
+            3592.7520000000004,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 5,
+          "bbox_um": [
+            4219.552000000001,
+            12501.930554519318,
+            5619.552000000001,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 6,
+          "bbox_um": [
+            6246.352000000001,
+            12501.930554519318,
+            7646.352000000001,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 7,
+          "bbox_um": [
+            8273.152,
+            12501.930554519318,
+            9673.152,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 12,
+          "bbox_um": [
+            22526.847999999998,
+            12501.930554519318,
+            23926.847999999998,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 13,
+          "bbox_um": [
+            24553.647999999997,
+            12501.930554519318,
+            25953.647999999997,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 14,
+          "bbox_um": [
+            26580.447999999997,
+            12501.930554519318,
+            27980.447999999997,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 15,
+          "bbox_um": [
+            28607.248,
+            12501.930554519318,
+            30007.248,
+            12505.525562519319
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 16,
+          "bbox_um": [
+            2192.7520000000004,
+            16893.930554519317,
+            3592.7520000000004,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 17,
+          "bbox_um": [
+            4219.552000000001,
+            16893.930554519317,
+            5619.552000000001,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 18,
+          "bbox_um": [
+            6246.352000000001,
+            16893.930554519317,
+            7646.352000000001,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 19,
+          "bbox_um": [
+            8273.152,
+            16893.930554519317,
+            9673.152,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 24,
+          "bbox_um": [
+            22526.847999999998,
+            16893.930554519317,
+            23926.847999999998,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 25,
+          "bbox_um": [
+            24553.647999999997,
+            16893.930554519317,
+            25953.647999999997,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 26,
+          "bbox_um": [
+            26580.447999999997,
+            16893.930554519317,
+            27980.447999999997,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 27,
+          "bbox_um": [
+            28607.248,
+            16893.930554519317,
+            30007.248,
+            16897.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 20,
+          "bbox_um": [
+            2192.7520000000004,
+            21285.930554519317,
+            3592.7520000000004,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 21,
+          "bbox_um": [
+            4219.552000000001,
+            21285.930554519317,
+            5619.552000000001,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 22,
+          "bbox_um": [
+            6246.352000000001,
+            21285.930554519317,
+            7646.352000000001,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 23,
+          "bbox_um": [
+            8273.152,
+            21285.930554519317,
+            9673.152,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 28,
+          "bbox_um": [
+            22526.847999999998,
+            21285.930554519317,
+            23926.847999999998,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 29,
+          "bbox_um": [
+            24553.647999999997,
+            21285.930554519317,
+            25953.647999999997,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 30,
+          "bbox_um": [
+            26580.447999999997,
+            21285.930554519317,
+            27980.447999999997,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 31,
+          "bbox_um": [
+            28607.248,
+            21285.930554519317,
+            30007.248,
+            21289.525562519317
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        }
+      ],
+      "admission": "FAIL_PHYSICAL_SOURCE_BINDING",
+      "area": {
+        "actual_reserved_strip_residual_um2_per_SM": 34348.79599999999,
+        "existing_RF_shared_L2_SRAM_recharged": false,
+        "full_die_reserved_occupancy_mm2": 471.8800554201599,
+        "incremental_connector_cell_um2_per_SM": 2516.5056,
+        "incremental_connector_footprint_um2_per_SM": 5033.0112,
+        "incremental_controller_footprint_mm2_per_die": 0.0970544864,
+        "incremental_controller_footprint_um2_per_slice": 24263.6216,
+        "new_logic_fits_inside_existing_expanded_reservations": true
+      },
+      "atomic_connector_source_present": false,
+      "blockers": [
+        "actual mapped parent FF/cone placement and exhaustive routes remain unbound",
+        "new atomic connector/shared-L2 gateway has no connected source endpoint",
+        "all GU/KV cache writers must join the producer-range fence; generic L2 line read/write adapter absent; Qwen GU scalar producer is not generic L2 hardware coverage",
+        "new PG/via/crossing geometry and context SS/FF remain unqualified",
+        "Dewey actual event/provider interval reconciliation before total-token latency"
+      ],
+      "hardware_admitted": false,
+      "latency": {
+        "FF_hold_uncertainty_ps": 25,
+        "SS_setup_uncertainty_ps": 60,
+        "backend_wait_parameter": "actual positive bounded backend/byte-arbitration delay required; exampleB1 is not a measured guarantee",
+        "calendar_requires_actual_event_receipts": true,
+        "clock_GHz": 1.2,
+        "provisional_profiles": {
+          "L2_128_read": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 17408,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "L2_128",
+            "leaf_no_stall_ticks": 12,
+            "leaf_transactions": 4,
+            "no_stall_ticks": 30,
+            "payload64B_beats": 2,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": false
+          },
+          "L2_128_write": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 15360,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "L2_128",
+            "leaf_no_stall_ticks": 8,
+            "leaf_transactions": 4,
+            "no_stall_ticks": 26,
+            "payload64B_beats": 2,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": true
+          },
+          "shared64_read": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 10752,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "shared64",
+            "leaf_no_stall_ticks": 3,
+            "leaf_transactions": 1,
+            "no_stall_ticks": 20,
+            "payload64B_beats": 1,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": false
+          },
+          "shared64_write": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 10240,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "shared64",
+            "leaf_no_stall_ticks": 2,
+            "leaf_transactions": 1,
+            "no_stall_ticks": 19,
+            "payload64B_beats": 1,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": true
+          }
+        },
+        "queue_scope": "up to511 older occupied shared-client seats; weight traffic byte arbitration remains a separate provider bound",
+        "service_stall_bound_is_example_only": true,
+        "whole_token_ns": null
+      },
+      "routing": {
+        "C0_transport_reuse": "existing512data+512metadata pair, one arbiter credit; fetch/control and value transfer serialize, never free concurrent bandwidth",
+        "additional_wide_data_trunk_bits": 0,
+        "constructive_cut_screen_pass": true,
+        "existing_corridor_cuts": 14,
+        "existing_global_service_cuts": 6688,
+        "local_L2_cuts": 4,
+        "source_pending_route_bindings": [
+          "all original parent FFs unplaced; actual FF/cone endpoint ownership incomplete",
+          "new bank-local H1+C0+V1 source endpoint absent; Sagan atomic gateway must own all16bank tags/ACKs; Qwen shallowRF abstract remains unqualified",
+          "new PDN/clock/via geometry and pin escapes not source-bound;50% reservation is a proposal",
+          "full retained-parent detailed cuts and all unrelated provider occupancy required before routing sufficiency",
+          "Dewey actual typed ordered distance and shared-fetch interval reconciliation",
+          "full-context SS/FF closure"
+        ]
+      },
+      "source_SM_placement_adapter": [
+        {
+          "SM": 0,
+          "bbox_um": [
+            1792.7520000000004,
+            4318.465408805032,
+            3592.7520000000004,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            1792.7520000000004,
+            4318.465408805032,
+            3192.7520000000004,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            1792.7520000000004,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 0,
+            "geometric_slot": 0,
+            "producer_bank": 0,
+            "stack": 0,
+            "weight_client": 0
+          },
+          "stack": 0
+        },
+        {
+          "SM": 1,
+          "bbox_um": [
+            3819.5520000000006,
+            4318.465408805032,
+            5619.552000000001,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            3819.5520000000006,
+            4318.465408805032,
+            5219.552000000001,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            3819.5520000000006,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 1,
+            "geometric_slot": 1,
+            "producer_bank": 1,
+            "stack": 0,
+            "weight_client": 1
+          },
+          "stack": 0
+        },
+        {
+          "SM": 2,
+          "bbox_um": [
+            5846.352000000001,
+            4318.465408805032,
+            7646.352000000001,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            5846.352000000001,
+            4318.465408805032,
+            7246.352000000001,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            5846.352000000001,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 2,
+            "geometric_slot": 2,
+            "producer_bank": 2,
+            "stack": 0,
+            "weight_client": 2
+          },
+          "stack": 0
+        },
+        {
+          "SM": 3,
+          "bbox_um": [
+            7873.152,
+            4318.465408805032,
+            9673.152,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            7873.152,
+            4318.465408805032,
+            9273.152,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            7873.152,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 3,
+            "geometric_slot": 3,
+            "producer_bank": 3,
+            "stack": 0,
+            "weight_client": 3
+          },
+          "stack": 0
+        },
+        {
+          "SM": 8,
+          "bbox_um": [
+            22126.847999999998,
+            4318.465408805032,
+            23926.847999999998,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            22126.847999999998,
+            4318.465408805032,
+            23526.847999999998,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            22126.847999999998,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 8,
+            "geometric_slot": 4,
+            "producer_bank": 0,
+            "stack": 1,
+            "weight_client": 8
+          },
+          "stack": 1
+        },
+        {
+          "SM": 9,
+          "bbox_um": [
+            24153.647999999997,
+            4318.465408805032,
+            25953.647999999997,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            24153.647999999997,
+            4318.465408805032,
+            25553.647999999997,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            24153.647999999997,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 9,
+            "geometric_slot": 5,
+            "producer_bank": 1,
+            "stack": 1,
+            "weight_client": 9
+          },
+          "stack": 1
+        },
+        {
+          "SM": 10,
+          "bbox_um": [
+            26180.447999999997,
+            4318.465408805032,
+            27980.447999999997,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            26180.447999999997,
+            4318.465408805032,
+            27580.447999999997,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            26180.447999999997,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 10,
+            "geometric_slot": 6,
+            "producer_bank": 2,
+            "stack": 1,
+            "weight_client": 10
+          },
+          "stack": 1
+        },
+        {
+          "SM": 11,
+          "bbox_um": [
+            28207.248,
+            4318.465408805032,
+            30007.248,
+            8134.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            28207.248,
+            4318.465408805032,
+            29607.248,
+            5958.465408805032
+          ],
+          "service_origin_um": [
+            28207.248,
+            5990.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 11,
+            "geometric_slot": 7,
+            "producer_bank": 3,
+            "stack": 1,
+            "weight_client": 11
+          },
+          "stack": 1
+        },
+        {
+          "SM": 4,
+          "bbox_um": [
+            1792.7520000000004,
+            8710.465408805032,
+            3592.7520000000004,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            1792.7520000000004,
+            8710.465408805032,
+            3192.7520000000004,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            1792.7520000000004,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 4,
+            "geometric_slot": 8,
+            "producer_bank": 4,
+            "stack": 0,
+            "weight_client": 4
+          },
+          "stack": 0
+        },
+        {
+          "SM": 5,
+          "bbox_um": [
+            3819.5520000000006,
+            8710.465408805032,
+            5619.552000000001,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            3819.5520000000006,
+            8710.465408805032,
+            5219.552000000001,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            3819.5520000000006,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 5,
+            "geometric_slot": 9,
+            "producer_bank": 5,
+            "stack": 0,
+            "weight_client": 5
+          },
+          "stack": 0
+        },
+        {
+          "SM": 6,
+          "bbox_um": [
+            5846.352000000001,
+            8710.465408805032,
+            7646.352000000001,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            5846.352000000001,
+            8710.465408805032,
+            7246.352000000001,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            5846.352000000001,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 6,
+            "geometric_slot": 10,
+            "producer_bank": 6,
+            "stack": 0,
+            "weight_client": 6
+          },
+          "stack": 0
+        },
+        {
+          "SM": 7,
+          "bbox_um": [
+            7873.152,
+            8710.465408805032,
+            9673.152,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            7873.152,
+            8710.465408805032,
+            9273.152,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            7873.152,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 7,
+            "geometric_slot": 11,
+            "producer_bank": 7,
+            "stack": 0,
+            "weight_client": 7
+          },
+          "stack": 0
+        },
+        {
+          "SM": 12,
+          "bbox_um": [
+            22126.847999999998,
+            8710.465408805032,
+            23926.847999999998,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            22126.847999999998,
+            8710.465408805032,
+            23526.847999999998,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            22126.847999999998,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 12,
+            "geometric_slot": 12,
+            "producer_bank": 4,
+            "stack": 1,
+            "weight_client": 12
+          },
+          "stack": 1
+        },
+        {
+          "SM": 13,
+          "bbox_um": [
+            24153.647999999997,
+            8710.465408805032,
+            25953.647999999997,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            24153.647999999997,
+            8710.465408805032,
+            25553.647999999997,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            24153.647999999997,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 13,
+            "geometric_slot": 13,
+            "producer_bank": 5,
+            "stack": 1,
+            "weight_client": 13
+          },
+          "stack": 1
+        },
+        {
+          "SM": 14,
+          "bbox_um": [
+            26180.447999999997,
+            8710.465408805032,
+            27980.447999999997,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            26180.447999999997,
+            8710.465408805032,
+            27580.447999999997,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            26180.447999999997,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 14,
+            "geometric_slot": 14,
+            "producer_bank": 6,
+            "stack": 1,
+            "weight_client": 14
+          },
+          "stack": 1
+        },
+        {
+          "SM": 15,
+          "bbox_um": [
+            28207.248,
+            8710.465408805032,
+            30007.248,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            28207.248,
+            8710.465408805032,
+            29607.248,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            28207.248,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 15,
+            "geometric_slot": 15,
+            "producer_bank": 7,
+            "stack": 1,
+            "weight_client": 15
+          },
+          "stack": 1
+        },
+        {
+          "SM": 16,
+          "bbox_um": [
+            1792.7520000000004,
+            13102.465408805032,
+            3592.7520000000004,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            1792.7520000000004,
+            13102.465408805032,
+            3192.7520000000004,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            1792.7520000000004,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 16,
+            "geometric_slot": 16,
+            "producer_bank": 0,
+            "stack": 2,
+            "weight_client": 16
+          },
+          "stack": 2
+        },
+        {
+          "SM": 17,
+          "bbox_um": [
+            3819.5520000000006,
+            13102.465408805032,
+            5619.552000000001,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            3819.5520000000006,
+            13102.465408805032,
+            5219.552000000001,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            3819.5520000000006,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 17,
+            "geometric_slot": 17,
+            "producer_bank": 1,
+            "stack": 2,
+            "weight_client": 17
+          },
+          "stack": 2
+        },
+        {
+          "SM": 18,
+          "bbox_um": [
+            5846.352000000001,
+            13102.465408805032,
+            7646.352000000001,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            5846.352000000001,
+            13102.465408805032,
+            7246.352000000001,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            5846.352000000001,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 18,
+            "geometric_slot": 18,
+            "producer_bank": 2,
+            "stack": 2,
+            "weight_client": 18
+          },
+          "stack": 2
+        },
+        {
+          "SM": 19,
+          "bbox_um": [
+            7873.152,
+            13102.465408805032,
+            9673.152,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            7873.152,
+            13102.465408805032,
+            9273.152,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            7873.152,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 19,
+            "geometric_slot": 19,
+            "producer_bank": 3,
+            "stack": 2,
+            "weight_client": 19
+          },
+          "stack": 2
+        },
+        {
+          "SM": 24,
+          "bbox_um": [
+            22126.847999999998,
+            13102.465408805032,
+            23926.847999999998,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            22126.847999999998,
+            13102.465408805032,
+            23526.847999999998,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            22126.847999999998,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 24,
+            "geometric_slot": 20,
+            "producer_bank": 0,
+            "stack": 3,
+            "weight_client": 24
+          },
+          "stack": 3
+        },
+        {
+          "SM": 25,
+          "bbox_um": [
+            24153.647999999997,
+            13102.465408805032,
+            25953.647999999997,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            24153.647999999997,
+            13102.465408805032,
+            25553.647999999997,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            24153.647999999997,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 25,
+            "geometric_slot": 21,
+            "producer_bank": 1,
+            "stack": 3,
+            "weight_client": 25
+          },
+          "stack": 3
+        },
+        {
+          "SM": 26,
+          "bbox_um": [
+            26180.447999999997,
+            13102.465408805032,
+            27980.447999999997,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            26180.447999999997,
+            13102.465408805032,
+            27580.447999999997,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            26180.447999999997,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 26,
+            "geometric_slot": 22,
+            "producer_bank": 2,
+            "stack": 3,
+            "weight_client": 26
+          },
+          "stack": 3
+        },
+        {
+          "SM": 27,
+          "bbox_um": [
+            28207.248,
+            13102.465408805032,
+            30007.248,
+            16918.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            28207.248,
+            13102.465408805032,
+            29607.248,
+            14742.465408805032
+          ],
+          "service_origin_um": [
+            28207.248,
+            14774.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 27,
+            "geometric_slot": 23,
+            "producer_bank": 3,
+            "stack": 3,
+            "weight_client": 27
+          },
+          "stack": 3
+        },
+        {
+          "SM": 20,
+          "bbox_um": [
+            1792.7520000000004,
+            17494.46540880503,
+            3592.7520000000004,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            1792.7520000000004,
+            17494.46540880503,
+            3192.7520000000004,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            1792.7520000000004,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 20,
+            "geometric_slot": 24,
+            "producer_bank": 4,
+            "stack": 2,
+            "weight_client": 20
+          },
+          "stack": 2
+        },
+        {
+          "SM": 21,
+          "bbox_um": [
+            3819.5520000000006,
+            17494.46540880503,
+            5619.552000000001,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            3819.5520000000006,
+            17494.46540880503,
+            5219.552000000001,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            3819.5520000000006,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 21,
+            "geometric_slot": 25,
+            "producer_bank": 5,
+            "stack": 2,
+            "weight_client": 21
+          },
+          "stack": 2
+        },
+        {
+          "SM": 22,
+          "bbox_um": [
+            5846.352000000001,
+            17494.46540880503,
+            7646.352000000001,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            5846.352000000001,
+            17494.46540880503,
+            7246.352000000001,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            5846.352000000001,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 22,
+            "geometric_slot": 26,
+            "producer_bank": 6,
+            "stack": 2,
+            "weight_client": 22
+          },
+          "stack": 2
+        },
+        {
+          "SM": 23,
+          "bbox_um": [
+            7873.152,
+            17494.46540880503,
+            9673.152,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            7873.152,
+            17494.46540880503,
+            9273.152,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            7873.152,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 23,
+            "geometric_slot": 27,
+            "producer_bank": 7,
+            "stack": 2,
+            "weight_client": 23
+          },
+          "stack": 2
+        },
+        {
+          "SM": 28,
+          "bbox_um": [
+            22126.847999999998,
+            17494.46540880503,
+            23926.847999999998,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            22126.847999999998,
+            17494.46540880503,
+            23526.847999999998,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            22126.847999999998,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 28,
+            "geometric_slot": 28,
+            "producer_bank": 4,
+            "stack": 3,
+            "weight_client": 28
+          },
+          "stack": 3
+        },
+        {
+          "SM": 29,
+          "bbox_um": [
+            24153.647999999997,
+            17494.46540880503,
+            25953.647999999997,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            24153.647999999997,
+            17494.46540880503,
+            25553.647999999997,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            24153.647999999997,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 29,
+            "geometric_slot": 29,
+            "producer_bank": 5,
+            "stack": 3,
+            "weight_client": 29
+          },
+          "stack": 3
+        },
+        {
+          "SM": 30,
+          "bbox_um": [
+            26180.447999999997,
+            17494.46540880503,
+            27980.447999999997,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            26180.447999999997,
+            17494.46540880503,
+            27580.447999999997,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            26180.447999999997,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 30,
+            "geometric_slot": 30,
+            "producer_bank": 6,
+            "stack": 3,
+            "weight_client": 30
+          },
+          "stack": 3
+        },
+        {
+          "SM": 31,
+          "bbox_um": [
+            28207.248,
+            17494.46540880503,
+            30007.248,
+            21310.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            28207.248,
+            17494.46540880503,
+            29607.248,
+            19134.46540880503
+          ],
+          "service_origin_um": [
+            28207.248,
+            19166.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 31,
+            "geometric_slot": 31,
+            "producer_bank": 7,
+            "stack": 3,
+            "weight_client": 31
+          },
+          "stack": 3
+        }
+      ],
+      "source_cut_owner_adapter": [
+        {
+          "old_geometric_cut_SM": 0,
+          "source_bank": 0,
+          "source_provider_SM": 0,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 1,
+          "source_bank": 1,
+          "source_provider_SM": 1,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 2,
+          "source_bank": 2,
+          "source_provider_SM": 2,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 3,
+          "source_bank": 3,
+          "source_provider_SM": 3,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 4,
+          "source_bank": 0,
+          "source_provider_SM": 8,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 5,
+          "source_bank": 1,
+          "source_provider_SM": 9,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 6,
+          "source_bank": 2,
+          "source_provider_SM": 10,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 7,
+          "source_bank": 3,
+          "source_provider_SM": 11,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 8,
+          "source_bank": 4,
+          "source_provider_SM": 4,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 9,
+          "source_bank": 5,
+          "source_provider_SM": 5,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 10,
+          "source_bank": 6,
+          "source_provider_SM": 6,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 11,
+          "source_bank": 7,
+          "source_provider_SM": 7,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 12,
+          "source_bank": 4,
+          "source_provider_SM": 12,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 13,
+          "source_bank": 5,
+          "source_provider_SM": 13,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 14,
+          "source_bank": 6,
+          "source_provider_SM": 14,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 15,
+          "source_bank": 7,
+          "source_provider_SM": 15,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 16,
+          "source_bank": 0,
+          "source_provider_SM": 16,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 17,
+          "source_bank": 1,
+          "source_provider_SM": 17,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 18,
+          "source_bank": 2,
+          "source_provider_SM": 18,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 19,
+          "source_bank": 3,
+          "source_provider_SM": 19,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 20,
+          "source_bank": 0,
+          "source_provider_SM": 24,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 21,
+          "source_bank": 1,
+          "source_provider_SM": 25,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 22,
+          "source_bank": 2,
+          "source_provider_SM": 26,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 23,
+          "source_bank": 3,
+          "source_provider_SM": 27,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 24,
+          "source_bank": 4,
+          "source_provider_SM": 20,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 25,
+          "source_bank": 5,
+          "source_provider_SM": 21,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 26,
+          "source_bank": 6,
+          "source_provider_SM": 22,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 27,
+          "source_bank": 7,
+          "source_provider_SM": 23,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 28,
+          "source_bank": 4,
+          "source_provider_SM": 28,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 29,
+          "source_bank": 5,
+          "source_provider_SM": 29,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 30,
+          "source_bank": 6,
+          "source_provider_SM": 30,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 31,
+          "source_bank": 7,
+          "source_provider_SM": 31,
+          "stack": 3
+        }
+      ],
+      "source_quad_clients": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          32
+        ],
+        [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          33
+        ],
+        [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          34
+        ],
+        [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          35
+        ]
+      ],
+      "storage": {
+        "L2_banks_per_slice": 8,
+        "L2_bytes_per_bank": 262144,
+        "L2_bytes_per_die": 8388608,
+        "L2_macros_per_die": 256,
+        "RF_logical_bytes_per_SM": 262144,
+        "RF_macros_per_SM": 128,
+        "RF_physical_bytes_per_SM": 524288,
+        "retained_bulk_outstanding": 512,
+        "retained_bulk_ring_bytes_per_SM": 131072,
+        "shared64B_beats": 1024,
+        "shared_bytes_per_SM": 65536,
+        "shared_macro_count": 2
+      }
+    },
+    "Qwen": {
+      "L2_controller_slots": [
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            10848.176,
+            1977.44,
+            11360.176,
+            2041.44
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 1977.44,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2s0/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                10848.176,
+                11360.176
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 0
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            18924.848,
+            1977.44,
+            19436.848,
+            2041.44
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 1977.44,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2s1/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                18924.848,
+                19436.848
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 1
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            10848.176,
+            23591.28,
+            11360.176,
+            23655.28
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 23591.28,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2n0/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                10848.176,
+                11360.176
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 2
+        },
+        {
+          "baseline_Qwen_controller_scope": "same32KB1R1W process geometry and explicit candidate controller cost; DS does not inherit GU scalar producer arithmetic qualification",
+          "bbox_um": [
+            18924.848,
+            23591.28,
+            19436.848,
+            23655.28
+          ],
+          "controller_capacity_um2": 32768,
+          "controller_footprint_um2": 24263.6216,
+          "cuts": [
+            {
+              "actual_new_PDN_bound": false,
+              "axis": "X",
+              "coordinate_um": 23591.28,
+              "demand_scope": "dedicated source-interface reservation upper; not a routed-net measurement",
+              "demand_tracks": 2368,
+              "layers": {
+                "M7": {
+                  "PG_clock_via_reserved_tracks": 4000,
+                  "origin_DBU": 16,
+                  "pitch_DBU": 64,
+                  "raw_tracks": 8000,
+                  "signal_tracks": 4000
+                },
+                "M9": {
+                  "PG_clock_via_reserved_tracks": 3200,
+                  "origin_DBU": 116,
+                  "pitch_DBU": 80,
+                  "raw_tracks": 6400,
+                  "signal_tracks": 3200
+                }
+              },
+              "margin_tracks": 4832,
+              "owner": "L2n1/read_write_owner_bus",
+              "screen_pass": true,
+              "signal_capacity_tracks": 7200,
+              "span_um": [
+                18924.848,
+                19436.848
+              ]
+            }
+          ],
+          "fit": true,
+          "hardware_word_adapter_implemented": false,
+          "macro_halo_conflicts": [],
+          "stack": 3
+        }
+      ],
+      "L2_generic_word_endpoint_source_present": false,
+      "SM_connector_slots": [
+        {
+          "SM": 0,
+          "bbox_um": [
+            6706.200000000001,
+            7249.504680233604,
+            8106.200000000001,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 1,
+          "bbox_um": [
+            9133.0,
+            7249.504680233604,
+            10533.0,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 2,
+          "bbox_um": [
+            11559.800000000001,
+            7249.504680233604,
+            12959.800000000001,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 3,
+          "bbox_um": [
+            13986.600000000002,
+            7249.504680233604,
+            15386.600000000002,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 8,
+          "bbox_um": [
+            16413.4,
+            7249.504680233604,
+            17813.4,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 9,
+          "bbox_um": [
+            18840.2,
+            7249.504680233604,
+            20240.2,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 10,
+          "bbox_um": [
+            21267.0,
+            7249.504680233604,
+            22667.0,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 11,
+          "bbox_um": [
+            23693.800000000003,
+            7249.504680233604,
+            25093.800000000003,
+            7253.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 4,
+          "bbox_um": [
+            6706.200000000001,
+            12501.504680233604,
+            8106.200000000001,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 5,
+          "bbox_um": [
+            9133.0,
+            12501.504680233604,
+            10533.0,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 6,
+          "bbox_um": [
+            11559.800000000001,
+            12501.504680233604,
+            12959.800000000001,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 7,
+          "bbox_um": [
+            13986.600000000002,
+            12501.504680233604,
+            15386.600000000002,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 12,
+          "bbox_um": [
+            16413.4,
+            12501.504680233604,
+            17813.4,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 13,
+          "bbox_um": [
+            18840.2,
+            12501.504680233604,
+            20240.2,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 14,
+          "bbox_um": [
+            21267.0,
+            12501.504680233604,
+            22667.0,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 15,
+          "bbox_um": [
+            23693.800000000003,
+            12501.504680233604,
+            25093.800000000003,
+            12505.099688233604
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 16,
+          "bbox_um": [
+            6706.200000000001,
+            17753.5046802336,
+            8106.200000000001,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 17,
+          "bbox_um": [
+            9133.0,
+            17753.5046802336,
+            10533.0,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 18,
+          "bbox_um": [
+            11559.800000000001,
+            17753.5046802336,
+            12959.800000000001,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 19,
+          "bbox_um": [
+            13986.600000000002,
+            17753.5046802336,
+            15386.600000000002,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 24,
+          "bbox_um": [
+            16413.4,
+            17753.5046802336,
+            17813.4,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 25,
+          "bbox_um": [
+            18840.2,
+            17753.5046802336,
+            20240.2,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 26,
+          "bbox_um": [
+            21267.0,
+            17753.5046802336,
+            22667.0,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 27,
+          "bbox_um": [
+            23693.800000000003,
+            17753.5046802336,
+            25093.800000000003,
+            17757.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 20,
+          "bbox_um": [
+            6706.200000000001,
+            23005.5046802336,
+            8106.200000000001,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 21,
+          "bbox_um": [
+            9133.0,
+            23005.5046802336,
+            10533.0,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 22,
+          "bbox_um": [
+            11559.800000000001,
+            23005.5046802336,
+            12959.800000000001,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 23,
+          "bbox_um": [
+            13986.600000000002,
+            23005.5046802336,
+            15386.600000000002,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 28,
+          "bbox_um": [
+            16413.4,
+            23005.5046802336,
+            17813.4,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 29,
+          "bbox_um": [
+            18840.2,
+            23005.5046802336,
+            20240.2,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 30,
+          "bbox_um": [
+            21267.0,
+            23005.5046802336,
+            22667.0,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        },
+        {
+          "SM": 31,
+          "bbox_um": [
+            23693.800000000003,
+            23005.5046802336,
+            25093.800000000003,
+            23009.0996882336
+          ],
+          "fit": true,
+          "source_C0_ticket_held_through_reverse": true
+        }
+      ],
+      "admission": "FAIL_PHYSICAL_SOURCE_BINDING",
+      "area": {
+        "actual_reserved_strip_residual_um2_per_SM": 34945.01999999999,
+        "existing_RF_shared_L2_SRAM_recharged": false,
+        "full_die_reserved_occupancy_mm2": 457.48399132671994,
+        "incremental_connector_cell_um2_per_SM": 2516.5056,
+        "incremental_connector_footprint_um2_per_SM": 5033.0112,
+        "incremental_controller_footprint_mm2_per_die": 0.0970544864,
+        "incremental_controller_footprint_um2_per_slice": 24263.6216,
+        "new_logic_fits_inside_existing_expanded_reservations": true
+      },
+      "atomic_connector_source_present": false,
+      "blockers": [
+        "actual mapped parent FF/cone placement and exhaustive routes remain unbound",
+        "new atomic connector/shared-L2 gateway has no connected source endpoint",
+        "all GU/KV cache writers must join the producer-range fence; generic L2 line read/write adapter absent; Qwen GU scalar producer is not generic L2 hardware coverage",
+        "new PG/via/crossing geometry and context SS/FF remain unqualified",
+        "Dewey actual event/provider interval reconciliation before total-token latency"
+      ],
+      "hardware_admitted": false,
+      "latency": {
+        "FF_hold_uncertainty_ps": 25,
+        "SS_setup_uncertainty_ps": 60,
+        "backend_wait_parameter": "actual positive bounded backend/byte-arbitration delay required; exampleB1 is not a measured guarantee",
+        "calendar_requires_actual_event_receipts": true,
+        "clock_GHz": 1.2,
+        "provisional_profiles": {
+          "L2_128_read": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 17408,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "L2_128",
+            "leaf_no_stall_ticks": 12,
+            "leaf_transactions": 4,
+            "no_stall_ticks": 30,
+            "payload64B_beats": 2,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": false
+          },
+          "L2_128_write": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 15360,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "L2_128",
+            "leaf_no_stall_ticks": 8,
+            "leaf_transactions": 4,
+            "no_stall_ticks": 26,
+            "payload64B_beats": 2,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": true
+          },
+          "shared64_read": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 10752,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "shared64",
+            "leaf_no_stall_ticks": 3,
+            "leaf_transactions": 1,
+            "no_stall_ticks": 20,
+            "payload64B_beats": 1,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": false
+          },
+          "shared64_write": {
+            "C0_front_recharged": false,
+            "RF_I64_RMW_recharged": false,
+            "bounded_ticks": 10240,
+            "clock_qualified": false,
+            "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+            "kind": "shared64",
+            "leaf_no_stall_ticks": 2,
+            "leaf_transactions": 1,
+            "no_stall_ticks": 19,
+            "payload64B_beats": 1,
+            "request_hops": 5,
+            "response_hops": 5,
+            "write": true
+          }
+        },
+        "queue_scope": "up to511 older occupied shared-client seats; weight traffic byte arbitration remains a separate provider bound",
+        "service_stall_bound_is_example_only": true,
+        "whole_token_ns": null
+      },
+      "routing": {
+        "C0_transport_reuse": "existing512data+512metadata pair, one arbiter credit; fetch/control and value transfer serialize, never free concurrent bandwidth",
+        "additional_wide_data_trunk_bits": 0,
+        "constructive_cut_screen_pass": true,
+        "existing_corridor_cuts": 10,
+        "existing_global_service_cuts": 6688,
+        "local_L2_cuts": 4,
+        "source_pending_route_bindings": [
+          "all original parent FFs unplaced; actual FF/cone endpoint ownership incomplete",
+          "new bank-local H1+C0+V1 source endpoint absent; Sagan atomic gateway must own all16bank tags/ACKs; Qwen shallowRF abstract remains unqualified",
+          "new PDN/clock/via geometry and pin escapes not source-bound;50% reservation is a proposal",
+          "full retained-parent detailed cuts and all unrelated provider occupancy required before routing sufficiency",
+          "Dewey actual typed ordered distance and shared-fetch interval reconciliation",
+          "full-context SS/FF closure"
+        ]
+      },
+      "source_SM_placement_adapter": [
+        {
+          "SM": 0,
+          "bbox_um": [
+            6306.200000000001,
+            2598.465408805032,
+            8506.2,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            6306.200000000001,
+            2598.465408805032,
+            8506.2,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            6306.200000000001,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 0,
+            "geometric_slot": 0,
+            "producer_bank": 0,
+            "stack": 0,
+            "weight_client": 0
+          },
+          "stack": 0
+        },
+        {
+          "SM": 1,
+          "bbox_um": [
+            8733.0,
+            2598.465408805032,
+            10933.0,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            8733.0,
+            2598.465408805032,
+            10933.0,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            8733.0,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 1,
+            "geometric_slot": 1,
+            "producer_bank": 1,
+            "stack": 0,
+            "weight_client": 1
+          },
+          "stack": 0
+        },
+        {
+          "SM": 2,
+          "bbox_um": [
+            11159.800000000001,
+            2598.465408805032,
+            13359.800000000001,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            11159.800000000001,
+            2598.465408805032,
+            13359.800000000001,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            11159.800000000001,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 2,
+            "geometric_slot": 2,
+            "producer_bank": 2,
+            "stack": 0,
+            "weight_client": 2
+          },
+          "stack": 0
+        },
+        {
+          "SM": 3,
+          "bbox_um": [
+            13586.600000000002,
+            2598.465408805032,
+            15786.600000000002,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            13586.600000000002,
+            2598.465408805032,
+            15786.600000000002,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            13586.600000000002,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 3,
+            "geometric_slot": 3,
+            "producer_bank": 3,
+            "stack": 0,
+            "weight_client": 3
+          },
+          "stack": 0
+        },
+        {
+          "SM": 8,
+          "bbox_um": [
+            16013.400000000001,
+            2598.465408805032,
+            18213.4,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            16013.400000000001,
+            2598.465408805032,
+            18213.4,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            16013.400000000001,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 8,
+            "geometric_slot": 4,
+            "producer_bank": 0,
+            "stack": 1,
+            "weight_client": 8
+          },
+          "stack": 1
+        },
+        {
+          "SM": 9,
+          "bbox_um": [
+            18440.2,
+            2598.465408805032,
+            20640.2,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            18440.2,
+            2598.465408805032,
+            20640.2,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            18440.2,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 9,
+            "geometric_slot": 5,
+            "producer_bank": 1,
+            "stack": 1,
+            "weight_client": 9
+          },
+          "stack": 1
+        },
+        {
+          "SM": 10,
+          "bbox_um": [
+            20867.0,
+            2598.465408805032,
+            23067.0,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            20867.0,
+            2598.465408805032,
+            23067.0,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            20867.0,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 10,
+            "geometric_slot": 6,
+            "producer_bank": 2,
+            "stack": 1,
+            "weight_client": 10
+          },
+          "stack": 1
+        },
+        {
+          "SM": 11,
+          "bbox_um": [
+            23293.800000000003,
+            2598.465408805032,
+            25493.800000000003,
+            7274.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            23293.800000000003,
+            2598.465408805032,
+            25493.800000000003,
+            5098.465408805032
+          ],
+          "service_origin_um": [
+            23293.800000000003,
+            5130.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 11,
+            "geometric_slot": 7,
+            "producer_bank": 3,
+            "stack": 1,
+            "weight_client": 11
+          },
+          "stack": 1
+        },
+        {
+          "SM": 4,
+          "bbox_um": [
+            6306.200000000001,
+            7850.465408805032,
+            8506.2,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            6306.200000000001,
+            7850.465408805032,
+            8506.2,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            6306.200000000001,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 4,
+            "geometric_slot": 8,
+            "producer_bank": 4,
+            "stack": 0,
+            "weight_client": 4
+          },
+          "stack": 0
+        },
+        {
+          "SM": 5,
+          "bbox_um": [
+            8733.0,
+            7850.465408805032,
+            10933.0,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            8733.0,
+            7850.465408805032,
+            10933.0,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            8733.0,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 5,
+            "geometric_slot": 9,
+            "producer_bank": 5,
+            "stack": 0,
+            "weight_client": 5
+          },
+          "stack": 0
+        },
+        {
+          "SM": 6,
+          "bbox_um": [
+            11159.800000000001,
+            7850.465408805032,
+            13359.800000000001,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            11159.800000000001,
+            7850.465408805032,
+            13359.800000000001,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            11159.800000000001,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 6,
+            "geometric_slot": 10,
+            "producer_bank": 6,
+            "stack": 0,
+            "weight_client": 6
+          },
+          "stack": 0
+        },
+        {
+          "SM": 7,
+          "bbox_um": [
+            13586.600000000002,
+            7850.465408805032,
+            15786.600000000002,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            13586.600000000002,
+            7850.465408805032,
+            15786.600000000002,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            13586.600000000002,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 32,
+            "SM": 7,
+            "geometric_slot": 11,
+            "producer_bank": 7,
+            "stack": 0,
+            "weight_client": 7
+          },
+          "stack": 0
+        },
+        {
+          "SM": 12,
+          "bbox_um": [
+            16013.400000000001,
+            7850.465408805032,
+            18213.4,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            16013.400000000001,
+            7850.465408805032,
+            18213.4,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            16013.400000000001,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 12,
+            "geometric_slot": 12,
+            "producer_bank": 4,
+            "stack": 1,
+            "weight_client": 12
+          },
+          "stack": 1
+        },
+        {
+          "SM": 13,
+          "bbox_um": [
+            18440.2,
+            7850.465408805032,
+            20640.2,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            18440.2,
+            7850.465408805032,
+            20640.2,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            18440.2,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 13,
+            "geometric_slot": 13,
+            "producer_bank": 5,
+            "stack": 1,
+            "weight_client": 13
+          },
+          "stack": 1
+        },
+        {
+          "SM": 14,
+          "bbox_um": [
+            20867.0,
+            7850.465408805032,
+            23067.0,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            20867.0,
+            7850.465408805032,
+            23067.0,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            20867.0,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 14,
+            "geometric_slot": 14,
+            "producer_bank": 6,
+            "stack": 1,
+            "weight_client": 14
+          },
+          "stack": 1
+        },
+        {
+          "SM": 15,
+          "bbox_um": [
+            23293.800000000003,
+            7850.465408805032,
+            25493.800000000003,
+            12526.465408805032
+          ],
+          "retained_actual_body_bbox_um": [
+            23293.800000000003,
+            7850.465408805032,
+            25493.800000000003,
+            10350.465408805032
+          ],
+          "service_origin_um": [
+            23293.800000000003,
+            10382.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 33,
+            "SM": 15,
+            "geometric_slot": 15,
+            "producer_bank": 7,
+            "stack": 1,
+            "weight_client": 15
+          },
+          "stack": 1
+        },
+        {
+          "SM": 16,
+          "bbox_um": [
+            6306.200000000001,
+            13102.465408805032,
+            8506.2,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            6306.200000000001,
+            13102.465408805032,
+            8506.2,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            6306.200000000001,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 16,
+            "geometric_slot": 16,
+            "producer_bank": 0,
+            "stack": 2,
+            "weight_client": 16
+          },
+          "stack": 2
+        },
+        {
+          "SM": 17,
+          "bbox_um": [
+            8733.0,
+            13102.465408805032,
+            10933.0,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            8733.0,
+            13102.465408805032,
+            10933.0,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            8733.0,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 17,
+            "geometric_slot": 17,
+            "producer_bank": 1,
+            "stack": 2,
+            "weight_client": 17
+          },
+          "stack": 2
+        },
+        {
+          "SM": 18,
+          "bbox_um": [
+            11159.800000000001,
+            13102.465408805032,
+            13359.800000000001,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            11159.800000000001,
+            13102.465408805032,
+            13359.800000000001,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            11159.800000000001,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 18,
+            "geometric_slot": 18,
+            "producer_bank": 2,
+            "stack": 2,
+            "weight_client": 18
+          },
+          "stack": 2
+        },
+        {
+          "SM": 19,
+          "bbox_um": [
+            13586.600000000002,
+            13102.465408805032,
+            15786.600000000002,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            13586.600000000002,
+            13102.465408805032,
+            15786.600000000002,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            13586.600000000002,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 19,
+            "geometric_slot": 19,
+            "producer_bank": 3,
+            "stack": 2,
+            "weight_client": 19
+          },
+          "stack": 2
+        },
+        {
+          "SM": 24,
+          "bbox_um": [
+            16013.400000000001,
+            13102.465408805032,
+            18213.4,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            16013.400000000001,
+            13102.465408805032,
+            18213.4,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            16013.400000000001,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 24,
+            "geometric_slot": 20,
+            "producer_bank": 0,
+            "stack": 3,
+            "weight_client": 24
+          },
+          "stack": 3
+        },
+        {
+          "SM": 25,
+          "bbox_um": [
+            18440.2,
+            13102.465408805032,
+            20640.2,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            18440.2,
+            13102.465408805032,
+            20640.2,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            18440.2,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 25,
+            "geometric_slot": 21,
+            "producer_bank": 1,
+            "stack": 3,
+            "weight_client": 25
+          },
+          "stack": 3
+        },
+        {
+          "SM": 26,
+          "bbox_um": [
+            20867.0,
+            13102.465408805032,
+            23067.0,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            20867.0,
+            13102.465408805032,
+            23067.0,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            20867.0,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 26,
+            "geometric_slot": 22,
+            "producer_bank": 2,
+            "stack": 3,
+            "weight_client": 26
+          },
+          "stack": 3
+        },
+        {
+          "SM": 27,
+          "bbox_um": [
+            23293.800000000003,
+            13102.465408805032,
+            25493.800000000003,
+            17778.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            23293.800000000003,
+            13102.465408805032,
+            25493.800000000003,
+            15602.465408805032
+          ],
+          "service_origin_um": [
+            23293.800000000003,
+            15634.465408805032
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 27,
+            "geometric_slot": 23,
+            "producer_bank": 3,
+            "stack": 3,
+            "weight_client": 27
+          },
+          "stack": 3
+        },
+        {
+          "SM": 20,
+          "bbox_um": [
+            6306.200000000001,
+            18354.46540880503,
+            8506.2,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            6306.200000000001,
+            18354.46540880503,
+            8506.2,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            6306.200000000001,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 20,
+            "geometric_slot": 24,
+            "producer_bank": 4,
+            "stack": 2,
+            "weight_client": 20
+          },
+          "stack": 2
+        },
+        {
+          "SM": 21,
+          "bbox_um": [
+            8733.0,
+            18354.46540880503,
+            10933.0,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            8733.0,
+            18354.46540880503,
+            10933.0,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            8733.0,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 21,
+            "geometric_slot": 25,
+            "producer_bank": 5,
+            "stack": 2,
+            "weight_client": 21
+          },
+          "stack": 2
+        },
+        {
+          "SM": 22,
+          "bbox_um": [
+            11159.800000000001,
+            18354.46540880503,
+            13359.800000000001,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            11159.800000000001,
+            18354.46540880503,
+            13359.800000000001,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            11159.800000000001,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 22,
+            "geometric_slot": 26,
+            "producer_bank": 6,
+            "stack": 2,
+            "weight_client": 22
+          },
+          "stack": 2
+        },
+        {
+          "SM": 23,
+          "bbox_um": [
+            13586.600000000002,
+            18354.46540880503,
+            15786.600000000002,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            13586.600000000002,
+            18354.46540880503,
+            15786.600000000002,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            13586.600000000002,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 34,
+            "SM": 23,
+            "geometric_slot": 27,
+            "producer_bank": 7,
+            "stack": 2,
+            "weight_client": 23
+          },
+          "stack": 2
+        },
+        {
+          "SM": 28,
+          "bbox_um": [
+            16013.400000000001,
+            18354.46540880503,
+            18213.4,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            16013.400000000001,
+            18354.46540880503,
+            18213.4,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            16013.400000000001,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 28,
+            "geometric_slot": 28,
+            "producer_bank": 4,
+            "stack": 3,
+            "weight_client": 28
+          },
+          "stack": 3
+        },
+        {
+          "SM": 29,
+          "bbox_um": [
+            18440.2,
+            18354.46540880503,
+            20640.2,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            18440.2,
+            18354.46540880503,
+            20640.2,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            18440.2,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 29,
+            "geometric_slot": 29,
+            "producer_bank": 5,
+            "stack": 3,
+            "weight_client": 29
+          },
+          "stack": 3
+        },
+        {
+          "SM": 30,
+          "bbox_um": [
+            20867.0,
+            18354.46540880503,
+            23067.0,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            20867.0,
+            18354.46540880503,
+            23067.0,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            20867.0,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 30,
+            "geometric_slot": 30,
+            "producer_bank": 6,
+            "stack": 3,
+            "weight_client": 30
+          },
+          "stack": 3
+        },
+        {
+          "SM": 31,
+          "bbox_um": [
+            23293.800000000003,
+            18354.46540880503,
+            25493.800000000003,
+            23030.46540880503
+          ],
+          "retained_actual_body_bbox_um": [
+            23293.800000000003,
+            18354.46540880503,
+            25493.800000000003,
+            20854.46540880503
+          ],
+          "service_origin_um": [
+            23293.800000000003,
+            20886.46540880503
+          ],
+          "source_provider_identity": {
+            "L2_vector_KV_client": 35,
+            "SM": 31,
+            "geometric_slot": 31,
+            "producer_bank": 7,
+            "stack": 3,
+            "weight_client": 31
+          },
+          "stack": 3
+        }
+      ],
+      "source_cut_owner_adapter": [
+        {
+          "old_geometric_cut_SM": 0,
+          "source_bank": 0,
+          "source_provider_SM": 0,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 1,
+          "source_bank": 1,
+          "source_provider_SM": 1,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 2,
+          "source_bank": 2,
+          "source_provider_SM": 2,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 3,
+          "source_bank": 3,
+          "source_provider_SM": 3,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 4,
+          "source_bank": 0,
+          "source_provider_SM": 8,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 5,
+          "source_bank": 1,
+          "source_provider_SM": 9,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 6,
+          "source_bank": 2,
+          "source_provider_SM": 10,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 7,
+          "source_bank": 3,
+          "source_provider_SM": 11,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 8,
+          "source_bank": 4,
+          "source_provider_SM": 4,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 9,
+          "source_bank": 5,
+          "source_provider_SM": 5,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 10,
+          "source_bank": 6,
+          "source_provider_SM": 6,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 11,
+          "source_bank": 7,
+          "source_provider_SM": 7,
+          "stack": 0
+        },
+        {
+          "old_geometric_cut_SM": 12,
+          "source_bank": 4,
+          "source_provider_SM": 12,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 13,
+          "source_bank": 5,
+          "source_provider_SM": 13,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 14,
+          "source_bank": 6,
+          "source_provider_SM": 14,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 15,
+          "source_bank": 7,
+          "source_provider_SM": 15,
+          "stack": 1
+        },
+        {
+          "old_geometric_cut_SM": 16,
+          "source_bank": 0,
+          "source_provider_SM": 16,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 17,
+          "source_bank": 1,
+          "source_provider_SM": 17,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 18,
+          "source_bank": 2,
+          "source_provider_SM": 18,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 19,
+          "source_bank": 3,
+          "source_provider_SM": 19,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 20,
+          "source_bank": 0,
+          "source_provider_SM": 24,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 21,
+          "source_bank": 1,
+          "source_provider_SM": 25,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 22,
+          "source_bank": 2,
+          "source_provider_SM": 26,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 23,
+          "source_bank": 3,
+          "source_provider_SM": 27,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 24,
+          "source_bank": 4,
+          "source_provider_SM": 20,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 25,
+          "source_bank": 5,
+          "source_provider_SM": 21,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 26,
+          "source_bank": 6,
+          "source_provider_SM": 22,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 27,
+          "source_bank": 7,
+          "source_provider_SM": 23,
+          "stack": 2
+        },
+        {
+          "old_geometric_cut_SM": 28,
+          "source_bank": 4,
+          "source_provider_SM": 28,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 29,
+          "source_bank": 5,
+          "source_provider_SM": 29,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 30,
+          "source_bank": 6,
+          "source_provider_SM": 30,
+          "stack": 3
+        },
+        {
+          "old_geometric_cut_SM": 31,
+          "source_bank": 7,
+          "source_provider_SM": 31,
+          "stack": 3
+        }
+      ],
+      "source_quad_clients": [
+        [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          32
+        ],
+        [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          33
+        ],
+        [
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          34
+        ],
+        [
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          35
+        ]
+      ],
+      "storage": {
+        "L2_banks_per_slice": 8,
+        "L2_bytes_per_bank": 262144,
+        "L2_bytes_per_die": 8388608,
+        "L2_macros_per_die": 256,
+        "RF_logical_bytes_per_SM": 262144,
+        "RF_macros_per_SM": 128,
+        "RF_physical_bytes_per_SM": 524288,
+        "retained_bulk_outstanding": 512,
+        "retained_bulk_ring_bytes_per_SM": 131072,
+        "shared64B_beats": 1024,
+        "shared_bytes_per_SM": 65536,
+        "shared_macro_count": 2
+      }
+    }
+  },
+  "no_RTL_or_PnR": true,
+  "schema": "opentallas.H4.HBM.complete-service-G0.v1",
+  "slice_lease_fields_bits": {
+    "bank": 3,
+    "byte_offset": 18,
+    "lease": 64,
+    "length": 8,
+    "local_tag": 10,
+    "state": 4,
+    "ticket": 128,
+    "write": 1
+  },
+  "slice_state_bits": 12297,
+  "source_drain_probe": {
+    "RF": "quiesce unaccepted host/SIMD requests; host_rd_ready&&host_wr_ready&&!host_rsp_valid&&!host_ack_valid with all requestvalids0 proves original idle; drain existing consumers first",
+    "bulk": "never mask an owned no-ready weight response; source staging ring remains independent",
+    "shared": "scratch_ready&&!scratch_done after existing consumer ACK"
+  },
+  "source_pins": [
+    {
+      "commit": "4885f71d419c8a14443377b399c148459e05584a",
+      "path": "results/uarch/h4_v1_expanded_service_20261002/private_routes_r4/model.json",
+      "sha256": "b635b1106650df1ed14701837c0cfdb3f22b678159e5aed300c0d86ec6e48920"
+    },
+    {
+      "commit": "4885f71d419c8a14443377b399c148459e05584a",
+      "path": "tools/h4_v1_expanded_service.py",
+      "sha256": "0a29478b77fe12ec92025a63a04a14fee6f23313102b93bb09d34179d25634f6"
+    },
+    {
+      "commit": "5df5be3336f34998dad44b5ad3efc8477879f1d8",
+      "path": "results/uarch/qwen_hbm_connected_20261001/L2_injector_before_RTL_r2.json",
+      "sha256": "cfb7d07dd074ed90aa5a094192ae16c70dab983eb61cccd85a822a45fa745256"
+    },
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_full_sm_service.sv",
+      "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896"
+    },
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_scratch_service.sv",
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "rtl/gpu/ot_gpu_bulk_copy.sv",
+      "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "rtl/gpu/ot_gpu_qwen_gu64_l2.sv",
+      "sha256": "dbd29d09a45ab5d46e05f6b96fb061c933c1bfeb130233105d58dc9b6b7ea30f"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    {
+      "commit": "655f22b2b",
+      "path": "tools/h4_c0_bridge.py",
+      "sha256": "19904b9fa7481e5ba0e27e9d4f17b1308abf3ee2df20a553f5c5ae5b0add996c"
+    }
+  ],
+  "tag_contract": {
+    "C0_max_seats_per_slice": 8,
+    "KV_outstanding_capacity_reduction_fraction": 0.015625,
+    "KV_seats_at_full_C0_occupancy": 504,
+    "bank_read_contract": "explicit source producer_bank/stack from actual home; never infer producer from consumerSM; cross-slice producer route unsupported until bound",
+    "client_bits": 6,
+    "existing_clients": 36,
+    "finite_credit_bound": "one connector command per SM; all-or-none reserve, no RF lock held while waiting for a slice seat",
+    "global_tag_bits": 16,
+    "local_tag_bits": 10,
+    "per_client_seats": 512,
+    "semantics": "512 total shared seats, not512+8; all return/write visibility and reverse grants drain before reuse",
+    "shared_C0_clients": [
+      32,
+      33,
+      34,
+      35
+    ],
+    "weight_clients": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "weight_seats_reduced": 0
+  }
+}

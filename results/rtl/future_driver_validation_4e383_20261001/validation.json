@@ -1,0 +1,50 @@
+{
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "exact_transformation": "r2/transformation.json",
+  "helper_negative_controls": {
+    "all_compiled": true,
+    "all_failed_correct_assertion": true,
+    "count": 3,
+    "record": "r2/fake_helper_proof.json"
+  },
+  "limits": [
+    "FakeDie validates helper and copied loop contract, not actual generated model linking or full runtime equivalence",
+    "Parent must review PC-watchdog diagnostic policy before selecting any future binary; protected original remains unchanged",
+    "No producer lifecycle or fault/quiescence redesign; causal operation/service bounds still missing"
+  ],
+  "policy": {
+    "MAXC": "existing default2000000/argument strictly parsed; distinct incomplete execution terminal; cannot clear after late completion",
+    "WD": "existing default5000/RT_WATCHDOG strictly parsed; PC dwell diagnostic only, not terminal or causal service deadline",
+    "fault": "per-rank raw and existing packed sticky/debug sources sampled before aggregate DONE; continuation never clears failed status",
+    "generated_dbg_fs_binding_macro": "W17_FUTURE_BIND_DBG_FS; unset by default; requires future generated-class binding review",
+    "link_age": "actual FIFO front due timestamp minus original fixed latency; diagnostic only, unchanged scheduling",
+    "opt_in_macro": "W17_FUTURE_DRIVER_VALIDATION_OPT_IN=1",
+    "service_bounds": "BOUND_MISSING; no universal timeout/admission/liveness claim"
+  },
+  "scope": {
+    "driver_copy_compiled": false,
+    "full_die_compile": false,
+    "hardware_adoption": false,
+    "hardware_architecture_change": false,
+    "live_getter_attach": false,
+    "live_restart": false,
+    "new_files_only": true,
+    "new_rtl_simulation": false,
+    "payload_reads": false,
+    "protected_original_changed": false,
+    "source_list_change": false
+  },
+  "selection_gate": "PARENT_REVIEW_REQUIRED_BEFORE_FUTURE_BINARY_SELECTION",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins": {
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+  },
+  "status": "PASS_STANDALONE_HELPER_PREPARED_OPT_IN_DRIVER_COPY",
+  "tests": {
+    "command": "python3 -m pytest -q tests/test_w17_future_driver_validation.py",
+    "log": "pytest_final.log",
+    "passed": 33
+  },
+  "watchdog_contract_prerequisite_commit": "1bab7000085843be2eac51750c6b3f3c88e2fa15"
+}

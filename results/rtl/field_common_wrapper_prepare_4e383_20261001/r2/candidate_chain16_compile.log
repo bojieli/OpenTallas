@@ -1,0 +1,32 @@
+Running as unit: run-u50420.service
+%Error: Cannot find file containing module: 'tb_field_common_wrappers.sv'
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+        ... This may be because there's no search path specified with -I<dir>.
+        ... Looked in:
+             tb_field_common_wrappers.sv
+             tb_field_common_wrappers.sv.v
+             tb_field_common_wrappers.sv.sv
+             obj_chain16/tb_field_common_wrappers.sv
+             obj_chain16/tb_field_common_wrappers.sv.v
+             obj_chain16/tb_field_common_wrappers.sv.sv
+        ... With current working directory '/home/ubuntu'
+%Error: Cannot find file containing module: 'ref_ot_prefix.sv'
+%Error: Cannot find file containing module: 'ref_ot_hdc_delay.sv'
+%Error: Cannot find file containing module: 'ref_ot_v41_fadd.sv'
+%Error: Cannot find file containing module: 'ref_ot_v41_bmul2.sv'
+%Error: Cannot find file containing module: 'ref_ot_v41_chain2.sv'
+%Error: Cannot find file containing module: 'ref_ot_v41_segtree2.sv'
+%Error: Cannot find file containing module: 'ref_ot_v41_bf16_lanes2.sv'
+%Error: Cannot find file containing module: 'cand_ot_prefix.sv'
+%Error: Cannot find file containing module: 'cand_ot_hdc_delay.sv'
+%Error: Cannot find file containing module: 'cand_ot_v41_fadd.sv'
+%Error: Cannot find file containing module: 'cand_ot_v41_bmul2.sv'
+%Error: Cannot find file containing module: 'cand_ot_v41_chain2.sv'
+%Error: Cannot find file containing module: 'cand_ot_v41_segtree2.sv'
+%Error: Cannot find file containing module: 'cand_ot_v41_bf16_lanes2.sv'
+%Error: Exiting due to 15 error(s)
+RESOURCE {"memory.max": "4294967296", "memory.swap.max": "0", "memory.peak": "22360064", "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0", "returncode": 1, "cpus": [0, 1], "elapsed_seconds": 0.064}
+Finished with result: exit-code
+Main processes terminated with: code=exited/status=1
+Service runtime: 94ms
+CPU time consumed: 64ms

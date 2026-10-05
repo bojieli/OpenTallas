@@ -1,0 +1,3 @@
+PASS TAG_NEG_write "P":255 : faulted as required (code 32768)
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"TAG_NEG_write","pass":true,"P":255,"detail":"faulted as required (code 32768)"}],"status":"pass"}

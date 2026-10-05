@@ -1,0 +1,39 @@
+{
+  "allocation_note": "69-bit original raw records, not arbitrary global pool. Valid is included in69; row_seen separately charges duplicate detection. Proposed counters/context metadata are explicit new costs. DFF/allowed mux cell mapping, clock/reset buffering, wires, SRAM provider and slot remain unqualified. No RAM macro area credit. Existing 63-bit writer and512-bit VM boundary require formatting/exclusive bridge; no eight-read-port RAM assumed.",
+  "bank_prices_per_stage": {
+    "candidate_control_bits": 1468,
+    "exact_FF_record_bits": 39744,
+    "padding_bits": 4416,
+    "pow2_4_8_record_bits": 44160,
+    "row_membership_compare_bits": 9216,
+    "scalar_mux_2to1_bit_equivalents": 39675,
+    "total_FF_bit_lower_bound": 41212
+  },
+  "checks": "48 PASS: 18 capture-bank tests +30 provider regression; retained actual runtime reanalysis; cold generator verification",
+  "commands": [
+    "python -m pytest -q tests/test_dsrom_I66_capture_banks.py tests/test_dsrom_I66_stage_provider.py",
+    "python tools/dsrom_I66_capture_banks.py --out results/uarch/dsrom_I66_capture_banks_20261002/model.json --verify"
+  ],
+  "missing_boundaries": [
+    "physical bank provider/cells/slot/SSFF",
+    "actual remote delivery/home causal fence",
+    "actual producer accepted-visible origin and fullprogram consumer deadline",
+    "lease/bridge implementation and stale root wire quiescence proof"
+  ],
+  "next_gate": "Maxwell bind charged banks/control/mux to allowed cells and slot; Hubble bind actual source consumer deadline. No field-ready added. Only then source/model-reviewed opt-in bridge preparation.",
+  "parent_main_contains_prerequisites": "760a4b3d0",
+  "prerequisite_owner_commits": [
+    "819d3dbf1d8410acbd5516e561031e253f51d343",
+    "5a373d0fd11fe9445660af9872fd410b94788e38",
+    "95014f025091a238dd7ccbe96fc704ed25cbcb05",
+    "86dc31256bccff296b8289adb887c3cc025d2f83",
+    "04bb228ecc6f468c036a5e392bf66ad65ef738a0"
+  ],
+  "scope": "all768 symbolic plans; finite capture/drain replay only qualified local EID0/rank0 retained runtime, no new build",
+  "timeout": {
+    "4096_selected": false,
+    "default1024": "FAIL preserved"
+  },
+  "verdict": "READY_FOR_SOURCE_MODEL_REVIEW_NOT_HARDWARE",
+  "verification_attempt_preserved": "verifier_attempt1_FAIL.json; canonical byte verifier successor passes"
+}

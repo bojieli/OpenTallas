@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 196, in <module>
+    args.out.write_text(json.dumps(generate(),sort_keys=True,indent=2)+'\n')
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 164, in generate
+    writes=a.seal();fast=affine_native_calendar(writes,0);reference=v.calendar({},[],writes.writes,0)
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/tools/dsrom_field_native_VM_join.py", line 123, in affine_native_calendar
+    frame=v.calendar({},[],w,epoch)
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_calendar.py", line 76, in calendar
+    replies, image, status = reference().ordered_edge(memory, reads, writes)
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_calendar.py", line 32, in reference
+    spec.loader.exec_module(m)
+  File "<frozen importlib._bootstrap_external>", line 883, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "/tmp/opentallas-nativeVM-verify-r2-cold-20261003/results/uarch/dsrom_field_native_VM_join_20261003/inputs/native_provider/inputs/4_dsrom_split_vm_order_model.py", line 1, in <module>
+    #!/usr/bin/env python3
+RuntimeError: CACHE_MUST_NOT_EXECUTE

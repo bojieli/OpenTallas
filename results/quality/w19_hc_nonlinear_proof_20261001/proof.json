@@ -1,0 +1,346 @@
+{
+  "schema": "opentallas.w19.hc-nonlinear.cpu-proof.v1",
+  "source_commit": "0724b1b35da60dbd453288333fc1b121f5568526",
+  "source_pins": {
+    "tools/w19_hc_nonlinear_proof.py": "461908f934a74a3b332b84b8dd5a01410a8daac7155229e320791d30cbc777d9",
+    "tests/test_w19_hc_nonlinear_proof.py": "3258dee11c8a1d8571cab157d5b9a1efa2336a579953a8dbfa9a1eec83ff52a1",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_hc_simd_proof.py": "187b1a1d7e9d2056f31209824f5a656c097d45907a101a0778c6f029edb17c71"
+  },
+  "numpy": "2.2.6",
+  "fixtures": [
+    {
+      "name": "layers.0.hc_attn_seeded_normal_BF16",
+      "provenance": {
+        "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+        "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "tensors": {
+          "layers.0.hc_attn_fn": {
+            "sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+            "shape": [
+              24,
+              20480
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          },
+          "layers.0.hc_attn_scale": {
+            "sha256": "469d1cd794e040d20e34c63eeef4140aea16495449b16a73fd574dd3ae841eb2",
+            "shape": [
+              3
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          },
+          "layers.0.hc_attn_base": {
+            "sha256": "becbd2b643d7be6c4714cae2a236283e4ddba20eabc9bf24cf5ccc42706a098e",
+            "shape": [
+              24
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          }
+        },
+        "activation": "seeded_normal_BF16",
+        "disclosure": "synthetic BF16 activation, not actual model trajectory"
+      },
+      "boundary_count": 375,
+      "boundary_instruction_counts": {
+        "mul": 43,
+        "add": 221,
+        "div": 43,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 15,
+        "rsqrt.output": 1,
+        "dot": 1,
+        "exp.input": 3,
+        "exp.clamped": 3,
+        "exp.output": 3,
+        "sinkhorn.softmax_eps": 1,
+        "sinkhorn.cols": 20,
+        "sinkhorn.rows": 19
+      },
+      "boundary_F32_element_counts": {
+        "mul": 20758,
+        "add": 25523,
+        "div": 649,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 66,
+        "rsqrt.output": 1,
+        "dot": 24,
+        "exp.input": 24,
+        "exp.clamped": 24,
+        "exp.output": 24,
+        "sinkhorn.softmax_eps": 16,
+        "sinkhorn.cols": 320,
+        "sinkhorn.rows": 304
+      },
+      "hc_mult": 4,
+      "norm_eps": 1e-20,
+      "hc_eps": 1e-06,
+      "sinkhorn_iters": 20,
+      "verdict": "PASS"
+    },
+    {
+      "name": "layers.0.hc_attn_all_positive_zero_BF16",
+      "provenance": {
+        "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+        "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "tensors": {
+          "layers.0.hc_attn_fn": {
+            "sha256": "11c9abd39f35e3364aad812c3f2dcb9c5fa5cf71e0f837a1af684112a00f930c",
+            "shape": [
+              24,
+              20480
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          },
+          "layers.0.hc_attn_scale": {
+            "sha256": "469d1cd794e040d20e34c63eeef4140aea16495449b16a73fd574dd3ae841eb2",
+            "shape": [
+              3
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          },
+          "layers.0.hc_attn_base": {
+            "sha256": "becbd2b643d7be6c4714cae2a236283e4ddba20eabc9bf24cf5ccc42706a098e",
+            "shape": [
+              24
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9"
+          }
+        },
+        "activation": "all_positive_zero_BF16",
+        "disclosure": "synthetic BF16 activation, not actual model trajectory"
+      },
+      "boundary_count": 375,
+      "boundary_instruction_counts": {
+        "mul": 43,
+        "add": 221,
+        "div": 43,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 15,
+        "rsqrt.output": 1,
+        "dot": 1,
+        "exp.input": 3,
+        "exp.clamped": 3,
+        "exp.output": 3,
+        "sinkhorn.softmax_eps": 1,
+        "sinkhorn.cols": 20,
+        "sinkhorn.rows": 19
+      },
+      "boundary_F32_element_counts": {
+        "mul": 20758,
+        "add": 25523,
+        "div": 649,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 66,
+        "rsqrt.output": 1,
+        "dot": 24,
+        "exp.input": 24,
+        "exp.clamped": 24,
+        "exp.output": 24,
+        "sinkhorn.softmax_eps": 16,
+        "sinkhorn.cols": 320,
+        "sinkhorn.rows": 304
+      },
+      "hc_mult": 4,
+      "norm_eps": 1e-20,
+      "hc_eps": 1e-06,
+      "sinkhorn_iters": 20,
+      "verdict": "PASS"
+    },
+    {
+      "name": "layers.39.hc_ffn_seeded_normal_BF16",
+      "provenance": {
+        "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+        "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "tensors": {
+          "layers.39.hc_ffn_fn": {
+            "sha256": "57d4ddd966895f34ad7134847376b4b25739ec34c758c099860b177ccb0d2fe2",
+            "shape": [
+              24,
+              20480
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          },
+          "layers.39.hc_ffn_scale": {
+            "sha256": "f439472b66bafb97a8f47b0e2ddd21639dd80c953ba3974ce697d7a99e2b8e69",
+            "shape": [
+              3
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          },
+          "layers.39.hc_ffn_base": {
+            "sha256": "bdc3db4860dce3b83a2ed0061f936f27f140b59b500be761449c1d5bf2e0cd71",
+            "shape": [
+              24
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          }
+        },
+        "activation": "seeded_normal_BF16",
+        "disclosure": "synthetic BF16 activation, not actual model trajectory"
+      },
+      "boundary_count": 375,
+      "boundary_instruction_counts": {
+        "mul": 43,
+        "add": 221,
+        "div": 43,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 15,
+        "rsqrt.output": 1,
+        "dot": 1,
+        "exp.input": 3,
+        "exp.clamped": 3,
+        "exp.output": 3,
+        "sinkhorn.softmax_eps": 1,
+        "sinkhorn.cols": 20,
+        "sinkhorn.rows": 19
+      },
+      "boundary_F32_element_counts": {
+        "mul": 20758,
+        "add": 25523,
+        "div": 649,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 66,
+        "rsqrt.output": 1,
+        "dot": 24,
+        "exp.input": 24,
+        "exp.clamped": 24,
+        "exp.output": 24,
+        "sinkhorn.softmax_eps": 16,
+        "sinkhorn.cols": 320,
+        "sinkhorn.rows": 304
+      },
+      "hc_mult": 4,
+      "norm_eps": 1e-20,
+      "hc_eps": 1e-06,
+      "sinkhorn_iters": 20,
+      "verdict": "PASS"
+    },
+    {
+      "name": "layers.39.hc_ffn_all_positive_zero_BF16",
+      "provenance": {
+        "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+        "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+        "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+        "tensors": {
+          "layers.39.hc_ffn_fn": {
+            "sha256": "57d4ddd966895f34ad7134847376b4b25739ec34c758c099860b177ccb0d2fe2",
+            "shape": [
+              24,
+              20480
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          },
+          "layers.39.hc_ffn_scale": {
+            "sha256": "f439472b66bafb97a8f47b0e2ddd21639dd80c953ba3974ce697d7a99e2b8e69",
+            "shape": [
+              3
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          },
+          "layers.39.hc_ffn_base": {
+            "sha256": "bdc3db4860dce3b83a2ed0061f936f27f140b59b500be761449c1d5bf2e0cd71",
+            "shape": [
+              24
+            ],
+            "dtype": "F32",
+            "shard": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1a4d5d30ae51bafda75078d49b05a585c924b0af9b3481c075b04341507c2ef"
+          }
+        },
+        "activation": "all_positive_zero_BF16",
+        "disclosure": "synthetic BF16 activation, not actual model trajectory"
+      },
+      "boundary_count": 375,
+      "boundary_instruction_counts": {
+        "mul": 43,
+        "add": 221,
+        "div": 43,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 15,
+        "rsqrt.output": 1,
+        "dot": 1,
+        "exp.input": 3,
+        "exp.clamped": 3,
+        "exp.output": 3,
+        "sinkhorn.softmax_eps": 1,
+        "sinkhorn.cols": 20,
+        "sinkhorn.rows": 19
+      },
+      "boundary_F32_element_counts": {
+        "mul": 20758,
+        "add": 25523,
+        "div": 649,
+        "rsqrt.input": 1,
+        "rsqrt.seed": 1,
+        "neg": 66,
+        "rsqrt.output": 1,
+        "dot": 24,
+        "exp.input": 24,
+        "exp.clamped": 24,
+        "exp.output": 24,
+        "sinkhorn.softmax_eps": 16,
+        "sinkhorn.cols": 320,
+        "sinkhorn.rows": 304
+      },
+      "hc_mult": 4,
+      "norm_eps": 1e-20,
+      "hc_eps": 1e-06,
+      "sinkhorn_iters": 20,
+      "verdict": "PASS"
+    }
+  ],
+  "integrated_dot_prerequisite": {
+    "path": "results/quality/w19_hc_simd_proof_20261001/proof.json",
+    "sha256": "06c42b25ca4d32fe75dbabd9ee857457f0308d827a224b6f484c95e2d304cab4",
+    "coefficient_identity_checked": true
+  },
+  "negative_controls": {
+    "native_rsqrt_differing_words": 2,
+    "native_exp_differing_words": 3
+  },
+  "verdict": "PASS",
+  "backend": "CPU NumPy binary32, explicitly separated operations, original-golden instrumentation",
+  "oracle_mode": "chunk8",
+  "scope": "full-shape HC mixes pre/post/comb only; no hc_pre/hc_post residual application, actual model trajectory or GPU qualification",
+  "GPU_campaign_launched": false,
+  "model_eligibility": "REFUSED_PENDING_GPU_LOWERING_AND_RESOURCES",
+  "rate": null,
+  "adoption": false,
+  "QC_NAM": "existing full FAIL unchanged",
+  "artifacts": {
+    "boundaries_0.json": "c985befc642be2a018c8a72f6e35720733f8ba00e301e008f936c2f2fb6f7349",
+    "boundaries_1.json": "196b04eb12b1be661f7f24cab2b7b20ceb48a4a8e6b7abc87929cd3bb8a15cf9",
+    "boundaries_2.json": "ab650d6b79d0688cf8e4a4ae2928c4bd8cc0b9fddaa177dd13c20db10f99d79b",
+    "boundaries_3.json": "fc0c3c67bdfdfefa66f43b9a72f2d4ab7058c7f5b3f0feb84fcf41053cb7d003",
+    "fixture_0.npz": "b30d47d1ba7fdf7f5a4c0756c5d711fd33befd00c4149424177e0ee62e0ffda6",
+    "fixture_1.npz": "6e80f960a1893da3047db807236170501e7c4af0c687f4db4864a8dfd1eeaff1",
+    "fixture_2.npz": "4c44eb567cc50fe53627e2a544e46a2ff8ac4ecc85aa156a9fd1af8e098c3ac4",
+    "fixture_3.npz": "1b367fc28a28ca03a50f95f6812931a4237568776f435d812033b342dd79bc59"
+  }
+}

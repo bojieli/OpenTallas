@@ -1,0 +1,16 @@
+[
+  {
+    "copy": "shard.json.gz",
+    "source": "results/uarch/dsrom_capture_shard_join_r49_20261002/model.json",
+    "commit": "c710ef8f4e60c245f26a7353fb9751c0db2bb647",
+    "source_sha256": "1a75456348de769a591a8d765c754da002e460752675ea012abfb48894f83f71",
+    "copy_sha256": "e428e4bcf0c3e23653d0da9bdc39c7e36a1c359abab14294b5e36a2c3d740231"
+  },
+  {
+    "copy": "prior_home.json.gz",
+    "source": "results/uarch/dsrom_capture_home_20261002/model.json",
+    "commit": "1f8e7e65dfc28474028b40bcc2005210b77f314e",
+    "source_sha256": "c952055e1d46c3d86095965ee0bc92162256649f398d723ef70b5e7b13c0a0a0",
+    "copy_sha256": "c750430107e5291192957489029cc37f7354911683d2fc70f096bc6c56a909e3"
+  }
+]

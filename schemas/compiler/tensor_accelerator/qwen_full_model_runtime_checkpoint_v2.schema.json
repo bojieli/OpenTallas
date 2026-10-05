@@ -1,0 +1,137 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_runtime_checkpoint_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_version": {"const": "tensor-accelerator-qwen-full-model-runtime-checkpoint-0.2.0"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "dynamic_session_complete": {"const": false},
+        "restart_state_only": {"const": true},
+        "target_precision_reference_verified": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "dynamic_session_complete",
+        "restart_state_only",
+        "target_precision_reference_verified",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "context_capacity": {"const": 8000},
+    "execution_mode": {"const": "dynamic_v1"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm_logical_sha256": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "next_step_index": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "previous_greedy_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+    "previous_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_runtime_checkpoint.v2"},
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "simulator_version": {"const": "tensor-accelerator-qwen-full-model-simulator-0.1.0"},
+    "state_count": {"const": 36},
+    "state_image": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_sha256": {"$ref": "#/$defs/sha256"},
+        "shard_bytes": {"const": 268435456},
+        "shards": {
+          "items": {"$ref": "#/$defs/shard"},
+          "maxItems": 5,
+          "minItems": 1,
+          "type": "array"
+        },
+        "size_bytes": {"maximum": 1179648000, "minimum": 147456, "type": "integer"}
+      },
+      "required": ["logical_sha256", "shard_bytes", "shards", "size_bytes"],
+      "type": "object"
+    },
+    "states": {
+      "items": {"$ref": "#/$defs/state"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    }
+  },
+  "required": [
+    "build_id",
+    "capability_id",
+    "checkpoint_id",
+    "checkpoint_lock_id",
+    "checkpoint_version",
+    "claim_boundary",
+    "command_program_sha256",
+    "context_capacity",
+    "execution_mode",
+    "graph_id",
+    "hbm_logical_sha256",
+    "kernel_ir_id",
+    "next_step_index",
+    "physical_plan_id",
+    "previous_greedy_token_id",
+    "previous_report_id",
+    "schema",
+    "session_id",
+    "simulator_version",
+    "state_count",
+    "state_image",
+    "states"
+  ],
+  "title": "Qwen authenticated arbitrary dynamic-session checkpoint v2",
+  "type": "object",
+  "$defs": {
+    "plane": {
+      "additionalProperties": false,
+      "properties": {
+        "logical_offset": {"minimum": 0, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"maximum": 16384000, "minimum": 2048, "type": "integer"}
+      },
+      "required": ["logical_offset", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "shard": {
+      "additionalProperties": false,
+      "properties": {
+        "index": {"maximum": 4, "minimum": 0, "type": "integer"},
+        "logical_offset": {"minimum": 0, "type": "integer"},
+        "path": {"pattern": "^state/hbm\\.[0-9]{5}\\.[0-9a-f]{64}\\.bin$", "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"maximum": 268435456, "minimum": 1, "type": "integer"}
+      },
+      "required": ["index", "logical_offset", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "capacity": {"const": 8000},
+        "generation": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "key": {"$ref": "#/$defs/plane"},
+        "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "length": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "resource_id": {"pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$", "type": "string"},
+        "value": {"$ref": "#/$defs/plane"}
+      },
+      "required": [
+        "capacity",
+        "generation",
+        "key",
+        "layer",
+        "length",
+        "resource_id",
+        "value"
+      ],
+      "type": "object"
+    }
+  }
+}

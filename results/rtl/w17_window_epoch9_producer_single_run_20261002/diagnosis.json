@@ -1,0 +1,440 @@
+{
+  "schema": "opentallas.window_epoch9.producer_failure_explanation.v1",
+  "verdict": "FAIL_PRESERVED_NO_RETRY",
+  "no_retry": true,
+  "no_source_model_fixture_changes": true,
+  "cases": {
+    "retain0": {
+      "per_PC_differences": [
+        {
+          "pc": 0,
+          "field": "activations",
+          "actual": 47,
+          "predicted": 0
+        },
+        {
+          "pc": 1,
+          "field": "activations",
+          "actual": 46,
+          "predicted": 0
+        },
+        {
+          "pc": 2,
+          "field": "activations",
+          "actual": 46,
+          "predicted": 0
+        },
+        {
+          "pc": 3,
+          "field": "activations",
+          "actual": 46,
+          "predicted": 0
+        },
+        {
+          "pc": 4,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 5,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 6,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 7,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 8,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 9,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 10,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 11,
+          "field": "activations",
+          "actual": 46,
+          "predicted": 0
+        },
+        {
+          "pc": 12,
+          "field": "activations",
+          "actual": 48,
+          "predicted": 0
+        },
+        {
+          "pc": 13,
+          "field": "activations",
+          "actual": 47,
+          "predicted": 0
+        },
+        {
+          "pc": 14,
+          "field": "activations",
+          "actual": 47,
+          "predicted": 0
+        },
+        {
+          "pc": 15,
+          "field": "activations",
+          "actual": 47,
+          "predicted": 0
+        },
+        {
+          "pc": 16,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 17,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 18,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 19,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 20,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 21,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 22,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 23,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 24,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 25,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 26,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 27,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 28,
+          "field": "activations",
+          "actual": 44,
+          "predicted": 0
+        },
+        {
+          "pc": 29,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 30,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        },
+        {
+          "pc": 31,
+          "field": "activations",
+          "actual": 45,
+          "predicted": 0
+        }
+      ],
+      "actual_ACT_sum": 1442,
+      "raw_publication_line": [
+        "LOGICAL_PUBLISH cycle=1105"
+      ],
+      "exact_checks": [
+        "block",
+        "descriptor",
+        "write_ack",
+        "request",
+        "reply",
+        "column",
+        "lifecycle_done",
+        "stage",
+        "terminal"
+      ]
+    },
+    "retain1": {
+      "per_PC_differences": [
+        {
+          "pc": 0,
+          "field": "activations",
+          "actual": 26,
+          "predicted": 0
+        },
+        {
+          "pc": 1,
+          "field": "activations",
+          "actual": 26,
+          "predicted": 0
+        },
+        {
+          "pc": 2,
+          "field": "activations",
+          "actual": 26,
+          "predicted": 0
+        },
+        {
+          "pc": 3,
+          "field": "activations",
+          "actual": 26,
+          "predicted": 0
+        },
+        {
+          "pc": 4,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 5,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 6,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 7,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 8,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 9,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 10,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 11,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 12,
+          "field": "activations",
+          "actual": 27,
+          "predicted": 0
+        },
+        {
+          "pc": 13,
+          "field": "activations",
+          "actual": 27,
+          "predicted": 0
+        },
+        {
+          "pc": 14,
+          "field": "activations",
+          "actual": 27,
+          "predicted": 0
+        },
+        {
+          "pc": 15,
+          "field": "activations",
+          "actual": 27,
+          "predicted": 0
+        },
+        {
+          "pc": 16,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 17,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 18,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 19,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 20,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 21,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 22,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 23,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 24,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 25,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 26,
+          "field": "activations",
+          "actual": 25,
+          "predicted": 0
+        },
+        {
+          "pc": 27,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 28,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 29,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 30,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        },
+        {
+          "pc": 31,
+          "field": "activations",
+          "actual": 24,
+          "predicted": 0
+        }
+      ],
+      "actual_ACT_sum": 795,
+      "raw_publication_line": [
+        "LOGICAL_PUBLISH cycle=1105"
+      ],
+      "exact_checks": [
+        "block",
+        "descriptor",
+        "write_ack",
+        "request",
+        "reply",
+        "column",
+        "lifecycle_done",
+        "stage",
+        "terminal"
+      ]
+    }
+  },
+  "publication_contract": "Fixture logs pre-NBA mem.cyc on posedge consuming final wr_done. Source WS_DONE/bidx15 sets row_valid by NBA on that same edge; fixture checks it after #0.001. Log is ack edge, not next-edge row_valid sampling or physical visibility. Single regex group was iterated as characters by original runner.",
+  "activation_contract": "Actual idx schedule() increments st_act[p] once in closed-bank/row-miss branch after refresh selection and bank ACT state updates, when scheduling head, not on eventual column execution, request, return or estimate. WriteBackend.schedule updates equivalent ACT state but omitted acts increment; predicted counters zero.",
+  "source_refs": {
+    "publication_fixture": "rtl/test/w17_window_epoch9_producer/tb.sv:154,197",
+    "publication_source": "rtl/test/w17_window_epoch9_candidate/ot_chip_v41x_window_kv_prefetch.sv:353-357",
+    "ACT_source": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv:254-329,463",
+    "omission": "tools/w17_window_epoch9_producer_prediction.py:46-53",
+    "parser": "tools/w17_window_epoch9_producer_run.py:52"
+  },
+  "scope": "Overall calibration FAIL preserved. No numerical credit/timing mismatch observed among compared complete event traces; no DUT fault claim, admission, physicalclock/fulltoken or recovery qualification."
+}

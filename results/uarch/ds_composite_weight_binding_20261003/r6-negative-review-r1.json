@@ -1,0 +1,91 @@
+{
+  "historical_commit": "0c31e5e0099ab080dafb84afa23b420298afcbfd",
+  "historical_model_git_blob": "2051f03029ac86a663357fff0ad976246b2dbfcf",
+  "historical_model_path": "results/uarch/ds_full_checkpoint_continuation_plan_20261003/r6/model.json",
+  "historical_model_sha256": "0ed3c3657b8f69596f8a6e69d0c8adb4e34b30cdb8bf0a6f963f3703491c2f4f",
+  "historical_negative_test_path": "tests/test_ds_full_checkpoint_continuation_plan.py",
+  "historical_negative_test_sha256": "8447ec51f44af50b3813225e2fe31dc8759b1e48d588246264aaa0813d048d5f",
+  "r6_failure_preserved": true,
+  "replay_requires_historical_full_model_or_test": false,
+  "reviewed_bindings": [
+    {
+      "PC": 115,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.2.attn.compressor.wkv.weight",
+        "layers.2.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "06ebcba3f79346035ef7a1d835f213b766d5b517bf2dc07c17387ad7132f95c0"
+    },
+    {
+      "PC": 115,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.2.attn.compressor.wkv.weight",
+        "layers.2.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "c941aa314da8b548e8d48c1892dd4635dc0fe28f4115674c2c1b7e079794eb23"
+    },
+    {
+      "PC": 443,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.8.attn.compressor.wkv.weight",
+        "layers.8.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "06ebcba3f79346035ef7a1d835f213b766d5b517bf2dc07c17387ad7132f95c0"
+    },
+    {
+      "PC": 443,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.8.attn.compressor.wkv.weight",
+        "layers.8.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "c941aa314da8b548e8d48c1892dd4635dc0fe28f4115674c2c1b7e079794eb23"
+    },
+    {
+      "PC": 776,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.14.attn.compressor.wkv.weight",
+        "layers.14.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "06ebcba3f79346035ef7a1d835f213b766d5b517bf2dc07c17387ad7132f95c0"
+    },
+    {
+      "PC": 776,
+      "family": "mv",
+      "kind": "immutable_weight_provider",
+      "logical_tensor": [
+        "layers.14.attn.compressor.wkv.weight",
+        "layers.14.attn.compressor.wgate.weight"
+      ],
+      "operand": "weight",
+      "reason": "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND",
+      "template": "c941aa314da8b548e8d48c1892dd4635dc0fe28f4115674c2c1b7e079794eb23"
+    }
+  ],
+  "reviewed_gap_counts": {
+    "COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND": 6
+  },
+  "reviewed_negative_test": "test_actual_composite_descriptor_rejected_without_payload_or_constructor",
+  "schema": "DS_COMPOSITE_R6_NEGATIVE_REVIEW_R1",
+  "source_MRO_r33_effective": true,
+  "successor_scope": "six bindings/288 exact emitted owner calls, metadata only"
+}

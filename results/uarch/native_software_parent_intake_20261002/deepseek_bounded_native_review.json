@@ -1,0 +1,33 @@
+{
+  "schema": "parent-bounded-DS-review-v1",
+  "owner_commit": "6e3ce3620",
+  "intake_commit": "9275542a320fc0c9b727639cf84786882a428ee7",
+  "independent_tests": {
+    "exit_code": 0,
+    "passed": 157
+  },
+  "compiler_replay": "PASS",
+  "source_pins": "PASS",
+  "PCs": 2213,
+  "families": 30,
+  "templates": 1127,
+  "recursive_fallbacks": 0,
+  "artifact_sha256": {
+    "forward_dispatch_milestone.json.gz": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f",
+    "forward_family_execution_calendars.json.gz": "d4e142457cdb2fbf9bcd2f59ab6f73201ba1c614189652e46311848543379305",
+    "handoff.json": "bf4cb315eca573f9100d862f572c6a478b6db295d62f38fb6efc413124fe2a10"
+  },
+  "scope": "bounded software compiler and synthetic-family exactness only",
+  "actual_checkpoint_execution": false,
+  "hardware_qualified": false,
+  "remaining": [
+    "actual checkpoint byte providers",
+    "workspace physical homes and causal visibility",
+    "finite 32SM ports/routes and full-token critical path",
+    "connected RTL",
+    "in-context SS/FF and routing"
+  ],
+  "all30_numerical_receipt_byte_replay": "PASS",
+  "make_check_figures": "PASS",
+  "check_figures_limits": "Existing unbuilt deployment figure noted by checker; no new stale headline pin. Does not establish four-target qualification."
+}

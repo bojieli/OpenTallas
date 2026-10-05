@@ -1,0 +1,170 @@
+library(ot_chip_v41x_hbm_karb_pc_local) {
+    technology (cmos);
+    delay_model : table_lookup;
+    time_unit : "1ns";
+    voltage_unit : "1V";
+    current_unit : "1uA";
+    leakage_power_unit : "1uW";
+    pulling_resistance_unit : "1kohm";
+    capacitive_load_unit (1,pf);
+    nom_process : 1;
+    nom_temperature : 25.000;
+    nom_voltage : 0.7;
+    operating_conditions(tt_0p7_25) { process : 1; temperature : 25.000; voltage : 0.7; tree_type : balanced_tree; }
+    default_operating_conditions : tt_0p7_25;
+    default_max_transition : 0.320;
+    default_fanout_load : 1;
+    default_input_pin_cap : 0.0;
+    default_output_pin_cap : 0.0;
+    default_inout_pin_cap : 0.0;
+    default_cell_leakage_power : 0;
+    default_leakage_power_density : 0.0;
+    slew_lower_threshold_pct_rise : 20.000;
+    slew_upper_threshold_pct_rise : 80.000;
+    slew_lower_threshold_pct_fall : 20.000;
+    slew_upper_threshold_pct_fall : 80.000;
+    input_threshold_pct_rise : 50.000;
+    input_threshold_pct_fall : 50.000;
+    output_threshold_pct_rise : 50.000;
+    output_threshold_pct_fall : 50.000;
+    lu_table_template(ot_chip_v41x_hbm_karb_pc_local_delay) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_chip_v41x_hbm_karb_pc_local_slew) { variable_1 : input_net_transition; variable_2 : total_output_net_capacitance; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    lu_table_template(ot_chip_v41x_hbm_karb_pc_local_check) { variable_1 : related_pin_transition; variable_2 : constrained_pin_transition; index_1 ("1000, 1001"); index_2 ("1000, 1001"); }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus4) { base_type : array; data_type : bit; bit_width : 4; bit_from : 3; bit_to : 0; downto : true; }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus16) { base_type : array; data_type : bit; bit_width : 16; bit_from : 15; bit_to : 0; downto : true; }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus17) { base_type : array; data_type : bit; bit_width : 17; bit_from : 16; bit_to : 0; downto : true; }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus28) { base_type : array; data_type : bit; bit_width : 28; bit_from : 27; bit_to : 0; downto : true; }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus32) { base_type : array; data_type : bit; bit_width : 32; bit_from : 31; bit_to : 0; downto : true; }
+    type (ot_chip_v41x_hbm_karb_pc_local_bus256) { base_type : array; data_type : bit; bit_width : 256; bit_from : 255; bit_to : 0; downto : true; }
+    cell(ot_chip_v41x_hbm_karb_pc_local) {
+        area : 6378.750;
+        interface_timing : true;
+        dont_use : true;
+        dont_touch : true;
+        pin(clk) { direction : input; capacitance : 0.020; clock : true; }
+        pin(rst_n) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(b_v) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(b_rdy) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(b_addr) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus28;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(b_len) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus4;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(b_tag) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus16;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(b_we) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(b_wdata) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus256;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(b_wstrb) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(b_wr_done) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        pin(k_v) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(k_rdy) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(k_addr) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus28;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(k_len) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus4;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(k_tag) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus16;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(k_we) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(k_wdata) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus256;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(k_wstrb) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : input;
+            capacitance : 0.0020;
+        }
+        pin(k_wr_done) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        pin(h_v) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        pin(h_rdy) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(h_addr) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus28;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(h_len) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus4;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(h_tag) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus17;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        pin(h_we) {
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(h_wdata) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus256;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(h_wstrb) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        pin(h_wr_done) {
+            direction : input;
+            capacitance : 0.0020;
+        }
+        bus(k_grants) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(b_grants) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+        bus(contended) { bus_type : ot_chip_v41x_hbm_karb_pc_local_bus32;
+            direction : output;
+            max_capacitance : 0.500;
+        }
+    }
+}

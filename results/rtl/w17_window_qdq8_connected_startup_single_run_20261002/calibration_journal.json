@@ -1,0 +1,441 @@
+{
+  "verdict": "PASS_UNCHANGED_PRECOMMITTED_MODEL_BOTH_CASES",
+  "comparison": {
+    "retain0": {
+      "checks": {
+        "block": {
+          "actual_count": 16,
+          "predicted_count": 16,
+          "exact": true
+        },
+        "descriptor": {
+          "actual_count": 6,
+          "predicted_count": 6,
+          "exact": true
+        },
+        "write_ack": {
+          "actual_count": 32,
+          "predicted_count": 32,
+          "exact": true
+        },
+        "logical_publish": {
+          "actual_count": 1,
+          "predicted_count": 1,
+          "exact": true
+        },
+        "request": {
+          "actual_count": 13088,
+          "predicted_count": 13088,
+          "exact": true
+        },
+        "reply": {
+          "actual_count": 13056,
+          "predicted_count": 13056,
+          "exact": true
+        },
+        "column": {
+          "actual_count": 13088,
+          "predicted_count": 13088,
+          "exact": true
+        },
+        "lifecycle_done": {
+          "actual_count": 6,
+          "predicted_count": 6,
+          "exact": true
+        },
+        "stage": {
+          "actual": [
+            [
+              21361,
+              0,
+              1,
+              20454
+            ],
+            [
+              41749,
+              1,
+              2,
+              20255
+            ],
+            [
+              61648,
+              2,
+              3,
+              19766
+            ],
+            [
+              81576,
+              3,
+              4,
+              19795
+            ],
+            [
+              101509,
+              4,
+              5,
+              19800
+            ],
+            [
+              121844,
+              5,
+              6,
+              20202
+            ]
+          ],
+          "predicted": [
+            [
+              21361,
+              0,
+              1,
+              20454
+            ],
+            [
+              41749,
+              1,
+              2,
+              20255
+            ],
+            [
+              61648,
+              2,
+              3,
+              19766
+            ],
+            [
+              81576,
+              3,
+              4,
+              19795
+            ],
+            [
+              101509,
+              4,
+              5,
+              19800
+            ],
+            [
+              121844,
+              5,
+              6,
+              20202
+            ]
+          ],
+          "exact": true
+        },
+        "per_PC": {
+          "exact": true,
+          "actual_count": 32
+        },
+        "terminal": {
+          "actual": [
+            0,
+            32,
+            32,
+            13056,
+            13056,
+            192,
+            256
+          ],
+          "predicted": [
+            0,
+            32,
+            32,
+            13056,
+            13056,
+            192,
+            256
+          ],
+          "exact": true
+        },
+        "actual_QE_capture": {
+          "exact": true,
+          "actual_count": 16,
+          "expected_count": 16
+        },
+        "natural_wrap": {
+          "exact": true,
+          "actual": [
+            [
+              81574,
+              512
+            ]
+          ],
+          "expected": [
+            [
+              81574,
+              512
+            ]
+          ]
+        }
+      },
+      "mismatches": [],
+      "verdict": "PASS"
+    },
+    "retain1": {
+      "checks": {
+        "block": {
+          "actual_count": 16,
+          "predicted_count": 16,
+          "exact": true
+        },
+        "descriptor": {
+          "actual_count": 10,
+          "predicted_count": 10,
+          "exact": true
+        },
+        "write_ack": {
+          "actual_count": 32,
+          "predicted_count": 32,
+          "exact": true
+        },
+        "logical_publish": {
+          "actual_count": 1,
+          "predicted_count": 1,
+          "exact": true
+        },
+        "request": {
+          "actual_count": 10912,
+          "predicted_count": 10912,
+          "exact": true
+        },
+        "reply": {
+          "actual_count": 10880,
+          "predicted_count": 10880,
+          "exact": true
+        },
+        "column": {
+          "actual_count": 10912,
+          "predicted_count": 10912,
+          "exact": true
+        },
+        "lifecycle_done": {
+          "actual_count": 10,
+          "predicted_count": 10,
+          "exact": true
+        },
+        "stage": {
+          "actual": [
+            [
+              21361,
+              0,
+              1,
+              20453
+            ],
+            [
+              21495,
+              1,
+              2,
+              0
+            ],
+            [
+              41850,
+              2,
+              3,
+              20221
+            ],
+            [
+              41984,
+              3,
+              4,
+              0
+            ],
+            [
+              62076,
+              4,
+              5,
+              19958
+            ],
+            [
+              62210,
+              5,
+              6,
+              0
+            ],
+            [
+              82256,
+              6,
+              7,
+              19912
+            ],
+            [
+              82390,
+              7,
+              8,
+              0
+            ],
+            [
+              102454,
+              8,
+              9,
+              19930
+            ],
+            [
+              102588,
+              9,
+              10,
+              0
+            ]
+          ],
+          "predicted": [
+            [
+              21361,
+              0,
+              1,
+              20453
+            ],
+            [
+              21495,
+              1,
+              2,
+              0
+            ],
+            [
+              41850,
+              2,
+              3,
+              20221
+            ],
+            [
+              41984,
+              3,
+              4,
+              0
+            ],
+            [
+              62076,
+              4,
+              5,
+              19958
+            ],
+            [
+              62210,
+              5,
+              6,
+              0
+            ],
+            [
+              82256,
+              6,
+              7,
+              19912
+            ],
+            [
+              82390,
+              7,
+              8,
+              0
+            ],
+            [
+              102454,
+              8,
+              9,
+              19930
+            ],
+            [
+              102588,
+              9,
+              10,
+              0
+            ]
+          ],
+          "exact": true
+        },
+        "per_PC": {
+          "exact": true,
+          "actual_count": 32
+        },
+        "terminal": {
+          "actual": [
+            1,
+            32,
+            32,
+            10880,
+            10880,
+            320,
+            128
+          ],
+          "predicted": [
+            1,
+            32,
+            32,
+            10880,
+            10880,
+            320,
+            128
+          ],
+          "exact": true
+        },
+        "actual_QE_capture": {
+          "exact": true,
+          "actual_count": 16,
+          "expected_count": 16
+        },
+        "natural_wrap": {
+          "exact": true,
+          "actual": [
+            [
+              82254,
+              512
+            ]
+          ],
+          "expected": [
+            [
+              82254,
+              512
+            ]
+          ]
+        }
+      },
+      "mismatches": [],
+      "verdict": "PASS"
+    }
+  },
+  "complete_actual_journals": {
+    "retain0": {
+      "path": "retain0_runtime.log",
+      "sha256": "dbed5b9ffbf5a511dbbe9f318938d0a7299f87967d65a06c3b3605634dd08e74",
+      "format": "Complete source-order original RTL display journal, verbatim including simulation report.",
+      "marker_counts": {
+        "QE_CAPTURE": 16,
+        "BLOCK": 16,
+        "REQUEST": 13088,
+        "COLUMN": 13088,
+        "WRITE_ACK": 32,
+        "LOGICAL_PUBLISH": 1,
+        "DESCRIPTOR": 6,
+        "REPLY": 13056,
+        "STAGE": 6,
+        "LIFECYCLE_DONE": 6,
+        "NATURAL_EPOCH_WRAP": 1,
+        "PC_DRAIN": 32,
+        "QDQ8_CONNECTED_LIFECYCLE_PASS": 1
+      },
+      "prediction_path": "results/uarch/w17_window_qdq8_connected_preparation_20261002/retain0_events.jsonl",
+      "prediction_sha256": "bdb805bef64fd3c4e4eb3a563ac7e1350f17fc45d835ee5cb44503b8e734a4cc"
+    },
+    "retain1": {
+      "path": "retain1_runtime.log",
+      "sha256": "cf385584b8fcbd9305908aff83bb2cbb03e9b620586a40d5f8f04335c13d76cb",
+      "format": "Complete source-order original RTL display journal, verbatim including simulation report.",
+      "marker_counts": {
+        "QE_CAPTURE": 16,
+        "BLOCK": 16,
+        "REQUEST": 10912,
+        "COLUMN": 10912,
+        "WRITE_ACK": 32,
+        "LOGICAL_PUBLISH": 1,
+        "DESCRIPTOR": 10,
+        "REPLY": 10880,
+        "STAGE": 10,
+        "LIFECYCLE_DONE": 10,
+        "NATURAL_EPOCH_WRAP": 1,
+        "PC_DRAIN": 32,
+        "QDQ8_CONNECTED_LIFECYCLE_PASS": 1
+      },
+      "prediction_path": "results/uarch/w17_window_qdq8_connected_preparation_20261002/retain1_events.jsonl",
+      "prediction_sha256": "6a43ae1e0b784d2f65633f704eda6e967d3941b2917aa92c1a48ddaba7a37720"
+    }
+  },
+  "no_fit": true,
+  "no_rerun": true
+}

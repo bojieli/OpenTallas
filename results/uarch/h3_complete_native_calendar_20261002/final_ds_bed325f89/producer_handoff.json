@@ -1,0 +1,37 @@
+{
+  "status": "PASS_ALL_PC_NATIVE_EMISSION_AND_SOURCE_REPLAY_TOY_NUMERIC",
+  "root": "/tmp/h3-distributed-endpoint/worktree",
+  "base_commit": "cd9a7781052d2a6b870fcbe781553f50a0baf350",
+  "PCs": 2213,
+  "families": 30,
+  "templates": 1127,
+  "tests": 82,
+  "native_execution": "Machine executes primitive instructions; no family handler or golden numerical callback. Exact DIV contract is reused from Epicurus.",
+  "tests_command": "python3 -m pytest -q tests/test_h3_deepseek_complete_native.py",
+  "replay_command": "python3 tools/h3_deepseek_complete_native.py --verify --out results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+  "provider_interpreter": "execute_finite uses existing PersistentMemory credits1, <=512B fragments, immutable tickets, matching event and consume before reuse; logical software event only",
+  "numerical_full_checkpoint_token_executed": false,
+  "main_live_original_edits": false,
+  "RTL_builds": 0,
+  "P_and_R": 0,
+  "physical_or_clock_transfer_credit": false,
+  "hardware_admission_dependencies": [
+    "Maxwell composed cost/slots/12339 local tracks+41 root route",
+    "Dewey finite service calendar/capacities",
+    "Kepler accepted versioned provider and causal publication",
+    "workspace materialization/tile feasibility; no invented resident extents"
+  ],
+  "retained_failures": [
+    "initial_numerical_failure.json",
+    "initial_fixture_geometry_failure2.json",
+    "initial_integer_zero_oracle_failure.log"
+  ],
+  "source_pin_fields": "coverage.json +program source_sha256; archived exact DIV source byte-identical to99da9b345cb7c9048b642f93517fb63729ff873a",
+  "workspace_hardware_admitted": false,
+  "materialized_scratch_bytes_per_rank_from_Dewey": 8598331392,
+  "provider_AW": 27,
+  "required_materialized_AW": 34,
+  "program_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "final_test_receipt": "final_tests.log",
+  "final_replay_receipt": "final_source_replay.log"
+}

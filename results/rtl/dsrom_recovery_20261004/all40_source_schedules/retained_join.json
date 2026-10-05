@@ -1,0 +1,5900 @@
+{
+  "source_signature_implementation": "tools/dsrom_recovery_coverage_manifest.py::signature (existing exact function)",
+  "source_sha256": "51980d4898b47e21166406902e3015fbd0e83f6bb1e8b816db816fadec67484e",
+  "all40_schedule_file_hashes_match": true,
+  "missing_layers_bound": 33,
+  "retained_matrix_metadata_compared": 237,
+  "retained_matrix_metadata_mismatches": [],
+  "comparison_rule": "Reverse ONLY explicit retained R93 moves; compare actual canonical matrices. No activation/runtime comparison.",
+  "literal_source_operations": 1149,
+  "all4_rank_fragments": 5244,
+  "native_ME_refusal_reasons": {
+    "round": 6
+  },
+  "unique_canonical_group_signatures": 434,
+  "groups": [
+    {
+      "layer": 0,
+      "node": "attn.a_proj",
+      "stage": 0,
+      "signature": "d4005cdf8c13cb193b880c527001e5da9f3f0a58738348e1dbec656f18596b00",
+      "phase_count": 1,
+      "phase_order": [
+        "L0.a_proj.fp8"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        0,
+        "attn.a_proj",
+        0
+      ]
+    },
+    {
+      "layer": 0,
+      "node": "attn.wq_b",
+      "stage": 0,
+      "signature": "f6e7e41538bf4d066f501ade44772092c8b7aadec0ff1a9647ce516064693d48",
+      "phase_count": 1,
+      "phase_order": [
+        "L0.wq_b"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        0,
+        "attn.wq_b",
+        0
+      ]
+    },
+    {
+      "layer": 0,
+      "node": "attn.wo_a",
+      "stage": 0,
+      "signature": "d0b52e9f0e609c7c9da349b28b70e1311d5d5cf7e55a8d7401430d148f39556b",
+      "phase_count": 4,
+      "phase_order": [
+        "L0.wo_a.g0.wo_a.group0.rows0",
+        "L0.wo_a.g0.wo_a.group0.rows768",
+        "L0.wo_a.g1.wo_a.group1.rows0",
+        "L0.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 0,
+      "node": "attn.wo_b",
+      "stage": 0,
+      "signature": "7033a6959f3ad7aa2e0fca2d4923fc0c83ccfd0ef8ca8f8c37766c287dce5b3d",
+      "phase_count": 1,
+      "phase_order": [
+        "L0.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 0,
+      "node": "ffn.router",
+      "stage": 0,
+      "signature": "ce484e351f0fe0c3f4a4b2a837cf5bf1cecdcb114ad628b024832cbeab90c9c2",
+      "phase_count": 1,
+      "phase_order": [
+        "L0.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        0,
+        "ffn.router",
+        0
+      ]
+    },
+    {
+      "layer": 0,
+      "node": "ffn.shared_gu",
+      "stage": 0,
+      "signature": "1a28e249aa09c0b296d0cc3d0194321045de0bcbbc6bc103bd773ebfc8b53588",
+      "phase_count": 1,
+      "phase_order": [
+        "L0.shared_gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        0,
+        "ffn.shared_gu",
+        0
+      ]
+    },
+    {
+      "layer": 0,
+      "node": "ffn.experts_gu",
+      "stage": 0,
+      "signature": "2eadc04310f7f5eec878e92a0d7d09b98f37aad1fb2774388b7ef765aad2a225",
+      "phase_count": 4,
+      "phase_order": [
+        "L0.exp112.gu",
+        "L0.exp170.gu",
+        "L0.exp61.gu",
+        "L0.exp69.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 0,
+      "node": "ffn.experts_gu",
+      "stage": 1,
+      "signature": "d581d6cafe1913c2d3c1ce0f6d98d231e9a2ed4e46e2c95c309fabfd678eb6c1",
+      "phase_count": 2,
+      "phase_order": [
+        "L0.exp299.gu",
+        "L0.exp357.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        0,
+        "ffn.experts_gu",
+        1
+      ]
+    },
+    {
+      "layer": 0,
+      "node": "ffn.down",
+      "stage": 0,
+      "signature": "1a9bb9f73ebed0019a80853ff8b4f3668bd70cb77fd4272d9d1eca61e205124f",
+      "phase_count": 5,
+      "phase_order": [
+        "L0.exp112.w2",
+        "L0.exp170.w2",
+        "L0.exp61.w2",
+        "L0.exp69.w2",
+        "L0.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 0,
+      "node": "ffn.down",
+      "stage": 1,
+      "signature": "bcabb6f0393cae220a716f4c5454e775840b62316acb5cbb7054df6e5feaf2a3",
+      "phase_count": 2,
+      "phase_order": [
+        "L0.exp299.w2",
+        "L0.exp357.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "attn.a_proj",
+      "stage": 1,
+      "signature": "68df5dd93bc04f3fcb6c15c8eb6c5ff31b22d91dc9bb3ceb793d90be450f2516",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.a_proj.fp8"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "attn.a_proj",
+        1
+      ]
+    },
+    {
+      "layer": 1,
+      "node": "attn.wq_b",
+      "stage": 1,
+      "signature": "7a219a3deecd0bdf51dbce201cb353bbebdc8ab12ba14d812cf5c6a1151eacd0",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "attn.wo_a",
+      "stage": 1,
+      "signature": "773cf9e374efa57184235d4e5eb20edc63f75b129fe2e6f327a872f54dd8d5ff",
+      "phase_count": 4,
+      "phase_order": [
+        "L1.wo_a.g0.wo_a.group0.rows0",
+        "L1.wo_a.g0.wo_a.group0.rows768",
+        "L1.wo_a.g1.wo_a.group1.rows0",
+        "L1.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "attn.wo_b",
+      "stage": 1,
+      "signature": "113a0e59779fc3d60cb87caf005c29f13c04ae374eeb831f3e629e63af23ccbc",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.wo_b"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "attn.wo_b",
+        1
+      ]
+    },
+    {
+      "layer": 1,
+      "node": "ffn.router",
+      "stage": 1,
+      "signature": "3593a7673816f47860d96b7168a6679c37586b11191c79d0016051bb3b9389b6",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "ffn.router",
+        1
+      ]
+    },
+    {
+      "layer": 1,
+      "node": "ffn.shared_gu",
+      "stage": 1,
+      "signature": "4d53a75ea5145e94a8406bc6de5c5c39ab79a02d65ad239b4450608369279364",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "E1.wkv",
+      "stage": 1,
+      "signature": "eb25e540a83a550321eac7af6945fae1b32cd2b9fdd85c52a275a1025052f503",
+      "phase_count": 2,
+      "phase_order": [
+        "L1.engram.wkv.engram.wkv.rows0",
+        "L1.engram.wkv.engram.wkv.rows4608"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "ffn.experts_gu",
+      "stage": 1,
+      "signature": "1d4afe9d0abccefedb9f1cefd165d8236c416384576e2ab8b980828688789b39",
+      "phase_count": 1,
+      "phase_order": [
+        "L1.exp15.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "ffn.experts_gu",
+      "stage": 3,
+      "signature": "9dc0c5a390879e6b58c0fd722c7637bdf2752a3edbb1c2dd5a8d8c3c7dcc7f8f",
+      "phase_count": 3,
+      "phase_order": [
+        "L1.exp244.gu",
+        "L1.exp276.gu",
+        "L1.exp345.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "ffn.experts_gu",
+      "stage": 2,
+      "signature": "5e887d51773915e94631b769b86141e4886e942027f1bcf190b5cd39d774e5ca",
+      "phase_count": 2,
+      "phase_order": [
+        "L1.exp56.gu",
+        "L1.exp72.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "ffn.experts_gu",
+        2
+      ]
+    },
+    {
+      "layer": 1,
+      "node": "ffn.down",
+      "stage": 1,
+      "signature": "cd48e3929b8e88ce10396706b4ca9e652254d9196aaedf1496b1f44812a0ff84",
+      "phase_count": 2,
+      "phase_order": [
+        "L1.exp15.w2",
+        "L1.shared.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "ffn.down",
+        1
+      ]
+    },
+    {
+      "layer": 1,
+      "node": "ffn.down",
+      "stage": 3,
+      "signature": "ab5373f153c34e10390a8a5efa798a51d8c5d8c3c61a0028e08049906a80e6cc",
+      "phase_count": 3,
+      "phase_order": [
+        "L1.exp244.w2",
+        "L1.exp276.w2",
+        "L1.exp345.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 1,
+      "node": "ffn.down",
+      "stage": 2,
+      "signature": "7b19f9ee81ee8bdfd8a63df1c57cd7ee622d950c3e3c86bf2999b8634d8d14f9",
+      "phase_count": 2,
+      "phase_order": [
+        "L1.exp56.w2",
+        "L1.exp72.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        1,
+        "ffn.down",
+        2
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "attn.a_proj",
+      "stage": 3,
+      "signature": "59c18a4acd49e3262c30ee6ef383d0e842cc3406ec89b6a0f7248ffdcef8d9a3",
+      "phase_count": 4,
+      "phase_order": [
+        "L2.a_proj.fp8",
+        "L2.a_proj.bf16.compressor.wkv",
+        "L2.a_proj.bf16.compressor.wgate",
+        "L2.a_proj.bf16.indexer.weights_proj"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "attn.a_proj",
+        3
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "attn.wq_b",
+      "stage": 3,
+      "signature": "3e95be1612452e6e9ec59977ce398209975e6ea007fd121c45bb01fca0367c4a",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L2.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 2,
+      "node": "attn.cmp.wk",
+      "stage": 3,
+      "signature": "52efc01fb2dbce63e28f391bf457d6923ec5b2c160362ed9bcef558fce92f464",
+      "phase_count": 1,
+      "phase_order": [
+        "L2.cmp.wk"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "attn.cmp.wk",
+        3
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "attn.wo_a",
+      "stage": 3,
+      "signature": "042cf1c30f730594f4e9b617d29324e405b757e056ffb9e5e64addae78d1a684",
+      "phase_count": 4,
+      "phase_order": [
+        "L2.wo_a.g0.wo_a.group0.rows0",
+        "L2.wo_a.g0.wo_a.group0.rows768",
+        "L2.wo_a.g1.wo_a.group1.rows0",
+        "L2.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 2,
+      "node": "attn.wo_b",
+      "stage": 3,
+      "signature": "f5e338b33f9effe6339dcf8a33c923b754e6a3812e7aba3ec44adb0ee24a9743",
+      "phase_count": 1,
+      "phase_order": [
+        "L2.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 2,
+      "node": "ffn.router",
+      "stage": 3,
+      "signature": "68eb0014c582c0dfa5c9e7c14304a8c5c67d991c79f8771ead8525911917fd6b",
+      "phase_count": 1,
+      "phase_order": [
+        "L2.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.router",
+        3
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.shared_gu",
+      "stage": 3,
+      "signature": "03fd1c0a1564863ad4388d6c4b5bcb42be115beb533fe2c5b5a4d5e4bbe51f54",
+      "phase_count": 1,
+      "phase_order": [
+        "L2.shared_gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.shared_gu",
+        3
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.experts_gu",
+      "stage": 4,
+      "signature": "ce4114474d541bc742d7c5c616613131faa57a8da4e3f7cedb189d11402d042d",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.exp182.gu",
+        "L2.exp59.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 2,
+      "node": "ffn.experts_gu",
+      "stage": 5,
+      "signature": "074a0e66c5782337a7da46d3362781379d561f9ebb4ae1623d294b8c0e0d590f",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.exp279.gu",
+        "L2.exp352.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.experts_gu",
+        5
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.experts_gu",
+      "stage": 3,
+      "signature": "bf01e16e7344e23105529e156fc1ced9bfaffe86b604b9431b9959ea62f31233",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.exp33.gu",
+        "L2.exp36.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.experts_gu",
+        3
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.down",
+      "stage": 4,
+      "signature": "d758bf86f07f2bbf4447eed574dfefc8004ba56eb70a19bdfe30a8160c6fd9e2",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.exp182.w2",
+        "L2.exp59.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.down",
+        4
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.down",
+      "stage": 5,
+      "signature": "65eab3d35db57fa5937e835a87e92bf5cab231bfe3b1c48cfdd8b566eb1a5244",
+      "phase_count": 2,
+      "phase_order": [
+        "L2.exp279.w2",
+        "L2.exp352.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.down",
+        5
+      ]
+    },
+    {
+      "layer": 2,
+      "node": "ffn.down",
+      "stage": 3,
+      "signature": "82fa3d104c7525928120fa7890a6654e03e18537f06aadda476fa2677cf752b3",
+      "phase_count": 3,
+      "phase_order": [
+        "L2.exp33.w2",
+        "L2.exp36.w2",
+        "L2.shared.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        2,
+        "ffn.down",
+        3
+      ]
+    },
+    {
+      "layer": 3,
+      "node": "attn.a_proj",
+      "stage": 5,
+      "signature": "4d5ce90dbabd05617b315387297f58ac3da1aa9840c492020ee63ca3c3cae961",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.a_proj.fp8"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        3,
+        "attn.a_proj",
+        5
+      ]
+    },
+    {
+      "layer": 3,
+      "node": "attn.wq_b",
+      "stage": 5,
+      "signature": "38daf6424cd912c6985ef953573dd9eb9e4a67a771beb9a5545f32cac277b3db",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 3,
+      "node": "attn.wo_a",
+      "stage": 5,
+      "signature": "8b895417465f76f08841a8a055f6f79bc668a741652723e4df3fbe2cde744b53",
+      "phase_count": 4,
+      "phase_order": [
+        "L3.wo_a.g0.wo_a.group0.rows0",
+        "L3.wo_a.g0.wo_a.group0.rows768",
+        "L3.wo_a.g1.wo_a.group1.rows0",
+        "L3.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 3,
+      "node": "attn.wo_b",
+      "stage": 5,
+      "signature": "c2aeb4ea0321a803b855a3fcac122c3489a3d44227c436b14552642f2c6b0352",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.wo_b"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        3,
+        "attn.wo_b",
+        5
+      ]
+    },
+    {
+      "layer": 3,
+      "node": "ffn.router",
+      "stage": 5,
+      "signature": "d60002ded98a9a9eb013185c8759ad0b2e160f24bc0ebcb545a2b15cc5a25085",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        3,
+        "ffn.router",
+        5
+      ]
+    },
+    {
+      "layer": 3,
+      "node": "ffn.shared_gu",
+      "stage": 5,
+      "signature": "d2388e481b6d82f0f9c2f2b4ce0cca9c6a08bdc837fc0034687529b19be2d01d",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 3,
+      "node": "ffn.experts_gu",
+      "stage": 6,
+      "signature": "2793667574a5d452f655bf050ed190ce5b9b201a14ad6683b8d84509ef135d51",
+      "phase_count": 6,
+      "phase_order": [
+        "L3.exp128.gu",
+        "L3.exp129.gu",
+        "L3.exp142.gu",
+        "L3.exp159.gu",
+        "L3.exp160.gu",
+        "L3.exp228.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 3,
+      "node": "ffn.down",
+      "stage": 6,
+      "signature": "16fbc683f262fa5dcecab029a7aac4ee1ff17083ed19400234f5c091ce7ea86f",
+      "phase_count": 6,
+      "phase_order": [
+        "L3.exp128.w2",
+        "L3.exp129.w2",
+        "L3.exp142.w2",
+        "L3.exp159.w2",
+        "L3.exp160.w2",
+        "L3.exp228.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        3,
+        "ffn.down",
+        6
+      ]
+    },
+    {
+      "layer": 3,
+      "node": "ffn.down",
+      "stage": 5,
+      "signature": "2aab3d8713632bbb9019e0da463e1e128bb95546db138c3b901f55e1ddb7da4f",
+      "phase_count": 1,
+      "phase_order": [
+        "L3.shared.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        3,
+        "ffn.down",
+        5
+      ]
+    },
+    {
+      "layer": 4,
+      "node": "attn.a_proj",
+      "stage": 7,
+      "signature": "6d956c146def8bc00951b2f20a9618ff6b920d96dbea194e515879ae5f898ac9",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "attn.wq_b",
+      "stage": 7,
+      "signature": "dbb275253dcade91316e9541486c300208d5da74b98539f06e7da82e4b52baa7",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "attn.wo_a",
+      "stage": 7,
+      "signature": "8aff476418237f335268dc34c7ea2bcc70685654142e60bcc5fcc12675176c98",
+      "phase_count": 4,
+      "phase_order": [
+        "L4.wo_a.g0.wo_a.group0.rows0",
+        "L4.wo_a.g0.wo_a.group0.rows768",
+        "L4.wo_a.g1.wo_a.group1.rows0",
+        "L4.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "attn.wo_b",
+      "stage": 7,
+      "signature": "a32d3dfb2cebffc45b7df1035d0c6e883eda9fcbc8200da5e89566b65883ed50",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.router",
+      "stage": 7,
+      "signature": "97e085a1403542f032be745b6b6e86a3b08bd465d6b7d3ef0ef1ab57abc7522a",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.shared_gu",
+      "stage": 7,
+      "signature": "fa1acd4661f1976e52c3d0c2bdef7d9579206244a0e2d830047813448a8cc7f2",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.experts_gu",
+      "stage": 8,
+      "signature": "a41ca9f688b4c613bc942b2adec8e92b2082498c38d9bf8e26901dbc42f0071e",
+      "phase_count": 5,
+      "phase_order": [
+        "L4.exp145.gu",
+        "L4.exp169.gu",
+        "L4.exp217.gu",
+        "L4.exp281.gu",
+        "L4.exp292.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.experts_gu",
+      "stage": 7,
+      "signature": "84c8ac5d60bdba363859c1365d8f740b4ab85a06be22e845c816a40171267c1d",
+      "phase_count": 1,
+      "phase_order": [
+        "L4.exp38.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.down",
+      "stage": 8,
+      "signature": "b3d7024f0a78b0aa58d96168858b293ffa36cc4ca917b01f3dbc1a9eb292dcd3",
+      "phase_count": 5,
+      "phase_order": [
+        "L4.exp145.w2",
+        "L4.exp169.w2",
+        "L4.exp217.w2",
+        "L4.exp281.w2",
+        "L4.exp292.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 4,
+      "node": "ffn.down",
+      "stage": 7,
+      "signature": "0c57dbb34b9358b41ca2666041e9cda81d68b07ca5189a4dc712a7e4420482a6",
+      "phase_count": 2,
+      "phase_order": [
+        "L4.exp38.w2",
+        "L4.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "attn.a_proj",
+      "stage": 9,
+      "signature": "c4e726863150f4ea532c3ddf8f1c8e909cb952f5d115770a4fe3013a8f6abb44",
+      "phase_count": 1,
+      "phase_order": [
+        "L5.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "attn.wq_b",
+      "stage": 9,
+      "signature": "4669abca09bc0fb28e03d281fa54e63f6e6a27f59d7fdfe091db7c31b9592c01",
+      "phase_count": 1,
+      "phase_order": [
+        "L5.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "attn.wo_a",
+      "stage": 9,
+      "signature": "61412b6596e0a5f6bb893402d86579e531605a3cf06fa5c0c9e8119fd6644ee7",
+      "phase_count": 4,
+      "phase_order": [
+        "L5.wo_a.g0.wo_a.group0.rows0",
+        "L5.wo_a.g0.wo_a.group0.rows768",
+        "L5.wo_a.g1.wo_a.group1.rows0",
+        "L5.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "attn.wo_b",
+      "stage": 9,
+      "signature": "7b1522c600b7f47a96f1c0159901089e5beaf57eaae057bfa6a629f5de80d1f0",
+      "phase_count": 1,
+      "phase_order": [
+        "L5.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.router",
+      "stage": 9,
+      "signature": "99b43a0537ac1efe2730c80e0d1fc43392adcaa3329c09425f420c309c2ca759",
+      "phase_count": 1,
+      "phase_order": [
+        "L5.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.shared_gu",
+      "stage": 9,
+      "signature": "27534ca342c93735fe406ea2b4a89585aaa9181aced88f34118072e0d1be9106",
+      "phase_count": 1,
+      "phase_order": [
+        "L5.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.experts_gu",
+      "stage": 9,
+      "signature": "80990a4cd8ddaff61928329ca54d5fa3d9da123d8138be548af45533b398365a",
+      "phase_count": 2,
+      "phase_order": [
+        "L5.exp1.gu",
+        "L5.exp25.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.experts_gu",
+      "stage": 10,
+      "signature": "bdb7ed851015413ae67762096c3a904b0bd12c9234a7dbe34524a41d8de7047e",
+      "phase_count": 4,
+      "phase_order": [
+        "L5.exp152.gu",
+        "L5.exp190.gu",
+        "L5.exp338.gu",
+        "L5.exp345.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.down",
+      "stage": 9,
+      "signature": "6a60bf32909e9d89edcb25b20554e82cd729d9b380a971589b0092fe4b4c0346",
+      "phase_count": 3,
+      "phase_order": [
+        "L5.exp1.w2",
+        "L5.exp25.w2",
+        "L5.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 5,
+      "node": "ffn.down",
+      "stage": 10,
+      "signature": "e7635de853e374c8ef487a79d0cf64fbab5ea65407febb8e3d78f8045ae0cedd",
+      "phase_count": 4,
+      "phase_order": [
+        "L5.exp152.w2",
+        "L5.exp190.w2",
+        "L5.exp338.w2",
+        "L5.exp345.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "attn.a_proj",
+      "stage": 11,
+      "signature": "51f8a66487c30e2bc971cd07b0986a1a99056fe703ad6d470d07edff5156758b",
+      "phase_count": 1,
+      "phase_order": [
+        "L6.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "attn.wq_b",
+      "stage": 11,
+      "signature": "013ab9f780ce98e899e86aaaa360c64c9e900eb31b671170ef091519627e5c19",
+      "phase_count": 1,
+      "phase_order": [
+        "L6.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "attn.wo_a",
+      "stage": 11,
+      "signature": "f5244f0d1edc61be993b3bbaafd7e5cce82862393f24263aae0f2282e58a7e8f",
+      "phase_count": 4,
+      "phase_order": [
+        "L6.wo_a.g0.wo_a.group0.rows0",
+        "L6.wo_a.g0.wo_a.group0.rows768",
+        "L6.wo_a.g1.wo_a.group1.rows0",
+        "L6.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "attn.wo_b",
+      "stage": 11,
+      "signature": "77ccf69b37c5d38857f1f8f150062003554973d92ee40dd69d69b8456e568aa1",
+      "phase_count": 1,
+      "phase_order": [
+        "L6.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.router",
+      "stage": 11,
+      "signature": "43d7e0682aa39c4419cb9aed540e78ae669a9580eb8722b114b29acc4a87a654",
+      "phase_count": 1,
+      "phase_order": [
+        "L6.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.shared_gu",
+      "stage": 11,
+      "signature": "6a440400aa1824e11eaf2843e593f35de5c77f1d9e80a931334c321c6fc139c2",
+      "phase_count": 1,
+      "phase_order": [
+        "L6.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.experts_gu",
+      "stage": 12,
+      "signature": "0535d235b4d703caf68032226953bfa4bc8e6357bd346c756609b0a314a3bb7f",
+      "phase_count": 3,
+      "phase_order": [
+        "L6.exp274.gu",
+        "L6.exp288.gu",
+        "L6.exp325.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.experts_gu",
+      "stage": 11,
+      "signature": "02a481e7b63c5ac006af88fd204b82a0c559a1a918c4007d3773f096ebdd7c2a",
+      "phase_count": 3,
+      "phase_order": [
+        "L6.exp28.gu",
+        "L6.exp72.gu",
+        "L6.exp85.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.down",
+      "stage": 12,
+      "signature": "aaaae8e12a8743a279c77e806f71f1e821ba8b2204c7477b3d0a9ee139e865b5",
+      "phase_count": 3,
+      "phase_order": [
+        "L6.exp274.w2",
+        "L6.exp288.w2",
+        "L6.exp325.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 6,
+      "node": "ffn.down",
+      "stage": 11,
+      "signature": "0116f5cfef09cb5b884d9976495a3cfa8e918fbaaf175996cbb9e7e226fcb5a7",
+      "phase_count": 4,
+      "phase_order": [
+        "L6.exp28.w2",
+        "L6.exp72.w2",
+        "L6.exp85.w2",
+        "L6.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "attn.a_proj",
+      "stage": 12,
+      "signature": "cce1526c6bdf4da976862858d185d547b252024f7b63335ffe4043570d382b02",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "attn.wq_b",
+      "stage": 12,
+      "signature": "6d44031c01fc7bd2e8c14dce9d7c5f6117529932248f2d575efbeceb857d2b2c",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "attn.wo_a",
+      "stage": 12,
+      "signature": "13269c0ce6dc4e013f7373d2f0430ee81a1ebfd26a2fa74f823d5ffa4bf4b2d7",
+      "phase_count": 4,
+      "phase_order": [
+        "L7.wo_a.g0.wo_a.group0.rows0",
+        "L7.wo_a.g0.wo_a.group0.rows768",
+        "L7.wo_a.g1.wo_a.group1.rows0",
+        "L7.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "attn.wo_b",
+      "stage": 12,
+      "signature": "ca23cb9947d62d84171e2af9e73d9cbb27975ad74fbc08bdefc8cd1816ebde31",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.router",
+      "stage": 13,
+      "signature": "dc111d112af85405b512c61559978505a22c965dfb9a9377fb7bd5acdd3602d7",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.shared_gu",
+      "stage": 13,
+      "signature": "4704794b10c76746c367e471547ff5d7661356c67e0a1a43e536ad279922f00c",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.experts_gu",
+      "stage": 13,
+      "signature": "48ad635140f8520590fed9ead3b703d614cd1bcf5d6cea5d8baaa75058cdb36c",
+      "phase_count": 5,
+      "phase_order": [
+        "L7.exp109.gu",
+        "L7.exp159.gu",
+        "L7.exp164.gu",
+        "L7.exp184.gu",
+        "L7.exp211.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.experts_gu",
+      "stage": 14,
+      "signature": "cfd603df3630edeb511ed4d1bb1f1adc81b2b4f859c823ce8f075246c9fc80f1",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.exp323.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.down",
+      "stage": 13,
+      "signature": "6d1fca44859c2aae8058272871acdd3383d3471ba5c9912361aa889b81b15078",
+      "phase_count": 6,
+      "phase_order": [
+        "L7.exp109.w2",
+        "L7.exp159.w2",
+        "L7.exp164.w2",
+        "L7.exp184.w2",
+        "L7.exp211.w2",
+        "L7.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 7,
+      "node": "ffn.down",
+      "stage": 14,
+      "signature": "c6fee3aa460e69a63424c448bc1b468640641643c4e30ed3209cd98b56366933",
+      "phase_count": 1,
+      "phase_order": [
+        "L7.exp323.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "attn.a_proj",
+      "stage": 14,
+      "signature": "922b97a7abc122608980249884d663fda9cfd630bd1db06783e577acd61fff7e",
+      "phase_count": 4,
+      "phase_order": [
+        "L8.a_proj.fp8",
+        "L8.a_proj.bf16.compressor.wkv",
+        "L8.a_proj.bf16.compressor.wgate",
+        "L8.a_proj.bf16.indexer.weights_proj"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "attn.wq_b",
+      "stage": 14,
+      "signature": "bd536f68f6dc780a6c77a65b84ec6c153de7248194705d537f0aa0f845582f6d",
+      "phase_count": 2,
+      "phase_order": [
+        "L8.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L8.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "attn.cmp.wk",
+      "stage": 14,
+      "signature": "9a01834a8375349eb962c5e80ff860718a8cd9faf9689eeb1615458339344048",
+      "phase_count": 1,
+      "phase_order": [
+        "L8.cmp.wk"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "attn.wo_a",
+      "stage": 14,
+      "signature": "6fa80b5ab90710f8a37b87b4d4bf7237709483f2e1fb480641f8588737e4281d",
+      "phase_count": 4,
+      "phase_order": [
+        "L8.wo_a.g0.wo_a.group0.rows0",
+        "L8.wo_a.g0.wo_a.group0.rows768",
+        "L8.wo_a.g1.wo_a.group1.rows0",
+        "L8.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "attn.wo_b",
+      "stage": 14,
+      "signature": "cb4ea588fa4f2207bcf087e69ba424f98928912a6990ec30c5c5d0856a3434ef",
+      "phase_count": 1,
+      "phase_order": [
+        "L8.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.router",
+      "stage": 14,
+      "signature": "d1792aad24dfa68e5c9a8c48549c4661e79614eca0919f1cd590650af283cd0b",
+      "phase_count": 1,
+      "phase_order": [
+        "L8.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.shared_gu",
+      "stage": 14,
+      "signature": "9159f99c458b6b1fa5e6b048cf263236cc85e8e74ac712946ce4ffc3bc7fd56e",
+      "phase_count": 1,
+      "phase_order": [
+        "L8.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.experts_gu",
+      "stage": 14,
+      "signature": "673ffe9350f03f5e8b4d6c0459a9c11ad056b29b1413b0426088a36d0926b3a3",
+      "phase_count": 1,
+      "phase_order": [
+        "L8.exp0.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.experts_gu",
+      "stage": 15,
+      "signature": "bfd18e42f2401b8aad309e0876afed4fdbe9b1b97fe6ad48d7f7e7475a212bf3",
+      "phase_count": 2,
+      "phase_order": [
+        "L8.exp182.gu",
+        "L8.exp66.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.experts_gu",
+      "stage": 16,
+      "signature": "c84f35e49ace12fe28c83bdd6699fc79c1b99f1ebaf9446f1babf477ab3c441d",
+      "phase_count": 3,
+      "phase_order": [
+        "L8.exp320.gu",
+        "L8.exp345.gu",
+        "L8.exp353.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.down",
+      "stage": 14,
+      "signature": "ba969981618d712cc02c5d9b4661119955fd749db69be9b055e46f06ca4eb2eb",
+      "phase_count": 2,
+      "phase_order": [
+        "L8.exp0.w2",
+        "L8.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.down",
+      "stage": 15,
+      "signature": "fe5c6813d3a9036d3102d2a255edb83365786f7cc9f46236d896c4c5e1eb01af",
+      "phase_count": 2,
+      "phase_order": [
+        "L8.exp182.w2",
+        "L8.exp66.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 8,
+      "node": "ffn.down",
+      "stage": 16,
+      "signature": "2d63ad7cf34675d3fa302b15b3139c72c0c0f582b275a2646c83e68f07c27990",
+      "phase_count": 3,
+      "phase_order": [
+        "L8.exp320.w2",
+        "L8.exp345.w2",
+        "L8.exp353.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "attn.a_proj",
+      "stage": 16,
+      "signature": "de6348b2e8eb80195cdd70d7276f8234d8ea84643021cc2a8abba9cf32f82f98",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "attn.wq_b",
+      "stage": 16,
+      "signature": "8ce6ad818c387a25c30ceda4325322f83d77942bf5239a2bbb0ea5c24c3ea6e8",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "attn.wo_a",
+      "stage": 16,
+      "signature": "74b8b3a37d76fdb138867f744c69acb949ebfee288ff5bd1b406dd8cee6da6ce",
+      "phase_count": 4,
+      "phase_order": [
+        "L9.wo_a.g0.wo_a.group0.rows0",
+        "L9.wo_a.g0.wo_a.group0.rows768",
+        "L9.wo_a.g1.wo_a.group1.rows0",
+        "L9.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "attn.wo_b",
+      "stage": 16,
+      "signature": "0b239f0e82a65bfeb6d70bd98009f41e1e46e209e100799abd38b83c90b5f9a8",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.router",
+      "stage": 16,
+      "signature": "18a0797c238703747c667b0122668159b9cbfd98c3dc1975ff10c6148ea86545",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.shared_gu",
+      "stage": 16,
+      "signature": "18842d0db0f9b412e560bb87c7afee2c3a11cb3fabb424931a8b4ef4549a44c6",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.experts_gu",
+      "stage": 17,
+      "signature": "6adc2b139a42eaceaa40e63a445e3e30aae2c4969c0ec3eeb8a2d2e5bf6b8e8a",
+      "phase_count": 3,
+      "phase_order": [
+        "L9.exp124.gu",
+        "L9.exp165.gu",
+        "L9.exp184.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.experts_gu",
+      "stage": 18,
+      "signature": "65c2b2390ace616c48a41f1ca697435656b6bcf758cde1e7aa653e5f590e5ccd",
+      "phase_count": 3,
+      "phase_order": [
+        "L9.exp298.gu",
+        "L9.exp350.gu",
+        "L9.exp365.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.down",
+      "stage": 17,
+      "signature": "9f913c980b60dae577683d919ace1c91b7b35f14ccd99c84493ed464bc07d14e",
+      "phase_count": 3,
+      "phase_order": [
+        "L9.exp124.w2",
+        "L9.exp165.w2",
+        "L9.exp184.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.down",
+      "stage": 18,
+      "signature": "74f646d92a0ab7328de109971432bf639f15063130c14bed6da6ed93b7a0023b",
+      "phase_count": 3,
+      "phase_order": [
+        "L9.exp298.w2",
+        "L9.exp350.w2",
+        "L9.exp365.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 9,
+      "node": "ffn.down",
+      "stage": 16,
+      "signature": "41bfc9ecfa014060e6ed308c01e1fc27994357e3855c7a0933166876cfad8452",
+      "phase_count": 1,
+      "phase_order": [
+        "L9.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "attn.a_proj",
+      "stage": 18,
+      "signature": "50c1725bcb071dff0cd6bd154a7b9cad409191148c2a3c61b8de5ffcad7d4095",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "attn.wq_b",
+      "stage": 18,
+      "signature": "0958ccc20c6e4bbc204aadfe16100171828bb14197cce4d8df47a271b0911890",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "attn.wo_a",
+      "stage": 18,
+      "signature": "338e9c4c8438674a8b9a2427425d855fecd97d3304862d1d2b08f30f321d7339",
+      "phase_count": 4,
+      "phase_order": [
+        "L10.wo_a.g0.wo_a.group0.rows0",
+        "L10.wo_a.g0.wo_a.group0.rows768",
+        "L10.wo_a.g1.wo_a.group1.rows0",
+        "L10.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "attn.wo_b",
+      "stage": 18,
+      "signature": "6b59727cd4870c7170e7f524b6ee6837d7d5b9f1ca3e360dacb4a7231ce9b706",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.router",
+      "stage": 18,
+      "signature": "e4f236161d1a0fde4ae7cf567c7d44da1d44e50a63cbd6725908302cdcc95cd1",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.shared_gu",
+      "stage": 18,
+      "signature": "fb64a690602e2c0b6e39ee9d1ebb25366c6cece9e44143e1381a2cd2140299df",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.experts_gu",
+      "stage": 19,
+      "signature": "b7312ceb5213f883ef2f2e0c95f7c8c9d1cda32e5193c66a51dc3b90137ca63f",
+      "phase_count": 3,
+      "phase_order": [
+        "L10.exp230.gu",
+        "L10.exp258.gu",
+        "L10.exp305.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.experts_gu",
+      "stage": 20,
+      "signature": "6567614bed63234a5e64adfe73861d243a08338609dcf0ef2b4b197fec8ceb30",
+      "phase_count": 2,
+      "phase_order": [
+        "L10.exp330.gu",
+        "L10.exp353.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.experts_gu",
+      "stage": 18,
+      "signature": "dbbcdb4317a19c87d1a194df0011bd2458d4d4458df07cb09b1abc5f946535c7",
+      "phase_count": 1,
+      "phase_order": [
+        "L10.exp45.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.down",
+      "stage": 19,
+      "signature": "7ba8a6458d75fac1e08ffb1d5bd79359b54d6f8f4ace9b1c96e856c6dfadd5d8",
+      "phase_count": 3,
+      "phase_order": [
+        "L10.exp230.w2",
+        "L10.exp258.w2",
+        "L10.exp305.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.down",
+      "stage": 20,
+      "signature": "a62f915c9b8146062773d203c388a81a28ebbbba698921d0274a16c92e5efe8e",
+      "phase_count": 2,
+      "phase_order": [
+        "L10.exp330.w2",
+        "L10.exp353.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 10,
+      "node": "ffn.down",
+      "stage": 18,
+      "signature": "67885d848fab9cffe6ad28fb1a2784685d4497165c120b055e758d38ac0505e8",
+      "phase_count": 2,
+      "phase_order": [
+        "L10.exp45.w2",
+        "L10.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "attn.a_proj",
+      "stage": 20,
+      "signature": "53d107c932c4ad23270eb8429e70cd6bc28655635af9d2f777c8649fb355139c",
+      "phase_count": 1,
+      "phase_order": [
+        "L11.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "attn.wq_b",
+      "stage": 20,
+      "signature": "18b006d6ae10a934b0bc0a8a0ce52e8648a3330f07737d7f197d60a008eaab72",
+      "phase_count": 1,
+      "phase_order": [
+        "L11.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "attn.wo_a",
+      "stage": 20,
+      "signature": "78dcf9821722e1db4c5dcdb0c54f5a29430217fd7add5b644385c9a9520cfcd9",
+      "phase_count": 4,
+      "phase_order": [
+        "L11.wo_a.g0.wo_a.group0.rows0",
+        "L11.wo_a.g0.wo_a.group0.rows768",
+        "L11.wo_a.g1.wo_a.group1.rows0",
+        "L11.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "attn.wo_b",
+      "stage": 20,
+      "signature": "24668b23872b90b43bfe2849ea6d82a723a5a7cb96172fdb95f6ebf5ab0b3dad",
+      "phase_count": 1,
+      "phase_order": [
+        "L11.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.router",
+      "stage": 20,
+      "signature": "9d01c1fc4cbd6091a3a2f1f1e184603dd679e5b9995b516c751999b3e7de3d52",
+      "phase_count": 1,
+      "phase_order": [
+        "L11.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.shared_gu",
+      "stage": 20,
+      "signature": "263f2da12e2181d0e2754f9c7796de35c359bcca53a8973dd5c2cf19d4421935",
+      "phase_count": 1,
+      "phase_order": [
+        "L11.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.experts_gu",
+      "stage": 20,
+      "signature": "4bb4699aff0906c7d875c1b792d0788deacc9d2db009f391161a934cbcac1d93",
+      "phase_count": 2,
+      "phase_order": [
+        "L11.exp126.gu",
+        "L11.exp95.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.experts_gu",
+      "stage": 21,
+      "signature": "7ad012545fd4e147b0bf534f03d655493422d2550a4839b44076766fb60944a9",
+      "phase_count": 4,
+      "phase_order": [
+        "L11.exp150.gu",
+        "L11.exp164.gu",
+        "L11.exp268.gu",
+        "L11.exp295.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.down",
+      "stage": 20,
+      "signature": "b2bea8723396ccb300d803f290b0b970f49299577038199f368d332a2354f4c4",
+      "phase_count": 3,
+      "phase_order": [
+        "L11.exp126.w2",
+        "L11.exp95.w2",
+        "L11.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 11,
+      "node": "ffn.down",
+      "stage": 21,
+      "signature": "44428fc9e31a3efc997524416496d45fdf35a54040daeaf2d8a3595c16c02677",
+      "phase_count": 4,
+      "phase_order": [
+        "L11.exp150.w2",
+        "L11.exp164.w2",
+        "L11.exp268.w2",
+        "L11.exp295.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "attn.a_proj",
+      "stage": 22,
+      "signature": "4b314dc8104fc66e98e322a433a64a85c9b34d97ac8702f01ee5c9314d1f569b",
+      "phase_count": 1,
+      "phase_order": [
+        "L12.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "attn.wq_b",
+      "stage": 22,
+      "signature": "57da604608402edf73c9b449f504b61b60f7ae362fd6f888c68eee0796218daf",
+      "phase_count": 1,
+      "phase_order": [
+        "L12.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "attn.wo_a",
+      "stage": 22,
+      "signature": "c1186248d94f97f0a8e42d0276867ce9fe616ec64e519e3bb715f588e7a51b1c",
+      "phase_count": 4,
+      "phase_order": [
+        "L12.wo_a.g0.wo_a.group0.rows0",
+        "L12.wo_a.g0.wo_a.group0.rows768",
+        "L12.wo_a.g1.wo_a.group1.rows0",
+        "L12.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "attn.wo_b",
+      "stage": 22,
+      "signature": "5400145fbbb437fdbb0d645fd0e27575015e34b964a18451a770de0183f94d1e",
+      "phase_count": 1,
+      "phase_order": [
+        "L12.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.router",
+      "stage": 22,
+      "signature": "f67b209d97c5a3d27df70ce7f8daea4bddfa48641b1452b42be308b051b37796",
+      "phase_count": 1,
+      "phase_order": [
+        "L12.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.shared_gu",
+      "stage": 22,
+      "signature": "cd3ed5fd91d530b8e4bb6e84b75cedb40bc73813a3d1fff4346d1b9b96514aa6",
+      "phase_count": 1,
+      "phase_order": [
+        "L12.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.experts_gu",
+      "stage": 22,
+      "signature": "78a1fe805fc36263512cac17b8dd65b0b78bb47ba49412153477e0401ef5c014",
+      "phase_count": 2,
+      "phase_order": [
+        "L12.exp140.gu",
+        "L12.exp83.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.experts_gu",
+      "stage": 23,
+      "signature": "9eb231d9bac3d8fb87efc49ae2e24e23a45987fbdf195b4ddabd1354a00f6d02",
+      "phase_count": 4,
+      "phase_order": [
+        "L12.exp171.gu",
+        "L12.exp215.gu",
+        "L12.exp228.gu",
+        "L12.exp354.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.down",
+      "stage": 22,
+      "signature": "bcbd1bb7fe561ef132ead5e4226fba7e7d5b5015de147cf0e908c61dc12e7ed1",
+      "phase_count": 3,
+      "phase_order": [
+        "L12.exp140.w2",
+        "L12.exp83.w2",
+        "L12.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 12,
+      "node": "ffn.down",
+      "stage": 23,
+      "signature": "b3c0ebf0192d86873d65d223044b9fa537bc0082dd9738d26d982b73b8323dfb",
+      "phase_count": 4,
+      "phase_order": [
+        "L12.exp171.w2",
+        "L12.exp215.w2",
+        "L12.exp228.w2",
+        "L12.exp354.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "attn.a_proj",
+      "stage": 24,
+      "signature": "aaf640cb7080e5e11a032b02f69d30d1555efe2d3d84812ad469427b2feb6c2c",
+      "phase_count": 1,
+      "phase_order": [
+        "L13.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "attn.wq_b",
+      "stage": 24,
+      "signature": "da45fc7d8af99ca53b032b2bdc98c9eefe442a838a0c72fe11956a3d338336f3",
+      "phase_count": 2,
+      "phase_order": [
+        "L13.wq_b.wq_b.rows0",
+        "L13.wq_b.wq_b.rows4608"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "attn.wo_a",
+      "stage": 24,
+      "signature": "58ede093e9460d151954a18b15beb04a9656c6e5ab509129833948a85c931fe9",
+      "phase_count": 4,
+      "phase_order": [
+        "L13.wo_a.g0.wo_a.group0.rows0",
+        "L13.wo_a.g0.wo_a.group0.rows768",
+        "L13.wo_a.g1.wo_a.group1.rows0",
+        "L13.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "attn.wo_b",
+      "stage": 24,
+      "signature": "5e20981b115a144f6df83f327990c5f120741852555d70d4ccdbeccec3831def",
+      "phase_count": 1,
+      "phase_order": [
+        "L13.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.router",
+      "stage": 24,
+      "signature": "c945d9e09609c996e9b9d14f255b5e4029ec73a9c45bfc56d6a69477e140c842",
+      "phase_count": 1,
+      "phase_order": [
+        "L13.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.shared_gu",
+      "stage": 24,
+      "signature": "1c95b9580294a4bef42fe7fd36791eb1044a5eb5b8892e5089feed3a444f3036",
+      "phase_count": 1,
+      "phase_order": [
+        "L13.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.experts_gu",
+      "stage": 24,
+      "signature": "356e6fa8ad4e6eba3c311ca1834c0a0343803005a19d55cdcc60f5cf72513584",
+      "phase_count": 3,
+      "phase_order": [
+        "L13.exp112.gu",
+        "L13.exp141.gu",
+        "L13.exp61.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.experts_gu",
+      "stage": 25,
+      "signature": "6e9fb4417b46e71861e52801b97500c427d2624980bc22af70137fe0d6aab6b4",
+      "phase_count": 3,
+      "phase_order": [
+        "L13.exp356.gu",
+        "L13.exp358.gu",
+        "L13.exp365.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.down",
+      "stage": 24,
+      "signature": "ed313b0f447b1948173216b5522ae8149dde8fa4281a195abb767993f5584e79",
+      "phase_count": 4,
+      "phase_order": [
+        "L13.exp112.w2",
+        "L13.exp141.w2",
+        "L13.exp61.w2",
+        "L13.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 13,
+      "node": "ffn.down",
+      "stage": 25,
+      "signature": "6f4ae05d02ed1aee64690596393d25e417c8c32fa8336e75c436897f41e3c3cb",
+      "phase_count": 3,
+      "phase_order": [
+        "L13.exp356.w2",
+        "L13.exp358.w2",
+        "L13.exp365.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "attn.a_proj",
+      "stage": 25,
+      "signature": "f90a0d265d375f043560222c3c50bf54a62672b07fc4367755cadd51a1517052",
+      "phase_count": 4,
+      "phase_order": [
+        "L14.a_proj.fp8",
+        "L14.a_proj.bf16.compressor.wkv",
+        "L14.a_proj.bf16.compressor.wgate",
+        "L14.a_proj.bf16.indexer.weights_proj"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "attn.wq_b",
+      "stage": 25,
+      "signature": "55db751145a5904ef978f71d804d12acab60036a9f36cd5f5674dbcc1c8a3742",
+      "phase_count": 2,
+      "phase_order": [
+        "L14.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L14.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "attn.cmp.wk",
+      "stage": 25,
+      "signature": "92273f0a16e1c4f46029ef2f85037b6c2addb413eb8d684f14c7b51c2c89b064",
+      "phase_count": 1,
+      "phase_order": [
+        "L14.cmp.wk"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "attn.wo_a",
+      "stage": 25,
+      "signature": "59f32e89b69f95da01af0b52c825919092424f5e56ba45ede584e939b9b06104",
+      "phase_count": 4,
+      "phase_order": [
+        "L14.wo_a.g0.wo_a.group0.rows0",
+        "L14.wo_a.g0.wo_a.group0.rows768",
+        "L14.wo_a.g1.wo_a.group1.rows0",
+        "L14.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "attn.wo_b",
+      "stage": 25,
+      "signature": "61c47abe96ff2dad96d2b51ba8b3a26a0f72b8de3942e716db7b1166b66e333b",
+      "phase_count": 1,
+      "phase_order": [
+        "L14.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.router",
+      "stage": 25,
+      "signature": "d688be53323f47567149a25ef7044e55448439459b72036b2509ff451d5bef7c",
+      "phase_count": 1,
+      "phase_order": [
+        "L14.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.shared_gu",
+      "stage": 25,
+      "signature": "ac01416ea7fad490c67e4fbbeb7eb5281d257748dfe1791a1f9d14edd116ab1a",
+      "phase_count": 1,
+      "phase_order": [
+        "L14.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "E1.wkv",
+      "stage": 26,
+      "signature": "b425cf71d79da8ddea7d61f36430d1854a83f16b74f6dfd2f88413153cbfc2bf",
+      "phase_count": 2,
+      "phase_order": [
+        "L14.engram.wkv.engram.wkv.rows0",
+        "L14.engram.wkv.engram.wkv.rows4608"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.experts_gu",
+      "stage": 26,
+      "signature": "9970bbfe0f867f17ab0346f78279e3caa088ed677e11d81f9d7a37d3a58ef5f6",
+      "phase_count": 4,
+      "phase_order": [
+        "L14.exp114.gu",
+        "L14.exp155.gu",
+        "L14.exp26.gu",
+        "L14.exp29.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.experts_gu",
+      "stage": 27,
+      "signature": "cc5ffdc2de377320a88ceb8950844282931484271c56c10c71f83082045607c4",
+      "phase_count": 2,
+      "phase_order": [
+        "L14.exp334.gu",
+        "L14.exp352.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.down",
+      "stage": 26,
+      "signature": "e77a789e7972033e9df88e58b6931a59354262e21444bf5ed77ec13d0da0ed3c",
+      "phase_count": 4,
+      "phase_order": [
+        "L14.exp114.w2",
+        "L14.exp155.w2",
+        "L14.exp26.w2",
+        "L14.exp29.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.down",
+      "stage": 27,
+      "signature": "3bed5e18f999d5b55b29d1d0d3263e686ea3d0a39aadbf56a45532f8d0e8db70",
+      "phase_count": 2,
+      "phase_order": [
+        "L14.exp334.w2",
+        "L14.exp352.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 14,
+      "node": "ffn.down",
+      "stage": 25,
+      "signature": "0198db016b6c3b76c5c2108bba571e1526bca9786f6a6d4abeb226f1353d0f9f",
+      "phase_count": 1,
+      "phase_order": [
+        "L14.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "attn.a_proj",
+      "stage": 27,
+      "signature": "32eef7735151d19b690223195dcff4bf582230fcdbbe14bf75c044f1ad5cb1b6",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "attn.wq_b",
+      "stage": 27,
+      "signature": "ab1bfff10bc5a6d6e7e5df45e9dddd68a7f26f83514820ea6ff3d9a724653e9e",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "attn.wo_a",
+      "stage": 27,
+      "signature": "cad0f1a6d3afbb46fba486c3d266af5e4c5ebffbea55cd6a1ce3b2af9f74a722",
+      "phase_count": 4,
+      "phase_order": [
+        "L15.wo_a.g0.wo_a.group0.rows0",
+        "L15.wo_a.g0.wo_a.group0.rows768",
+        "L15.wo_a.g1.wo_a.group1.rows0",
+        "L15.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "attn.wo_b",
+      "stage": 27,
+      "signature": "c40d6515bc7bb5155461b3d06a446e900906604a0f1717b76a3a732025694cd5",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.router",
+      "stage": 27,
+      "signature": "e5949ebf93ca74dac120d631ed1a0d68fb12197ddcc1e6037e2945d3dc025622",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.shared_gu",
+      "stage": 27,
+      "signature": "fdddc2724e1e67971e7bb63b17eb1b797e085efb60e1d68a6b661ec76434d8e9",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.experts_gu",
+      "stage": 28,
+      "signature": "469b6bcb112303ebe8af0c778ebc1efccc6a9945493595f13019d4aca40c945a",
+      "phase_count": 2,
+      "phase_order": [
+        "L15.exp180.gu",
+        "L15.exp221.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.experts_gu",
+      "stage": 29,
+      "signature": "a2233f8e829deb92e896b935ea7d47d126a24dcb8cba35d7dd0fd0338694efec",
+      "phase_count": 4,
+      "phase_order": [
+        "L15.exp247.gu",
+        "L15.exp303.gu",
+        "L15.exp307.gu",
+        "L15.exp322.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.down",
+      "stage": 28,
+      "signature": "bd72d57eada290fd958810ad3ef0e3b05b9794d8c19d53e86cfb6e11cfde58d9",
+      "phase_count": 2,
+      "phase_order": [
+        "L15.exp180.w2",
+        "L15.exp221.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.down",
+      "stage": 29,
+      "signature": "dce02c335879f5852c49c1bc1cf873f0cbe37bec1bf7e0b3fbb023a04817a5e6",
+      "phase_count": 4,
+      "phase_order": [
+        "L15.exp247.w2",
+        "L15.exp303.w2",
+        "L15.exp307.w2",
+        "L15.exp322.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 15,
+      "node": "ffn.down",
+      "stage": 27,
+      "signature": "01f5d85b1d936f63ebb6d2132137e41668b303b5704f738d264a65428e3185ad",
+      "phase_count": 1,
+      "phase_order": [
+        "L15.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "attn.a_proj",
+      "stage": 29,
+      "signature": "7ef29a55bbc61a2ea2c7c32b97c73c856d8abb252055306702523fc7decf34b5",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "attn.wq_b",
+      "stage": 29,
+      "signature": "ed25b157d66ead5e8918e2462fb7bd4577dc889d26e21f9ffa16036f09aefe50",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "attn.wo_a",
+      "stage": 29,
+      "signature": "d59beb8507a329a191037cdaae26e37684a5732078ce67d45bdd4cc7c53dcfd5",
+      "phase_count": 4,
+      "phase_order": [
+        "L16.wo_a.g0.wo_a.group0.rows0",
+        "L16.wo_a.g0.wo_a.group0.rows768",
+        "L16.wo_a.g1.wo_a.group1.rows0",
+        "L16.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "attn.wo_b",
+      "stage": 29,
+      "signature": "2a2b5c7200d189334bcf8b15252b8acd0105b2c4c2dbd5979bced7532c7ae5f5",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.router",
+      "stage": 29,
+      "signature": "c4f8bc8308b598b54efcdceb46773cbd312ac8dc933c316f5f6f2c9f8d450550",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.shared_gu",
+      "stage": 29,
+      "signature": "da5ca9c01e734ab7e35ecf0c03cc620fbe865cdbf746b786b0f847a09fe78921",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.experts_gu",
+      "stage": 30,
+      "signature": "2690e3d512da5a747339f1bf1704d5d1ee8d1916a60dd5e18c49186120fb22d9",
+      "phase_count": 3,
+      "phase_order": [
+        "L16.exp169.gu",
+        "L16.exp179.gu",
+        "L16.exp70.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.experts_gu",
+      "stage": 31,
+      "signature": "556ab8a0671e84af4eca42dd4fd0f797d203e5eb7094e929c170e9146df2947c",
+      "phase_count": 2,
+      "phase_order": [
+        "L16.exp282.gu",
+        "L16.exp379.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.experts_gu",
+      "stage": 29,
+      "signature": "82dd043d87b67d455de6b8ddc51d86af476968fcdaf1e8ac5dd0c0589b1f49a1",
+      "phase_count": 1,
+      "phase_order": [
+        "L16.exp3.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.down",
+      "stage": 30,
+      "signature": "19f74eac85aa65ed5eeb8194391d0f1935aacfdade261aee4a07ccc450208ee7",
+      "phase_count": 3,
+      "phase_order": [
+        "L16.exp169.w2",
+        "L16.exp179.w2",
+        "L16.exp70.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.down",
+      "stage": 31,
+      "signature": "a9e850a7cf2f3fa850fcae4fb55b613c7ef7bbc6f4510ee17b621503c58be2b8",
+      "phase_count": 2,
+      "phase_order": [
+        "L16.exp282.w2",
+        "L16.exp379.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 16,
+      "node": "ffn.down",
+      "stage": 29,
+      "signature": "5d05a76e13394a7c5de5be075578ab9bbfc578649a3cc942d25c83d6d67d6656",
+      "phase_count": 2,
+      "phase_order": [
+        "L16.exp3.w2",
+        "L16.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "attn.a_proj",
+      "stage": 31,
+      "signature": "f894927e361cd3302027f5af0e7a8ad4010e32dc675ddc5dbffcf0e32888910f",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "attn.wq_b",
+      "stage": 31,
+      "signature": "5f188546e8b4a22ced2ac68ee8424fbd7a7ffaafb2c99d661cbbe76a95b9b262",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "attn.wo_a",
+      "stage": 31,
+      "signature": "d163f19dc0395ad852c7e2c046d7a7723318a48b0d9785fd761d1043c6e8f1e9",
+      "phase_count": 4,
+      "phase_order": [
+        "L17.wo_a.g0.wo_a.group0.rows0",
+        "L17.wo_a.g0.wo_a.group0.rows768",
+        "L17.wo_a.g1.wo_a.group1.rows0",
+        "L17.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "attn.wo_b",
+      "stage": 31,
+      "signature": "9048386e70a78c4f40c10126e134130ffe134a6d2656d94942dac9760bae47f5",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.router",
+      "stage": 31,
+      "signature": "678ad078714234efccbf105b503b5b406cd893ccf3e24b0e4dbaf15726ce5afc",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.shared_gu",
+      "stage": 31,
+      "signature": "e3847c4b00d1bbd8fe5e6a33569038b90aa1104707ef2797025856e34a55f9ed",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.experts_gu",
+      "stage": 32,
+      "signature": "c91f8e7db826e0f758249ef4418c2ef9ef2c25d4e4d06c2c664b2039fa232fb3",
+      "phase_count": 4,
+      "phase_order": [
+        "L17.exp179.gu",
+        "L17.exp232.gu",
+        "L17.exp293.gu",
+        "L17.exp295.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.experts_gu",
+      "stage": 33,
+      "signature": "529255084c16165a084226b51a53fced779735a545528f1ee1f32586fd016d9e",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.exp372.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.experts_gu",
+      "stage": 31,
+      "signature": "36e52b3288bce8104b3a86d30aa8be96f9fd1a66b34a61c7a6745060ccbe5876",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.exp89.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.down",
+      "stage": 32,
+      "signature": "2bc867f0054bcaffa25ecea099e3ac5ea1106e14f631466dd51d47d8cda65cda",
+      "phase_count": 4,
+      "phase_order": [
+        "L17.exp179.w2",
+        "L17.exp232.w2",
+        "L17.exp293.w2",
+        "L17.exp295.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.down",
+      "stage": 33,
+      "signature": "eccc29b7a9a784ee08af0bb37374ed8b5589c72b69ce6d2d1c8397fdad1d3cda",
+      "phase_count": 1,
+      "phase_order": [
+        "L17.exp372.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 17,
+      "node": "ffn.down",
+      "stage": 31,
+      "signature": "b51a9d79ecff48f960db2d15db7c1aa9763bb7707ebe067373f4d89849ccc490",
+      "phase_count": 2,
+      "phase_order": [
+        "L17.exp89.w2",
+        "L17.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "attn.a_proj",
+      "stage": 33,
+      "signature": "eeef7d193485d30e283dd6b4b04bc0b8f4808ea2c6fcfbb13cf36d83ee530390",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "attn.wq_b",
+      "stage": 33,
+      "signature": "b89a49178be979a722970f6200039d0c4a2cdc7274b7d89a7d2d1e475154bf7d",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "attn.wo_a",
+      "stage": 33,
+      "signature": "672cf57c64355260890ffa36bd5b0bd2603431a6edf6bf6e0512a77cdae7d4b7",
+      "phase_count": 4,
+      "phase_order": [
+        "L18.wo_a.g0.wo_a.group0.rows0",
+        "L18.wo_a.g0.wo_a.group0.rows768",
+        "L18.wo_a.g1.wo_a.group1.rows0",
+        "L18.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "attn.wo_b",
+      "stage": 33,
+      "signature": "98ba59465cc8b8278819f0a598c19f83239d43afa39f3ed8131f5e689c99833a",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.router",
+      "stage": 33,
+      "signature": "858b70debe78ac9d3ef34916b9709251e0d972caf4b8bc5b34dccd56635f3f21",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.shared_gu",
+      "stage": 33,
+      "signature": "4061d8abd6127acd86c1087824c233a7c559cdb3744b5b53ac0e7f5628344995",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.experts_gu",
+      "stage": 34,
+      "signature": "af11d4223faaab52d098383750fd91e29b0fd64aed3830a637d160b150662a01",
+      "phase_count": 3,
+      "phase_order": [
+        "L18.exp215.gu",
+        "L18.exp249.gu",
+        "L18.exp283.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.experts_gu",
+      "stage": 35,
+      "signature": "46410967a22bb0dcf23090d73c3dca854376d3ce185cfef917fa9cd4f553ef8b",
+      "phase_count": 2,
+      "phase_order": [
+        "L18.exp354.gu",
+        "L18.exp378.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.experts_gu",
+      "stage": 33,
+      "signature": "fcfd7589c28b956745696019d9f04cc205fddb9f52e5f8c94d3a7b989b33efe8",
+      "phase_count": 1,
+      "phase_order": [
+        "L18.exp68.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.down",
+      "stage": 34,
+      "signature": "0705e371e6a440ba086484f09a44d7cd4453ff8a558e206583a735bf7c711eb7",
+      "phase_count": 3,
+      "phase_order": [
+        "L18.exp215.w2",
+        "L18.exp249.w2",
+        "L18.exp283.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.down",
+      "stage": 35,
+      "signature": "355f80a6917b90bdfd04d96891395f271a79ebe44f4f9e15fb28d6f02de0dcaa",
+      "phase_count": 2,
+      "phase_order": [
+        "L18.exp354.w2",
+        "L18.exp378.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 18,
+      "node": "ffn.down",
+      "stage": 33,
+      "signature": "fa9fd58b39f65e4b7a67ced042d81f23a6ad41f5c0d0c27a76f297d431965eaf",
+      "phase_count": 2,
+      "phase_order": [
+        "L18.exp68.w2",
+        "L18.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "attn.a_proj",
+      "stage": 35,
+      "signature": "b61f903bab2b33ee54599f65f852735bc7dcff28e0a5cc9c736eb01ab6a30ea4",
+      "phase_count": 1,
+      "phase_order": [
+        "L19.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "attn.wq_b",
+      "stage": 35,
+      "signature": "1989322692bd60ba0b34da4dda86e3d5daf0fe0871027d6b88f982360744bab4",
+      "phase_count": 1,
+      "phase_order": [
+        "L19.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "attn.wo_a",
+      "stage": 35,
+      "signature": "e12e00e36b9e0a3a11c31ba148f7fa908065f04846959ca185ceb84af3433e7b",
+      "phase_count": 4,
+      "phase_order": [
+        "L19.wo_a.g0.wo_a.group0.rows0",
+        "L19.wo_a.g0.wo_a.group0.rows768",
+        "L19.wo_a.g1.wo_a.group1.rows0",
+        "L19.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "attn.wo_b",
+      "stage": 35,
+      "signature": "b4b459ddaacaf87ee072d5283e92b2befb2a37c15a3e5a2b4a320361388a004e",
+      "phase_count": 1,
+      "phase_order": [
+        "L19.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.router",
+      "stage": 35,
+      "signature": "bb744b89f9e05b93f1e3c6ebfe1837c949e153762479a8244c5d6fdda4a7337b",
+      "phase_count": 1,
+      "phase_order": [
+        "L19.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.shared_gu",
+      "stage": 35,
+      "signature": "1357888b51e48f9d4810c048c7bb550ad72057d0e4736f658d051680475bc930",
+      "phase_count": 1,
+      "phase_order": [
+        "L19.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.experts_gu",
+      "stage": 35,
+      "signature": "5c76a3e33746b74f083f34b60cc71a99c052f45573e626a86b6a2c330b6c9590",
+      "phase_count": 4,
+      "phase_order": [
+        "L19.exp126.gu",
+        "L19.exp160.gu",
+        "L19.exp27.gu",
+        "L19.exp40.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.experts_gu",
+      "stage": 36,
+      "signature": "860bda3de8b60e6869b18acb933ed6074b34b18ea8b6c272affbef416c8b5149",
+      "phase_count": 2,
+      "phase_order": [
+        "L19.exp200.gu",
+        "L19.exp362.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.down",
+      "stage": 35,
+      "signature": "8a0d6d08f431a79fcdec60eeb6b85c3abf0dfd5e416ff11f24d79aae6352b20c",
+      "phase_count": 5,
+      "phase_order": [
+        "L19.exp126.w2",
+        "L19.exp160.w2",
+        "L19.exp27.w2",
+        "L19.exp40.w2",
+        "L19.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 19,
+      "node": "ffn.down",
+      "stage": 36,
+      "signature": "1b8897617856e59884ac4640dfaf2cda6d8db4751daea698daa506619690e2c0",
+      "phase_count": 2,
+      "phase_order": [
+        "L19.exp200.w2",
+        "L19.exp362.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 20,
+      "node": "attn.a_proj",
+      "stage": 37,
+      "signature": "7cde54772ced3678e29ae8d662b5873df3ac184696aa80e23efdd3a716b7fbd2",
+      "phase_count": 3,
+      "phase_order": [
+        "L20.a_proj.fp8",
+        "L20.a_proj.bf16.compressor.wkv",
+        "L20.a_proj.bf16.indexer.weights_proj"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "attn.a_proj",
+        37
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "attn.wq_b",
+      "stage": 37,
+      "signature": "f580a2ed5ef1d88408b6692c188731dc285f0ed816bfb70e7d0ed34a3e0f1d07",
+      "phase_count": 2,
+      "phase_order": [
+        "L20.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L20.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 20,
+      "node": "attn.cmp.wk",
+      "stage": 37,
+      "signature": "bfeb81ec1a9bc9d9d94772ca35dab8eb3ab2993c4e35c9a29568a533e38406cd",
+      "phase_count": 1,
+      "phase_order": [
+        "L20.cmp.wk"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "attn.cmp.wk",
+        37
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "attn.wo_a",
+      "stage": 37,
+      "signature": "1770e262e4deda3ae57787127cc0ce6f82a9fff79989ea70ce6344510087aa93",
+      "phase_count": 4,
+      "phase_order": [
+        "L20.wo_a.g0.wo_a.group0.rows0",
+        "L20.wo_a.g0.wo_a.group0.rows768",
+        "L20.wo_a.g1.wo_a.group1.rows0",
+        "L20.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 20,
+      "node": "attn.wo_b",
+      "stage": 37,
+      "signature": "77cb78bbad2d1423f50a083fb33a5fbc3374cada57b3d98cd1effc1818448cd1",
+      "phase_count": 1,
+      "phase_order": [
+        "L20.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 20,
+      "node": "ffn.router",
+      "stage": 37,
+      "signature": "da6a9a7b139e70a9b5cab85b83f5cbff4c0c7c4e2f594c2cee25eba4be5a5794",
+      "phase_count": 1,
+      "phase_order": [
+        "L20.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "ffn.router",
+        37
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "ffn.shared_gu",
+      "stage": 37,
+      "signature": "375b28ebd85160ac23ea12de268000111f9d9a62aac2503592630635f8956957",
+      "phase_count": 1,
+      "phase_order": [
+        "L20.shared_gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "ffn.shared_gu",
+        37
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "ffn.experts_gu",
+      "stage": 37,
+      "signature": "c72c3224713404bf5af7d19ff5b1e3b8b5bf000293cee61fc07090a82d3c7414",
+      "phase_count": 4,
+      "phase_order": [
+        "L20.exp158.gu",
+        "L20.exp164.gu",
+        "L20.exp41.gu",
+        "L20.exp65.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "ffn.experts_gu",
+        37
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "ffn.experts_gu",
+      "stage": 38,
+      "signature": "442bd8648eb17cffb2c8133f945070166596af4ce6528297556ac949a3b9c61c",
+      "phase_count": 2,
+      "phase_order": [
+        "L20.exp259.gu",
+        "L20.exp266.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "ffn.experts_gu",
+        38
+      ]
+    },
+    {
+      "layer": 20,
+      "node": "ffn.down",
+      "stage": 37,
+      "signature": "de90cd2e669af773e57680886a00f8f2fec1c5e0c86c894d48309d624361251c",
+      "phase_count": 5,
+      "phase_order": [
+        "L20.exp158.w2",
+        "L20.exp164.w2",
+        "L20.exp41.w2",
+        "L20.exp65.w2",
+        "L20.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 20,
+      "node": "ffn.down",
+      "stage": 38,
+      "signature": "fabce1b94b723540519168b9420052a57ad37c2c45e854ef3000caea950d93ab",
+      "phase_count": 2,
+      "phase_order": [
+        "L20.exp259.w2",
+        "L20.exp266.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        20,
+        "ffn.down",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "attn.a_proj",
+      "stage": 38,
+      "signature": "4e7971fc82f66d01beb92cd36861f35b25227035169ba500ee30497f715f61c7",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.a_proj.fp8"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "attn.a_proj",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "attn.wq_b",
+      "stage": 38,
+      "signature": "6d75c1db668c0a5184784bbf5e0ff5fea1c687074dac3a61dcef33fe023dc155",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 21,
+      "node": "attn.wo_a",
+      "stage": 38,
+      "signature": "8eb73b21b9a407be379105d5cba97426b4e6d8bcaf2cc979dc09fa3ece6da135",
+      "phase_count": 4,
+      "phase_order": [
+        "L21.wo_a.g0.wo_a.group0.rows0",
+        "L21.wo_a.g0.wo_a.group0.rows768",
+        "L21.wo_a.g1.wo_a.group1.rows0",
+        "L21.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 21,
+      "node": "attn.wo_b",
+      "stage": 38,
+      "signature": "62adff8345c80f709424593c377ba02f8f52455abe14ed22d45c785550e9618e",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 21,
+      "node": "ffn.router",
+      "stage": 38,
+      "signature": "30cf0f00525b7790963316fecdd79e90457459a1486bb1e1258d4813e3689035",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.router",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.shared_gu",
+      "stage": 38,
+      "signature": "658bc2c31293cfc6b1fbbeb7182e539259f9c07f32c3fdeda1ca6d8ded68c145",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.shared_gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.shared_gu",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.experts_gu",
+      "stage": 38,
+      "signature": "55f42df69f8be59ee697ef3fbe93d313db0c011218513f298ba47e99c7da53b7",
+      "phase_count": 1,
+      "phase_order": [
+        "L21.exp12.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.experts_gu",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.experts_gu",
+      "stage": 39,
+      "signature": "9d5f552e4f09758762d9416a8dc82f22046f06ad73232d5856c443a53a70d781",
+      "phase_count": 3,
+      "phase_order": [
+        "L21.exp176.gu",
+        "L21.exp224.gu",
+        "L21.exp36.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.experts_gu",
+        39
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.experts_gu",
+      "stage": 40,
+      "signature": "6cead881fbf99b64ccc0d468c2456bcae5bd532227ec2fcaca5543a0ccaa1f19",
+      "phase_count": 2,
+      "phase_order": [
+        "L21.exp271.gu",
+        "L21.exp331.gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.experts_gu",
+        40
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.down",
+      "stage": 38,
+      "signature": "583f90c27ee58da656896e76ba03477a225c21756b37d74f96bfd6391afcbfc6",
+      "phase_count": 2,
+      "phase_order": [
+        "L21.exp12.w2",
+        "L21.shared.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.down",
+        38
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.down",
+      "stage": 39,
+      "signature": "eb2239ed52607b31f1624bbe354e95df1954c8d998293f70ec181b78938773a3",
+      "phase_count": 3,
+      "phase_order": [
+        "L21.exp176.w2",
+        "L21.exp224.w2",
+        "L21.exp36.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        21,
+        "ffn.down",
+        39
+      ]
+    },
+    {
+      "layer": 21,
+      "node": "ffn.down",
+      "stage": 40,
+      "signature": "365a8fa0ff8197ad24bad49b628a449273b48e54c49bc267c8a993d526249fd9",
+      "phase_count": 2,
+      "phase_order": [
+        "L21.exp271.w2",
+        "L21.exp331.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "attn.a_proj",
+      "stage": 40,
+      "signature": "838fb911029f52b5b21ecae3bef6b5ac7bb79e6931ef1d1136502e47bb094ec9",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "attn.wq_b",
+      "stage": 40,
+      "signature": "cd14ca63d33956fd347def270719d9b0bbddfb6a519e8f454e56e5121476dbd5",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "attn.wo_a",
+      "stage": 40,
+      "signature": "700a6e56aedac695ad30af680c3c826d1740418db0dd3306d67ef6239101adef",
+      "phase_count": 4,
+      "phase_order": [
+        "L22.wo_a.g0.wo_a.group0.rows0",
+        "L22.wo_a.g0.wo_a.group0.rows768",
+        "L22.wo_a.g1.wo_a.group1.rows0",
+        "L22.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "attn.wo_b",
+      "stage": 40,
+      "signature": "8fcf1a6da4c67af65da41f4962b8afe952bcb0686a2f3c7566bef6b112da376c",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.router",
+      "stage": 40,
+      "signature": "43a9d5243be2c1033b33ee7b5deda8f225de235fbdfca03d3ff0f1e3a1f53fd0",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.shared_gu",
+      "stage": 40,
+      "signature": "b44a1eba2da173f8463bb5d7470d698b4bb75489eea10978f4c3df5b010dba23",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.experts_gu",
+      "stage": 41,
+      "signature": "cf4d209029590991c755774a466faaa8a2b6b96f82c895391127585bbce95b21",
+      "phase_count": 5,
+      "phase_order": [
+        "L22.exp115.gu",
+        "L22.exp138.gu",
+        "L22.exp200.gu",
+        "L22.exp263.gu",
+        "L22.exp77.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.experts_gu",
+      "stage": 42,
+      "signature": "8a9e8f1aaadc4ccae98fe27ed19c192bae774fc0e2ee0a8cbf6966a07a68c533",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.exp340.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.down",
+      "stage": 41,
+      "signature": "eeef068cf0de4c44ae66fce148a1c22b696181c82de2293ecdd7abb4bdd9daf7",
+      "phase_count": 5,
+      "phase_order": [
+        "L22.exp115.w2",
+        "L22.exp138.w2",
+        "L22.exp200.w2",
+        "L22.exp263.w2",
+        "L22.exp77.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.down",
+      "stage": 42,
+      "signature": "9a51a1317a1b10399e2ff3356400cff5b87945c5bc254390c082ebf11cbe9ba0",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.exp340.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 22,
+      "node": "ffn.down",
+      "stage": 40,
+      "signature": "2b4bc263c907d390b5b80d29e7885eadd0125128a7033df73f24147a96a88daa",
+      "phase_count": 1,
+      "phase_order": [
+        "L22.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "attn.a_proj",
+      "stage": 42,
+      "signature": "aafcccd35a4440e63414c7f581e1e2b537bbb76c302996d9774bafc8a17c9f37",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "attn.wq_b",
+      "stage": 42,
+      "signature": "9f6e1f39fe57e52fef2e22bce79f528e2e1030aea53d53e554b46075fa7fb804",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "attn.wo_a",
+      "stage": 42,
+      "signature": "88323e8fe37b248e329bd23ac21873401f12abeee1d5c3f9bc5e8022d03b7c54",
+      "phase_count": 4,
+      "phase_order": [
+        "L23.wo_a.g0.wo_a.group0.rows0",
+        "L23.wo_a.g0.wo_a.group0.rows768",
+        "L23.wo_a.g1.wo_a.group1.rows0",
+        "L23.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "attn.wo_b",
+      "stage": 42,
+      "signature": "e6af401b68fd8d17d2e24f3bd72b77e5d3f15a04fa02752728d0eb184f32a738",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.router",
+      "stage": 42,
+      "signature": "5af24ce4e24570dad3fd0d1d82e939e7c5eae09851a90e4b55751180aabf944b",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.shared_gu",
+      "stage": 42,
+      "signature": "348d13a0eea8f56a3531e45978e102e35bd1c7a3721d9fe1687d5ae69e4ffedd",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.experts_gu",
+      "stage": 43,
+      "signature": "c828c4de01336add5e5c7969abaa05c8a9dea37453fa56a03976d625d63e4520",
+      "phase_count": 4,
+      "phase_order": [
+        "L23.exp189.gu",
+        "L23.exp217.gu",
+        "L23.exp257.gu",
+        "L23.exp286.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.experts_gu",
+      "stage": 44,
+      "signature": "bba0c523f0c01f08aad7ad48356bdc48692109fb70142be4415c0f13e0db3ddf",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.exp355.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.experts_gu",
+      "stage": 42,
+      "signature": "0abc57ac3247588d4b0de0fa305a9017a2cc3bfc6e84942e063275ee2e2767de",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.exp53.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.down",
+      "stage": 43,
+      "signature": "deee1a4c9c179a995e82e190c80774c13e3f897b49e934494d7d74a1748285f4",
+      "phase_count": 4,
+      "phase_order": [
+        "L23.exp189.w2",
+        "L23.exp217.w2",
+        "L23.exp257.w2",
+        "L23.exp286.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.down",
+      "stage": 44,
+      "signature": "6e9823fd1d2d57205a39f784edf5e6a95dc774bd30db14b7c282d984c1cc0b88",
+      "phase_count": 1,
+      "phase_order": [
+        "L23.exp355.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 23,
+      "node": "ffn.down",
+      "stage": 42,
+      "signature": "46078a8d338568785f926aeb204c9a8e38df9ee326c59ed7063675a07714d88f",
+      "phase_count": 2,
+      "phase_order": [
+        "L23.exp53.w2",
+        "L23.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "attn.a_proj",
+      "stage": 44,
+      "signature": "ec6cd33fd07c0641c4d7b7ba7c811ebac52d49b4c67a2b33bc6583625850cf4b",
+      "phase_count": 2,
+      "phase_order": [
+        "L24.a_proj.fp8",
+        "L24.a_proj.bf16"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "attn.wq_b",
+      "stage": 44,
+      "signature": "a2f7690e9f0b85652bb3bdf00344fee3cbdf8948e414dfb134c519b01a59bae3",
+      "phase_count": 2,
+      "phase_order": [
+        "L24.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L24.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        24,
+        "attn.wq_b",
+        44
+      ]
+    },
+    {
+      "layer": 24,
+      "node": "attn.wo_a",
+      "stage": 44,
+      "signature": "d3fc594dddcdb0b5d9d65f35e7b8ebb9b9793460a93024cc314bdba009d66f3f",
+      "phase_count": 4,
+      "phase_order": [
+        "L24.wo_a.g0.wo_a.group0.rows0",
+        "L24.wo_a.g0.wo_a.group0.rows768",
+        "L24.wo_a.g1.wo_a.group1.rows0",
+        "L24.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "attn.wo_b",
+      "stage": 44,
+      "signature": "461756fa468adb2a8bcb906051ba4a9958e13010db1e4585984d58fb60d1a22a",
+      "phase_count": 1,
+      "phase_order": [
+        "L24.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "ffn.router",
+      "stage": 44,
+      "signature": "da72132d12a68ff74aa4ed340edf201adcd44386dfccdedba7fc8498895eb8d9",
+      "phase_count": 1,
+      "phase_order": [
+        "L24.router"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        24,
+        "ffn.router",
+        44
+      ]
+    },
+    {
+      "layer": 24,
+      "node": "ffn.shared_gu",
+      "stage": 44,
+      "signature": "65004c8e0cd4f37e13f6e340dc278879bd5a6a0f1838d906fc6151192b383150",
+      "phase_count": 1,
+      "phase_order": [
+        "L24.shared_gu"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        24,
+        "ffn.shared_gu",
+        44
+      ]
+    },
+    {
+      "layer": 24,
+      "node": "ffn.experts_gu",
+      "stage": 45,
+      "signature": "8b46317cdf0f8c982a4326059660163b281a5c18036d788693019b9ec395500c",
+      "phase_count": 5,
+      "phase_order": [
+        "L24.exp143.gu",
+        "L24.exp180.gu",
+        "L24.exp218.gu",
+        "L24.exp256.gu",
+        "L24.exp271.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "ffn.experts_gu",
+      "stage": 44,
+      "signature": "211c777fe21f1078d6cf99dbb3a5e9252dd6e85283dfe0ff3f1680eac21d6fdd",
+      "phase_count": 1,
+      "phase_order": [
+        "L24.exp18.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 24,
+      "node": "ffn.down",
+      "stage": 45,
+      "signature": "53c7bcaadbb6b3eb79ce83a4a4bf75c8e8914cd33f031576da2d59334667ff6a",
+      "phase_count": 5,
+      "phase_order": [
+        "L24.exp143.w2",
+        "L24.exp180.w2",
+        "L24.exp218.w2",
+        "L24.exp256.w2",
+        "L24.exp271.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        24,
+        "ffn.down",
+        45
+      ]
+    },
+    {
+      "layer": 24,
+      "node": "ffn.down",
+      "stage": 44,
+      "signature": "8c513df0068fd186507e9b88e2900f967e5d29644b4b7c0f2ef38bd8a2ec8f46",
+      "phase_count": 2,
+      "phase_order": [
+        "L24.exp18.w2",
+        "L24.shared.w2"
+      ],
+      "matches_retained_candidate": true,
+      "retained_example": [
+        24,
+        "ffn.down",
+        44
+      ]
+    },
+    {
+      "layer": 25,
+      "node": "attn.a_proj",
+      "stage": 46,
+      "signature": "b9124ba876f3502c5436beb13ea4368f9197ac537a72cefa6f90bf33c428285c",
+      "phase_count": 1,
+      "phase_order": [
+        "L25.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "attn.wq_b",
+      "stage": 46,
+      "signature": "561c3e78cb4a2da98058a8372b190b5bcf47360d04a447fd1f1ab1892724f0e2",
+      "phase_count": 1,
+      "phase_order": [
+        "L25.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "attn.wo_a",
+      "stage": 46,
+      "signature": "55bcba7e7e72170712daebe80e8f0fd25895e5ed6e76c8483f5145cebca027d7",
+      "phase_count": 4,
+      "phase_order": [
+        "L25.wo_a.g0.wo_a.group0.rows0",
+        "L25.wo_a.g0.wo_a.group0.rows768",
+        "L25.wo_a.g1.wo_a.group1.rows0",
+        "L25.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "attn.wo_b",
+      "stage": 46,
+      "signature": "673fd7f8b5e33e4c22bb55e1a5e9b0789a5a04012c2901cad2339c3ac78cbb88",
+      "phase_count": 1,
+      "phase_order": [
+        "L25.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.router",
+      "stage": 46,
+      "signature": "c6e25d86d8aaa6e57de0a49e43ab7c4e13e907351f7fb93d9a66a24e05565ffa",
+      "phase_count": 1,
+      "phase_order": [
+        "L25.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.shared_gu",
+      "stage": 46,
+      "signature": "daf96e37881c82cb726a54e129b047b9979458c0d29efaff12639f77e7dd9fbb",
+      "phase_count": 1,
+      "phase_order": [
+        "L25.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.experts_gu",
+      "stage": 47,
+      "signature": "4b93dab1fb2de29cf7e2d9f5ca85e8284498283ae90e67cbf5f535dacef38458",
+      "phase_count": 4,
+      "phase_order": [
+        "L25.exp163.gu",
+        "L25.exp257.gu",
+        "L25.exp287.gu",
+        "L25.exp310.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.experts_gu",
+      "stage": 46,
+      "signature": "825debffbcdbc26f396feabf0271d30c825bef63d84aa6f9c33989264ef7ca5a",
+      "phase_count": 2,
+      "phase_order": [
+        "L25.exp86.gu",
+        "L25.exp94.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.down",
+      "stage": 47,
+      "signature": "01fd19444297e5affa159f304102cb86de3d7c73901f8a994b1aeaae0ae12741",
+      "phase_count": 4,
+      "phase_order": [
+        "L25.exp163.w2",
+        "L25.exp257.w2",
+        "L25.exp287.w2",
+        "L25.exp310.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 25,
+      "node": "ffn.down",
+      "stage": 46,
+      "signature": "9cb37216a3535f165512c28b09535112e887107c54899e911ebf94f186978b16",
+      "phase_count": 3,
+      "phase_order": [
+        "L25.exp86.w2",
+        "L25.exp94.w2",
+        "L25.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "attn.a_proj",
+      "stage": 48,
+      "signature": "e853efa06458b1572cb4cbdb726f06b84c7530d7e60d81f732769f8b97fa8cff",
+      "phase_count": 1,
+      "phase_order": [
+        "L26.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "attn.wq_b",
+      "stage": 48,
+      "signature": "c2fe898a590966cb6c2f2c3c2b0a7c8f0085f3aabcf8ce2e8e28996b7cb85405",
+      "phase_count": 1,
+      "phase_order": [
+        "L26.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "attn.wo_a",
+      "stage": 48,
+      "signature": "421b35c9b55da81ac0d862569e481e529a0c92a90dac44361a043d79c1e19952",
+      "phase_count": 4,
+      "phase_order": [
+        "L26.wo_a.g0.wo_a.group0.rows0",
+        "L26.wo_a.g0.wo_a.group0.rows768",
+        "L26.wo_a.g1.wo_a.group1.rows0",
+        "L26.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "attn.wo_b",
+      "stage": 48,
+      "signature": "7255f52a57373c3f78f0a86a7c454d40d9cca385195a256472da6f19931aa827",
+      "phase_count": 1,
+      "phase_order": [
+        "L26.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.router",
+      "stage": 48,
+      "signature": "9fbcdb851fd070978220dca2fd5160519e44c777316db6f13f53e1ae20be314b",
+      "phase_count": 1,
+      "phase_order": [
+        "L26.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.shared_gu",
+      "stage": 48,
+      "signature": "62220faa28b7d480ded33832072b83de8ffc290550d2c8a5bcd0c343f81379b3",
+      "phase_count": 1,
+      "phase_order": [
+        "L26.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.experts_gu",
+      "stage": 48,
+      "signature": "74b524083890e924231855c136ec37eb8685edce71f58fbb711f9e78a0316f5f",
+      "phase_count": 3,
+      "phase_order": [
+        "L26.exp129.gu",
+        "L26.exp148.gu",
+        "L26.exp77.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.experts_gu",
+      "stage": 49,
+      "signature": "86b00d9017e7580bac0251bdc6c28b8bec253636afb276e98830b4a851129536",
+      "phase_count": 3,
+      "phase_order": [
+        "L26.exp245.gu",
+        "L26.exp250.gu",
+        "L26.exp302.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.down",
+      "stage": 48,
+      "signature": "6fd2cdfb23d4a7a90a8cdf9407ba72d37b16ea42741b940810668bf9cba1db24",
+      "phase_count": 4,
+      "phase_order": [
+        "L26.exp129.w2",
+        "L26.exp148.w2",
+        "L26.exp77.w2",
+        "L26.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 26,
+      "node": "ffn.down",
+      "stage": 49,
+      "signature": "b43e56723832710bdc8df664cdb9fa27c9ae21db33552d3c484f0854243b006b",
+      "phase_count": 3,
+      "phase_order": [
+        "L26.exp245.w2",
+        "L26.exp250.w2",
+        "L26.exp302.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "attn.a_proj",
+      "stage": 49,
+      "signature": "817311555d2b99b19e9ea86ca352dc02d39d5604d71cc5c7f02dde8240294a46",
+      "phase_count": 1,
+      "phase_order": [
+        "L27.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "attn.wq_b",
+      "stage": 49,
+      "signature": "51fa7d7765b0b1af67bc56e4fe388e99492a50366c8d838b0dc709df894e584c",
+      "phase_count": 1,
+      "phase_order": [
+        "L27.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "attn.wo_a",
+      "stage": 49,
+      "signature": "e55681354da64e13c8ca24b8705c51aa6a6900b67f481284ddcc459b5b71aac5",
+      "phase_count": 4,
+      "phase_order": [
+        "L27.wo_a.g0.wo_a.group0.rows0",
+        "L27.wo_a.g0.wo_a.group0.rows768",
+        "L27.wo_a.g1.wo_a.group1.rows0",
+        "L27.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "attn.wo_b",
+      "stage": 49,
+      "signature": "0d144bc1ff9b2e44313c085c0b8ba9f1513a972c6bbdc06707a952e6bf0cbc55",
+      "phase_count": 1,
+      "phase_order": [
+        "L27.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.router",
+      "stage": 50,
+      "signature": "dc111d112af85405b512c61559978505a22c965dfb9a9377fb7bd5acdd3602d7",
+      "phase_count": 1,
+      "phase_order": [
+        "L27.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.shared_gu",
+      "stage": 50,
+      "signature": "eb6c71d76859a3b5041ba42464f9c236446c795ef9da05e9026d14ba74ff86a8",
+      "phase_count": 1,
+      "phase_order": [
+        "L27.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.experts_gu",
+      "stage": 50,
+      "signature": "608906abea317337d8b390e5dc0190170d67c1235cefd575908badab368e9563",
+      "phase_count": 2,
+      "phase_order": [
+        "L27.exp16.gu",
+        "L27.exp199.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.experts_gu",
+      "stage": 51,
+      "signature": "5a779eda10eb30525ac78dfa7f1ff56f518b3148b5bf08a6063878c34f72415a",
+      "phase_count": 4,
+      "phase_order": [
+        "L27.exp222.gu",
+        "L27.exp244.gu",
+        "L27.exp272.gu",
+        "L27.exp297.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.down",
+      "stage": 50,
+      "signature": "b0f31d5b3bf2d22c982e74f1e88f3d25d0d1abbef771263899cb1ec4b9094516",
+      "phase_count": 3,
+      "phase_order": [
+        "L27.exp16.w2",
+        "L27.exp199.w2",
+        "L27.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 27,
+      "node": "ffn.down",
+      "stage": 51,
+      "signature": "48e0352b6d1269849c505eda93b636cd09c3adfd252230d53533f6356473d895",
+      "phase_count": 4,
+      "phase_order": [
+        "L27.exp222.w2",
+        "L27.exp244.w2",
+        "L27.exp272.w2",
+        "L27.exp297.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "attn.a_proj",
+      "stage": 51,
+      "signature": "2cbdd6999824e2e3dad277a2854eeddac64b0d2d55527e6ca2cd035645466f65",
+      "phase_count": 2,
+      "phase_order": [
+        "L28.a_proj.fp8",
+        "L28.a_proj.bf16"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "attn.wq_b",
+      "stage": 51,
+      "signature": "d44da350422092dc243ac1cd555d6268822dce3dec927a46f5773c34fcccd42f",
+      "phase_count": 2,
+      "phase_order": [
+        "L28.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L28.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "attn.wo_a",
+      "stage": 51,
+      "signature": "599d387fa9a9f6c992837080d0ca5aac4988541dc4155ee9f367bbe3a18db2ae",
+      "phase_count": 4,
+      "phase_order": [
+        "L28.wo_a.g0.wo_a.group0.rows0",
+        "L28.wo_a.g0.wo_a.group0.rows768",
+        "L28.wo_a.g1.wo_a.group1.rows0",
+        "L28.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "attn.wo_b",
+      "stage": 51,
+      "signature": "d03fa2b986f88fb7459221e084691d958b8b1aacdfbe082eed4c74413972004d",
+      "phase_count": 1,
+      "phase_order": [
+        "L28.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.router",
+      "stage": 51,
+      "signature": "2d2541961326d09a1fe6b5dec83089cec64d4ec823a87a84eb67882b874f852d",
+      "phase_count": 1,
+      "phase_order": [
+        "L28.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.shared_gu",
+      "stage": 51,
+      "signature": "2923fac27e37bfed8605be5ce0aa6d4575272f75eede35a661b11cad28785622",
+      "phase_count": 1,
+      "phase_order": [
+        "L28.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.experts_gu",
+      "stage": 52,
+      "signature": "ac5207bee61a37482188071ba206fcc62d2ef182051001e179dcc74c6699d89f",
+      "phase_count": 4,
+      "phase_order": [
+        "L28.exp127.gu",
+        "L28.exp158.gu",
+        "L28.exp233.gu",
+        "L28.exp92.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.experts_gu",
+      "stage": 53,
+      "signature": "ef72d29872582c56404483faab6aa83ba17789a4113732adbd5b25a1b064e3b4",
+      "phase_count": 2,
+      "phase_order": [
+        "L28.exp252.gu",
+        "L28.exp303.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.down",
+      "stage": 52,
+      "signature": "77d562d346b3374196c34d3a5ad18dfccd926445476c381c64108d8165bf7839",
+      "phase_count": 4,
+      "phase_order": [
+        "L28.exp127.w2",
+        "L28.exp158.w2",
+        "L28.exp233.w2",
+        "L28.exp92.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.down",
+      "stage": 53,
+      "signature": "bfdcf10814ce77b0fe134366d19124fbf402301bb064582089094537620ad257",
+      "phase_count": 2,
+      "phase_order": [
+        "L28.exp252.w2",
+        "L28.exp303.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 28,
+      "node": "ffn.down",
+      "stage": 51,
+      "signature": "da0319abd91e9a0df7f374d419f98c3d1b0d52d6d81c7ea1823ec6dd2762bca3",
+      "phase_count": 1,
+      "phase_order": [
+        "L28.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "attn.a_proj",
+      "stage": 53,
+      "signature": "33aa297ea93990db07c64ee39f7b663c1d535cc0c463efaa3a5e8cba088d091c",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "attn.wq_b",
+      "stage": 53,
+      "signature": "563619dbf4bad62560bc62f8c081c8a20277fd94131831c484af61914989393d",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "attn.wo_a",
+      "stage": 53,
+      "signature": "b8106147936efee5541bf406b41d972532b9dab02c19c2fb6cf4570ffc2cf94d",
+      "phase_count": 4,
+      "phase_order": [
+        "L29.wo_a.g0.wo_a.group0.rows0",
+        "L29.wo_a.g0.wo_a.group0.rows768",
+        "L29.wo_a.g1.wo_a.group1.rows0",
+        "L29.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "attn.wo_b",
+      "stage": 53,
+      "signature": "4f36e857ca87cbc813164ad8ef748ecd453af50e2d0d7387132112d155280c19",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.router",
+      "stage": 53,
+      "signature": "8590999803eaef76f8dd87066086172da88423709f65486e8479f43858ad4255",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.shared_gu",
+      "stage": 53,
+      "signature": "1d40e0b85e3199b9e79d6412f546083c06275a6ba429b6a728b2ef7077dee5bd",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.experts_gu",
+      "stage": 54,
+      "signature": "9b0c511c00afbd71d8bb5d861a61a52173aa8b835e9ebbebe7423418f63174cd",
+      "phase_count": 4,
+      "phase_order": [
+        "L29.exp145.gu",
+        "L29.exp187.gu",
+        "L29.exp192.gu",
+        "L29.exp243.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.experts_gu",
+      "stage": 53,
+      "signature": "091cbc97274b0d6b7fa3322dbcec8864ca28d122ed5614493b2dd729559ac0dd",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.exp27.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.experts_gu",
+      "stage": 55,
+      "signature": "31ae01f494b8f6876bb0af08de73bd1e9b27b27a7f023117d9b3e45e7e6af81a",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.exp378.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.down",
+      "stage": 54,
+      "signature": "f101331588ec129bae7dce856e27e41132bf2f915684a5dcfdc8757f7ec3fd45",
+      "phase_count": 4,
+      "phase_order": [
+        "L29.exp145.w2",
+        "L29.exp187.w2",
+        "L29.exp192.w2",
+        "L29.exp243.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.down",
+      "stage": 53,
+      "signature": "31d9e4bcea42fe6801409fdd6ec35e5e12b600872513f0bc6c7359433145e288",
+      "phase_count": 2,
+      "phase_order": [
+        "L29.exp27.w2",
+        "L29.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 29,
+      "node": "ffn.down",
+      "stage": 55,
+      "signature": "7f757fd2c7d218163efcc1327c15d659d09baa3fc8a7114b0180ec23798eea28",
+      "phase_count": 1,
+      "phase_order": [
+        "L29.exp378.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "attn.a_proj",
+      "stage": 55,
+      "signature": "e12a36cb952049d064016c3c10a16323090dc36867896aa40454745e22153adc",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "attn.wq_b",
+      "stage": 55,
+      "signature": "f76d92b1c8f83bd5fc77c7a333248bece62c550bc60a6f7ddf4e6ac37f10ff4b",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "attn.wo_a",
+      "stage": 55,
+      "signature": "e493902adc0f9af3897ed2d54dfb80192cb3e02ae710e9f6738276d981b82d88",
+      "phase_count": 4,
+      "phase_order": [
+        "L30.wo_a.g0.wo_a.group0.rows0",
+        "L30.wo_a.g0.wo_a.group0.rows768",
+        "L30.wo_a.g1.wo_a.group1.rows0",
+        "L30.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "attn.wo_b",
+      "stage": 55,
+      "signature": "2d3ba5449a9bc6ead034b6ff80a57acded8fac85732d350d43ff97b115acb3a3",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.router",
+      "stage": 55,
+      "signature": "99bfff63626ac84575acaa8d2b4fc9503c2bae023fb601c80360c00200eecc05",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.shared_gu",
+      "stage": 55,
+      "signature": "8c77c8d029fb11f2283f8876eb766de3fa339245d1a9fd37d5178246b24808a6",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.experts_gu",
+      "stage": 56,
+      "signature": "d909cee7595c43f0b267f437ffbf734f9c182fecf88d1570fd56137c4191d0c0",
+      "phase_count": 4,
+      "phase_order": [
+        "L30.exp134.gu",
+        "L30.exp176.gu",
+        "L30.exp190.gu",
+        "L30.exp275.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.experts_gu",
+      "stage": 57,
+      "signature": "04f28c40cfb1607574eaee57bcffcbf4331ecb40096e918809d0a8d60e13231f",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.exp324.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.experts_gu",
+      "stage": 55,
+      "signature": "8c77111c816413e5986aa30a1a30ff3ab29e3d59052659752412b99c75745baf",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.exp42.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.down",
+      "stage": 56,
+      "signature": "30002a3a271ae8919aa7d9c5a4e42ec2daa171945c8bb169f73e74c5f33282fb",
+      "phase_count": 4,
+      "phase_order": [
+        "L30.exp134.w2",
+        "L30.exp176.w2",
+        "L30.exp190.w2",
+        "L30.exp275.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.down",
+      "stage": 57,
+      "signature": "a1c2a82961173011b1da062e7d934786fbeae62a4d727d2e8656ac5fb78e02ed",
+      "phase_count": 1,
+      "phase_order": [
+        "L30.exp324.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 30,
+      "node": "ffn.down",
+      "stage": 55,
+      "signature": "340e44913c71b46c8c93a40f3811e2a00948b12add9c371a2f19f616aeb7e7a9",
+      "phase_count": 2,
+      "phase_order": [
+        "L30.exp42.w2",
+        "L30.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "attn.a_proj",
+      "stage": 57,
+      "signature": "deb082b588a2301de37ca7bbba2736ba261ef1ff64bec11f21c9f944fd00cfb9",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "attn.wq_b",
+      "stage": 57,
+      "signature": "a20a474b871f585b263afa314c9f1ade9945a63b6653e5993d2b3b05b80583ea",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "attn.wo_a",
+      "stage": 57,
+      "signature": "72452d53dda006c93d692a96bcfd2ab6b595e43ac2fc47b2e30ab6d2a734fe4a",
+      "phase_count": 4,
+      "phase_order": [
+        "L31.wo_a.g0.wo_a.group0.rows0",
+        "L31.wo_a.g0.wo_a.group0.rows768",
+        "L31.wo_a.g1.wo_a.group1.rows0",
+        "L31.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "attn.wo_b",
+      "stage": 57,
+      "signature": "8ce331966428701acb54a203b7ada53bffc3d8e5c7f18771650fc4fb07a0cacf",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.router",
+      "stage": 57,
+      "signature": "865cb28f2133450e3ccde99daecf9bdcd5d53b243586272463ddcdb60132c365",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.shared_gu",
+      "stage": 57,
+      "signature": "9f9b88960e31ebd2df320efd502120b38024358312bc5b24f4f9f5c8da60d941",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.experts_gu",
+      "stage": 58,
+      "signature": "a347d599f8552198774f654f4115192bd0c8fecea4094e7e5998459096e21cb9",
+      "phase_count": 5,
+      "phase_order": [
+        "L31.exp206.gu",
+        "L31.exp208.gu",
+        "L31.exp266.gu",
+        "L31.exp302.gu",
+        "L31.exp335.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.experts_gu",
+      "stage": 57,
+      "signature": "d5033af2e7650c17c43672e1ab38f7b8c1d9d1e06d7592cdc4d5635429ab5973",
+      "phase_count": 1,
+      "phase_order": [
+        "L31.exp56.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.down",
+      "stage": 58,
+      "signature": "2799d4cfeac63f4cf88064e7d6a0930277ecc3b27f87c323393aabece63ab857",
+      "phase_count": 5,
+      "phase_order": [
+        "L31.exp206.w2",
+        "L31.exp208.w2",
+        "L31.exp266.w2",
+        "L31.exp302.w2",
+        "L31.exp335.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 31,
+      "node": "ffn.down",
+      "stage": 57,
+      "signature": "bf5097713be993ac4239c92f930899197cff6c421ad02840825a5776849967ff",
+      "phase_count": 2,
+      "phase_order": [
+        "L31.exp56.w2",
+        "L31.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "attn.a_proj",
+      "stage": 59,
+      "signature": "34a4ca11e496a82dfe846b5553629620f512a7bce86fec25fb0a94aab1e6598b",
+      "phase_count": 2,
+      "phase_order": [
+        "L32.a_proj.fp8",
+        "L32.a_proj.bf16"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "attn.wq_b",
+      "stage": 59,
+      "signature": "42653ae07109d364bf2eb431252ae99968f15de4b5b6623c09955bcb98d0b3f3",
+      "phase_count": 2,
+      "phase_order": [
+        "L32.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L32.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "attn.wo_a",
+      "stage": 59,
+      "signature": "f059580505256a5a30c3d01845ea36d8a0a475330d0d3b491b85f65bab591bfb",
+      "phase_count": 4,
+      "phase_order": [
+        "L32.wo_a.g0.wo_a.group0.rows0",
+        "L32.wo_a.g0.wo_a.group0.rows768",
+        "L32.wo_a.g1.wo_a.group1.rows0",
+        "L32.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "attn.wo_b",
+      "stage": 59,
+      "signature": "c2fed016912c383afdda036efed5d4e16e98fe139e8a7a13f1bb89c5588995ec",
+      "phase_count": 1,
+      "phase_order": [
+        "L32.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.router",
+      "stage": 59,
+      "signature": "ecdcb606025a10b5e7597aede979779326feb0df681ac8fa507fb847fa3f95f0",
+      "phase_count": 1,
+      "phase_order": [
+        "L32.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.shared_gu",
+      "stage": 59,
+      "signature": "6911f7068abe2fc74dc158a1cd23da7c6fbbc403c265b77c96e2d6b809f7f99e",
+      "phase_count": 1,
+      "phase_order": [
+        "L32.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.experts_gu",
+      "stage": 60,
+      "signature": "1e02bf084a4c78ac7399b42a91e653393737e105edaff056751ab2ab925bf2e3",
+      "phase_count": 4,
+      "phase_order": [
+        "L32.exp172.gu",
+        "L32.exp189.gu",
+        "L32.exp270.gu",
+        "L32.exp373.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.experts_gu",
+      "stage": 59,
+      "signature": "0e36e6ca010899f0497d93e443621f50376d4aec3774912b2111e31de4b09d1a",
+      "phase_count": 2,
+      "phase_order": [
+        "L32.exp23.gu",
+        "L32.exp54.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.down",
+      "stage": 60,
+      "signature": "81bdc7bf949c4ff7b0e8db2f249a31a07f957fb0576405cecf89619a239e076e",
+      "phase_count": 4,
+      "phase_order": [
+        "L32.exp172.w2",
+        "L32.exp189.w2",
+        "L32.exp270.w2",
+        "L32.exp373.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 32,
+      "node": "ffn.down",
+      "stage": 59,
+      "signature": "1bab75ab3b728f6e738de6ffd6a4b8b415a84fed1cd0ec82412d321a6c4bd37e",
+      "phase_count": 3,
+      "phase_order": [
+        "L32.exp23.w2",
+        "L32.exp54.w2",
+        "L32.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "attn.a_proj",
+      "stage": 61,
+      "signature": "98bbdcfdd738ab7777c5c78854c80fd956c34cdf991bf247e8b19b253f0a559f",
+      "phase_count": 1,
+      "phase_order": [
+        "L33.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "attn.wq_b",
+      "stage": 61,
+      "signature": "84eab4902e72c82283c3d07c6c7f0ea3b0b4b58b94a6e56acc1014f4cce8b630",
+      "phase_count": 2,
+      "phase_order": [
+        "L33.wq_b.wq_b.rows0",
+        "L33.wq_b.wq_b.rows4608"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "attn.wo_a",
+      "stage": 61,
+      "signature": "b7e749e2055200003948b5d2f92599ac9302ae49dc47cca3fbe7c3a978336490",
+      "phase_count": 4,
+      "phase_order": [
+        "L33.wo_a.g0.wo_a.group0.rows0",
+        "L33.wo_a.g0.wo_a.group0.rows768",
+        "L33.wo_a.g1.wo_a.group1.rows0",
+        "L33.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "attn.wo_b",
+      "stage": 61,
+      "signature": "6aeec19502ba84901176539dfd279c4e28c8d68ed9811467fbe355f0f40338e1",
+      "phase_count": 1,
+      "phase_order": [
+        "L33.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.router",
+      "stage": 61,
+      "signature": "db02821530af7a4b05413e58ebfd942180e432a58d71f58511da343cff8d4ea0",
+      "phase_count": 1,
+      "phase_order": [
+        "L33.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.shared_gu",
+      "stage": 61,
+      "signature": "16e60ee8c3de39f1c90037415e11ae6087312816daf87c3ab01799c8345e6e88",
+      "phase_count": 1,
+      "phase_order": [
+        "L33.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.experts_gu",
+      "stage": 61,
+      "signature": "8e671050fc600c8f26d297edb9b5c2f494424480fb5f4b3ffb0e35a09d5a0d86",
+      "phase_count": 3,
+      "phase_order": [
+        "L33.exp191.gu",
+        "L33.exp70.gu",
+        "L33.exp98.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.experts_gu",
+      "stage": 62,
+      "signature": "4b99d987f98cb741abf0f47f7e639df329907e597418493e5e3db95c29d3ff77",
+      "phase_count": 3,
+      "phase_order": [
+        "L33.exp279.gu",
+        "L33.exp327.gu",
+        "L33.exp343.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.down",
+      "stage": 61,
+      "signature": "19038e849174bb28fcd1d877f55efb4e4823480c06298cbcdcd49d53601d6638",
+      "phase_count": 4,
+      "phase_order": [
+        "L33.exp191.w2",
+        "L33.exp70.w2",
+        "L33.exp98.w2",
+        "L33.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 33,
+      "node": "ffn.down",
+      "stage": 62,
+      "signature": "b3de6240e1379102559f697ab3edaca4f14af31928c25d9ae72f63f7a0313637",
+      "phase_count": 3,
+      "phase_order": [
+        "L33.exp279.w2",
+        "L33.exp327.w2",
+        "L33.exp343.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "attn.a_proj",
+      "stage": 62,
+      "signature": "de93d8a1ac7f7b7ec773e0f16424471bd609844e27129063dde60d72fe5d100d",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "attn.wq_b",
+      "stage": 62,
+      "signature": "a2d31ea28ce682f03b375d346b710260b05cfaa962e54252ee388f2686ac1be5",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "attn.wo_a",
+      "stage": 62,
+      "signature": "e8c0ea39b0c32b61906c74a0ea436ec98a965252bec4ff4210c5255a27c85a78",
+      "phase_count": 4,
+      "phase_order": [
+        "L34.wo_a.g0.wo_a.group0.rows0",
+        "L34.wo_a.g0.wo_a.group0.rows768",
+        "L34.wo_a.g1.wo_a.group1.rows0",
+        "L34.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "attn.wo_b",
+      "stage": 62,
+      "signature": "0b1223324be2740222e1487a18699a5326e8a86776134f908af4302c1a4cec42",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.router",
+      "stage": 62,
+      "signature": "8d36e4b9c90f5961c1fca7b2daa80236779e2bb1c34fbb4ce5f999fcaf074f1b",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.shared_gu",
+      "stage": 62,
+      "signature": "9cc21acca22fa3f2f32becbc8a89f2ef1252d1f30ecaee10054ca8aa5f2f18dd",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.experts_gu",
+      "stage": 64,
+      "signature": "8696d675c7f893d1e53377b18818d62dab1d961554094b1706277277c9e42348",
+      "phase_count": 4,
+      "phase_order": [
+        "L34.exp292.gu",
+        "L34.exp298.gu",
+        "L34.exp329.gu",
+        "L34.exp345.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.experts_gu",
+      "stage": 63,
+      "signature": "4faf78a594ee57c3b3b8ec97e4ee50385ae52faae22c872d025732d0533071d8",
+      "phase_count": 2,
+      "phase_order": [
+        "L34.exp51.gu",
+        "L34.exp83.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.down",
+      "stage": 64,
+      "signature": "46ac19b7ee51c66b3cab414dafe63eb67cfa27dc2e17c7ec43696ee8bd23e8d5",
+      "phase_count": 4,
+      "phase_order": [
+        "L34.exp292.w2",
+        "L34.exp298.w2",
+        "L34.exp329.w2",
+        "L34.exp345.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.down",
+      "stage": 63,
+      "signature": "f056c9b29638b8ce0ef9453850d94d868d475b825fb99029ddedb3c5b5edb846",
+      "phase_count": 2,
+      "phase_order": [
+        "L34.exp51.w2",
+        "L34.exp83.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 34,
+      "node": "ffn.down",
+      "stage": 62,
+      "signature": "6679dcf1fb7c50ad79c57457028708c1f7da0c1200b8592dd5bbb5890ffc80c6",
+      "phase_count": 1,
+      "phase_order": [
+        "L34.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "attn.a_proj",
+      "stage": 64,
+      "signature": "e9db38247887bd5488fe22deb4c930aac0b3e680017a1e2be4f1125c7ea6897f",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "attn.wq_b",
+      "stage": 64,
+      "signature": "4288a50c6782aef1b577b4dfc01f318a2cb14a8c0596e9bcbedd0b6bed6310d5",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "attn.wo_a",
+      "stage": 64,
+      "signature": "de502e33d6d7cdab9a048ecc6431af6be7234f46f6222cccd6b7b383e3c55ffa",
+      "phase_count": 4,
+      "phase_order": [
+        "L35.wo_a.g0.wo_a.group0.rows0",
+        "L35.wo_a.g0.wo_a.group0.rows768",
+        "L35.wo_a.g1.wo_a.group1.rows0",
+        "L35.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "attn.wo_b",
+      "stage": 64,
+      "signature": "c2931ff3580a15328170b8f3570cf245e001639fb2adf2600ae462749402a0be",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.router",
+      "stage": 64,
+      "signature": "b336f78e651b1feb7ee279a6788ae25334904bf654d61ed4b89bd00998098040",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.shared_gu",
+      "stage": 64,
+      "signature": "48b19dc67fae4f751cfba7d3d3b2c6fe0512a05be09e993b10d205753b562137",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.experts_gu",
+      "stage": 65,
+      "signature": "bfbc00900710de55c75179a832750f86f725c80a8eac7a8cc0d024e05bb4c657",
+      "phase_count": 5,
+      "phase_order": [
+        "L35.exp166.gu",
+        "L35.exp182.gu",
+        "L35.exp259.gu",
+        "L35.exp74.gu",
+        "L35.exp82.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.experts_gu",
+      "stage": 66,
+      "signature": "33b7c797d8209ab9071cdf876079fe41ef5e4a6c30df7b453cfe117a4dd14451",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.exp336.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.down",
+      "stage": 65,
+      "signature": "9641b271f49a88a87a37ccffd987990182fee76c2014572e588c4cbb231f72d1",
+      "phase_count": 5,
+      "phase_order": [
+        "L35.exp166.w2",
+        "L35.exp182.w2",
+        "L35.exp259.w2",
+        "L35.exp74.w2",
+        "L35.exp82.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.down",
+      "stage": 66,
+      "signature": "fb9b366d42baff438d56fad67b6ab65825f41b509223dffaa04e590dae0fb1a6",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.exp336.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 35,
+      "node": "ffn.down",
+      "stage": 64,
+      "signature": "3a8c00d056cf0c4433acf3791b3303c1b821fc9d77f2d7c43457ea487a1e25d9",
+      "phase_count": 1,
+      "phase_order": [
+        "L35.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "attn.a_proj",
+      "stage": 66,
+      "signature": "c83cb32dd406cf7a9f996acf693427fd52ae866b9c03a65d86c0e8c3091e4547",
+      "phase_count": 2,
+      "phase_order": [
+        "L36.a_proj.fp8",
+        "L36.a_proj.bf16"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "attn.wq_b",
+      "stage": 66,
+      "signature": "73e0a0ff451bec05b89bd94ba12a6d6c6665917d6d5aab5715a9ff108eaf0dbf",
+      "phase_count": 2,
+      "phase_order": [
+        "L36.wq_b.wq_b.rows0+wq_b.rows4608",
+        "L36.wq_b.indexer.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "attn.wo_a",
+      "stage": 66,
+      "signature": "5ab124be02a3d7de617b89d6e7b3b0c54c22c441a94b0d73f927821d30423974",
+      "phase_count": 4,
+      "phase_order": [
+        "L36.wo_a.g0.wo_a.group0.rows0",
+        "L36.wo_a.g0.wo_a.group0.rows768",
+        "L36.wo_a.g1.wo_a.group1.rows0",
+        "L36.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "attn.wo_b",
+      "stage": 66,
+      "signature": "b59bf2c91464838435d1f73146990eb7454ef7bb152fab186eae244b2753e684",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.router",
+      "stage": 66,
+      "signature": "1b6ba2f1faf72678b4aa79ae37e569ade0803b702a3dc023e94e74b6f680a3b5",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.shared_gu",
+      "stage": 66,
+      "signature": "14e70d4978ddd2f3782fbf291850414bc1171910dd22d7a09399c8b678b66f06",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.experts_gu",
+      "stage": 67,
+      "signature": "d6032ce47f1d5e252a32ec67aa5d2fe944d1b1d8b6074486de208f63f5657109",
+      "phase_count": 5,
+      "phase_order": [
+        "L36.exp126.gu",
+        "L36.exp151.gu",
+        "L36.exp183.gu",
+        "L36.exp186.gu",
+        "L36.exp264.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.experts_gu",
+      "stage": 68,
+      "signature": "4f874492379cd13361a49b5d21317328f90a6a512c8a12d7546eec23ecbb475c",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.exp302.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.down",
+      "stage": 67,
+      "signature": "8a0d465d6b8fc9832468325d413b3d2cae382ba587b22b10364c887ea025e26b",
+      "phase_count": 5,
+      "phase_order": [
+        "L36.exp126.w2",
+        "L36.exp151.w2",
+        "L36.exp183.w2",
+        "L36.exp186.w2",
+        "L36.exp264.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.down",
+      "stage": 68,
+      "signature": "bb840c967aaa8518b4aefb40e8aa4e28bd55ede549aab7065df1fd512fd50df9",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.exp302.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 36,
+      "node": "ffn.down",
+      "stage": 66,
+      "signature": "c88b4e40df86809572889da24bb891cc59f6c9e4f2b76b23b673243208edc773",
+      "phase_count": 1,
+      "phase_order": [
+        "L36.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "attn.a_proj",
+      "stage": 68,
+      "signature": "c4a34e54433b86d19625ab8e6f561d22478e858b4737738279186050397a5925",
+      "phase_count": 1,
+      "phase_order": [
+        "L37.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "attn.wq_b",
+      "stage": 68,
+      "signature": "40f06c6027b4298e35870a6fe571693803bc16185d1164e2ef25f5c88b8233ea",
+      "phase_count": 1,
+      "phase_order": [
+        "L37.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "attn.wo_a",
+      "stage": 68,
+      "signature": "c437d7a812d032cce3747085c3ff3e5f971692a99d10e4d4679d1a8f015e41d1",
+      "phase_count": 4,
+      "phase_order": [
+        "L37.wo_a.g0.wo_a.group0.rows0",
+        "L37.wo_a.g0.wo_a.group0.rows768",
+        "L37.wo_a.g1.wo_a.group1.rows0",
+        "L37.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "attn.wo_b",
+      "stage": 68,
+      "signature": "f48b46bff84d6406693807c45c5de83009926ee3d1ed79e9392528a1a1097137",
+      "phase_count": 1,
+      "phase_order": [
+        "L37.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.router",
+      "stage": 68,
+      "signature": "f82bcd875614b35fd60ad217973520da41d8feb52853c15adbe2bd331765551f",
+      "phase_count": 1,
+      "phase_order": [
+        "L37.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.shared_gu",
+      "stage": 68,
+      "signature": "354fe9cf30a5375d07beb5be6794acdb0c4ac078d1c376bab2d1b6489a8e3acf",
+      "phase_count": 1,
+      "phase_order": [
+        "L37.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.experts_gu",
+      "stage": 68,
+      "signature": "c8565b06f31a3a662ed12c801bcc8c1542853fb5babae31c31042eefc0f48fdf",
+      "phase_count": 2,
+      "phase_order": [
+        "L37.exp120.gu",
+        "L37.exp83.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.experts_gu",
+      "stage": 69,
+      "signature": "5a2c2fa97fb3e01b841aa7aeafea1e11348857d21944bb3fa6d3e38ba23dab7c",
+      "phase_count": 4,
+      "phase_order": [
+        "L37.exp128.gu",
+        "L37.exp149.gu",
+        "L37.exp153.gu",
+        "L37.exp286.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.down",
+      "stage": 68,
+      "signature": "90a4e358b8c7208cd098896379c3fbc4bacbdc8a5258b1c4baf2d01199cf3f5d",
+      "phase_count": 3,
+      "phase_order": [
+        "L37.exp120.w2",
+        "L37.exp83.w2",
+        "L37.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 37,
+      "node": "ffn.down",
+      "stage": 69,
+      "signature": "6fa3cbf97b7199efda1b5bf56becdc4e19cf0556ebe0576a7e52f7a5b8d9c7a4",
+      "phase_count": 4,
+      "phase_order": [
+        "L37.exp128.w2",
+        "L37.exp149.w2",
+        "L37.exp153.w2",
+        "L37.exp286.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "attn.a_proj",
+      "stage": 70,
+      "signature": "310eb573b807a263637c44a43353fab3dbdfd8d58ccd30a529be0149fd7bc943",
+      "phase_count": 1,
+      "phase_order": [
+        "L38.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "attn.wq_b",
+      "stage": 70,
+      "signature": "ba876ea40eb4771f039d79f5d65db816f0fc4fe8c12fe9963a812eaef1eaf20d",
+      "phase_count": 1,
+      "phase_order": [
+        "L38.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "attn.wo_a",
+      "stage": 70,
+      "signature": "d5ab07c03c442e089609320cbc3af449c91304f6a40fc0718edb0d584ce00afa",
+      "phase_count": 4,
+      "phase_order": [
+        "L38.wo_a.g0.wo_a.group0.rows0",
+        "L38.wo_a.g0.wo_a.group0.rows768",
+        "L38.wo_a.g1.wo_a.group1.rows0",
+        "L38.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "attn.wo_b",
+      "stage": 70,
+      "signature": "a1abc1fad822058dd4712fe896500f739bc8e7067fd90265c85c601aea44d3fb",
+      "phase_count": 1,
+      "phase_order": [
+        "L38.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.router",
+      "stage": 70,
+      "signature": "96e2764f52c37389f111a57ea67ef894df0e033f6ea207bef40239d2c18c0c80",
+      "phase_count": 1,
+      "phase_order": [
+        "L38.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.shared_gu",
+      "stage": 70,
+      "signature": "62f7fe35b2b830dcc8840279a712bc895b29c0790ab0887e73518dab44c30387",
+      "phase_count": 1,
+      "phase_order": [
+        "L38.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.experts_gu",
+      "stage": 71,
+      "signature": "df6dac1a59ac45d3e0fb87d9d6b9afc0a30d2f60c9559c5db96d12a3e80b7c27",
+      "phase_count": 4,
+      "phase_order": [
+        "L38.exp213.gu",
+        "L38.exp255.gu",
+        "L38.exp338.gu",
+        "L38.exp348.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.experts_gu",
+      "stage": 70,
+      "signature": "2afa2062b6c689fa8e9f98a8520661f0685cd1beb46c6a671472360cddd425d0",
+      "phase_count": 2,
+      "phase_order": [
+        "L38.exp37.gu",
+        "L38.exp60.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.down",
+      "stage": 71,
+      "signature": "53b0bc422e5a8b0826a13abe311cadcbef6158ac5b0b383c84a0984caf5b41c7",
+      "phase_count": 4,
+      "phase_order": [
+        "L38.exp213.w2",
+        "L38.exp255.w2",
+        "L38.exp338.w2",
+        "L38.exp348.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 38,
+      "node": "ffn.down",
+      "stage": 70,
+      "signature": "79c3f1dc3ac6426587a93f841923a292a199aa4f98e5c0a2aace82536c7530dd",
+      "phase_count": 3,
+      "phase_order": [
+        "L38.exp37.w2",
+        "L38.exp60.w2",
+        "L38.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "attn.a_proj",
+      "stage": 72,
+      "signature": "b8afeb02dcfe0dff4b4c85ba90a7ee95fd73950c4c0b1e5fa1ee59a5e09f7df3",
+      "phase_count": 1,
+      "phase_order": [
+        "L39.a_proj.fp8"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "attn.wq_b",
+      "stage": 72,
+      "signature": "ffc5775a5b65111a2f8729779f884f0a7ac269aeb45c7e706af9a7e1a9da0b4a",
+      "phase_count": 1,
+      "phase_order": [
+        "L39.wq_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "attn.wo_a",
+      "stage": 72,
+      "signature": "b7053374463aa73073445a613809f09dbd56eda0b3c859fceb774f89be080c68",
+      "phase_count": 4,
+      "phase_order": [
+        "L39.wo_a.g0.wo_a.group0.rows0",
+        "L39.wo_a.g0.wo_a.group0.rows768",
+        "L39.wo_a.g1.wo_a.group1.rows0",
+        "L39.wo_a.g1.wo_a.group1.rows768"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "attn.wo_b",
+      "stage": 72,
+      "signature": "fc969a20f8c6172af03d3e301494b804fbb17ff63bc697664396e00066bd6e8d",
+      "phase_count": 1,
+      "phase_order": [
+        "L39.wo_b"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.router",
+      "stage": 72,
+      "signature": "c9f98717c44ce4a3fed2f17f0def1037b92d11c02309255ba25ebae1190d8e7f",
+      "phase_count": 1,
+      "phase_order": [
+        "L39.router"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.shared_gu",
+      "stage": 72,
+      "signature": "66cac02411fd109809657aec064ae6b6ad7e8cd9b1b70a1bf18966bd9bc95644",
+      "phase_count": 1,
+      "phase_order": [
+        "L39.shared_gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.experts_gu",
+      "stage": 72,
+      "signature": "ac2a48cca35c0c7f7974b373bd1d9b374694a3164acf3ff4610f42a4ea8a9919",
+      "phase_count": 3,
+      "phase_order": [
+        "L39.exp141.gu",
+        "L39.exp148.gu",
+        "L39.exp188.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.experts_gu",
+      "stage": 73,
+      "signature": "7a66bc7c7bf191451b06163b76f2682f849ce1c86fc548aacef0c82b15abed3e",
+      "phase_count": 3,
+      "phase_order": [
+        "L39.exp276.gu",
+        "L39.exp331.gu",
+        "L39.exp351.gu"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.down",
+      "stage": 72,
+      "signature": "55a9c54d9c515b32f840c1dc4be0f8e13b8800806372042c95df06d4bf0324a8",
+      "phase_count": 4,
+      "phase_order": [
+        "L39.exp141.w2",
+        "L39.exp148.w2",
+        "L39.exp188.w2",
+        "L39.shared.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    },
+    {
+      "layer": 39,
+      "node": "ffn.down",
+      "stage": 73,
+      "signature": "2fdc84ded63ecb4f4b9dcdba5852ae71b6f90af82bcab025b6b88d21ab947bcb",
+      "phase_count": 3,
+      "phase_order": [
+        "L39.exp276.w2",
+        "L39.exp331.w2",
+        "L39.exp351.w2"
+      ],
+      "matches_retained_candidate": false,
+      "retained_example": null
+    }
+  ],
+  "missing_layer_groups": 357,
+  "missing_layer_groups_matching_retained": 0,
+  "candidate_remap_applied": false,
+  "observer_launch_authorized": false,
+  "composed_gain": null
+}

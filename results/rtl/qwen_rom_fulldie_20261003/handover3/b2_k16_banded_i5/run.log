@@ -1,0 +1,90 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /work/tech.lef, created 17 layers, 8 vias
+[INFO ODB-0227] LEF file: /work/elements.lef, created 34 library cells
+[WARNING ORD-2011] LEF master qfd_ctrl has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_chead has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_hub has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_collective has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_embedding_rom has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_serdes has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_io_ucie has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_c has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lfifo has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_h has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_lst_v has no liberty cell.
+[WARNING ORD-2011] LEF master ot_hbm3e_phy has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_reng has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_cst has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_constants_sequencer has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_4 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_5 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_port_tiles_6 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_0 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_1 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_2 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_3 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_4 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_5 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_6 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_scale_rom_7 has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_su64_sfu has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_tree_top has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_sp_vector_memory has no liberty cell.
+[WARNING ORD-2011] LEF master qfd_tile has no liberty cell.
+[INFO IFP-0001] Added 7593 rows of 27958 site bsite.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 24156.144 32801.760 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 24155.712 32801.760 ) um
+[INFO IFP-0102] Core area:                    792349867.653 um^2
+[INFO IFP-0103] Total instances area:         652534840.644 um^2
+[INFO IFP-0104] Effective utilization:                0.824
+[INFO IFP-0105] Number of instances:                   3224
+OTMEM placed 246 MB 1791031626
+[WARNING GRT-0300] Timing is not available, setting critical nets percentage to 0.
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.5760  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.6170  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.5760  line-2-Via Pitch: 0.5760
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.7680  line-2-Via Pitch: 0.7680
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.7680  line-2-Via Pitch: 0.7680
+[INFO GRT-0088] Layer M6      Track-Pitch = 1.0240  line-2-Via Pitch: 1.0240
+[INFO GRT-0088] Layer M7      Track-Pitch = 1.0240  line-2-Via Pitch: 1.0240
+[INFO GRT-0088] Layer M8      Track-Pitch = 1.2800  line-2-Via Pitch: 1.2800
+[INFO GRT-0088] Layer M9      Track-Pitch = 1.2800  line-2-Via Pitch: 1.2800
+[INFO GRT-0003] Macros: 3224
+[INFO GRT-0004] Blockages: 12804
+[INFO GRT-0019] Found 0 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 2
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal   24504217             0          100.00%
+M3         Vertical     25757166             0          100.00%
+M4         Horizontal   20514733         16715          99.92%
+M5         Vertical     25582125        128449          99.50%
+M6         Horizontal   19653588      15298064          22.16%
+M7         Vertical     19114718      14867950          22.22%
+M8         Horizontal   66845017      53568175          19.86%
+M9         Vertical     66954308      53481765          20.12%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/5
+[INFO GRT-0102] Start extra iteration 2/5
+[INFO GRT-0102] Start extra iteration 3/5
+[INFO GRT-0102] Start extra iteration 4/5
+[INFO GRT-0102] Start extra iteration 5/5

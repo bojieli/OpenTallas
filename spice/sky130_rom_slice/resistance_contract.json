@@ -1,0 +1,153 @@
+{
+  "acceptance": {
+    "capacitor_element_count": 269,
+    "device_count": 10,
+    "electrical_cases_failed_max": 0,
+    "electrical_cases_per_style": 33,
+    "extraction_stats": {
+      "common_subcells": {
+        "sky130_fd_pr__nfet_01v8_MJJGZY": {
+          "nets_extracted": 4,
+          "nets_output": 4,
+          "nets_total": 4
+        },
+        "sky130_fd_pr__pfet_01v8_WWEVP9": {
+          "nets_extracted": 4,
+          "nets_output": 4,
+          "nets_total": 5
+        }
+      },
+      "top_by_style": {
+        "high_r_high_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 36
+        },
+        "high_r_low_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 36
+        },
+        "low_r_high_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 36
+        },
+        "low_r_low_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 36
+        },
+        "nominal": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 37
+        }
+      }
+    },
+    "programming_connectivity": {
+      "absent_device_drain": "NROW_ABSENT/D.t0",
+      "absent_forbidden_nodes": [
+        "BL_ABSENT",
+        "BL_PRESENT"
+      ],
+      "absent_required_node": "ROM_DRAIN_ABSENT",
+      "present_device_drain": "NROW_PRESENT/D.t0",
+      "present_forbidden_nodes": [
+        "BL_ABSENT",
+        "ROM_DRAIN_ABSENT"
+      ],
+      "present_required_node": "BL_PRESENT"
+    },
+    "resistor_element_count": 630,
+    "semantic_replay_required": true,
+    "unexpected_ngspice_warnings_max": 0
+  },
+  "claim_boundary": {
+    "establishes": [
+      "Magic full-RC extraction methodology for the exact archived two-column SKY130A demonstration layout under the declared public-PDK interconnect styles",
+      "explicit resistor-network preservation of the programmed-drain and absent-via connectivity distinction",
+      "local full-RC electrical behavior over the same 33 deterministic device-PVT, supply, temperature, and output-load points used by the capacitance-only campaign",
+      "semantic extraction replay despite non-semantic SPICE statement ordering differences"
+    ],
+    "evidence_class": "public_open_pdk_distributed_rc_extraction_and_simulation_of_local_demonstration_slice",
+    "forbidden_inferences": [
+      "compact ROM cell, row, column, decoder, sense-amplifier, repair, clock, or full-array resistance and capacitance",
+      "full-array simultaneous-current, IR-drop, noise, electromigration, aging, thermal, or power-delivery behavior",
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "whole-wafer timing, inference throughput, or GPU speedup",
+      "target-foundry late-via availability, sign-off extraction, manufacturing sign-off, or silicon correlation"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "sky130_via_rom_distributed_rc_v1",
+  "extraction": {
+    "integrated_extresist": true,
+    "mindelay_ps": 0.0,
+    "minres_milliohm": 0.0,
+    "random_seed": 12345,
+    "replay_each_style": true,
+    "semantic_comparison": "exact_multiset_of_ports_devices_resistors_and_capacitors",
+    "simplify": false,
+    "style_total_net_note": "The nominal top-cell .ext statistics include one 1.11022e-16 gate-to-gate coupling record absent from all four corner-style .ext files; every style still outputs 15 top-cell nets and the same 10-device, 630-resistor, 269-capacitor RC netlist element counts.",
+    "styles": [
+      {
+        "id": "nominal",
+        "magic_style": "ngspice()"
+      },
+      {
+        "id": "high_r_high_c",
+        "magic_style": "ngspice(hrhc)"
+      },
+      {
+        "id": "high_r_low_c",
+        "magic_style": "ngspice(hrlc)"
+      },
+      {
+        "id": "low_r_high_c",
+        "magic_style": "ngspice(lrhc)"
+      },
+      {
+        "id": "low_r_low_c",
+        "magic_style": "ngspice(lrlc)"
+      }
+    ],
+    "threshold_milliohm": 0.0
+  },
+  "inputs": {
+    "deterministic_pvt_contract": "spice/sky130_rom_slice/extracted_pvt_contract.json",
+    "deterministic_pvt_result": "results/spice/sky130_extracted_pvt.json",
+    "extractor_script": "spice/sky130_rom_slice/extract_resistance.tcl",
+    "nfet_layout": "results/spice/sky130_physical/artifacts/sky130_fd_pr__nfet_01v8_MJJGZY.mag",
+    "pdk_lock": "configs/pdk/sky130_physical_lock.json",
+    "pfet_layout": "results/spice/sky130_physical/artifacts/sky130_fd_pr__pfet_01v8_WWEVP9.mag",
+    "physical_result": "results/spice/sky130_physical/physical.json",
+    "testbench_template": "spice/sky130_rom_slice/extracted_testbench.spice.in",
+    "top_layout": "results/spice/sky130_physical/artifacts/sky130_rom_slice.mag"
+  },
+  "reports": {
+    "artifacts": "results/spice/sky130_resistance/artifacts",
+    "json": "results/spice/sky130_resistance/resistance.json",
+    "markdown": "results/spice/sky130_resistance/REPORT.md"
+  },
+  "schema_version": 1,
+  "simulation": {
+    "default_workers": 8,
+    "pvt_case_source": "deterministic_pvt_contract",
+    "threshold_source": "deterministic_pvt_contract"
+  },
+  "top_cell": "sky130_rom_slice",
+  "top_ports": [
+    "VGND",
+    "VPWR",
+    "WL_PRESENT",
+    "EN_PRESENT",
+    "PRE_PRESENT",
+    "Q_PRESENT",
+    "WL_ABSENT",
+    "EN_ABSENT",
+    "PRE_ABSENT",
+    "Q_ABSENT"
+  ]
+}

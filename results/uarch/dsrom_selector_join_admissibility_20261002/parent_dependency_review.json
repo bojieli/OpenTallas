@@ -1,0 +1,20 @@
+{
+  "cold_replay": "tests/test_model_dsrom_selector_join_admissibility.py:test_cold_fresh_replay_no_git_or_owner_path",
+  "historical_git_objects_required_for_replay": false,
+  "parent_base": "a4715047d",
+  "private_owner_PYTHONPATH_required": false,
+  "source_chain_already_intaken": [
+    "6430309068468c41954abf25355ba35505675f82",
+    "545f2fa1ca39ce0a8147873e6909b956edc2b07e",
+    "a4e504d36d18db31ebc5d7325c52955f8257be79"
+  ],
+  "transitive_imports_byte_equal_parent": {
+    "tools/uarch_topk_buffered_station_source_model.py": "c2c92d6b55bd230762de4734de3d5e3823ecae558d3f528a2ea7d803d7edc9ca",
+    "tools/uarch_topk_finite_source_context.py": "abc2834d823dcc004d6966ec09fa824bfc6ab5de6e8cce8c8383690a1654f0a0",
+    "tools/uarch_topk_finite_track_turn_model.py": "73e582e2d4e30edb92139cc80462aba92f4cef9c99d4aa3c93d36eaaf9bb9ad5",
+    "tools/uarch_topk_integer_tree_model.py": "a8cc34e17f0886493431f5267f33fcb923af4bd5d9618da8bdfe74c3c723ce4b",
+    "tools/uarch_topk_physical_g0_archive_replay.py": "ad63059ff7a4eb57f61225fea9650bab9d20b215a865464063f4cd9cceafd29e",
+    "tools/uarch_topk_physical_g0_inputs.py": "77800eea381bb5c81d1a6da381c3714398d5b8fdc815d82514932caced8062a6",
+    "tools/uarch_topk_station_SSFF_cell_model.py": "39a9310350fe557e17f87306d372abf557df2e865a6552a147ba228edbf898a0"
+  }
+}

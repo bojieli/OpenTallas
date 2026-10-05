@@ -1,0 +1,48 @@
+{
+  "PC0_9_code": [
+    "b51dd3cc6",
+    "1eea54934"
+  ],
+  "actual96rank_PC0_result": "6c136247b",
+  "checkpoint_weight_shards_external": true,
+  "dependency_note": "R34/R36 provider dependencies already on parent main; R37 includes immutable peer-source snapshots and metadata. Bundle requires exact bf0984bbff10b15c13dc09fd97abd86b6737064b ancestry; direct cherry-pick of named minimal commits does not require importing the long branch.",
+  "full_token_GO": false,
+  "hardware_qualified": false,
+  "input_archive_bytes": 6758666240,
+  "input_files": 124,
+  "minimal_PC0_code": [
+    "b51dd3cc6",
+    "f6f47d0cc"
+  ],
+  "package": "/tmp/kepler-ds-provider-r39-replay-package-20261002",
+  "prefix9_live_PID": 1791203,
+  "prefix9_live_source": "1eea54934831c0f859f7f9a828cea2999ae98513",
+  "prefix9_receipt": "/tmp/kepler-ds-r39-PC0-9-execution-20261002/receipt.json",
+  "preserved_failed_attempt": "8d5363b81",
+  "raw_PC0_SQLite_bytes": 1393061888,
+  "raw_PC0_SQLite_preserved": "/tmp/kepler-ds-r38-PC0-96rank-execution-20261002/actual-prefix-journal/events.sqlite",
+  "raw_PC0_SQLite_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+  "restore_policy": "verify package and each existing/restored input; original absolute paths; no overwrite, no weights copied; constructor requires all future inputs preserved",
+  "restore_tool": "tools/ds_hbm_restore_provider_inputs_r40.py",
+  "source_bundle_base": "bf0984bbff10b15c13dc09fd97abd86b6737064b",
+  "source_bundle_tip": "1eea54934831c0f859f7f9a828cea2999ae98513",
+  "source_tools": [
+    "tools/h3_ds_connected_provider_r37.py",
+    "tools/ds_hbm_attention_views_r37.py",
+    "tools/ds_hbm_source_merge_r37.py",
+    "tools/ds_hbm_collective_continuations_r37.py",
+    "tools/ds_hbm_connected_prepare_r37.py",
+    "tools/ds_hbm_checkpoint_prefix_r37.py",
+    "tools/ds_hbm_prefix_admission_r38.py",
+    "tools/h3_ds_source_prefix_provider_r39.py",
+    "tools/ds_hbm_source_prefix_r39.py"
+  ],
+  "status": "READY_MINIMAL_SOURCE_AND_REAL_INPUT_REPLAY_PACKAGE",
+  "validation": {
+    "R39_ephemeral_bytecode_pin": "Original manifest failure retained; parent owns additive successor removing bytecode pin. No running source changed.",
+    "archive_inputs": 124,
+    "archive_verification": "PASS",
+    "restore_refusal_regression": "PASS: missing input refused, explicit restore exact, conflict never overwritten, corrupt archive refused",
+    "source_bundle_verification": "PASS"
+  }
+}

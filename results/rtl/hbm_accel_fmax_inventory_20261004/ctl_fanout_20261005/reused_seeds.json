@@ -1,0 +1,88 @@
+{
+  "source": "ff9fe287e9c73321d445f74da4e30cfa899df3a6",
+  "bench_sha256": "e8bc999739c6c877d068ceaf3a2d0f97cde6ee51f19e4c645e1f456d52ba77d2",
+  "prior_bench_sha256": "4e46309da3c2d4a5472f6191fcb2b94763d0c95a87709da13d79bb1da951ee43",
+  "retained_path": "ot-agidock128:/home/ubuntu/claude-hbm-fmax-ctl/diag",
+  "reuse_scope": "identical elaborated DRAIN1/NREQ3000 inputs, same assertion/fatal logic, same RTL hashes; default/comment difference only",
+  "RTL_pins": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/gpu/dshbm/ot_dshbm_spec_state.sv": "b39964d19f984a10446175cc7dd34f451ab3a16306d473a374c89f483e75e411",
+    "results/rtl/ctl_spec_seed8_fix_20261005/original/spec3_failed.sv": "d1bd8377283349e619fdd13dc53a9ab644178e898ff8745f273fedada8e82f33"
+  },
+  "rows": [
+    {
+      "seed": 1,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d1.log",
+      "sha256": "6d4628ad8110b51e4ad4fda83b4833bd1807f5110e2e0200c4301432b8c912d8"
+    },
+    {
+      "seed": 2,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d2.log",
+      "sha256": "f24f32c80cd8700f1773b4d1a7202e35cfae4da9c02cc85fe052e51a1dba4373"
+    },
+    {
+      "seed": 3,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d3.log",
+      "sha256": "3ce8715996c53797ab5fcde4b4b33ed2164f81600f255756a49f1ea6d171d0fa"
+    },
+    {
+      "seed": 4,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d4.log",
+      "sha256": "a50ec5fbb9b3f4b79eea30799f8c82b9878d744fc7d8e3370d61ffa7aeaf6213"
+    },
+    {
+      "seed": 5,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d5.log",
+      "sha256": "812b2e9a6ad9a0ebfd812c52ded1c684758c289d415350393be184df43e8fdb0"
+    },
+    {
+      "seed": 6,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d6.log",
+      "sha256": "b1cd97cf728c6988fa516a8f9cebc858618fb9cdc77df5975744cc75dbd9eead"
+    },
+    {
+      "seed": 7,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d7.log",
+      "sha256": "42533836060aa418ec552ad879bf6335c488876b113f4018407a939076fee30c"
+    },
+    {
+      "seed": 8,
+      "NREQ": 3000,
+      "DRAIN": 1,
+      "verified_elaborated_binary_parameters": true,
+      "terminal_rc": 0,
+      "log": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_fanout_20261005/reused_seeds/d8.log",
+      "sha256": "e0ed9d226416b7b5ac008964ddb32d523e0b9b77d2032c915f34a122b4cd7926"
+    }
+  ],
+  "hardware_candidate": "ot_dshbm_spec_state_f, preserved f3, NOT token_edge successor",
+  "physical_enrolled": false
+}

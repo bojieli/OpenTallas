@@ -1,0 +1,21 @@
+{
+  "kind": "verilator",
+  "params": {
+    "SOURCE": 1,
+    "LOCKSTEP": 0,
+    "MAXU": 866,
+    "USERS": 32,
+    "SEED": 21,
+    "CLAT": 12000,
+    "PDLY": 600,
+    "PLEN": 2,
+    "GEN": 10,
+    "MAXCYC": 100000000
+  },
+  "exit_code": 0,
+  "passed": true,
+  "terminal_lines": [
+    "EQUIV STATS source=1 lockstep=0 maxu=866 users=32 cycles=4805972 fin=4804444/4805921 issues=400/400 rejects=54/54 squashed=48/48 committed_ok=352/352 err=0/0 fault_cyc=0/0 mism=0",
+    "EQUIV PASS"
+  ]
+}

@@ -1,0 +1,16 @@
+diff --git a/openvaf/openvaf-driver/src/cli_process.rs b/openvaf/openvaf-driver/src/cli_process.rs
+index 96a661f..dff1ced 100644
+--- a/openvaf/openvaf-driver/src/cli_process.rs
++++ b/openvaf/openvaf-driver/src/cli_process.rs
+@@ -99,7 +99,10 @@ pub fn matches_to_opts(matches: ArgMatches) -> Result<Opts> {
+         bail!("The target {target} is not supported by  this binary")
+     };
+ 
+-    let target_cpu = *matches.get_one(TARGET_CPU).unwrap_or(&default_cpu);
++    let target_cpu = matches
++        .get_one::<String>(TARGET_CPU)
++        .map(String::as_str)
++        .unwrap_or(default_cpu);
+ 
+     Ok(Opts {
+         input,

@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.hbm_clock_loops.kv_lifecycle.v1",
+ "block": "ot_hbm_accel_kv_lifecycle ENABLE=1",
+ "period_ns": 0.833,
+ "signoff": {
+  "ss_setup_ps": 10.36,
+  "ff_hold_ps": 7.73,
+  "closes_signoff": true,
+  "fmax_mhz": 1215.6,
+  "convention": "--false-path-io (bulk-copy convention): internal reg-to-reg; uncertainty SS 60 ps / FF 25 ps"
+ },
+ "routed_source_sha256": "b75b66c1ee2456b49f626c4e35d0eea2352edd9f67ab708abb5ba6ef1d8d7c35",
+ "committed_source_sha256": "2f96a70e0b692338f5a69dbd56c01e1aac5dda03e3dbe4d9148d73c3c150a5d4",
+ "committed_vs_routed": "identical after stripping comments/whitespace (header comment updated only)",
+ "cells": 98296,
+ "area_um2": 15497.6,
+ "previous": {
+  "n6_route_ss_r2r_ps": -243.74,
+  "n6_route_output_ps": -594.2,
+  "n6_ff_hold_ps": -0.02
+ },
+ "cycles": {
+  "per_command_response_vs_original": "+1..+4 (HA4 gate deltas {1,3,4}); +1 vs the committed HEAD successor (SNAP2 row-compare edge)",
+  "sector_issue_intervals": "equal to original (gate)",
+  "writer_lifecycle_272_sectors_pct": "gate test_complete (BEGIN, 16 STAGE, COMMIT 272 sectors, PUBLISH, ACQUIRE, 2 CONSUMER, RELEASE): last command at cycle 4470 original -> 4556 (+86, +1.9%); HEAD successor n6: 4537"
+ },
+ "exactness": [
+  "tools/hbm_accel_service_gate.py PASS_DIRECTED 15/15 (response order, sector order, sector intervals equal)",
+  "kv/kv_random_equiv.py 300 seeds (141 with an injected protocol violation): transaction logs identical to the original controller"
+ ],
+ "io_note": "interface false-pathed for sign-off; informational STA with 20% IO delays and propagated 400 ps clock latency in kv_k10_0833_io_informational.txt (unconstrained output ports are unbuffered in this route; payload_req_data/address are now flop-driven through one lane mux)"
+}

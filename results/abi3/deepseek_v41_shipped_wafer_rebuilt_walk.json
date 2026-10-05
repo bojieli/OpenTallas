@@ -1,0 +1,18 @@
+{
+ "deployment": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41_wafer_rebuild",
+ "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+ "workload_id": "TA-DS41-CHAT-1-P32",
+ "emitted_token_ids": [],
+ "stop_reason": "failed",
+ "failure": "prefill failed: EMBED_LOOKUP output view 1735 is (32, 24, 1); expected (768, 8) or a view whose leading axes multiply to 768 over a final 8",
+ "prefill_tokens": 32,
+ "decode_steps": 0,
+ "wall_seconds": 217.9,
+ "oracle_token_ids": [
+  13806,
+  345,
+  7472,
+  49665
+ ],
+ "agrees_with_oracle": false
+}

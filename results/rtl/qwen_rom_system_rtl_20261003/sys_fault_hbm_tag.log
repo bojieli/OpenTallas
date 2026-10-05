@@ -1,0 +1,12 @@
+BOOT sys_ready at cycle 4460 status=00000051 boot_cycles
+CQ error slot=0 tag=5a00 status=7
+DIE 0 hbm_kv_mismatches=2112 vm_mismatches=930
+DIE 1 hbm_kv_mismatches=2112 vm_mismatches=930
+DIE 2 hbm_kv_mismatches=2112 vm_mismatches=929
+DIE 3 hbm_kv_mismatches=2112 vm_mismatches=930
+COUNTERS kv_fill_words=468,470,469,470 kv_wb_sectors=216,216,216,216 link_crc_err=0 link_replays=0 link_seq_drops=0 boot_cycles=4442 steps=1 die0_coll_cycles=750 die0_busy=18000 die0_kvok_wait=1772
+FAULT_STATUS=00002000 FAULT_FIRST=8000000d fault_src=00002000 msi=1 cq_entries=1 errors=1
+SYS users=1 me_cdc=0 steps_checked=1 mismatches=0 kv_mismatches=8448 vm_mismatches=3719 collisions=0 flip=0 cycles=22567 ticks=90268
+PASS
+- rtl/test/qwen_sys/tb_qwen_rom_sys.sv:392: Verilog $finish
+HARNESS clk=slow fphase=0 ticks=90269

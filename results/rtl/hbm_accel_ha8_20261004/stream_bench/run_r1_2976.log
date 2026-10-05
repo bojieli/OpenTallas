@@ -1,0 +1,5 @@
+RESULT nstk=4 words=2976 ref_mode=1 cycles=74129 rd=9142272 room_block=0 desc_gap_pc_cycles=8960 bytes=292552704 ns=75908 TBps_per_stack=0.9635
+- tb_hbmacc_wstream_bw.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 76us; walltime 193.233 s; speed 392.866 ns/s
+- Verilator: cpu 193.121 s on 1 threads; allocated 15 MB

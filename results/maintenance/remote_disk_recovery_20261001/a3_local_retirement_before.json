@@ -1,0 +1,200 @@
+{
+  "path": "/home/ubuntu/w10qjobs/work/a3",
+  "timestamp": 1790845326.9658027,
+  "owner_clearance": "W10 explicit child list",
+  "local_process_hits": [],
+  "local_docker_hits": [],
+  "remote_process_docker_hits": {
+    "155.103.253.78_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve3_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.16_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.114_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.191_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve2_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.133_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "155.103.253.39_probe_raw.json": {
+      "process": [],
+      "docker": []
+    },
+    "ot-pve1_probe_raw.json": {
+      "process": [],
+      "docker": []
+    }
+  },
+  "manifest_mentions": [],
+  "manifest_review": "Latest owner explicit retirement supersedes historical references; all current process/Docker references checked.",
+  "evidence_preservation": "w10_evidence_preservation.json",
+  "files": [
+    {
+      "relative": "orfs/config.mk",
+      "bytes": 738
+    },
+    {
+      "relative": "orfs/1_2_yosys.raw.v",
+      "bytes": 299848
+    },
+    {
+      "relative": "orfs/constraint.sdc",
+      "bytes": 377
+    },
+    {
+      "relative": "orfs/orfs_synth.log",
+      "bytes": 21123
+    },
+    {
+      "relative": "orfs/orfs_flow.log",
+      "bytes": 11953
+    },
+    {
+      "relative": "orfs/objects/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/abc.constr",
+      "bytes": 50
+    },
+    {
+      "relative": "orfs/objects/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/copyright.txt",
+      "bytes": 0
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_1_yosys_canonicalize.rtlil",
+      "bytes": 800696
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_3_floorplan_tapcell.odb",
+      "bytes": 1985613
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/mem.json",
+      "bytes": 247226
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_floorplan.sdc",
+      "bytes": 11289
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_2_yosys.sdc",
+      "bytes": 377
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_4_floorplan_pdn.odb",
+      "bytes": 2187999
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_2_yosys.v",
+      "bytes": 299848
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_2_floorplan_macro.odb",
+      "bytes": 1910264
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/clock_period.txt",
+      "bytes": 4
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_1_floorplan.odb",
+      "bytes": 1910264
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_1_floorplan.sdc",
+      "bytes": 11289
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_synth.sdc",
+      "bytes": 11289
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_floorplan.odb",
+      "bytes": 2187999
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_synth.odb",
+      "bytes": 1887291
+    },
+    {
+      "relative": "orfs/results/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_2_floorplan_macro.tcl",
+      "bytes": 1
+    },
+    {
+      "relative": "orfs/reports/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/synth_check.txt",
+      "bytes": 121
+    },
+    {
+      "relative": "orfs/reports/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_floorplan_final.rpt",
+      "bytes": 17438
+    },
+    {
+      "relative": "orfs/reports/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/synth_stat.txt",
+      "bytes": 4172
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_2_floorplan_macro.log",
+      "bytes": 1599
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_synth.log",
+      "bytes": 1982
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_4_floorplan_pdn.json",
+      "bytes": 172
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_1_yosys_canonicalize.log",
+      "bytes": 4066
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_4_floorplan_pdn.log",
+      "bytes": 1766
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_2_yosys.log",
+      "bytes": 16697
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_1_floorplan.log",
+      "bytes": 4809
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_1_floorplan.json",
+      "bytes": 2032
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_3_floorplan_tapcell.log",
+      "bytes": 1807
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_2_floorplan_macro.json",
+      "bytes": 134
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/1_synth.json",
+      "bytes": 800
+    },
+    {
+      "relative": "orfs/logs/asap7/opentallas_ot_v41_fadd_asap7_w10_fadd_a3/base/2_3_floorplan_tapcell.json",
+      "bytes": 134
+    }
+  ],
+  "allocated_bytes": 14016512,
+  "free_before": 277398470656
+}

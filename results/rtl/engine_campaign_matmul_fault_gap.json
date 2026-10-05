@@ -1,0 +1,80 @@
+{
+ "answer": "no. The campaign already fails at HEAD, on two MATMUL cases, and the failure set is byte-identical with and without the swap.",
+ "baseline_combinational_scaler": {
+  "checks": {
+   "iverilog": 40878,
+   "verilator": 40878
+  },
+  "fail_lines": [
+   "FAIL: result count got 6 want 0",
+   "FAIL: case 11 word 0 got 0000ff72 want deadbeef",
+   "FAIL: case 11 word 1 got 00007f10 want deadbeef",
+   "FAIL: case 11 word 2 got 0000ff66 want deadbeef",
+   "FAIL: case 11 word 3 got 0000bf32 want deadbeef",
+   "FAIL: case 11 word 4 got 000040a1 want deadbeef",
+   "FAIL: case 11 word 5 got 0000bf1b want deadbeef",
+   "FAIL: fault code got 3 want 2",
+   "FAIL: result count got 6 want 0",
+   "FAIL: case 13 word 0 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 1 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 2 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 3 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 4 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 5 got 00003f7e want deadbeef",
+   "FAILURES: 15 after checks=40878"
+  ],
+  "mutation_count": 7,
+  "mutations": true,
+  "status": "fail"
+ },
+ "failures_unique_to_the_swap": [],
+ "identical_failure_sets": true,
+ "not_a_claim": [
+  "the campaign is FAILING, so it does not certify the engine datapath; what it establishes here is the absence of a regression, which is a weaker statement",
+  "not a physical measurement"
+ ],
+ "question": "does swapping the engine array to the pipelined VECTOR.SCALE regress the engine datapath campaign?",
+ "schema": "opentallas.rtl.engine_campaign_matmul_fault_gap.v1",
+ "the_pre_existing_failure": {
+  "cases": [
+   "case 11 = matmul_bf16_operand_nonfinite",
+   "case 13 = matmul_bf16_product_overflow"
+  ],
+  "engine": "ot_a3_mac_lane -- the MATMUL datapath, which this session did not touch",
+  "ordering_note": "cases 11 and 13 run before any VECTOR.SCALE case, so the scaler has never been started when they execute; the scaler cannot reach them",
+  "status": "pre-existing and unfixed. Recorded rather than repaired, because repairing MATMUL is a separate change from integrating the pipelined scaler and mixing them would make neither reviewable.",
+  "symptom": "both are refusals that must commit nothing; the engine commits 6 words and case 11 reports fault 3 (ERR_PRODUCT_RANGE) where 2 (ERR_OPERAND_NONFINITE) is expected"
+ },
+ "what_this_does_verify": [
+  "the swap introduces no new failure: 16 FAIL lines before, the same 16 after, none unique to the swap",
+  "both simulators run the same 40,878 checks with and without it",
+  "all 7 mutations are caught by both simulators in both configurations, including the one repointed at the pipelined engine"
+ ],
+ "with_pipelined_scaler": {
+  "checks": {
+   "iverilog": 40878,
+   "verilator": 40878
+  },
+  "fail_lines": [
+   "FAIL: result count got 6 want 0",
+   "FAIL: case 11 word 0 got 0000ff72 want deadbeef",
+   "FAIL: case 11 word 1 got 00007f10 want deadbeef",
+   "FAIL: case 11 word 2 got 0000ff66 want deadbeef",
+   "FAIL: case 11 word 3 got 0000bf32 want deadbeef",
+   "FAIL: case 11 word 4 got 000040a1 want deadbeef",
+   "FAIL: case 11 word 5 got 0000bf1b want deadbeef",
+   "FAIL: fault code got 3 want 2",
+   "FAIL: result count got 6 want 0",
+   "FAIL: case 13 word 0 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 1 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 2 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 3 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 4 got 00003f7e want deadbeef",
+   "FAIL: case 13 word 5 got 00003f7e want deadbeef",
+   "FAILURES: 15 after checks=40878"
+  ],
+  "mutation_count": 7,
+  "mutations": true,
+  "status": "fail"
+ }
+}

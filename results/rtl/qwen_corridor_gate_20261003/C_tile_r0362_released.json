@@ -1,0 +1,381 @@
+{
+ "claim_boundary": "ASAP7 block-level strip of one corridor at its r2 width: the router sees only the tracks inside the corridor width; neighbouring tiles, crossing corridors and the die-level clock are absent. GRT capacity of the non-assigned same-direction layers is zeroed between slabs to enforce the r2 layer assignment; detail route is audited per layer.",
+ "clock": {
+  "hold_uncertainty_ns": 0.025,
+  "period_ns": 0.833,
+  "primary_corner": "WC (SS)",
+  "repair_corners": [
+   "WC",
+   "BC"
+  ],
+  "setup_uncertainty_ns": 0.06
+ },
+ "diagnostic_allow_congestion": false,
+ "driver_flow_completed": true,
+ "driver_status": "not_met",
+ "drt": {
+  "by_iteration": [
+   105390,
+   340,
+   126,
+   8,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   0
+  ],
+  "errors": [],
+  "final_violations": 0
+ },
+ "drt_completed": true,
+ "flow_errors": [],
+ "geometry": {
+  "assigned_layers": [
+   "M7",
+   "M9"
+  ],
+  "axis": "y",
+  "chains": 637,
+  "demand_over_raw": 0.3617,
+  "demand_tracks": 637,
+  "gr_blocked_between_slabs": [
+   "M3",
+   "M5"
+  ],
+  "length_um": 1328.94,
+  "r2_width_um": 52.704,
+  "ratio_tag": "r0362",
+  "raw_tracks": {
+   "M7": 978,
+   "M9": 783
+  },
+  "repeaters_per_segment": 3,
+  "segment_um": 430.56,
+  "width_um": 62.64,
+  "zones": [
+   [
+    "qs0",
+    26.46,
+    35.1
+   ],
+   [
+    "qr01",
+    136.08,
+    140.67
+   ],
+   [
+    "qr02",
+    243.81,
+    248.4
+   ],
+   [
+    "qr03",
+    351.54,
+    355.86
+   ],
+   [
+    "qs1",
+    456.84,
+    465.75
+   ],
+   [
+    "qr11",
+    566.73,
+    571.32
+   ],
+   [
+    "qr12",
+    674.46,
+    678.78
+   ],
+   [
+    "qr13",
+    781.92,
+    786.51
+   ],
+   [
+    "qs2",
+    887.49,
+    896.4
+   ],
+   [
+    "qr21",
+    997.38,
+    1001.7
+   ],
+   [
+    "qr22",
+    1104.84,
+    1109.43
+   ],
+   [
+    "qr23",
+    1212.57,
+    1217.16
+   ],
+   [
+    "qs3",
+    1318.14,
+    1326.78
+   ]
+  ]
+ },
+ "grt": {
+  "errors": [],
+  "final": {
+   "demand": 1546069,
+   "overflow": 0,
+   "resource": 10577794,
+   "usage_pct": 14.62
+  },
+  "first": {
+   "overflow": 0,
+   "usage_pct": 14.62
+  },
+  "per_layer": null
+ },
+ "last_stage_log": "6_report.log",
+ "launch": {
+  "driver_args": [
+   "--view",
+   "asap7",
+   "--top",
+   "qcg_tile_column",
+   "--source",
+   "rtl/chip/physical/qcg/qcg_tile_column.v",
+   "--clock-port",
+   "clk",
+   "--clock-period-ns",
+   "0.833",
+   "--clock-uncertainty-ns",
+   "0.06",
+   "--clock-uncertainty-hold-ns",
+   "0.025",
+   "--orfs-corner",
+   "WC",
+   "--hold-corners",
+   "WC,BC",
+   "--false-path-io",
+   "--io-delay-fraction",
+   "0",
+   "--stages",
+   "pnr",
+   "--purpose",
+   "signoff_target",
+   "--die-area",
+   "0",
+   "0",
+   "62.64",
+   "1328.94",
+   "--core-area",
+   "1.08",
+   "1.08",
+   "61.56",
+   "1327.86",
+   "--routing-layers",
+   "M2",
+   "M9",
+   "--step-tcl",
+   "PRE_FLOORPLAN=physical/qwen_corridor_gate/dont_touch.tcl",
+   "--step-tcl",
+   "PRE_GLOBAL_PLACE_SKIP_IO=physical/qwen_corridor_gate/c_place.tcl",
+   "--step-tcl",
+   "PRE_IO_PLACEMENT=physical/qwen_corridor_gate/c_pins.tcl",
+   "--step-tcl",
+   "PRE_RESIZE=physical/qwen_corridor_gate/unfreeze.tcl",
+   "--step-tcl",
+   "PRE_GLOBAL_ROUTE=physical/qwen_corridor_gate/c_grt.tcl",
+   "--step-tcl",
+   "POST_DETAIL_ROUTE=physical/qwen_corridor_gate/write_def.tcl",
+   "--orfs-var",
+   "PDN_TCL=/src/physical/qwen_corridor_gate/pdn_tile.tcl",
+   "--orfs-var",
+   "IO_PLACER_H=M4 M6",
+   "--orfs-var",
+   "IO_PLACER_V=M7 M9",
+   "--orfs-var",
+   "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks",
+   "--orfs-var",
+   "DONT_BUFFER_PORTS=1",
+   "--orfs-var",
+   "PLACE_DENSITY_LB_ADDON=",
+   "--keep-heavy-artifacts",
+   "--nickname-tag",
+   "qcg_c_tile_r0362",
+   "--source-root",
+   "/srv/opentallas-scratch/claude/qwen-corridor-gate/wt",
+   "--output",
+   "/srv/opentallas-scratch/claude/qwen-corridor-gate/jobs/C_tile_r0362/physical.json"
+  ],
+  "elapsed_seconds": 2247.742,
+  "git": {
+   "commit": "d4abbd4c1e1446cdb6ce7f9e244904d5615a59f4",
+   "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+   "untracked_results": [],
+   "worktree_dirty": false,
+   "worktree_status": []
+  },
+  "receipt_status": "DRIVER_RETURNED"
+ },
+ "layer_assignment_held": false,
+ "layer_audit": {
+  "access_band_on_blocked_same_direction_layers_um": 5513.6,
+  "assigned_share_of_between_slab": 0.9718,
+  "basis": "routed DEF signal + clock wires; slab = slab +/- 2.0 um (GRT keep), access = a further 8.0 um band (station / repeater pin access), between = the rest of the span",
+  "between_slab_on_blocked_same_direction_layers_um": 12961.4,
+  "between_slab_um": 645617.6,
+  "blocked_layer_segments_longer_than_um": {
+   "10.0": 219
+  },
+  "longest_blocked_layer_segment_beyond_access": {
+   "layer": "M3",
+   "net": "r600_21",
+   "um": 74.2
+  },
+  "per_layer_um": {
+   "M2": {
+    "access": 1497.6,
+    "between": 2053.7,
+    "slab": 7139.8
+   },
+   "M3": {
+    "access": 3080.9,
+    "between": 8460.2,
+    "slab": 38973.0
+   },
+   "M4": {
+    "access": 1237.1,
+    "between": 878.7,
+    "slab": 6721.7
+   },
+   "M5": {
+    "access": 2432.7,
+    "between": 4501.2,
+    "slab": 12842.9
+   },
+   "M6": {
+    "access": 1836.0,
+    "between": 1829.1,
+    "slab": 2991.6
+   },
+   "M7": {
+    "access": 110227.5,
+    "between": 564552.2,
+    "slab": 24654.7
+   },
+   "M8": {
+    "access": 271.5,
+    "between": 497.0,
+    "slab": 864.6
+   },
+   "M9": {
+    "access": 13243.2,
+    "between": 62845.5,
+    "slab": 7523.5
+   }
+  }
+ },
+ "make_errors": [],
+ "method": "stations/repeaters fixed BUFx4/DFFHQNx2 through placement, released to the resizer at PRE_RESIZE",
+ "orfs_metrics": {
+  "antenna_violating_nets": 0,
+  "drc_errors": 0,
+  "instance_count": 272119,
+  "max_cap_violations": 0,
+  "max_slew_violations": 4,
+  "routed_wirelength_um": 881156,
+  "standard_cell_count": 9968,
+  "utilization_fraction": 0.0188276,
+  "vias": 143053
+ },
+ "pg": {
+  "pitch_um": 10.8,
+  "r2_cov_per_net": 0.0439,
+  "realised_cov_per_net": 0.0441,
+  "region": "tile",
+  "stripe_um": 0.476
+ },
+ "question": "does the r2 corridor route at its netted width (demand / raw same-direction tracks on the assigned layers), with real stations, repeaters, CTS, PG and tile pins, and close SS setup / FF hold?",
+ "recorder_sha256": "196c6c4e2c99bce427a435684c9cfe4f579a4acbd92a62a5df0feb4e28bd34b2",
+ "routed_clean": true,
+ "run_sources": {
+  "commit": "d4abbd4c1e1446cdb6ce7f9e244904d5615a59f4",
+  "root": "/srv/opentallas-scratch/claude/qwen-corridor-gate/wt",
+  "sha256": {
+   "physical/qwen_corridor_gate/c_grt.tcl": "711d4580cf4cc9d822985997fe43f292a8ad270b5fd0841c067c823e2b15e350",
+   "physical/qwen_corridor_gate/c_pins.tcl": "75f66677d50b0d64945638ae78fe3729d57c0714ca5511e6f4dde631f91bfb71",
+   "physical/qwen_corridor_gate/c_place.tcl": "ff9b50e4494d6fe3f9f77a70a441ee138fb049411eb655d4c7067641227b34c3",
+   "physical/qwen_corridor_gate/dont_touch.tcl": "5fcac91f18de07065b34604e1a5fe06bfe9cc988379ddf1311ed5e1d13aaff93",
+   "physical/qwen_corridor_gate/pdn_tile.tcl": "8854f0d1a6bfdbfe4da181dc3f1ffdb6e7fe08bd962e3002d43096bdf287fb9c",
+   "physical/qwen_corridor_gate/unfreeze.tcl": "84d7883bf354f6c404a6166ce6ef936d35df83a5f97205fa3894487d4ae3515d",
+   "physical/qwen_corridor_gate/write_def.tcl": "e46a99392a927e8b086fbd158a7cc92f24e4256c74129c5506dd2e9ba13d65ed",
+   "results/uarch/qwen_rom_floorplan_nearhbm_20261003/model-r2.json": "e1e8ac2ddab4711d1a6e476a31a7b9f01813a67aa6c27dfd473225d771e7b951",
+   "rtl/chip/physical/qcg/qcg_tile_column.v": "23587665c323fa0a592af4d1f665cadab4eb1f6e436a69398e01237dc3ad73c5",
+   "tools/qwen_corridor_gate.py": "196c6c4e2c99bce427a435684c9cfe4f579a4acbd92a62a5df0feb4e28bd34b2"
+  }
+ },
+ "schema": "opentallas.qwen-corridor-gate.v1",
+ "test": "C",
+ "timing": {
+  "corner_sta": {
+   "basis": "OpenSTA on 6_final.odb + RCX 6_final.spef, one liberty corner per run",
+   "ff_failing_D_hold": 0,
+   "ff_failing_D_setup": 0,
+   "ff_hold_ns": 0.11577,
+   "ff_setup_ns": 0.31116,
+   "ff_station_D_pins": 2548,
+   "ss_failing_D_hold": 0,
+   "ss_failing_D_setup": 19,
+   "ss_hold_ns": 0.28839,
+   "ss_setup_ns": -0.03913,
+   "ss_station_D_pins": 2548,
+   "status": "ran"
+  },
+  "ff_hold_wns_ns": 0.11577,
+  "orfs_finish": {
+   "hold_violations": 0,
+   "hold_wns_ns": 0.113607,
+   "setup_violations": 19,
+   "setup_wns_ns": -0.0391307
+  },
+  "ss_setup_wns_ns": -0.03913
+ },
+ "timing_met": false,
+ "top": "qcg_tile_column",
+ "variant": "C_tile_r0362",
+ "verdict": "ROUTED_CLEAN"
+}

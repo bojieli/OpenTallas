@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "new_tests": 28,
+  "total_tests": 172,
+  "seconds": 7.12,
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "-q",
+    "tests/test_observer_frontend_resources.py",
+    "tests/test_observer_capped_lint.py",
+    "tests/test_observer_l0_structural.py",
+    "tests/test_observer_hierarchy_source_plan.py",
+    "tests/test_simulation_observation_wrapper.py"
+  ],
+  "compiler_executed": false,
+  "child_tests": "small Python children; virtual RLIMIT_AS verification, 64MiB memory negative, finite wall/log controls"
+}

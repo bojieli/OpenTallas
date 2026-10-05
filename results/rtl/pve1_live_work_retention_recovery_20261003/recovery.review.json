@@ -1,0 +1,66 @@
+{
+  "time_utc": "2026-10-03T00:31:07.126934+00:00",
+  "status": "LIVE_CURRENT_STAGE_OUTPUT_RETENTION_RESTORED",
+  "source_commit": "fb5df1ac4ee6df1011165e32e91aadc29bc702ae",
+  "driver_sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+  "original_failure_record": "/tmp/claude-1000/w11s/hard/sc_r7/physical.json",
+  "original_failure_record_sha256": "f017794f6eae8ccd042e0d545121981b872d50c7eebbae72eac31f91ec86b0c0",
+  "original_status": "error",
+  "original_failure_completed_at": "2026-10-02T19:58:38.055055+00:00",
+  "original_timeout_seconds": 64800,
+  "original_command_matches_live_container_mount_and_stage": true,
+  "source_RTL_hashes_verified": 12,
+  "container_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "container_id": "35e4eb5586c0f731e624fe3d4a929569cbc887663fc2c3cd60d6b568416b73f9",
+  "cwd_deleted": false,
+  "original_work_root_deleted": true,
+  "new_persistent_work": "/home/ubuntu/ot-retained/pve1-w11-su2-live-20261003/work",
+  "same_inode_host_namespace_verified": true,
+  "live_output_files": [
+    "results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/3_3_place_gp.odb",
+    "results/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/3_3_place_gp-failed.odb",
+    "reports/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/3_global_place.rpt",
+    "logs/asap7/opentallas_ot_hdc_v41x_vec_red1024_asap7_w11sc_r7/base/3_3_place_gp.json"
+  ],
+  "write_controls": {
+    "WRITE_ODB_AND_SDC_EACH_STAGE": "1"
+  },
+  "writer_source_snapshots": [
+    {
+      "path": "global_place.tcl",
+      "bytes": 2478,
+      "sha256": "05a7a124580f8a023113ad1f4d56c15e61c3640142f4581c27d5ebaa6aa59e33"
+    },
+    {
+      "path": "util.tcl",
+      "bytes": 10585,
+      "sha256": "3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81"
+    },
+    {
+      "path": "report_metrics.tcl",
+      "bytes": 12680,
+      "sha256": "b314571634205e7f739126bc9e6923f7f65ea510307ed2b92ee4e4a7d890f329"
+    },
+    {
+      "path": "flow.sh",
+      "bytes": 747,
+      "sha256": "48f3911f8f90daa20e4cb07b1821d495744125e808ba14f5a1c1051c3b39bade"
+    },
+    {
+      "path": "run_command.py",
+      "bytes": 3809,
+      "sha256": "c6e1f733b88c4f59d342fc41e674b955c467c4a16bd454f09cf2db0297f4da97"
+    }
+  ],
+  "cause": "Exact pinned driver runs docker CLI with64800s timeout; matching terminal receipt recordsTimeoutExpired at19:58:38Oct2. Its exception handler then callsTemporaryDirectory.cleanup. Live original/work mount had nlink0 and //deleted; cwd intact. This evidence supports original timeout/cleanup path, not a new healthy-job termination.",
+  "earlier_recovery": "Three unique open regular file inodes preserved. Deleted log recovered. No earlier closed ODB/netlist/stage-SDC open handles found in complete live container cgroup; no earlier checkpoint recovered. In-memory current design can write current3_3 ODB to restored path.",
+  "continuation_limit": "config.mk and2_floorplan.sdc lost; no retained exact bytes/hash found. They are not reconstructed or replaced with guessed constraints. Subsequent make stage cannot be claimed continuation-ready.",
+  "watcher_unit": "ot-pve1-su2-live-retention-20261003.service",
+  "watcher_pid": 2093643,
+  "held_log_sha256": "58ccce03e83038daf1c9344514177c3f26b067de2adf3346c995693f6cb474b8",
+  "no_pipes_read": true,
+  "no_producer_fd_offset_changes": true,
+  "no_signals_or_experiment_restart": true,
+  "no_clock_RTL_changes": true,
+  "original_failure_preserved": true
+}

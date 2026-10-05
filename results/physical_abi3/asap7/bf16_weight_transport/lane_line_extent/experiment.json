@@ -1,0 +1,22 @@
+{
+  "status": "candidate; routed comparison pending",
+  "baseline_source_sha256": "0db0272552bac476a0be9e7e56225570aa9ba28ee86de5d8b1dc77137ed02997",
+  "candidate_source_sha256": "70119b4ec736f120f6c3ca6d9f6a4c489568c962809c8093191876a0f45052a8",
+  "motivation": "Pre-handoff containing route worst path from gather.slot to gather.read_bytes; move final-line comparison to existing BOUNDS stage",
+  "payload_bits_added": 8,
+  "pipeline_cycles_added": 0,
+  "focused_cases": 16,
+  "route": "results/physical_abi3/asap7/bf16_weight_transport/pnr_lane_line_extent_cts12_1ns.json",
+  "loaded_campaigns": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "e074181b6bfd8c48b4e41be3113be8089bf5b30a59b81d8aabb67ae425f485a8",
+      "row_reuse": true
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_no_weight_reuse_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json",
+      "sha256": "13d86825955d444edd0513cf59784d510342ed6bb56fa83deb3b0ba3c2c8ec37",
+      "row_reuse": false
+    }
+  ]
+}

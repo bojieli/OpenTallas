@@ -1,0 +1,98 @@
+{
+  "schema": "opentallas.w16.selected-nonsm-header-metadata.v1",
+  "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "selected_tensors": {
+    "embed.weight": {
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        5120
+      ],
+      "data_offsets": [
+        0,
+        1323827200
+      ],
+      "bytes": 1323827200,
+      "shard": "model-00002-of-00048.safetensors"
+    },
+    "layers.1.engram.embed.weight": {
+      "dtype": "F8_E4M3",
+      "shape": [
+        384006168,
+        256
+      ],
+      "data_offsets": [
+        0,
+        98305579008
+      ],
+      "bytes": 98305579008,
+      "shard": "model-00047-of-00048.safetensors"
+    },
+    "layers.1.engram.embed.scale": {
+      "dtype": "F8_E8M0",
+      "shape": [
+        384006168,
+        8
+      ],
+      "data_offsets": [
+        98305579008,
+        101377628352
+      ],
+      "bytes": 3072049344,
+      "shard": "model-00047-of-00048.safetensors"
+    },
+    "layers.14.engram.embed.weight": {
+      "dtype": "F8_E4M3",
+      "shape": [
+        384016682,
+        256
+      ],
+      "data_offsets": [
+        0,
+        98308270592
+      ],
+      "bytes": 98308270592,
+      "shard": "model-00048-of-00048.safetensors"
+    },
+    "layers.14.engram.embed.scale": {
+      "dtype": "F8_E8M0",
+      "shape": [
+        384016682,
+        8
+      ],
+      "data_offsets": [
+        98308270592,
+        101380404048
+      ],
+      "bytes": 3072133456,
+      "shard": "model-00048-of-00048.safetensors"
+    }
+  },
+  "headers": {
+    "model-00002-of-00048.safetensors": {
+      "header_sha256": "d12e3fdffd1199b504f628efad3ffe194a04365beed1234be196c42952af5101",
+      "header_bytes": 344,
+      "file_bytes": 1323858272,
+      "blob_target": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4320066fc6958e5bc01d8c3feba79b7454b59f0f4b7299ab7145ed44bbf4ecec",
+      "mtime_ns": 1789298534154389218
+    },
+    "model-00047-of-00048.safetensors": {
+      "header_sha256": "e5c5c7fc900caec400644bef07aa5d7e28fc6ca941c8c47592b393963b218242",
+      "header_bytes": 656,
+      "file_bytes": 101535150936,
+      "blob_target": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/824db4881320407ac340736d14dcee5ecd748c27d0f5836b8127ecc2e3781b0f",
+      "mtime_ns": 1789302705071034653
+    },
+    "model-00048-of-00048.safetensors": {
+      "header_sha256": "5d8fa4697d7a071c31baeee6947d493c08ea3243261c5d0f79c355ad191b8222",
+      "header_bytes": 664,
+      "file_bytes": 101537926640,
+      "blob_target": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/976330f4954338e1ad8b508c32aa912032c7ad908959fd53c8307650fe4520ed",
+      "mtime_ns": 1789302707604086704
+    }
+  },
+  "header_payload_read_bytes": 1688,
+  "tensor_payload_read_bytes": 0,
+  "scope": "Five selected metadata entries only; no inventory duplication, decoding or image emission. Physical ownership/layout remains unassigned."
+}

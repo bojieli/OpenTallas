@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/determinism_check_v1.schema.json",
+  "title": "OpenTallas Qwen3 fresh-build determinism check v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifact_count", "artifact_payload_bytes", "build_id", "checker_sha256", "manifest_sha256", "report_id", "schema", "status"],
+  "properties": {
+    "artifact_count": {"minimum": 51, "type": "integer"},
+    "artifact_payload_bytes": {"minimum": 16381470720, "type": "integer"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checker_sha256": {"$ref": "#/$defs/sha256"},
+    "manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.determinism_check.v1"},
+    "status": {"const": "pass"}
+  },
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

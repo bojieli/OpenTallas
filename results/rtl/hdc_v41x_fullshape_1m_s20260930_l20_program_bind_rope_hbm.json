@@ -1,0 +1,5484 @@
+{
+  "schema": "opentallas.v41x.fullshape.program_bind.v1",
+  "status": "blocked",
+  "layer": 20,
+  "rank": 0,
+  "layout_path": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_token_selected_rom_layout.json",
+  "layout_sha256": "554e1d32b8a18ad4053bced1d4a8e8d27c369a94376ca078d168081ec5fdad09",
+  "shard_path": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_rank0_image.json",
+  "shard_sha256": "b2c7804d489f94befdd8240676d1e4abf147d251fbd5efd5f29796d382465cc2",
+  "qe_stream_path": "results/rtl/hdc_v41x_fullshape_qe_stream_1m_s20260930_l20_rank0.json",
+  "qe_stream_sha256": "e0576a4385de27daa83f89bbf0e833ce325613065cf849758686ab808dac8c6f",
+  "rope_mode": "hbm_cache",
+  "context": 1048576,
+  "position": 1048575,
+  "constants_manifest": "results/rtl/v41_program_constants.json",
+  "constants_manifest_sha256": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
+  "rope_patch_sha256": null,
+  "rope_token_patch": null,
+  "rope_hbm_table": {
+    "storage": "hbm_read_only_table",
+    "kind": "yarn",
+    "cache_fixture": null,
+    "position": 1048575,
+    "pair_count": 32,
+    "bytes_per_position": 256,
+    "capacity_record_sha256": "ca4c77670e46fa6aee548f8ee02ff431946282eb1bd7eb5fdd8b0d274421627c",
+    "cache_record_sha256": "655549cf3f704668cf526fffa79886915ad22e105ddeae8a490ec0961cead484",
+    "physical_region_base_sector": null,
+    "full_table_image_sha256": null,
+    "claim_boundary": "HBM capacity plus one-position cache proof; full table image and physical HBM region not yet bound",
+    "prefetch_pc": 18,
+    "release_pc": 67,
+    "su_read_pcs": [
+      19,
+      23,
+      34,
+      37,
+      40,
+      66
+    ]
+  },
+  "resource_trace": {
+    "qe_logical_qrom_words": 7201920,
+    "qe_direct_expanded_bytes": 3917844480,
+    "qe_packed_physical_bytes": 2093322240,
+    "other_engine_bytes": 43096992,
+    "packed_die_bytes": 2136419232,
+    "rom_capacity_bytes": 2714287356,
+    "direct_expanded_fits_die": false,
+    "packed_requires_fp4_port_adapter": true
+  },
+  "source_sha256": {
+    "tools/v41_fullshape_program_bind.py": "56fccd6e6daf22d4627e1e8e201ccab86f74195bc033d7676a6dcc69ffac90ab",
+    "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/v41_program_constants.py": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4",
+    "results/rtl/v41_program_constants.json": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d",
+    "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+  },
+  "source_experts": [
+    41,
+    65,
+    158,
+    164,
+    259,
+    266
+  ],
+  "matrix_count": 33,
+  "constant_count": 13,
+  "instruction_count": 144,
+  "instruction_trace": [
+    {
+      "pc": 0,
+      "unit": 2,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "SSX"
+      ],
+      "writes": [
+        "RF"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 40960,
+        "m1": 5,
+        "imm1": 1184890880,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 40992,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_hc_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 1,
+      "unit": 5,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "H"
+      ],
+      "writes": [
+        "MIX"
+      ],
+      "fields": {
+        "unit": 5,
+        "he_nout": 24,
+        "he_k": 2560,
+        "he_wbase": 0,
+        "he_xbase": 0,
+        "he_obase": 41024,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 2,
+      "unit": 2,
+      "tag": "L20.attn_norm",
+      "reads": [
+        "H",
+        "PF"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41152,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41153,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 3,
+      "unit": 2,
+      "tag": "L20.attn_norm",
+      "reads": [
+        "H",
+        "PF",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41154,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 4,
+      "unit": 2,
+      "tag": "L20.attn_norm",
+      "reads": [
+        "H",
+        "PF",
+        "T"
+      ],
+      "writes": [
+        "SS",
+        "X"
+      ],
+      "fields": {
+        "su_nout": 8,
+        "su_nin": 640,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41155,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 41344,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 640,
+        "b_so": 0,
+        "c_so": 640,
+        "d_so": 0,
+        "o_so": 640,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 80
+      }
+    },
+    {
+      "pc": 5,
+      "unit": 2,
+      "tag": "L20.attn_norm",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1168113664,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 6,
+      "unit": 2,
+      "tag": "L20.attn_norm",
+      "reads": [
+        "RS",
+        "X"
+      ],
+      "writes": [
+        "XN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 41344,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 0,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 46464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 7,
+      "unit": 3,
+      "tag": "L20.attn",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "QAL"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 320,
+        "qe_tiles": 3,
+        "qe_wbase": 0,
+        "qe_obase": 419776,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 8,
+      "unit": 3,
+      "tag": "L20.attn",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "KVAL"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 128,
+        "qe_tiles": 1,
+        "qe_wbase": 3840,
+        "qe_obase": 420096,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 9,
+      "unit": 6,
+      "tag": "L20.attn.q_a_gather",
+      "reads": [
+        "QAL"
+      ],
+      "writes": [
+        "QA"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 419776,
+        "coll_dst": 51648,
+        "coll_n": 320,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 0,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 10,
+      "unit": 6,
+      "tag": "L20.attn.kv_gather",
+      "reads": [
+        "KVAL"
+      ],
+      "writes": [
+        "KVA"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 420096,
+        "coll_dst": 54208,
+        "coll_n": 128,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 1,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 11,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "QA"
+      ],
+      "writes": [
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 160,
+        "a_base": 51648,
+        "a_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 160,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 0,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 12,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1151336448,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_q_rank",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 13,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "QA",
+        "RS"
+      ],
+      "writes": [
+        "QR"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 51648,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 10240,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 52928,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 14,
+      "unit": 3,
+      "tag": "L20.attn",
+      "reads": [
+        "QR"
+      ],
+      "writes": [
+        "Q"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 52928,
+        "qe_nb": 40,
+        "qe_nout": 8192,
+        "qe_tiles": 64,
+        "qe_wbase": 5120,
+        "qe_obase": 55744,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 15,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "KVA"
+      ],
+      "writes": [
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 64,
+        "a_base": 54208,
+        "a_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 64,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 0,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 16,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1140850688,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_head_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 17,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "KVA",
+        "RS"
+      ],
+      "writes": [
+        "KVN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 54208,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 11520,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 54720,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 18,
+      "unit": 0,
+      "tag": "L20.attn.rope_prefetch",
+      "reads": [],
+      "writes": [],
+      "fields": {
+        "unit": 0,
+        "ctl": 5,
+        "ctl_slot": 0,
+        "ctl_lane": 1,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 19,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "KVN"
+      ],
+      "writes": [
+        "KVN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 55168,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 55168,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 20,
+      "unit": 3,
+      "tag": "L20.attn",
+      "reads": [
+        "KVN"
+      ],
+      "writes": [
+        "KVQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 1,
+        "qe_xbase": 54720,
+        "qe_nb": 16,
+        "qe_obase": 55232,
+        "qe_d_obase": 0,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 21,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KT20"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 3,
+        "o_base": 0,
+        "o_d": "WINM1",
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 22,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "KVQ"
+      ],
+      "writes": [
+        "KR20"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 55232,
+        "a_si": 1,
+        "dst": 2,
+        "o_base": 0,
+        "o_d": "WINM1_ROW",
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 23,
+      "unit": 2,
+      "tag": "L20.attn",
+      "reads": [
+        "Q"
+      ],
+      "writes": [
+        "Q"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 16,
+        "su_nin": 64,
+        "a_base": 56192,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 56192,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 24,
+      "unit": 1,
+      "tag": "L20.compressor",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "CKAL"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 128,
+        "me_tiles": 1,
+        "me_k": 1280,
+        "me_wsrc": 0,
+        "me_wbase": 138752,
+        "me_ts": 10240,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 46464,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 27918,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 1280,
+        "me_split": 2,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 25,
+      "unit": 2,
+      "tag": "L20.compressor",
+      "reads": [
+        "CKAL"
+      ],
+      "writes": [
+        "CKAL"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 128,
+        "a_base": 446688,
+        "a_si": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 446688,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 1,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 26,
+      "unit": 6,
+      "tag": "L20.compressor.latent_gather",
+      "reads": [
+        "CKAL"
+      ],
+      "writes": [
+        "CKA"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 446688,
+        "coll_dst": 93216,
+        "coll_n": 128,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 2,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 27,
+      "unit": 2,
+      "tag": "L20.compressor",
+      "reads": [
+        "CKA"
+      ],
+      "writes": [
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 64,
+        "a_base": 93216,
+        "a_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 64,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 0,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 28,
+      "unit": 2,
+      "tag": "L20.compressor",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1140850688,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_head_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 29,
+      "unit": 2,
+      "tag": "L20.compressor",
+      "reads": [
+        "CKA",
+        "RS"
+      ],
+      "writes": [
+        "LAT"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 512,
+        "a_base": 93216,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 12528,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 93728,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 30,
+      "unit": 1,
+      "tag": "L20.index_key",
+      "reads": [
+        "LAT"
+      ],
+      "writes": [
+        "IKA"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 128,
+        "me_tiles": 1,
+        "me_k": 128,
+        "me_wsrc": 0,
+        "me_wbase": 148992,
+        "me_ts": 1024,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 93728,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 5890,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 128,
+        "me_split": 2,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 31,
+      "unit": 2,
+      "tag": "L20.index_key",
+      "reads": [
+        "IKA"
+      ],
+      "writes": [
+        "IKA",
+        "SS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 8,
+        "su_nin": 16,
+        "a_base": 94240,
+        "a_si": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 94240,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 16,
+        "b_so": 0,
+        "c_so": 0,
+        "d_so": 0,
+        "o_so": 16,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 1,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 32,
+      "unit": 2,
+      "tag": "L20.index_key",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1124073472,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_index_head_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 33,
+      "unit": 2,
+      "tag": "L20.index_key",
+      "reads": [
+        "IKA",
+        "RS"
+      ],
+      "writes": [
+        "IKN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 128,
+        "a_base": 94240,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 13040,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 94368,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 34,
+      "unit": 2,
+      "tag": "L20.index_key",
+      "reads": [
+        "IKN"
+      ],
+      "writes": [
+        "IKN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 94432,
+        "a_so": 128,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 94432,
+        "o_so": 128,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 35,
+      "unit": 3,
+      "tag": "L20.index_key",
+      "reads": [
+        "IKN"
+      ],
+      "writes": [
+        "IKQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 2,
+        "qe_xbase": 94368,
+        "qe_nb": 4,
+        "qe_obase": 94496,
+        "qe_d_obase": 0,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 36,
+      "unit": 2,
+      "tag": "L20.index_key",
+      "reads": [
+        "IKQ"
+      ],
+      "writes": [
+        "IK20"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 128,
+        "a_base": 94496,
+        "a_si": 1,
+        "dst": 3,
+        "o_base": 0,
+        "o_d": 4,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 37,
+      "unit": 2,
+      "tag": "L20.compressor",
+      "reads": [
+        "LAT"
+      ],
+      "writes": [
+        "LAT"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 64,
+        "a_base": 94176,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 94176,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 38,
+      "unit": 3,
+      "tag": "L20.compressor",
+      "reads": [
+        "LAT"
+      ],
+      "writes": [
+        "CKV20"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 3,
+        "qe_xbase": 93728,
+        "qe_nb": 16,
+        "qe_obase": 0,
+        "qe_d_obase": 16,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 39,
+      "unit": 3,
+      "tag": "L20.indexer",
+      "reads": [
+        "QR"
+      ],
+      "writes": [
+        "IQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 52928,
+        "qe_nb": 40,
+        "qe_nout": 4096,
+        "qe_tiles": 32,
+        "qe_wbase": 64640,
+        "qe_obase": 94624,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 40,
+      "unit": 2,
+      "tag": "L20.indexer",
+      "reads": [
+        "IQ"
+      ],
+      "writes": [
+        "IQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 32,
+        "su_nin": 64,
+        "a_base": 94688,
+        "a_so": 128,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 3,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 94688,
+        "o_so": 128,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 41,
+      "unit": 3,
+      "tag": "L20.indexer",
+      "reads": [
+        "IQ"
+      ],
+      "writes": [
+        "IQQ"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 2,
+        "qe_xbase": 94624,
+        "qe_nb": 128,
+        "qe_obase": 98720,
+        "qe_d_obase": 0,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 42,
+      "unit": 1,
+      "tag": "L20.indexer",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "WP"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 32,
+        "me_tiles": 1,
+        "me_k": 1280,
+        "me_wsrc": 0,
+        "me_wbase": 150016,
+        "me_ts": 10240,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 46464,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 6426,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 1280,
+        "me_split": 2,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 43,
+      "unit": 2,
+      "tag": "L20.indexer",
+      "reads": [
+        "WP"
+      ],
+      "writes": [
+        "WTS"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 32,
+        "a_base": 102816,
+        "a_si": 1,
+        "a_rnd": 1,
+        "m1": 3,
+        "imm1": 1015021568,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 102848,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 1,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "index_w_scale"
+      }
+    },
+    {
+      "pc": 44,
+      "unit": 1,
+      "tag": "L20.indexer",
+      "reads": [
+        "IK20",
+        "IQQ",
+        "WTS"
+      ],
+      "writes": [
+        "IS"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 128,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 128,
+        "me_ks": 1,
+        "me_js": 0,
+        "me_xbase": 98720,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 6430,
+        "me_ots": 1,
+        "me_ojs": 0,
+        "me_oen": 1,
+        "me_xcs": 1024,
+        "me_split": 0,
+        "me_jsh": 3,
+        "me_xjs": 128,
+        "me_mmode": 1,
+        "me_d_nout": "SC1",
+        "me_d_tiles": [
+          "ceil",
+          "SC1",
+          16
+        ],
+        "me_hg": 2,
+        "me_ogs": 0,
+        "me_fuse": 1,
+        "me_wts": 102848,
+        "wait": 6
+      }
+    },
+    {
+      "pc": 45,
+      "unit": 4,
+      "tag": "L20.indexer",
+      "reads": [
+        "IS"
+      ],
+      "writes": [
+        "SEL"
+      ],
+      "fields": {
+        "xu_op": 0,
+        "xu_src": 102880,
+        "xu_dst": 365024,
+        "xu_d_n": "SC1",
+        "xu_d_k": "NSL1",
+        "unit": 4,
+        "wait": 1
+      }
+    },
+    {
+      "pc": 46,
+      "unit": 2,
+      "tag": "L20.indexer",
+      "reads": [
+        "IS",
+        "SEL"
+      ],
+      "writes": [
+        "SV"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 0,
+        "su_d_nin": "NSL1",
+        "a_base": 102880,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 365024,
+        "dst": 1,
+        "o_base": 446816,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 8,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 47,
+      "unit": 6,
+      "tag": "L20.indexer.topk_merge",
+      "reads": [
+        "SEL",
+        "SV"
+      ],
+      "writes": [
+        "SELG"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 2,
+        "coll_src": 446816,
+        "coll_dst": 447360,
+        "coll_n": 512,
+        "coll_k": 512,
+        "coll_ibase": 365024,
+        "coll_seq": 3,
+        "coll_rnd": 0,
+        "coll_d_stride": "SC1"
+      }
+    },
+    {
+      "pc": 48,
+      "unit": 2,
+      "tag": "L20.candidates",
+      "reads": [
+        "IS"
+      ],
+      "writes": [
+        "BLK"
+      ],
+      "fields": {
+        "su_nout": 0,
+        "su_d_nout": [
+          "ceil",
+          "SC1",
+          8
+        ],
+        "su_nin": 8,
+        "a_base": 102880,
+        "a_so": 8,
+        "a_si": 1,
+        "red": 2,
+        "r_base": 447872,
+        "r_so": 1,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 49,
+      "unit": 2,
+      "tag": "L20.candidates",
+      "reads": [
+        "WTS"
+      ],
+      "writes": [
+        "BLK"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 102848,
+        "ad": 4,
+        "imm2": 2139095040,
+        "dst": 1,
+        "o_base": 447872,
+        "o_d": "NEWBLK",
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "cand_pin"
+      }
+    },
+    {
+      "pc": 50,
+      "unit": 4,
+      "tag": "L20.candidates",
+      "reads": [
+        "BLK"
+      ],
+      "writes": [
+        "CBSEL"
+      ],
+      "fields": {
+        "xu_op": 0,
+        "xu_src": 447872,
+        "xu_dst": 480672,
+        "xu_d_n": [
+          "ceil",
+          "SC1",
+          8
+        ],
+        "xu_k": 2048,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 51,
+      "unit": 2,
+      "tag": "L20.candidates",
+      "reads": [
+        "BLK",
+        "CBSEL"
+      ],
+      "writes": [
+        "CBSV"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 2048,
+        "a_base": 447872,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 480672,
+        "dst": 1,
+        "o_base": 482720,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 8,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 52,
+      "unit": 6,
+      "tag": "L20.candidates.topk_merge",
+      "reads": [
+        "CBSEL",
+        "CBSV"
+      ],
+      "writes": [
+        "CAND"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 2,
+        "coll_src": 482720,
+        "coll_dst": 484800,
+        "coll_n": 2048,
+        "coll_k": 2048,
+        "coll_ibase": 480672,
+        "coll_seq": 4,
+        "coll_rnd": 0,
+        "coll_d_stride": [
+          "ceil",
+          "SC1",
+          8
+        ]
+      }
+    },
+    {
+      "pc": 53,
+      "unit": 2,
+      "tag": "L20.gather",
+      "reads": [
+        "CKV20",
+        "SELG"
+      ],
+      "writes": [
+        "KT20"
+      ],
+      "fields": {
+        "su_nout": 0,
+        "su_d_nout": "NS1",
+        "su_nin": 512,
+        "a_base": 0,
+        "a_so": 512,
+        "a_si": 1,
+        "a_ind": 2,
+        "a_ibase": 447360,
+        "dst": 3,
+        "o_base": 0,
+        "o_d": "WIN",
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 54,
+      "unit": 2,
+      "tag": "L20.gather",
+      "reads": [
+        "CKV20",
+        "SELG"
+      ],
+      "writes": [
+        "KR20"
+      ],
+      "fields": {
+        "su_nout": 0,
+        "su_d_nout": "NS1",
+        "su_nin": 512,
+        "a_base": 0,
+        "a_so": 512,
+        "a_si": 1,
+        "a_ind": 2,
+        "a_ibase": 447360,
+        "dst": 2,
+        "o_base": 0,
+        "o_d": "WIN_ROW",
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 55,
+      "unit": 1,
+      "tag": "L20.scores",
+      "reads": [
+        "KT20",
+        "Q"
+      ],
+      "writes": [
+        "S"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 0,
+        "me_tiles": 0,
+        "me_k": 512,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 512,
+        "me_ks": 1,
+        "me_js": 0,
+        "me_xbase": 55744,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 3996,
+        "me_ots": 1,
+        "me_ojs": 40,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "pred": 0,
+        "me_jsh": 3,
+        "me_xjs": 512,
+        "me_mmode": 1,
+        "me_d_nout": "T1",
+        "me_d_tiles": [
+          "ceil",
+          "T1",
+          32
+        ],
+        "me_hg": 1,
+        "me_ogs": 320,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 56,
+      "unit": 2,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "PA"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41024,
+        "c_base": 12032,
+        "d_base": 12056,
+        "sfu": 4,
+        "e1": 4,
+        "imm2": 897988541,
+        "o_base": 41056,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_eps"
+      }
+    },
+    {
+      "pc": 57,
+      "unit": 2,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "POA"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41028,
+        "c_base": 12036,
+        "d_base": 12060,
+        "sfu": 4,
+        "e1": 3,
+        "imm2": 1073741824,
+        "o_base": 41088,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_post_scale"
+      }
+    },
+    {
+      "pc": 58,
+      "unit": 2,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "CRAW",
+        "M4"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41032,
+        "a_so": 4,
+        "c_base": 12040,
+        "c_so": 4,
+        "d_base": 12064,
+        "d_so": 4,
+        "o_base": 41248,
+        "o_so": 4,
+        "red": 2,
+        "r_base": 41280,
+        "r_so": 1,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 4,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 59,
+      "unit": 2,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "CRAW",
+        "M4"
+      ],
+      "writes": [
+        "E16"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 4,
+        "a_base": 41248,
+        "a_so": 4,
+        "a_si": 1,
+        "b_base": 41280,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "dst": 1,
+        "o_base": 41312,
+        "o_so": 4,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 60,
+      "unit": 4,
+      "tag": "L20.hc_attn",
+      "reads": [
+        "E16"
+      ],
+      "writes": [
+        "CA"
+      ],
+      "fields": {
+        "xu_op": 1,
+        "xu_src": 41312,
+        "xu_dst": 41120,
+        "xu_n": 16,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 61,
+      "unit": 2,
+      "tag": "L20.softmax",
+      "reads": [
+        "S"
+      ],
+      "writes": [
+        "M",
+        "S"
+      ],
+      "fields": {
+        "m1": 3,
+        "imm1": 1026884851,
+        "red": 2,
+        "r_base": 74176,
+        "r_so": 1,
+        "su_nout": 16,
+        "su_nin": 0,
+        "su_d_nin": "T1",
+        "a_base": 63936,
+        "a_so": 640,
+        "a_si": 1,
+        "dst": 1,
+        "o_base": 63936,
+        "o_so": 640,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 1,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "attn_scale"
+      }
+    },
+    {
+      "pc": 62,
+      "unit": 2,
+      "tag": "L20.softmax",
+      "reads": [
+        "M",
+        "S"
+      ],
+      "writes": [
+        "S",
+        "Z"
+      ],
+      "fields": {
+        "b_base": 74176,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "red": 1,
+        "r_base": 74208,
+        "r_so": 1,
+        "su_nout": 16,
+        "su_nin": 0,
+        "su_d_nin": "T1",
+        "a_base": 63936,
+        "a_so": 640,
+        "a_si": 1,
+        "dst": 1,
+        "o_base": 63936,
+        "o_so": 640,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 63,
+      "unit": 1,
+      "tag": "L20.pv",
+      "reads": [
+        "KR20",
+        "S"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 512,
+        "me_tiles": 16,
+        "me_k": 0,
+        "me_wsrc": 1,
+        "me_wbase": 0,
+        "me_ts": 1,
+        "me_ks": 32,
+        "me_js": 0,
+        "me_xbase": 63936,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 4642,
+        "me_ots": 1,
+        "me_ojs": 32,
+        "me_oen": 1,
+        "me_xcs": 5120,
+        "me_split": 0,
+        "me_jsh": 3,
+        "me_xjs": 640,
+        "me_mmode": 1,
+        "me_d_k": "T1",
+        "me_hg": 1,
+        "me_ogs": 256,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 64,
+      "unit": 2,
+      "tag": "L20.softmax",
+      "reads": [
+        "M",
+        "Z"
+      ],
+      "writes": [
+        "DEN"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 16,
+        "a_src": 1,
+        "a_base": 12128,
+        "a_si": 1,
+        "b_base": 74176,
+        "b_si": 1,
+        "ad": 3,
+        "sfu": 1,
+        "c_base": 74208,
+        "c_si": 1,
+        "e1": 2,
+        "dst": 1,
+        "o_base": 74240,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 65,
+      "unit": 2,
+      "tag": "L20.softmax",
+      "reads": [
+        "ACC",
+        "DEN"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "su_nout": 16,
+        "su_nin": 512,
+        "a_base": 74272,
+        "a_so": 512,
+        "a_si": 1,
+        "b_base": 74240,
+        "b_so": 1,
+        "m1": 4,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 74272,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 3,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 66,
+      "unit": 2,
+      "tag": "L20.softmax",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ACC"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 16,
+        "su_nin": 64,
+        "a_base": 74720,
+        "a_so": 512,
+        "a_si": 1,
+        "c_pair": 1,
+        "b_src": 1,
+        "b_base": 805306368,
+        "b_d": 2,
+        "b_si": 1,
+        "b_half": 1,
+        "d_src": 2,
+        "d_base": 805306368,
+        "d_d": 2,
+        "d_si": 1,
+        "m1": 1,
+        "qm": 4,
+        "ad": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 74720,
+        "o_so": 512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 67,
+      "unit": 0,
+      "tag": "L20.attn.rope_release",
+      "reads": [],
+      "writes": [],
+      "fields": {
+        "unit": 0,
+        "ctl": 6,
+        "ctl_slot": 0,
+        "ctl_lane": 1,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 68,
+      "unit": 1,
+      "tag": "L20.out",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 1024,
+        "me_tiles": 2,
+        "me_k": 4096,
+        "me_wsrc": 0,
+        "me_wbase": 7680,
+        "me_ts": 32768,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 74272,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 5154,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 69,
+      "unit": 1,
+      "tag": "L20.out",
+      "reads": [
+        "ACC"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 1024,
+        "me_tiles": 2,
+        "me_k": 4096,
+        "me_wsrc": 0,
+        "me_wbase": 73216,
+        "me_ts": 32768,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 78368,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 5218,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 4096,
+        "me_split": 0,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 70,
+      "unit": 2,
+      "tag": "L20.out",
+      "reads": [
+        "ZA"
+      ],
+      "writes": [
+        "ZA"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 2048,
+        "a_base": 82464,
+        "a_si": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 82464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 1,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 71,
+      "unit": 3,
+      "tag": "L20.out",
+      "reads": [
+        "ZA"
+      ],
+      "writes": [
+        "YTMP"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 82464,
+        "qe_nb": 64,
+        "qe_nout": 5120,
+        "qe_tiles": 40,
+        "qe_wbase": 25600,
+        "qe_obase": 420320,
+        "qe_unrounded": 1,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 72,
+      "unit": 6,
+      "tag": "L20.out.wo_b_reduce",
+      "reads": [
+        "YTMP"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 0,
+        "coll_src": 420320,
+        "coll_dst": 84512,
+        "coll_n": 5120,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 5,
+        "coll_rnd": 1
+      }
+    },
+    {
+      "pc": 73,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CA",
+        "H"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41120,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41124,
+        "d_so": 1,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 74,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CA",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41128,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 75,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CA",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41132,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 2560
+      }
+    },
+    {
+      "pc": 76,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "POA",
+        "T",
+        "Y"
+      ],
+      "writes": [
+        "H",
+        "SSX"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 84512,
+        "a_si": 1,
+        "b_base": 41088,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 0,
+        "o_so": 5120,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "red_tree": 1,
+        "r_base": 40960,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 640
+      }
+    },
+    {
+      "pc": 77,
+      "unit": 2,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "SSX"
+      ],
+      "writes": [
+        "RF"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 40960,
+        "m1": 5,
+        "imm1": 1184890880,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 40992,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_hc_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 78,
+      "unit": 5,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "H"
+      ],
+      "writes": [
+        "MIX"
+      ],
+      "fields": {
+        "unit": 5,
+        "he_nout": 24,
+        "he_k": 2560,
+        "he_wbase": 7680,
+        "he_xbase": 0,
+        "he_obase": 41024,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 79,
+      "unit": 2,
+      "tag": "L20.ffn_norm",
+      "reads": [
+        "H",
+        "PA"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41056,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41057,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 80,
+      "unit": 2,
+      "tag": "L20.ffn_norm",
+      "reads": [
+        "H",
+        "PA",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41058,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 81,
+      "unit": 2,
+      "tag": "L20.ffn_norm",
+      "reads": [
+        "H",
+        "PA",
+        "T"
+      ],
+      "writes": [
+        "SS",
+        "X"
+      ],
+      "fields": {
+        "su_nout": 8,
+        "su_nin": 640,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41059,
+        "m1": 1,
+        "c_base": 20480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 41344,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "r_base": 51584,
+        "red_tree": 1,
+        "a_so": 640,
+        "b_so": 0,
+        "c_so": 640,
+        "d_so": 0,
+        "o_so": 640,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 80
+      }
+    },
+    {
+      "pc": 82,
+      "unit": 2,
+      "tag": "L20.ffn_norm",
+      "reads": [
+        "SS"
+      ],
+      "writes": [
+        "RS"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 51584,
+        "m1": 5,
+        "imm1": 1168113664,
+        "ad": 4,
+        "imm2": 507307272,
+        "sfu": 2,
+        "dst": 1,
+        "o_base": 51616,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "count_dim",
+        "imm2": "norm_eps"
+      }
+    },
+    {
+      "pc": 83,
+      "unit": 2,
+      "tag": "L20.ffn_norm",
+      "reads": [
+        "RS",
+        "X"
+      ],
+      "writes": [
+        "XN"
+      ],
+      "fields": {
+        "pred": 0,
+        "su_nout": 1,
+        "su_nin": 5120,
+        "a_base": 41344,
+        "a_si": 1,
+        "b_base": 51616,
+        "m1": 1,
+        "c_src": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 46464,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 84,
+      "unit": 3,
+      "tag": "L20.shared",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 46080,
+        "qe_obase": 416768,
+        "unit": 3,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 85,
+      "unit": 3,
+      "tag": "L20.shared",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 52480,
+        "qe_obase": 417344,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 86,
+      "unit": 1,
+      "tag": "L20.router",
+      "reads": [
+        "XN"
+      ],
+      "writes": [
+        "G12"
+      ],
+      "fields": {
+        "unit": 1,
+        "me_nout": 96,
+        "me_tiles": 1,
+        "me_k": 1280,
+        "me_wsrc": 0,
+        "me_wbase": 0,
+        "me_ts": 10240,
+        "me_ks": 8,
+        "me_js": 1,
+        "me_xbase": 46464,
+        "me_xks": 1,
+        "me_round": 1,
+        "me_obase": 22846,
+        "me_ots": 8,
+        "me_ojs": 1,
+        "me_oen": 1,
+        "me_xcs": 1280,
+        "me_split": 2,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 87,
+      "unit": 2,
+      "tag": "L20.shared",
+      "reads": [
+        "GU6",
+        "WGT"
+      ],
+      "writes": [
+        "ACT6"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 416768,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 417344,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 417920,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 88,
+      "unit": 6,
+      "tag": "L20.shared.act6_gather",
+      "reads": [
+        "ACT6"
+      ],
+      "writes": [
+        "ACTALL6"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 417920,
+        "coll_dst": 444384,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 6,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 89,
+      "unit": 3,
+      "tag": "L20.shared",
+      "reads": [
+        "ACTALL6",
+        "EID"
+      ],
+      "writes": [
+        "E6"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 0,
+        "qe_xbase": 444384,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 58880,
+        "qe_obase": 418496,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 90,
+      "unit": 2,
+      "tag": "L20.router",
+      "reads": [
+        "G12"
+      ],
+      "writes": [
+        "SCL"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 96,
+        "a_base": 365536,
+        "a_si": 1,
+        "sfu": 6,
+        "dst": 1,
+        "o_base": 420224,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 91,
+      "unit": 6,
+      "tag": "L20.router.router_gather",
+      "reads": [
+        "SCL"
+      ],
+      "writes": [
+        "SC"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 420224,
+        "coll_dst": 365920,
+        "coll_n": 96,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 7,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 92,
+      "unit": 2,
+      "tag": "L20.router",
+      "reads": [
+        "SC"
+      ],
+      "writes": [
+        "BI"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 384,
+        "a_base": 365920,
+        "a_si": 1,
+        "d_src": 1,
+        "d_base": 12144,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_base": 366304,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 93,
+      "unit": 4,
+      "tag": "L20.router",
+      "reads": [
+        "BI"
+      ],
+      "writes": [
+        "EID"
+      ],
+      "fields": {
+        "xu_op": 0,
+        "xu_src": 366304,
+        "xu_dst": 366688,
+        "xu_n": 384,
+        "xu_k": 6,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 94,
+      "unit": 2,
+      "tag": "L20.router",
+      "reads": [
+        "EID",
+        "SC"
+      ],
+      "writes": [
+        "TOT"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 6,
+        "a_base": 365920,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 366688,
+        "red": 3,
+        "r_base": 366720,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 8,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 95,
+      "unit": 2,
+      "tag": "L20.router",
+      "reads": [
+        "TOT"
+      ],
+      "writes": [
+        "DEN1"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1,
+        "a_base": 366720,
+        "ad": 4,
+        "imm2": 507307272,
+        "dst": 1,
+        "o_base": 366752,
+        "unit": 2,
+        "su_vec": 0,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "router_den_eps"
+      }
+    },
+    {
+      "pc": 96,
+      "unit": 2,
+      "tag": "L20.router",
+      "reads": [
+        "DEN1",
+        "EID",
+        "SC"
+      ],
+      "writes": [
+        "WGT"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 6,
+        "a_base": 365920,
+        "a_si": 1,
+        "a_ind": 1,
+        "a_ibase": 366688,
+        "b_base": 366752,
+        "m1": 4,
+        "m2": 2,
+        "imm1": 1069547520,
+        "dst": 1,
+        "o_base": 366784,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm1": "route_scale"
+      }
+    },
+    {
+      "pc": 97,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 398720,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 98,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 399296,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 99,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 401728,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 100,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 402304,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 101,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU0",
+        "WGT"
+      ],
+      "writes": [
+        "ACT0"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 398720,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 399296,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 399872,
+        "o_si": 1,
+        "b_base": 366784,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 102,
+      "unit": 6,
+      "tag": "L20.experts.act0_gather",
+      "reads": [
+        "ACT0"
+      ],
+      "writes": [
+        "ACTALL0"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 399872,
+        "coll_dst": 430560,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 8,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 103,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 404736,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 104,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 405312,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 105,
+      "unit": 2,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "PF"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41024,
+        "c_base": 12080,
+        "d_base": 12104,
+        "sfu": 4,
+        "e1": 4,
+        "imm2": 897988541,
+        "o_base": 41152,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_eps"
+      }
+    },
+    {
+      "pc": 106,
+      "unit": 2,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "POF"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41028,
+        "c_base": 12084,
+        "d_base": 12108,
+        "sfu": 4,
+        "e1": 3,
+        "imm2": 1073741824,
+        "o_base": 41184,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm2": "hc_post_scale"
+      }
+    },
+    {
+      "pc": 107,
+      "unit": 2,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "MIX",
+        "RF"
+      ],
+      "writes": [
+        "CRAW",
+        "M4"
+      ],
+      "fields": {
+        "su_nin": 4,
+        "a_base": 41032,
+        "a_so": 4,
+        "c_base": 12088,
+        "c_so": 4,
+        "d_base": 12112,
+        "d_so": 4,
+        "o_base": 41248,
+        "o_so": 4,
+        "red": 2,
+        "r_base": 41280,
+        "r_so": 1,
+        "a_si": 1,
+        "b_base": 40992,
+        "m1": 1,
+        "c_src": 1,
+        "c_si": 1,
+        "m2": 1,
+        "d_src": 1,
+        "d_si": 1,
+        "ad": 5,
+        "dst": 1,
+        "o_si": 1,
+        "su_nout": 4,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 108,
+      "unit": 2,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "CRAW",
+        "M4"
+      ],
+      "writes": [
+        "E16"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 4,
+        "a_base": 41248,
+        "a_so": 4,
+        "a_si": 1,
+        "b_base": 41280,
+        "b_so": 1,
+        "ad": 3,
+        "sfu": 1,
+        "dst": 1,
+        "o_base": 41312,
+        "o_so": 4,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 109,
+      "unit": 4,
+      "tag": "L20.hc_ffn",
+      "reads": [
+        "E16"
+      ],
+      "writes": [
+        "CF"
+      ],
+      "fields": {
+        "xu_op": 1,
+        "xu_src": 41312,
+        "xu_dst": 41216,
+        "xu_n": 16,
+        "unit": 4,
+        "wait": 2
+      }
+    },
+    {
+      "pc": 110,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL0",
+        "EID"
+      ],
+      "writes": [
+        "E0"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 430560,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 400448,
+        "qe_ind": 1,
+        "qe_ibase": 366688,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 111,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU1",
+        "WGT"
+      ],
+      "writes": [
+        "ACT1"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 401728,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 402304,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 402880,
+        "o_si": 1,
+        "b_base": 366785,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 112,
+      "unit": 6,
+      "tag": "L20.experts.act1_gather",
+      "reads": [
+        "ACT1"
+      ],
+      "writes": [
+        "ACTALL1"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 402880,
+        "coll_dst": 432864,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 9,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 113,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 407744,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 114,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 408320,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 115,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL1",
+        "EID"
+      ],
+      "writes": [
+        "E1"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 432864,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 403456,
+        "qe_ind": 1,
+        "qe_ibase": 366689,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 116,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU2",
+        "WGT"
+      ],
+      "writes": [
+        "ACT2"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 404736,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 405312,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 405888,
+        "o_si": 1,
+        "b_base": 366786,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 117,
+      "unit": 6,
+      "tag": "L20.experts.act2_gather",
+      "reads": [
+        "ACT2"
+      ],
+      "writes": [
+        "ACTALL2"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 405888,
+        "coll_dst": 435168,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 10,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 118,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 410752,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 119,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 411328,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 120,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL2",
+        "EID"
+      ],
+      "writes": [
+        "E2"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 435168,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 406464,
+        "qe_ind": 1,
+        "qe_ibase": 366690,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 121,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU3",
+        "WGT"
+      ],
+      "writes": [
+        "ACT3"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 407744,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 408320,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 408896,
+        "o_si": 1,
+        "b_base": 366787,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 122,
+      "unit": 6,
+      "tag": "L20.experts.act3_gather",
+      "reads": [
+        "ACT3"
+      ],
+      "writes": [
+        "ACTALL3"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 408896,
+        "coll_dst": 437472,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 11,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 123,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 74880,
+        "qe_obase": 413760,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 124,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "EID",
+        "XN"
+      ],
+      "writes": [
+        "GU5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 46464,
+        "qe_nb": 160,
+        "qe_nout": 576,
+        "qe_tiles": 5,
+        "qe_wbase": 2532480,
+        "qe_obase": 414336,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 6400,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 125,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL3",
+        "EID"
+      ],
+      "writes": [
+        "E3"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 437472,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 409472,
+        "qe_ind": 1,
+        "qe_ibase": 366691,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 126,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU4",
+        "WGT"
+      ],
+      "writes": [
+        "ACT4"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 410752,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 411328,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 411904,
+        "o_si": 1,
+        "b_base": 366788,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 127,
+      "unit": 6,
+      "tag": "L20.experts.act4_gather",
+      "reads": [
+        "ACT4"
+      ],
+      "writes": [
+        "ACTALL4"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 411904,
+        "coll_dst": 439776,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 12,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 128,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL4",
+        "EID"
+      ],
+      "writes": [
+        "E4"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 439776,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 412480,
+        "qe_ind": 1,
+        "qe_ibase": 366692,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 129,
+      "unit": 2,
+      "tag": "L20.experts",
+      "reads": [
+        "GU5",
+        "WGT"
+      ],
+      "writes": [
+        "ACT5"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 576,
+        "a_base": 413760,
+        "a_si": 1,
+        "a_min": 1,
+        "imm3": 1092616192,
+        "c_base": 414336,
+        "c_si": 1,
+        "c_clip": 1,
+        "sfu": 5,
+        "e1": 1,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 414912,
+        "o_si": 1,
+        "b_base": 366789,
+        "e2": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      },
+      "imm_sources": {
+        "imm3": "swiglu_limit"
+      }
+    },
+    {
+      "pc": 130,
+      "unit": 6,
+      "tag": "L20.experts.act5_gather",
+      "reads": [
+        "ACT5"
+      ],
+      "writes": [
+        "ACTALL5"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 414912,
+        "coll_dst": 442080,
+        "coll_n": 576,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 13,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 131,
+      "unit": 3,
+      "tag": "L20.experts",
+      "reads": [
+        "ACTALL5",
+        "EID"
+      ],
+      "writes": [
+        "E5"
+      ],
+      "fields": {
+        "pred": 0,
+        "qe_mode": 0,
+        "qe_fp4": 1,
+        "qe_xbase": 442080,
+        "qe_nb": 72,
+        "qe_nout": 1280,
+        "qe_tiles": 10,
+        "qe_wbase": 4990080,
+        "qe_obase": 415488,
+        "qe_ind": 1,
+        "qe_ibase": 366693,
+        "qe_istride": 5760,
+        "unit": 3,
+        "wait": 0
+      }
+    },
+    {
+      "pc": 132,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E0",
+        "E1"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 400448,
+        "a_si": 1,
+        "c_base": 403456,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 133,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E2",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 406464,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 134,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E3",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 409472,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 135,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E4",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 412480,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 136,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E5",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 415488,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 0,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 4,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 137,
+      "unit": 2,
+      "tag": "L20.moe_sum",
+      "reads": [
+        "E6",
+        "Y"
+      ],
+      "writes": [
+        "Y"
+      ],
+      "fields": {
+        "su_nout": 1,
+        "su_nin": 1280,
+        "a_base": 84512,
+        "a_si": 1,
+        "c_base": 418496,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 84512,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 160
+      }
+    },
+    {
+      "pc": 138,
+      "unit": 6,
+      "tag": "L20.moe_sum.y_gather",
+      "reads": [
+        "Y"
+      ],
+      "writes": [
+        "YALL"
+      ],
+      "fields": {
+        "unit": 6,
+        "wait": 31,
+        "coll_op": 1,
+        "coll_src": 84512,
+        "coll_dst": 425440,
+        "coll_n": 1280,
+        "coll_k": 0,
+        "coll_ibase": 0,
+        "coll_seq": 14,
+        "coll_rnd": 0
+      }
+    },
+    {
+      "pc": 139,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CF",
+        "H"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 0,
+        "a_si": 1,
+        "b_base": 41216,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 5120,
+        "c_si": 1,
+        "d_base": 41220,
+        "d_so": 1,
+        "qm": 1,
+        "ad": 1,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 140,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CF",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 10240,
+        "a_si": 1,
+        "b_base": 41224,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 2,
+        "su_chase": 0
+      }
+    },
+    {
+      "pc": 141,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "CF",
+        "H",
+        "T"
+      ],
+      "writes": [
+        "T"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 15360,
+        "a_si": 1,
+        "b_base": 41228,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "dst": 1,
+        "o_base": 20480,
+        "o_so": 5120,
+        "o_si": 1,
+        "unit": 2,
+        "su_vec": 1,
+        "wait": 0,
+        "su_chase": 2560
+      }
+    },
+    {
+      "pc": 142,
+      "unit": 2,
+      "tag": "L20.hc_post",
+      "reads": [
+        "POF",
+        "T",
+        "YALL"
+      ],
+      "writes": [
+        "H",
+        "SSX"
+      ],
+      "fields": {
+        "su_nout": 4,
+        "su_nin": 5120,
+        "a_base": 425440,
+        "a_si": 1,
+        "b_base": 41184,
+        "b_so": 1,
+        "m1": 1,
+        "c_base": 20480,
+        "c_so": 5120,
+        "c_si": 1,
+        "ad": 2,
+        "rnd": 1,
+        "dst": 1,
+        "o_base": 0,
+        "o_so": 5120,
+        "o_si": 1,
+        "red": 1,
+        "red_sq": 1,
+        "red_tree": 1,
+        "r_base": 40960,
+        "unit": 2,
+        "su_vec": 2,
+        "wait": 0,
+        "su_chase": 640
+      }
+    },
+    {
+      "pc": 143,
+      "unit": 0,
+      "tag": "end",
+      "reads": [],
+      "writes": [],
+      "fields": {
+        "unit": 0,
+        "wait": 31
+      }
+    }
+  ],
+  "qe_address_trace": [
+    {
+      "pc": 7,
+      "matrix": "wq_a",
+      "expert_id": null,
+      "start_word": 0,
+      "end_word_exclusive": 3840,
+      "image_end_word_exclusive": 3840,
+      "backed": true
+    },
+    {
+      "pc": 8,
+      "matrix": "wkv",
+      "expert_id": null,
+      "start_word": 3840,
+      "end_word_exclusive": 5120,
+      "image_end_word_exclusive": 5120,
+      "backed": true
+    },
+    {
+      "pc": 14,
+      "matrix": "wq_b",
+      "expert_id": null,
+      "start_word": 5120,
+      "end_word_exclusive": 25600,
+      "image_end_word_exclusive": 25600,
+      "backed": true
+    },
+    {
+      "pc": 39,
+      "matrix": "indexer.wq_b",
+      "expert_id": null,
+      "start_word": 64640,
+      "end_word_exclusive": 74880,
+      "image_end_word_exclusive": 74880,
+      "backed": true
+    },
+    {
+      "pc": 71,
+      "matrix": "wo_b",
+      "expert_id": null,
+      "start_word": 25600,
+      "end_word_exclusive": 46080,
+      "image_end_word_exclusive": 46080,
+      "backed": true
+    },
+    {
+      "pc": 84,
+      "matrix": "shared.w1",
+      "expert_id": null,
+      "start_word": 46080,
+      "end_word_exclusive": 52480,
+      "image_end_word_exclusive": 52480,
+      "backed": true
+    },
+    {
+      "pc": 85,
+      "matrix": "shared.w3",
+      "expert_id": null,
+      "start_word": 52480,
+      "end_word_exclusive": 58880,
+      "image_end_word_exclusive": 58880,
+      "backed": true
+    },
+    {
+      "pc": 89,
+      "matrix": "shared.w2",
+      "expert_id": null,
+      "start_word": 58880,
+      "end_word_exclusive": 64640,
+      "image_end_word_exclusive": 64640,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 97,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 98,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 99,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 100,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 103,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 104,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 110,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 113,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 114,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 115,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 118,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 119,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 120,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 41,
+      "start_word": 337280,
+      "end_word_exclusive": 343680,
+      "image_end_word_exclusive": 343680,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 65,
+      "start_word": 490880,
+      "end_word_exclusive": 497280,
+      "image_end_word_exclusive": 497280,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 158,
+      "start_word": 1086080,
+      "end_word_exclusive": 1092480,
+      "image_end_word_exclusive": 1092480,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 164,
+      "start_word": 1124480,
+      "end_word_exclusive": 1130880,
+      "image_end_word_exclusive": 1130880,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 259,
+      "start_word": 1732480,
+      "end_word_exclusive": 1738880,
+      "image_end_word_exclusive": 1738880,
+      "backed": true
+    },
+    {
+      "pc": 123,
+      "matrix": "exp.w1",
+      "expert_id": 266,
+      "start_word": 1777280,
+      "end_word_exclusive": 1783680,
+      "image_end_word_exclusive": 1783680,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 41,
+      "start_word": 2794880,
+      "end_word_exclusive": 2801280,
+      "image_end_word_exclusive": 2801280,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 65,
+      "start_word": 2948480,
+      "end_word_exclusive": 2954880,
+      "image_end_word_exclusive": 2954880,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 158,
+      "start_word": 3543680,
+      "end_word_exclusive": 3550080,
+      "image_end_word_exclusive": 3550080,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 164,
+      "start_word": 3582080,
+      "end_word_exclusive": 3588480,
+      "image_end_word_exclusive": 3588480,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 259,
+      "start_word": 4190080,
+      "end_word_exclusive": 4196480,
+      "image_end_word_exclusive": 4196480,
+      "backed": true
+    },
+    {
+      "pc": 124,
+      "matrix": "exp.w3",
+      "expert_id": 266,
+      "start_word": 4234880,
+      "end_word_exclusive": 4241280,
+      "image_end_word_exclusive": 4241280,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 125,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 128,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 41,
+      "start_word": 5226240,
+      "end_word_exclusive": 5232000,
+      "image_end_word_exclusive": 5232000,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 65,
+      "start_word": 5364480,
+      "end_word_exclusive": 5370240,
+      "image_end_word_exclusive": 5370240,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 158,
+      "start_word": 5900160,
+      "end_word_exclusive": 5905920,
+      "image_end_word_exclusive": 5905920,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 164,
+      "start_word": 5934720,
+      "end_word_exclusive": 5940480,
+      "image_end_word_exclusive": 5940480,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 259,
+      "start_word": 6481920,
+      "end_word_exclusive": 6487680,
+      "image_end_word_exclusive": 6487680,
+      "backed": true
+    },
+    {
+      "pc": 131,
+      "matrix": "exp.w2",
+      "expert_id": 266,
+      "start_word": 6522240,
+      "end_word_exclusive": 6528000,
+      "image_end_word_exclusive": 6528000,
+      "backed": true
+    }
+  ],
+  "me_wo_a_trace": [
+    {
+      "pc": 68,
+      "group": 0,
+      "output_first_row": 0,
+      "output_last_row_exclusive": 1024,
+      "image_start_word": 7680,
+      "expected_image_start_word": 7680,
+      "image_end_word_exclusive": 73216,
+      "x_first": 74272,
+      "required_x_first": 74272,
+      "x_last_exclusive": 78368,
+      "output_first": 82464,
+      "required_output_first": 82464,
+      "rows": 1024,
+      "xjs": 0
+    },
+    {
+      "pc": 69,
+      "group": 1,
+      "output_first_row": 1024,
+      "output_last_row_exclusive": 2048,
+      "image_start_word": 73216,
+      "expected_image_start_word": 73216,
+      "image_end_word_exclusive": 138752,
+      "x_first": 78368,
+      "required_x_first": 78368,
+      "x_last_exclusive": 82464,
+      "output_first": 83488,
+      "required_output_first": 83488,
+      "rows": 1024,
+      "xjs": 0
+    }
+  ],
+  "blockers": [
+    "packed FP4 QE words require a sector-to-16-lane port adapter; no exact RTL adapter gate",
+    "production HBM RoPE full-position table image and physical region not bound",
+    "COLL_TOPK_MERGE (index top-k, candidate blocks) and the rank-aware NEWBLK DYN are ISA-level contracts (results/rtl/w17_l20_fullshape_isa.json); the die faults coll_op[1]"
+  ],
+  "claim_boundary": "Descriptor and source image address check; no RTL token or throughput verdict."
+}

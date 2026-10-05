@@ -1,0 +1,164 @@
+# Tier 1 CI: only what is demonstrably green on a bare checkout, and only what
+# fits in a runner's memory.
+#
+# MEMORY BUDGET. A GitHub-hosted ubuntu-latest runner has ~7 GB of RAM. Every job
+# here was measured with /usr/bin/time -v on the same commit, peak RSS:
+#
+#     tests/sim                   1.29 GB   <- the largest thing in this file
+#     make check-figures          0.54 GB
+#     tests/abi3                  0.13 GB
+#     make iso-node               0.07 GB
+#     tests/qwen3                 0.05 GB
+#     make check-chip-architecture 0.01 GB
+#
+# Nothing here comes within 5x of the limit. That is deliberate: the suites left
+# out are not merely slow, they are physically unable to run on a hosted runner.
+# tests/runtime/test_abi3_cycle.py alone was measured at 72-84 GB RSS and has
+# been OOM-killed repeatedly on a 250 GB machine. Never add a job to this file
+# without measuring its peak RSS first.
+#
+# This repository's full test suite is 7,445 tests, and some evidence campaigns
+# take hours (several artifacts record verification_wall_seconds near 16,500 s
+# per store). None of that belongs on a pull request. What belongs here is the
+# set of checks that (a) need nothing but Python and numpy, (b) run in seconds,
+# and (c) pass at HEAD today -- so that a red badge always means a real
+# regression rather than a known gap.
+#
+# Deliberately NOT in tier 1, and why:
+#   * tests/runtime  -- reports 64 failures as a group and 10 per-file. The gap
+#                       is MEMORY, not test pollution: test_abi3_cycle.py alone
+#                       grows past 70 GB RSS and a group run gets OOM-killed
+#                       (measured: rc=137, anon-rss 72 GB, zero failures
+#                       recorded before the kill). A GitHub runner has ~7 GB, so
+#                       this group cannot run there at all until the memory
+#                       footprint is fixed -- per-file invocation, pytest-forked,
+#                       or an explicit cap.
+#   * tests/compiler -- 67 failures at HEAD, dominated by source-currency drift
+#                       (64 of 96 pinning artifacts have drifted). A backlog,
+#                       not a regression.
+#   * RTL / ORFS     -- need pinned Verilator, Icarus, Yosys, OpenROAD and a
+#                       PDK. See docs/REPRODUCIBILITY.md tiers 2 and 3.
+#   * the gate board -- runs here for its OUTPUT, not its exit code: it exits 1
+#                       by design while any terminal gate fails, and 3 of 4 do.
+#
+# When the runtime isolation bug is fixed, add tests/runtime as its own job.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-checks:
+    name: Evidence checks (no EDA tools)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install runtime dependency
+        run: python -m pip install --upgrade pip 'numpy>=1.23'
+
+      # Each of these regenerates an artifact and compares it against the
+      # committed copy, so a drifted commit fails here rather than in review.
+      - name: Specification consistency
+        run: make spec-check
+
+      - name: Prose figures match their artifacts
+        run: make check-figures
+
+      - name: Final-number readiness report matches current evidence
+        run: make check-final-number-readiness
+
+      - name: Evidence grades
+        run: make check-evidence-grades
+
+      - name: Chip architecture report is current
+        run: make check-chip-architecture
+
+      # The regenerating targets must leave the tree byte-identical. This is the
+      # property the whole evidence chain rests on: if analytical artifacts stop
+      # reproducing, every figure quoting them becomes unverifiable.
+      - name: Analytical artifacts regenerate byte-identically
+        run: |
+          make model-traffic
+          make iso-node
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::regeneration changed tracked files -- artifacts are not deterministic"
+            git status --porcelain
+            git --no-pager diff --stat
+            exit 1
+          fi
+          echo "tree clean after regeneration"
+
+  fast-tests:
+    name: Fast test groups
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e '.[test]'
+
+      # Measured at b0f92a9: 3 s, 1 s, 42 s, zero failures. Tests needing an
+      # absent EDA tool skip rather than fail.
+      - name: tests/abi3
+        run: PYTHONPATH=. python -m pytest tests/abi3 -q --tb=short
+
+      - name: tests/qwen3
+        run: PYTHONPATH=. python -m pytest tests/qwen3 -q --tb=short
+
+      - name: tests/sim
+        run: PYTHONPATH=. python -m pytest tests/sim -q --tb=short
+
+  gate-board:
+    name: Gate board (informational)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # No dependency install: the board is pure standard library, by design.
+      # It exits 1 while terminal gates fail, which is the honest state of the
+      # program rather than a build break -- so its status is surfaced in the
+      # summary and does not fail the job.
+      - name: Print the 19-rung board
+        run: |
+          set +e
+          PYTHONPATH=. python tools/check_redesign_gates.py | tee "$RUNNER_TEMP/board.txt"
+          status=${PIPESTATUS[0]}
+          {
+            echo '### Gate board'
+            echo
+            echo '```'
+            tail -n 25 "$RUNNER_TEMP/board.txt"
+            echo '```'
+            echo
+            echo "Exit status: ${status} (1 is expected while any terminal gate fails)."
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 0

@@ -1,0 +1,9 @@
+test_mixed_resource_blocks_are_one_wall_interval (test_qwen_rom_kv_stall_attribution.AttributionTests) ... ok
+test_native_pc_deadline_and_event_digest_unchanged (test_qwen_rom_kv_stall_attribution.AttributionTests) ... ok
+test_one_layer_every_frozen_reservation_digest_and_credit_unchanged (test_qwen_rom_kv_stall_attribution.AttributionTests) ... ok
+test_queue_backlog_is_separate_from_feedback_latency (test_qwen_rom_kv_stall_attribution.AttributionTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 3.680s
+
+OK

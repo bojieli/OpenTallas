@@ -1,0 +1,12 @@
+{
+  "scope": "Full 4200-case exp/sigmoid reference corpus, exact published interval comparison; active service cycles, not clock or model latency.",
+  "cases": 4200,
+  "faster_cases": 2170,
+  "baseline_cycles": 6611480,
+  "candidate_cycles": 1302924,
+  "saved_cycles": 5308556,
+  "cycle_reduction_percent": 80.29300549952507,
+  "max_saved_cycles_per_case": 2585,
+  "exact_interval_endpoints_match": true,
+  "production_integrated": false
+}

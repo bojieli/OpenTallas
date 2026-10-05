@@ -1,0 +1,25 @@
+test_actual64_tile_run_and_mirrored_publication (tools.test_h4_c0_ds_tiled_continuation.ContinuationTests) ... ok
+test_missing_backing_retains_lease_and_no_publication (tools.test_h4_c0_ds_tiled_continuation.ContinuationTests) ... ok
+test_stale_identity_refuses_before_read (tools.test_h4_c0_ds_tiled_continuation.ContinuationTests) ... ok
+test_actual_compound_query_and_history_controls_on_composed_class (tools.test_h4_c0_ds_tiled_continuation.R36CompositionTests) ... ERROR
+
+======================================================================
+ERROR: test_actual_compound_query_and_history_controls_on_composed_class (tools.test_h4_c0_ds_tiled_continuation.R36CompositionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-C0-operand-windows-20261002/tools/test_h4_c0_ds_tiled_continuation.py", line 90, in test_actual_compound_query_and_history_controls_on_composed_class
+    module.test_actual_writer_receipts_to_selectedKV_native_consumer(pathlib.Path(tmp)/'history')
+  File "/home/ubuntu/OpenTallas/tests/test_ds_hbm_history_provider_r36.py", line 48, in test_actual_writer_receipts_to_selectedKV_native_consumer
+    p,n=setup(tmp_path);op=next(o for o in n['instructions'] if o['pc']==121);rank=63;g=1;grp=524287
+  File "/home/ubuntu/OpenTallas/tests/test_ds_hbm_history_provider_r36.py", line 45, in setup
+    return P.create_provider(m,n,{},homes),n
+  File "/tmp/opentallas-C0-operand-windows-20261002/tools/test_h4_c0_ds_tiled_continuation.py", line 85, in create
+    p=actual(manifest,native,dispatch,homes)
+  File "/home/ubuntu/OpenTallas/tools/h3_ds_query_provider_r36.py", line 43, in __init__
+    for b in manifest['query_field_homes']['rows']:
+KeyError: 'query_field_homes'
+
+----------------------------------------------------------------------
+Ran 4 tests in 31.809s
+
+FAILED (errors=1)

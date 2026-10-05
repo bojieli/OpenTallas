@@ -1,0 +1,27 @@
+{
+  "source_commit": "b8c40d3f7",
+  "same_user": 2,
+  "positions": [
+    100,
+    101
+  ],
+  "compressed_global_ids": [
+    766,
+    767
+  ],
+  "actual_native_ACKs_per_position": 9,
+  "native_readback_sectors": 27,
+  "second_selected_gather_contains_first_row": true,
+  "reset_between_positions": false,
+  "first_visibility_cycle": 409,
+  "second_fixture_begin_cycle": 1236,
+  "second_visibility_cycle": 1740,
+  "end_cycle": 2442,
+  "pre_NBA_counter_note": "C8_POSITION_VISIBLE prints visible_ACKs=8 while ninth vv event is asserted; bench requires visible+$countones(vv)==9 on own_visible for each position. Final18 refers to these two checked receipt sets.",
+  "scope": "K512 CKV transport/selection/table reuse with actual rowencoder,mux,arb,four32PCbackends and identity journal; not whole L20 computation/second engine entry or golden activation injection",
+  "parent_local_reuse_fence": "New service-to-parent reuse_ready connection committed after this measurement; source connection tests only, no execution credit transferred",
+  "S82_context": "same combined default-off source branch and canonical DieROM8c6 host; this gate does not instantiate2388 fieldpairs",
+  "full_L20_interval_measured": false,
+  "SS_FF_parent_qualified": false,
+  "option_C_adopted": false
+}

@@ -1,0 +1,2584 @@
+{
+  "schema": "opentallas.ha5-archived-native-candidate.v1",
+  "verdict": "SOURCE_NATIVE_COMPILER_JOIN_PASS",
+  "origin_sha256": "1c7ffa786cd7ee2b71b953ca1d82fe9ab6015f25a5baa3d53a41fc14d005155e",
+  "config_sha256": "3981625600c458d98afefb214cf374b9fcd73982e1da3dcb95025431cae1a90d",
+  "original_artifacts": {
+    "prog_d0_s0.hex": "9c175c1decf552b57a9da5b3aa5b0f72b715d97e2ca98ea1cb790f646d2227ec",
+    "prog_d0_s1.hex": "7fc6d0b1d6aa98c5f5341e9f847bc358bfcaab17dcc11b425970bf1accdb52c5",
+    "prog_d1_s0.hex": "3ea466c6068779d473f563ea4956fc64068d3dba06147d80e458c4b79f4e3148",
+    "prog_d1_s1.hex": "7258bec362d6db49442d048e7a6f2bff6b41437bde247d43755f6436df438fd1",
+    "die0.bin": "356e3a504a9e75aef4dc0ab62fc322d98f062eef58273c8f28a17f8736a13b69",
+    "die1.bin": "61a65536541ddde4e65e6cb0b7131d036137726b14a2190ea6fc02d0bb26bf60"
+  },
+  "baseline_entries": {
+    "swapin": 0,
+    "swapout": 61,
+    "embed": 81,
+    "layer": 106,
+    "head": 6395,
+    "seed": 6780,
+    "demb": 7209,
+    "dsa": 7229,
+    "dsb": 8029,
+    "dhead": 11726,
+    "markov": 11902
+  },
+  "candidate_entries": {
+    "swapin": 0,
+    "swapout": 61,
+    "embed": 81,
+    "layer": 106,
+    "head": 6395,
+    "seed": 6780,
+    "demb": 7209,
+    "dsa": 7229,
+    "dsb": 8029,
+    "dhead": 11726,
+    "markov": 11902
+  },
+  "candidate_artifacts": {
+    "prog_d0_s0.hex": "ce95328c160bf2ae4fbe4cab1e5eaee0f044a464a235afe974416f81494487f5",
+    "prog_d0_s1.hex": "d8b8880b7daec41dedf06042104a188f9b1c962d644cf50bd2df2c50cb2d3318",
+    "prog_d1_s0.hex": "bb4fd0bf3e07c938231834276f8b6b40bf1395ea1a21f010938b411e61044b33",
+    "prog_d1_s1.hex": "bc23a8a3ce47843b8f89994828669621503630fcd7f9d166db68d9e95d027570"
+  },
+  "registers": [
+    {
+      "kind": "swapin",
+      "die": 0,
+      "sm": 0,
+      "peak": 8,
+      "capacity": 256,
+      "words": 61
+    },
+    {
+      "kind": "swapin",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapin",
+      "die": 1,
+      "sm": 0,
+      "peak": 8,
+      "capacity": 256,
+      "words": 61
+    },
+    {
+      "kind": "swapin",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapout",
+      "die": 0,
+      "sm": 0,
+      "peak": 1,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "swapout",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapout",
+      "die": 1,
+      "sm": 0,
+      "peak": 1,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "swapout",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "embed",
+      "die": 0,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 25
+    },
+    {
+      "kind": "embed",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "embed",
+      "die": 1,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 25
+    },
+    {
+      "kind": "embed",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "peak": 146,
+      "capacity": 256,
+      "words": 6289
+    },
+    {
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "peak": 143,
+      "capacity": 256,
+      "words": 6058
+    },
+    {
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "peak": 144,
+      "capacity": 256,
+      "words": 6233
+    },
+    {
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "peak": 143,
+      "capacity": 256,
+      "words": 6042
+    },
+    {
+      "kind": "head",
+      "die": 0,
+      "sm": 0,
+      "peak": 16,
+      "capacity": 256,
+      "words": 384
+    },
+    {
+      "kind": "head",
+      "die": 0,
+      "sm": 1,
+      "peak": 15,
+      "capacity": 256,
+      "words": 365
+    },
+    {
+      "kind": "head",
+      "die": 1,
+      "sm": 0,
+      "peak": 16,
+      "capacity": 256,
+      "words": 385
+    },
+    {
+      "kind": "head",
+      "die": 1,
+      "sm": 1,
+      "peak": 15,
+      "capacity": 256,
+      "words": 365
+    },
+    {
+      "kind": "seed",
+      "die": 0,
+      "sm": 0,
+      "peak": 31,
+      "capacity": 256,
+      "words": 428
+    },
+    {
+      "kind": "seed",
+      "die": 0,
+      "sm": 1,
+      "peak": 30,
+      "capacity": 256,
+      "words": 411
+    },
+    {
+      "kind": "seed",
+      "die": 1,
+      "sm": 0,
+      "peak": 31,
+      "capacity": 256,
+      "words": 429
+    },
+    {
+      "kind": "seed",
+      "die": 1,
+      "sm": 1,
+      "peak": 30,
+      "capacity": 256,
+      "words": 411
+    },
+    {
+      "kind": "demb",
+      "die": 0,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "demb",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "demb",
+      "die": 1,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "demb",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "dsa",
+      "die": 0,
+      "sm": 0,
+      "peak": 49,
+      "capacity": 256,
+      "words": 800
+    },
+    {
+      "kind": "dsa",
+      "die": 0,
+      "sm": 1,
+      "peak": 47,
+      "capacity": 256,
+      "words": 758
+    },
+    {
+      "kind": "dsa",
+      "die": 1,
+      "sm": 0,
+      "peak": 49,
+      "capacity": 256,
+      "words": 770
+    },
+    {
+      "kind": "dsa",
+      "die": 1,
+      "sm": 1,
+      "peak": 47,
+      "capacity": 256,
+      "words": 750
+    },
+    {
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "peak": 88,
+      "capacity": 256,
+      "words": 3697
+    },
+    {
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "peak": 85,
+      "capacity": 256,
+      "words": 3617
+    },
+    {
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "peak": 89,
+      "capacity": 256,
+      "words": 3667
+    },
+    {
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "peak": 85,
+      "capacity": 256,
+      "words": 3609
+    },
+    {
+      "kind": "dhead",
+      "die": 0,
+      "sm": 0,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 0,
+      "sm": 1,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 1,
+      "sm": 0,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 1,
+      "sm": 1,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "markov",
+      "die": 0,
+      "sm": 0,
+      "peak": 11,
+      "capacity": 256,
+      "words": 279
+    },
+    {
+      "kind": "markov",
+      "die": 0,
+      "sm": 1,
+      "peak": 10,
+      "capacity": 256,
+      "words": 259
+    },
+    {
+      "kind": "markov",
+      "die": 1,
+      "sm": 0,
+      "peak": 11,
+      "capacity": 256,
+      "words": 280
+    },
+    {
+      "kind": "markov",
+      "die": 1,
+      "sm": 1,
+      "peak": 10,
+      "capacity": 256,
+      "words": 259
+    }
+  ],
+  "boundaries": [
+    {
+      "phase": "prefix_begin",
+      "slot": 6,
+      "word_offset": 5576,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5682,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 6,
+      "word_offset": 5615,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5721,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 5615,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5721,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 5659,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5765,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 5659,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5765,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 5703,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5809,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 5703,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5809,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 5747,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5853,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 5747,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5853,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 5791,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5897,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 4,
+      "word_offset": 5791,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5897,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 4,
+      "word_offset": 5835,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5941,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 5,
+      "word_offset": 5835,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5941,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 5,
+      "word_offset": 5879,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 5985,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 6,
+      "word_offset": 5900,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6006,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 6,
+      "word_offset": 5937,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6043,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 5937,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6043,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 5977,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6083,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 5977,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6083,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 6018,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6124,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 6018,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6124,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 6059,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6165,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 6059,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6165,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 6100,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6206,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 4,
+      "word_offset": 6100,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6206,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 4,
+      "word_offset": 6141,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6247,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 5,
+      "word_offset": 6141,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6247,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 5,
+      "word_offset": 6182,
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 6288,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 6,
+      "word_offset": 5381,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5487,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 6,
+      "word_offset": 5420,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5526,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 5420,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5526,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 5464,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5570,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 5464,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5570,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 5508,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5614,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 5508,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5614,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 5552,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5658,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 5552,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5658,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 5596,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5702,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 4,
+      "word_offset": 5596,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5702,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 4,
+      "word_offset": 5640,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5746,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 5,
+      "word_offset": 5640,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5746,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 5,
+      "word_offset": 5684,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5790,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 6,
+      "word_offset": 5687,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5793,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 6,
+      "word_offset": 5724,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5830,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 5724,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5830,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 5764,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5870,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 5764,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5870,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 5805,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5911,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 5805,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5911,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 5846,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5952,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 5846,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5952,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 5887,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5993,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 4,
+      "word_offset": 5887,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 5993,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 4,
+      "word_offset": 5928,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 6034,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 5,
+      "word_offset": 5928,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 6034,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 5,
+      "word_offset": 5969,
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 6075,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 6,
+      "word_offset": 5519,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5625,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 6,
+      "word_offset": 5558,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5664,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 5558,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5664,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 5602,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5708,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 5602,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5708,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 5646,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5752,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 5646,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5752,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 5690,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5796,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 5690,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5796,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 5734,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5840,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 4,
+      "word_offset": 5734,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5840,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 4,
+      "word_offset": 5778,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5884,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 5,
+      "word_offset": 5778,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5884,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 5,
+      "word_offset": 5822,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5928,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 6,
+      "word_offset": 5844,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5950,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 6,
+      "word_offset": 5881,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5987,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 5881,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 5987,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 5921,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6027,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 5921,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6027,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 5962,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6068,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 5962,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6068,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 6003,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6109,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 6003,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6109,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 6044,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6150,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 4,
+      "word_offset": 6044,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6150,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 4,
+      "word_offset": 6085,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6191,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 5,
+      "word_offset": 6085,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6191,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 5,
+      "word_offset": 6126,
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 6232,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 6,
+      "word_offset": 5365,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5471,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 6,
+      "word_offset": 5404,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5510,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 5404,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5510,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 5448,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5554,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 5448,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5554,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 5492,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5598,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 5492,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5598,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 5536,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5642,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 5536,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5642,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 5580,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5686,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 4,
+      "word_offset": 5580,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5686,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 4,
+      "word_offset": 5624,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5730,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 5,
+      "word_offset": 5624,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5730,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 5,
+      "word_offset": 5668,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5774,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 6,
+      "word_offset": 5671,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5777,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 6,
+      "word_offset": 5708,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5814,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 5708,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5814,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 5748,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5854,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 5748,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5854,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 5789,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5895,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 5789,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5895,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 5830,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5936,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 5830,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5936,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 5871,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5977,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 4,
+      "word_offset": 5871,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 5977,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 4,
+      "word_offset": 5912,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 6018,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 5,
+      "word_offset": 5912,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 6018,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 5,
+      "word_offset": 5953,
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 6059,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 3249,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11278,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 3288,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11317,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 3288,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11317,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 3332,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11361,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 3332,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11361,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 3376,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11405,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 3376,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11405,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 3420,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11449,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 3433,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11462,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 3470,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11499,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 3470,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11499,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 3510,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11539,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 3510,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11539,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 3551,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11580,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 3551,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11580,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 3592,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "linked_pc": 11621,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 3195,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11224,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 3234,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11263,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 3234,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11263,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 3278,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11307,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 3278,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11307,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 3322,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11351,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 3322,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11351,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 3366,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11395,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 3369,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11398,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 3406,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11435,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 3406,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11435,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 3446,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11475,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 3446,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11475,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 3487,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11516,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 3487,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11516,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 3528,
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "linked_pc": 11557,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 3219,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11248,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 3258,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11287,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 3258,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11287,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 3302,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11331,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 3302,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11331,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 3346,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11375,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 3346,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11375,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 3390,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11419,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 3403,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11432,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 3440,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11469,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 3440,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11469,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 3480,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11509,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 3480,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11509,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 3521,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11550,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 3521,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11550,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 3562,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "linked_pc": 11591,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 3,
+      "word_offset": 3187,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11216,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 3,
+      "word_offset": 3226,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11255,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 0,
+      "word_offset": 3226,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11255,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 0,
+      "word_offset": 3270,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11299,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 1,
+      "word_offset": 3270,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11299,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 1,
+      "word_offset": 3314,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11343,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_begin",
+      "slot": 2,
+      "word_offset": 3314,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11343,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "prefix_end",
+      "slot": 2,
+      "word_offset": 3358,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11387,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 3,
+      "word_offset": 3361,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11390,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 3,
+      "word_offset": 3398,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11427,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 0,
+      "word_offset": 3398,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11427,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 0,
+      "word_offset": 3438,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11467,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 1,
+      "word_offset": 3438,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11467,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 1,
+      "word_offset": 3479,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11508,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_begin",
+      "slot": 2,
+      "word_offset": 3479,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11508,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    },
+    {
+      "phase": "down_end",
+      "slot": 2,
+      "word_offset": 3520,
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "linked_pc": 11549,
+      "admission": "internal entry; same held native RF/activation/router context required"
+    }
+  ],
+  "constant_vectors": 212,
+  "descriptor_fields": {
+    "skip_eng": 0,
+    "ehash": 1,
+    "etab": 2,
+    "ewkv0": 3,
+    "eqk": 4,
+    "hcfn_attn0": 5,
+    "hcsb_attn": 6,
+    "attn_norm": 7,
+    "wqakv": 8,
+    "qkvn": 9,
+    "rope": 10,
+    "win": 11,
+    "wqb0": 12,
+    "skip_idx": 13,
+    "iwqb0": 14,
+    "iwp0": 15,
+    "ik": 16,
+    "log2r": 17,
+    "ckv": 18,
+    "yarnmask": 19,
+    "sink0": 20,
+    "woa0": 21,
+    "wob0": 22,
+    "hcfn_ffn0": 23,
+    "hcsb_ffn": 24,
+    "ffn_norm": 25,
+    "gate": 26,
+    "gbias": 27,
+    "rexp0": 28,
+    "shexp0": 29,
+    "ewkv1": 30,
+    "hcfn_attn1": 31,
+    "wqb1": 32,
+    "iwqb1": 33,
+    "iwp1": 34,
+    "skip_comp2": 35,
+    "cwkv": 36,
+    "slot": 37,
+    "cnorm": 38,
+    "skip_comp1": 39,
+    "negr": 40,
+    "iwk": 41,
+    "iknorm": 42,
+    "sink1": 43,
+    "woa1": 44,
+    "wob1": 45,
+    "hcfn_ffn1": 46,
+    "rexp1": 47,
+    "shexp1": 48,
+    "mproj0": 49,
+    "dwkv": 50,
+    "mproj1": 51,
+    "dblk": 52,
+    "dsk": 53
+  },
+  "constant_base": 118652928,
+  "source_position_extent": 32,
+  "column_stride": 4736,
+  "archived_memory_changed": false,
+  "baseline_words_exact": true,
+  "full_shape_qualified": false,
+  "numerical_qualified": false,
+  "union_weight_reuse_qualified": false,
+  "measured_slot6_time_us": null,
+  "measured_overlap_us": null,
+  "adopt": false,
+  "baseline_registers": [
+    {
+      "kind": "swapin",
+      "die": 0,
+      "sm": 0,
+      "peak": 8,
+      "capacity": 256,
+      "words": 61
+    },
+    {
+      "kind": "swapin",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapin",
+      "die": 1,
+      "sm": 0,
+      "peak": 8,
+      "capacity": 256,
+      "words": 61
+    },
+    {
+      "kind": "swapin",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapout",
+      "die": 0,
+      "sm": 0,
+      "peak": 1,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "swapout",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "swapout",
+      "die": 1,
+      "sm": 0,
+      "peak": 1,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "swapout",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "embed",
+      "die": 0,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 25
+    },
+    {
+      "kind": "embed",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "embed",
+      "die": 1,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 25
+    },
+    {
+      "kind": "embed",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "layer",
+      "die": 0,
+      "sm": 0,
+      "peak": 146,
+      "capacity": 256,
+      "words": 6289
+    },
+    {
+      "kind": "layer",
+      "die": 0,
+      "sm": 1,
+      "peak": 143,
+      "capacity": 256,
+      "words": 6058
+    },
+    {
+      "kind": "layer",
+      "die": 1,
+      "sm": 0,
+      "peak": 144,
+      "capacity": 256,
+      "words": 6233
+    },
+    {
+      "kind": "layer",
+      "die": 1,
+      "sm": 1,
+      "peak": 143,
+      "capacity": 256,
+      "words": 6042
+    },
+    {
+      "kind": "head",
+      "die": 0,
+      "sm": 0,
+      "peak": 16,
+      "capacity": 256,
+      "words": 384
+    },
+    {
+      "kind": "head",
+      "die": 0,
+      "sm": 1,
+      "peak": 15,
+      "capacity": 256,
+      "words": 365
+    },
+    {
+      "kind": "head",
+      "die": 1,
+      "sm": 0,
+      "peak": 16,
+      "capacity": 256,
+      "words": 385
+    },
+    {
+      "kind": "head",
+      "die": 1,
+      "sm": 1,
+      "peak": 15,
+      "capacity": 256,
+      "words": 365
+    },
+    {
+      "kind": "seed",
+      "die": 0,
+      "sm": 0,
+      "peak": 31,
+      "capacity": 256,
+      "words": 428
+    },
+    {
+      "kind": "seed",
+      "die": 0,
+      "sm": 1,
+      "peak": 30,
+      "capacity": 256,
+      "words": 411
+    },
+    {
+      "kind": "seed",
+      "die": 1,
+      "sm": 0,
+      "peak": 31,
+      "capacity": 256,
+      "words": 429
+    },
+    {
+      "kind": "seed",
+      "die": 1,
+      "sm": 1,
+      "peak": 30,
+      "capacity": 256,
+      "words": 411
+    },
+    {
+      "kind": "demb",
+      "die": 0,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "demb",
+      "die": 0,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "demb",
+      "die": 1,
+      "sm": 0,
+      "peak": 4,
+      "capacity": 256,
+      "words": 20
+    },
+    {
+      "kind": "demb",
+      "die": 1,
+      "sm": 1,
+      "peak": 0,
+      "capacity": 256,
+      "words": 2
+    },
+    {
+      "kind": "dsa",
+      "die": 0,
+      "sm": 0,
+      "peak": 49,
+      "capacity": 256,
+      "words": 800
+    },
+    {
+      "kind": "dsa",
+      "die": 0,
+      "sm": 1,
+      "peak": 47,
+      "capacity": 256,
+      "words": 758
+    },
+    {
+      "kind": "dsa",
+      "die": 1,
+      "sm": 0,
+      "peak": 49,
+      "capacity": 256,
+      "words": 770
+    },
+    {
+      "kind": "dsa",
+      "die": 1,
+      "sm": 1,
+      "peak": 47,
+      "capacity": 256,
+      "words": 750
+    },
+    {
+      "kind": "dsb",
+      "die": 0,
+      "sm": 0,
+      "peak": 88,
+      "capacity": 256,
+      "words": 3697
+    },
+    {
+      "kind": "dsb",
+      "die": 0,
+      "sm": 1,
+      "peak": 85,
+      "capacity": 256,
+      "words": 3617
+    },
+    {
+      "kind": "dsb",
+      "die": 1,
+      "sm": 0,
+      "peak": 89,
+      "capacity": 256,
+      "words": 3667
+    },
+    {
+      "kind": "dsb",
+      "die": 1,
+      "sm": 1,
+      "peak": 85,
+      "capacity": 256,
+      "words": 3609
+    },
+    {
+      "kind": "dhead",
+      "die": 0,
+      "sm": 0,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 0,
+      "sm": 1,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 1,
+      "sm": 0,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "dhead",
+      "die": 1,
+      "sm": 1,
+      "peak": 12,
+      "capacity": 256,
+      "words": 176
+    },
+    {
+      "kind": "markov",
+      "die": 0,
+      "sm": 0,
+      "peak": 11,
+      "capacity": 256,
+      "words": 279
+    },
+    {
+      "kind": "markov",
+      "die": 0,
+      "sm": 1,
+      "peak": 10,
+      "capacity": 256,
+      "words": 259
+    },
+    {
+      "kind": "markov",
+      "die": 1,
+      "sm": 0,
+      "peak": 11,
+      "capacity": 256,
+      "words": 280
+    },
+    {
+      "kind": "markov",
+      "die": 1,
+      "sm": 1,
+      "peak": 10,
+      "capacity": 256,
+      "words": 259
+    }
+  ]
+}

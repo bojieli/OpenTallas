@@ -1,0 +1,6 @@
+view=asap7 corner=TT block=ot_hbm_accel_issue_pq_sm_boundary top=ot_hbm_accel_issue_pq_sm_boundary purpose=characterization
+  pnr:   wirelength=17467 um vias=48927 DRC=0 antenna_nets=0 Fmax=1014.36 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]; SLEW_MARGIN=30
+  STATUS: NOT_MET (did not meet in: place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r3/physical.json

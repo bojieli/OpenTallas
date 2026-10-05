@@ -1,0 +1,19 @@
+{
+  "schema": "parent-source-pin-review-v1",
+  "tree": "5cb588c973e8a91c0caf6bab29869b8450d7b898",
+  "command": "python3 tools/h3_qwen_complete_native.py --verify",
+  "exit_code": 1,
+  "verdict": "INTAKE_HELD_PINNED_ORIGINALS_CHANGED",
+  "error": "source pin mismatch tests/test_h3_qwen_complete_native.py",
+  "files": {
+    "tools/h3_qwen_complete_native.py": {
+      "actual_sha256": "39510ee998e14e536772b61baa8b2188e7b0dde2063f484db5133238c1157324",
+      "manifest_sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76"
+    },
+    "tests/test_h3_qwen_complete_native.py": {
+      "actual_sha256": "1a7d996aabae6728fe854a59c99b442185554e2ed69ed0efc4a82af87e2e7c35",
+      "manifest_sha256": "d77b41cfc08ce4bcc2158fb330c1a090ba9106cd8296edf1555a721dbf0dff50"
+    }
+  },
+  "required_fix": "Restore pinned originals byte-identical and relocate additive bounded implementation/tests to new paths; regenerate only new bounded evidence."
+}

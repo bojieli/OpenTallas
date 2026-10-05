@@ -1,0 +1,183 @@
+{
+  "schema": "opentallas.w17.current_kv_fixture_audit.v1",
+  "verdict": "PASS_L0_PRIOR_CONTEXT_ONLY_CURRENT_ROW_ABSENT",
+  "scope": "L0 startup fixture audit only; no RTL writer, layer, full-token or physical PASS",
+  "images": "/home/ubuntu/w17work/die/ctx1048576_s20260930",
+  "ranks": [
+    {
+      "rank": 0,
+      "position": 1048575,
+      "current_sector_start": 264303,
+      "current_sector_count": 17,
+      "zero_current_sectors": 17,
+      "differences_only_current_row": [
+        264303,
+        264304,
+        264305,
+        264306,
+        264307,
+        264308,
+        264309,
+        264310,
+        264311,
+        264312,
+        264313,
+        264314,
+        264315,
+        264316,
+        264317,
+        264318,
+        264319
+      ],
+      "sparse_entries": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "input_sha256": {
+        "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+        "hbm0_without_current_row.hex": "7a87c4206fcb5d3dda41f125735cf5caa23827d7be2b782b2818b99b4e444467",
+        "hbm0_with_current_row.hex": "14975baa4a048157b8d16aa4978645995bcdd74d240a5877a4f7949e36f88303",
+        "vm_init.hex": "0c9710c340b9e68c4aaaa9374f1ff3eecb72a19757a9b02545ffe9cf478ecd9e",
+        "hbmsparse0.hex": "4e33060af81855eb96b27bf47c03450c94a25bd17eccbed284ed40b6f45df994",
+        "hbmsparse1.hex": "17cff8114e3c47f09b8a44a3162f236acb4a321232b489a121c6ba0fa0d5db4c",
+        "hbmsparse2.hex": "8a860b8615439142169073b13ae862ca5856dd6f4a2d2b455282da4d9fd59e4d",
+        "hbmsparse3.hex": "5f090b16593f56c700b4505f3e6940cf19c159219578beeaeb4d5e90b86a83a5"
+      }
+    },
+    {
+      "rank": 1,
+      "position": 1048575,
+      "current_sector_start": 264303,
+      "current_sector_count": 17,
+      "zero_current_sectors": 17,
+      "differences_only_current_row": [
+        264303,
+        264304,
+        264305,
+        264306,
+        264307,
+        264308,
+        264309,
+        264310,
+        264311,
+        264312,
+        264313,
+        264314,
+        264315,
+        264316,
+        264317,
+        264318,
+        264319
+      ],
+      "sparse_entries": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "input_sha256": {
+        "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+        "hbm0_without_current_row.hex": "7a87c4206fcb5d3dda41f125735cf5caa23827d7be2b782b2818b99b4e444467",
+        "hbm0_with_current_row.hex": "14975baa4a048157b8d16aa4978645995bcdd74d240a5877a4f7949e36f88303",
+        "vm_init.hex": "0c9710c340b9e68c4aaaa9374f1ff3eecb72a19757a9b02545ffe9cf478ecd9e",
+        "hbmsparse0.hex": "4e33060af81855eb96b27bf47c03450c94a25bd17eccbed284ed40b6f45df994",
+        "hbmsparse1.hex": "17cff8114e3c47f09b8a44a3162f236acb4a321232b489a121c6ba0fa0d5db4c",
+        "hbmsparse2.hex": "8a860b8615439142169073b13ae862ca5856dd6f4a2d2b455282da4d9fd59e4d",
+        "hbmsparse3.hex": "5f090b16593f56c700b4505f3e6940cf19c159219578beeaeb4d5e90b86a83a5"
+      }
+    },
+    {
+      "rank": 2,
+      "position": 1048575,
+      "current_sector_start": 264303,
+      "current_sector_count": 17,
+      "zero_current_sectors": 17,
+      "differences_only_current_row": [
+        264303,
+        264304,
+        264305,
+        264306,
+        264307,
+        264308,
+        264309,
+        264310,
+        264311,
+        264312,
+        264313,
+        264314,
+        264315,
+        264316,
+        264317,
+        264318,
+        264319
+      ],
+      "sparse_entries": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "input_sha256": {
+        "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+        "hbm0_without_current_row.hex": "7a87c4206fcb5d3dda41f125735cf5caa23827d7be2b782b2818b99b4e444467",
+        "hbm0_with_current_row.hex": "14975baa4a048157b8d16aa4978645995bcdd74d240a5877a4f7949e36f88303",
+        "vm_init.hex": "0c9710c340b9e68c4aaaa9374f1ff3eecb72a19757a9b02545ffe9cf478ecd9e",
+        "hbmsparse0.hex": "4e33060af81855eb96b27bf47c03450c94a25bd17eccbed284ed40b6f45df994",
+        "hbmsparse1.hex": "17cff8114e3c47f09b8a44a3162f236acb4a321232b489a121c6ba0fa0d5db4c",
+        "hbmsparse2.hex": "8a860b8615439142169073b13ae862ca5856dd6f4a2d2b455282da4d9fd59e4d",
+        "hbmsparse3.hex": "5f090b16593f56c700b4505f3e6940cf19c159219578beeaeb4d5e90b86a83a5"
+      }
+    },
+    {
+      "rank": 3,
+      "position": 1048575,
+      "current_sector_start": 264303,
+      "current_sector_count": 17,
+      "zero_current_sectors": 17,
+      "differences_only_current_row": [
+        264303,
+        264304,
+        264305,
+        264306,
+        264307,
+        264308,
+        264309,
+        264310,
+        264311,
+        264312,
+        264313,
+        264314,
+        264315,
+        264316,
+        264317,
+        264318,
+        264319
+      ],
+      "sparse_entries": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "input_sha256": {
+        "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+        "hbm0_without_current_row.hex": "7a87c4206fcb5d3dda41f125735cf5caa23827d7be2b782b2818b99b4e444467",
+        "hbm0_with_current_row.hex": "14975baa4a048157b8d16aa4978645995bcdd74d240a5877a4f7949e36f88303",
+        "vm_init.hex": "0c9710c340b9e68c4aaaa9374f1ff3eecb72a19757a9b02545ffe9cf478ecd9e",
+        "hbmsparse0.hex": "4e33060af81855eb96b27bf47c03450c94a25bd17eccbed284ed40b6f45df994",
+        "hbmsparse1.hex": "17cff8114e3c47f09b8a44a3162f236acb4a321232b489a121c6ba0fa0d5db4c",
+        "hbmsparse2.hex": "8a860b8615439142169073b13ae862ca5856dd6f4a2d2b455282da4d9fd59e4d",
+        "hbmsparse3.hex": "5f090b16593f56c700b4505f3e6940cf19c159219578beeaeb4d5e90b86a83a5"
+      }
+    }
+  ],
+  "adopt": false,
+  "full_token_requirement": "Carry RTL-produced activations and KV through all layers; do not reinitialize from per-layer golden state.",
+  "source_sha256": {
+    "tools/w17_current_kv_fixture_audit.py": "2580e595e0782731aca54da76074f2ff307f0d23a2848f3300eca4254cd29de0",
+    "tools/v41_die_l0_images.py": "2304170d0e390816909cee5e9fc84984d4f39671101f90cbba5765fb44fa8127",
+    "tools/w17_current_L0_supervisor_v2.py": "cbb40f865ffc3bad932ec6c2073eab1bd330fb3e6db4b534a93a9fbd80b645db"
+  }
+}

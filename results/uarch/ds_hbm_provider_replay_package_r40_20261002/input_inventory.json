@@ -1,0 +1,890 @@
+{
+  "PC0_9_successor": "1eea54934",
+  "PC0_actual_result": "6c136247b",
+  "base_code_precondition": "bf0984bbff10b15c13dc09fd97abd86b6737064b or exact equivalent r36 source files",
+  "checkpoint_path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_weights_archived": false,
+  "files": [
+    {
+      "bytes": 260224,
+      "expected_sha256": "6676969415259b27a29a34c49ff6f13c0be08e44ccf793c18a862ab7f7a9fb79",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L00.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L00.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "ffe068fbf66c20ee2ef795760e93fa7661c43c9feb315736cdcdab67b721eca5",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L01.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L01.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "c084abfb28284af93f09ec386c5048fccc021ebe94acd8ed1fe7ccd438564990",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L02.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L02.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "f1d22b6fc0b7a50bcae2ba00e56d3152f8649f8ba5a68d4b4e41a3e59f3f8d96",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L03.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L03.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "9e46bec7715fa6a090d1b4b031fce6f618c023097b7ab5bf105a99a2e078d4d3",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L04.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L04.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "a790f131c97c4295f5e43fae430f42d6f053ab986730c8cfe355fed1d2fd749e",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L05.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L05.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "440b18498f6833b7c2f2086506250157d5400d3318933231cee500939b1d72ce",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L06.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L06.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "3efa8db25cfa88f17f8665031b2917aad756ef00161ffebbe81e3e3f2d370eba",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L07.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L07.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "e07ce0c3760c2e987add0bf2ae37edea1e0bc587371b2dd32e73742c58944e12",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L08.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L08.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "15ef0e6d64932b151c2ba840800641962ff5cc0b2fd104e3c3f14e11e78ef64d",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L09.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L09.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "a14304ad8fa784847f479d987d85582364f80f1c49c4d6fe34763f7ddd988c48",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L10.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L10.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "e2b12aef8859e0acee5c9d471c0bf69998d8f67ff5eefe47e09caccebf81ca82",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L11.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L11.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "1f6c3c691f03b76f8ac24256bf887d7ccc638787a49fc79674bacba5c96507e6",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L12.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L12.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "4104198f96dae3c4b4fc70014ce483ed35c7cd530c8dbb039461c7e2222b07a4",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L13.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L13.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "104c473cfd5675749adbd7bd1ed4f05e2a2e17501345df1769a16b87cd907ca2",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L14.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L14.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "8e09cc2fa4624b18dcd6ae04479f62d5f7cdfc0d06ffbd48589505161079adbd",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L15.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L15.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "2c03f6b75f9317d21312a19aa6358c1fdef3046f7b99ddd79f2d0be972da4884",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L16.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L16.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "95d3ecefc7b6e4cfafe197c4c0df4688bbc7085af0031828913de6c630ef428d",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L17.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L17.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "ef8fe4070f2fc1b3b8c96619307b6c0e71e66c99de17886758cf0d59a122b5c0",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L18.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L18.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "154bb62a0d1283c367423bb8af2260e630d4cd0a1652e549401dd4126462e727",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L19.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L19.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "0cc638977035ca9fd063c5ce0565ec66a285af09a134aa312cca99e21bb5f493",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L20.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L20.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "285cbe730217177e1521a206497af427123fe025cac984745de0cb0df516b8f4",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L21.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L21.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "d87083bfbbed4f0e356456095a3863d4334481e2187aa1c5ee5ff751c9a3518f",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L22.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L22.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "85c3745fbb6ff1d54d800ec48dedfb8709f69eb6ca253aa0df545093c3ad9b8f",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L23.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L23.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "4af76b1d9c88e7008349b3da192fcb9ca130eb463985c326471de50a951fa899",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L24.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L24.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "fe3cbc3786451b034e1e8853d80abbe598842dbcb9d59c1480adc0a9d20bf011",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L25.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L25.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "91e8705d67afb22b42594b99b978aa888b6086d3b1b3c7b917d7d87baad1a8c1",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L26.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L26.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "e56210d81c49528c31d3493bddd637a2886ffbf7a9e6fc0f00bec009f4677ba3",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L27.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L27.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "3c511746d0a2760a7c84d47fbb023b881798b0de34d4685dd8c731eeaeee3fb7",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L28.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L28.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "c890f50a3501beec4596315d3a50a3886365735518fc06833e59ef128184af21",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L29.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L29.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "2a2305a033e9e13859314d147e9d2aa6e333882ec38032446be99d1b7293405b",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L30.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L30.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "0ba1051a98e32ddebe342af99cb0cb3a1c52e8343952e9913009904586282b86",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L31.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L31.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "696abc8839395af4d9b2ba667bea72e01b0f0efdda31ca04e507297e1419d35b",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L32.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L32.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "798b1ba1f951f89d34ea4a3f9f09481452f23f349f17cd777a01618ce069ed97",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L33.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L33.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "d7d46cf64c45d8471b0d972c0256a056704f10870c4cae9443ef6efde3514a3d",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L34.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L34.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "c25d37ae2e99b9e9306af805c0edaf669b99a45bf367d63ee5a03b4535ad9698",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L35.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L35.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "b497853185041905bda7973efbe8c162ce1227f0bd1f9d8f7ef60ed8e1b7acb4",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L36.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L36.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "022e1f738be9d5e2c17c37c48ab3d8708cbc266f3852feb0e401f6f02c667cb7",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L37.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L37.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "aa7f358cddefcbed165cd81664a0ad742659302bc1b60edaa3430870cbdf138f",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L38.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L38.npy"
+    },
+    {
+      "bytes": 260224,
+      "expected_sha256": "a361a33b91ad8c821f37e6bcf6d7c63978f63d3dc0adf8bf2c7739129a2882d2",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/window_L39.npy",
+      "role": "source-seeded entering window; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/window_L39.npy"
+    },
+    {
+      "bytes": 1073739904,
+      "expected_sha256": "621b09238fe95e3e1a262f11fb8767bdb5d7b61ced25c8ab8d72a229eee18013",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ckv_L2.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ckv_L2.npy"
+    },
+    {
+      "bytes": 268435072,
+      "expected_sha256": "f894dadab14757b120fe0db4f8ed9be4056a8ee5be1057705ecab6a664bcff41",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ik_L2.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ik_L2.npy"
+    },
+    {
+      "bytes": 1073739904,
+      "expected_sha256": "80c3cc9a60e2c0a240800bbf373503133a383e5231f6a3318559670d04708e5c",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ckv_L8.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ckv_L8.npy"
+    },
+    {
+      "bytes": 268435072,
+      "expected_sha256": "e8f796b23045a31b3c465b31067eecd2e057c8c3c98e27debdcc0a6343b0ae26",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ik_L8.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ik_L8.npy"
+    },
+    {
+      "bytes": 1073739904,
+      "expected_sha256": "5eb2293a321afabe23f0de3820f87ecb54d16a36fdfe5f912237b3d1d187ea2c",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ckv_L14.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ckv_L14.npy"
+    },
+    {
+      "bytes": 268435072,
+      "expected_sha256": "3d908dd8268b066eec176b466594aee5ab8b890389459db9e67cbf47e6755d68",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ik_L14.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ik_L14.npy"
+    },
+    {
+      "bytes": 2147481728,
+      "expected_sha256": "3efac7539e51095d26522927bf40ba5a080d5f60d9b7ff9207f6749df8142b45",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ckv_L20.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ckv_L20.npy"
+    },
+    {
+      "bytes": 536870528,
+      "expected_sha256": "f55ba8392f2474fbb8a460cc867829345a923773f563c8b52340043848b55790",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy",
+      "role": "source-seeded retained history; not decoded prefix",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/ik_L20.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "e7d28d1038624a5ff826c99a7744a0e87f024bd6872778e5ec18fff23e22c717",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_cos.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_cos.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "70a5691591cd2e7cd0c43220a2b98d15c5ab6c03e317cd9be5ef2fe3a5cd1bc6",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_sin.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_sin.npy"
+    },
+    {
+      "bytes": 132,
+      "expected_sha256": "f8d97fa22e9f52198906063ff337811d83c9160d589f8e71747fe7a6984efd3f",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/attn_scale_0.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/attn_scale_0.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L18_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L18_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L19_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L19_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "e7d28d1038624a5ff826c99a7744a0e87f024bd6872778e5ec18fff23e22c717",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_6.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_6.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "70a5691591cd2e7cd0c43220a2b98d15c5ab6c03e317cd9be5ef2fe3a5cd1bc6",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_7.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_7.npy"
+    },
+    {
+      "bytes": 132,
+      "expected_sha256": "9a11f9865e9f3b7b9056d3a633784f4107f776098d5874bffb6b932ffa401a7b",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_w_scale_5.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_w_scale_5.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "90a9ae315daab9dc28b6aae373d7aa91255a93fb7246c4f91137f56b8dd62eed",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L20_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L20_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L21_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L21_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "303a00edd0dcba16076abfb152855c19665d3c515b87256bc2a6a2c2d891111f",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_3.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_cos_3.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "2b6ec97e93a3d184d5d02d3f0d47f0452a69ccfc410cd63af2770612be451157",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_4.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/index_rope_sin_4.npy"
+    },
+    {
+      "bytes": 4224,
+      "expected_sha256": "2c51fd7282e20581c7436c93326d936700a64990d9b03f2f317243913f7add9e",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/open_L2.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/open_L2.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L22_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L22_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L23_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L23_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "238d73197be268fd3f4e1b94599d13ca90a7386350f747b49a042d5dbdb323a8",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L24_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L24_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L25_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L25_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "a2bfd469b309ada53b555e9f2d222a02c6fef25c6544b5604dd0b7ef568bf3c3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L02_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L02_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L26_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L26_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L27_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L27_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "238d73197be268fd3f4e1b94599d13ca90a7386350f747b49a042d5dbdb323a8",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L28_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L28_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L29_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L29_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L30_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L30_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L31_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L31_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "238d73197be268fd3f4e1b94599d13ca90a7386350f747b49a042d5dbdb323a8",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L32_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L32_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L33_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L33_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L34_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L34_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L03_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L03_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L35_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L35_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L00_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L00_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "238d73197be268fd3f4e1b94599d13ca90a7386350f747b49a042d5dbdb323a8",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L36_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L36_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L37_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L37_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L38_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L38_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L39_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L39_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L04_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L04_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L05_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L05_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L06_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L06_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L07_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L07_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 4224,
+      "expected_sha256": "a70c3a6bf4b69ea355076fff4191fbf8370ef02143cf3104e8f8f58b3f70a73c",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/open_L8.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/open_L8.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "a2bfd469b309ada53b555e9f2d222a02c6fef25c6544b5604dd0b7ef568bf3c3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L08_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L08_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "43a5b18dad9d98a6c9eb362535717cc79ce28f9cb9fd0931fd815fc7daf5f707",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_cos.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_cos.npy"
+    },
+    {
+      "bytes": 256,
+      "expected_sha256": "c02a430d5fbf0d2dd2e9fcdf4d7e32ae88fb071f9252a5ddd43101de4d12f945",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_sin.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_sin.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L09_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L09_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 1152,
+      "expected_sha256": "09dc9aa04a9d3cff19ae8d289c52340dabebcb02ab1586ef953401dbc8f08ff1",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/E4M3_decode_1.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/E4M3_decode_1.npy"
+    },
+    {
+      "bytes": 160,
+      "expected_sha256": "034de56f7e8a98f1a5c5157a3a1e20c2f3f17f8927fb159bd7324dd575adee70",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_multipliers.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_multipliers.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "ff83c74c3fa5d4a084ec5e0f34198b36be6e7541dda77c3845a787d1f88789d1",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_offsets.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_offsets.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "45f1d04473409883537aa996ccde2db89359d03eba297848a44a873fa61596af",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_primes.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_primes.npy"
+    },
+    {
+      "bytes": 160,
+      "expected_sha256": "70ed2efe1cc6ba957e04029c6cf1b7b682a8b613cc4dd80aea3303f569bbe969",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_raw_recent_tokens.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_raw_recent_tokens.npy"
+    },
+    {
+      "bytes": 49280,
+      "expected_sha256": "f977055eef8c02e1d023c7e26a5dd0e0cf67fc953b6b058672f5418cea411065",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_codes.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_codes.npy"
+    },
+    {
+      "bytes": 1664,
+      "expected_sha256": "d1fa2239853a7367763dd0c5b5f448c827453e411f9f7ef689d33bc62ef18a48",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_exp.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_exp.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "0c2b48ea99274ed24819d50470863584f0a8819c9a0e1f2320501dce1185411f",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_row_ids.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_selected_row_ids.npy"
+    },
+    {
+      "bytes": 1034368,
+      "expected_sha256": "fbc8c3ec76fc11430b854fb2ff267fdf923b5ff2d4f869e3c0433d8edc6479b1",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_token_map.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_token_map.npy"
+    },
+    {
+      "bytes": 132,
+      "expected_sha256": "9e9868df1d3bdcef1f0a7893c918c4d91bc1134ed8198c17684d1e95b4f89d3c",
+      "path": "/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/engram_scale_2.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r34-source-inputs-final/static_auxiliary/engram_scale_2.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L10_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L10_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L11_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L11_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L12_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L12_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L13_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L13_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 160,
+      "expected_sha256": "4e3392267619c39065fea6bb5bc7a384495031280e041ad9c3fcb05a5a762183",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_multipliers.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_multipliers.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "c7b86c43be8d49223be4bcc71deac708559b98ec49e6603e030af09f87d870f4",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_offsets.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_offsets.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "84b21bfaa92be07e26432eb3fee80e46fcb4b299c70b4e6af7a54eb8cad02a69",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_primes.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_primes.npy"
+    },
+    {
+      "bytes": 160,
+      "expected_sha256": "70ed2efe1cc6ba957e04029c6cf1b7b682a8b613cc4dd80aea3303f569bbe969",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_raw_recent_tokens.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_raw_recent_tokens.npy"
+    },
+    {
+      "bytes": 49280,
+      "expected_sha256": "fbd58c3bc36070b739d8f27ab435890a115aff3c0fc842800611c35909cb9b58",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_codes.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_codes.npy"
+    },
+    {
+      "bytes": 1664,
+      "expected_sha256": "46b26021162708707f81de3d7f33d2288c20c1fc0aee65247dc6f3f9922bdf99",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_exp.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_exp.npy"
+    },
+    {
+      "bytes": 320,
+      "expected_sha256": "3b776c1fa3f616923fef8d97b8e9399e808f15f656717ca853efafc8f910d026",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_row_ids.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_selected_row_ids.npy"
+    },
+    {
+      "bytes": 1034368,
+      "expected_sha256": "fbc8c3ec76fc11430b854fb2ff267fdf923b5ff2d4f869e3c0433d8edc6479b1",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_token_map.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_token_map.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "4c011bf3e3a0f11161072f52688abe204940b5fdf768b73992f91b21d827dc8b",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L01_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L01_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 4224,
+      "expected_sha256": "e91f0620f09f76e38a0fd1132f06ea53f0cbf37fbe8f2cbb0818e866171730c5",
+      "path": "/tmp/kepler-ds-hbm-r35-entering-state/open_L14.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-hbm-r35-entering-state/open_L14.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "319472c1ea2bc161d248f358d70b5296c6b512eac112ec7838bfbae9a84adac1",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L14_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L14_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L15_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L15_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L16_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L16_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 36992,
+      "expected_sha256": "8f057085b06dec13b80c139791beeb9b569628a882fcbd615e3e8eeb6ba8aee3",
+      "path": "/tmp/kepler-ds-r35-checkpoint-payloads/L17_expert_descriptor_table.npy",
+      "role": "locked auxiliary source image",
+      "tar_member": "inputs/tmp/kepler-ds-r35-checkpoint-payloads/L17_expert_descriptor_table.npy"
+    },
+    {
+      "bytes": 64275,
+      "expected_sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/inputs/initializer.py.snapshot",
+      "role": "initializer source",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/inputs/initializer.py.snapshot"
+    },
+    {
+      "bytes": 26963,
+      "expected_sha256": "ea7256eb1ac7a7895441f5a31dfb8ce5d05224d7c860e21c4b9c6ce1e6da8e56",
+      "path": "/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/inputs/initial_token_history.json",
+      "role": "source benchmark token history",
+      "tar_member": "inputs/home/ubuntu/OpenTallas-qwen-provider-observation-r5/results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/inputs/initial_token_history.json"
+    },
+    {
+      "bytes": 14342060,
+      "expected_sha256": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+      "path": "/tmp/kepler-ds-r34-provider-joined-sealed/native.json.gz",
+      "role": "actual full native metadata",
+      "tar_member": "inputs/tmp/kepler-ds-r34-provider-joined-sealed/native.json.gz"
+    },
+    {
+      "bytes": 11566814,
+      "expected_sha256": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+      "path": "/tmp/kepler-ds-r34-provider-joined-sealed/dispatch.json.gz",
+      "role": "actual full dispatch metadata",
+      "tar_member": "inputs/tmp/kepler-ds-r34-provider-joined-sealed/dispatch.json.gz"
+    },
+    {
+      "bytes": 7470294,
+      "expected_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+      "path": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/54c85064dd92c8550471302e9ae59bedbbf96ca4",
+      "role": "released checkpoint index only; weights external",
+      "tar_member": "inputs/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/54c85064dd92c8550471302e9ae59bedbbf96ca4"
+    }
+  ],
+  "full_token_GO": false,
+  "hardware_qualified": false,
+  "minimal_PC0_source_commits": [
+    "b51dd3cc6",
+    "f6f47d0cc"
+  ],
+  "preserved_failure": "8d5363b81",
+  "raw_SQLite_preserved": "/tmp/kepler-ds-r38-PC0-96rank-execution-20261002/actual-prefix-journal/events.sqlite",
+  "raw_SQLite_sha256": "6b4f32a19ab71908e90d51d9e6d292d73932c8d8d28d974fefc92f5b859940de",
+  "source_tip": "1eea54934831c0f859f7f9a828cea2999ae98513",
+  "status": "PORTABLE_INPUT_ARCHIVE_PLANNED",
+  "total_input_bytes": 6758425682
+}

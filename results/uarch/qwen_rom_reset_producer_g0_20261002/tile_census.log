@@ -1,0 +1,16 @@
+
+-- Executing script file `/tmp/opentallas-qwen-reset-producer-g0-20261002/results/uarch/qwen_rom_reset_producer_g0_20261002/tile_census.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fpu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fadd'.
+Generating RTLIL representation for module `\ot_hdc_fmul'.
+Generating RTLIL representation for module `\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fastfp.sv

@@ -1,0 +1,59 @@
+{
+  "Euclid_action": "Accepted member-to-word quarter/mask dependencies, actual capture/visibility events, copy-reader leases, reverse404ACK/tag-retire and currentV prefix; no invented early payload.",
+  "Russell_action": "ONE16/128/64/80 same8/4/7 calendar; dispatch only exact-source ready words, price extra predicate edge, preserve owner DATA/GRANT contention, strict refresh and all final drains. Reject if below1percent or fails contextualSSFF.",
+  "baseline_physical_obligations": [
+    "7973fill/control tracks",
+    "43256boundary bits including804untyped",
+    "four nativePHY pins/controller protocol and sustainable113.135616GB/s perstack",
+    "complete source clock/reset/PG/hold and ACK characterization"
+  ],
+  "build_admission": false,
+  "candidate": "source-owned per-word readiness dispatch within existing16/128 credit topology",
+  "complete_calendar_latency_s": null,
+  "gain_fraction": null,
+  "gross_control_price": {
+    "FFs": 169472,
+    "collector_buffers": 48496,
+    "equality_bits": 143360,
+    "known_mm2": 0.1455818832,
+    "member_FFs": 8192,
+    "route_PG_hold_slew_and_clock_price_complete": false,
+    "source_gate_and_protection_binding_complete": false,
+    "source_sized_not_mapped": true,
+    "word_FFs": 161280
+  },
+  "model": "results/uarch/qwen_rom_kv_dispatch_after_rejection_20261003/model-r2.json",
+  "model_sha256": "2457f0f4e8acdf809ac096bcb36d2e185bf46d004d364a2b07561344435dfe5e",
+  "parent_relay_required": true,
+  "physical_delta_authorized": false,
+  "rate_scope": "ONE candidate contract; no numeric gain or prediction before exact source dependency/visibility and finite replay",
+  "replay_commands": [
+    "python -m pytest tests/test_qwen_rom_kv_word_dispatch_contract.py -q"
+  ],
+  "schema": "QROM_ONE_WORD_READY_DISPATCH_PEER_CONTRACT_R1",
+  "semantics": {
+    "additional_registered_predicate_edges": 1,
+    "beat_ACK": "every word touched by this physical tag/beat is visible and has no reader lease; reverse credit accepted",
+    "cohort_reuse": "all member ACKs accepted and reader debt discharged",
+    "ready_selection_edges": 4,
+    "source_epoch_abort": "stale epochs rejected; abort drains held data/ACK/reader debt before reuse",
+    "tag_retire": "source same-tag remaining_PC update and owned consume only",
+    "word_ready": "all required immutable source members accepted and captured",
+    "word_visible": "actual complete masked macro write/capture accepted"
+  },
+  "source_bound": false,
+  "source_rejection_commit": "61c72fb3a",
+  "topology": {
+    "PHY_replicas_added": 0,
+    "column_paths": 4,
+    "context_RAM_replicas_added": 0,
+    "fill_lanes": 7,
+    "global_credits": 128,
+    "group_credits": 16,
+    "lookup_edges": 12,
+    "pending_per_PC": 64,
+    "pools": 56,
+    "return_groups": 8,
+    "words_per_pool": 80
+  }
+}

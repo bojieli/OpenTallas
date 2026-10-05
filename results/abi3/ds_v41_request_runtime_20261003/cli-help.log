@@ -1,0 +1,15 @@
+usage: build_ds_v41_request_deployment.py [-h] --ir IR --capability CAPABILITY
+                                          --phase {decode,prefill}
+                                          [--prefill-chunk-tokens PREFILL_CHUNK_TOKENS]
+                                          [--prompt-ingestion] --out OUT
+
+Build a source-sized request deployment without changing the generic CLI.
+
+options:
+  -h, --help            show this help message and exit
+  --ir IR
+  --capability CAPABILITY
+  --phase {decode,prefill}
+  --prefill-chunk-tokens PREFILL_CHUNK_TOKENS
+  --prompt-ingestion
+  --out OUT

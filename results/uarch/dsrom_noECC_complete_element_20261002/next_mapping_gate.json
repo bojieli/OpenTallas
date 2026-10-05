@@ -1,0 +1,31 @@
+{
+  "source_manifest": "physical_source_manifest.json",
+  "top": "ot_v41_rom_elem_w10",
+  "prepared_cases": [
+    "q",
+    "bfcolumn"
+  ],
+  "MAC_or_producer_stubs": false,
+  "runtime_memory_replacements": false,
+  "literal_KSA_prefix_preserved": true,
+  "clock_target_GHz": 1.2,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "memory": "Real4096x274 fourphysicalLEF/LIB/blackbox ports; unselected8192 branch must disappear",
+  "job_admission": "Review complete source/staticreservation first; standalone completeelement mapping can identify actualcell/FF/gateCLK load union independentlyfulltoken. P&R waits namedload/clock/via/port union and acceptedparentIO constraints.",
+  "required_mapping_outputs": [
+    "fullhierarchy/sourcehash/netlist",
+    "four4096macroinstances",
+    "leaf0..7 FF/master clockpin capacitance and fanout",
+    "capture/enable/reset/WAKE/RNEstage4 cones",
+    "stdcellarea vs disjointcapture/compute/clock reservation",
+    "SSFF libraryfamily exact source and no templatecrosscollision"
+  ],
+  "forbid": [
+    "helpersubstitution",
+    "constantportproducers",
+    "clockrelaxation",
+    "broadmacro-to-arithmetic multicycle",
+    "freeIO/slew/skew/zeroexception assumptions"
+  ]
+}

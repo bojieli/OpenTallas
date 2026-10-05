@@ -1,0 +1,5 @@
+PASS full128 SIMD directed RNE/sign/subnormal/refusal;12cycle done;mirrors;leases
+- /home/ubuntu/OpenTallas-hbm-rf-service/rtl/test/full_sm_service/tb_full_service_exact.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 860ns; walltime 0.491 s; speed 1.750 us/s
+- Verilator: cpu 0.491 s on 1 threads; allocated 106 MB

@@ -1,0 +1,161 @@
+{
+  "active_job": {
+    "host": "ot-pve1",
+    "last_completed_pc_at_observation": 17,
+    "mutation_or_restart_authorized_by_this_record": false,
+    "payload_directory": "/home/ubuntu/otjobs/ampere-c0-pc40-payload-20261003-r1/payload",
+    "pid_at_observation": 918356,
+    "unit": "ampere-c0-pc40-payload-20261003-r1.service"
+  },
+  "artifact_and_interface_pins": [
+    {
+      "path": "tools/h4_c0_pc40_payload_r1.py",
+      "sha256": "05e64c4cca236b42135dd3d3bbd63955e0d34ce0921dc35058de8448dd190f1d"
+    },
+    {
+      "path": "tools/h4_c0_pc40_workspace_lease_r1.py",
+      "sha256": "d3e7614737f4d315409593e02673578239b8a461b1e655ae1b143fc7e3b1fbb9"
+    },
+    {
+      "path": "tools/h4_c0_pc40_payload_replay_r1.py",
+      "sha256": "04bb39cef5ec8a1a9e96bbc6e808ffce2299804f21459d2bdb6f23e8edb86089"
+    },
+    {
+      "path": "tools/h4_c0_source_operand_views_r1.py",
+      "sha256": "e342a4ffdc2cdd88653f34296edc8790e7ddec423bcb8e4a4425626476c4357d"
+    },
+    {
+      "path": "tests/test_c0_pc40_workspace_lease_r1.py",
+      "sha256": "7b2465b049784c3d4d9b3b0e6065e3ab7b41ad76c6edc7dda042013a035aae3e"
+    },
+    {
+      "path": "tests/test_c0_pc40_payload_replay_r1.py",
+      "sha256": "cc6802b7d0174ce4f10e97a886c17bdc8d318d30c4d8d52c95b32e9a50685f9b"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/numeric_input_manifest_r1.json",
+      "sha256": "82461160e03285bebca32cd314d1bf1c1f71ca8231b3f60727f5bfa8b3d897e3"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/historical_prefix_hashes_r1.json",
+      "sha256": "67fe2f9069f1f7f14e0ce1d413091319f6662f0d5d8af5e9fc1437ce935fb81c"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/RF_port_source_r1.json",
+      "sha256": "ca8b7835f2f2656b5f1d026445e272b3bcdaa3c84b3132e30e60ab529e77adcc"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/workspace_model_r1.json",
+      "sha256": "df1a70e25aab10faa195e077d2ce91784e842e2bbe8cf7c5240d296708e6cd17"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/caller_preparation_model_r2.json",
+      "sha256": "93a57327a894d2b2e9803ae736f065680a2ffc89f2709c37f73ef5b2acd339ed"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/preparation_and_replay_tests_r1.log",
+      "sha256": "6d7762597d94a01183ca87190c88c0676730858b40bb3dab7c4bd5c0891ad5a8"
+    },
+    {
+      "path": "results/uarch/c0_pc40_payload_lease_20261003/GO_r1.json",
+      "sha256": "3c8600860ed33e0968d73207196bb89c88cbcf4be682d0824c2f5801842ec9e9"
+    }
+  ],
+  "evidence_classes": {
+    "constructor_preflight": "PASS_CONSTRUCTOR_ONLY",
+    "directed_preparation_replay_tests": "20_PASS_FIXTURES",
+    "installed_RF_ports": "NOT_OBSERVED",
+    "physical_qualification": "NOT_ADMITTED",
+    "released_checkpoint_payload": "PENDING_ACTIVE_JOB",
+    "source_metadata": "FROZEN",
+    "workspace_consumer_reverse": "NOT_OBSERVED"
+  },
+  "frozen_implementation_commit": "6bba619eed2287bc61ff1e12a0b6570e9bda50de",
+  "frozen_runner_commit": "81f0a7ded1725186f4323cb5553dfd15e4425aa4",
+  "historical_evidence_modified": false,
+  "interface": {
+    "PC": 40,
+    "arithmetic_dtype": "F32",
+    "attrs": {},
+    "common_ACK_tag_bits": 0,
+    "default_enabled": false,
+    "executor_SM": 0,
+    "executor_rank": 0,
+    "frame_bytes": 512,
+    "gate_home": {
+      "RFslot9": 38,
+      "SM": 0,
+      "rank": 0,
+      "word_start": 0
+    },
+    "input_bits": [
+      32,
+      32
+    ],
+    "mirrors": 2,
+    "opcode": "FMAX",
+    "output19_release": "held until source exp.step1 FMIN consumer acceptance and validated reverse",
+    "output_bits": 32,
+    "owner_binding": "sole pending accepted write, exact active rank/SM/generation/owner_tag; new prospective namespace, not observed C0 dispatch",
+    "packing": "little-endian U32 bitcast of F32; 16 banks, 32 bytes per bank",
+    "parent55": null,
+    "parent55_scope": "NOT_APPLICABLE_DIRECT_RF",
+    "pending_RF_transactions": 1,
+    "read_ports": 2,
+    "source_gate_release": "retained through entire PC40 consumer",
+    "source_version": "Qwen.39.L0.d0.gu_post.49",
+    "step": 0,
+    "template": "exp",
+    "up_home": {
+      "RFslot9": 32,
+      "SM": 24,
+      "rank": 0,
+      "word_start": 6144
+    },
+    "words": 128,
+    "workspace_slots_prospective": {
+      "FMAX": 19,
+      "constant": 18,
+      "negative": 17
+    },
+    "write_ports": 1
+  },
+  "latency_expression": "2*C_SOURCE_RF_READ + C_NoC_UP_PAGE + C_CDC_UP + C_NEG_CHAIN + 2*C_CONST_BROADCAST + C_FMAX_SOURCE_SERVICE",
+  "latency_ns": null,
+  "original_executor_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "remaining_integration_inputs": [
+    "exact gate/up retained placement in Dewey calendar",
+    "source-sized SM24->SM0 NoC/CDC service and cuts",
+    "actual direct-RF commonACK/owner binding and component SS/FF"
+  ],
+  "schema": "C0_PC40_BOUNDED_INTERFACE_HANDOFF_R1",
+  "scope": "one actual PC40 exp.step0 FMAX; separate prospective workspace seam; peer full-HBM system integration owns assembly",
+  "source_RF_read_payload_bytes": 1024,
+  "source_remote_up_payload_bits": 4096,
+  "terminal_export": {
+    "files": [
+      "gate.bin",
+      "negative.bin",
+      "constant.bin",
+      "FMAX.bin",
+      "native_capture.json",
+      "terminal.json",
+      "producer_progress.jsonl"
+    ],
+    "numeric_conditions": [
+      "all 40 original producer posthashes match",
+      "native frames captured before independent released-checkpoint oracle",
+      "all four 128-word comparisons bit-exact and finite",
+      "no oracle input injection"
+    ],
+    "offline_replay_arguments": [
+      "--capture",
+      "ARCHIVED_CAPTURE_DIRECTORY",
+      "--out",
+      "FRESH_RECEIPT_PATH"
+    ],
+    "offline_replay_tool": "tools/h4_c0_pc40_payload_replay_r1.py",
+    "release_inferred": false,
+    "replay_scope": "saved actual payload plus planned source RF events; no new numerical prefix"
+  }
+}

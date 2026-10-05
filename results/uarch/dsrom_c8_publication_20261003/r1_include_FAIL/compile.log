@@ -1,0 +1,14 @@
+%Error: /home/ubuntu/otjobs/dsrom-c8/native-r1/original/rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:399:14: Cannot find include file: 'ot_hdc_isa_v41_profiles.svh'
+  399 |     `include "ot_hdc_isa_v41_profiles.svh"
+      |              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+        ... This may be because there's no search path specified with -I<dir>.
+        ... Looked in:
+             ot_hdc_isa_v41_profiles.svh
+             ot_hdc_isa_v41_profiles.svh.v
+             ot_hdc_isa_v41_profiles.svh.sv
+             /home/ubuntu/otjobs/dsrom-c8/native-r1/obj/ot_hdc_isa_v41_profiles.svh
+             /home/ubuntu/otjobs/dsrom-c8/native-r1/obj/ot_hdc_isa_v41_profiles.svh.v
+             /home/ubuntu/otjobs/dsrom-c8/native-r1/obj/ot_hdc_isa_v41_profiles.svh.sv
+        ... With current working directory '/home/ubuntu/otjobs/dsrom-c8/source-1c303912d'
+%Error: Exiting due to 1 error(s)

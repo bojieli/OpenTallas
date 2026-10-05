@@ -1,0 +1,40 @@
+{
+  "recorded_utc": "2026-10-01T22:57:18.616180+00:00",
+  "authoritative_contract": "contract_r2.json",
+  "model_source_commit": "35299f0c6b55808ea3dc3dd3eddd9e88bdeae105",
+  "static_attempt1": {
+    "verdict": "FAIL_MODEL_PROGRAM_FILTER_ASSERTION",
+    "source_commit": "be4a34bf1",
+    "reason": "L20 has third me_mmode indexer SC1 operation; model wrongly asserted allmmodeops are onlyscores/PV. Correctedfilter preserves exact L0twoops and includes L20extraop metadata without claiming wholelayercount.",
+    "log_sha256": "6f72b3bd13869a5fc02f601dffe731bd5c4727cde324297e61013954503ff224",
+    "preserved": true
+  },
+  "original_failure": "Epoch512ownercollision remainsFAIL for unchangedcredits>1; default1/readwrites clarifiedsafe.",
+  "assertions": {
+    "original_uarch_byte_identical_to_main_base_and_pinned_source": true,
+    "RTL_byte_identical": true,
+    "static_owner_roundtrips": "PASS",
+    "programL0exactlytwoWINDOWdescriptors": "PASS",
+    "healthy_drain": "SOURCE_CONSERVATION_CONDITIONAL_MODEL; CONNECTED_COUNTER_GATE_PENDING",
+    "proposed_wrap": "STATIC_ENCODING_PASS; NO_CANDIDATE_RTL_YET"
+  },
+  "original_uarch_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "evidence_sha256": {
+    "contract.json": "7cdb36d3940e56b15980d1defaf16142468b03bf4f1b260fbbd8ccdc469591b2",
+    "contract.log": "7cdb36d3940e56b15980d1defaf16142468b03bf4f1b260fbbd8ccdc469591b2",
+    "contract_r2.json": "989ae637a3e7c5b3ec712c5d9fd6afa9b2ea60cb3207d3b00c66c95784fe5f13",
+    "contract_r2.log": "989ae637a3e7c5b3ec712c5d9fd6afa9b2ea60cb3207d3b00c66c95784fe5f13",
+    "standalone_refill_model.json": "65aa89a29317510dcc3c10cdebc2d9580d491ef519bdf9b3225293cad0ec8493",
+    "standalone_refill_model.log": "65aa89a29317510dcc3c10cdebc2d9580d491ef519bdf9b3225293cad0ec8493",
+    "static_attempt1.log": "6f72b3bd13869a5fc02f601dffe731bd5c4727cde324297e61013954503ff224"
+  },
+  "reproduction": [
+    "python3 tools/w17_window_epoch_contract.py --out NEW_contract.json",
+    "python3 tools/w17_window_credits_model.py --out NEW_refill_model.json"
+  ],
+  "no_builds_benchmarks_RTL_edits_payload_checkpoint_reads_main_live_edits": true,
+  "intake": "Every changedpath isADDED versus e72abea5a. Do not cherry-pick prior mixeduarchCLI commit; thisbranch isstandalone.",
+  "retained_review_scope": "No resetpertokenassumption, across-tokenretention, full40epochcount/rate, payloadqualification or priorprooftransfer.",
+  "ready_gate_handoff_sha256": "62a6baa574781122073517c1a15b53dc6de2257292af99995ce9c32f51df4c8d",
+  "source_timing_backend_sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+}

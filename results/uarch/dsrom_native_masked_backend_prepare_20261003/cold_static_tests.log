@@ -1,0 +1,17 @@
+test_additive_source_default_off_and_full_native_masks (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_all_double_error_positions_refuse_write (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_all_single_error_positions_correct_before_merge (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_cold_model_exact (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_frozen_input_receipts (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_full_backend_and_raw_event_cost (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_no_protection_or_timing_transfer (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_retained_native_read_tree_byte_identical (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_sidecar_address_bijection_all_words (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_sidecar_shared_port_conflict_is_real (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_strict_address_and_raw_lane_types (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+test_unmasked_sibling_witness_and_random_rmw (test_dsrom_native_masked_backend_prepare.NativeProtectionPreparation) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.442s
+
+OK

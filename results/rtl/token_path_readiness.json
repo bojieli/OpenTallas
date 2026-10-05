@@ -1,0 +1,106 @@
+{
+  "checks": [
+    {
+      "asks": "does ot_a3_qwen_gqa take its head geometry at elaboration?",
+      "evidence": "rtl/abi3/ot_a3_qwen_gqa.sv parameter names",
+      "id": "attention-geometry-is-a-parameter",
+      "met": true,
+      "was_listed_as_blocking": true
+    },
+    {
+      "asks": "does ot_a3_vector_rms_norm derive its mean reciprocal instead of selecting between two hardcoded widths?",
+      "evidence": "rtl/abi3/ot_a3_vector_rms_norm.sv derives the reciprocal",
+      "id": "rms-norm-width-is-generic",
+      "met": true,
+      "was_listed_as_blocking": true
+    },
+    {
+      "asks": "can the integrated vehicle be elaborated at the reduced geometry, rather than only at the shipped one?",
+      "evidence": "rtl/test/a3_shipped_prefix_top.sv parameters, forwarded to the bridge",
+      "id": "vehicle-accepts-the-reduced-geometry",
+      "met": true,
+      "was_listed_as_blocking": false
+    },
+    {
+      "asks": "does SELECTION.ARGMAX actually launch once the gate is on?",
+      "evidence": "abi3_g1d_head_admission: launches with the gate on 1, off 0",
+      "id": "argmax-launches-when-admitted",
+      "met": true,
+      "was_listed_as_blocking": false
+    },
+    {
+      "asks": "can the SHIPPED LM head width be admitted, in the vocabulary partitions the ABI provides?",
+      "evidence": "the bridge admits matmul weight rows up to 65,535 (rtl/abi3/ot_a3_engine_issue_bridge.sv, matmul_weight_source_ok); the shipped Qwen3 head is 151,936 rows, so it needs 3 vocabulary partitions and the ABI's VOCABULARY_PARTITIONS symbol provides up to 255. The superseded measurement in abi3_g1d_head_admission.json is 4096 launching and 4097 refusing, taken before the bound was raised.",
+      "id": "shipped-lm-head-fits-in-the-vocabulary-partitions",
+      "met": true,
+      "note": "The reduced configuration is still required, but for the OTHER reason this tool states: the shipped forward pass is 7.57e9 multiply-accumulates and one lane retires one per cycle. Width of the head is no longer the blocker; simulation time is.",
+      "was_listed_as_blocking": false
+    },
+    {
+      "asks": "does the redesigned tensor lane execute a real program under the real microsequencer, bridge and engine array?",
+      "evidence": "shipped-prefix campaign with the pipelined lane: status pass, 353707 checks, 50745842 cycles against the legacy lane's 50746511",
+      "id": "new-tensor-datapath-runs-under-the-real-control-plane",
+      "met": true,
+      "was_listed_as_blocking": false
+    },
+    {
+      "asks": "does the committed vector set set MAPPED_FAMILIES_WORD, which is what admits DMA.SCATTER, ATTENTION.GQA, VECTOR.ADD, VECTOR.SILU_MUL, SELECTION.ARGMAX and SELECTION.TOKEN_APPEND?",
+      "evidence": "tools/build_abi3_shipped_prefix_vectors.py emits 0 for MAPPED_FAMILIES_WORD, because the set carries no golden past its fail-stop boundary",
+      "id": "vector-set-admits-the-six-mapped-families",
+      "met": false,
+      "note": "THIS IS THE REMAINING BLOCKER. The gate is one word; what it needs is a golden write stream for the reduced program past that boundary, which is a builder bootstrap rather than a design change: the numbers can only be what a first run reports and are then pinned.",
+      "was_listed_as_blocking": true
+    }
+  ],
+  "git": {
+    "commit": "771cbe210de4d1e21314ac56569d07386f23b533",
+    "worktree_dirty": true
+  },
+  "met_count": 6,
+  "previously_listed_blockers_now_met": [
+    "attention-geometry-is-a-parameter",
+    "rms-norm-width-is-generic"
+  ],
+  "question": "What still stands between this RTL and an emitted token id?",
+  "refusals": [
+    "a-met-precondition-is-not-a-token: every check here is about whether something STOPS a token. None of them is evidence that one was emitted, and record_token_ids is still empty.",
+    "greps-are-not-proofs: the RTL checks test for parameter and function names in the source. They establish that the mechanism exists, not that it is correct at the reduced geometry -- the G1f probe measures that separately and reports admitted=True.",
+    "the-reduced-configuration-is-not-the-shipped-one: a token from the reduced model is a regression result. It says the integrated path works end to end; it says nothing about Qwen3-8B's own output."
+  ],
+  "remaining_run_plan": [
+    "assign a distinct base per object, per bank, from the sizes in the deployment's own object table; the bridge refuses an object the placement table does not name and refuses one named twice",
+    "stage the `segments` objects: the large ones through the DPI weight window the vehicle already has, the small ones into the source bank",
+    "elaborate ot_a3_shipped_prefix_top at the reduced geometry (GQA_QUERY_HEADS=8, GQA_KV_HEADS=2, GQA_HEAD_WIDTH=16, scale code 0x3e800000 for 1/sqrt(16)) with RESULT_WORDS raised past the largest object",
+    "bootstrap the placement table by probing, which is the pattern tools/rtl_abi3_g1d_head_admission.py already uses: run, read which object the bridge refused, add it, repeat. Unlike that tool this must give each object its OWN base and stage its bytes, because a shared probe base is exactly why its selected token is not a token id",
+    "read selected_token off the vehicle's port and compare it against the oracle's [1073, 382, 93]"
+  ],
+  "remaining_run_staging": {
+    "by_source_kind": {
+      "generated": {
+        "bytes": 1124608,
+        "objects": 2
+      },
+      "segments": {
+        "bytes": 3607040,
+        "objects": 14
+      },
+      "zero": {
+        "bytes": 33845256,
+        "objects": 21
+      }
+    },
+    "largest_object_bytes": 6684672,
+    "note": "Only objects whose source is `segments` carry data that must be staged; `zero` objects need address space and no bytes, and they are the large ones (KV planes). The largest object is bigger than the vehicle's default result bank, so RESULT_WORDS has to be raised at elaboration -- it is a parameter, not a limit.",
+    "objects": 37,
+    "placement_table_entries_available": 32,
+    "total_bytes": 38576904
+  },
+  "rtl_token_ids_today": [],
+  "schema": "opentallas.audit.token_path_readiness.v1",
+  "unmet_count": 1,
+  "why_the_placement_step_needs_the_builder": {
+    "consequence": "A standalone planner cannot reproduce this from deployment.json. The allocation follows the builder's operator walk, which knows each view's slot and therefore its bank. Reconstructing it from thirteen sample rows would be guessing, and a guessed placement that happened to emit a token id would be worse than no token: it would read the wrong bytes and still select something.",
+    "finding": "The placement bases are PER-BANK COMPACT allocations, not a global layout derivable from the deployment's object table. Read out of the committed p3_case.hex, the shipped table has objects 4 and 55 BOTH at base 8448, and objects 8 and 64 both at 12544 -- legal because the bridge chooses the bank from the reading slot, so two objects in different banks may share a base value. And the spacing does not follow the declared sizes: object 8 is 9,216 bytes and object 10 sits 128 units later.",
+    "so_the_next_step_is": "extend tools/build_abi3_shipped_prefix_vectors.py with a reduced target and let its existing allocator assign the bases, rather than writing a second allocator that has to agree with it."
+  }
+}

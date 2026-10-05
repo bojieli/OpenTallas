@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL_STATIC_TEST_MATCHER_NOT_RTL",
+  "original_log": "pytest.log",
+  "cause": "Substring force matched preserved fatal text no-force epochs. Same known string trap, no simulator-force statement.",
+  "action": "Anchored SV force statement and epoch-assignment matcher only; fixture/model/predictions remain unchanged. No compile/run."
+}

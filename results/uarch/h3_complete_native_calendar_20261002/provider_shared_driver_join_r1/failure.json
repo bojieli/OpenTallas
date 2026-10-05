@@ -1,0 +1,12 @@
+{
+  "failure_logs": [
+    "replay.log",
+    "replay_diagnostic.log"
+  ],
+  "old_bulk_journal_committed": false,
+  "old_execution_sha256": "a9a601554abb5703005539ea7c3b9a7fd03aab29e5e327108821ec1513ca4010",
+  "old_journal_gzip_sha256": "4a9b26130b67eb410790b7b5f915941be82c5b55eb639cd1be7d22947cd5061b",
+  "reason": "Only journal_uncompressed_sha256 changed: producer receipt metadata contains temporary journal_path; original records retained, canonical r2 copies paths without editing live database",
+  "schema": "PRESERVED_R1_REPLAY_FAILURE",
+  "successor": "provider_shared_driver_join_r2"
+}

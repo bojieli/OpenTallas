@@ -1,0 +1,86 @@
+[
+  {
+    "commit": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+    "copy": "tile.sv",
+    "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+    "source_archive": "results/uarch/dsrom_split_domain_parent_20261003"
+  },
+  {
+    "commit": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+    "copy": "core.sv",
+    "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+    "source_archive": "results/uarch/dsrom_split_domain_parent_20261003"
+  },
+  {
+    "commit": "9ffc7a30c13af94c9dc2f4c69b9fc1c276dd9cdc",
+    "copy": "parent_model.json",
+    "sha256": "3cdef28378588029dbf83d2cc44bc383df1f1fc5949b95755504a1e50ed3ec10",
+    "source_archive": "results/uarch/dsrom_split_domain_parent_20261003"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/macro_review.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "d4cdf053672d0013d1001064d6d223f16eff29c608c8c6b3703821c9a104603b"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/results/physical_abi3/asap7/chip/v41_w10_elem/elem_physical_a6.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "b6074b58e33fb80cfb0d16ee1ec3a4c277c7aa10cd040bf4f6e9699648ab28b2"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/results/physical_abi3/asap7/chip/v41_w10_elem/pair_physical_p2.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "79ca0ab8d4772843dccd15a56be6202351a5543fc85059695b2c5af5816558b5"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/results/physical_abi3/asap7/chip/v41_w10_elem/ss_route_failures/p12q9.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "ca00b65f33609027e051bd6451007c2a843b9fe3a57b268588a2a2e124137e87"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/results/uarch/macro_pin_access_audit_20261003/historical_placements.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "3556b3c8c04e7161c9c69b8f45a5ed07d59e156b60d81a1f1cc12d50147f20da"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/review.json",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "505b3151eb1575dc452a53225cd152dd4e5fa904ba9b49c382108232776a711e"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/tests.log",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "be3a2b3c9fb67ee544b76a9fafda8c12ef04686d75d54d7f068961e700014bca"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/tools/check_macro_track_alignment.py",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84"
+  },
+  {
+    "commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+    "copy": "pin_access_review/tools/test_check_macro_track_alignment.py",
+    "kind": "Independent checker replay; raw logs not newly executed",
+    "sha256": "90bfff88d90862e0355730d0fd52be1f660ab6f42871b6e6d3546622f8d5209d"
+  }
+]

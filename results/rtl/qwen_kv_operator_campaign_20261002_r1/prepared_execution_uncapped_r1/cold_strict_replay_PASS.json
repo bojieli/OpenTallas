@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_LAYER_HEAD_BOUNDARIES_WITH_OPEN_KV_COVERAGE",
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "PCs": 1737,
+  "independent_comparison_boundaries": 39,
+  "compared_values": 303488,
+  "source_tensors": 399,
+  "ordered_KV_journal": "MISSING_NOT_EMITTED_BY_PINNED_DRIVER",
+  "open_coverage": [
+    "1737 output hashes are observations; independent comparisons cover39 layer/head boundaries only",
+    "independent FP8 KV payload comparison not emitted by pinned driver",
+    "actual ordered KV lifecycle journal not emitted by pinned driver"
+  ],
+  "checkpoint_tensor_shard_mapping_verified": true,
+  "fulltoken_KV_comparison_qualified": false,
+  "actual_RTL": false,
+  "physical_credit": false,
+  "rate_credit": false,
+  "qualified_images_sha256": "b055a2e9674c5903fa28b8cfe3d38e2e0c5c664624253b644f539bcd96067fdb",
+  "replay_scope": "read-only archival replay; runtime ROOT/admission guards unchanged",
+  "validator_sha256": "740e828dd6be2990839883b477c7aedbcabc8110afe857bc2e6013ea2686bf7d"
+}

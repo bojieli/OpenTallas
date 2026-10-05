@@ -1,0 +1,45 @@
+{
+  "status": "FAIL_GRT_CONGESTION",
+  "shell_exit": 0,
+  "bundle_k": 16,
+  "tree": "banded",
+  "iterations": 5,
+  "overflow": 36383,
+  "M9_overflow": 35131,
+  "M9_window_max_ratio": 1.293,
+  "wall": "50:00.78",
+  "peak_RSS_MB": 12694,
+  "SSFF_DRC": "NOT QUALIFIED: bundled GRT only",
+  "source_tool_frozen": "c3a5675416cf435591a6213a88fe0c5f09956fed",
+  "raw_inputs": {
+    "grt_congestion.rpt": {
+      "bytes": 22246,
+      "sha256": "d5105e26af34e7a63ee10f6ca203ba0804988f7526c08792e2dd28f3e105a2c8"
+    },
+    "run.log.end": {
+      "bytes": 21,
+      "sha256": "6060738ac1b82d04ad130ffc74044fac448bbba4d7301a4bc95bea6251055591"
+    },
+    "run.log.exit": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "manifest.json": {
+      "bytes": 456,
+      "sha256": "694a1cbe2c42db676946dd060f1e3ce55c7dd8b8c1c1aea1837104f28cad78e0"
+    },
+    "wirelength.csv": {
+      "bytes": 5204425,
+      "sha256": "1962d509a40b53352da5309234c6b2c6854331d549482eb29e7dc6527e927f2e"
+    },
+    "run.log": {
+      "bytes": 144836,
+      "sha256": "33d4828f4b7f184b6ac7d5d6a618a59c430e4322a6b1f2598cd9933629e64113"
+    },
+    "gcell_usage.txt": {
+      "bytes": 54478764,
+      "sha256": "11f53fb9388cdb7cb7de5f119a3bd50d764ee4d0a0825afcd7fd8552971e43ac"
+    }
+  },
+  "run_repeated": false
+}

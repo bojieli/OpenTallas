@@ -1,0 +1,185 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/execution_report_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "counter_reconciliation": {
+      "const": "exact"
+    },
+    "counters": {
+      "$ref": "https://opentallas.org/schemas/compiler/tensor_accelerator/independent_check_v1.schema.json#/$defs/counters"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "mode": {
+      "enum": [
+        "data_bearing_timing",
+        "functional"
+      ]
+    },
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/output"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "request_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.execution_report.v1"
+    },
+    "semantic_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "pass"
+    },
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "clock_hz": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "cycles": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "seconds": {
+          "exclusiveMinimum": 0,
+          "type": "number"
+        }
+      },
+      "required": [
+        "clock_hz",
+        "cycles",
+        "seconds"
+      ],
+      "type": "object"
+    },
+    "trace": {
+      "items": {
+        "$ref": "#/$defs/trace"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "build_id",
+    "capability_id",
+    "counter_reconciliation",
+    "counters",
+    "model_id",
+    "mode",
+    "outputs",
+    "request_sha256",
+    "schema",
+    "semantic_sha256",
+    "status",
+    "timing",
+    "trace"
+  ],
+  "title": "OpenTallas tensor-accelerator execution report v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "values": {
+          "items": {
+            "maximum": 4294967295,
+            "minimum": -2147483648,
+            "type": "integer"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "payload_sha256",
+        "shape",
+        "values"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "trace": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cycle_begin": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "cycle_end": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "engine": {
+          "enum": [
+            "CONTROL",
+            "DMA",
+            "TENSOR",
+            "VECTOR"
+          ]
+        },
+        "opcode": {
+          "enum": [
+            "ADD_I32",
+            "COMPLETE",
+            "DMA_HBM_TO_SRAM",
+            "MATMUL_I8_I8_I32"
+          ]
+        }
+      },
+      "required": [
+        "command_index",
+        "cycle_begin",
+        "cycle_end",
+        "engine",
+        "opcode"
+      ],
+      "type": "object"
+    }
+  }
+}

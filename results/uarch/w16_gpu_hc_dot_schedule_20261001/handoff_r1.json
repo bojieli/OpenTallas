@@ -1,0 +1,46 @@
+{
+  "source_commit": "ec351a66d88a92b12f114ec21add4b0f89bed2ea",
+  "worktree": "/home/ubuntu/OpenTallas-w16-nonsm",
+  "active_jobs": [],
+  "tests": {
+    "tests": "48",
+    "failures": "0",
+    "errors": "0",
+    "skipped": "0"
+  },
+  "graph_commit": "0095fc4bc016ff1571e8316e836d5e522fc029e8",
+  "graph_sha256": "de91824b4768041a2defe508a32c1d43a8a852153d890b5dd2d632b3800a6ff9",
+  "HC22_nodes": 1760,
+  "HC22_cost_provider": "COMPLETE_MODELED_SCHEDULE_NOT_CONNECTED_RTL",
+  "actual_committed_evidence_replay": true,
+  "full_token": "BLOCKED_NON_HC_COSTS",
+  "preserved_transpose_cycles": 35248,
+  "cycles_operator": 132635,
+  "r1_receipt_and_source_byte_identical": true,
+  "model_generator_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+  "physical": "TC16 SS FAIL -31.06ps; FF+5.22ps at833ps, SM refused. No clock relax/tuning or architecture credit.",
+  "ready_packages": [
+    "cost_r1.json",
+    "../w16_gpu_hc_simt_contract_20261001/contract_r2.json"
+  ],
+  "coordination": {
+    "Euler": "0833 bank layout/3cycle landing/source one128Brequest clock plus serialized context allocation consumed;5346800B/rank. Confirm chosen fixed450cycle isolated credit bound; not a measured upper bound.",
+    "Leibniz": "c461 proof1500boundaries/fourrealcoefffixtures consumed;649IEEEF32divisions preserved, no reciprocalmultiply/nativeSFU.",
+    "graph_owner": "0095 immutable22phase package consumed, exactgraphSHA matched. No edits to ownedsource; new companion avoids historical5phase next lookup.",
+    "parent": "Review ec351a66d and following receipt commit together. Oldr1 historical; no currentpins refresh or generator edits needed. No GPU launch.",
+    "direct_acknowledgement": false
+  },
+  "artifacts": {
+    "HC22_schedule_r1.json": "32c14d5933aeb930852b217a7f3984d73670792b17c856f61774b610b85f3f42",
+    "build_r1.log": "4641c1d2e82b3c77d7a0d81845da0fc0f7fffdb3336000766171fb9b2edad112",
+    "check_r1.log": "4641c1d2e82b3c77d7a0d81845da0fc0f7fffdb3336000766171fb9b2edad112",
+    "cost_r1.json": "f8d5a9ab72bbbe57806f341defaff4210b3e1aaaf353033f31d422b649e29414",
+    "cost_r1.trace.json": "8a6720019580f8206d2e9ebd8a380272dd0ca568fb55aaf7b39159f562470c80",
+    "inputs_r1.json": "7c130e8c16eba97918129c95e7f0b3ce446add7f904882a6eb2e1e80d8aa172e",
+    "remaining_nonHC_costs_r1.json": "5dbb36fe3998210130d8a643bb50b429bcb0256574a982975d93269bb63e65f4",
+    "resource_build_r2.log": "e440ef5dc0fa326df208ec8950f2a70e6343610d7e4f53737cc2b7be259962c3",
+    "resource_check_r2.log": "e440ef5dc0fa326df208ec8950f2a70e6343610d7e4f53737cc2b7be259962c3",
+    "tests_r1.log": "6dd786dc72d45e02d32f9a2c96fbee7f0ea69261b610e86a41d1a671dd0186ef",
+    "tests_r1.xml": "ad2829660651d2681391719760b182978c2df6b5938ff74bc00841ddc4a659a0"
+  }
+}

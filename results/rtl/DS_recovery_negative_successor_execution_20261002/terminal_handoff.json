@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.DS.recovery-successor-terminal-handoff.v1",
+  "status": "PASS_SUCCESSOR_RECOVERY_SIMULATION_ONLY",
+  "UTC": "2026-10-02T17:36:34.683213+00:00",
+  "source_commit": "68e0a801d9d852e337453fc9ef87b1b9b47b69bd",
+  "execution_plan_sha256": "dac18f2a5966332299b0111a0d5a6f09adddb1a9a8f61333762fc8db0b4118f4",
+  "runner_sha256": "1cf2ca72fda622eb712958810795105c828a7b014be6339c381ecf89c9547faa",
+  "archive_before_parent_audit_commit": "17ad42b99d8fc9a254f46dd5d7ea6049c7efa5c3",
+  "authoritative_terminal_record": {
+    "path": "record.json",
+    "sha256": "265a9ff990a3053ff92c95f622136eebc49fd60ee9c465621699e935eeddb60b",
+    "verdict": "PASS_SUCCESSOR_RECOVERY_SIMULATION_ONLY"
+  },
+  "exact_receipts": {
+    "path": "receipt_catalog.json",
+    "sha256": "667bd64468ca39aee65edf921af6f633756643d5620a88f17dd1a975944f5893",
+    "positive_exit0": 23,
+    "negative_exit1_with_predeclared_fatal_and_witness": 4,
+    "total": 27
+  },
+  "source_snapshot_file_hashes_verified": 820,
+  "five_exact_binary_tool_args_bindings": true,
+  "parent_independent_audit": {
+    "path": "parent_terminal_audit.json",
+    "sha256": "a644c5d83cabca47048bba9ecba695191677cab4ba367e8ff282d7936780ee7e",
+    "verdict": "PASS_SUCCESSOR_SIMULATION_SCOPE"
+  },
+  "supervisor_and_user_service_exit": 0,
+  "user_service": "DS-recovery-negative-successor-20261002-r1.service",
+  "user_service_terminal_properties": "MainPID=0\nResult=success\nExecMainStatus=0\nControlGroup=\nActiveState=inactive\n",
+  "no_active_supervisor_or_runner_children": true,
+  "reservation_active": false,
+  "reservation_release_record": {
+    "path": "reservation_terminal.json",
+    "sha256": "30c10a635504ea0d235d6a050f83463379b925d97790b6b131207b1059b68598"
+  },
+  "full_terminal_and_capacity_milestone": {
+    "path": "milestone.json",
+    "sha256": "f0f2867ee9ff4d98388442e9d3a0740c4f21a50c22b0bc6ae7f8710d41bc1a18"
+  },
+  "retained_build_inventory": {
+    "path": "retained_build_inventory.json",
+    "sha256": "76c9cdf7d1ef68afe0fefc79394e0f68e8981343e31edecf34a16b4ea6576e09",
+    "completed_objects": 100,
+    "binaries": 5,
+    "runtime_output_root": "/tmp/DS-recovery-negative-successor-execution-20261002-r1",
+    "no_deletions": true
+  },
+  "historical_pending_records": "intake.json and per-phase pending closure records are immutable chronological history, not the terminal verdict. Use this handoff, record.json, milestone.json and parent_terminal_audit.json for terminal intake.",
+  "historical_full27_FAIL_unchanged": true,
+  "production_RTL_tools_model_TASKS_docs_main_unchanged": true,
+  "no_restart_rebuild_retry_or_arbitrary_runtime_file_CPU_AS_limits": true,
+  "fulltoken": false,
+  "hardware_admitted": false,
+  "adoption": false
+}

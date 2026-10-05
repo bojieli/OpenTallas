@@ -1,0 +1,28 @@
+using CData = uint8_t;    ///< Data representing 'bit' of 1-8 packed bits
+using SData = uint16_t;   ///< Data representing 'bit' of 9-16 packed bits
+using IData = uint32_t;   ///< Data representing 'bit' of 17-32 packed bits
+using QData = uint64_t;   ///< Data representing 'bit' of 33-64 packed bits
+using EData = uint32_t;   ///< Data representing one element of VlWide
+//    F     = float;        // No typedef needed; Verilator uses float
+struct VlWide final {
+    static constexpr size_t Words = N_Words;
+
+    // MEMBERS
+    // This should be the only data member, otherwise generated static initializers need updating
+    EData m_storage[N_Words];  // Contents of the packed array
+
+    // CONSTRUCTORS
+class VlUnpacked final {
+    // TYPES
+    using T_Key = IData;  // Index type, for uniformity with other containers
+    using Unpacked = T_Value[N_Depth];
+
+public:
+    template <typename T_Func>
+    using WithFuncReturnType = decltype(std::declval<T_Func>()(0, std::declval<T_Value>()));
+
+    // MEMBERS
+    // This should be the only data member, otherwise generated static initializers need updating
+    Unpacked m_storage;  // Contents of the unpacked array
+
+    // CONSTRUCTORS

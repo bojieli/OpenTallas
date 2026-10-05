@@ -1,0 +1,258 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-01T20:27:22.534041+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_qwen_rom_tile",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": true,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ACC_LAT": 7,
+      "FAST_ISSUE": 1,
+      "KV_PREP": 3,
+      "MUL_LAT": 6,
+      "TREE_LAT": 7
+    },
+    "sources": [
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "d603cb58d074295c1e50799aac5b6e3990f872d5e3d9ac32f230bd00f8fa3976",
+        "size_bytes": 9042
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "933efd1766f008560fd01b14e40723ef3249adb85667c85b03382839d9a85c59",
+        "size_bytes": 19911
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "sha256": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee",
+        "size_bytes": 10869
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_matvec.sv",
+        "sha256": "bde73980267bce435029ea2d22d575f47c621cac38ce1f6d8ca182ee83fa0d5d",
+        "size_bytes": 63941
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_me_array.sv",
+        "sha256": "a50e60b1537909cef3c3caafb501ab9eb5a11ce836a42967b4574db1c5ba2d0c",
+        "size_bytes": 21646
+      },
+      {
+        "path": "rtl/hdc/ot_qwen_rom_tile.sv",
+        "sha256": "bd999147070c4d57502d82f847e581dd17ba63c3052806ffd6b08785b7cef4ef",
+        "size_bytes": 17274
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+        "sha256": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
+        "size_bytes": 409
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_qwen_rom_tile"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n M7 (guide).\n[INFO DRT-0035]   Complete V7 (guide).\n[INFO DRT-0035]   Complete M8 (guide).\n[INFO DRT-0035]   Complete V8 (guide).\n[INFO DRT-0035]   Complete M9 (guide).\n[INFO DRT-0035]   Complete V9 (guide).\n[INFO DRT-0035]   Complete Pad (guide).\n[INFO DRT-0036] Active guide region query size = 0.\n[INFO DRT-0036] V0 guide region query size = 0.\n[INFO DRT-0036] M1 guide region query size = 1477714.\n[INFO DRT-0036] V1 guide region query size = 0.\n[INFO DRT-0036] M2 guide region query size = 1415702.\n[INFO DRT-0036] V2 guide region query size = 0.\n[INFO DRT-0036] M3 guide region query size = 736970.\n[INFO DRT-0036] V3 guide region query size = 0.\n[INFO DRT-0036] M4 guide region query size = 109211.\n[INFO DRT-0036] V4 guide region query size = 0.\n[INFO DRT-0036] M5 guide region query size = 65935.\n[INFO DRT-0036] V5 guide region query size = 0.\n[INFO DRT-0036] M6 guide region query size = 38612.\n[INFO DRT-0036] V6 guide region query size = 0.\n[INFO DRT-0036] M7 guide region query size = 24471.\n[INFO DRT-0036] V7 guide region query size = 0.\n[INFO DRT-0036] M8 guide region query size = 15071.\n[INFO DRT-0036] V8 guide region query size = 0.\n[INFO DRT-0036] M9 guide region query size = 5213.\n[INFO DRT-0036] V9 guide region query size = 0.\n[INFO DRT-0036] Pad guide region query size = 0.\n[INFO DRT-0179] Init gr pin query.\n[INFO DRT-0267] cpu time = 00:00:48, elapsed time = 00:00:15, memory = 7151.33 (MB), peak = 7203.95 (MB)\n[INFO DRT-0245] skipped writing guide updates to database.\n[INFO DRT-0181] Start track assignment.\n[INFO DRT-0184] Done with 2310303 vertical wires in 19 frboxes and 1578596 horizontal wires in 14 frboxes.\n[INFO DRT-0186] Done with 266112 vertical wires in 19 frboxes and 447978 horizontal wires in 14 frboxes.\n[INFO DRT-0182] Complete track assignment.\n[INFO DRT-0267] cpu time = 00:13:21, elapsed time = 00:04:02, memory = 12899.57 (MB), peak = 12999.68 (MB)\n[INFO DRT-0187] Start routing data preparation.\n[INFO DRT-0267] cpu time = 00:00:07, elapsed time = 00:00:07, memory = 13274.43 (MB), peak = 13274.43 (MB)\n[INFO DRT-0194] Start detail routing.\n[INFO DRT-0195] Start 0th optimization iteration.\n    Completing 10% with 4499 violations.\n    elapsed time = 00:06:44, memory = 19862.15 (MB).\n    Completing 20% with 24619 violations.\n    elapsed time = 00:23:14, memory = 35639.99 (MB).\n    Completing 30% with 32023 violations.\n    elapsed time = 00:26:32, memory = 35409.01 (MB).\n    Completing 40% with 36997 violations.\n    elapsed time = 00:49:21, memory = 36729.70 (MB).\n    Completing 50% with 63095 violations.\n    elapsed time = 00:59:27, memory = 38189.24 (MB).\n    Completing 60% with 67167 violations.\n    elapsed time = 01:08:27, memory = 40045.66 (MB).\n    Completing 70% with 81568 violations.\n    elapsed time = 01:28:06, memory = 42743.87 (MB).\n    Completing 80% with 86593 violations.\n    elapsed time = 01:31:29, memory = 42834.72 (MB).\n    Completing 90% with 91102 violations.\n    elapsed time = 01:52:15, memory = 43763.73 (MB).\n\nElapsed time: 0:58.10[h:]min:sec. CPU time: user 54.31 sys 3.37 (99%). Peak memory: 2058176KB.\nElapsed time: 46:21.99[h:]min:sec. CPU time: user 2811.05 sys 10.12 (101%). Peak memory: 3142276KB.\nElapsed time: 1:05:43.70[h:]min:sec. CPU time: user 1948.85 sys 504.95 (62%). Peak memory: 3216888KB.\nElapsed time: 0:20.22[h:]min:sec. CPU time: user 17.24 sys 2.30 (96%). Peak memory: 979972KB.\nElapsed time: 0:49.46[h:]min:sec. CPU time: user 45.66 sys 3.22 (98%). Peak memory: 1622136KB.\nElapsed time: 18:34.48[h:]min:sec. CPU time: user 1515.51 sys 13.29 (137%). Peak memory: 2237048KB.\nElapsed time: 0:20.63[h:]min:sec. CPU time: user 17.88 sys 2.15 (97%). Peak memory: 1377076KB.\nElapsed time: 1:32:23.19[h:]min:sec. CPU time: user 6748.03 sys 79.45 (123%). Peak memory: 7092520KB.\nElapsed time: 27:14.77[h:]min:sec. CPU time: user 1768.64 sys 33.35 (110%). Peak memory: 3980808KB.\nElapsed time: 39:51.63[h:]min:sec. CPU time: user 2526.59 sys 28.19 (106%). Peak memory: 5121752KB.\nElapsed time: 1:47:41.59[h:]min:sec. CPU time: user 7360.14 sys 145.05 (116%). Peak memory: 7174704KB.\nElapsed time: 4:48:39.80[h:]min:sec. CPU time: user 47425.98 sys 522.39 (276%). Peak memory: 12503616KB.\nElapsed time: 2:24:12.63[h:]min:sec. CPU time: user 87176.95 sys 673.98 (1015%). Peak memory: 47451340KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 247\nmake: *** [Makefile:589: /work/results/asap7/opentallas_ot_qwen_rom_tile_asap7_w12_tile_i518/base/5_2_route.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T04:15:59.843513+00:00",
+  "git": {
+    "commit": "7c03aa062b9e995d9488491e12a92fece63ce736",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_hdc/asap7/qwen_o4_w12/tile_i518/"
+    ],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_rom_tile",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_matvec.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_me_array.sv",
+      "--source",
+      "rtl/hdc/ot_qwen_rom_tile.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "--param",
+      "ACC_LAT=7",
+      "--param",
+      "TREE_LAT=7",
+      "--param",
+      "FAST_ISSUE=1",
+      "--param",
+      "KV_PREP=3",
+      "--param",
+      "MUL_LAT=6",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--stages",
+      "pnr",
+      "--corner",
+      "TT",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--keep-heavy-artifacts",
+      "--max-transition-ns",
+      "--max-fanout",
+      "32",
+      "--macro-place-halo",
+      "4.32",
+      "2.16",
+      "--macro-view",
+      "ot_rom_4096x266_m8=physical/asap7_memory_macros/ot_rom_4096x266_m8",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--nickname-tag",
+      "w12_tile_i518",
+      "--output",
+      "results/physical_hdc/asap7/qwen_o4_w12/tile_i518/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w12bwork/keep_i518",
+      "--die-area",
+      "0",
+      "0",
+      "518.4",
+      "386.64",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "516.24",
+      "384.48",
+      "--false-path-io",
+      "--place-density",
+      "0.6",
+      "--routing-layers",
+      "M2",
+      "M9"
+    ],
+    "driver": {
+      "commit": "7c03aa062b9e995d9488491e12a92fece63ce736",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w12bwork/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "1238d12389efa5e176c5411959510bbf7bf5ac88448583858e5c03f3ad803fb6",
+      "tree": "/home/ubuntu/w12bwork/src"
+    },
+    "platform": "Linux-5.15.0-194-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/w12bwork/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

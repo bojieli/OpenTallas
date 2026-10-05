@@ -1,0 +1,233 @@
+{
+  "Russell_join": {
+    "actual_existing_history_prefix": null,
+    "commit": "fd406a00966e5e95cdf2330ded8e61f23fcf1afe",
+    "context8192_position8191_conditional_only": true,
+    "minimum_feasible_calendar_adoption": false,
+    "model_sha256": "57ab30e63fc1f3c84383026c2d612ae059420a9abaed36ef9b76fa1399cf2d56",
+    "retained_observer_position": 0,
+    "source_policy_missing": [
+      "actual parent owner/global-ready instantiation",
+      "actual published-prefix/twoKtail/currentVforward residence",
+      "actual all1536 tile/row masks, command/return/DATA/GRANT/fill/visible/drain events",
+      "current sourceSMIN6/+55 physical clocks/corridors/slot fit"
+    ]
+  },
+  "acceptance": [
+    "all144 layer/rank program/descriptor identities equal retained pins before and after replay",
+    "all33 source and pinned archive/header/generated-core bytes unchanged",
+    "source-dispatched ordered accepted issues and exact DYN-adjusted379 bits",
+    "all73728 real KV lane writes, all73728 independent final-memory snapshot values, exact agreement",
+    "all144 end-X vectors equal retained numerical capture; zero seq/core/collective faults; 36stage terminal",
+    "No new full-token/head or physical/8K-calendar adoption claim"
+  ],
+  "authoritative_successor": "r2",
+  "commands": {
+    "compile_host_only_after_parent_GO": [
+      "g++",
+      "-std=c++20",
+      "-O2",
+      "-pthread",
+      "-DGROUPS=6144",
+      "-DCOUNTWIDTH=18",
+      "-DSWIDTH=64",
+      "-DSMAXB=11",
+      "-DTCUTL=7",
+      "-DNWSD=5",
+      "-DXVMD=1",
+      "-DTPD=4",
+      "-DCBANKS=5",
+      "-DSMINV=7",
+      "-DQROM_OBSERVER=1",
+      "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+      "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+      "-I/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE",
+      "-I/home/ubuntu/w12/rt_tp4d/coll",
+      "-I/home/ubuntu/w12/rt_tp4d/die",
+      "-I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_fmul",
+      "-I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_qadd",
+      "-I/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_vstream_lane_a",
+      "-I/home/ubuntu/w12/rt_tp4d/tile",
+      "-I/home/ubuntu/w12/wt4/rtl/test/qwen_rom_runtime",
+      "-I/home/ubuntu/w12/wt4/rtl/test/qwen_runtime",
+      "-c",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/qwen_rom_rt_observed.cpp",
+      "-o",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/host-observed.o"
+    ],
+    "environment": {
+      "RT_QROM_JOURNAL": "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/accepted-state.raw",
+      "RT_SCALE_LOCAL": "0",
+      "RT_THREADS": "14"
+    },
+    "link_same_archive_bytes_after_parent_GO": [
+      "g++",
+      "-std=c++20",
+      "-O2",
+      "-pthread",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/host-observed.o",
+      "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+      "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+      "-Wl,--start-group",
+      "/home/ubuntu/w12/rt_tp4d/coll/Vcoll__ALL.a",
+      "/home/ubuntu/w12/rt_tp4d/die/Vdie__ALL.a",
+      "/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_fmul/libot_hdc_fmul.a",
+      "/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_qadd/libot_hdc_qadd.a",
+      "/home/ubuntu/w12/rt_tp4d/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a",
+      "/home/ubuntu/w12/rt_tp4d/tile/Vtile__ALL.a",
+      "-Wl,--end-group",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp",
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp",
+      "-o",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/qwen_rom_rt_observed"
+    ],
+    "run_after_review_and_lease": [
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/qwen_rom_rt_observed",
+      "--stages",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/stages.txt",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE",
+      "/home/ubuntu/w12/qrom-observer-parent-approved-REPLACE_WITH_LEASE/preload.hex",
+      "9223372036854775807"
+    ]
+  },
+  "headroom_receipt": {
+    "PVE1_lease_required_before_launch": true,
+    "PVE2_PVE3_new_jobs": false,
+    "available_memory_kib": 156866376,
+    "free_disk_bytes": 80905666560,
+    "loadavg": [
+      2.390625,
+      2.484375,
+      3.23876953125
+    ],
+    "local_D1_24CPU_reservation_used": false,
+    "original_PID1220907_exists": false,
+    "visible_CPUs": 28
+  },
+  "launch_requires": "Parent review of this exact packet and explicit fleet lease/GO; this tool never builds or executes the observer replay.",
+  "measured_reference": {
+    "baseline_L35_end_wall_seconds": 128826,
+    "baseline_full_token_wall_seconds": 131316.6,
+    "baseline_layer_prefix_cycles": 168091,
+    "baseline_original_host_link_seconds": 41.0,
+    "baseline_original_link_RSS_KiB": 327808,
+    "baseline_runtime_RSS_KiB": 1796596,
+    "observer_microbench": {
+      "actual_RTL_runtime_measured": false,
+      "benchmark_is_actual_journal": false,
+      "formatted_bytes": 4097122,
+      "formatted_record_seconds": 0.01702459,
+      "formatted_records": 151200,
+      "idle_sample_seconds": 0.000654621,
+      "idle_samples": 1000000,
+      "native_fixture_compile_RSS_KiB": 76544,
+      "native_fixture_compile_seconds": 0.20931329997256398,
+      "source_cpp_sha256": "6f1c744aa204e56d3a5e5d1f1e4ce8249984b89c478a012b42c1b53231fa3a5b",
+      "status": "PASS_OBSERVER_MICROBENCH_FIXTURE_ONLY"
+    },
+    "projection_scope": "Baseline35.785h layer-prefix wall reference, not a new deadline or promised runtime. Formatting/accessor benchmark is fixture-only; actual host overhead remains unmeasured."
+  },
+  "model_observation_price": {
+    "DUT_boundary_bits_per_cycle_added": 0,
+    "DUT_memory_ports_added": 0,
+    "FF_or_macro_replicas_added": 0,
+    "MACs_per_cycle_added": 0,
+    "hardware_area_added_um2": 0,
+    "hardware_clocks_or_uncertainty_changed": false,
+    "physical_timing_credit": false,
+    "routing_tracks_added": 0,
+    "software_observer_instances": 1,
+    "software_rank_predicates": 4,
+    "source_snapshot_FP32_bytes": 294912,
+    "token_clock_cycles_added": 0
+  },
+  "observed_control_lifetimes": {
+    "HBM_or_window_owner_reader_drain": null,
+    "lifetime_summary": [
+      "producer accepted PC/ticket/edge",
+      "first/last actual committed KV write",
+      "both actual accepted KV consumer fields/edges",
+      "first source ME-idle observation after last KV acceptance",
+      "snapshot edge"
+    ],
+    "not_a_global_provider_ready_claim": true,
+    "signals": [
+      "actual core.me_idle",
+      "actual core.su_idle",
+      "actual core.su_ready"
+    ],
+    "source_events": "sparse transition/first-layer-state B records"
+  },
+  "observer_header_sha256": "49b49946dfaea79fe8c7ebddb3eeb06feee8784567dfd137e42ff6f67f80a15f",
+  "original_capture_sha256": "d71d6d8a6d724b8f48c77ec90dd9027935d5d8f90d50b54be3a941b680f9beab",
+  "prepared_host_sha256": "b36f95aeef9b622a7bae94726385491805d20f74c84d8448564f053ee3178a63",
+  "resource_policy": {
+    "CPU_timeout": null,
+    "FSIZE": "unlimited",
+    "aggregate_file_cap": null,
+    "guessed_address_space_limit": null,
+    "incremental_host_object_retained": true,
+    "original_archive_files_read_only": true,
+    "refresh_measured_headroom_before_GO": true,
+    "wall_timeout": null
+  },
+  "retained_reuse": {
+    "archive_pins": {
+      "build_params.json": "0acc3fee6955c00452cfa72c6192ded8f38d32ebc7e28c8c93954d9a7f3743ff",
+      "coll/Vcoll__ALL.a": "2c4aaa56d59fe5b1b5bf3bedaf509f83105051385668c17310993e7ccc825409",
+      "die/Vdie.h": "bf686105f1dad2669449213c9ee3cbdb6e8391b7180538d06ae76f0c75adc738",
+      "die/Vdie__ALL.a": "cf55670362aa7471531afad9f43342149782daee54d20d180c523d6b3e773c1e",
+      "die/Vdie___024root.h": "a028c076aa2bd493fecc6fb1e6a059ac3502018f6d90abe82823d56bd19a2fd2",
+      "die/Vot_hdc_fmul/libot_hdc_fmul.a": "3380c94ec094973a28c1814ce636b6e60a9551b7b1bc9a26127d44c409f8820e",
+      "die/Vot_hdc_qadd/libot_hdc_qadd.a": "3bcff8df5017824ca18c809fb6b1ec5838a4dd02b412d6878ebd936eddea8f0b",
+      "die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a": "b3d9862c6fa3d3da1e6ebcc0b335581fa85c84e2163d1dc311c3e2c84986b083",
+      "gen/ot_qwen_rom_core.sv": "c8023a8b38be3d78a81deba60c20e318d7adcf50174c0112e16ef59e47bb9793",
+      "qwen_rom_rt": "f16129f24be3113b1bca7486aa92966a22c363636065c1fe6f70d1ec2beb574a",
+      "tile/Vtile__ALL.a": "8817173c8f6830a33b3acfb19a68b75b85a7187d49699be97b7e5abb59896828"
+    },
+    "binary_sha256": "f16129f24be3113b1bca7486aa92966a22c363636065c1fe6f70d1ec2beb574a",
+    "generated_core_sha256": "c8023a8b38be3d78a81deba60c20e318d7adcf50174c0112e16ef59e47bb9793",
+    "recompile_DUT_models": false,
+    "relink_host_needed": "Original binary has no hooks; new host reads already-retained actual root fields and committed memory. Same die/tile/coll archives are read-only.",
+    "source_files_byte_exact": 33
+  },
+  "scope": {
+    "head_replayed": false,
+    "input_token": 0,
+    "layers": 36,
+    "new_numerical_position": false,
+    "new_physical_source_qualified": false,
+    "position": 0,
+    "ranks": 4,
+    "stage_rank_identities": 144
+  },
+  "source_bank_policy": "No inherited labels qualify ownership: current parent owner/global-ready/provider/leased-window graph still requires independent actual source instantiation and transport journal.",
+  "status": "READY_FOR_PARENT_SOURCE_EXPORT_RESOURCE_REVIEW_NOT_LAUNCHED",
+  "storage_projection": {
+    "actual_final_snapshot_rows": 73728,
+    "actual_producer_write_rows": 73728,
+    "control_row_reservation_is_not_file_cap": true,
+    "journal_reservation_bytes": 134217728,
+    "matrix_images_or_models_duplicated": false,
+    "maximum_control_row_bytes_at64B": 43031296,
+    "maximum_control_rows_at_baseline_prefix_cycles": 672364,
+    "new_run_output_reservation_bytes": 268435456,
+    "observer_binary_reference_bytes": 45447232,
+    "reservation_is_not_termination_cap": true,
+    "retained_archive_count": 6,
+    "selective_numerical_X_bytes": 5308416,
+    "source_rows": 152640,
+    "worst_320_bytes_each_source_row": 48844800
+  },
+  "verification_recipe": [
+    "python3",
+    "tools/qwen_rom_source_observer_verify.py",
+    "--workdir",
+    "<observer-run-dir>",
+    "--bundle",
+    "results/uarch/qwen_rom_program_identity_20261002/retained-reproduction-final.json.gz",
+    "--out",
+    "<exclusive-terminal-receipt.json>"
+  ]
+}

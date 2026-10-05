@@ -1,0 +1,25 @@
+{
+  "parent_ha5": "9d5bbaf84ba05cb7cae7ca8c982abd0c37edcd48",
+  "rtl_parent": "5b8fb2a98e745fa7bbb382d68295bc6308d47e3e",
+  "guarded_parent": "0cde0cae02f38070f0b701c23dd973816609700a",
+  "terminal_checks": {
+    "guarded_adapter_and_backend": 14,
+    "compiled_fixture_gate": "NOT REPEATED"
+  },
+  "build": {
+    "host": "ot-pve1",
+    "supervisor_pid": 2385921,
+    "path": "/tmp/ha5-cp20-native-backend-r2/build",
+    "status": "LIVE; actual RTL compilation",
+    "admission_peak_GB": 24,
+    "workers": 2
+  },
+  "missing": [
+    "actual union column/source-service binding from Sagan",
+    "prepared released native source program/memory maps",
+    "archived layer/head21946 golden and actual1M source gate",
+    "actual slot6 accepted-edge measurement",
+    "composed selector load/select/merge/drain/retire costs"
+  ],
+  "adopt": false
+}

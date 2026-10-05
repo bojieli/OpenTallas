@@ -1,0 +1,23 @@
+{
+  "scope": "ASAP7 TT 1 ns matched synthesis/STA of weight prefetch with separate stream tags and absolute addresses. Macro-free prelayout model does not establish physical SRAM timing. Both timing checks fail.",
+  "records": [
+    {
+      "record": "prelayout_baseline_1ns.json",
+      "sha256": "4278c4b0620a1bfadc5d338a48b660a54da031810ea985de89d6a49d635739a4",
+      "area_um2": 885.703,
+      "setup_wns_ns": -0.9348390987591089,
+      "snapshot": "baseline.sv",
+      "snapshot_sha256": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7"
+    },
+    {
+      "record": "prelayout_candidate_1ns.json",
+      "sha256": "cf5c3c0ed887577cde7be331349e3114e5ad0935977564697e0b71f1dba0d599",
+      "area_um2": 897.817,
+      "setup_wns_ns": -1.6326656758504374,
+      "snapshot": "candidate.sv",
+      "snapshot_sha256": "59977f5ab501e7fb5fee16fe44c7852a915cd0c106bd23a44d0f96d1cff769f3"
+    }
+  ],
+  "decision": "Reject one-hot weight FIFO head: mapped area rises 1.37% and setup slack worsens. Active RTL restored byte-for-byte to baseline. No route launched for rejected candidate.",
+  "functional": "Candidate passed original 19 prefetch/replay cases. Restored baseline passes 21 cases with expanded FIFO depths1/2/3/4/8. Depth1 bench now drains one word before waiting for two-word tile release; larger queues remain stalled throughout release/overwrite."
+}

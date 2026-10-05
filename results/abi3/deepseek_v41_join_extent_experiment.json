@@ -1,0 +1,16 @@
+{
+  "not_a_claim": [
+    "no fix is proposed and nothing in the tree was changed: the experiment was a scratch monkeypatch over the lowering",
+    "the second refusal may be caused BY the patch rather than merely exposed by it; the two are not distinguished yet"
+  ],
+  "question": "At decode the V4.1 KV join's output view is narrowed by _remaining_extent against the CONTEXT LOOP's remaining units -- one token, so floor(1*1/2) is zero compressed groups -- and resolves to its 128-row bias, while its compressed input fails _walks_extent_axis and presents its full declared 64.  Should the output present what its inputs present instead?",
+  "result": {
+    "a_second_join_then_refuses": "GROUPED_CONCAT output view 7033 dims (138, 32) differ from the axis-0 concatenation (129, 32) -- and note the direction has REVERSED: the output is now too LARGE (138) for its inputs (129 = 128 + 1), where the first join's output was too small.",
+    "the_first_join_is_fixed": "main.layer02.attention.key_value_view no longer refuses.  Its output presented 192 = 128 + 64, which is exactly what its inputs present, and decode moved past it.  So the reading of the mechanism is confirmed by changing it.",
+    "what_that_proves": "Blanket-forcing the declared extent is too blunt.  Some phase outputs want the loop-narrowed extent and some want the declared one, and the patch gave all of them the same answer.  The reduced model's layers do not share a compression ratio -- compress_ratios carries 0, 2 and 1 -- so 'which joins' plausibly turns on the ratio, but that is the next thing to measure rather than assert."
+  },
+  "schema": "opentallas.result.v41_join_extent_experiment.v1",
+  "the_experiment": "A monkeypatch, not an edit: every phase output whose extent binds CONTEXT_LENGTH was given its DECLARED leading rows statically, the reduced V4.1 array was rebuilt, and decode step 1 was walked.  Three minutes per iteration against 5h36m for the shipped vehicle.",
+  "the_instrument_that_made_this_possible": "The committed reduced walk has decode_steps 0 -- it stopped after one token from prefill -- so no V4.1 build had ever executed a decode step.  Asking for two tokens reproduced the shipped failure in 60 seconds, which turned a 5h36m question into a 3-minute one.",
+  "why_this_is_recorded_without_a_fix": "A change that moves one refusal to another is not yet a fix, and committing it would trade a known failure for a less understood one.  What it does establish, and what four static readings could not, is that the join's output extent IS the mechanism and that the correct change is a discrimination between joins rather than a global rule."
+}

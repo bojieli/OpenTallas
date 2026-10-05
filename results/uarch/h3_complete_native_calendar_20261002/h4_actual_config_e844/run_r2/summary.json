@@ -1,0 +1,48 @@
+{
+  "C0_command_repetitions": 66342,
+  "DS_PC127_C0_commands": 1189792,
+  "DS_PC127_added_software_ticks": 26175424,
+  "DS_PC127_source_stages": 3999,
+  "H1_bridge_family_coverage": {
+    "DeepSeek": {
+      "PC_bindings": 2213,
+      "PC_count": 2213,
+      "actual_full_H1_native_command_bridges": 0,
+      "evidence": "software family expansion + H1 candidates only; audit e844",
+      "families": 30,
+      "unique_PCs": 2213
+    },
+    "Qwen": {
+      "PC_bindings": 1737,
+      "PC_count": 1737,
+      "actual_full_H1_native_command_bridges": 0,
+      "evidence": "software family expansion + H1 candidates only; audit e844",
+      "families": 21,
+      "unique_PCs": 1737
+    }
+  },
+  "Qwen_fixture_PC_intervals": 3474,
+  "Qwen_software_ticks_after": 89848800,
+  "Qwen_software_ticks_before": 88339452,
+  "RF_ACK_service_charged_once": true,
+  "consumer_sha256": "42c04beee7189ecdd7889baa83bdb54c0548aa3e52aeaf8f47bdfb1924cf61e0",
+  "hardware_clock_admission": false,
+  "no_provider_or_arithmetic_repeat": true,
+  "r22_augmentation_applied": false,
+  "schema": "H4_FINITE_MODEL_COST_JOIN_V1",
+  "scratch64_transactions": 12456,
+  "source_sha256": {
+    "DS_PC127_calendar.json.gz": "1cc4d757759dec4772689b2bca37b03e1ad45d3ee4e912803a1a9e0021603072",
+    "DS_PC127_template.json.gz": "dcddf1462567a342858e703f5bc2991b4561ac38da95388fc13a11031b98c1e0",
+    "Dewey_handoff.json": "ea3ba019188b1b4494f64f88eda2294d95e43eb36fe713fcfd8665f57c1746a3",
+    "Qwen_provider_execution.json.gz": "2c8a877636c5311e151deecaed42b920d993c8b6c6e4e029875e74cad72668ae",
+    "family_coverage.json": "c26e8cc4058cf4a90de58c5ebeeb5cac8079b2c97cb38fd16eee945a6308f576",
+    "family_summary.tsv": "9fb7227f978c710d91e1108fbec2ee9c49b910bed074b4ee278271e4505e3ea9",
+    "hardware_inventory.json": "d2510a49dce061129409d0ad028c19253f78afd5260215f7bf8381a52855ffa6",
+    "primitive_capabilities.json": "ba1f13f4957f165c10fd36d9a9e600ee726de8a6985444eca16b009fb9f405fe",
+    "remaining_work.json": "bfd4f1578fc7ad5f6da172309ff647a05e468d9418eaaea6b5dfe1b1b0625b14",
+    "source_pins.json": "4864f685e779df2c831491bc92c9d07c7b854d68fdd136a7c69c4a439dfe617e",
+    "uarch_model.py.source": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "uarch_parameters.json": "44045e5b8d302e468c00f3e5456e1479dce38b9ddf7a9931f3828681dadec4ec"
+  }
+}

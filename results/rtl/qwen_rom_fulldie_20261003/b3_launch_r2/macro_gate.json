@@ -1,0 +1,222 @@
+{
+ "created_ns": 1791045204789026695,
+ "hooks": [],
+ "macros": [],
+ "refusals": [
+  "qfd_sp_constants_sequencer: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_port_tiles_6: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_0: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_1: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_2: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_3: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_4: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_5: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_6: signal pins required; empty outline is not a qualified abstract",
+  "qfd_sp_scale_rom_7: signal pins required; empty outline is not a qualified abstract"
+ ],
+ "required_masters": [
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_tile/qfd_tile.lef",
+   "lef_sha256": "ae47c402facc4a15d47b2fad08bc9f23f279869ee742ab543d6150c39adaeaa5",
+   "requested_master": "qfd_tile",
+   "signal_pins_checked": 2373
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_cst/qfd_cst.lef",
+   "lef_sha256": "9019b3068800e9802271650bad3012ed384f1d9ae9114a791dc2f0f55ae07bfb",
+   "requested_master": "qfd_cst",
+   "signal_pins_checked": 1101
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_chead/qfd_chead.lef",
+   "lef_sha256": "e76f7ea663b5b16e82e6b8e8d990173dfc4478328c3f3ae80df875064bc3c89c",
+   "requested_master": "qfd_chead",
+   "signal_pins_checked": 1552
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_reng/qfd_reng.lef",
+   "lef_sha256": "60b3b1b59f2faad0eed1d6e021b682bf5ff65a268060bb1fd40b38143e19e752",
+   "requested_master": "qfd_reng",
+   "signal_pins_checked": 3200
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lfifo/qfd_lfifo.lef",
+   "lef_sha256": "dd3a1b36895d77e6bb443118bc4ed479aeab47d5ec604a8de1a3268999ab6ed8",
+   "requested_master": "qfd_lfifo",
+   "signal_pins_checked": 3299
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_ctrl/qfd_ctrl.lef",
+   "lef_sha256": "1ca2ef4859c58f4530684e72aacbee5e78ab4b5aa9d2f6711aab6887be743c29",
+   "requested_master": "qfd_ctrl",
+   "signal_pins_checked": 15865
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_hub/qfd_hub.lef",
+   "lef_sha256": "7343c17209dfad3e0e1be4951e119433b358b637808fe835ea626a8fab815f8d",
+   "requested_master": "qfd_hub",
+   "signal_pins_checked": 5266
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lst_v/qfd_lst_v.lef",
+   "lef_sha256": "0d9ce9b5fbb1850eaf6fbc234367c793b6e0911e079919a7a31b78e0b139c01b",
+   "requested_master": "qfd_lst_v",
+   "signal_pins_checked": 4224
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lst_c/qfd_lst_c.lef",
+   "lef_sha256": "444e6b8e3e9221422198fd7661b57ee57ac0b1bfecdaa669dd40d7407f255bcf",
+   "requested_master": "qfd_lst_c",
+   "signal_pins_checked": 4224
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lst_h/qfd_lst_h.lef",
+   "lef_sha256": "883c03df4d578b188ff9340f1ea5a612139abda35d5e57fb0db186331a947468",
+   "requested_master": "qfd_lst_h",
+   "signal_pins_checked": 2112
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_vector_memory/qfd_sp_vector_memory.lef",
+   "lef_sha256": "d40bfc0fac747fa89d9dfd962265383ca49eb3b51eadb14a1ee440d882b8f094",
+   "requested_master": "qfd_sp_vector_memory",
+   "signal_pins_checked": 2824
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_su64_sfu/qfd_sp_su64_sfu.lef",
+   "lef_sha256": "289a931381ab31d77f70637bcb9c41dfa63a6b5fcc85c1f37699eafe1cb07747",
+   "requested_master": "qfd_sp_su64_sfu",
+   "signal_pins_checked": 515
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_tree_top/qfd_sp_tree_top.lef",
+   "lef_sha256": "ea08e47f2b02af7f36e94fc4c9de0c95b60b85282242eeb3c45d6eb374944627",
+   "requested_master": "qfd_sp_tree_top",
+   "signal_pins_checked": 3072
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_constants_sequencer/qfd_sp_constants_sequencer.lef",
+   "lef_sha256": "59cedc0a318cacfc83a61fdf9f938a7d5f0ea07fffa1a072f8f30a7ec524c984",
+   "requested_master": "qfd_sp_constants_sequencer"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_0/qfd_sp_port_tiles_0.lef",
+   "lef_sha256": "6582bd2a2659afa904e1421775a66548453a0888c98b1940a85a41111135e745",
+   "requested_master": "qfd_sp_port_tiles_0",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_1/qfd_sp_port_tiles_1.lef",
+   "lef_sha256": "921cbd6c72ce40a1ac6b587e7ca550aec03e013266b21dcc7d65bbe07e8c0b53",
+   "requested_master": "qfd_sp_port_tiles_1",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_2/qfd_sp_port_tiles_2.lef",
+   "lef_sha256": "98fe70476f7bf9522aae2c5cc3f8c6e1569eb5adff859ed9800467b1238e7ace",
+   "requested_master": "qfd_sp_port_tiles_2",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_3/qfd_sp_port_tiles_3.lef",
+   "lef_sha256": "488b5d5cfc38824416f5df61644aec7ee3dfbc2a1da090f953535207f61f3b3d",
+   "requested_master": "qfd_sp_port_tiles_3",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_4/qfd_sp_port_tiles_4.lef",
+   "lef_sha256": "0cd418b350ddc628d2e5137effc6e4f69323002e794ac4ba2cd331076dfdcbeb",
+   "requested_master": "qfd_sp_port_tiles_4",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_5/qfd_sp_port_tiles_5.lef",
+   "lef_sha256": "89f60425b9c917a3c3871d9efa8d2f58cc16ac1f6de40b129788e7ae1f9b237f",
+   "requested_master": "qfd_sp_port_tiles_5",
+   "signal_pins_checked": 4608
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_port_tiles_6/qfd_sp_port_tiles_6.lef",
+   "lef_sha256": "1ee8e0ae52b9be5bf8c392c2bd88ecdb56660ec8a343813f8af443ea35ba1afc",
+   "requested_master": "qfd_sp_port_tiles_6"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_0/qfd_sp_scale_rom_0.lef",
+   "lef_sha256": "6fcbd70e1d6c6ba0b383e16e510f89233ee385e47bf2ad79def9d36347ee24bf",
+   "requested_master": "qfd_sp_scale_rom_0"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_1/qfd_sp_scale_rom_1.lef",
+   "lef_sha256": "fbe832b3b582d4e417b66a97b809379920b1e6044a509030e41217387e76e19f",
+   "requested_master": "qfd_sp_scale_rom_1"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_2/qfd_sp_scale_rom_2.lef",
+   "lef_sha256": "3ad6ec0a94c18d662162cc6d84cf63834e87d54b5d02d22ee54a396b73eebb7b",
+   "requested_master": "qfd_sp_scale_rom_2"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_3/qfd_sp_scale_rom_3.lef",
+   "lef_sha256": "43b65badcc8d553876944dd4fad313859eb4afcc2c0a2eeb685ce4802a828bca",
+   "requested_master": "qfd_sp_scale_rom_3"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_4/qfd_sp_scale_rom_4.lef",
+   "lef_sha256": "fe491bf2cd2e93f35a0407dbf4beeb3e0e468511df06f3e6e947bbfef85822ad",
+   "requested_master": "qfd_sp_scale_rom_4"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_5/qfd_sp_scale_rom_5.lef",
+   "lef_sha256": "ad1c620b4b6b7c926cf339a8382087e7f56148795dbd4821735182a62d1d3198",
+   "requested_master": "qfd_sp_scale_rom_5"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_6/qfd_sp_scale_rom_6.lef",
+   "lef_sha256": "c90c374fa599654d2577ba0b05be863e91e6465b4778325c5fb69042f9d533c8",
+   "requested_master": "qfd_sp_scale_rom_6"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_sp_scale_rom_7/qfd_sp_scale_rom_7.lef",
+   "lef_sha256": "041cf8be1f96f0f7f50c620861a969519885deff8f2cb6f61e1687fa012643ab",
+   "requested_master": "qfd_sp_scale_rom_7"
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_io_collective/qfd_io_collective.lef",
+   "lef_sha256": "f936ca37c5e9b7a54d2827623c2c6af237178633bc62f5f6fa87be49b3c2d2f3",
+   "requested_master": "qfd_io_collective",
+   "signal_pins_checked": 3075
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_io_embedding_rom/qfd_io_embedding_rom.lef",
+   "lef_sha256": "46bd04f30a51f2ec95d64c43d6bb168cca0ceec9ed2c48f2bc30029062623eb2",
+   "requested_master": "qfd_io_embedding_rom",
+   "signal_pins_checked": 512
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_io_ucie/qfd_io_ucie.lef",
+   "lef_sha256": "36966fa5a876387c98f9a47be76e96f6a72827400f8941c70f79a92820c75cac",
+   "requested_master": "qfd_io_ucie",
+   "signal_pins_checked": 1024
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_io_serdes/qfd_io_serdes.lef",
+   "lef_sha256": "24d143108bb22dce2a3d068ecf5e1c346e96d19427b9790d0dc53632994005a9",
+   "requested_master": "qfd_io_serdes",
+   "signal_pins_checked": 1024
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lst_v_split/qfd_lst_v_split.lef",
+   "lef_sha256": "8c14381f33a362c0a3fdfb0cbf94123c0911ab035d4c330ac58b344ebdf84dcc",
+   "requested_master": "qfd_lst_v_split",
+   "signal_pins_checked": 2112
+  },
+  {
+   "lef": "/srv/opentallas-scratch/claude/qwen-fulldie/cases/b3_k16_banded_i5/guard_views/qfd_lst_c_split/qfd_lst_c_split.lef",
+   "lef_sha256": "54e0007e6cc66ac6b7e23e9b5546b7f50bcd65a66c3721c3fb7ea22ce53b2bf3",
+   "requested_master": "qfd_lst_c_split",
+   "signal_pins_checked": 3168
+  }
+ ],
+ "schema": "opentallas.macro_track_gate.guarded.v1",
+ "verdict": "REFUSED",
+ "warnings": []
+}

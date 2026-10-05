@@ -1,0 +1,69 @@
+{
+  "H1_RTL_commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+  "created_UTC": "2026-10-02T13:14:06.242454+00:00",
+  "files": {
+    "Dewey_handoff.json": {
+      "bytes": 1742,
+      "sha256": "ea3ba019188b1b4494f64f88eda2294d95e43eb36fe713fcfd8665f57c1746a3"
+    },
+    "audit.py": {
+      "bytes": 22139,
+      "sha256": "bf794e0dd58f4b9e4c42feb086b2839b42585b720b1ff117d2a0ee4cab2f5fbf"
+    },
+    "binding_verification.json": {
+      "bytes": 731,
+      "sha256": "6a8e4fc19b3d462457910f0ef930a1e87994393ed9289b9e830f5d6fc7f8277b"
+    },
+    "candidate_RTL_elsewhere.json": {
+      "bytes": 1760,
+      "sha256": "b0110381ff10734cc6974a8645488edb6af57c264f4bad05174e7dd27963c2fd"
+    },
+    "family_bindings.json.gz": {
+      "bytes": 4143466,
+      "sha256": "5bdc7b20a289ab9677c3e6e78e3dc204da2faada259426e5d80fd0224d3af865"
+    },
+    "family_summary.tsv": {
+      "bytes": 5947,
+      "sha256": "9fb7227f978c710d91e1108fbec2ee9c49b910bed074b4ee278271e4505e3ea9"
+    },
+    "hardware_inventory.json": {
+      "bytes": 38008,
+      "sha256": "d2510a49dce061129409d0ad028c19253f78afd5260215f7bf8381a52855ffa6"
+    },
+    "primitive_capabilities.json": {
+      "bytes": 22969,
+      "sha256": "ba1f13f4957f165c10fd36d9a9e600ee726de8a6985444eca16b009fb9f405fe"
+    },
+    "remaining_work.json": {
+      "bytes": 4089,
+      "sha256": "bfd4f1578fc7ad5f6da172309ff647a05e468d9418eaaea6b5dfe1b1b0625b14"
+    },
+    "replay_receipt.json": {
+      "bytes": 1227,
+      "sha256": "a4ba64d47e5dcf5a8047adbd34519e45a2d6935a78a0a5ff46092f7495378d7e"
+    },
+    "report.txt": {
+      "bytes": 7155,
+      "sha256": "3bcb8c28b6e600ab3cb9d4e4fbb112df25161b67035505bf57db951aba7ba8ac"
+    },
+    "source_pins.json": {
+      "bytes": 8334,
+      "sha256": "4864f685e779df2c831491bc92c9d07c7b854d68fdd136a7c69c4a439dfe617e"
+    },
+    "validation.json": {
+      "bytes": 600,
+      "sha256": "330bbd133cf190fb4191c0728f70a2995540da362c5634fb2e7005ad4a41cea3"
+    },
+    "validation.log": {
+      "bytes": 532,
+      "sha256": "dde798c9680909a9ef37419182c89fb206c2d6ea122c6ba6626b0ca3d09cafa2"
+    },
+    "verify_bindings.py": {
+      "bytes": 1608,
+      "sha256": "23579f9f81711f51079158db5bfcdbd2fce5a3693da2ddd67cdf0357af317554"
+    }
+  },
+  "native_commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+  "schema": "h4_native_rtl_source_audit_manifest_v1",
+  "scope": "3950PC/51family audit; no connected token or physical qualification"
+}

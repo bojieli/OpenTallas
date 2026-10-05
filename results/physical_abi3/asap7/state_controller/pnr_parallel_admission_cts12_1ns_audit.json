@@ -1,0 +1,55 @@
+{
+  "record": "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns.json",
+  "sha256": "56140e20511e3af97f2ef668d7c8bf2610740abf3c08a322615dcce8c04e5103",
+  "scope": "Final extracted source-bound block at tested 1 ns ASAP7 TT; not integrated closure.",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+      "size_bytes": 19703
+    },
+    {
+      "path": "rtl/abi3/ot_a3_state_controller.sv",
+      "sha256": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+      "size_bytes": 20404
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/1_2_yosys.v": "744b3f881b15515502e9fb5adc4c16029af3eb873d6274a5e8ca3b9c2997ba47",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/6_final.v": "c8cac44ff9f1b1f10ad549aceb2181495a78b85085da3256b3b3792c39714e8b",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/6_finish.rpt": "c8edd49130fc4a99541b7d030b440d1a243f842c38d3c5a05699163e0006a011",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns_artifacts/metadata.json": "f42af881597c80f56a16d33f9aa9630b0dc43c58db9d97538f6ff97698ab1c17"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0559389,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 1319.0,
+        "setup_wns_ns": -0.663333,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 4182.11,
+  "critical_path": "apply_index[1] -> count_bytes_written[63]",
+  "decision": "Admission improved compared with payload-capture baseline, but apply byte accounting is now worst; pipeline candidate under validation."
+}

@@ -1,0 +1,18 @@
+{
+  "verdict": "SCOPED_GATE_READY_MODEL_ADMISSION_PENDING",
+  "invalid_receipts": [
+    "prelease_reserved_return_rtl.json",
+    "prelease_reserved_return_rtl_strict_initial.json"
+  ],
+  "invalid_reason": "Initial bench counted before sampling and accepted unknown counters; strict initial run exposed reset-settling X. Original logs retained; no endpoint qualification transferred.",
+  "authoritative_gate": "prelease_reserved_return_rtl_edge_final.json",
+  "phase_gate_commit": "d74a0bd4d",
+  "scope": "Unchanged NPC32 WB32 GA24 index return landing only; 136 synthetic sectors, stalled output, actual ROB data, finite 300-cycle bound. Does not prove full frozen-queue DRAM schedule, C/P/W drain, peer collector credit, CKV burst visibility, physical closure or full-token exactness.",
+  "next_dependency": "Ram composed model admission must bind old producer retirement, reserved return endpoints, exclusive publication lease, actual burst-visible backend, nine completion fence and final consumer done. No engine correction authorized by this component PASS.",
+  "live_job": {
+    "pid": 1307359,
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "stage": "build_rank0",
+    "action": "preserve"
+  }
+}

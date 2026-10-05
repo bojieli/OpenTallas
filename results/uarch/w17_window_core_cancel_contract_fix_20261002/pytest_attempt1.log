@@ -1,0 +1,28 @@
+.........................F.                                              [100%]
+=================================== FAILURES ===================================
+__________________ test_all_control_snapshots_exact_mutation ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6561/test_all_control_snapshots_exa0')
+
+    def test_all_control_snapshots_exact_mutation(tmp_path):
+     p=json.loads(PLAN.read_text());m=json.loads(campaign.MODEL.read_text())
+     for j in p['jobs'][1:]:
+      src=tmp_path/j['label'];src.mkdir();target=src/m['runtime_cone_path'];target.parent.mkdir(parents=True)
+      shutil.copyfile(ROOT/m['runtime_cone_path'],target);shutil.copyfile(ROOT/'rtl/test/w17_window_core_cancel_join_r7/tb.sv',src/'tb.sv')
+      chosen=src/'tb.sv' if j['mutation'].get('target')=='bench' else target;old=chosen.read_text()
+      campaign.mutate(src,j,m)
+>     assert chosen.read_text()==old.replace(j['mutation']['old'],j['mutation']['new'],1)
+E     AssertionError: assert '`timescale 1...endmodule\n\n' == '`timescale 1...endmodule\n\n'
+E       
+E       Skipping 96430 identical leading characters in diff, use -v to show
+E       Skipping 7388 identical trailing characters in diff, use -v to show
+E       -  raw_kv_we;
+E       +  raw_kv_we & {SUN{!win_scalar_suppress}};
+E                 assign vi_re = 0; assign vi_addr = 0; assign vs_re = 0; assign vs_addr = 0; assign crom_re = 0;
+E                 assign crom_addr = 0; assign ewrom_re = 0; assign ewrom_addr = 0; assign vw_su_we = 0; assign vw_su_addr = 0;...
+E       
+E       ...Full output truncated (1144 lines hidden), use '-vv' to show
+
+tests/test_w17_window_core_cancel_resource_admission.py:132: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_w17_window_core_cancel_resource_admission.py::test_all_control_snapshots_exact_mutation

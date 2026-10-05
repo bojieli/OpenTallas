@@ -1,0 +1,9 @@
+{
+  "verdict": "FAIL_TEST_MUTANT_CONSTRUCTION",
+  "passed": 11,
+  "failed": 1,
+  "test": "test_omitted_row_wrong_root_and_tail_mutants",
+  "error": "TypeError: 'tuple' object does not support item assignment",
+  "line": "bad[segments][0][1]-=32",
+  "correction": "Construct replacement tuple before calling the independent validator; no expected capacity or source geometry change"
+}

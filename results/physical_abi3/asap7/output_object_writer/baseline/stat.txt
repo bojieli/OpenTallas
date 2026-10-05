@@ -1,0 +1,57 @@
+
+9. Printing statistics.
+
+=== ot_a3_output_object_writer ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    12030        - wires
+    12030        - wire bits
+     1680        - public wires
+     1680        - public wire bits
+     1680        - ports
+     1680        - port bits
+    11187 1.38E+03 cells
+      737   64.473   AND2x2_ASAP7_75t_R
+      318   27.819   AND3x1_ASAP7_75t_R
+       90    9.185   AND4x1_ASAP7_75t_R
+       32    3.732   AND5x1_ASAP7_75t_R
+       30    6.998   AO211x2_ASAP7_75t_R
+     1127    98.59   AO21x1_ASAP7_75t_R
+      108   15.746   AO221x1_ASAP7_75t_R
+       92   16.096   AO222x2_ASAP7_75t_R
+      194   25.457   AO22x1_ASAP7_75t_R
+       22    5.132   AO31x2_ASAP7_75t_R
+      171   19.945   AO32x1_ASAP7_75t_R
+        4    0.583   AO33x2_ASAP7_75t_R
+        4      0.7   AOI211x1_ASAP7_75t_R
+      209   24.378   AOI21x1_ASAP7_75t_R
+        1    0.204   AOI221x1_ASAP7_75t_R
+      122   17.788   AOI22x1_ASAP7_75t_R
+        6    2.274   DFFASRHQNx1_ASAP7_75t_R
+     1178  343.505   DFFHQNx1_ASAP7_75t_R
+     1469   64.254   INVx1_ASAP7_75t_R
+      338   44.352   MAJx2_ASAP7_75t_R
+      537   46.977   NAND2x1_ASAP7_75t_R
+       23    3.689   NAND3x1_ASAP7_75t_R
+      519   45.402   NOR2x1_ASAP7_75t_R
+       13    2.085   NOR3x1_ASAP7_75t_R
+      177   20.645   OA211x2_ASAP7_75t_R
+      376   38.375   OA21x2_ASAP7_75t_R
+       24    4.199   OA222x2_ASAP7_75t_R
+       92   13.414   OA22x2_ASAP7_75t_R
+       41    8.967   OA31x2_ASAP7_75t_R
+        5    0.729   OA33x2_ASAP7_75t_R
+      433   50.505   OAI21x1_ASAP7_75t_R
+      110   16.038   OAI22x1_ASAP7_75t_R
+      479   41.903   OR2x2_ASAP7_75t_R
+      438   38.316   OR3x1_ASAP7_75t_R
+      121   12.349   OR4x1_ASAP7_75t_R
+       76    8.865   OR5x1_ASAP7_75t_R
+     1197  191.975   XNOR2x2_ASAP7_75t_R
+      274   43.944   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_output_object_writer': 1379.588760
+     of which used for sequential elements: 345.779280 (25.06%)
+

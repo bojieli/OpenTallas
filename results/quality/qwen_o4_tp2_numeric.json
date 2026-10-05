@@ -1,0 +1,177 @@
+{
+  "checkpoint_shard_blob": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+  "claim_boundary": "Layer-0 real-row numerical probe. Embedding input to o, repeated embedding input to down, and BF16 stress activations are synthetic. Changed K-split arithmetic can differ from the quality harness; no full token, RTL, throughput, or quality delta is validated.",
+  "probes": [
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 56,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 987266934,
+      "first_scale_order_mismatch_row": 0,
+      "first_wrong_bits": 987266928,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 49,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 1073
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 41,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 3168436468,
+      "first_scale_order_mismatch_row": 1,
+      "first_wrong_bits": 3168436469,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 39,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 0
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 50,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 994089375,
+      "first_scale_order_mismatch_row": 2,
+      "first_wrong_bits": 994089374,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 50,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 1
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 57,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 3149395941,
+      "first_scale_order_mismatch_row": 1,
+      "first_wrong_bits": 3149395944,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 54,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 1000
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 48,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 1014422657,
+      "first_scale_order_mismatch_row": 2,
+      "first_wrong_bits": 1014422658,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 34,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 4096
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 48,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 3164439847,
+      "first_scale_order_mismatch_row": 1,
+      "first_wrong_bits": 3164439848,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 43,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 12345
+    },
+    {
+      "down_fold_then_scale_vs_scale_then_fold_mismatches": 49,
+      "down_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "first_correct_bits": 3139671541,
+      "first_scale_order_mismatch_row": 0,
+      "first_wrong_bits": 3139671542,
+      "o_fold_then_scale_vs_scale_then_fold_mismatches": 43,
+      "o_global_vs_tp2_fold_then_scale_mismatches": 0,
+      "q_global_vs_tp2_mismatches": 0,
+      "token": 151000
+    }
+  ],
+  "quantization": "signed INT8 complete output row, one BF16 scale, norm fold before q quantization",
+  "required_tp2_order": "raw FP32 partials, rank-ordered FP32 fold, one FP32 RNE row-scale multiply",
+  "rows_per_matrix": 128,
+  "snapshot_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "source_sha256": {
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/qwen3_deployment_quality.py": "dcd3c740b599b5ae7b9663793fc2efc3bcc8a1d9f4d4982707e19958c7f7ee5b",
+    "tools/qwen_o4_tp2_numeric.py": "6f19f5617674f76b3bf7e90448f1184da76bd76227dfbb240d1055f6bce0ac77"
+  },
+  "splits": {
+    "down_quality": 256,
+    "down_tp2_per_die": 2048,
+    "o_quality": 256,
+    "o_tp2_per_die": 2048,
+    "q_quality": 512,
+    "q_tp2": 256
+  },
+  "synthetic_bf16_stress": {
+    "probes": [
+      {
+        "input_std": 0.01,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 0
+      },
+      {
+        "input_std": 0.01,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 1,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 1
+      },
+      {
+        "input_std": 0.01,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 2
+      },
+      {
+        "input_std": 0.1,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 0
+      },
+      {
+        "input_std": 0.1,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 1,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 1
+      },
+      {
+        "input_std": 0.1,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 2
+      },
+      {
+        "input_std": 1.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 0
+      },
+      {
+        "input_std": 1.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 1,
+        "q_quality_vs_tp2_mismatches": 1,
+        "sample": 1
+      },
+      {
+        "input_std": 1.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 2
+      },
+      {
+        "input_std": 10.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 1,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 0
+      },
+      {
+        "input_std": 10.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 0,
+        "q_quality_vs_tp2_mismatches": 0,
+        "sample": 1
+      },
+      {
+        "input_std": 10.0,
+        "o_quality_vs_tp2_fold_then_scale_mismatches": 1,
+        "q_quality_vs_tp2_mismatches": 1,
+        "sample": 2
+      }
+    ],
+    "rng": "numpy default_rng(20260928)"
+  }
+}

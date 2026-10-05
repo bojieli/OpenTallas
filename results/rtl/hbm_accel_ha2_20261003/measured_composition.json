@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.ha2.measured_composition.v1",
+  "source_commit": "045cc74114fcdbaa1576f27fa6fe3537a7890ee4",
+  "rows": [
+    {
+      "rung": "HA2 snapshot candidate",
+      "verdict": "REJECT_SNAPSHOT_CANDIDATE",
+      "measured_gather_last_ns": [
+        2158.392,
+        2278.488,
+        2251.7999999999997
+      ],
+      "measured_ar_ns": null,
+      "measured_per_user_gain_pct": null,
+      "adopted": false,
+      "contribution_to_adopted_composition": null
+    }
+  ],
+  "excluded": [
+    "HA2: snapshot rejected; system/area/route/SSFF/gain gates pending"
+  ],
+  "published_accelerator_rate": null
+}

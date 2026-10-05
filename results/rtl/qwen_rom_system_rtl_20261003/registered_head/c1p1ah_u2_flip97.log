@@ -1,0 +1,17 @@
+BOOT sys_ready at cycle 4460 status=00000051 boot_cycles
+CQ slot=0 tag=5a00 pos=15 token=1073 kind=1 cycle=399571
+CQ slot=1 tag=5a01 pos=15 token=1073 kind=1 cycle=412500
+CQ slot=0 tag=5a00 pos=16 token=382 kind=1 cycle=425529
+CQ slot=1 tag=5a01 pos=16 token=382 kind=1 cycle=438528
+CQ slot=0 tag=5a00 pos=17 token=93 kind=2 cycle=451623
+CQ slot=1 tag=5a01 pos=17 token=93 kind=2 cycle=464718
+DIE 0 hbm_kv_mismatches=0 vm_mismatches=0
+DIE 1 hbm_kv_mismatches=0 vm_mismatches=0
+DIE 2 hbm_kv_mismatches=0 vm_mismatches=0
+DIE 3 hbm_kv_mismatches=0 vm_mismatches=0
+COUNTERS kv_fill_words=10493,10503,10505,10510 kv_wb_sectors=5742,5742,5742,5742 link_crc_err=57121 link_replays=6101 link_seq_drops=9221 boot_cycles=4442 steps=36 die0_coll_cycles=386871 die0_busy=458402 die0_kvok_wait=0
+FAULT_STATUS=00000000 FAULT_FIRST=00000000 fault_src=00000000 msi=6 cq_entries=6 errors=0
+SYS users=2 me_cdc=1 steps_checked=36 mismatches=0 kv_mismatches=0 vm_mismatches=0 collisions=0 flip=97 cycles=464799 ticks=1859196
+PASS
+- rtl/test/qwen_sys/tb_qwen_rom_sys.sv:394: Verilog $finish
+HARNESS clk=split fphase=0 ticks=1859197

@@ -1,0 +1,25 @@
+{
+  "DS_bounded_dispatch_PCs": 2213,
+  "DeepSeek": {
+    "PCs": 2213,
+    "all_PC_shapes_templates_bound": true,
+    "all_PCs_exactly_once": true,
+    "families": 30
+  },
+  "Qwen": {
+    "PCs": 1737,
+    "all_PC_shapes_templates_bound": true,
+    "all_PCs_exactly_once": true,
+    "families": 21
+  },
+  "all_prepared_RTL_hashes_match": true,
+  "connected_token_qualification": false,
+  "native_primitive_opcodes": 39,
+  "new_engine_RTL": 0,
+  "new_jobs": 0,
+  "new_place_route": 0,
+  "prepared_RTL_hash_checks": 90,
+  "status": "PASS_SOURCE_AUDIT_ONLY",
+  "total_PCs": 3950,
+  "total_families": 51
+}

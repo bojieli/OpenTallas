@@ -1,0 +1,150 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_downstream_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "counters": {"$ref": "#/$defs/counters"},
+    "expectations_id": {"$ref": "#/$defs/sha256"},
+    "intermediate_payload_sha256": {"$ref": "#/$defs/intermediate_hashes"},
+    "output_payload_sha256": {"$ref": "#/$defs/output_hashes"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "saturated_element_count": {"$ref": "#/$defs/saturation"},
+    "schema": {"const": "opentallas.tensor_accelerator.layer_downstream_expectations.v1"}
+  },
+  "required": [
+    "check_id",
+    "counters",
+    "expectations_id",
+    "intermediate_payload_sha256",
+    "output_payload_sha256",
+    "qualification_report_id",
+    "saturated_element_count",
+    "schema"
+  ],
+  "title": "Layer downstream execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "counters": {
+      "additionalProperties": {"minimum": 0, "type": "integer"},
+      "maxProperties": 37,
+      "minProperties": 37,
+      "propertyNames": {
+        "enum": [
+          "accumulator_sram_bytes_read",
+          "accumulator_sram_bytes_written",
+          "add_command_count",
+          "add_input_sram_bytes_read",
+          "add_output_sram_bytes_written",
+          "command_count",
+          "complete_command_count",
+          "dma_command_count",
+          "dma_sram_bytes_written",
+          "epsilon_additions",
+          "final_weight_multiplications",
+          "hbm_transferred_bytes_read",
+          "hbm_useful_bytes_read",
+          "input_square_multiplications",
+          "matrix_input_sram_bytes_read",
+          "matrix_output_sram_bytes_written",
+          "matmul_command_count",
+          "mean_divisions",
+          "normalization_multiplications",
+          "projection_accumulation_additions",
+          "projection_multiplications",
+          "reciprocal_square_roots",
+          "reduction_additions",
+          "residual_additions",
+          "rmsnorm_command_count",
+          "rmsnorm_input_sram_bytes_read",
+          "rmsnorm_output_sram_bytes_written",
+          "rmsnorm_weight_sram_bytes_read",
+          "sigmoid_denominator_additions",
+          "sigmoid_divisions",
+          "sigmoid_exponentials",
+          "silu_command_count",
+          "silu_input_sram_bytes_read",
+          "silu_multiplications",
+          "silu_output_sram_bytes_written",
+          "up_gate_multiplications",
+          "weight_sram_bytes_read"
+        ]
+      },
+      "type": "object"
+    },
+    "intermediate_hashes": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_projected": {"$ref": "#/$defs/sha256"},
+        "down": {"$ref": "#/$defs/sha256"},
+        "gate": {"$ref": "#/$defs/sha256"},
+        "gated_mlp": {"$ref": "#/$defs/sha256"},
+        "mlp_norm": {"$ref": "#/$defs/sha256"},
+        "post_attention": {"$ref": "#/$defs/sha256"},
+        "silu_activation": {"$ref": "#/$defs/sha256"},
+        "up": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "attention_projected",
+        "down",
+        "gate",
+        "gated_mlp",
+        "mlp_norm",
+        "post_attention",
+        "silu_activation",
+        "up"
+      ],
+      "type": "object"
+    },
+    "output_hashes": {
+      "additionalProperties": false,
+      "properties": {"hidden_1": {"$ref": "#/$defs/sha256"}},
+      "required": ["hidden_1"],
+      "type": "object"
+    },
+    "saturation": {
+      "additionalProperties": false,
+      "properties": {
+        "projection": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_output": {"minimum": 0, "type": "integer"},
+            "down": {"minimum": 0, "type": "integer"},
+            "gate": {"minimum": 0, "type": "integer"},
+            "up": {"minimum": 0, "type": "integer"}
+          },
+          "required": ["attention_output", "down", "gate", "up"],
+          "type": "object"
+        },
+        "rmsnorm": {
+          "additionalProperties": false,
+          "properties": {
+            "normalized": {"minimum": 0, "type": "integer"},
+            "output": {"minimum": 0, "type": "integer"}
+          },
+          "required": ["normalized", "output"],
+          "type": "object"
+        },
+        "vector": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_residual": {"minimum": 0, "type": "integer"},
+            "final_residual": {"minimum": 0, "type": "integer"},
+            "silu_activation": {"minimum": 0, "type": "integer"},
+            "silu_output": {"minimum": 0, "type": "integer"}
+          },
+          "required": [
+            "attention_residual",
+            "final_residual",
+            "silu_activation",
+            "silu_output"
+          ],
+          "type": "object"
+        }
+      },
+      "required": ["projection", "rmsnorm", "vector"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

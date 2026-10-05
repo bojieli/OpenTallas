@@ -1,0 +1,77 @@
+{
+  "active_inference_inventory": {
+    "active_transformer_weight_bytes_per_call": 40259514944,
+    "full_transformer_weight_bytes": 66280430144,
+    "main_adaln_precomputable_bytes": 26020915200,
+    "main_attention_bytes": 15414092800,
+    "main_matrix_parameters": 19267584000,
+    "main_mlp_bytes": 23121100800,
+    "main_norm_and_other_bytes": 1075200,
+    "other_io_time_final_bytes": 181784640,
+    "token_refiner_bytes": 1541461504
+  },
+  "architecture": {
+    "attention_head_dim": 128,
+    "attention_inner_dim": 7168,
+    "ffn_dim": 14336,
+    "hidden_size": 5376,
+    "num_attention_heads": 56,
+    "num_layers": 50,
+    "num_refiner_layers": 2,
+    "visual_effective_spatial_downsample": 32,
+    "visual_temporal_downsample": 4
+  },
+  "checkpoint_inventory": {
+    "dtype_policy": "official mixed BF16/FP32 transformer payload",
+    "index_sha256": "fb457a26ffa6294660e249b0ddd03a337f2e5393f770b5c34c8b8f90a29a7efb",
+    "path": "FL2VA/transformer",
+    "shard_count": 13,
+    "tensor_count": 535,
+    "transformer_config_sha256": "f619093a231fcfbcc3d035bec26c50ad864e7331a500d5c519f5045dc1e50458"
+  },
+  "diffusers_source": {
+    "before_denoise.py": "530b007c1d689c3ee1fc1690527f5253522d2da6b44dd326bec99faaf9f72fff",
+    "denoise.py": "bf0224f3ac8f3bba8366599143f60d78bd14e9faf77cdb207a844549bb8c1dc4",
+    "modular_blocks_minimax_h3.py": "78b093a1062266dd52b3dbb0b00d56335bed4c81aba7ce4badb80ccc3a7b4811",
+    "repo": "huggingface/diffusers",
+    "revision": "bda3386ddcaa31bc2853567a95e815629c8022b7",
+    "scheduling_minimax_h3.py": "307d5bf755337ef00c47237f9ac8be116e627d26e1df3b5f0bd504a80f9de8dd",
+    "transformer_minimax_h3.py": "1926b1bc15a5bebda05e3dc8cde1b3955d56641ba7f8f9d6e90c8f78c66ae30c"
+  },
+  "evidence_boundary": [
+    "Transformer storage is summed from the public pinned safetensor headers; the study does not execute the checkpoint.",
+    "The active-per-call number gives H3 the vendor-described inference benefit of precomputing approximately 13B AdaLN-branch outputs.",
+    "Service for the resulting precomputed AdaLN output table is not charged, making the H3 control favorable.",
+    "The dense operation model prices only the 50 main attention/MLP blocks and is therefore a favorable transformer-only bound.",
+    "No autoregressive persistent KV cache is assigned: every denoising call rebuilds Q/K/V for the bidirectional packed sequence."
+  ],
+  "huggingface_repo": "MiniMaxAI/MiniMax-H3",
+  "huggingface_revision": "42ed227ee7df40d41602854ae760620d6eb651fe",
+  "model": "MiniMax-H3",
+  "repo": "MiniMax-AI/MiniMax-H3",
+  "revision": "d21241f0a4b3acbb34c97dae47fa417b7065e438",
+  "schema_version": 1,
+  "sequence_cases": [
+    {
+      "audio_tokens": 414,
+      "label": "5.17s",
+      "latent_video_frames": 37,
+      "output_frames": 124,
+      "sequence_tokens_at_512_text": 38222
+    },
+    {
+      "audio_tokens": 810,
+      "label": "10.12s",
+      "latent_video_frames": 72,
+      "output_frames": 243,
+      "sequence_tokens_at_512_text": 73898
+    },
+    {
+      "audio_tokens": 1150,
+      "label": "14.38s",
+      "latent_video_frames": 102,
+      "output_frames": 345,
+      "sequence_tokens_at_512_text": 104478
+    }
+  ]
+}

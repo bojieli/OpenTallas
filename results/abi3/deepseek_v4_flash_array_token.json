@@ -1,0 +1,58 @@
+{
+  "answer": "yes",
+  "cases": {
+    "rom_array_32": {
+      "deployment": "build/abi3/deepseek-v4-flash-rom-array-32",
+      "deployment_sha256": "bcf4d82bb5231c4304239b2bc0b6d2f530d231f9e8ae0501d7553bb649fcb546",
+      "emitted_token_ids": [
+        16
+      ],
+      "failure": null,
+      "instruction_count": 1344,
+      "max_retired_work": 6655369,
+      "node_count": 32,
+      "retired_work": 16065,
+      "target_id": "deepseek-v4-flash-rom-array-32"
+    },
+    "rom_wafer": {
+      "deployment": "build/abi3/deepseek-v4-flash-rom",
+      "emitted_token_ids": [
+        16
+      ],
+      "failure": null,
+      "instruction_count": 1323,
+      "node_count": 2,
+      "retired_work": 15830
+    }
+  },
+  "cross_topology_agreement": {
+    "agree": true,
+    "reading": "the 2-node wafer and the 32-node array emit THE SAME TOKEN from the same prompt over the same weights, which is the property two lowerings of one graph must have.  DeepSeek V4.1's two stores do NOT have it -- 2750 against 459 -- so this is a check the array passes and that one fails"
+  },
+  "evidence_class": "functional_device_execution_shipped_checkpoint",
+  "model_id": "deepseek-v4-flash-0731",
+  "not_a_claim": [
+    "rtl_execution",
+    "timing_or_performance",
+    "agreement_with_the_reference_oracle_on_this_prompt"
+  ],
+  "producer": {
+    "git": {
+      "commit": "889b0e17ed253300e05b6a12ea7ccca697de499d",
+      "worktree_dirty": true
+    }
+  },
+  "prompt_provenance": "an arbitrary 8-token prompt, NOT the reference oracle's own 32-token workload -- so this establishes that the array executes and emits, and says nothing about the value being right.  The oracle-prompt run is a separate, longer job",
+  "prompt_token_ids": [
+    0,
+    3563,
+    3745,
+    418,
+    170,
+    16,
+    3564,
+    3582
+  ],
+  "question": "does a 32-node ROM ARRAY walk its program under the real control plane and emit a token?",
+  "schema": "opentallas.abi3.array_topology_token.v1"
+}

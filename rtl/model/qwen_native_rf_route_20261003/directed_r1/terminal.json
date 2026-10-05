@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS_NATIVE_RF_ROUTE_FIXTURE",
+  "compile_rc": 0,
+  "runtime_rc": 0,
+  "elapsed_s": 39.51073999796063,
+  "source_sha256": {
+    "rtl/model/qwen_native_rf_route_20261003/ot_gpu_qwen_native_rf_route.sv": "021fc3a8a995b3c8bc8624b7c50cf8976c36ac382b162b9bf855144c91b4c34c",
+    "rtl/model/qwen_native_rf_route_20261003/directed_r1/tb.sv": "ef00b82b8c6013a6eaac3b1eee1dfad6135ea457dd3890d2e3dffccfbc3a279b",
+    "rtl/experimental/canonical_qwen_banked_manifest_owner_20261003/ot_gpu_qwen_banked_manifest_range_owner.sv": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "post_sha256": {
+    "rtl/model/qwen_native_rf_route_20261003/ot_gpu_qwen_native_rf_route.sv": "021fc3a8a995b3c8bc8624b7c50cf8976c36ac382b162b9bf855144c91b4c34c",
+    "rtl/model/qwen_native_rf_route_20261003/directed_r1/tb.sv": "ef00b82b8c6013a6eaac3b1eee1dfad6135ea457dd3890d2e3dffccfbc3a279b",
+    "rtl/experimental/canonical_qwen_banked_manifest_owner_20261003/ot_gpu_qwen_banked_manifest_range_owner.sv": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "scope": "actual router+original sealed72 codec; collector/controller/RF port signals fixtures, no integrated engine/payload/token/SSFF credit",
+  "limits": "CPU/AS/FSIZE unlimited; no wall cap"
+}

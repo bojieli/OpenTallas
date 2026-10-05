@@ -1,0 +1,59 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/execution_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "model_id": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "opentallas.execution_request.v1"
+    },
+    "tensors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "dtype": {
+            "enum": [
+              "i8",
+              "i32"
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "shape": {
+            "items": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "values": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "dtype",
+          "id",
+          "shape",
+          "values"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "model_id",
+    "schema",
+    "tensors"
+  ],
+  "title": "OpenTallas execution request v1",
+  "type": "object"
+}

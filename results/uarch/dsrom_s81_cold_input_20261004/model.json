@@ -1,0 +1,67 @@
+{
+  "MACs_per_cycle": 0,
+  "ROM_ECC": false,
+  "ROM_port_bytes_per_cycle_peak": 32,
+  "VM_FP32_words_per_token": 20480,
+  "VM_commits_per_token": 1280,
+  "VM_write_bytes_per_cycle_peak": 64,
+  "adopted": false,
+  "all_numbers": "MODEL_UNVALIDATED",
+  "boundary_bits_per_cycle": {
+    "ROM_request": 73,
+    "ROM_response": 256,
+    "VM_commit": 512,
+    "saved_context": 47
+  },
+  "clock_hz": 1200000000.0,
+  "communication_intensity_FP32_output_bytes_per_source_byte": 8,
+  "composed_single_user_contribution": "Cold embedding before native SSX reduction/L0.I0; stalls and transport are additive",
+  "compute_intensity_MAC_per_byte": 0,
+  "floorplan_slot_fit": null,
+  "geometry_changed": false,
+  "lookup_words_per_token": 320,
+  "mux_demux_fanout": "Single selected macro return mux retained in storage ledger; 16 BF16-to-FP32 wiring lanes, 4 sequential HC copies, one target VM endpoint at a time. TP4 fanout/delivery requires parent pricing.",
+  "no_stall_latency_cycles": 4161,
+  "no_stall_latency_us": 3.4675,
+  "numerical_work": "Lossless BF16 bits <<16; no arithmetic, expected activation or CPU inference",
+  "one_outstanding_request": true,
+  "physical_SS_FF_qualified": false,
+  "register_cell_lower_bound_mm2": 0.00010585080000000001,
+  "replicas": 1,
+  "required_next_native_producer": "SSX = golden-order sum of H squared; never host-computed here",
+  "retained_storage": {
+    "elements": 661913600,
+    "pair_start": 0,
+    "pairs": 2525,
+    "secded_bits": 0,
+    "shape": [
+      129280,
+      5120
+    ],
+    "tensor": "embed.weight",
+    "word_data_bits": 256,
+    "words": 41369600
+  },
+  "retained_storage_credit_mm2": 0,
+  "rom_capture_cycles": 8,
+  "rom_response_bytes": 32,
+  "routing_channel_capacity": null,
+  "routing_fit_qualified": false,
+  "routing_tracks_required": {
+    "ROM_address": 26,
+    "ROM_response_data": 256,
+    "VM_address": 19,
+    "VM_commit_data": 512,
+    "VM_identity": 47
+  },
+  "schema": "opentallas.dsrom.S81.embedding-bootstrap.model.v1",
+  "source_inventory": "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json",
+  "state_bits": 363,
+  "unpriced_control_and_routes": [
+    "token/address decode and bounds",
+    "macro return mux/control",
+    "VM 16-lane arbitration/commit port",
+    "dedicated-store to TP4 transport",
+    "CTS/PDN/routes"
+  ]
+}

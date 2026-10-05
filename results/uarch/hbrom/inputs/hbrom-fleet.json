@@ -1,0 +1,174 @@
+{
+  "observed_utc": "2026-10-05T04:06:22.354170+00:00",
+  "hosts": {
+    "ot-epyc1tb": {
+      "time_utc": "2026-10-05T04:06:22.164406+00:00",
+      "hostname": "ot-epyc1tb",
+      "cpu": 128,
+      "load": [
+        65.3720703125,
+        70.79345703125,
+        83.7958984375
+      ],
+      "mem_total": 1216617857024,
+      "mem_available": 792969089024,
+      "disk": {
+        "/": {
+          "total": 943322828800,
+          "used": 39515545600,
+          "free": 855813595136
+        },
+        "/tmp": {
+          "total": 608308928512,
+          "used": 102072320,
+          "free": 608206856192
+        },
+        "/srv/opentallas-scratch": {
+          "total": 3149225934848,
+          "used": 2623738200064,
+          "free": 525470957568
+        }
+      }
+    },
+    "ot-epyc2": {
+      "time_utc": "2026-10-05T04:06:22.174661+00:00",
+      "hostname": "climbing-locust",
+      "cpu": 128,
+      "load": [
+        32.609375,
+        39.0810546875,
+        42.96240234375
+      ],
+      "mem_total": 1216617865216,
+      "mem_available": 1034548760576,
+      "disk": {
+        "/": {
+          "total": 943322828800,
+          "used": 366413479936,
+          "free": 528915660800
+        },
+        "/tmp": {
+          "total": 608308932608,
+          "used": 9388032,
+          "free": 608299544576
+        },
+        "/srv/opentallas-scratch": {
+          "total": 943322828800,
+          "used": 366413479936,
+          "free": 528915660800
+        }
+      }
+    },
+    "ot-pve1": {
+      "time_utc": "2026-10-05T04:06:19.995144+00:00",
+      "hostname": "ot-pve1",
+      "cpu": 28,
+      "load": [
+        15.419921875,
+        20.37158203125,
+        24.52001953125
+      ],
+      "mem_total": 253343473664,
+      "mem_available": 184128684032,
+      "disk": {
+        "/": {
+          "total": 1977024151552,
+          "used": 717030596608,
+          "free": 1259976777728
+        },
+        "/tmp": {
+          "total": 1977024151552,
+          "used": 717030596608,
+          "free": 1259976777728
+        },
+        "/srv/opentallas-scratch": {
+          "total": 1977024151552,
+          "used": 717030596608,
+          "free": 1259976777728
+        }
+      }
+    },
+    "ot-agidock128": {
+      "time_utc": "2026-10-05T04:06:19.687013+00:00",
+      "hostname": "vm-xry57mhfyn",
+      "cpu": 64,
+      "load": [
+        21.06494140625,
+        17.36962890625,
+        19.41650390625
+      ],
+      "mem_total": 134974394368,
+      "mem_available": 49208872960,
+      "disk": {
+        "/": {
+          "total": 1065316089856,
+          "used": 551723843584,
+          "free": 513575469056
+        },
+        "/tmp": {
+          "total": 67487199232,
+          "used": 27130142720,
+          "free": 40357056512
+        },
+        "/srv/opentallas-scratch": {
+          "total": 1065316089856,
+          "used": 551723843584,
+          "free": 513575469056
+        }
+      }
+    },
+    "local": {
+      "time_utc": "2026-10-05T04:06:22.351377+00:00",
+      "hostname": "ubuntu",
+      "cpu": 32,
+      "load": [
+        1.19580078125,
+        1.40966796875,
+        1.5166015625
+      ],
+      "mem_total": 202405810176,
+      "mem_available": 172102311936,
+      "disk": {
+        "/": {
+          "total": 4028851920896,
+          "used": 2754579398656,
+          "free": 1069541519360
+        },
+        "/tmp": {
+          "total": 4028851920896,
+          "used": 2754579398656,
+          "free": 1069541519360
+        }
+      }
+    }
+  },
+  "scope": "read-only fleet discovery; no jobs started",
+  "policy_sources": [
+    "/home/ubuntu/.codex/attachments/a4dcf2e9-0f28-4ce7-95ef-725b7f9b62f4/pasted-text-1.txt",
+    "/tmp/claude-review-20261003/FLEET_AND_FLOW.md"
+  ],
+  "preferred_large_job_host": "ot-epyc2",
+  "guard": {
+    "epyc": "/srv/opentallas-scratch/admit.sh <measured_or_inventory_estimated_peak_GiB> -- <command>",
+    "epyc_behavior": "atomic lock; 100 GiB host reserve plus 180-second recent admitted peaks; >=16 GiB jobs wait if load1 >1.5*nCPU; no process memory/time cap",
+    "pve1": "/srv/opentallas-scratch/admit.sh delegates ~/bin/admit.sh; 12GiB reserve; no atomic ramp tracking",
+    "agidock128": "/srv/opentallas-scratch/admit.sh uses atomic guard reserve min(100GiB,15% RAM) and recent peak tracking; ~/bin/admit.sh old reserve12GiB also exists",
+    "disk_cpu": "Check live CPU and scratch free space separately before admission; guard does not check disk"
+  },
+  "tool_locations": {
+    "epyc_env": "/home/ubuntu/.opentallas-env",
+    "verilator": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+    "ORFS": "Docker openroad/orfs:asap7lock on EPYC1/EPYC2/agidock128; latest exists on all four",
+    "physical_driver": "tools/run_abi3_physical.py",
+    "repo_seed_epyc": "/srv/opentallas/repos/OpenTallas-git"
+  },
+  "launch_recipe": [
+    "Create unique pinned clean source checkout/archive under /srv/opentallas-scratch/hbrom/<commit>/src. Do not modify another checkout.",
+    "Create unique run directory and manifest recording commit, source hashes, argv, selected model, shape, expected memory/build inventory, current host headroom.",
+    "Source ~/.opentallas-env on EPYC; export OT_ORFS_NUM_CORES=16 (up to24 if measured headroom allows); choose locked ORFS image when required by driver.",
+    "Run through /srv/opentallas-scratch/admit.sh PEAK_GIB -- bash run.sh, detached with stdout/stderr and immutable exit status. Preserve completed objects and failures.",
+    "Use /srv/opentallas-scratch for bulk output, not /tmp tmpfs; monitor free disk."
+  ],
+  "recommendation": "EPYC2 first for full-shape synthesis and P&R. EPYC1 can share with measured headroom, but scratch only ~489 GiB free. PVE1 medium runs; agidock128 small low-memory benches. Local light coordination only."
+}

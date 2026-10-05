@@ -1,0 +1,466 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "llama-3.3-70b",
+ "repo": "unsloth/Llama-3.3-70B-Instruct",
+ "revision": "99cd0d2c829e92a67c844f9144c2509632e5c87f",
+ "original_repo": "meta-llama/Llama-3.3-70B-Instruct",
+ "license": "llama3.3",
+ "mirror_note": "meta-llama repo is gated; profiled from the ungated unsloth mirror",
+ "config_sha256": "2427aebfcced3177803fc7cd5571cc8e4833b9560791ada65df86d8ed855efce",
+ "index_sha256": "2abe0910e23770a30ccf9b1b91804c64831c47f9c98defaa5293aa999433fc2b",
+ "shards": 30,
+ "tensors": 723,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 141107412992
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "llama",
+ "architectures": [
+  "LlamaForCausalLM"
+ ],
+ "layers": 80,
+ "hidden": 8192,
+ "heads": 64,
+ "kv_heads": 8,
+ "head_dim": 128,
+ "vocab": 128256,
+ "tied_embeddings": false,
+ "max_context": 131072,
+ "intermediate": 28672,
+ "moe_intermediate": null,
+ "moe": {
+  "experts": 0,
+  "top_k": 0,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 68452360192,
+  "routed": 0,
+  "embed": 1050673152,
+  "head": 1050673152,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 70553706496,
+  "total_all": 70553706496,
+  "active_per_token": 69503033344,
+  "active_routed": 0,
+  "head_streamed": 1050673152
+ },
+ "header_bytes": {
+  "embed": 2101346304,
+  "dense": 136904720384,
+  "head": 2101346304
+ },
+ "layer_count_in_headers": 80,
+ "kv_layers": [
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 2048,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle3": "nvidia/Llama-3.3-70B-Instruct-Eagle3"
+ },
+ "quantization": null
+}

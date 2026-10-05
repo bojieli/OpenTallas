@@ -1,0 +1,18 @@
+{
+  "archive_files": 21,
+  "command": [
+    "python3",
+    "tools/qwen_rom_L0_terminal_packet_replay.py",
+    "--packet",
+    "results/uarch/qwen_rom_L0_terminal_source_20261003",
+    "--out",
+    "/tmp/qrom-L0-terminal-independent-replay-20261003-r2"
+  ],
+  "current_physical_or_provider_credit": false,
+  "dependency_commit": "19a4a932e9b54fbac4d098d24660f1dffc25d143",
+  "fresh_source_input_hash_guard": true,
+  "new_numerical_process_started": false,
+  "original_strict_return_FAILURE_reproduced": true,
+  "rank_checkpoints": 4,
+  "status": "PASS_INDEPENDENT_OFFLINE_BYTE_EXACT_SOURCE_ONLY_REPLAY"
+}

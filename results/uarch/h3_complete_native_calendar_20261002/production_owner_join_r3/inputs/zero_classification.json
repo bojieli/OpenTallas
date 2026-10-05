@@ -1,0 +1,173 @@
+{
+ "schema": "opentallas.review.hbm-zero-placeholder-classification.v1",
+ "main": "7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865",
+ "read_only": true,
+ "input": ["/tmp/claude-review-20261003/hbm_owner_ack_gaps.json", "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md"],
+ "method": "Each zero traced by grep of its key name and producing record path through tools/, tests/, results/, docs/. Headline sensitivity computed by calling tools/uarch_model.py functions read-only (hbm_gpu_design, qwen_hbm_ops, stream_overlap, v41_hbm_chain) with an added per-boundary cycle delta; nothing written to the repo.",
+ "classes": {
+  "DELIBERATELY_NONADOPTED": "record marks it unknown/blocked/not adopted; no adopted figure consumes it",
+  "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO": "labelled unknown/reused/no-stall but still enters a computed number as 0",
+  "IMPLICITLY_CREDITED": "a 0 or an absent term that flows into a published/adopted rate, latency or area"
+ },
+ "global_findings": {
+  "no_zero_reaches_a_headline": "None of the 10 flagged zeros is read by tools/uarch_model.py, tools/current_final_number_readiness.py, results/uarch/hbm_gpu.json, results/arch/qwen3_budget.json, or docs EVIDENCE_LEDGER/PROGRAM_STATUS/UNIFIED_EXECUTION_CHECKLIST/ARCHITECTURE_ATLAS Table 5-2/MICROARCH_MODEL. Their only consumers are sibling h3_/h4_/ds_hbm_ records, tests, and docs/CURRENT_WORK_HANDOFF_2026_10_03.md (pointer only). Every producing record carries whole_token_latency=None or hardware_admitted=False.",
+  "headline_omits_the_terms_entirely": "The published HBM headlines come from analytical functions that contain no owner/ACK/visibility/consumer/reverse/CDC/backend-stall term at all: tools/uarch_model.py:1416-1442 (qwen_hbm_ops), :1192-1228 (v41_hbm_chain), output results/uarch/hbm_gpu.json (Qwen 880.5 tok/s; V4.1 group-slot 356.9 us = 2,801.8 tok/s). This absence, not any of the 10 zeros, is the IMPLICITLY_CREDITED item.",
+  "gates": "results/arch/current_final_number_readiness_20261002/readiness.json: all 24 gate cells (4 targets x G0-G5) are blocked (13-41 blockers each). No certificates directory exists. The zeros sit under G0 finite_buffers_ports_tags_credits / write_visibility_lifetimes, G2 backpressure_reset_drain_CDC, G4 measured_stalls_service_collectives (tools/current_final_number_readiness.py:20-33). They block future certificates but cannot flip any gate today.",
+  "sensitivity_qwen_hbm": "Stream-bound. With a delta of +2/+5/+12/+26/+50 cycles on every one of 181 boundaries, token cycles go from 1,247,686 to 1,247,688/691/698/712/736 (<=0.004%). Qwen HBM per-user rate is insensitive to every latency-type zero in the list. Only added HBM bytes would move it: KV-fence RMW (18,432 x 32 B) plus metadata reads (74,304 x 32 B) total about 3.0 MB against roughly 8.2 GB per token (about 0.04%).",
+  "sensitivity_ds_hbm": "Chain-bound and serial (T = sum of parts). nb = 329 boundaries at 1.0339 GHz, so each cycle per boundary costs 0.318 us, or 0.089% of rate. +2 -> -0.18%, +5 -> -0.44%, +8 -> -0.71%, +12 -> -1.06%, +26 -> -2.27%. The AGENTS 1% gate is crossed at about 11.3 cycles per boundary. DS HBM is the only combination where these terms can be claim-determining.",
+  "ROM_designs": "Qwen ROM and DS ROM headlines do not read any of these records. The r14 provider (item 2) and the HDC PC service (item 1) feed only the non-adopted Qwen ROM KV calendars (qwen_rom_kv_credit17 model-r3 adoption False; beat_retirement model-r3 REJECT).",
+  "side_findings": [
+   "docs/MICROARCH_MODEL.md:237-247 and results/uarch/fabric.json still publish V4.1 HBM 2,920 tok/s, but the current model and results/uarch/hbm_gpu.json give 2,801.8 (356.9 us; 78-cycle boundary, not the 54 the doc states). The doc is stale against its own model.",
+   "uarch_model.sm_area (tools/uarch_model.py:1336-1381) and the published die_fit (results/uarch/hbm_gpu.json designs.*.die_fit; tools/uarch_model.py:1678-1683) have no register-file term. rtl/gpu/ot_gpu_rf_service.sv:28,32 uses ot_sram_1r1w_128x256 macros, 128 per SM (h4_hbm_service_context_g0 word_ports). That is 128 x 3,891.6 um2 x 32 x 1.31 = about 20.9 mm2 per die omitted from used_mm2 (Qwen 152.0, V4.1 187.9 of 688.4). It does not flip fits=true, but it is an area under-statement.",
+   "The prior audit's 'C0/V1 model consumes two independently timed mirror ACKs' defect is half-wrong: SerializedOwner.ack (tools/h4_v1_physical_join.py:161-170) requires the same stall count for both mirrors and adds 2+stalls ONCE, so time is a combined ACK. The two-call protocol shape still differs from RTL's single ack_valid (rtl/gpu/ot_gpu_rf_service.sv:46).",
+   "ot_hdc_qwen_pc_service/ot_hdc_qwen_hbm_service (item 1) is the HDC (ROM-core) KV service: tools/qwen_o4_die_inventory.py:230-232 lists it as the Qwen ROM die's KV service, instantiated only in unit benches. installed_r2 reuses it as the Qwen HBM comparator's 'installed' PC model. The prior audit attributes it to the comparator only."
+  ]
+ },
+ "items": [
+  {
+   "rank": 1,
+   "id": "Z9+Z10+Z1 (bounded-wait family)",
+   "members": ["Z9 C0 read_return/write_mirror_ACK stalls=0", "Z10 L2/shared stall_bound=1", "Z1 write completion has no ready (always-captured sink)"],
+   "why_ranked_first": "These are the only terms with no upper bound anywhere. On the serial DS HBM chain an unbounded per-boundary wait is the most likely way past the 1% gate (>=11.3 cycles/boundary). The fix (W11 measured backend/credit-return bound) prices all three at once.",
+   "claim_impact": "DS HBM per-user rate: currently unbounded optimism of unknown size (no source bound exists). Qwen HBM: none (stream-bound). ROM: none. Gates: G2/G4 HBM cannot certify without them."
+  },
+  {
+   "rank": 2,
+   "id": "Z6+Z4 (per-boundary fixed lower-bound family)",
+   "members": ["Z6 structural_frontier retire 0 duration with no native reverse/CDC term", "Z4 RF_both_copy_write count 0"],
+   "why": "Source-bounded fixed costs that would land once per publication/boundary if the headline modelled them: mirrored write ACK 2 edges, CDC 3 destination edges.",
+   "claim_impact": "DS HBM: 2 edges -0.18%, 2+3 -0.44%, 2+3+3 (two crossings) -0.71%. Each is below the 1% gate alone; together with rank-1 stalls they can cross it. Qwen HBM: <0.001%."
+  },
+  {
+   "rank": 3,
+   "id": "Z5+Z7+Z8 (no-double-charge accounting family)",
+   "members": ["Z5 cost_addition/C0_V1_I64_provider_RF_mirror_cost_added/additional_cost=0", "Z7 new_RF_I64_RMW_C0_provider_costs=0", "Z8 incremental_I64_RMW_charge=0, extra_C0_V1_I64_provider_charge=0, 1-edge merge"],
+   "why": "These declare 'this record adds nothing on top of existing intervals'. That is correct bookkeeping only if the existing intervals really contain the cost, which is unverified. The magnitude is small: the RMW merge is 288 edges over 96 ranks, about 3 edges per rank, and PC0 only.",
+   "claim_impact": "Negligible on any headline (<0.01% DS HBM even if all were on the chain). Must be reconciled once the provider calendar is converted to clocks."
+  },
+  {
+   "rank": 4,
+   "id": "Z2+Z3 (identity-check family, no latency zero)",
+   "members": ["Z2 r14 read credit accepted without identity match", "Z3 bulk-copy response no ready, no tag validation"],
+   "why": "These are missing transaction-identity checks (required by AGENTS ROM/SRAM policy), not cost zeros. Z3's no-ready is justified by construction (the ring slot is reserved at issue). Z2 is already a recorded blocker on a non-adopted ROM-KV path.",
+   "claim_impact": "Rate: none. Z3 can be added with 0 added cycles (sticky-fault compare off the data path) and negligible area. Gates: G0/G2 identity requirements."
+  }
+ ],
+ "zeros": [
+  {
+   "id": "Z1",
+   "zero": "Write completion has no ready; counter decrements on any wr_done for the client (always-captured sink, no tag check)",
+   "where": ["rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:27-28 (c_wr_done_v/tag outputs, no ready input)", "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:83-87 (combinational fan-out)", "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv:100-104 (decrement on p_wr_done_v, client id only)", "tools/h3_complete_native_calendar_installed_r2.py:49 (write_take always true, faithful to RTL)"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["tools/h3_complete_native_calendar_installed_r2.py:25-26 docstring 'No idealization: writes have no ready'", "installed_r2.py:172-173 writes_have_completion_ready=False, full_generation_or_exact_tag_match=False, backend_ready_upper=None", "installed_r2.py:191 required_logic 'held write-completion capture or admitted always-captured source sink'", "installed_r2.py:194-195 physical_wait_upper=None, full_token_latency=None, hardware_qualified=False", "tools/qwen_hbm_downstream_contract_r8.py:42 flags PC_service_unready_pulse", "tools/qwen_o4_die_inventory.py:230-232 'instantiated only by unit benches'"],
+   "consumer_trace": "RTL -> rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv (128 PC wrapper) -> unit benches only (rtl/test/tb_hdc_qwen_pc_service.sv, tb_hdc_qwen_hbm_service.sv, tb_hdc_qwen_hbm_mixed_service.sv, tb_hdc_qwen_kv_shared_service.sv). Model -> installed_services_r2/model.json -> installed_services_r2/handoff.json and docs/CURRENT_WORK_HANDOFF_2026_10_03.md:175 (pointer). Terminal: none. Not read by uarch_model.py, readiness, hbm_gpu.json or qwen3_budget.json.",
+   "claim_impact": {"qwen_rom": "none (headline is analytical qwen3_budget)", "qwen_hbm": "none (headline stream-bound; this service is not in its path)", "ds_rom": "none", "ds_hbm": "none (no DS multi-client service RTL exists)", "gates": "G2 backpressure_reset_drain_CDC cannot pass while the sink is unready"},
+   "magnitude_if_priced": "Latency: 0 extra cycles when the client is ready. A 1-entry held capture register per client adds 1 registered edge on completion and a stall only when the client is busy; there is no source bound on client busy time (W11). Area: 6 clients x (32-bit tag + valid) per PC x 128 PCs = 25,344 FF, about 0.0074 mm2 cell or 0.015 mm2 at 0.5 utilisation (0.2916 um2/FF, the repo's DFF constant)."
+  },
+  {
+   "id": "Z2",
+   "zero": "r14 read credit (credit_we=0) granted with no identity match",
+   "where": ["rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:133"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["results/uarch/qwen_hbm_endpoint_r14_20261002/source_inventory_and_admission_r14.json blockers[1] id R14_READER_CREDIT_VALIDATION_OPEN, witness 'if(!credit_we) credit_match=1'; status BLOCKED_SOURCE_REVIEW_NO_RTL_EXECUTION_ADMISSION; latency_contract.effective_bandwidth_or_per_user_rate_credit=0", "results/uarch/parent_HBM_r14_preflight_review_20261002/review.json adoption=false, verdict STATIC_PREFLIGHT_PASS_EXECUTION_NOT_ADMITTED", "results/uarch/qwen_rom_kv_credit17_20261003/model-r3.json admission.adoption=False, calendar.adopted_rate=None", "results/uarch/qwen_rom_kv_beat_retirement_20261003/model-r3.json status REJECT_MODEL_GAIN_LT1PERCENT_AND_3K_FAIL_PHYSICAL_PRODUCTION_OPEN"],
+   "consumer_trace": "Provider RTL -> tb_hbm_finite_stage (r14 bench) -> Qwen ROM KV models (qwen_rom_kv_credit_allocator model-r1..r4, credit17 model-r2/r3, beat_retirement model-r1..r3, bank_groups, causal_join, launch_readiness, production_join) -> docs/CURRENT_WORK_HANDOFF_2026_10_03.md (361.07 us calendar, REJECTED). Terminal: none adopted.",
+   "claim_impact": {"qwen_rom": "none adopted. The finite calendar (361.07 -> 358.60 us candidate) was rejected at 0.69% gain, so credit-lifetime sensitivity is low.", "qwen_hbm": "none", "ds_rom": "none", "ds_hbm": "none", "gates": "G0 tags/credits and AGENTS transaction-identity rule"},
+   "magnitude_if_priced": "Not a latency zero. A compare against a retained read-owner record, the same 4-way compare the write path already does at :134-136, fits the existing grant cycle: 0 extra edges. If it reuses the tag-owner lookup instead, the source cost is 12 CORE edges (installed_r2.py:159 'delay==11'; r14 latency_contract owner_lookup_CORE_edges=12) added to credit lifetime, not to the token chain."
+  },
+  {
+   "id": "Z3",
+   "zero": "Bulk-copy response has no ready and no tag validation",
+   "where": ["rtl/gpu/ot_gpu_bulk_copy.sv:40-42", "rtl/gpu/ot_gpu_bulk_copy.sv:79", "rtl/gpu/ot_gpu_bulk_copy.sv:137-138"],
+   "classification": "IMPLICITLY_CREDITED (justified by construction)",
+   "proof": ["The engine is in the headline path: docs/MICROARCH_MODEL.md:282 decision 1; tools/uarch_model.py gpu_measured/hbm_gpu_design read results/rtl/gpu_supply_barrier.json (ot_gpu_bulk_copy) for outstanding_lines_sm", "No-ready is legitimate: ot_gpu_bulk_copy.sv:67 issues only when a ring slot is free and :135 reserves it, so every legal response has a slot; tools/h4_hbm_service_context_g0.py:161 records 'retained bulk-copy ring always accepts its owned responses'", "Tag validation is absent: :138 sets full[rsp_tag] with no check that the tag is outstanding or not already full"],
+   "consumer_trace": "RTL -> results/rtl/gpu_supply_barrier.json -> tools/uarch_model.py gpu_measured()/hbm_gpu_design() bulk_copy.measured (sizing only; the token uses r_hbm=3.6e12/clock) -> results/uarch/hbm_gpu.json -> MICROARCH_MODEL.md:282. Also h4_hbm_service_context_g0 endpoint inventory (response_ready_port=False).",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "none on rate: the zero-cost sink is correct by reservation, and supply only sizes the in-flight count", "ds_rom": "none", "ds_hbm": "none on rate", "gates": "G0/G2 identity: a duplicate or stale response would corrupt the ring silently"},
+   "magnitude_if_priced": "0 cycles: a sticky-fault compare (full[rsp_tag]==0 and tag inside [cons_p, alloc_p)) can sit off the data path. Area is about a 10-bit range compare plus a 1024:1 read of the existing full[] vector per SM, negligible against the 147.9 mm2 SM array."
+  },
+  {
+   "id": "Z4",
+   "zero": "RF_both_copy_write count fixed at 0 in KV conditional service price",
+   "where": ["tools/h4_hbm_kv_validity_fence_model.py:278-280"],
+   "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO",
+   "proof": ["Labelled as reuse, not as known zero: price() returns RF_producer_write_charge_reused=True, source_RF_ACK_intervals_must_be_reused=True, existing_Dewey_interval_reconciliation_required=True (h4_hbm_kv_validity_fence_model.py:305-307)", "But it multiplies a required-positive cost by count 0 in subtotal (:297); RF_mirror_ACK=576 is charged, the write itself is not", "Not executed in committed outputs: results/uarch/h4_hbm_kv_validity_fence_20261003/ has no priced_service.json; model.json status FAIL_INSTALLED_VALIDITY_FENCE_AND_COMPOSED_BOUND"],
+   "consumer_trace": "price() only when --profile is passed (none committed) -> priced_service.json (absent). Count also mirrored in results/uarch/h4_hbm_selected_cache_rmw_20261002/owner_wait_requirements*.json and c0_program_shared64_r1/Popper_owner_wait_requirements_r4.json (requirements text). Terminal: none.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "<0.001% (stream-bound)", "ds_rom": "none", "ds_hbm": "Qwen-only plan (DeepSeek_row_is_geometry_screen_only, :340); none today", "gates": "G0 write_visibility_lifetimes"},
+   "magnitude_if_priced": "576 producer vectors x >=1 write edge (rtl/gpu/ot_gpu_rf_service.sv:46, ack_valid<=1 the cycle after write_go; installed_r2.py:175 source_write_ACK_after_accept_offset=1; production_owner.py:415 RF_write_mirrors=2). Serialized upper is 576-1,152 edges, 0.48-0.96 us at 1.2 GHz, on a 1,135.7 us Qwen HBM token: <=0.085% even with no overlap, and in practice hidden under the stream."
+  },
+  {
+   "id": "Z5",
+   "zero": "Grant ledger cost_addition=0, C0_V1_I64_provider_RF_mirror_cost_added=0, additional_cost=0",
+   "where": ["tools/h3_complete_native_calendar_grants_r1.py:96-100", "tools/h3_complete_native_calendar_grants_r1.py:306"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["Same record sets whole_token_latency=None, hardware_qualified=False, physical_production_bindings_closed=0 (:97-100), baseline_cost_replaced=False, unknowns list (:306-311)", "replace_provider_interval_once (:534-563) refuses zero for unknown provider costs ('unknown provider costs cannot be zero', :557-558) and keeps total=None when any cost is unknown (:559)", "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal/summary.json additional_cost=0, whole_token_latency=null, baseline_cost_replaced=false"],
+   "consumer_trace": "build_inventory -> bindings.json.gz/summary.json -> causal_grants_r1/handoff.json, installed_services_r2/handoff.json, native_software_parent_intake_20261002/HBM_installed_calendar_R2_parent_review.json, docs/CURRENT_WORK_HANDOFF_2026_10_03.md. The key cost_addition has no reader outside its own file (grep). Terminal: none.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "none", "ds_rom": "none", "ds_hbm": "none", "gates": "none directly"},
+   "magnitude_if_priced": "Not a cost. It declares that the ledger is an obligation inventory. The real cost is the per-child edge minima the ledger already carries: source_min_ACK_edge_offset 1 (write) / 2 (read) at :67, over 738,816 PC0 transactions inside existing intervals."
+  },
+  {
+   "id": "Z6",
+   "zero": "structural_frontier nodes (Qwen.PC*.retire, KV record/bitmap :ready) take 0 duration; native PC retire carries no reverse/CDC term",
+   "where": ["tools/h3_complete_native_calendar_grants_r1.py:486", "tools/h3_complete_native_calendar_grants_r1.py:341", "tools/h3_complete_native_calendar_grants_r1.py:379"],
+   "classification": "DELIBERATELY_NONADOPTED (latent CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO)",
+   "proof": ["schedule_finite_extension refuses to schedule while any phase cost or native frontier is missing: returns UNKNOWN_COMPLETE_SERVICE_INPUTS with whole_token_latency=None (:453-464)", "main() calls it with empty costs (:580); final_causal/summary.json Qwen_KV_extension has 21 missing_phase_costs and 1,737 missing native frontiers, 1,881 structural_frontier nodes of 198,594", "0 duration is a legitimate DAG join; what is absent is any reverse/CDC node for non-KV native PCs. If the 21 costs were supplied, native retire would be scheduled at 0."],
+   "consumer_trace": "compile_qwen_kv_extension -> Qwen_KV_finite_DAG.json.gz -> schedule_finite_extension (tests/test_h3_complete_native_calendar_grants_r1.py only). Terminal: none.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "<0.001% even at +3 dest edges per PC (stream-bound)", "ds_rom": "none", "ds_hbm": "The DAG is Qwen-only. The analogous DS term per boundary: +3 dest edges (one CDC) -0.27%, two crossings -0.53%", "gates": "G2 CDC"},
+   "magnitude_if_priced": "CDC lower bound: rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv:9-26 two-stage Gray-pointer synchronizers; tools/qwen_hbm_endpoint_preflight_r14.py:69 'bridge_no_stall_contribution: 42FAST +3destination_edges'. That is about 3 destination edges per crossing, and a reverse grant crosses back, so about 6 per retire round trip."
+  },
+  {
+   "id": "Z7",
+   "zero": "new_RF_I64_RMW_C0_provider_costs=0",
+   "where": ["tools/h4_hbm_production_owner.py:428"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["Same dict sets hardware_admitted=False, engine_build_allowed=False, whole_token_latency_ns=None (:427)", "finite_wait_contract has every edge None (:412-414), with provisional_1_1_1_admitted=False and software_ticks_are_hardware_edges=False (:417); finite_arbiter_equation contenders=None (:420)", "Source leaf lower bounds are recorded beside it (:415): RF_read_pair=3, RF_write_mirrors=2, shared64 3/2, L2_read128=12, L2_write128=8"],
+   "consumer_trace": "controller_model -> results/uarch/h4_hbm_production_owner_20261002/{actual_r1,actual_r2,final_r3,final_r4,final_r5}/model.json -> PC0_projection.json.gz consumed by grants_r1 SOURCES (:26) for transaction counts only. The key is copied in h4_hbm_gateway_via_arrays owner_source_for_coordination.py and h4_hbm_w19_pc10_endpoints/inputs/owner.py (snapshots). Terminal: none.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "none", "ds_rom": "none", "ds_hbm": "none", "gates": "none directly"},
+   "magnitude_if_priced": "Not a cost. It is a no-double-charge declaration. Per-publication cost floor from :415: 2 (mirrored write) + arbitration/visibility/consumer/reverse (all None)."
+  },
+  {
+   "id": "Z8",
+   "zero": "incremental_I64_RMW_charge=0, extra_C0_V1_I64_provider_charge=0; merge priced at 1 edge with SS_FF_merge_verified=False",
+   "where": ["tools/h4_hbm_selected_cache_rmw.py:43", "tools/h4_hbm_selected_cache_rmw.py:166-167", "tools/h4_hbm_selected_cache_rmw.py:184"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["status FAIL_COMPOSED_SOURCE_ADMISSION (:157); old_RF_RMW_charge_replaced_not_added=True (:167); conditional_bound=None, whole_token_latency_ns=None, hardware_admitted=False, engine_build_allowed=False (:188-195)", "rejected_historical_external_edge_defaults=[1,1,1] (:184): the old optimistic defaults are explicitly refused"],
+   "consumer_trace": "build -> results/uarch/h4_hbm_selected_cache_rmw_20261002/selected_r1..r4/model.json -> h4_hbm_kv_validity_fence_20261003/inputs/parent_model.json (area only, composed_area_upper_only.with_RMW_upper_mm2 -> KV fence full_die_with_delta_upper_only) and c0_program_shared64_r1/Popper_selected_r4_model.json; commands.json.gz -> grants_r1 SOURCES (:25). Terminal: none. The area passes into an upper-only screen, not a headline.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "none", "ds_rom": "none", "ds_hbm": "none (PC0-only, 288 RMWs)", "gates": "G3 SS/FF merge stage unverified"},
+   "magnitude_if_priced": "Merge: 288 x 1 edge = 288 edges in total over 96 ranks (3 per rank), 2.5 ns per rank at 1.2 GHz. If SS forces a second stage, +1 edge each. Negligible."
+  },
+  {
+   "id": "Z9",
+   "zero": "C0 read_return / write_mirror_ACK stalls default 0",
+   "where": ["tools/h4_c0_v1_owner_lock_addressed.py:154", "tools/h4_c0_v1_owner_lock_addressed.py:175", "tools/h4_v1_physical_join.py:142-149", "tools/h4_v1_physical_join.py:161-170"],
+   "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO",
+   "proof": ["The contract names the term as observed: RF_latency_once='3*read_pairs+2*write_vectors+native_only_ticks+observed_response_stalls' (h4_c0_v1_owner_lock_addressed.py:285)", "A per-command response_stall_bound is mandatory input (h4_v1_physical_join.py:117-119), but callers that omit stalls add time += 3+0 / 2+0 (:145, :170)", "Consumers are non-adopted: results/uarch/h4_c0_parent_provider_join_20261002/r2_parent_additive/model/composed_owner_model.json headline_rate_changed=false, hardware_admitted=false; c0_program_shared64_*/summary.json whole_token_latency=null; qwen_rom_reset_producer_g0 model-r5 adoption=false"],
+   "consumer_trace": "SerializedOwner.time -> C0 owner lock -> h4_c0_parent_provider_join / h4_c0_r33_source_adapter / h3_complete_native_calendar_successor_r1.py (pinned) / qwen_rom_reset_producer_g0 (inputs snapshot). Terminal: none adopted.",
+   "claim_impact": {"qwen_rom": "none adopted (reset producer adoption False)", "qwen_hbm": "none (stream-bound)", "ds_hbm": "unbounded per-publication risk: each stall cycle on a chain boundary costs 0.089% of rate", "ds_rom": "none", "gates": "G4 measured_stalls_service_collectives"},
+   "magnitude_if_priced": "No source bound exists (W11 open). Fixed part: worst_RF_ticks_once=13 (composed_owner_model latency) plus C0_control_ticks=22 provisional (tools/h4_c0_model.py C0_costs_Dewey_positive_provisional_ticks). These are positive provisional ticks, not zeros, but the uarch V4.1 chain does not carry them either."
+  },
+  {
+   "id": "Z10",
+   "zero": "stall_bound=1 per L2/shared word with no source",
+   "where": ["tools/h4_hbm_service_context_g0.py:218"],
+   "classification": "DELIBERATELY_NONADOPTED",
+   "proof": ["latency.service_stall_bound_is_example_only=True, backend_wait_parameter 'exampleB1 is not a measured guarantee', whole_token_ns=None (:228)", "service_cost cost_scope 'standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta', clock_qualified=False (:55-58)", "Downstream h4_hbm_atomic_source_g0.py:313 replaces it with actual_backend_stall_bound=None"],
+   "consumer_trace": "build -> results/uarch/h4_hbm_service_context_g0_20261002/final/model.json latency.provisional_profiles -> pinned snapshots in h4_hbm_atomic_source_g0 and h4_hbm_gateway_constructive constructor_r1..r9 (source pins). Terminal: none.",
+   "claim_impact": {"qwen_rom": "none", "qwen_hbm": "none (L2 not on the stream path; weights bypass L2)", "ds_rom": "none", "ds_hbm": "none today. If an L2 word ever sits on a chain boundary, the no-stall floor alone is 2+5+2+12+5+2+2 = 30 ticks for L2_128 read (:52-53), i.e. -2.6%", "gates": "G4"},
+   "magnitude_if_priced": "Bounded form (commands_ahead+1)*(fixed+words*stall_bound) = 512*(30+4*1) = 17,408 ticks with the example B=1. The real B is unknown."
+  }
+ ],
+ "missed_by_prior_audit": [
+  {"id": "M1", "where": "tools/uarch_model.py:1416-1442 (qwen_hbm_ops), :1192-1228 (v41_hbm_chain) -> results/uarch/hbm_gpu.json, docs/MICROARCH_MODEL.md:237-247", "zero": "No owner/ACK/visibility/consumer/reverse/CDC/backend-stall term at all in the HBM headline token. The term is absent rather than set to 0.", "classification": "IMPLICITLY_CREDITED", "impact": "DS HBM: every cycle per boundary is 0.089% of rate (nb=329); the 1% gate is crossed at about 11.3 cycles. Qwen HBM: <=0.004% at +50 cycles per boundary. This is the claim-determining omission."},
+  {"id": "M2", "where": "tools/uarch_model.py:1336-1381 sm_area, :1678-1683 die_fit -> results/uarch/hbm_gpu.json designs.*.die_fit", "zero": "No register-file macros in the SM area (RF is 128 x ot_sram_1r1w_128x256 per SM per rtl/gpu/ot_gpu_rf_service.sv:28,32 and h4_hbm_service_context_g0 word_ports). There is also no owner/tag metadata.", "classification": "IMPLICITLY_CREDITED", "impact": "About +20.9 mm2 per HBM die (both models); used 152.0 -> about 172.9 (Qwen), 187.9 -> about 208.8 (V4.1) of 688.4. fits stays true. Owner-gate metadata envelope (installed_r2.py:186-187, ASSUMED) adds up to about 2.3 mm2 footprint."},
+  {"id": "M3", "where": "tools/h3_complete_native_calendar.py:877 and :926", "zero": "C0_additional_ticks=0, I64_RMW_additional_ticks=0, additional_RMW_codec_or_r22_cost=0, while RF_additional_cost_after_existing_ledger=None. DeepSeek known_native_only_successor_software_ticks sums intervals with RF reconciliation excluded (actual_RF_reconciliation_complete=False).", "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO", "impact": "Software-tick total only; clock_or_ns_conversion=None, hardware_admitted=False. No headline."},
+  {"id": "M4", "where": "tools/h3_complete_native_calendar.py:1795,1937,1984,2372,2450; tools/ds_hbm_pc10_projection_r46.py:52,91", "zero": "additional_provider_RF_C0_I64_charge=0 / native_C0_provider_RF_I64_cost_added=0 / existing_RF_I64_RMW_C0_provider_charges_added=0 / existing_V1_C0_I64_provider_cost_added=0 / new_cost_charges=0", "classification": "DELIBERATELY_NONADOPTED", "impact": "Same no-double-charge class as Z5/Z7. Records carry whole_token_latency(_ns)=None / hardware_admitted=False."},
+  {"id": "M5", "where": "tools/h3_native_div_source_join.py:20-24, :153-155", "zero": "compose_service(read_wait=0, write_wait=0, retire_wait=0) publishes success_accept_to_retire_no_stall_edges=37 and conditional_1p2GHz_service_ns=30.8", "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO", "impact": "Labelled no-stall; finite_service_upper_bound_without_parent_ready_bounds=None and whole_kernel_total_ns=None. Not adopted. Its component_edges (RF_read 2, mirrored_write_ACK 2, done_retire 1) are a useful source for Z4/Z6 floors."},
+  {"id": "M6", "where": "tools/h4_v1_physical_join.py:142,161", "zero": "SerializedOwner.return_read/ack stalls=0 defaults (the root of Z9)", "classification": "CLASSIFIED_UNKNOWN_BUT_NUMERIC_ZERO", "impact": "As Z9."}
+ ],
+ "remediation_order": [
+  "1. Add a priced per-boundary service term to v41_hbm_chain (and, for completeness, qwen_hbm_ops): mirrored-ACK 2 + visibility/reverse + measured backend/credit stall bound (W11). Re-state DS HBM per-user rate. This is the only claim-determining fix (0.089%/cycle/boundary).",
+  "2. Produce a source-bound stall upper bound (W11) to replace Z9/Z10/Z1 defaults; until then label the DS HBM rate 'no service stalls'.",
+  "3. Add RF macros to uarch sm_area/die_fit (about 20.9 mm2/die); refresh MICROARCH 2,920 -> 2,801.8 tok/s V4.1 HBM.",
+  "4. Reconcile Z4/Z5/Z7/Z8/M3/M4 no-double-charge flags against actual interval ids once the provider calendar has clocks (W13). Negligible magnitude.",
+  "5. Identity checks Z2/Z3 (W3, bulk-copy sticky fault): correctness/G0 only, 0 rate impact."
+ ]
+}

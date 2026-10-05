@@ -1,0 +1,307 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "qwen3-30b-a3b",
+ "repo": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+ "revision": "0d7cf23991f47feeb3a57ecb4c9cee8ea4a17bfe",
+ "original_repo": "Qwen/Qwen3-30B-A3B-Instruct-2507",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "a1ee086a68d0cbfc87316da00ba4b8507bd1292978108e2496201a30a450f438",
+ "index_sha256": "8dde190b862c7c80ec7403c6495de00c60bbaf246ed479cee4506284989c584c",
+ "shards": 16,
+ "tensors": 18867,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 61064245248
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "qwen3_moe",
+ "architectures": [
+  "Qwen3MoeForCausalLM"
+ ],
+ "layers": 48,
+ "hidden": 2048,
+ "heads": 32,
+ "kv_heads": 4,
+ "head_dim": 128,
+ "vocab": 151936,
+ "tied_embeddings": false,
+ "max_context": 262144,
+ "intermediate": 6144,
+ "moe_intermediate": 768,
+ "moe": {
+  "experts": 128,
+  "top_k": 8,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 918763520,
+  "routed": 28991029248,
+  "embed": 311164928,
+  "head": 311164928,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 30532122624,
+  "total_all": 30532122624,
+  "active_per_token": 3041867776,
+  "active_routed": 1811939328,
+  "head_streamed": 311164928
+ },
+ "header_bytes": {
+  "embed": 622329856,
+  "dense": 1837527040,
+  "routed": 57982058496,
+  "head": 622329856
+ },
+ "layer_count_in_headers": 48,
+ "kv_layers": [
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle3": "RedHatAI/Qwen3-30B-A3B-Instruct-2507-speculator.eagle3"
+ },
+ "quantization": null
+}

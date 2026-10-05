@@ -1,0 +1,101 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/roundtrip_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "application_id": { "$ref": "#/$defs/sha256" },
+    "checked_artifact_count": { "const": 3 },
+    "checked_payload_bytes": { "const": 1572972 },
+    "checked_replica_count": { "const": 12 },
+    "checked_replica_payload_bytes": { "const": 6291888 },
+    "checkpoint_lock_id": { "$ref": "#/$defs/sha256" },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "reconstructed": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "deployment_path": {
+            "pattern": "^payloads/sha256/[0-9a-f]{64}\\.f32le$",
+            "type": "string"
+          },
+          "dtype": { "const": "F32" },
+          "replicated_ranks": { "$ref": "#/$defs/ranks" },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "shape": {
+            "items": { "enum": [3, 24, 16384], "type": "integer" },
+            "maxItems": 2,
+            "minItems": 1,
+            "type": "array"
+          },
+          "size_bytes": { "enum": [12, 96, 1572864] },
+          "source_assignment_paths": {
+            "items": { "$ref": "#/$defs/path" },
+            "maxItems": 4,
+            "minItems": 4,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "tensor_name": {
+            "enum": [
+              "layers.0.hc_attn_base",
+              "layers.0.hc_attn_fn",
+              "layers.0.hc_attn_scale"
+            ]
+          }
+        },
+        "required": [
+          "deployment_path",
+          "dtype",
+          "replicated_ranks",
+          "sha256",
+          "shape",
+          "size_bytes",
+          "source_assignment_paths",
+          "tensor_name"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "roundtrip_id": { "$ref": "#/$defs/sha256" },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_roundtrip.v1" },
+    "status": { "const": "byte_exact_full_parameter_roundtrip" }
+  },
+  "required": [
+    "application_id",
+    "checked_artifact_count",
+    "checked_payload_bytes",
+    "checked_replica_count",
+    "checked_replica_payload_bytes",
+    "checkpoint_lock_id",
+    "model_id",
+    "reconstructed",
+    "roundtrip_id",
+    "schema",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE parameter roundtrip v1",
+  "type": "object",
+  "$defs": {
+    "path": {
+      "minLength": 1,
+      "not": { "pattern": "(^/|(^|/)\\.\\.?(/|$)|\\\\|\\u0000)" },
+      "type": "string"
+    },
+    "ranks": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": 0 },
+        { "const": 1 },
+        { "const": 2 },
+        { "const": 3 }
+      ],
+      "type": "array"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" }
+  }
+}

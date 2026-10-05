@@ -1,0 +1,1009 @@
+{
+  "G0": {
+    "DIV_issue_per_cycle": "ABI3 worst-case core+reaccept 66 edges, stalls extend it; HDC 1 internal, RF lease serialized",
+    "DS_RMS_scalar_FP_rounds_excluding_DIV_including_epsilon": 14,
+    "MAC_per_cycle": 0,
+    "Newton_rsqr_FP_rounds": 13,
+    "Qwen_RMS_scalar_FP_rounds_including_mean_epsilon": 15,
+    "RF_existing_read_bytes_per_accepted_transaction": 1024,
+    "RF_existing_write_bytes_per_accepted_transaction": 512,
+    "RF_peak_read_bytes_per_cycle": 1024,
+    "RF_peak_write_bytes_per_cycle": 512,
+    "SS_FF_in_context": false,
+    "calibration": "Peirce H1 19-edge FP driver calibration is functional only, not native GPU time; DIV core edge ledger separate",
+    "cell_area_total_um2": null,
+    "clock_policy": "native streaming 1.2GHz SS/FF60/25ps; serial0.9GHz requires explicit3:4 CDC; neither divider inherits frequency",
+    "context_service": "costed proposal only: lane-local rounded results retained; uses existing native ADD/MUL via explicit operand/result routing still to be modeled",
+    "extra_mux_fanout_area_um2": null,
+    "floorplan_slot_fit": null,
+    "full_composed_token_latency_ns": null,
+    "intensity": "naive RF rsqrt: 13 scalar rounded ops / 19968 transferred bytes; lane-local scalar capture cost unbound",
+    "lane_local_fusion": "must retain exact operand registers/rounding; removes intermediate RF trips only after separate source model, no implemented fusion credit",
+    "latency_expression": "Peirce root service + exact DIV or mean-MUL + epsilon-ADD + 10MUL+3ADD + integer seed/neg + scalar capture + RF mirrored ACK + delivery fence",
+    "local_RF_read_wire_bits": 8192,
+    "local_RF_write_wire_bits": 4096,
+    "new_RF_memory_ports": 0,
+    "proposed_context_DFF_um2_proxy_excluding_tags": 40.2408,
+    "proposed_context_bits_excluding_tags": 138,
+    "proposed_context_ledger_bits": {
+      "busy": 1,
+      "error": 2,
+      "half": 32,
+      "input_d": 32,
+      "kind": 2,
+      "result": 32,
+      "step": 4,
+      "valid": 1,
+      "y": 32
+    },
+    "proposed_extra_state_bits_with_tags": null,
+    "replicas": {
+      "local_SM_count": 32,
+      "norm_collector_per_rank": 1,
+      "replica_selection": "requires Maxwell admission; no 128-lane DIV assumed"
+    },
+    "reuse_SIMD_naive_rsqr_RF_read_bytes": 13312,
+    "reuse_SIMD_naive_rsqr_RF_write_bytes": 6656,
+    "routing_tracks_against_capacity": null,
+    "scalar_operand_bits": 64,
+    "scalar_result_bits": 32,
+    "selected_primitive": null,
+    "tags_ready_fault_bits": null,
+    "target_applicability": [
+      "Qwen ROM",
+      "Qwen HBM",
+      "DS ROM",
+      "DS HBM"
+    ]
+  },
+  "Newton_traces": [
+    {
+      "input": "3f800000",
+      "kind": "rsqrt",
+      "result": "3f7fffff",
+      "seed": "3f7759df",
+      "steps": [
+        {
+          "a": "3f800000",
+          "b": "3f000000",
+          "op": "half_mul",
+          "y": "3f000000"
+        },
+        {
+          "a": "3f7759df",
+          "b": "3f7759df",
+          "op": "0:y_y",
+          "y": "3f6efe8c"
+        },
+        {
+          "a": "3f000000",
+          "b": "3f6efe8c",
+          "op": "0:half_yy",
+          "y": "3eeefe8c"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beeefe8c",
+          "op": "0:correction_add",
+          "y": "3f84405d"
+        },
+        {
+          "a": "3f7759df",
+          "b": "3f84405d",
+          "op": "0:next_mul",
+          "y": "3f7f910f"
+        },
+        {
+          "a": "3f7f910f",
+          "b": "3f7f910f",
+          "op": "1:y_y",
+          "y": "3f7f224e"
+        },
+        {
+          "a": "3f000000",
+          "b": "3f7f224e",
+          "op": "1:half_yy",
+          "y": "3eff224e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beff224e",
+          "op": "1:correction_add",
+          "y": "3f80376c"
+        },
+        {
+          "a": "3f7f910f",
+          "b": "3f80376c",
+          "op": "1:next_mul",
+          "y": "3f7fffb7"
+        },
+        {
+          "a": "3f7fffb7",
+          "b": "3f7fffb7",
+          "op": "2:y_y",
+          "y": "3f7fff6e"
+        },
+        {
+          "a": "3f000000",
+          "b": "3f7fff6e",
+          "op": "2:half_yy",
+          "y": "3effff6e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beffff6e",
+          "op": "2:correction_add",
+          "y": "3f800024"
+        },
+        {
+          "a": "3f7fffb7",
+          "b": "3f800024",
+          "op": "2:next_mul",
+          "y": "3f7fffff"
+        }
+      ]
+    },
+    {
+      "input": "40000000",
+      "kind": "rsqrt",
+      "result": "3f3504f4",
+      "seed": "3f3759df",
+      "steps": [
+        {
+          "a": "40000000",
+          "b": "3f000000",
+          "op": "half_mul",
+          "y": "3f800000"
+        },
+        {
+          "a": "3f3759df",
+          "b": "3f3759df",
+          "op": "0:y_y",
+          "y": "3f03519c"
+        },
+        {
+          "a": "3f800000",
+          "b": "3f03519c",
+          "op": "0:half_yy",
+          "y": "3f03519c"
+        },
+        {
+          "a": "3fc00000",
+          "b": "bf03519c",
+          "op": "0:correction_add",
+          "y": "3f7cae64"
+        },
+        {
+          "a": "3f3759df",
+          "b": "3f7cae64",
+          "op": "0:next_mul",
+          "y": "3f34f95e"
+        },
+        {
+          "a": "3f34f95e",
+          "b": "3f34f95e",
+          "op": "1:y_y",
+          "y": "3effdf3e"
+        },
+        {
+          "a": "3f800000",
+          "b": "3effdf3e",
+          "op": "1:half_yy",
+          "y": "3effdf3e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beffdf3e",
+          "op": "1:correction_add",
+          "y": "3f800830"
+        },
+        {
+          "a": "3f34f95e",
+          "b": "3f800830",
+          "op": "1:next_mul",
+          "y": "3f3504f1"
+        },
+        {
+          "a": "3f3504f1",
+          "b": "3f3504f1",
+          "op": "2:y_y",
+          "y": "3efffffa"
+        },
+        {
+          "a": "3f800000",
+          "b": "3efffffa",
+          "op": "2:half_yy",
+          "y": "3efffffa"
+        },
+        {
+          "a": "3fc00000",
+          "b": "befffffa",
+          "op": "2:correction_add",
+          "y": "3f800002"
+        },
+        {
+          "a": "3f3504f1",
+          "b": "3f800002",
+          "op": "2:next_mul",
+          "y": "3f3504f4"
+        }
+      ]
+    },
+    {
+      "input": "40800000",
+      "kind": "rsqrt",
+      "result": "3effffff",
+      "seed": "3ef759df",
+      "steps": [
+        {
+          "a": "40800000",
+          "b": "3f000000",
+          "op": "half_mul",
+          "y": "40000000"
+        },
+        {
+          "a": "3ef759df",
+          "b": "3ef759df",
+          "op": "0:y_y",
+          "y": "3e6efe8c"
+        },
+        {
+          "a": "40000000",
+          "b": "3e6efe8c",
+          "op": "0:half_yy",
+          "y": "3eeefe8c"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beeefe8c",
+          "op": "0:correction_add",
+          "y": "3f84405d"
+        },
+        {
+          "a": "3ef759df",
+          "b": "3f84405d",
+          "op": "0:next_mul",
+          "y": "3eff910f"
+        },
+        {
+          "a": "3eff910f",
+          "b": "3eff910f",
+          "op": "1:y_y",
+          "y": "3e7f224e"
+        },
+        {
+          "a": "40000000",
+          "b": "3e7f224e",
+          "op": "1:half_yy",
+          "y": "3eff224e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beff224e",
+          "op": "1:correction_add",
+          "y": "3f80376c"
+        },
+        {
+          "a": "3eff910f",
+          "b": "3f80376c",
+          "op": "1:next_mul",
+          "y": "3effffb7"
+        },
+        {
+          "a": "3effffb7",
+          "b": "3effffb7",
+          "op": "2:y_y",
+          "y": "3e7fff6e"
+        },
+        {
+          "a": "40000000",
+          "b": "3e7fff6e",
+          "op": "2:half_yy",
+          "y": "3effff6e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beffff6e",
+          "op": "2:correction_add",
+          "y": "3f800024"
+        },
+        {
+          "a": "3effffb7",
+          "b": "3f800024",
+          "op": "2:next_mul",
+          "y": "3effffff"
+        }
+      ]
+    },
+    {
+      "input": "3a800000",
+      "kind": "rsqrt",
+      "result": "41ffffff",
+      "seed": "41f759df",
+      "steps": [
+        {
+          "a": "3a800000",
+          "b": "3f000000",
+          "op": "half_mul",
+          "y": "3a000000"
+        },
+        {
+          "a": "41f759df",
+          "b": "41f759df",
+          "op": "0:y_y",
+          "y": "446efe8c"
+        },
+        {
+          "a": "3a000000",
+          "b": "446efe8c",
+          "op": "0:half_yy",
+          "y": "3eeefe8c"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beeefe8c",
+          "op": "0:correction_add",
+          "y": "3f84405d"
+        },
+        {
+          "a": "41f759df",
+          "b": "3f84405d",
+          "op": "0:next_mul",
+          "y": "41ff910f"
+        },
+        {
+          "a": "41ff910f",
+          "b": "41ff910f",
+          "op": "1:y_y",
+          "y": "447f224e"
+        },
+        {
+          "a": "3a000000",
+          "b": "447f224e",
+          "op": "1:half_yy",
+          "y": "3eff224e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beff224e",
+          "op": "1:correction_add",
+          "y": "3f80376c"
+        },
+        {
+          "a": "41ff910f",
+          "b": "3f80376c",
+          "op": "1:next_mul",
+          "y": "41ffffb7"
+        },
+        {
+          "a": "41ffffb7",
+          "b": "41ffffb7",
+          "op": "2:y_y",
+          "y": "447fff6e"
+        },
+        {
+          "a": "3a000000",
+          "b": "447fff6e",
+          "op": "2:half_yy",
+          "y": "3effff6e"
+        },
+        {
+          "a": "3fc00000",
+          "b": "beffff6e",
+          "op": "2:correction_add",
+          "y": "3f800024"
+        },
+        {
+          "a": "41ffffb7",
+          "b": "3f800024",
+          "op": "2:next_mul",
+          "y": "41ffffff"
+        }
+      ]
+    },
+    {
+      "input": "3f800000",
+      "kind": "reciprocal",
+      "result": "3f7fffff",
+      "seed": "3f7311c7",
+      "steps": [
+        {
+          "a": "3f800000",
+          "b": "3f7311c7",
+          "op": "0:d_y",
+          "y": "3f7311c7"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7311c7",
+          "op": "0:correction_add",
+          "y": "3f86771c"
+        },
+        {
+          "a": "3f7311c7",
+          "b": "3f86771c",
+          "op": "0:next_mul",
+          "y": "3f7f58cc"
+        },
+        {
+          "a": "3f800000",
+          "b": "3f7f58cc",
+          "op": "1:d_y",
+          "y": "3f7f58cc"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7f58cc",
+          "op": "1:correction_add",
+          "y": "3f80539a"
+        },
+        {
+          "a": "3f7f58cc",
+          "b": "3f80539a",
+          "op": "1:next_mul",
+          "y": "3f7fff93"
+        },
+        {
+          "a": "3f800000",
+          "b": "3f7fff93",
+          "op": "2:d_y",
+          "y": "3f7fff93"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7fff93",
+          "op": "2:correction_add",
+          "y": "3f800036"
+        },
+        {
+          "a": "3f7fff93",
+          "b": "3f800036",
+          "op": "2:next_mul",
+          "y": "3f7fffff"
+        }
+      ]
+    },
+    {
+      "input": "40000000",
+      "kind": "reciprocal",
+      "result": "3effffff",
+      "seed": "3ef311c7",
+      "steps": [
+        {
+          "a": "40000000",
+          "b": "3ef311c7",
+          "op": "0:d_y",
+          "y": "3f7311c7"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7311c7",
+          "op": "0:correction_add",
+          "y": "3f86771c"
+        },
+        {
+          "a": "3ef311c7",
+          "b": "3f86771c",
+          "op": "0:next_mul",
+          "y": "3eff58cc"
+        },
+        {
+          "a": "40000000",
+          "b": "3eff58cc",
+          "op": "1:d_y",
+          "y": "3f7f58cc"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7f58cc",
+          "op": "1:correction_add",
+          "y": "3f80539a"
+        },
+        {
+          "a": "3eff58cc",
+          "b": "3f80539a",
+          "op": "1:next_mul",
+          "y": "3effff93"
+        },
+        {
+          "a": "40000000",
+          "b": "3effff93",
+          "op": "2:d_y",
+          "y": "3f7fff93"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7fff93",
+          "op": "2:correction_add",
+          "y": "3f800036"
+        },
+        {
+          "a": "3effff93",
+          "b": "3f800036",
+          "op": "2:next_mul",
+          "y": "3effffff"
+        }
+      ]
+    },
+    {
+      "input": "40800000",
+      "kind": "reciprocal",
+      "result": "3e7fffff",
+      "seed": "3e7311c7",
+      "steps": [
+        {
+          "a": "40800000",
+          "b": "3e7311c7",
+          "op": "0:d_y",
+          "y": "3f7311c7"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7311c7",
+          "op": "0:correction_add",
+          "y": "3f86771c"
+        },
+        {
+          "a": "3e7311c7",
+          "b": "3f86771c",
+          "op": "0:next_mul",
+          "y": "3e7f58cc"
+        },
+        {
+          "a": "40800000",
+          "b": "3e7f58cc",
+          "op": "1:d_y",
+          "y": "3f7f58cc"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7f58cc",
+          "op": "1:correction_add",
+          "y": "3f80539a"
+        },
+        {
+          "a": "3e7f58cc",
+          "b": "3f80539a",
+          "op": "1:next_mul",
+          "y": "3e7fff93"
+        },
+        {
+          "a": "40800000",
+          "b": "3e7fff93",
+          "op": "2:d_y",
+          "y": "3f7fff93"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7fff93",
+          "op": "2:correction_add",
+          "y": "3f800036"
+        },
+        {
+          "a": "3e7fff93",
+          "b": "3f800036",
+          "op": "2:next_mul",
+          "y": "3e7fffff"
+        }
+      ]
+    },
+    {
+      "input": "3a800000",
+      "kind": "reciprocal",
+      "result": "447fffff",
+      "seed": "447311c7",
+      "steps": [
+        {
+          "a": "3a800000",
+          "b": "447311c7",
+          "op": "0:d_y",
+          "y": "3f7311c7"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7311c7",
+          "op": "0:correction_add",
+          "y": "3f86771c"
+        },
+        {
+          "a": "447311c7",
+          "b": "3f86771c",
+          "op": "0:next_mul",
+          "y": "447f58cc"
+        },
+        {
+          "a": "3a800000",
+          "b": "447f58cc",
+          "op": "1:d_y",
+          "y": "3f7f58cc"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7f58cc",
+          "op": "1:correction_add",
+          "y": "3f80539a"
+        },
+        {
+          "a": "447f58cc",
+          "b": "3f80539a",
+          "op": "1:next_mul",
+          "y": "447fff93"
+        },
+        {
+          "a": "3a800000",
+          "b": "447fff93",
+          "op": "2:d_y",
+          "y": "3f7fff93"
+        },
+        {
+          "a": "40000000",
+          "b": "bf7fff93",
+          "op": "2:correction_add",
+          "y": "3f800036"
+        },
+        {
+          "a": "447fff93",
+          "b": "3f800036",
+          "op": "2:next_mul",
+          "y": "447fffff"
+        }
+      ]
+    }
+  ],
+  "RTL_builds": 0,
+  "base": "400d3d0c0f9caaf5e16392b71da21d6a135d3a6d",
+  "contracts": {
+    "DS_RMS": "chunk8 padded golden tree requires HDC_V41_ARITH=chunk8 or su; DIV(sum,F32(N)); ADD(eps); rsqrt3; HC-pre BF16 rounding retained",
+    "Qwen_RMS": "HDC_SU_WIDTH>=8; chunk8 padded golden tree; MUL(sum,F32(1/N)); ADD(eps); rsqrt3",
+    "fault": "DIV nonfinite/zero-divisor -> +0/argument; overflow -> +0/overflow. Golden IEEE Inf/NaN is not a zero-fault hardware oracle.",
+    "reciprocal3": {
+      "FADD": 3,
+      "FMUL": 6,
+      "INT_seed": 1,
+      "callers": [
+        "Qwen softmax denominator",
+        "Qwen attention PV normalization",
+        "Qwen SILU"
+      ],
+      "neg_XOR": 3,
+      "not_RMS_rsqrt": true,
+      "seed": "0x7ef311c7-bits(d), source positive-finite saturation retained"
+    },
+    "rsqrt3": {
+      "FADD": 3,
+      "FMUL": 10,
+      "INT_seed": 2,
+      "neg_XOR": 3,
+      "seed": "0x5f3759df-(bits(v)>>1)"
+    }
+  },
+  "gates": [
+    "owner ack and exact compiler source binding",
+    "native root/RF INT/gather cycle and source lease join",
+    "selected existing DIV source qualification and error codes",
+    "finite capture/tag/reset/drain CDC model",
+    "full G0 area/routing/slot/cycle composition before RTL",
+    "bounded assertion-only source-composed exact gate before SS/FF physical gate"
+  ],
+  "handoff_commit": "cd9a7781052d2a6b870fcbe781553f50a0baf350",
+  "handoff_source_sha256": {
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+    "tools/h3_native_command_cost_contract.py": "c62d86836a37f97e3ade882d4a433bd3ca0cf0dcd31e38f5e8c17ce6688cbbc1",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966"
+  },
+  "historical_physical_price": {
+    "DIV31_routed_core_outline_um2": 4039.61,
+    "DIV31_routed_standard_cell_area_um2": 1616.37,
+    "NS8_one_core_per_SM_cell_um2": 12930.96,
+    "NS8_one_core_per_SM_outline_um2": 32316.88,
+    "actual_native_slot_admission": false,
+    "actual_required_replica_count": null,
+    "corner": "TT",
+    "full_support_file_identical": false,
+    "historical_git_commit": "8e1441132c5b7ea4e8765fccfd4a03894afa26ac",
+    "new_capture_mux_tag_control_area_um2": null,
+    "reachable_vline_module_sha256": "23874911f62e091e7449d9be293a137ce3b618e08f9fe9b47e61d73eb0320506",
+    "scope": "DIV body and reachable vline identical; full SFU file differs in unrelated modules. Retained primitive TT price only, not native GPU SS/FF slot or timing qualification",
+    "source_body_match": true,
+    "source_record": "results/physical_abi3/asap7/primitive_fmax_headroom/routes/hdc_fdiv_base.json"
+  },
+  "ownership": {
+    "D2": "remains primary, clean pinned worktree, no running jobs",
+    "scalar": "Epicurus explicitly assigned; Peirce compiler and Maxwell composition unchanged"
+  },
+  "physical_runs": 0,
+  "primitive_inventory": {
+    "existing_ABI3_exact_DIV": {
+      "DFF_cell_um2_proxy": 94.1868,
+      "II": "core edges+1+out_ready stall; one in flight",
+      "core_max_edges_after_accept": 65,
+      "ledger": {
+        "bracket": 93,
+        "candidate": 31,
+        "control": 4,
+        "degenerate": 1,
+        "operand_powers": 18,
+        "operand_significands": 48,
+        "output": 35,
+        "product": 49,
+        "product_power": 10,
+        "round_power": 9,
+        "round_significand": 25
+      },
+      "logic": "one 25x24->49 multiplier, 97-bit alignment/comparator, 31-bit bracket, seed/midpoint logic",
+      "result_held_until_ready": true,
+      "state_bits": 323,
+      "unclamped_normal_window_max_edges": 53,
+      "zero_argument_edges_after_accept": 0
+    },
+    "existing_HDC_exact_DIV": {
+      "DFF_cell_um2_proxy": 768.0744000000001,
+      "II": 1,
+      "integration": "needs tagged result capture/backpressure holder; not connected GPU endpoint; no native GPU timing transfer",
+      "ledger": {
+        "decode": 62,
+        "finish1": 40,
+        "finish2": 38,
+        "output": 33,
+        "recurrence_27x90": 2430,
+        "valid_line": 31
+      },
+      "logic": "27 recurrence 25-bit compare/subtract stages, two normalize/shift paths, finish RNE shift/sticky",
+      "result_held_until_ready": false,
+      "source_stages": 31,
+      "state_bits": 2634
+    },
+    "existing_v41x_DIV19": {
+      "DFF_cell_um2_proxy": 555.2064,
+      "declared_II": 1,
+      "declared_stages": 19,
+      "ledger": {
+        "decode": 62,
+        "finish1": 40,
+        "finish2": 38,
+        "mb3_prep": 88,
+        "output": 33,
+        "recurrence_14x116": 1624,
+        "valid_line": 19
+      },
+      "logic": "13 two-bit radix4 stages and final one-bit; three 28-bit subtract/select paths per stage; normalization and RNE finish",
+      "native_GPU_binding": false,
+      "source_commit": "cd9a7781052d2a6b870fcbe781553f50a0baf350",
+      "state_bits": 1904,
+      "timing_transfer": false
+    },
+    "native_GPU": "existing 128xADD/MUL LAT7 SIMD; parent has binary mul selector, no DIV command. Reuse arithmetic; scalar endpoint/gather INT lease join remains proposed."
+  },
+  "selected_DIV5120_static_stage_witnesses": [
+    {
+      "expected_error": 0,
+      "expected_y": "00000000",
+      "input": "00000000",
+      "source_stages": {
+        "fault": 0,
+        "stage": "canonical_zero",
+        "y": 0
+      }
+    },
+    {
+      "expected_error": 0,
+      "expected_y": "00000000",
+      "input": "00000001",
+      "source_stages": {
+        "Q27": 53687091,
+        "biased_exponent": -35,
+        "fault": 0,
+        "guard": 0,
+        "remainder": 2097152,
+        "round_up": false,
+        "sticky": true,
+        "subnormal_shift": 25,
+        "y": 0
+      }
+    },
+    {
+      "expected_error": 0,
+      "expected_y": "00000666",
+      "input": "00800000",
+      "source_stages": {
+        "Q27": 53687091,
+        "biased_exponent": -12,
+        "fault": 0,
+        "guard": 0,
+        "remainder": 2097152,
+        "round_up": false,
+        "sticky": true,
+        "subnormal_shift": 13,
+        "y": 1638
+      }
+    },
+    {
+      "expected_error": 0,
+      "expected_y": "394ccccd",
+      "input": "3f800000",
+      "source_stages": {
+        "Q27": 53687091,
+        "biased_exponent": 114,
+        "fault": 0,
+        "guard": 1,
+        "remainder": 2097152,
+        "round_up": true,
+        "sticky": true,
+        "subnormal_shift": 0,
+        "y": 961334477
+      }
+    },
+    {
+      "expected_error": 0,
+      "expected_y": "794ccccc",
+      "input": "7f7fffff",
+      "source_stages": {
+        "Q27": 107374176,
+        "biased_exponent": 242,
+        "fault": 0,
+        "guard": 0,
+        "remainder": 0,
+        "round_up": false,
+        "sticky": false,
+        "subnormal_shift": 0,
+        "y": 2035076300
+      }
+    },
+    {
+      "expected_error": 0,
+      "expected_y": "00000000",
+      "input": "80000001",
+      "source_stages": {
+        "Q27": 53687091,
+        "biased_exponent": -35,
+        "fault": 0,
+        "guard": 0,
+        "remainder": 2097152,
+        "round_up": false,
+        "sticky": true,
+        "subnormal_shift": 25,
+        "y": 0
+      }
+    },
+    {
+      "expected_error": 1,
+      "expected_y": "00000000",
+      "input": "7f800000",
+      "source_stages": {
+        "fault": 1,
+        "stage": "decode_argument",
+        "y": 0
+      }
+    }
+  ],
+  "selected_endpoint": {
+    "Maxwell_admission_required": [
+      "NS8 source instance and scalar lease hook pins",
+      "12339 RF local tracks and 41 root tracks",
+      "scalar slot actual area/corridor and SS/FF paths",
+      "all participant/collector/scale/delivery service costs"
+    ],
+    "Qwen_mean_denominator_reciprocal_hex": "39800000",
+    "call": "DIV(sum,F32(5120))",
+    "conditional_ns_at_1p2GHz": {
+      "D19_service": 20.833333333333336,
+      "D31_service": 30.833333333333336
+    },
+    "context_clock": "single GPU service clock proposed; scalar result holder bridges backpressure. Different serial clock requires modeled CDC and is not selected",
+    "defaultoff_implementation": "held until G0 model/slot/clock admission",
+    "denominator_hex": "45a00000",
+    "fault_reset": "invalid argument/overflow captured as failed command, suppress successful scalar publication; no stale result after reset, pipeline valid flushed; RF payload may persist but invalid",
+    "frequency_qualified": false,
+    "lease": "sole whole-SM RF lease from command accept through mirrored write ACK and done retirement; no new RF port",
+    "native_source_join_missing": true,
+    "owner": "Epicurus explicitly assigned by parent",
+    "proposed_edge_calendar": [
+      "E0 accept, lease lock",
+      "E1 RF read accepted",
+      "E2 registered RF response becomes valid",
+      "E3 consume/start DIV decode",
+      "E(D+2) final DIV valid/result",
+      "E(D+3) capture result/fault",
+      "E(D+4) successful mirrored RF write",
+      "E(D+5) ACK consumed",
+      "E(D+6) successful command retired"
+    ],
+    "proposed_service_cost_edges": {
+      "RF_read": 2,
+      "admission": 1,
+      "done_retire": 1,
+      "execute_declared_D31": 31,
+      "mirrored_write_ACK": 2,
+      "scope": "analytical proposed scalar join under ready source RF, no competing host and no output stall; not actual measured GPU service",
+      "total_D19_no_stall": 25,
+      "total_D31_no_stall": 37
+    },
+    "root_tree": "Peirce chunk8 sibling/order unchanged; final collector lane0",
+    "source_full_SM_instance_count_NS": 8,
+    "stalls": "admission/RF read/write/done stalls add explicit edges; no finite service upper bound without ready guarantee"
+  },
+  "source_sha256": {
+    "results/physical_abi3/asap7/primitive_fmax_headroom/routes/hdc_fdiv_base.json": "69a70ed3777c347985feed04e7a327c03a1448483b44da32270a46d6009002b9",
+    "results/uarch/h3_distributed_norm_endpoint_20261002/model.json": "b9f3072b9e1ea174a9d7f89d7754ddca4bb6a3357714d566b15f97f0a10572b3",
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "tools/h3_distributed_norm_endpoint.py": "2112a5d7b5a4879e193151a8e42b47e5487391049eb5345243e739b26cf3d1be",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "status": "SOURCE_CONTRACT_MODEL_ONLY_NOT_BUILD_READY",
+  "witnesses": [
+    {
+      "a": "3f800000",
+      "b": "45a00000",
+      "edges_after_accept": 51,
+      "error": 0,
+      "iterations": 24,
+      "y": "394ccccd"
+    },
+    {
+      "a": "3f800000",
+      "b": "40400000",
+      "edges_after_accept": 51,
+      "error": 0,
+      "iterations": 24,
+      "y": "3eaaaaab"
+    },
+    {
+      "a": "00800000",
+      "b": "43800000",
+      "edges_after_accept": 65,
+      "error": 0,
+      "iterations": 31,
+      "y": "00008000"
+    },
+    {
+      "a": "80000001",
+      "b": "40000000",
+      "edges_after_accept": 65,
+      "error": 0,
+      "iterations": 31,
+      "y": "00000000"
+    },
+    {
+      "a": "7f7fffff",
+      "b": "3f000000",
+      "edges_after_accept": 51,
+      "error": 2,
+      "iterations": 24,
+      "y": "00000000"
+    },
+    {
+      "a": "00000000",
+      "b": "45a00000",
+      "edges_after_accept": 0,
+      "error": 0,
+      "iterations": 0,
+      "y": "00000000"
+    },
+    {
+      "a": "3f800000",
+      "b": "00000000",
+      "edges_after_accept": 0,
+      "error": 1,
+      "iterations": 0,
+      "y": "00000000"
+    },
+    {
+      "a": "7f800000",
+      "b": "3f800000",
+      "edges_after_accept": 0,
+      "error": 1,
+      "iterations": 0,
+      "y": "00000000"
+    }
+  ]
+}

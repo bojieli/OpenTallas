@@ -1,0 +1,12 @@
+{
+  "attention_methods_byte_identical": true,
+  "falling": "Set clk0; attention eval0; die eval0/att_propagate then repeat attention eval0 until unchanged",
+  "full_token_qualification": false,
+  "method_sha256": "7d6bf79297c76a1da4f4efbe919ce5d1c196194c193d708ce79a2c72514069dc",
+  "original_runtime_binary_linkage": "UNPROVEN_NO_LINK_MAP",
+  "reset": "ctx and actx randReset(0); commandArgs propagated; shared clk/rst_n",
+  "rising": "Both die and attention eval pre-edge inputs before att_propagate",
+  "settle_limit": 64,
+  "simulation_clock_to_host_seconds": "UNAVAILABLE_FOR_NEW_CORE_ENDPOINT",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274"
+}

@@ -1,0 +1,23 @@
+VIOLATION t=463872 ps pc=0 bank=13 tRCD
+VIOLATION t=466944 ps pc=1 bank=13 tRCD
+VIOLATION t=596992 ps pc=3 bank=17 tRCD
+VIOLATION t=600064 ps pc=4 bank=17 tRCD
+VIOLATION t=730112 ps pc=6 bank=21 tRCD
+VIOLATION t=859136 ps pc=8 bank=25 tRCD
+VIOLATION t=863232 ps pc=9 bank=25 tRCD
+VIOLATION t=992256 ps pc=11 bank=29 tRCD
+VIOLATION t=996352 ps pc=12 bank=29 tRCD
+VIOLATION t=6091776 ps pc=6 bank=26 tRCD
+VIOLATION t=6095872 ps pc=7 bank=26 tRCD
+VIOLATION t=6224896 ps pc=9 bank=29 tRCD
+RESULT ref_mode=1 hint=320 b2b=0 phase=0 cred=32 layers=2
+LAYER 0 go=65 first_ps=24576 stream_ps=1085440 data_ps=1060864
+LAYER 1 go=5176 first_ps=24576 stream_ps=1082368 data_ps=1057792
+SUMMARY worst_stream_ps=1085440 mean_stream_ps=1083904 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0
+SUMMARY bytes_per_layer=1048576 worst_Bps=966037735849 mean_Bps=967406707605
+SUMMARY sectors_good=65536 sectors_bad=0 violations=12 cmds ACT=2048 PRE=2048 PREab=0 REF=1645 RD=65536 max_ref_gap_ps=121856 max_landing=12
+SUMMARY verdict=FAIL
+- rtl/test/model_ready_hbm_r14/tb_hbm_stream_bw.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.474 s; speed 4.331 us/s
+- Verilator: cpu 0.683 s on 1 threads; allocated 10 MB

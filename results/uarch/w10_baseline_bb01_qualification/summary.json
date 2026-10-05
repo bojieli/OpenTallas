@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.w10.baseline.qualification.v1",
+  "verdict": "PASS_EXACT_PHYSICAL_PENDING",
+  "source_commit": "59e8e1358",
+  "source_clean_at_start": true,
+  "parameters": {
+    "FAST": 1,
+    "PP": 1,
+    "BP": 0,
+    "FRONT_PAR": 0,
+    "N": 4,
+    "NB": 2,
+    "MTP_positions": 6,
+    "EARLY": 1
+  },
+  "cases": 13,
+  "rows": 240,
+  "faults": 0,
+  "all_prior_front1_cycles_identical": true,
+  "model": "results/uarch/w10_baseline_main_prequalification_bb01.json",
+  "parent_model_preserved_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+  "main_baseline": "bb01a425a66da3c8cc9686a0b87870d126413e16",
+  "physical": {
+    "c8_pid": 2897072,
+    "status": "LIVE_GLOBAL_ROUTE_HOLD_REPAIR_NOT_TERMINAL",
+    "remote": "155.103.253.39",
+    "container": "otjob-9ebfa35966",
+    "source_commit": "d417de73367ba90846716612f8a5fedd52891140",
+    "column_outline_um": [
+      1002.89,
+      142.56
+    ],
+    "cts_snapshot_only": true,
+    "final_setup_hold_verdict": null,
+    "routed_layer_audit": null,
+    "rerun": false
+  },
+  "product_bankmap": {
+    "pid": 2711389,
+    "status": "LIVE_OUTPUT_ABSENT",
+    "output": "/tmp/claude-1000/w10out/prod_4b4b/v41_rom_ksplit_bankmap_product.json",
+    "source": "4b4b12e29",
+    "rerun": false
+  },
+  "frontend": "FRONT_PAR physical probe terminal FLW0024, rejected; no retry/tuning",
+  "retirement": "two own clean inactive frontend worktrees removed, source refs/evidence retained",
+  "observed_at": "2026-10-01T09:05:40.204948+00:00",
+  "files": {
+    "c8_cts_snapshot.json": "9b963a3931ca9ddccf9e51b095ce80f0a2b7ae2eca4aca897a5d0ac6fafbd9f1",
+    "c8_global_route_snapshot.log": "3d7b2e5bf6b7204e487c7264f465b2fb9c729ca0237778242944eac2da537aac",
+    "fastpp_front0.json": "870a4565a96b77c972c5a09f540d467990cef4a7a90243427062f4cf0b3b4512",
+    "fastpp_front0.log": "5b57d31f889f8687741ad2441d26fdf3cbd5ddc58d635c154a1230f3289e8bde",
+    "own_retirement.json": "b12ab6ef6b22cfcfa662874f3c8e4f5e3a5a209f83bf545e36535212bddf2a5a"
+  }
+}

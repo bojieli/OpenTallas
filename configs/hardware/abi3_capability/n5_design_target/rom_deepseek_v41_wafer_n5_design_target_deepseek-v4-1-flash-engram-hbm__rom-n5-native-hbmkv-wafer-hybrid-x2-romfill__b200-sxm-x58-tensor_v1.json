@@ -1,0 +1,180 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "capability_id": "rom_deepseek_v41_wafer_n5_design_target_deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor_v1",
+  "derived_from": {
+    "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+    "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+    "changed": [
+      "technology_view",
+      "capability_id",
+      "engines.*.lanes",
+      "engines.*.queues",
+      "limits.max_outstanding_per_queue",
+      "memory.sram.banks",
+      "memory.sram.ports",
+      "memory.hbm.channels",
+      "topology_class",
+      "limits.max_nodes",
+      "memory.rom.bytes",
+      "memory.hbm.bytes",
+      "memory.sram.bytes",
+      "limits.max_context_positions",
+      "memory.rom.arrays",
+      "memory.rom.banks"
+    ],
+    "design_point": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+    "generator": "tools/derive_cycle_machine.py",
+    "memory_capacity_provenance": {
+      "device_count": 2,
+      "kv_store": "hbm",
+      "parts": {
+        "memory.hbm.bytes": {
+          "base_bytes": 1649267441664,
+          "base_source": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json#memory.hbm.bytes",
+          "device_count": 2,
+          "emitted_bytes": 3298534883328,
+          "kv_arena": null,
+          "scaled_bytes": 3298534883328
+        },
+        "memory.rom.bytes": {
+          "base_bytes": 412316860416,
+          "base_source": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json#memory.rom.bytes",
+          "device_count": 2,
+          "emitted_bytes": 824633720832,
+          "kv_arena": null,
+          "scaled_bytes": 824633720832
+        },
+        "memory.sram.bytes": {
+          "base_bytes": 8589934592,
+          "base_source": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json#memory.sram.bytes",
+          "device_count": 2,
+          "emitted_bytes": 17179869184,
+          "kv_arena": null,
+          "scaled_bytes": 17179869184
+        }
+      },
+      "rule": "Every base capacity is one base device's, so the collapse to one logical device multiplies it by device_count.  A KV arena is the exception: the design point holds ONE of it for the session, so when its kv_store is 'sram' the SRAM capacity is the scaled scratchpad PLUS points[ROLE].kv_capacity_bytes, and memory.sram_kv names the second part.  The parts add because the consumer of memory.sram.bytes -- runtime/abi3/verifier.py _verify_address_map -- charges one space for every SRAM object the deployment declares."
+    },
+    "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
+  },
+  "engines": {
+    "attention": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "dma": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "link": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "reduction": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "route": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "selection": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "state": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "tensor": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "vector": {
+      "lanes": 32,
+      "queues": 16
+    }
+  },
+  "fabric": {
+    "node_class": 1
+  },
+  "features": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "limits": {
+    "max_candidate_positions": 16384,
+    "max_context_positions": 262144,
+    "max_descriptors": 65536,
+    "max_event_id": 1023,
+    "max_events": 512,
+    "max_expert_ids": 384,
+    "max_instructions": 8192,
+    "max_loop_depth": 4,
+    "max_loop_trip": 4096,
+    "max_nodes": 1,
+    "max_outstanding_per_queue": 16,
+    "max_retired_work": 67108864,
+    "max_sessions": 16,
+    "max_state_resources": 16,
+    "max_topk": 6,
+    "max_vocabulary": 129280
+  },
+  "link": {
+    "class_count": 4,
+    "reticle_columns": 8,
+    "reticle_rows": 6,
+    "tiles_per_reticle": 256
+  },
+  "memory": {
+    "hbm": {
+      "bytes": 3298534883328,
+      "channels": 344,
+      "resident_region_bytes": 202758032400
+    },
+    "rom": {
+      "arrays": 24576,
+      "banks": 24576,
+      "bytes": 824633720832
+    },
+    "sram": {
+      "banks": 32,
+      "bytes": 17179869184,
+      "ports": 4
+    }
+  },
+  "numeric_contracts": [
+    "bf16_add_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+    "bf16_byte_preserving_state_v1",
+    "bf16_payload_lookup_v1",
+    "candidate_mask_v1",
+    "deepseek_v4_compress_fp32_bf16_v1",
+    "deepseek_v4_hyper_connect_fp32_bf16_v1",
+    "deepseek_v4_router_fp32_sigmoid_v1",
+    "deepseek_v4_sparse_attention_fp32_softmax_v1",
+    "engram_gate_fp32_v1",
+    "exact_index_select_v1",
+    "exact_token_append_eos_v1",
+    "fp4_e2m1_s16_e4m3_to_fp8_v1",
+    "fp8_e4m3fn_fp8_e4m3fn_fp32_sequential_rne_v1",
+    "greedy_lowest_token_id_argmax_v1",
+    "mxfp4_e2m1_fp8_e4m3fn_fp32_blocked_rne_v1",
+    "ngram_hash_u32_v1"
+  ],
+  "schema": "opentallas.abi3.capability.v1",
+  "technology_view": "n5_design_target",
+  "topology_class": 0
+}

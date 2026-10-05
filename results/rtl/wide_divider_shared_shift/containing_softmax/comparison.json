@@ -1,0 +1,77 @@
+{
+  "scope": "Containing softmax current-source prelayout checkpoint after both divider updates; not routed closure or isolated wide-divider benefit.",
+  "record": "results/physical_abi3/asap7/a3_attention_softmax_block/both_divider_updates_synth_sta_1ns.json",
+  "record_sha256": "53f3fcf552dc10a3da57fa1429d8682ed476b6667fb1872627ddc60e18df957d",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "size_bytes": 3047
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7",
+      "size_bytes": 20439
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4",
+      "size_bytes": 31225
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "size_bytes": 11904
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "size_bytes": 6360
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "c03c15fd94567879e0c723fe8d09bf3aed590e47570d21c3d8ae9ac10b962880",
+      "size_bytes": 6417
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "size_bytes": 9667
+    }
+  ],
+  "area_um2": 12063.627,
+  "sequential_cells": 8584,
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.046632781156392696,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 6463,
+        "setup_wns_ns": -10.457506014069475,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "artifacts": {
+    "results/rtl/wide_divider_shared_shift/containing_softmax/setup_path.rpt": "12ed7f88b1a4010a40e6fa8f2a24a230d94aefe6d0d606431b27ee4abf2163ca",
+    "results/rtl/wide_divider_shared_shift/containing_softmax/synth.ys": "0c500d269e86444f215f75e6bc1cd23edbdbb4d03b5f358edec73fe9e3991978",
+    "results/rtl/wide_divider_shared_shift/containing_softmax/hold_path.rpt": "386a4818155014bc53c51d250decb93224f6b40833300f0bc94d67ca450d03bd",
+    "results/rtl/wide_divider_shared_shift/containing_softmax/stat.txt": "6cad4d9c57237e5b16430f007c8295db4355b060f33a8314cbd9e83ae6a1425c",
+    "results/rtl/wide_divider_shared_shift/containing_softmax/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+    "results/rtl/wide_divider_shared_shift/containing_softmax/sta.tcl": "aef44a58481f1cfe7f8f6532df751312253c9b19ba2fa806cbb9b9f6ff070831"
+  },
+  "previous_local_lane_write": {
+    "area_um2": 12070.904,
+    "sequential_cells": 8576,
+    "setup_slack_ns": -8.3640938
+  },
+  "interpretation": "Mapped cost effectively unchanged in containing softmax; prelayout setup slack worsens. Wide transform divider area saving is established standalone, not as a softmax area/clock gain. Softmax fixes operation to EXP_NONPOS; sigmoid service is not exercised by this consumer."
+}

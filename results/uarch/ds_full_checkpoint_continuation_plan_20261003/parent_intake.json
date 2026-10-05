@@ -1,0 +1,60 @@
+{
+  "base_main": "7f9ca03351448e723a0f23ddd065a6be5778180e",
+  "cold_reconcile_byte_identical": true,
+  "composite_weight_bindings_rejected": 6,
+  "coverage": {
+    "PCs": 2213,
+    "contiguous_scopes": 43,
+    "families": 30,
+    "templates": 1129
+  },
+  "focused_tests_passed": 16,
+  "full_token_execution_pass": false,
+  "limitations": [
+    "Actual PC9 checkpoint and restored PC10 result pending",
+    "Full-scope cold constructor/controller and independent comparison enrollment pending",
+    "Complete journal, codec, publication, witness and RAM resource projection pending",
+    "No hardware clock, CDC, physical fit or token rate qualification"
+  ],
+  "model_sha256": "0ed3c3657b8f69596f8a6e69d0c8adb4e34b30cdb8bf0a6f963f3703491c2f4f",
+  "next_scope": [
+    11,
+    19
+  ],
+  "physical_or_rate_credit": false,
+  "preserved_failed_records_unchanged": true,
+  "reviewed_commit": "0c31e5e0099ab080dafb84afa23b420298afcbfd",
+  "runtime_launch_authorized_by_record": false,
+  "schema": "DS_FULL_CONTINUATION_PARENT_INTAKE_V1",
+  "source_pins_verified": {
+    "results/uarch/ds_hbm_bound_engine_r43_20261002/inputs/actual_dispatch_bcf.json.gz": "bcf7d800aa64aeff92b8a1954cab328911c400025179d6a9ab9f211a934c253c",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/actual_DeepSeek_homes.json.gz": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h3_deepseek_streaming_linear.py": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/inputs/prefix_input_manifest.json.gz": "2c7d0d38d9e5c1a2b049ba14eecfe8bae91eaaf2e96629f418b4ade9693c1c01",
+    "results/uarch/ds_hbm_connected_source_r37_20261002/peer_source_pins.json": "ac08d45b958cbf0401c1abe706d19da8cca4c1ebf15243bc1a3b4181c4188641",
+    "results/uarch/ds_hbm_dual_resources_r56_20261003/model.json": "c41b8feadef2f83c863d5f558c8bba30d3007b21dd7f0bcbdee8771c83ce0c6f",
+    "results/uarch/ds_hbm_source_prefix_r39_20261002/journal_schema_envelope_r2.json": "5281b5c4f237feca913adc8b13dd50337206b42698846120f953adfcc9309455",
+    "results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz": "c65a584c1b1cfafcd00391af216870136a44ec142b0d11106df570db7b8eb264",
+    "tools/ds_hbm_additive_endpoint_join_r54.py": "00bd0b2fa93de9afd11ca65722563fec2df939729a937413f4e66451418d36c2",
+    "tools/ds_hbm_checkpointed_prefix_r55.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "tools/ds_hbm_collective_continuations_r37.py": "834807707285f70118a09c9878db86e501cd8420c9e744ba3b3dd4ce0ad1a84b",
+    "tools/ds_hbm_group_provider_r34.py": "3650aeaec460723a29ca1d5fdff8295c2bc14ba4c8418135b33a9538400b4fb1",
+    "tools/ds_hbm_pc10_engine_r44.py": "96949401e4ef66977211d03d4d64821ca7cff4bd818a8701d8806344484bc31d",
+    "tools/ds_hbm_pc10_projection_r46.py": "6abf0fe6946ba8cdd1580ee6f8c27b4c71d4f08bb4741f49b67549c94879ded5",
+    "tools/ds_hbm_registered_loader_r57.py": "a8f338aac3bcd33b0c81deef05135613dc7454d2a98aeb09c92c5d8691a23ba9",
+    "tools/ds_hbm_source_merge_r37.py": "7d683ae8c7362a6f7f981afbb1614045b066da9c35449b8e7849238d8bdfdcab",
+    "tools/ds_hbm_source_prefix_r45.py": "362ca1a8ca327f585451f5bd4fdb2b7d0b9dff135a75cabd9bc52a9d75d4d620",
+    "tools/ds_hbm_storage_home_binding_r41.py": "feaba8f44842282ad9c2cd314f0640a196f56dbd6ec546527d23942d5dcbe3f1",
+    "tools/ds_producer_checkpoint_resume_v3.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+    "tools/h3_ds_checkpoint_provider_r31.py": "12debf3d035611c0751459a5b15925a988998b2857f0fed50b75ab7072146ecc",
+    "tools/h3_ds_checkpoint_provider_r33.py": "722a0f5407b77fe6270e71092f7398702075fbe67923ef279a8bb88c5074d00f",
+    "tools/h3_ds_checkpoint_provider_r34.py": "9d47acf6f44481cf15458e8162118ec53395a03b3aa1d5242c1d1423e7d8b014",
+    "tools/h3_ds_connected_provider_r37.py": "085b86a67e53fa1ae2b9c43c3d346cea514944601d2ea89477928f9d2990ffe3",
+    "tools/h3_ds_history_provider_r36.py": "04b8f20c9aec5591be7fd86f2c4e11e31e42967a08918ab42bd98b0dcd4545df",
+    "tools/h3_ds_query_provider_r36.py": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9",
+    "tools/h3_ds_source_prefix_provider_r39.py": "dd50f6afb9a52fe58efe285564cd53da2e0622c31f191d5fded3511ea9d36d6d"
+  },
+  "verdict": "PASS_PLANNING_REPLAY_NOT_EXECUTION_ADMISSION"
+}

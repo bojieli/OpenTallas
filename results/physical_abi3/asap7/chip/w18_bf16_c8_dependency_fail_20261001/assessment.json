@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.final_element_dependency_failure.v1",
+ "observed_at": "2026-10-01T09:21:44.659539+00:00",
+ "bf16_job": "W10 c8",
+ "host": "155.103.253.39",
+ "remote_detail_route_log": "/home/ubuntu/w10qjobs/work/c8/orfs/logs/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_2_route.log",
+ "remote_log_sha256": "79364dd0aceee0b7bcb564b3881554b2f7a6e221e1047f564b271c3c2e3aa176",
+ "route_returncode": 1,
+ "failure": "DRT-0255 maze route cannot find paths for ROM g_mac[0].g_pp.rd1[254] and rd1[171]",
+ "abstract_recovery_status": "BLOCKED_INPUTS",
+ "queue_status": "BLOCKED_OR_FAILED_NO_RETRY",
+ "queue_exited": true,
+ "continuation_exited": true,
+ "final_artifacts_available": false,
+ "qualified_final_abstract": false,
+ "die_rebase_ready": false,
+ "adopted": false,
+ "restarted": false,
+ "tuned": false,
+ "remaining": [
+  "Qualified final q-pair actual LEF + SS/FF ETMs + exactness",
+  "Qualified final BF16 actual LEF + SS/FF ETMs + exactness",
+  "Current model/hub pins, root/region closure, routing-layer and actual-element IR"
+ ],
+ "read_only_local_waiter_pid": 3029028,
+ "next": "Parent updates W10/W18 plan; failed c8 is preserved and not tuned. No die rebase on an incomplete route or a LEF alone."
+}

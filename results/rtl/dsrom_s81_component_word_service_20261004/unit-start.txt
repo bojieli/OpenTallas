@@ -1,0 +1,15 @@
+RuntimeMaxUSec=infinity
+MainPID=2198968
+ExecMainStatus=0
+ExecStart={ path=/usr/bin/python3 ; argv[]=/usr/bin/python3 -u tools/dsrom_s81_component_word_server.py --selection /tmp/dsrom-s81-minimum-source-selected-cicero-r1/selection.json --checkpoint /home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277 --socket /tmp/dsrom-s81-minimum-field-57e3.sock --output /tmp/dsrom-s81-field-word-57e3-r1 ; ignore_errors=no ; start_time=[Sat 2026-10-03 21:21:30 PDT] ; stop_time=[n/a] ; pid=2198968 ; code=(null) ; status=0/0 }
+ControlGroup=/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-s81-minimum-field-57e3-r1.service
+MemoryCurrent=57098240
+CPUQuotaPerSecUSec=infinity
+MemoryMax=infinity
+MemorySwapMax=infinity
+LimitCPU=infinity
+LimitFSIZE=infinity
+LimitAS=infinity
+Id=dsrom-s81-minimum-field-57e3-r1.service
+ActiveState=active
+SubState=running

@@ -1,0 +1,18 @@
+{
+  "files_sha256": {
+    "ot_chip_v41x_hbm_karb_pc_local.lef": "25c5a271e018a6830432dc5fac97d53991c48e8df54b973749b96f7f167c3fb8",
+    "ot_chip_v41x_hbm_karb_pc_local_bb.v": "f35e3b2104a4994cdc9ae20a071f35600b28eea907a14e806605c31bedcf9551",
+    "ot_chip_v41x_hbm_karb_pc_local_tt.lib": "2e48077e6cf8c8fb31b46a7ce4fc3c674e436737215a38473d72c4ac02a1efe4"
+  },
+  "macro_size_um": [
+    375.0,
+    17.01
+  ],
+  "purpose": "geometry-only routed one-PC macro for composed placement/routing; no timing arcs",
+  "schema_version": 1,
+  "signal_pin_count": 1119,
+  "source_commit": "073a7603c7355ef11570b0c10a4dfbb62fd7865f",
+  "source_record": "results/asap7_physical/v41x_die_karb_pc_local_budget_slew50_m9/physical.json",
+  "source_routed_odb_sha256": "f5fb468a772ea0c0180184494f2ad3b72013d7a0f16b6060ae5d79a6e51d5945",
+  "timing_limit": "Liberty intentionally has no arcs. Do not use composition STA as chip Fmax."
+}

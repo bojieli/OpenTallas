@@ -1,0 +1,32 @@
+{
+  "inputs": {
+    "DS_grid.json": {
+      "commit": "4b6708348f3938e0830c3549fbbecadbce18e798",
+      "path": "results/uarch/dsrom_l20_hierarchical_reservation_20261002/grid_inputs/DS_grid.json",
+      "sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018"
+    },
+    "main_S58.json": {
+      "commit": "839fd4fc198b33ad658445244e48720fb47ab373",
+      "path": "results/uarch/dsrom_shared_complete_pair_candidate_r20_20261002/shared_candidate.json",
+      "sha256": "82551ea5d075eff9c3fbad608e3d3a261d29ecdc51aaaf9322d4a7fa1e3aa606"
+    },
+    "reservation_outline.json": {
+      "commit": "4b6708348f3938e0830c3549fbbecadbce18e798",
+      "path": "results/uarch/dsrom_l20_hierarchical_reservation_20261002/reservation_outline.json",
+      "sha256": "686f603c8f5f34525211926b0d9656720f534b5a54db16d2b8864eb18a31c3de"
+    },
+    "service_model.json": {
+      "commit": "b551e90be56463a6d0d0262b6128610429b25e30",
+      "path": "results/uarch/dsrom_service_hub_arch_handoff_20261002/model.json",
+      "sha256": "06bd52db3edefe90463593ee03d39fd0c962341c61b7853d86c9d030c58014a2"
+    }
+  },
+  "no_new_jobs": true,
+  "prior_commit_refs": [
+    "b551e90be",
+    "9f26b14d0",
+    "c9b4730bd"
+  ],
+  "schema": "opentallas.DSROM.S58.correction-input-receipt.v1",
+  "scope": "Self-contained correction only; no historical hierarchy helper needed and no claim of full b551 generator/c9 join replay. Exact source snapshots; no originals edited."
+}

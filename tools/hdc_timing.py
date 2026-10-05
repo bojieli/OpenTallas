@@ -1,0 +1,665 @@
+#!/usr/bin/env python3
+"""Cycle model of the hardwired decode core, calibrated against its RTL.
+
+Replays a program (tools/hdc_program.py) through a model of the sequencer and
+both units -- in-order issue, barriers (both units idle), chases (the other
+unit's latest op has made N progress), the matrix engine's fixed element loop
+and result latency, the stream unit's per-class depth and same-class overlap,
+the reducer's tail -- and returns per-instruction issue cycles and the token's
+cycle count.  The constants are the RTL's (see `calibrate`, which fits and
+checks them against a Verilator issue trace).  Because the model needs only
+the program's shapes, it prices dimensions the RTL simulator cannot reach in
+reasonable time, e.g. full Qwen3-8B (`--model qwen3-8b`).
+
+KV in HBM (`--kv-hbm`, `simulate(kv=...)`) adds the KV streaming engine
+(rtl/hdc/kv/ot_hdc_kv_stream.sv): a KV-sourced op is announced when the
+sequencer reaches it, its HBM words are fetched at the calibrated sustained
+rate after a fixed latency, and it issues only once its start threshold is in
+the window (min(lines, lead >> jsh + 1) lines), because the engine cannot
+stall.  Ops fetch in order, so an op's prefetch waits for the previous op's
+fetch.  An op whose demand (HBM words per cycle of its element loop) exceeds
+the supply cannot be covered by a bounded window: the model then starts it
+late enough for its last word to arrive in time and reports the window that
+would take (`kv_supply_limited_ops`, `kv_window_lines_required`).  The
+constants are fitted to the RTL (tools/rtl_hdc_kv_stream_campaign.py).
+
+Weights in HBM (`--w-hbm`, `simulate(w=WStream(...))`) adds the weight streaming
+engine (rtl/hdc/hbm/ot_hdc_wstream.sv): the token's weight words are one stream
+in consumption order, fetched from the first token start on at the sustained
+rate s = min(npc * bw_per_pc, 1 word a cycle) whenever the window has room
+(word k is requested no earlier than word k - win is consumed), and arrive
+`lat` cycles after their request.  A weight op of n words issues only once the
+first T = min(n, lead + n - floor(n * rate / 256)) of its words have arrived
+(its start threshold: the engine cannot stall), and consumes one word a cycle
+from its first element.  The stream runs on across tokens (WStream carries
+it), and the stream unit's embedding read waits `emb` cycles from the token
+start for the token's row.  Weight ops larger than the window are issued in
+round chunks by the program (tools/hdc_program.py --wchunk).  The constants are
+fitted to the RTL (tools/rtl_hdc_hbm_campaign.py); the per-channel rate is the
+streamer's probe on the HBM model.
+"""
+import argparse
+import json
+import math
+import re
+from pathlib import Path
+
+import hdc_isa as I
+
+ROOT = Path(__file__).resolve().parents[1]
+IL = I.INTERLEAVE
+
+
+def split_tree_levels(groups):
+    """Match RTL $clog2(G), including non-power-of-two group counts."""
+    if groups < 1:
+        raise ValueError("groups must be positive")
+    return (groups - 1).bit_length()
+
+# RTL constants (cycles); fitted by `calibrate` and fixed here.
+# Fitted to the reduced vehicle's Verilator issue trace (4 groups, SW 8): the
+# prefetched sequencer, the vector stream unit, the 3-cycle adders
+# (ot_hdc_fastfp) in the stream unit, reducers and split tree, the engine's
+# row max: 24,986 model cycles against 24,992 RTL cycles, every issue within 3
+# cycles (the pre-pipeline fit was 32,191 vs 32,196 at seq_gap 5).
+K = dict(seq_gap=1,        # go -> next go: NEXT is decoded on the issuing edge
+         start=3,          # start -> first issue: DYN, the first fetch, decode into NEXT
+         idle_me=4,        # matrix engine's last write -> a barrier releases
+         idle_su=1,        # stream unit's last write -> a barrier releases
+         me_start=1,       # go -> first element issued
+         me_lat=16,        # element issue -> its result written (memory stage, lanes, output registers)
+         me_tree=4,        # per split-tree level (the 3-cycle ot_hdc_qadd + the level's output register)
+         su_start=1,
+         # the low-latency (3-stage) adder and multiplier and the table-driven
+         # exp range reduction (rtl/hdc/ot_hdc_fastfp.sv, ot_hdc_sfu.sv; the
+         # worktree-agent-a516a664 branch at acc46e61): 29/121/75/90/172 -> 21/70/49/58/101
+         su_depth={I.SFU_NONE: 21, I.SFU_EXP: 70, I.SFU_RECIP: 49, I.SFU_RSQRT: 58, I.SFU_SIGM: 101},
+         red_tail=21,      # last element retired -> reducer result written (scalar unit; a516: 22 at seq_gap 5)
+         red_tail_vec=26,  # the vector reducer's fixed part: read 1 + square 3+1 + the 3-cycle-adder chain 21
+         red_lv=4,         # the vector reducer's time levels (ot_hdc_core LV)
+         rmax_tail=4,      # last result -> the maxima word written, beyond the compare tree's levels
+         idle_reg=2)       # last write -> registered idle seen by the sequencer
+
+
+# KV streaming (KV_HBM configuration).  bw_per_pc: sustained words (32 B) per
+# cycle per HBM pseudo-channel, measured by the streamer's bandwidth probe on
+# the model's HBM3E timing (tb_hdc_kv_stream +SET=2, one pseudo-channel, a
+# Qwen3-like two-KV-head stream) at a 1 GHz core; c0 (announce to first fetch,
+# issue iterations, completion walk, kv_ok registers) and lat (fetch to data)
+# are fitted to the reduced vehicle's Verilator runs.
+# lat was 108 with the 5-stage stream unit; a516 refitted it to 140 when the
+# shorter stream unit reached each KV op sooner (+0.30% / -0.31% at positions 15 / 59).
+KV = dict(npc=4, bw_per_pc=0.70, c0=12, lat=140, lead=512, win=256)
+
+
+def me_loop(f, dyn, pos, groups):
+    """(rounds, k steps) of a matrix-engine op.  KV-sourced ops cut their whole
+    K interleaved over S = 2^split groups (kc = ceil(K/S)) and count rounds of
+    G/S position tiles (tools/hdc_isa.py)."""
+    rounds = f["me_tiles"] + dyn[f["me_d_tiles"]]
+    k = f["me_k"] + dyn[f["me_d_k"]]
+    if f["me_wsrc"]:
+        s = f["me_split"]
+        if f["me_d_tiles"] == I.DYN_TTILES:
+            rounds = f["me_tiles"] + pos // (I.W_LANES * (groups >> s)) + 1
+        k = -(-k // (1 << s))
+    return rounds, k
+
+
+def su_vectors(f, dyn, su_width=None):
+    """Cycles of a stream op's element loop: the vector unit (SW >= 8) issues
+    ceil(nin / SW) vectors per outer iteration; the scalar unit one element."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    nin = f["su_nin"] + dyn[f["su_d_nin"]]
+    return f["su_nout"] * -(-nin // sw)
+
+
+def red_tail(k, su_width=None):
+    """Last element retired -> the reducer's result written.  The vector
+    reducer (rtl/hdc/ot_hdc_vreduce.sv): squaring stage, the 8-element chain,
+    log2(SW/8) tree levels and LV time levels of LA + 1 = 4 cycles each."""
+    sw = I.SU_WIDTH if su_width is None else su_width
+    if sw == 1:
+        return k["red_tail"]
+    return k["red_tail_vec"] + 4 * ((sw // 8).bit_length() - 1 + k["red_lv"])
+
+
+# Weights in HBM (W_HBM configuration).  bw_per_pc: sustained 128-byte words
+# per cycle per pseudo-channel of the streamer's per-channel sub-streams on the
+# model's HBM3E timing (tb_hdc_wstream probe, 1 GHz core); lat (request to the
+# completion pointer), c_ann (announce to issue) and emb (token start to the
+# embedding row) are fitted to the reduced vehicle's Verilator runs.
+WH = dict(npc=4, bw_per_pc=0.219, rmax=1.0, lat=80, c_ann=6, emb=65, emb_busy=138, kv_q=0, lead=512, win=2048,
+          margin=0.9, word_bytes=128)
+
+
+def w_rate(w):
+    """The streamer's guaranteed rate (words per cycle x 256) for a provisioning:
+    the probed sustained supply less a margin, capped at the engine's demand."""
+    return min(256, int(256 * w["margin"] * w["npc"] * w["bw_per_pc"] * 128 / w["word_bytes"]))
+
+
+class WStream:
+    """Fluid model of the weight streamer across tokens.  Word k of the stream is
+    requested at r_k = max(r_{k-1} + 1/s, c_{k-win}) (rate, and a free window
+    slot: word k - win consumed at c_{k-win}), which is k/s + a running maximum;
+    it has arrived at r_k + lat.  The KV streamer shares the HBM: its traffic
+    (steal) delays the weight stream's rate-limited requests by its bytes at
+    the stream's rate."""
+
+    def __init__(self, w, rate=None):
+        import numpy as np
+        self.np = np
+        self.w = w
+        # supply in the core's weight words (word_bytes each; bw_per_pc is in 128-byte words)
+        self.s = min(w["npc"] * w["bw_per_pc"] * 128 / w["word_bytes"], w["rmax"])
+        self.rate = w_rate(w) if rate is None else rate
+        self.r = np.zeros(0)
+        self.c = np.zeros(0)
+        self.t0 = None                 # stream start (absolute)
+        self.base = 0.0                # absolute time of the current token's cycle 0
+        self.nxt = 0                   # first word of the next op
+        self.pending = 0.0             # KV traffic not yet charged to the stream (cycles)
+        self.stats = dict(ops=0, words=0, wait_cycles=0, kv_bytes=0)
+
+    def token(self, t_abs):
+        """A token starts at absolute time t_abs (its cycle 0).  After the first
+        token the stream is running when a token starts (the next token's
+        weights are prefetched), so the embedding row waits behind the
+        pseudo-channel queues (emb_busy)."""
+        self.base = t_abs
+        self.emb = self.w["emb"] if self.t0 is None else self.w["emb_busy"]
+        if self.t0 is None:
+            self.t0 = t_abs
+
+    def _req(self, k):
+        np = self.np
+        k0 = len(self.r)
+        if k < k0:
+            return
+        win, s = self.w["win"], self.s
+        ks = np.arange(k0, k + 1)
+        b = np.full(len(ks), -np.inf)
+        m = ks >= win
+        b[m] = self.c[ks[m] - win] - ks[m] / s
+        carry = ((self.r[-1] - (k0 - 1) / s) if k0 else self.t0) + self.pending
+        self.pending = 0.0
+        b[0] = max(b[0], carry)
+        self.r = np.concatenate([self.r, ks / s + np.maximum.accumulate(b)])
+
+    def gate(self, n, t_ann):
+        """Earliest issue (token-relative) of the next weight op of n words,
+        announced at token-relative t_ann."""
+        w = self.w
+        T = min(n, w["lead"] + n - (n * self.rate) // 256)
+        self._req(self.nxt + T - 1)
+        ok = self.r[self.nxt + T - 1] + w["lat"] - self.base
+        return max(t_ann + w["c_ann"], ok)
+
+    def steal(self, t_rel, nbytes):
+        """KV traffic of nbytes issued at token-relative t_rel."""
+        self.stats["kv_bytes"] += nbytes
+        last = self.r[-1] if len(self.r) else self.t0
+        if self.base + t_rel >= last:
+            self.pending += nbytes / self.w["word_bytes"] / self.s
+
+    def consume(self, n, e0):
+        """The op's words are read one a cycle from token-relative e0."""
+        np = self.np
+        self.c = np.concatenate([self.c, self.base + e0 + np.arange(n)])
+        self.nxt += n
+        self.stats["ops"] += 1
+        self.stats["words"] += n
+
+
+def kv_op(f, dyn, pos, groups):
+    """(lines, HBM words, jsh) of a KV-sourced op under the streamer's rules."""
+    W = I.W_LANES
+    rounds, k = me_loop(f, dyn, pos, groups)
+    jsh = f["me_jsh"]
+    njh = IL >> jsh
+    lines = rounds * k * njh
+    ntile = min(-(-(f["me_nout"] + dyn[f["me_d_nout"]]) // W), rounds * groups)
+    tail = min(2, pos // W + 1) if f["me_d_tiles"] == I.DYN_TTILES else 0
+    return lines, max(ntile - tail, 0) * k * njh, jsh
+
+
+def dyn_values(pos, token=0, H=128, half=8, HD=16, groups=I.GROUPS):
+    W = I.W_LANES
+    return [0, token * H, pos * half, (pos // W) * HD * W + pos % W, pos * HD, pos + 1, pos // (W * groups) + 1]
+
+
+def simulate(prog, pos, groups=I.GROUPS, k=K, trace=False, dyn_shape=None, attn_groups=1, su_width=None, kv=None,
+             kv_stats=None, w=None):
+    """attn_groups / su_width > 1 are PROJECTIONS of design options the RTL does
+    not have yet: KV-sourced ops spread over that many lane groups (each taking
+    its own heads), and a stream unit retiring su_width elements per cycle.
+    kv: KV streaming constants (see KV) when the cache is in HBM; kv_stats, a
+    dict, receives the streaming totals.  w: a WStream (weights in HBM), whose
+    token() the caller has set to this token's start."""
+    dyn = dyn_values(pos, groups=groups, **(dyn_shape or {}))
+    t = k.get("start", 0)              # sequencer time: earliest next issue
+    me_free = su_free = 0              # unit accepts a new op from here
+    me_idle = su_idle = 0              # unit fully drained at
+    su_cls, su_cls_idle = None, 0
+    me_slot_t = []                     # latest ME op: time each result slot is written
+    su_el_t = None                     # latest SU op: (first write time, elements)
+    issues = []
+    kv_free = 0                        # the streamer's fetch of the previous KV op ends
+    ks = dict(ops=0, hbm_words=0, wait_cycles=0, supply_limited_ops=0, window_lines_required=0)
+    for f in prog:
+        f = {name: f.get(name, 0) for name, _ in I.FIELDS}
+        u = f["unit"]
+        if u == I.UNIT_END:
+            t = max(t, me_idle + k.get("idle_me", k["idle_reg"]), su_idle + k.get("idle_su", k["idle_reg"]))
+            break
+        ready = t
+        why = "issue"
+        if f["barrier"]:
+            b = max(me_idle + k.get("idle_me", k["idle_reg"]), su_idle + k.get("idle_su", k["idle_reg"]))
+            if b > ready:
+                ready, why = b, "barrier_me" if me_idle >= su_idle else "barrier_su"
+
+        elif f["wait_me"] or f["wait_su"]:
+            b = max(me_idle + k.get("idle_me", k["idle_reg"]) if f["wait_me"] else 0,
+                    su_idle + k.get("idle_su", k["idle_reg"]) if f["wait_su"] else 0)
+            if b > ready:
+                ready, why = b, "wait_me" if f["wait_me"] else "wait_su"
+
+        elif f["chase"]:
+            n = f["chase_n"]
+            if u == I.UNIT_ME and f["chase_rows"]:
+                first, cnt, per_row = su_el_t
+                c = first + min(n * per_row, cnt) - 1 + 1 + k.get("chase_me", 0)
+            elif u == I.UNIT_ME:
+                first, cnt, _ = su_el_t
+                c = first + min(n, cnt) - 1 + 1 + k.get("chase_me", 0)
+            else:
+                c = me_slot_t[min(n, len(me_slot_t)) - 1] + 1 + k.get("chase_su", 0)
+            if c > ready:
+                ready, why = c, "chase"
+
+        if u == I.UNIT_ME:
+            go = max(ready, me_free)
+            if go > ready:
+                why = "unit_busy"
+            if w is not None and not f["me_wsrc"]:
+                n_w = (f["me_tiles"] + dyn[f["me_d_tiles"]]) * (f["me_k"] + dyn[f["me_d_k"]]) * IL
+                g = w.gate(n_w, t)
+                g = int(-(-g // 1))
+                if g > go:
+                    w.stats["wait_cycles"] += g - go
+                    go, why = g, "w_window"
+            if kv and f["me_wsrc"]:
+                lines, words, jsh = kv_op(f, dyn, pos, groups)
+                bw = kv["npc"] * kv["bw_per_pc"]
+                thr = min(lines, (kv["lead"] >> jsh) + 1)
+                f0 = max(t + kv["c0"], kv_free)
+                ok = t + kv["c0"] + thr                                # completion walk, 1 line a cycle
+                if words:
+                    ok = max(ok, f0 + kv["lat"] + thr * (words / lines) / bw)
+                    span = lines << jsh                                # the op's element loop
+                    if words / span > bw:                              # demand above supply
+                        ok = max(ok, f0 + kv["lat"] + words / bw - span)
+                        ks["supply_limited_ops"] += 1
+                        need = lines - int(bw * span * lines / words)
+                        ks["window_lines_required"] = max(ks["window_lines_required"], need)
+                ok = int(-(-ok // 1))
+                ks["wait_cycles"] += max(0, ok - go)
+                go = max(go, ok)
+                kv_free = max(f0 + words / bw, go + ((lines - kv["win"]) << jsh))
+                ks["ops"] += 1
+                ks["hbm_words"] += words
+                if w is not None:
+                    w.steal(go, words * 32)
+            rounds, kc = me_loop(f, dyn, pos, groups)
+            n_el = rounds * kc * IL
+            e0 = go + k["me_start"]
+            lat = k["me_lat"] + k["me_tree"] * split_tree_levels(groups)
+            me_slot_t = [e0 + r * kc * IL + (kc - 1) * IL + j + lat for r in range(rounds) for j in range(IL)]
+            me_free = e0 + n_el
+            me_idle = max(me_idle, me_slot_t[-1] + (k.get("rmax_tail", 0) + (groups * I.W_LANES - 1).bit_length()
+                                                    if f["me_rmax"] else 0))
+            if w is not None and not f["me_wsrc"]:
+                w.consume(n_el, e0)
+        else:
+            cls = f["sfu"]
+            go = max(ready, su_free)
+            if go > ready:
+                why = "unit_busy"
+            if w is not None and f["a_src"] and w.emb > go:
+                go, why = w.emb, "embedding_row"
+            if su_cls is not None and cls != su_cls and su_cls_idle > go:
+                go, why = su_cls_idle, "class_drain"
+
+            n_el = su_vectors(f, dyn, su_width)
+            e0 = go + k["su_start"]
+            d = k["su_depth"][cls]
+            su_el_t = (e0 + d, n_el, n_el // max(1, f["su_nout"]))
+            last = e0 + n_el - 1 + d
+            tail = last + (red_tail(k, su_width) if f["red"] else 0)
+            su_free = e0 + n_el
+            su_idle = max(su_idle, tail)
+            su_cls, su_cls_idle = cls, last
+        issues.append(go)
+        if trace is not False and trace is not None:
+            trace.append((why, go - t))
+        t = go + k["seq_gap"]
+    if kv_stats is not None:
+        kv_stats.update(ks)
+    return issues, t
+
+
+# Model shapes (from each model's released config.json).
+SHAPES = {
+    "qwen3-8b": dict(H=4096, L=36, NH=32, KV=8, HD=128, FF=12288, V=151936),   # Qwen/Qwen3-8B
+    "qwen3-reduced": dict(H=128, L=4, NH=8, KV=2, HD=16, FF=384, V=4096),
+}
+
+
+class ShapeLayout:
+    """What build_program needs from a Layout, from shapes alone (no weights):
+    matrix tiling and K-split exactly as Layout.place_matrix derives them."""
+
+    def __init__(self, shape, groups):
+        import hdc_golden as G
+        self.H, self.L, self.NH, self.KV = shape["H"], shape["L"], shape["NH"], shape["KV"]
+        self.HD, self.FF, self.V = shape["HD"], shape["FF"], shape["V"]
+        self.half, self.eps, self.emb_word = self.HD // 2, 1e-6, 0
+        self.tp, self.die, self.row0 = 1, 0, 0   # one die: build_program reads the tensor-group split
+        self.groups = groups
+        W = I.W_LANES
+        self.GUB = min(W * IL, self.FF)          # gate/up interleave block, as Layout.GUB
+        self.TW = 1 << 20
+
+        def mat(n, k):
+            split = G.split_for(n, k, groups, W, IL)
+            tiles = -(-n // (W * IL))
+            return dict(base=0, n=n, k=k // split, tiles=-(-tiles // (groups // split)), split=split)
+        self.mat = {}
+        for L in range(self.L):
+            self.mat[(L, "qkv")] = mat((self.NH + 2 * self.KV) * self.HD, self.H)
+            self.mat[(L, "o")] = mat(self.H, self.NH * self.HD)
+            self.mat[(L, "gu")] = mat(2 * self.FF, self.H)
+            self.mat[(L, "down")] = mat(self.H, self.FF)
+        self.mat["lm_head"] = mat(self.V, self.H)
+        self.cb = {k: 0 for k in [(L, n) for L in range(self.L) for n in ("in", "qk", "post")] + ["final", "rope", "qscale"]}
+
+    def k_elem(self, L, g, t, d):
+        return ((L * self.KV + g) * self.TW + t) * self.HD + d
+
+    def v_elem(self, L, g, t, d):
+        return ((L * self.KV + g) * self.TW + t) * self.HD + d
+
+
+def price(model, groups, pos, ghz, attn_groups=1, su_width=1, kv=None):
+    """Cycles per token of `model` on a core of `groups` 16-lane groups
+    (with `kv`, the KV cache in HBM behind the streaming engine)."""
+    import hdc_program as P
+    shape = SHAPES[model]
+    lay = ShapeLayout(shape, groups)
+    prog = P.build_program(lay)
+    dyn_k = dict(H=shape["H"], half=shape["HD"] // 2, HD=shape["HD"])
+    stats = {}
+    issues, cycles = simulate(prog, pos, groups=groups, dyn_shape=dyn_k, attn_groups=attn_groups,
+                              su_width=su_width, kv=kv, kv_stats=stats)
+    out = {"model": model, "groups": groups, "lanes": groups * I.W_LANES, "position": pos,
+           "instructions": len(prog), "cycles_per_token": cycles,
+           "tokens_per_s_at_clock": round(ghz * 1e9 / cycles, 2), "clock_ghz": ghz,
+           "projection": {"attn_groups": attn_groups, "su_width": su_width}}
+    if kv:
+        out["kv_hbm"] = dict(kv, **{"kv_" + a: b for a, b in stats.items()},
+                             kv_bytes_per_token=stats["hbm_words"] * 32,
+                             kv_supply_words_per_cycle=kv["npc"] * kv["bw_per_pc"])
+    return out
+
+
+# ---- HBM comparator projections (tools/rtl_hdc_hbm_campaign.py) ------------------------------------
+PC_PER_STACK = 32
+
+
+def weight_ops_words(prog):
+    """Weight-sourced ops' word counts, in program order."""
+    return [f["me_tiles"] * f["me_k"] * IL for f in prog if f.get("unit") == I.UNIT_ME and not f.get("me_wsrc")]
+
+
+def price_hbm(model, groups, pos, stacks, kv_hbm=True, w_hbm=True, su_width=1):
+    """Cycles per token of `model` on a core of `groups` groups with the weights
+    (and the KV cache) streamed from `stacks` HBM3E stacks: the weight stream
+    and the KV streamer share the stacks' pseudo-channels.  The window is not
+    bounded here: its required size (the largest start threshold) is reported."""
+    import hdc_program as P
+    shape = SHAPES[model]
+    lay = ShapeLayout(shape, groups)
+    prog = P.build_program(lay)
+    dyn_k = dict(H=shape["H"], half=shape["HD"] // 2, HD=shape["HD"])
+    npc = stacks * PC_PER_STACK
+    wb = groups * I.W_LANES * 2
+    ops = weight_ops_words(prog)
+    ws = None
+    if w_hbm:
+        ws = WStream(dict(WH, npc=npc, word_bytes=wb, win=sum(ops)))
+        ws.token(0)
+    kst = {}
+    cycles = simulate(prog, pos, groups=groups, dyn_shape=dyn_k, kv=dict(KV, npc=npc) if kv_hbm else None,
+                      kv_stats=kst, w=ws, su_width=su_width)[1]
+    out = {"cycles_per_token": cycles, "weight_bytes_per_token": sum(ops) * wb,
+           "kv_bytes_per_token": kst.get("hbm_words", 0) * 32}
+    if ws is not None:
+        rate = ws.rate
+        thr = [min(n, WH["lead"] + n - (n * rate) // 256) for n in ops]
+        out.update(weight_supply_bytes_per_cycle=round(ws.s * wb, 1), weight_demand_bytes_per_cycle=wb,
+                   guaranteed_rate_x256=rate, weight_wait_cycles=ws.stats["wait_cycles"],
+                   window_bytes_required=max(thr) * wb)
+    return out
+
+
+def project_hbm(ghz=1.0, batch=64):
+    """Shipped-scale projections of the HBM comparator beside the ROM machine.
+
+    Qwen3-8B at an 8K context: this timing model's schedule of the full shapes
+    on the same core with its weights in ROM (and KV in on-core SRAM or HBM) and
+    with its weights and KV streamed from HBM3E stacks (one stack; a B200-class
+    8 stacks = 8 TB/s; enough stacks for the stream to keep up), at the
+    RTL-calibrated per-channel rate.  Batch B (PROJECTION): a batched core that
+    reads each weight once per step for B users (B x the element work per
+    weight word) -- step = max(B x the ROM core's token, the weight bytes plus
+    B x the KV bytes at the stacks' sustained rate); the ROM core time-shares
+    (step = B x its token).  Beside them, the B200 roofline (published
+    bandwidth and BF16 rate as the analytical study grades them) and the
+    analytical study's ROM designs.
+
+    DeepSeek-V4.1-Flash at 200K: ANALYTICAL (no shipped-scale V4.1 schedule
+    exists in this model): an HBM array whose token takes max(the ROM array's
+    token -- same cores, links and clock -- , the active bytes over the stacks'
+    sustained rate); at batch B the step reads the dense bytes once, each
+    distinct routed expert once (the expected union of B users' top-6 of 384)
+    and B users' KV."""
+    shape = SHAPES["qwen3-8b"]
+    H, L, NH, KVH, HD, FF, V = (shape[k] for k in ("H", "L", "NH", "KV", "HD", "FF", "V"))
+    pos = 8191
+    params = L * ((NH + 2 * KVH) * HD * H + NH * HD * H + 3 * FF * H) + V * H
+    w_bytes = 2 * params
+    kv_bytes = 2 * L * KVH * HD * 2 * (pos + 1)
+    stack_bw = 1.0e12
+    eta = WH["bw_per_pc"] * 128 * PC_PER_STACK * ghz * 1e9 / stack_bw       # sustained fraction of the peak
+    rows = []
+    for groups, sw in ((256, 1), (1024, 1), (256, 16), (1024, 16)):
+        demand = groups * I.W_LANES * 2 * ghz * 1e9
+        matched = math.ceil(demand / (stack_bw * eta))
+        rom_sram = price_hbm("qwen3-8b", groups, pos, 8, kv_hbm=False, w_hbm=False, su_width=sw)["cycles_per_token"]
+        for stacks, label in ((1, "one HBM3E stack (1 TB/s)"), (8, "B200-class: 8 HBM3E stacks (8 TB/s)"),
+                              (matched, f"{matched} stacks (the stream keeps up with the engine)")):
+            rom_kv = price_hbm("qwen3-8b", groups, pos, stacks, kv_hbm=True, w_hbm=False, su_width=sw)
+            hbm = price_hbm("qwen3-8b", groups, pos, stacks, su_width=sw)
+            bw = stacks * stack_bw * eta
+            b1 = {"rom_weights_kv_sram_tok_s": ghz * 1e9 / rom_sram,
+                  "rom_weights_kv_hbm_tok_s": ghz * 1e9 / rom_kv["cycles_per_token"],
+                  "hbm_weights_kv_hbm_tok_s": ghz * 1e9 / hbm["cycles_per_token"]}
+            step_rom = batch * rom_kv["cycles_per_token"] / (ghz * 1e9)
+            step_hbm = max(batch * rom_kv["cycles_per_token"] / (ghz * 1e9), (w_bytes + batch * kv_bytes) / bw)
+            rows.append({"groups": groups, "lanes": groups * I.W_LANES, "stacks": stacks, "configuration": label,
+                         "stream_unit_width": sw, "stream_unit_width_basis": "as built" if sw == 1 else
+                         "PROJECTION: a stream unit retiring 16 elements a cycle (hdc_timing su_width)",
+                         "matrix_engine_weight_cycles": sum(weight_ops_words(
+                             __import__("hdc_program").build_program(ShapeLayout(shape, groups)))),
+                         "hbm_bytes_s_sustained": bw, "weight_bytes_per_token": w_bytes,
+                         "kv_bytes_per_token": kv_bytes, "cycles_rom_kv_sram": rom_sram,
+                         "cycles_rom_kv_hbm": rom_kv["cycles_per_token"], "cycles_hbm": hbm["cycles_per_token"],
+                         "hbm_over_rom": round(hbm["cycles_per_token"] / rom_kv["cycles_per_token"], 3),
+                         "weight_demand_bytes_per_cycle": hbm["weight_demand_bytes_per_cycle"],
+                         "weight_supply_bytes_per_cycle": hbm["weight_supply_bytes_per_cycle"],
+                         "window_bytes_required": hbm["window_bytes_required"],
+                         "batch1": {k: round(v, 1) for k, v in b1.items()},
+                         f"batch{batch}": {"rom_per_user_tok_s": round(1 / step_rom, 1),
+                                           "rom_aggregate_tok_s": round(batch / step_rom, 1),
+                                           "hbm_batched_per_user_tok_s": round(1 / step_hbm, 1),
+                                           "hbm_batched_aggregate_tok_s": round(batch / step_hbm, 1)}})
+    b200 = {"bytes_s": 7.2e12, "bf16_flops": 2.25e15}
+    b200_rows = {}
+    for b in (1, batch):
+        step = max((w_bytes + b * kv_bytes) / b200["bytes_s"], 2 * params * b / b200["bf16_flops"])
+        b200_rows[f"batch{b}"] = {"per_user_tok_s": round(1 / step, 1), "aggregate_tok_s": round(b / step, 1)}
+    an = json.loads((ROOT / "results/roofline/n5_vs_b200/analytical.json").read_text())
+
+    def cite(path, model, b):
+        """The analytical study's fastest per-user ROM ARRAY design for `model`
+        at batch b (the wafer is not the deployment target), chosen by rate
+        rather than by name so the citation follows the study as it is re-run."""
+        path = path or "results/roofline/n5_vs_b200/analytical.json"
+        d = json.loads((ROOT / path).read_text())
+        cs = [c for c in d["comparisons"] if c["rom_design"].startswith(model + "/") and c["batch_size"] == b
+              and "-array-" in c["rom_design"]]
+        if not cs:
+            raise SystemExit(f"{path}: no ROM array design for {model} at batch {b}")
+        c = max(cs, key=lambda c: c["rom_per_user_tokens_s"])
+        return {"source": f"{path}#comparisons[rom_design={c['rom_design']},batch_size={b}]",
+                "rom_design": c["rom_design"], "rom_per_user_tokens_s": c["rom_per_user_tokens_s"],
+                "iso_area_gpu_per_user_tokens_s": c["iso_area_gpu_per_user_tokens_s"],
+                "iso_area_gpu_design": c["iso_area_gpu_design"],
+                "selection": "fastest per-user ROM array design at this batch"}
+    qwen = {"model": "Qwen3-8B", "position": pos, "clock_ghz": ghz, "batch": batch,
+            "hbm_sustained_fraction_of_peak": round(eta, 4), "rows": rows,
+            "b200_roofline": dict(b200, **b200_rows, basis="step = max((weights + B x KV) / 7.2 TB/s, "
+                                                             "2 x params x B / 2.25 PFLOP/s): the analytical study's "
+                                                             "b200_sxm-x1 read bandwidth and BF16 rate"),
+            "analytical_rom": {f"batch{b}": cite(None, "Qwen3-8B", b) for b in (1, batch)}}
+    # DeepSeek-V4.1-Flash, analytical
+    vp = "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json"
+    vd = json.loads((ROOT / vp).read_text())
+    ms = vd["model_summaries"][0]
+    active = ms["active_parameters"] * ms["native_bits_per_parameter"] / 8
+    per_exp = ms["per_region_sizing"]["routed_bytes_per_expert"]
+    k_exp, n_exp = ms["experts_per_token"], ms["num_experts"]
+    dense = active - k_exp * per_exp
+    kv_u = ms["kv_read_bytes_per_user_token"]
+    rom = {b: cite(vp, "DeepSeek-V4.1-Flash", b) for b in (1, batch)}
+    cap_stacks = math.ceil(ms["checkpoint_bytes"] / json.loads(
+        (ROOT / "configs/hardware/technology.json").read_text())["hbm"]["hbm3e"]["stack_capacity_bytes"]["value"])
+    vrows = []
+    for stacks, label in ((cap_stacks, "capacity minimum (the checkpoint fits)"), (96, "96 stacks"),
+                          (768, "768 stacks (the B200 x96 NVL72 layout's)")):
+        bw = stacks * stack_bw * eta
+        out = {"stacks": stacks, "configuration": label, "hbm_bytes_s_sustained": bw}
+        for b in (1, batch):
+            distinct = n_exp * (1 - (1 - k_exp / n_exp) ** b)
+            step_bytes = dense + distinct * per_exp + b * kv_u
+            t_rom = b / (rom[b]["rom_per_user_tokens_s"] * b)          # the ROM array's step (per-user rate)
+            step = max(t_rom, step_bytes / bw)
+            out[f"batch{b}"] = {"step_bytes": round(step_bytes), "distinct_experts": round(distinct, 1),
+                                "hbm_per_user_tok_s": round(1 / step, 1),
+                                "rom_per_user_tok_s": round(rom[b]["rom_per_user_tokens_s"], 1),
+                                "hbm_over_rom_time": round(step / t_rom, 3),
+                                "bound": "hbm_bandwidth" if step_bytes / bw > t_rom else "rom_array_path"}
+        vrows.append(out)
+    v41 = {"model": "DeepSeek-V4.1-Flash", "context": ms["context_tokens"], "batch": batch,
+           "active_weight_bytes_per_token": active, "dense_active_bytes": dense,
+           "routed_bytes_per_expert": per_exp, "kv_read_bytes_per_user_token": kv_u,
+           "checkpoint_bytes": ms["checkpoint_bytes"], "rows": vrows, "rom_array": rom, "source": vp,
+           "grade": "analytical: the ROM array's per-token path from the analytical study, the HBM streaming "
+                    "efficiency from the RTL-calibrated weight-stream probe; no shipped-scale V4.1 schedule"}
+    return {"qwen3_8b": qwen, "deepseek_v41_flash": v41}
+
+
+def control_breakdown(prog, pos, groups, dyn_shape=None, su_width=1):
+    """Where a token's cycles go: each unit's busy (element-issue) share, the
+    sequencer's issue-gap share (the control path proper) and the rest
+    (pipeline latency exposed at dependent-op boundaries)."""
+    issues, total = simulate(prog, pos, groups=groups, dyn_shape=dyn_shape, su_width=su_width)
+    d = dyn_values(pos, groups=groups, **(dyn_shape or {}))
+    me = su = 0
+    for f in prog:
+        f = {n: f.get(n, 0) for n, _ in I.FIELDS}
+        if f["unit"] == I.UNIT_ME:
+            rr, kk = me_loop(f, d, pos, groups)
+            me += rr * kk * IL
+        elif f["unit"] == I.UNIT_SU:
+            su += su_vectors(f, d, su_width)
+    n = sum(1 for f in prog if f.get("unit") != I.UNIT_END)
+    return {"cycles_per_token": total, "instructions": n,
+            "issue_gap_share": round(n * K["seq_gap"] / total, 5),
+            "matrix_engine_busy_share": round(me / total, 4), "stream_unit_busy_share": round(su / total, 4),
+            "su_width": su_width, "groups": groups, "position": pos}
+
+
+def calibrate(trace_path, prog, pos):
+    txt = Path(trace_path).read_text()
+    rtl = [int(c) for c, _ in re.findall(r"ISSUE cyc=(\d+) pc=(\d+)", txt)]
+    rtl_total = int(re.search(r"cycles=(\d+)", txt).group(1))
+    model, total = simulate(prog, pos)
+    diffs = [m - r for m, r in zip(model, rtl)]
+    return {"rtl_cycles": rtl_total, "model_cycles": total, "error_pct": 100.0 * (total - rtl_total) / rtl_total,
+            "max_issue_skew": max(map(abs, diffs)), "instructions": len(rtl)}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--trace", help="Verilator +TRACE log to calibrate against (reduced vehicle)")
+    ap.add_argument("--model", choices=sorted(SHAPES), help="price a model's shapes instead")
+    ap.add_argument("--groups", type=int, nargs="+", default=[I.GROUPS])
+    ap.add_argument("--pos", type=int, default=1024)
+    ap.add_argument("--ghz", type=float, default=1.1)
+    ap.add_argument("--attn-groups", type=int, default=1, help="PROJECTION: attention over this many groups")
+    ap.add_argument("--su-width", type=int, default=1, help="PROJECTION: stream-unit elements per cycle")
+    ap.add_argument("--kv-hbm", action="store_true", help="KV cache in HBM behind the streaming engine")
+    ap.add_argument("--hbm-pcs", type=int, default=KV["npc"], help="HBM pseudo-channels (32 per HBM3E stack)")
+    ap.add_argument("--control-breakdown", type=Path, help="write the control-path breakdown record here")
+    args = ap.parse_args()
+    if args.control_breakdown:
+        import hdc_program as P
+        model, prompt, expected, cache = P.golden_state()
+        rows = [dict(case="vehicle (reduced Qwen3, 4 groups, position 15)",
+                     **control_breakdown(P.build_program(P.Layout(model)), len(prompt) - 1, I.GROUPS))]
+        dyn = dict(H=4096, half=64, HD=128)
+        for g in (64, 1024):
+            for sw in (1, 16):
+                prog = P.build_program(ShapeLayout(SHAPES["qwen3-8b"], g))
+                rows.append(dict(case=f"Qwen3-8B shapes, {g} groups, position 1024" +
+                                 (", PROJECTED stream width 16" if sw > 1 else ""),
+                                 **control_breakdown(prog, 1024, g, dyn, sw)))
+        args.control_breakdown.write_text(json.dumps({
+            "schema": "opentallas.hdc-control-path-breakdown.v1",
+            "method": "tools/hdc_timing.py (constants fitted to the RTL issue trace; a test pins the vehicle "
+                      "within 0.5%). issue_gap_share is the sequencer's fetch/decode/issue cost -- the control "
+                      "path proper; unit busy shares are element-issue cycles; the remainder is pipeline latency "
+                      "exposed between dependent ops.",
+            "rows": rows}, indent=2) + "\n")
+        print(json.dumps(rows, indent=1))
+        return
+    kv = dict(KV, npc=args.hbm_pcs) if args.kv_hbm else None
+    if args.model:
+        for g in args.groups:
+            print(json.dumps(price(args.model, g, args.pos, args.ghz, min(args.attn_groups, g), args.su_width, kv=kv)))
+        return
+    import hdc_program as P
+    model, prompt, expected, cache = P.golden_state()
+    lay = P.Layout(model)
+    prog = P.build_program(lay)
+    if args.trace:
+        print(json.dumps(calibrate(args.trace, prog, len(prompt) - 1), indent=1))
+    else:
+        print(simulate(prog, len(prompt) - 1, kv=kv)[1])
+
+
+if __name__ == "__main__":
+    main()

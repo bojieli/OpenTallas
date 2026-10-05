@@ -1,0 +1,1141 @@
+{
+  "schema": "opentallas.window_epoch9.producer_prediction.v1",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "idx_sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+  "generator_sha256": "48975fa8cef3e15e309586e934adde4c3e7d5bd137ee1addeff7fb4846f3a60a",
+  "params": {
+    "QD": 64,
+    "RQD": 32,
+    "RW": 16,
+    "MAXSKIP": 16,
+    "CLK_PS": 1000,
+    "BURST_PS": 1024,
+    "TCCDL_PS": 2560,
+    "CL_PS": 12500,
+    "CWL_PS": 6250,
+    "RCDRD_PS": 19375,
+    "RCDWR_PS": 9375,
+    "RP_PS": 16250,
+    "RAS_PS": 28125,
+    "RTP_PS": 5625,
+    "RRDS_PS": 2500,
+    "RRDL_PS": 3125,
+    "FAW_PS": 15000,
+    "REQ_PS": 10000,
+    "RSP_PS": 10000,
+    "REFI_PS": 3900000,
+    "RFCPB_PS": 200000,
+    "WR_PS": 20625,
+    "WTRS_PS": 4375,
+    "WTRL_PS": 6250,
+    "RTW_PS": 9948
+  },
+  "cases": {
+    "L0_no_retain": {
+      "rows": 128,
+      "retain": 0,
+      "write_requests": 32,
+      "last_write_ack": 1104,
+      "last_WRcolumn_ps": 1103000,
+      "final_scale_visible_ps": 1110274,
+      "starts": [
+        1105,
+        21950
+      ],
+      "staged_samples": [
+        21818,
+        41845
+      ],
+      "lifecycle_done_samples": [
+        21949,
+        41976
+      ],
+      "refill_counters": [
+        20712,
+        19894
+      ],
+      "final_epoch": 256,
+      "first_own_row_READcolumns": {
+        "0": {
+          "kind": "column",
+          "cycle": 21673,
+          "pc": 11,
+          "tcol_ps": 21672375,
+          "address": 264303,
+          "tag": 69632,
+          "we": false
+        },
+        "15": {
+          "kind": "column",
+          "cycle": 21739,
+          "pc": 15,
+          "tcol_ps": 21738375,
+          "address": 264318,
+          "tag": 69647,
+          "we": false
+        },
+        "16": {
+          "kind": "column",
+          "cycle": 21793,
+          "pc": 15,
+          "tcol_ps": 21792375,
+          "address": 264319,
+          "tag": 69648,
+          "we": false
+        }
+      },
+      "read_visibility_margin_ps": {
+        "0": 21328726,
+        "15": 20640726,
+        "16": 20682101
+      },
+      "first_code_READ_after_final_scale_visibility_ps": 20562101,
+      "per_PC": [
+        {
+          "pc": 0,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 338,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 1,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 338,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 2,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 338,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 3,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 339,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 4,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 339,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 5,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 339,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 6,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 339,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 7,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 340,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 8,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 340,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 9,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 340,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 10,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 340,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 11,
+          "reads": 136,
+          "writes": 1,
+          "refreshes": 341,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 12,
+          "reads": 136,
+          "writes": 4,
+          "refreshes": 341,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 13,
+          "reads": 136,
+          "writes": 4,
+          "refreshes": 341,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 14,
+          "reads": 136,
+          "writes": 4,
+          "refreshes": 342,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 15,
+          "reads": 136,
+          "writes": 19,
+          "refreshes": 342,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 16,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 333,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 17,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 333,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 18,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 334,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 19,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 334,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 20,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 334,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 21,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 334,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 22,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 335,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 23,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 335,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 24,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 335,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 25,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 335,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 26,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 336,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 27,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 336,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 28,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 336,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 29,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 336,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 30,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 336,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 31,
+          "reads": 136,
+          "writes": 0,
+          "refreshes": 337,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        }
+      ]
+    },
+    "L0_retain": {
+      "rows": 128,
+      "retain": 1,
+      "write_requests": 32,
+      "last_write_ack": 1104,
+      "last_WRcolumn_ps": 1103000,
+      "final_scale_visible_ps": 1110274,
+      "starts": [
+        1105,
+        21950
+      ],
+      "staged_samples": [
+        21818,
+        21952
+      ],
+      "lifecycle_done_samples": [
+        21949,
+        22081
+      ],
+      "refill_counters": [
+        20712,
+        0
+      ],
+      "final_epoch": 128,
+      "first_own_row_READcolumns": {
+        "0": {
+          "kind": "column",
+          "cycle": 21673,
+          "pc": 11,
+          "tcol_ps": 21672375,
+          "address": 264303,
+          "tag": 69632,
+          "we": false
+        },
+        "15": {
+          "kind": "column",
+          "cycle": 21739,
+          "pc": 15,
+          "tcol_ps": 21738375,
+          "address": 264318,
+          "tag": 69647,
+          "we": false
+        },
+        "16": {
+          "kind": "column",
+          "cycle": 21793,
+          "pc": 15,
+          "tcol_ps": 21792375,
+          "address": 264319,
+          "tag": 69648,
+          "we": false
+        }
+      },
+      "read_visibility_margin_ps": {
+        "0": 21328726,
+        "15": 20640726,
+        "16": 20682101
+      },
+      "first_code_READ_after_final_scale_visibility_ps": 20562101,
+      "per_PC": [
+        {
+          "pc": 0,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 173,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 1,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 174,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 2,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 174,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 3,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 174,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 4,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 174,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 5,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 175,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 6,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 175,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 7,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 176,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 8,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 176,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 9,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 176,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 10,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 176,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 11,
+          "reads": 68,
+          "writes": 1,
+          "refreshes": 177,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 12,
+          "reads": 68,
+          "writes": 4,
+          "refreshes": 177,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 13,
+          "reads": 68,
+          "writes": 4,
+          "refreshes": 177,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 14,
+          "reads": 68,
+          "writes": 4,
+          "refreshes": 177,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 15,
+          "reads": 68,
+          "writes": 19,
+          "refreshes": 178,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 16,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 167,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 17,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 167,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 18,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 168,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 19,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 168,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 20,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 168,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 21,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 168,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 22,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 170,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 23,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 170,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 24,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 170,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 25,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 170,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 26,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 171,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 27,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 171,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 28,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 171,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 29,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 171,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 30,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 172,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 31,
+          "reads": 68,
+          "writes": 0,
+          "refreshes": 172,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        }
+      ]
+    },
+    "source_COUNT1_boundary": {
+      "rows": 1,
+      "retain": 0,
+      "write_requests": 32,
+      "last_write_ack": 1104,
+      "last_WRcolumn_ps": 1103000,
+      "final_scale_visible_ps": 1110274,
+      "starts": [
+        1105,
+        1459
+      ],
+      "staged_samples": [
+        1451,
+        1592
+      ],
+      "lifecycle_done_samples": [
+        1458,
+        1599
+      ],
+      "refill_counters": [
+        345,
+        132
+      ],
+      "final_epoch": 2,
+      "first_own_row_READcolumns": {
+        "0": {
+          "kind": "column",
+          "cycle": 1117,
+          "pc": 11,
+          "tcol_ps": 1117000,
+          "address": 264303,
+          "tag": 65568,
+          "we": false
+        },
+        "15": {
+          "kind": "column",
+          "cycle": 1390,
+          "pc": 15,
+          "tcol_ps": 1389628,
+          "address": 264318,
+          "tag": 65583,
+          "we": false
+        },
+        "16": {
+          "kind": "column",
+          "cycle": 1425,
+          "pc": 15,
+          "tcol_ps": 1425000,
+          "address": 264319,
+          "tag": 65584,
+          "we": false
+        }
+      },
+      "read_visibility_margin_ps": {
+        "0": 773351,
+        "15": 291979,
+        "16": 314726
+      },
+      "first_code_READ_after_final_scale_visibility_ps": 6726,
+      "per_PC": [
+        {
+          "pc": 0,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 1,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 2,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 3,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 4,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 5,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 6,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 7,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 8,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 9,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 10,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 11,
+          "reads": 2,
+          "writes": 1,
+          "refreshes": 11,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 12,
+          "reads": 8,
+          "writes": 4,
+          "refreshes": 11,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 13,
+          "reads": 8,
+          "writes": 4,
+          "refreshes": 11,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 14,
+          "reads": 8,
+          "writes": 4,
+          "refreshes": 11,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 15,
+          "reads": 8,
+          "writes": 19,
+          "refreshes": 12,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 16,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 17,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 18,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 19,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 20,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 21,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 22,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 23,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 24,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 25,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 26,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 27,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 28,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 29,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 30,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        },
+        {
+          "pc": 31,
+          "reads": 0,
+          "writes": 0,
+          "refreshes": 0,
+          "activations": 0,
+          "q": 0,
+          "r": 0
+        }
+      ]
+    }
+  },
+  "event_sha256": {
+    "L0_no_retain": "0aedb668f2f3dc0c0f040792df3f9eda9565ccab21659dc266ad5a81a558b8a0",
+    "L0_retain": "fb855e0fc9d70d2c07bd9ac5aa0d42d448a48ca410a2a0a1c617c8a615defd14",
+    "source_COUNT1_boundary": "c0168cec96680bc54205c26491b9979b5a51091c745faf5e89fd1970d97ceac0"
+  },
+  "verdict": "MODELED_PREPARED_NOT_BUILT_PENDING_PARENT_GO",
+  "visibility_contract": {
+    "lag_ps": 7274,
+    "publication": "row_valid proves logical ordered write acknowledgements only, not immediate physical visibility; existing consumers use it only to enter HBM refill. Packed/stage4 consumers need staged read replies; direct scalar banked reads fault.",
+    "earliest_prefetch_waiting_descriptor": "Final WRissueI, observedackA=I+1; earliest prefetchA+1, requestA+2, READcolumn >=(A+2)*1000+REQ10000 >=last_WRcol+13000, even COUNT1.",
+    "minimum_first_code_margin_over_latest_scale_visibility_ps": 5726,
+    "credit8_lower_bounds_relative_last_WRcol_ps": {
+      "any_code": 13000,
+      "last_code15": 55000,
+      "scale": 90000
+    },
+    "lower_bound_derivation": "Minimum request-to-reply34cycles from REQ10ns+CL12.5ns+BURST1.024ns+RSP10ns. Credit8 wave2 cannot start before reply0+1; code15 request>=firstgrant+42; scale waits all16 replies then oneedge. These are conservative source-derived lower bounds, not a constant fit or exact-case values.",
+    "per_PC_WTR_minimum_ps": {
+      "different_BG": 11649,
+      "same_BG": 13524
+    },
+    "bank_dependence": "Address map row127 lastcodePC15 bank10/BG2, scalePC15 bank11/BG3. WTRdifferentBG for code15 after scaleWR; sameBG for scaleREAD. Bank ACT/PRE/refresh/return congestion only postpone admission/column/reply.",
+    "guard_decision": "No7cycle guard implemented: legal source->HBM->stage->QK/PV path already captures data after visibility. Preserve7cycle post-ack worst visibility envelope for any future immediate-visible consumer or fault/reset contract; Peirce owns recovery.",
+    "COUNT1": "Not a legal actualL0 descriptor under L0_ONLY1 (requires128). Modeled only as stronger source-count boundary; source COUNT1 still has16code then scale barrier."
+  },
+  "stimulus_contract": {
+    "step_start": 299,
+    "capture_edges": [
+      300,
+      301,
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315
+    ],
+    "producer_issue": 316,
+    "captures": "Synthetic nonpoison bytes at actual QE capture output interface, src55232+32*block; actual window_kv_blocks and window_block_guard, no QE arithmetic/payload qualification.",
+    "historical_rows": "Prime127 historical absolute rows pos-127..pos-1; initialize their2176sector-prefix backing data; newrow slot127 starts sentinel and is written only through32actualsourcewrites.",
+    "descriptors": "QK/PV actualresolvedfields, accept QK nextedge after logical publication without waiting7cycles; PV nextedge after lifecycle_done sample. Same user0,pos1048575, generation1then2 from actual lifecycle, no force.",
+    "engine": "Finite engine stub becomesbusy on issue, holdsbusy through all32acceptedbeats, idle afterlastbeat. It qualifies lifecycle transport only, not engine arithmetic.",
+    "retention": "Two modes0/1; QK completion arms only after lifecycle+source drained; PV gets newgen. No mutations between QK/PV, no across-token retention.",
+    "addresses": "AW30, base262144,user0, MEM_WORDS264320; every admitted address explicitly bounded, no modulo alias relied on."
+  },
+  "no_RTL_run": true,
+  "no_original_live_edit": true,
+  "full_token_rate": null
+}

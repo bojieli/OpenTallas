@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen-collective-registered-head-model.v1",
+  "status": "PROSPECTIVE_NOT_ADOPTED",
+  "enabled_default": false,
+  "basis": "owner 2078c269c 490MHz pop loop; DFF_UM2 from unified model",
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "replicas_per_die": 4,
+  "memory_ports_per_die": 4,
+  "payload_bytes_per_port_per_cycle": 64,
+  "internal_record_bits_per_cycle": 2216,
+  "added_external_boundary_bits_per_cycle": 0,
+  "routing_tracks_added_external": 0,
+  "external_channel_capacity_change": 0,
+  "existing_fifo_bits": 35456,
+  "receive_capacity_change_words": 0,
+  "extra_register_bits": 2220,
+  "extra_register_area_mm2": 0.0006473520000000001,
+  "extra_placement_area_mm2_at_50pct": 0.0012947040000000003,
+  "mux": {
+    "read": 33240,
+    "forwarding": 2216,
+    "note": "read mux relocated ahead of head register; one two-way push-forward mux per record bit"
+  },
+  "fanout": {
+    "pop_head_enable": 2216,
+    "nonempty_flag": 4
+  },
+  "floorplan_slot": "existing per-die collective endpoint; actual slot/route gate pending",
+  "steady_issue_interval_cycles": 1,
+  "latency_cycles_per_collective": 1,
+  "collectives_per_token": 72,
+  "token_added_cycles": 72,
+  "token_added_ns": 59.99999999999999,
+  "serial_domain_token_added_ns": 80.0,
+  "gates": "exact + measured real-program delta, hub routes and contextual SS/FF pending"
+}

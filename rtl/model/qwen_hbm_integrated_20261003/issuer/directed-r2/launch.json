@@ -1,0 +1,27 @@
+{
+  "pid": 208767,
+  "source_HEAD": "0f99b3e3d9dd0a14f445016f3650f36d082277c5",
+  "source_sha256": {
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/issuer_tb.sv": "7a5e868d9521c94d23fed1c1a359622efbcc61a08065b056e526e6948ba8bf44",
+    "rtl/model/qwen_hbm_integrated_20261003/issuer/ot_gpu_qwen_full_issuer.sv": "82f85401dd62982f600329d86d54c0788578f9cc57bae9e53823638196abe0b8",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a"
+  },
+  "started": 1791030666.4901125,
+  "meminfo": "MemTotal:       131810932 kB\nMemFree:        18894360 kB\nMemAvailable:   18875572 kB\nBuffers:           23952 kB\nCached:         21360068 kB\nSwapCached:            0 kB\nActive:         50876248 kB\nInactive:       59824192 kB\nActive(anon):   50440604 kB\nInactive(anon): 59373096 kB\nActive(file):     435644 kB\nInactive(file):   451096 kB\nUnevictable:       11228 kB\nMlocked:            7228 kB\nSwapTotal:             0 kB\nSwapFree:              0 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:               884 kB\nWriteback:             0 kB\nAnonPages:      89328564 kB\nMapped:           256656 kB\nShmem:          20492436 kB\nKReclaimable:     239024 kB\nSlab:             708272 kB\nSReclaimable:     239024 kB\nSUnreclaim:       469248 kB\nKernelStack:       19920 kB\nPageTables:       195932 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    65905464 kB\nCommitted_AS:   114014584 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:       42428 kB\nVmallocChunk:          0 kB\nPercpu:            74496 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:     38912 kB\nFilePmdMapped:         0 kB\nCmaTotal:              0 kB\nCmaFree:         5745996 kB\nUnaccepted:            0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      306080 kB\nDirectMap2M:    10110976 kB\nDirectMap1G:    125829120 kB\n",
+  "free_disk": 46509105152,
+  "scope": "single actual issuer leaf, fixture callers only",
+  "limits": {
+    "0": [
+      -1,
+      -1
+    ],
+    "9": [
+      -1,
+      -1
+    ],
+    "1": [
+      -1,
+      -1
+    ]
+  }
+}

@@ -1,0 +1,24 @@
+.....................................................................    [100%]
+	Command being timed: "python -m pytest -q tests/test_ds_hbm_history_provider_r36.py tests/test_ds_hbm_checkpoint_payloads_r35.py tests/test_ds_hbm_window_and_retirement_r33.py tests/test_ds_checkpoint_provider_r33.py tests/test_ds_hbm_source_inputs_groups_r34.py"
+	User time (seconds): 8.67
+	System time (seconds): 0.87
+	Percent of CPU this job got: 87%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.93
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1477736
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 1
+	Minor (reclaiming a frame) page faults: 387634
+	Voluntary context switches: 956
+	Involuntary context switches: 60
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 38360
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

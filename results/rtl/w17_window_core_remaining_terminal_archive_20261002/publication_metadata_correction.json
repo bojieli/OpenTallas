@@ -1,0 +1,11 @@
+{
+  "status": "ADDITIVE_PUBLICATION_METADATA_FIX_NO_RUNTIME_CHANGE",
+  "previous_archive_commit": "87b7956b20f6581218b08ded08e844f5cdec0722",
+  "previous_publication_manifest_sha256": "ae20602058264cc03d0e53015f04ed2f0f41846d824eb0db5dce7561d6b992b9",
+  "reason": "Dynamic replay import created an ignored Python cache; the publication manifest incorrectly listed that untracked cache. Disable bytecode writes and enumerate only tracked artifact files.",
+  "raw_archive_manifest_unchanged_sha256": "f43b56fde857dbac8f3640e21896089a0d514dd9cc06b3c40a5e7edd2a2e8d63",
+  "all_actual_logs_sources_verdicts_unchanged": true,
+  "no_RTL_execution": true,
+  "physical_provider": false,
+  "fulltoken": false
+}

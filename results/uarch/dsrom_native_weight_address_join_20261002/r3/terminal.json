@@ -1,0 +1,11 @@
+{
+  "exit_code": 0,
+  "verdict": "PASS_SYMBOLIC_ADDRESS_MODEL_NATIVE_EXECUTION_BLOCKED",
+  "CPU_affinity": [
+    30,
+    31
+  ],
+  "BLAS_OMP_threads": 1,
+  "command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 taskset -c 30,31 timeout 180 python3 tools/dsrom_native_weight_address_join.py --out results/uarch/dsrom_native_weight_address_join_20261002/r3",
+  "RTL_build_or_checkpoint_payload_reads": 0
+}

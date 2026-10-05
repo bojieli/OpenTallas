@@ -1,0 +1,132 @@
+{
+  "historical": "built with LV=8 (tools/rtl_v41x_su_softmax_campaign.py at b674827f), which the reducer now refuses at elaboration (l_in is 3 bits: LV must be 1..7). Harmless here: the deepest segment had exactly 7 levels. Its cycles (3,280 at T640) are reproduced at LV=7 on current sources in results/rtl/w11_su_spec.json (N16_M8).",
+  "contract": "unnormalized FP32 exp scores; BF16 at PV operand boundary; sink DEN; post-PV divide then BF16",
+  "score_source": "deterministic fixture",
+  "pv_acc_source": "deterministic fixture",
+  "lanes": 16,
+  "sfu_lanes": 8,
+  "reducer_levels": 8,
+  "pv_included": false,
+  "cases": [
+    {
+      "heads": 16,
+      "tokens": 128,
+      "head_dim": 512,
+      "mismatches": {
+        "exp_scores": 0,
+        "maximum": 0,
+        "exp_sum": 0,
+        "denominator": 0,
+        "output_bf16": 0
+      },
+      "whole_vm_mismatches": 0,
+      "accepted": {
+        "0": 6,
+        "1": 200,
+        "2": 571,
+        "3": 650
+      },
+      "end_cycle": [
+        1726,
+        "ok"
+      ],
+      "completed": true,
+      "faults": 0,
+      "order_faults": 0,
+      "emits": {
+        "0": [
+          12,
+          139,
+          128
+        ],
+        "1": [
+          206,
+          461,
+          256
+        ],
+        "2": [
+          577,
+          578,
+          2
+        ],
+        "3": [
+          656,
+          1679,
+          1024
+        ]
+      },
+      "results": {
+        "0": [
+          78,
+          198,
+          16
+        ],
+        "1": [
+          329,
+          569,
+          16
+        ]
+      }
+    },
+    {
+      "heads": 16,
+      "tokens": 640,
+      "head_dim": 512,
+      "mismatches": {
+        "exp_scores": 0,
+        "maximum": 0,
+        "exp_sum": 0,
+        "denominator": 0,
+        "output_bf16": 0
+      },
+      "whole_vm_mismatches": 0,
+      "accepted": {
+        "0": 6,
+        "1": 721,
+        "2": 2125,
+        "3": 2204
+      },
+      "end_cycle": [
+        3280,
+        "ok"
+      ],
+      "completed": true,
+      "faults": 0,
+      "order_faults": 0,
+      "emits": {
+        "0": [
+          12,
+          651,
+          640
+        ],
+        "1": [
+          727,
+          2006,
+          1280
+        ],
+        "2": [
+          2131,
+          2132,
+          2
+        ],
+        "3": [
+          2210,
+          3233,
+          1024
+        ]
+      },
+      "results": {
+        "0": [
+          119,
+          719,
+          16
+        ],
+        "1": [
+          923,
+          2123,
+          16
+        ]
+      }
+    }
+  ]
+}

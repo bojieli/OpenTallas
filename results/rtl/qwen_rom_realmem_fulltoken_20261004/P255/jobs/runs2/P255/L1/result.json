@@ -1,0 +1,263 @@
+{
+  "ar256_enabled": true,
+  "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+  "configuration": "REAL_MEM",
+  "design_point": {
+    "code_banks": 5,
+    "collective_depth": 256,
+    "collective_lat_cycles": 339,
+    "groups_per_die": 6144,
+    "mem_extra": 1,
+    "smax": 11,
+    "smin": 7,
+    "su_reducer_time_levels": 7,
+    "su_width": 64,
+    "tp": 4,
+    "tree_cut": 7
+  },
+  "generated_core_sha256": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+  "hbm_layers": 36,
+  "head_check": null,
+  "kv_history_sha256": {
+    "L1_die0": "8ae76032496761910b053ccce52eac532bd89deeb6d344352968abf634e2ef75",
+    "L1_die1": "22fb056157ecfcfbb36995ddc01ab3c5577af03263dc17fd7776a6e9ecd96160",
+    "L1_die2": "68a7163cc8ac9cac162103b52d636b6ce3bc464598d8fe881abe4af4af053e4a",
+    "L1_die3": "3aaf09b7770be6f3967899367a5bbb57c9918ff6d91a7c98a2b49bbbfe92a2dc"
+  },
+  "layer_x_checks": {
+    "L1_die0_x": {
+      "actual_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "expected_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "first_mismatch": null,
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L1_die1_x": {
+      "actual_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "expected_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "first_mismatch": null,
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L1_die2_x": {
+      "actual_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "expected_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "first_mismatch": null,
+      "mismatches": 0,
+      "words": 4096
+    },
+    "L1_die3_x": {
+      "actual_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "expected_sha256": "812fe627917a951c97ba3dd0f57949b3df3a296055b856283b05428835e18495",
+      "first_mismatch": null,
+      "mismatches": 0,
+      "words": 4096
+    }
+  },
+  "max_rss_kib": 13048800,
+  "memory_services": {
+    "code_rom": "per tile 2 x 5 ot_rom_4096x266_m8 (hardened ot_qwen_rom_tile_w12)",
+    "hbm": "ot_qwen_hbm_model_ack NPC=32 one HBM3E stack/die, CLK_PS=833, PC_RDY=1, WR_ACK=1",
+    "kv_fill": {
+      "fill_lat": 8,
+      "lookahead_units": 512,
+      "outstanding_reads": 256,
+      "request_sectors": 16
+    },
+    "kv_slices": "per tile 2 x ot_sram_1r1w_128x256_m1_r2c2 (KV_LOCAL=1)",
+    "scale_rom": "48 ports x 13 ot_rom_4096x266_m8"
+  },
+  "oracle_json_sha256": "cb0d25ab3d441ba5551987ff3f5dcce857ea6dad4ea625db9201fa786ef1053e",
+  "position": 255,
+  "returncode": 0,
+  "schema": "opentallas.qwen-rom-rt-real-memory.v1",
+  "simulate_wall_seconds": 1584.5,
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hdc/kv/ot_qwen_hbm_model_ack.sv": "16aa903f03e848d843afd7354d3b580a3ed0c76531a16824124c745a06ba81bc",
+    "rtl/hdc/kv/ot_qwen_rt_kv_fill_service.sv": "4409d14f20b5015df7858c66edd102a856f25aa94adb63c526b634196189747a",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+    "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+    "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+    "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_rt_embed_rom.sv": "54deba0a76c99ef5046d10d8a1af4cff550c7c7550fd293411510a607afeae33",
+    "rtl/hdc/ot_qwen_rt_rom_bank.sv": "16471ef538de4a01492f5dbeac8782cc0f177d6a3bd222797dc2eaa71a0c8aec",
+    "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_rm.sv": "7f6470ceffa04fe581dde5923d875e9d3c491f3aa8d054cb4c36e6b6f34edcf9",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12_rm.cpp": "abc8a5cbb19e11664a1704d99a9e4480e92c88349c2bdbaf51ccb89defcc9632",
+    "rtl/test/qwen_runtime/qwen_rt_matvec.hpp": "337ae8dedab0e49ddfa76c70a88589b7ea374548e0d88f4bce2628aadc4e453b",
+    "rtl/test/qwen_runtime/qwen_rt_memory.hpp": "8b6f9b084ca2a20cc12c99da7d53629635141a9a28302a87cbfae16b54145b47",
+    "tools/qwen_rom_arithmetic_contract_w12.py": "8a1a3cd678e1e31da246b76489e8fa4461e79ddc6cc683fd71f43b316cb5a54d",
+    "tools/qwen_rom_embed_stage_w12.py": "6ba3872aa3b04ab0de4a5300c5061f024d4263e1d46c3a337b5cf8b9dcd0ab98",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_rt_rm_access.py": "cadd0010f6ca32a2b82766c267aadde14cc5f48018afa44a418255f073ec9aa8",
+    "tools/qwen_rom_rt_token_w12_rm.py": "a08880bced7563247850884f36cfba2aa9e4a2638641c9f7f9304e95e88a0b30"
+  },
+  "source_stable": true,
+  "stage_image_sha256": {
+    "L1/die0/crom.hex": "81918b75b46dabdb988427aaf11ed70933a28b895e302b3f65437cdbfa70a2bf",
+    "L1/die0/matrix_int8.hex": "09075fa74d641a63b0d27c811a8769b6ad5608268ae185b857eafbb79ddbb866",
+    "L1/die0/matrix_scale_bf16.hex": "d979bfe4dfe319b7bcb31014ff0f5512d4d7b78bc574365ff3407b887dcf859a",
+    "L1/die0/program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+    "L1/die0/segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+    "L1/die1/crom.hex": "81918b75b46dabdb988427aaf11ed70933a28b895e302b3f65437cdbfa70a2bf",
+    "L1/die1/matrix_int8.hex": "6ba873068db56e263026fc6bae03e26f2701c8c0b6868a311955a78d1bf3bcd6",
+    "L1/die1/matrix_scale_bf16.hex": "891d3516ec307a4a723a8ecaf300e3008bcb1ce36f7dc3eb122f04a67455b4be",
+    "L1/die1/program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+    "L1/die1/segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+    "L1/die2/crom.hex": "81918b75b46dabdb988427aaf11ed70933a28b895e302b3f65437cdbfa70a2bf",
+    "L1/die2/matrix_int8.hex": "a989a5affed3db52159094444dfe0497a6a0e835483e4ea777c7e87c569444a9",
+    "L1/die2/matrix_scale_bf16.hex": "bfd8f30c189a947deb17b73feefa170f3d9cc844bc57c5340324cabc9e392e53",
+    "L1/die2/program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+    "L1/die2/segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+    "L1/die3/crom.hex": "81918b75b46dabdb988427aaf11ed70933a28b895e302b3f65437cdbfa70a2bf",
+    "L1/die3/matrix_int8.hex": "643393e1d948c321acf7b3c1a224badac9c02e71347550da9878df59bbb31faf",
+    "L1/die3/matrix_scale_bf16.hex": "34b853925d0833083df86c49ec3ebd7b8f9a655406f55df6fe3cdb0492a97d7f",
+    "L1/die3/program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+    "L1/die3/segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46"
+  },
+  "stages": {
+    "L1": {
+      "cycles": 4338,
+      "me_clock_edges": "2067/2067",
+      "memory": {
+        "die0": {
+          "drain_low": 391,
+          "fill_cycles": 373,
+          "fill_sectors": 4088,
+          "kvok_low_with_desc": 0,
+          "rsp_tile_stall": 1,
+          "stall_bridge": 425,
+          "stall_drain": 369,
+          "stall_kv": 15,
+          "stall_mem": 0,
+          "stall_retire": 0,
+          "tile_edges": 2159,
+          "wr_lat_max": 114,
+          "wr_sectors": 136
+        },
+        "die1": {
+          "drain_low": 391,
+          "fill_cycles": 373,
+          "fill_sectors": 4088,
+          "kvok_low_with_desc": 0,
+          "rsp_tile_stall": 1,
+          "stall_bridge": 425,
+          "stall_drain": 369,
+          "stall_kv": 15,
+          "stall_mem": 0,
+          "stall_retire": 0,
+          "tile_edges": 2159,
+          "wr_lat_max": 114,
+          "wr_sectors": 136
+        },
+        "die2": {
+          "drain_low": 391,
+          "fill_cycles": 373,
+          "fill_sectors": 4088,
+          "kvok_low_with_desc": 0,
+          "rsp_tile_stall": 1,
+          "stall_bridge": 425,
+          "stall_drain": 369,
+          "stall_kv": 15,
+          "stall_mem": 0,
+          "stall_retire": 0,
+          "tile_edges": 2159,
+          "wr_lat_max": 114,
+          "wr_sectors": 136
+        },
+        "die3": {
+          "drain_low": 391,
+          "fill_cycles": 373,
+          "fill_sectors": 4088,
+          "kvok_low_with_desc": 0,
+          "rsp_tile_stall": 1,
+          "stall_bridge": 425,
+          "stall_drain": 369,
+          "stall_kv": 15,
+          "stall_mem": 0,
+          "stall_retire": 0,
+          "tile_edges": 2159,
+          "wr_lat_max": 114,
+          "wr_sectors": 136
+        }
+      }
+    }
+  },
+  "stages_run": [
+    "L1"
+  ],
+  "status": "pass",
+  "steps": [
+    {
+      "max_rss_kib": 165172,
+      "name": "access",
+      "returncode": 0,
+      "seconds": 5.2
+    }
+  ],
+  "token": 6280,
+  "token_kv_writeback_checks": {
+    "L1_die0": {
+      "k_codes": 256,
+      "k_mismatches": 0,
+      "v_codes": 256,
+      "v_mismatches": 0
+    },
+    "L1_die1": {
+      "k_codes": 256,
+      "k_mismatches": 0,
+      "v_codes": 256,
+      "v_mismatches": 0
+    },
+    "L1_die2": {
+      "k_codes": 256,
+      "k_mismatches": 0,
+      "v_codes": 256,
+      "v_mismatches": 0
+    },
+    "L1_die3": {
+      "k_codes": 256,
+      "k_mismatches": 0,
+      "v_codes": 256,
+      "v_mismatches": 0
+    }
+  },
+  "total_cycles": 4345,
+  "wire_stages": {
+    "bd": 41,
+    "nws": 5,
+    "ord": 7,
+    "tws": 38,
+    "xvm": 1
+  },
+  "x_entry": "/srv/opentallas-scratch/claude/realmem-fulltoken/runs2/P255/L1/entry.hex",
+  "x_entry_sha256": "181e59895b4acc738f15b08d131bc06685a4a367be7f9b9e311ce2eca2ab79de"
+}

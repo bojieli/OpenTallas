@@ -1,0 +1,1341 @@
+{
+ "schema": "opentallas.qwen-body-wire-latency.v1",
+ "status": "MODEL_ONLY_NOT_ADOPTED",
+ "question": "Decompose the Qwen3-8B ROM TP4 layer body; how many cycles are ME wire stages on the critical path; can golden-order-preserving reductions recover them?",
+ "configuration": {
+  "tp": 4,
+  "groups": 6144,
+  "su_width": 64,
+  "position": 0,
+  "me_wire_stages": {
+   "BD": 41,
+   "NWS": 25,
+   "TWS": 38,
+   "ORD": 7,
+   "MEM_EXTRA": 1
+  },
+  "me_fill": 16,
+  "tree_cycles": 52,
+  "tree_levels": 13,
+  "reach_um": 504.0,
+  "clock_hz": 1200000000.0,
+  "layers": 36
+ },
+ "calibration": {
+  "segments": [
+   {
+    "segment_base": 0,
+    "trace_first_fetch": 14,
+    "trace_end": 1280,
+    "trace_span": 1266,
+    "model_span": 1254,
+    "delta": -12
+   },
+   {
+    "segment_base": 18,
+    "trace_first_fetch": 1770,
+    "trace_end": 1777,
+    "trace_span": 7,
+    "model_span": 4,
+    "delta": -3
+   },
+   {
+    "segment_base": 19,
+    "trace_first_fetch": 2267,
+    "trace_end": 3467,
+    "trace_span": 1200,
+    "model_span": 1191,
+    "delta": -9
+   },
+   {
+    "segment_base": 27,
+    "trace_first_fetch": 3957,
+    "trace_end": 3964,
+    "trace_span": 7,
+    "model_span": 4,
+    "delta": -3
+   },
+   {
+    "segment_base": 28,
+    "trace_first_fetch": 4454,
+    "trace_end": 4676,
+    "trace_span": 222,
+    "model_span": 209,
+    "delta": -13
+   }
+  ],
+  "per_instruction": [
+   {
+    "pc": 0,
+    "unit": "SU",
+    "model": 3,
+    "trace": 4,
+    "delta": -1
+   },
+   {
+    "pc": 1,
+    "unit": "ME",
+    "model": 4,
+    "trace": 5,
+    "delta": -1
+   },
+   {
+    "pc": 2,
+    "unit": "SU",
+    "model": 143,
+    "trace": 156,
+    "delta": -13
+   },
+   {
+    "pc": 3,
+    "unit": "SU",
+    "model": 252,
+    "trace": 257,
+    "delta": -5
+   },
+   {
+    "pc": 4,
+    "unit": "SU",
+    "model": 257,
+    "trace": 262,
+    "delta": -5
+   },
+   {
+    "pc": 5,
+    "unit": "SU",
+    "model": 353,
+    "trace": 370,
+    "delta": -17
+   },
+   {
+    "pc": 6,
+    "unit": "SU",
+    "model": 413,
+    "trace": 430,
+    "delta": -17
+   },
+   {
+    "pc": 7,
+    "unit": "SU",
+    "model": 455,
+    "trace": 472,
+    "delta": -17
+   },
+   {
+    "pc": 8,
+    "unit": "SU",
+    "model": 464,
+    "trace": 481,
+    "delta": -17
+   },
+   {
+    "pc": 9,
+    "unit": "SU",
+    "model": 467,
+    "trace": 484,
+    "delta": -17
+   },
+   {
+    "pc": 10,
+    "unit": "SU",
+    "model": 476,
+    "trace": 493,
+    "delta": -17
+   },
+   {
+    "pc": 11,
+    "unit": "ME",
+    "model": 500,
+    "trace": 517,
+    "delta": -17
+   },
+   {
+    "pc": 12,
+    "unit": "SU",
+    "model": 713,
+    "trace": 716,
+    "delta": -3
+   },
+   {
+    "pc": 13,
+    "unit": "ME",
+    "model": 792,
+    "trace": 794,
+    "delta": -2
+   },
+   {
+    "pc": 14,
+    "unit": "SU",
+    "model": 846,
+    "trace": 861,
+    "delta": -15
+   },
+   {
+    "pc": 15,
+    "unit": "SU",
+    "model": 984,
+    "trace": 990,
+    "delta": -6
+   },
+   {
+    "pc": 16,
+    "unit": "ME",
+    "model": 1022,
+    "trace": 1027,
+    "delta": -5
+   },
+   {
+    "pc": 19,
+    "unit": "SU",
+    "model": 4,
+    "trace": 4,
+    "delta": 0
+   },
+   {
+    "pc": 20,
+    "unit": "SU",
+    "model": 69,
+    "trace": 69,
+    "delta": 0
+   },
+   {
+    "pc": 21,
+    "unit": "ME",
+    "model": 155,
+    "trace": 154,
+    "delta": 1
+   },
+   {
+    "pc": 22,
+    "unit": "SU",
+    "model": 209,
+    "trace": 221,
+    "delta": -12
+   },
+   {
+    "pc": 23,
+    "unit": "SU",
+    "model": 595,
+    "trace": 598,
+    "delta": -3
+   },
+   {
+    "pc": 24,
+    "unit": "SU",
+    "model": 713,
+    "trace": 716,
+    "delta": -3
+   },
+   {
+    "pc": 25,
+    "unit": "ME",
+    "model": 863,
+    "trace": 865,
+    "delta": -2
+   },
+   {
+    "pc": 28,
+    "unit": "SU",
+    "model": 4,
+    "trace": 4,
+    "delta": 0
+   },
+   {
+    "pc": 29,
+    "unit": "SU",
+    "model": 69,
+    "trace": 69,
+    "delta": 0
+   }
+  ],
+  "max_abs_issue_delta": 17,
+  "body_segments_trace": 2688,
+  "body_segments_model": 2654,
+  "body_model_over_trace": 0.9874,
+  "me_clock_windows": [
+   [
+    0,
+    6
+   ],
+   [
+    18,
+    270
+   ],
+   [
+    507,
+    729
+   ],
+   [
+    730,
+    1003
+   ],
+   [
+    1004,
+    1276
+   ],
+   [
+    2336,
+    2864
+   ],
+   [
+    2983,
+    3463
+   ]
+  ],
+  "split_layer_measured": 4668,
+  "note": "trace = the split-128 build (a17a3c79); the body is identical in the one-stream build (only the all-reduce descriptors differ: 4,668 - 3,930 = 738 = 2 x (987 - 624) + 12)"
+ },
+ "composition": {
+  "segments_model": [
+   1254,
+   1191,
+   209
+  ],
+  "allreduce_gate": 624,
+  "allreduces": 2,
+  "boundary_calibrated": 28,
+  "layer_measured": 3930,
+  "note": "layer = seg0 + AR + seg1 + AR + seg2 + boundary; AR = the Verilator gate's one-stream all-reduce (issue -> resume, 624); boundary absorbs TP-sequencer transitions, the stage restart and model error (calibrated, not a measured term)"
+ },
+ "level5": {
+  "continuous_program": {
+   "segA": 1405,
+   "segB": 1191,
+   "stage_runtime_seg0_plus_seg2": 1463,
+   "stage_artifact_per_layer": 58,
+   "layer_continuous": 3872,
+   "note": "the per-layer stage runtime pays a drain + restart + a recomputed input-norm sum of squares that a continuous token program does not; the calendar's 2,599 body inherits it"
+  },
+  "terms": {
+   "resume_handoff_after_last_fold": 12,
+   "lead_O": 43,
+   "lead_down": 107,
+   "words_per_round": 96,
+   "send_never_starved": true,
+   "next_norm_reducer_on_critical_path": 0
+  },
+  "layer_model_continuous": 3872,
+  "layer_variants": {
+   "L5b1": 3736,
+   "L5b2": 3586,
+   "L5c": 3722,
+   "L5pkg": 3586,
+   "L5max": 3436
+  },
+  "savings": {
+   "L5b1": 136,
+   "L5b2": 286,
+   "L5c": 150,
+   "L5pkg": 286,
+   "L5max": 436
+  }
+ },
+ "critical_path": [
+  {
+   "segment_base": 0,
+   "cycles": 1254,
+   "categories": {
+    "me_compute": 124,
+    "me_fill": 68,
+    "me_tree": 208,
+    "me_wire": 448,
+    "me_rowmax": 21,
+    "su_stream": 83,
+    "su_pipe": 222,
+    "su_reduce_tail": 54,
+    "handoff": 22,
+    "issue": 1,
+    "start": 3
+   },
+   "chain": [
+    {
+     "pc": 17,
+     "op": "AR1_barrier",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 16,
+     "op": "O_ME",
+     "link": "op_to_idle",
+     "cycles": 228
+    },
+    {
+     "pc": 15,
+     "op": "attn_out_scale",
+     "link": "chase_su_16",
+     "cycles": 37
+    },
+    {
+     "pc": 15,
+     "op": "attn_out_scale",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 13,
+     "op": "PV_ME",
+     "link": "op_to_idle",
+     "cycles": 188
+    },
+    {
+     "pc": 12,
+     "op": "softmax_exp_sum",
+     "link": "chase_su_8",
+     "cycles": 78
+    },
+    {
+     "pc": 12,
+     "op": "softmax_exp_sum",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 11,
+     "op": "scores_ME",
+     "link": "op_to_idle",
+     "cycles": 209
+    },
+    {
+     "pc": 11,
+     "op": "scores_ME",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 10,
+     "op": "rope_k_b_kvwrite",
+     "link": "op_to_idle",
+     "cycles": 23
+    },
+    {
+     "pc": 9,
+     "op": "rope_q_b",
+     "link": "op_to_free",
+     "cycles": 9
+    },
+    {
+     "pc": 8,
+     "op": "rope_k_a_kvwrite",
+     "link": "op_to_free",
+     "cycles": 3
+    },
+    {
+     "pc": 7,
+     "op": "rope_q_a",
+     "link": "op_to_free",
+     "cycles": 9
+    },
+    {
+     "pc": 7,
+     "op": "rope_q_a",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 6,
+     "op": "qk_norm_scale",
+     "link": "op_to_idle",
+     "cycles": 41
+    },
+    {
+     "pc": 6,
+     "op": "qk_norm_scale",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 5,
+     "op": "qk_rsqrt",
+     "link": "op_to_idle",
+     "cycles": 59
+    },
+    {
+     "pc": 5,
+     "op": "qk_rsqrt",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 4,
+     "op": "qk_norm_sumsq",
+     "link": "op_to_idle",
+     "cycles": 95
+    },
+    {
+     "pc": 3,
+     "op": "v_norm_scale_kvwrite",
+     "link": "op_to_free",
+     "cycles": 5
+    },
+    {
+     "pc": 3,
+     "op": "v_norm_scale_kvwrite",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 1,
+     "op": "QKV_ME",
+     "link": "op_to_idle",
+     "cycles": 244
+    },
+    {
+     "pc": 1,
+     "op": "QKV_ME",
+     "link": "issue",
+     "cycles": 1
+    },
+    {
+     "pc": 0,
+     "op": "in_norm_sumsq",
+     "link": "start",
+     "cycles": 3
+    }
+   ]
+  },
+  {
+   "segment_base": 18,
+   "cycles": 1191,
+   "categories": {
+    "me_compute": 398,
+    "me_fill": 34,
+    "me_tree": 104,
+    "me_wire": 224,
+    "su_stream": 248,
+    "su_pipe": 168,
+    "handoff": 11,
+    "start": 4
+   },
+   "chain": [
+    {
+     "pc": 25,
+     "op": "AR2_barrier",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 24,
+     "op": "down_ME",
+     "link": "op_to_idle",
+     "cycles": 324
+    },
+    {
+     "pc": 23,
+     "op": "silu_mul_up",
+     "link": "chase_su_48",
+     "cycles": 149
+    },
+    {
+     "pc": 23,
+     "op": "silu_mul_up",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 22,
+     "op": "gu_norm_scale",
+     "link": "op_to_idle",
+     "cycles": 117
+    },
+    {
+     "pc": 22,
+     "op": "gu_norm_scale",
+     "link": "idle_me",
+     "cycles": 4
+    },
+    {
+     "pc": 20,
+     "op": "GU_ME",
+     "link": "op_to_idle",
+     "cycles": 436
+    },
+    {
+     "pc": 19,
+     "op": "residual_1_sumsq",
+     "link": "chase_su_64",
+     "cycles": 85
+    },
+    {
+     "pc": 18,
+     "op": "post_tp_scale_1",
+     "link": "op_to_free",
+     "cycles": 65
+    },
+    {
+     "pc": 18,
+     "op": "post_tp_scale_1",
+     "link": "start",
+     "cycles": 4
+    }
+   ]
+  },
+  {
+   "segment_base": 26,
+   "cycles": 209,
+   "categories": {
+    "su_stream": 106,
+    "su_pipe": 44,
+    "su_reduce_tail": 54,
+    "handoff": 1,
+    "start": 4
+   },
+   "chain": [
+    {
+     "pc": 28,
+     "op": "END",
+     "link": "idle_su",
+     "cycles": 1
+    },
+    {
+     "pc": 27,
+     "op": "residual_2_sumsq",
+     "link": "op_to_idle",
+     "cycles": 139
+    },
+    {
+     "pc": 26,
+     "op": "post_tp_scale_2",
+     "link": "op_to_free",
+     "cycles": 65
+    },
+    {
+     "pc": 26,
+     "op": "post_tp_scale_2",
+     "link": "start",
+     "cycles": 4
+    }
+   ]
+  }
+ ],
+ "decomposition": {
+  "layer_measured_one_stream": 3930,
+  "non_collective_measured": 2682,
+  "non_collective_model": 2654,
+  "on_core_attention_span_pos0": 522,
+  "non_attention_body_measured_basis": 2160,
+  "calendar_body_2599_check": {
+   "calendar_body": 2599,
+   "calendar_attention_share": 87,
+   "this_study_attention_span": 522,
+   "difference": 435,
+   "finding": "the calendar subtracts 87 cycles of position-0 attention; the critical path's on-core attention (scores ME issue -> O ME issue: scores ME, softmax, P.V ME, 1/Z, scale) is 522 cycles, two of them ME ops carrying 112 wire stages each. The non-attention body the near-HBM design keeps is ~2160, not 2,599"
+  },
+  "critical_path_categories_total": {
+   "me_compute": 522,
+   "me_fill": 102,
+   "me_tree": 312,
+   "me_wire": 672,
+   "me_rowmax": 21,
+   "su_stream": 437,
+   "su_pipe": 434,
+   "su_reduce_tail": 108,
+   "handoff": 34,
+   "issue": 1,
+   "start": 11
+  },
+  "critical_path_by_op": {
+   "O_ME": 228,
+   "attn_out_scale": 37,
+   "PV_ME": 188,
+   "softmax_exp_sum": 78,
+   "scores_ME": 209,
+   "rope_k_b_kvwrite": 23,
+   "rope_q_b": 9,
+   "rope_k_a_kvwrite": 3,
+   "rope_q_a": 9,
+   "qk_norm_scale": 41,
+   "qk_rsqrt": 59,
+   "qk_norm_sumsq": 95,
+   "v_norm_scale_kvwrite": 5,
+   "QKV_ME": 244,
+   "down_ME": 324,
+   "silu_mul_up": 149,
+   "gu_norm_scale": 117,
+   "GU_ME": 436,
+   "residual_1_sumsq": 85,
+   "post_tp_scale_1": 65,
+   "residual_2_sumsq": 139,
+   "post_tp_scale_2": 65
+  },
+  "critical_path_by_group": {
+   "body": {
+    "me_fill": 68,
+    "me_compute": 508,
+    "me_tree": 208,
+    "me_wire": 448,
+    "su_pipe": 341,
+    "su_reduce_tail": 108,
+    "su_stream": 415
+   },
+   "attention": {
+    "su_pipe": 93,
+    "su_reduce_tail": 0,
+    "su_stream": 22,
+    "me_fill": 34,
+    "me_compute": 14,
+    "me_tree": 104,
+    "me_wire": 224,
+    "me_rowmax": 21
+   },
+   "unattributed_handoff_issue_start": {
+    "handoff": 34,
+    "issue": 1,
+    "start": 11
+   },
+   "note": "op-attributed cycles of the walk; 'attention' = scores, softmax, P.V, 1/Z, scale (replaced by the near-HBM unit); handoffs/issue/start are listed apart"
+  },
+  "me_ops": [
+   {
+    "pc": 1,
+    "op": "QKV_ME",
+    "rounds": 1,
+    "k_steps": 8,
+    "compute": 64,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 0,
+    "issue_to_idle": 244
+   },
+   {
+    "pc": 11,
+    "op": "scores_ME",
+    "rounds": 1,
+    "k_steps": 1,
+    "compute": 8,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 21,
+    "issue_to_idle": 209
+   },
+   {
+    "pc": 13,
+    "op": "PV_ME",
+    "rounds": 1,
+    "k_steps": 1,
+    "compute": 8,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 0,
+    "issue_to_idle": 188
+   },
+   {
+    "pc": 16,
+    "op": "O_ME",
+    "rounds": 3,
+    "k_steps": 2,
+    "compute": 48,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 0,
+    "issue_to_idle": 228
+   },
+   {
+    "pc": 20,
+    "op": "GU_ME",
+    "rounds": 1,
+    "k_steps": 32,
+    "compute": 256,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 0,
+    "issue_to_idle": 436
+   },
+   {
+    "pc": 24,
+    "op": "down_ME",
+    "rounds": 3,
+    "k_steps": 6,
+    "compute": 144,
+    "start": 1,
+    "fill": 16,
+    "tree": 52,
+    "wire": 112,
+    "rowmax": 0,
+    "issue_to_idle": 324
+   }
+  ],
+  "wire_on_critical_path": {
+   "per_me_op": 112,
+   "per_component": {
+    "BD": 41,
+    "NWS": 25,
+    "TWS": 38,
+    "ORD": 7,
+    "MEM_EXTRA": 1
+   },
+   "all_six_me_ops_sensitivity": 584,
+   "per_op_sensitivity": {
+    "QKV_ME": 49,
+    "scores_ME": 112,
+    "PV_ME": 87,
+    "O_ME": 112,
+    "GU_ME": 112,
+    "down_ME": 112
+   },
+   "body_me_ops": [
+    "QKV_ME",
+    "O_ME",
+    "GU_ME",
+    "down_ME"
+   ],
+   "body_wire_cycles": 385,
+   "attention_me_ops_wire_cycles": 199,
+   "body_wire_by_component_walk": {
+    "BD": 164,
+    "NWS": 100,
+    "TWS": 152,
+    "ORD": 28,
+    "MEM_EXTRA": 4
+   },
+   "share_of_non_attention_body": 0.1782,
+   "share_of_layer": 0.098
+  }
+ },
+ "geometry": {
+  "W12": {
+   "die_um": [
+    31800.0,
+    25628.931
+   ],
+   "tile_um": [
+    518.4,
+    386.64
+   ],
+   "spine_x_um": 15200.352,
+   "broadcast_um": 20518.2,
+   "broadcast_stages": 41,
+   "in_block_levels": {
+    "3": {
+     "um": 970.9,
+     "stages": 2
+    },
+    "4": {
+     "um": 1357.6,
+     "stages": 3
+    },
+    "5": {
+     "um": 1936.0,
+     "stages": 4
+    },
+    "6": {
+     "um": 2322.6,
+     "stages": 5
+    },
+    "7": {
+     "um": 1225.8,
+     "stages": 3
+    }
+   },
+   "in_block_uniform_nws": 25,
+   "in_block_per_level_sum": 17,
+   "in_block_path_um": 7812.9,
+   "tree_top_um": 18971.6,
+   "tree_top_stages": 38,
+   "result_write_um": 3037.2,
+   "result_write_stages": 7,
+   "return_path_um": 29821.7,
+   "return_stages_now": 70,
+   "return_detour_um": 6266.3,
+   "monotone_return_stages": [
+    41,
+    46
+   ],
+   "note": "W12 frame (as built in the runtime parameters): the return path (in-block levels 3-7 + level-7 words to the spine top + result write) is 29.8 mm against the 20.5 mm broadcast; the uniform NWS pads levels 3-7 (2+3+4+5+3 = 17 stages) to 5 x 5 = 25"
+  },
+  "B2EW": {
+   "die_um": [
+    24146.64,
+    32799.6
+   ],
+   "tile_slot_um": [
+    313.632,
+    1291.68
+   ],
+   "array_um": [
+    20072.448,
+    31193.856
+   ],
+   "hub_xy_um": [
+    12073.2,
+    15616.9
+   ],
+   "farthest_tile_centre_dx_um": 10486.8,
+   "farthest_tile_centre_dy_um": 14951.1,
+   "farthest_manhattan_um": 25437.9,
+   "one_way_stages": 51,
+   "round_trip_floor_cycles": 106,
+   "farthest_near_corner_um": 24635.3,
+   "one_way_stages_near_corner": 49,
+   "round_trip_floor_near_corner": 102,
+   "measured_runtime_cycles": 112,
+   "headroom_vs_measured": 6,
+   "headroom_vs_measured_optimistic": 10,
+   "w12_style_broadcast_stages": 53,
+   "note": "B2-EW (selected frame): hub at the die centre is the minimax point for Manhattan distance; any broadcast to and reduction from every tile is >= 2 x the farthest-tile distance. Floor = one-way stages x 2 + tile input register + XVM + 1 result-write stage + MEM_EXTRA. The runtime's 112 was derived on the W12 frame (0.20 mm2 tiles, half the field), so on B2-EW it is already AT this floor only if the tree is monotone; a W12-style tree on B2-EW would exceed 112"
+  }
+ },
+ "bases": {
+  "A_measured_pos0_onstream": {
+   "per_layer": 3930,
+   "token": 144522,
+   "note": "measured one-stream TP4 runtime, position 0, on-core attention (6 ME ops a layer)"
+  },
+  "B_selected_near_hbm_calendar": {
+   "per_layer": 5547,
+   "token": 202734,
+   "note": "selected near-HBM build entry with the one-stream AR: calendar body 2,599 + 2 x 624 + 1,700, + 3,042 non-layer (4 tile ME ops a layer)"
+  },
+  "C_near_hbm_corrected_body": {
+   "per_layer": 5108,
+   "token": 186930,
+   "note": "as B with the body corrected to this study's attention span"
+  }
+ },
+ "candidates": [
+  {
+   "id": "W1",
+   "name": "per-level tree wire stages (NWS per level: 2,3,4,5,3 instead of 5 x 5)",
+   "frame": "W12",
+   "per_op_wire_saving": 8,
+   "per_layer_saving_body_ops": 32,
+   "per_layer_saving_all_me_ops": 48,
+   "A": {
+    "per_layer_saved": 48,
+    "token_cycles": 142794,
+    "token_us": 118.995,
+    "per_user_rate_gain": 0.0121
+   },
+   "B": {
+    "per_layer_saved": 32,
+    "token_cycles": 201582,
+    "token_us": 167.985,
+    "per_user_rate_gain": 0.0057
+   },
+   "C": {
+    "per_layer_saved": 32,
+    "token_cycles": 185778,
+    "token_us": 154.815,
+    "per_user_rate_gain": 0.0062
+   },
+   "exactness": "unchanged arithmetic: only register stages on the level-3..7 wires; every level keeps one stage count for all its nodes so children stay aligned",
+   "cost": "none (fewer flops)",
+   "note": "W12-frame number; on B2-EW the per-level distances differ (not derived)"
+  },
+  {
+   "id": "W2",
+   "name": "spine-directed (monotone) in-block H-tree + result ports beside the VM, W12 frame, best",
+   "frame": "W12",
+   "per_op_wire_saving": 28,
+   "per_layer_saving_body_ops": 112,
+   "per_layer_saving_all_me_ops": 168,
+   "A": {
+    "per_layer_saved": 168,
+    "token_cycles": 138474,
+    "token_us": 115.395,
+    "per_user_rate_gain": 0.0437
+   },
+   "B": {
+    "per_layer_saved": 112,
+    "token_cycles": 198702,
+    "token_us": 165.585,
+    "per_user_rate_gain": 0.0203
+   },
+   "C": {
+    "per_layer_saved": 112,
+    "token_cycles": 182898,
+    "token_us": 152.415,
+    "per_user_rate_gain": 0.022
+   },
+   "exactness": "the logical pairing (group 2i with 2i+1 at every level, the golden split tree) is unchanged; only the physical slot of each logical group and the host tile of each tree node move",
+   "cost": "weight image re-layout (group -> tile map), tree-node hosting, port groups re-floorplanned",
+   "note": "upper bound: return wire = broadcast distance, ORD 7 -> 1"
+  },
+  {
+   "id": "W2w",
+   "name": "as W2, worst rounding (one extra stage per in-block level, ORD 4)",
+   "frame": "W12",
+   "per_op_wire_saving": 20,
+   "per_layer_saving_body_ops": 80,
+   "per_layer_saving_all_me_ops": 120,
+   "A": {
+    "per_layer_saved": 120,
+    "token_cycles": 140202,
+    "token_us": 116.835,
+    "per_user_rate_gain": 0.0308
+   },
+   "B": {
+    "per_layer_saved": 80,
+    "token_cycles": 199854,
+    "token_us": 166.545,
+    "per_user_rate_gain": 0.0144
+   },
+   "C": {
+    "per_layer_saved": 80,
+    "token_cycles": 184050,
+    "token_us": 153.375,
+    "per_user_rate_gain": 0.0156
+   },
+   "exactness": "as W2",
+   "cost": "as W2",
+   "note": ""
+  },
+  {
+   "id": "W3",
+   "name": "B2-EW frame (selected): every reduction/broadcast tree at the 2 x farthest-tile floor",
+   "frame": "B2-EW",
+   "per_op_wire_saving": 10,
+   "per_layer_saving_body_ops": 40,
+   "per_layer_saving_all_me_ops": 60,
+   "A": {
+    "per_layer_saved": 60,
+    "token_cycles": 142362,
+    "token_us": 118.635,
+    "per_user_rate_gain": 0.0152
+   },
+   "B": {
+    "per_layer_saved": 40,
+    "token_cycles": 201294,
+    "token_us": 167.745,
+    "per_user_rate_gain": 0.0072
+   },
+   "C": {
+    "per_layer_saved": 40,
+    "token_cycles": 185490,
+    "token_us": 154.575,
+    "per_user_rate_gain": 0.0078
+   },
+   "exactness": "as W2",
+   "cost": "as W2",
+   "note": "the selected frame's hub-to-farthest-tile Manhattan distance is 25437.9 um = 51 stages each way: floor 106 (102 with pins at the tile's near corner) vs 112 measured; priced at the optimistic floor"
+  },
+  {
+   "id": "W4",
+   "name": "regional broadcast trees (x root replicated per region)",
+   "per_layer_saving_body_ops": 0,
+   "B": {
+    "per_layer_saved": 0,
+    "token_cycles": 202734,
+    "token_us": 168.945,
+    "per_user_rate_gain": 0.0
+   },
+   "exactness": "n/a",
+   "cost": "replicated VM/x roots",
+   "note": "the x elements are produced by the SU at the hub; any path from the hub to the farthest tile is >= the hub-to-tile distance (triangle inequality), so regional roots add a hop and save nothing; the existing broadcast is already a pipelined tree"
+  },
+  {
+   "id": "W5",
+   "name": "place dependent ops' tiles nearer the hub (use a fraction f of the tiles)",
+   "per_op": [
+    {
+     "op": "QKV_ME",
+     "compute": 64,
+     "wire": 112,
+     "at_full": 176,
+     "best": 176.0,
+     "best_fraction": 1.0,
+     "saving": 0.0
+    },
+    {
+     "op": "O_ME",
+     "compute": 48,
+     "wire": 112,
+     "at_full": 160,
+     "best": 159.6,
+     "best_fraction": 0.902,
+     "saving": 0.4
+    },
+    {
+     "op": "GU_ME",
+     "compute": 256,
+     "wire": 112,
+     "at_full": 368,
+     "best": 368.0,
+     "best_fraction": 1.0,
+     "saving": 0.0
+    },
+    {
+     "op": "down_ME",
+     "compute": 144,
+     "wire": 112,
+     "at_full": 256,
+     "best": 256.0,
+     "best_fraction": 1.0,
+     "saving": 0.0
+    }
+   ],
+   "per_layer_saving_body_ops": 0.4,
+   "B": {
+    "per_layer_saved": 0,
+    "token_cycles": 202734,
+    "token_us": 168.945,
+    "per_user_rate_gain": 0.0
+   },
+   "exactness": "NOT exact: fewer groups changes the split-tree depth and the golden reduction order (it depends on G); excluded on that ground alone",
+   "cost": "re-partitioned weights",
+   "note": "even ignoring exactness the optimum is f = 1 for QKV, GU and down (compute C/f grows faster than wire W sqrt(f) shrinks)"
+  },
+  {
+   "id": "W6",
+   "name": "level 4: interleave independent chains to hide ME wire stages",
+   "per_layer_saving_body_ops": 0,
+   "B": {
+    "per_layer_saved": 0,
+    "token_cycles": 202734,
+    "token_us": 168.945,
+    "per_user_rate_gain": 0.0
+   },
+   "exactness": "exact (order unchanged)",
+   "cost": "compiler only",
+   "note": "at batch 1 the layer's ME ops form one dependent chain: QKV (one fused op) -> attention -> O -> AR -> GU (one fused op) -> SiLU -> down -> AR; the only independent SU work (input and FFN norm sum of squares, KV writes) already overlaps the ME ops (norm folded after the matvec). Nothing is left to interleave"
+  },
+  {
+   "id": "W7",
+   "name": "level 3/4: x produced in k-step order so O/GU/down chase the first SU vector (hides the 41-stage broadcast under the producer)",
+   "per_layer_saving_body_ops": 125,
+   "B": {
+    "per_layer_saved": 125,
+    "token_cycles": 198234,
+    "token_us": 165.195,
+    "per_user_rate_gain": 0.0227
+   },
+   "C": {
+    "per_layer_saved": 125,
+    "token_cycles": 182430,
+    "token_us": 152.025,
+    "per_user_rate_gain": 0.0247
+   },
+   "exactness": "elementwise producers are order-free; the residual pass's sum of squares must then run as a separate golden-order pass (off the critical path, before the rsqrt it feeds)",
+   "cost": "SU stride programs + an extra off-path reducer pass; the ME x reads must not outrun the SU (GU: 2 vectors per k step vs 1/cycle; down: 8 per 8 cycles = equal rate, no margin)",
+   "note": "UPPER BOUND: chase_n = 1 on O, GU and down; the model does not check the ME x-read rate"
+  },
+  {
+   "id": "L5a",
+   "name": "level 5: norm partials (next-norm sum of squares) carried with the collective",
+   "per_layer_saving_body_ops": 0,
+   "A": {
+    "per_layer_saved": 0,
+    "token_cycles": 144522,
+    "token_us": 120.435,
+    "per_user_rate_gain": 0.0
+   },
+   "B": {
+    "per_layer_saved": 0,
+    "token_cycles": 202734,
+    "token_us": 168.945,
+    "per_user_rate_gain": 0.0
+   },
+   "C": {
+    "per_layer_saved": 0,
+    "token_cycles": 186930,
+    "token_us": 155.775,
+    "per_user_rate_gain": 0.0
+   },
+   "exactness": "the reducer order is untouched",
+   "cost": "none",
+   "note": "the sum rides on the residual op and is consumed after the QKV matvec (norm folded after the matvec): nothing on the critical path to save"
+  },
+  {
+   "id": "L5b1",
+   "name": "level 1+5: post-TP scale and residual in ONE SU op; the core keeps running across the collective",
+   "per_layer_saving_body_ops": 136,
+   "A": {
+    "per_layer_saved": 136,
+    "token_cycles": 139626,
+    "token_us": 116.355,
+    "per_user_rate_gain": 0.0351
+   },
+   "B": {
+    "per_layer_saved": 136,
+    "token_cycles": 197838,
+    "token_us": 164.865,
+    "per_user_rate_gain": 0.0247
+   },
+   "C": {
+    "per_layer_saved": 136,
+    "token_cycles": 182034,
+    "token_us": 151.695,
+    "per_user_rate_gain": 0.0269
+   },
+   "exactness": "elementwise fl(fl(p x s) + x) exactly as the golden's two ops (multiply stage then add stage, each RNE, no FMA); the sum of squares stays in the reducer in its order",
+   "cost": "sequencer: a collective issued from the program with a wait on its completion instead of a segment restart; generator: one fused op; no new arithmetic",
+   "note": "removes one 64-vector pass per all-reduce and the core restart"
+  },
+  {
+   "id": "L5b2",
+   "name": "level 2+5: that epilogue applied to the arriving all-reduce words (hub-edge staging)",
+   "per_layer_saving_body_ops": 286,
+   "A": {
+    "per_layer_saved": 286,
+    "token_cycles": 134226,
+    "token_us": 111.855,
+    "per_user_rate_gain": 0.0767
+   },
+   "B": {
+    "per_layer_saved": 286,
+    "token_cycles": 192438,
+    "token_us": 160.365,
+    "per_user_rate_gain": 0.0535
+   },
+   "C": {
+    "per_layer_saved": 286,
+    "token_cycles": 176634,
+    "token_us": 147.195,
+    "per_user_rate_gain": 0.0583
+   },
+   "exactness": "as L5b1, in arrival order; the reducer fed 4 words = one 64-lane vector in its golden lane order",
+   "cost": "as L5b1 + a receive-path epilogue (16 fp32 mul + 16 fp32 add, or per-vector SU issue chasing the receive count): NEW arithmetic that must close at SS",
+   "note": "upper bound of the epilogue lever"
+  },
+  {
+   "id": "L5c",
+   "name": "level 5: cut-through send (each output word leaves when its tree result is written)",
+   "per_layer_saving_body_ops": 150,
+   "A": {
+    "per_layer_saved": 150,
+    "token_cycles": 139122,
+    "token_us": 115.935,
+    "per_user_rate_gain": 0.0388
+   },
+   "B": {
+    "per_layer_saved": 150,
+    "token_cycles": 197334,
+    "token_us": 164.445,
+    "per_user_rate_gain": 0.0274
+   },
+   "C": {
+    "per_layer_saved": 150,
+    "token_cycles": 181530,
+    "token_us": 151.275,
+    "per_user_rate_gain": 0.0297
+   },
+   "exactness": "the per-word fold ((p0+p1)+p2)+p3 and the word tags are unchanged; only the send time moves",
+   "cost": "TP sequencer reads chase the ME result-slot progress instead of the barrier/END",
+   "note": "O: 3 rounds 16 cycles apart; down: 3 rounds 48 apart; 96 words a round, so the 1-word-a-cycle send never starves"
+  },
+  {
+   "id": "L5pkg",
+   "name": "asynchronous collective: L5b1 + L5c (no new arithmetic)",
+   "per_layer_saving_body_ops": 286,
+   "A": {
+    "per_layer_saved": 286,
+    "token_cycles": 134226,
+    "token_us": 111.855,
+    "per_user_rate_gain": 0.0767
+   },
+   "B": {
+    "per_layer_saved": 286,
+    "token_cycles": 192438,
+    "token_us": 160.365,
+    "per_user_rate_gain": 0.0535
+   },
+   "C": {
+    "per_layer_saved": 286,
+    "token_cycles": 176634,
+    "token_us": 147.195,
+    "per_user_rate_gain": 0.0583
+   },
+   "exactness": "as L5b1 and L5c",
+   "cost": "as L5b1 and L5c",
+   "note": "one mechanism: the collective becomes a core-issued unit with progress handshakes on both sides (send chases the ME slots, the epilogue waits on the receive)"
+  },
+  {
+   "id": "L5max",
+   "name": "L5b2 + L5c (with the receive-path epilogue)",
+   "per_layer_saving_body_ops": 436,
+   "A": {
+    "per_layer_saved": 436,
+    "token_cycles": 128826,
+    "token_us": 107.355,
+    "per_user_rate_gain": 0.1218
+   },
+   "B": {
+    "per_layer_saved": 436,
+    "token_cycles": 187038,
+    "token_us": 155.865,
+    "per_user_rate_gain": 0.0839
+   },
+   "C": {
+    "per_layer_saved": 436,
+    "token_cycles": 171234,
+    "token_us": 142.695,
+    "per_user_rate_gain": 0.0917
+   },
+   "exactness": "as L5b2 and L5c",
+   "cost": "as L5b2 and L5c",
+   "note": "upper bound"
+  }
+ ],
+ "verdict": {
+  "wire": {
+   "decision": "KEEP the current wire design",
+   "best_wire_candidate": {
+    "id": "W7",
+    "B": 0.0227,
+    "C": 0.0247
+   },
+   "w12_frame_detour_recovery": {
+    "id": "W2",
+    "B": 0.0203,
+    "C": 0.022,
+    "A": 0.0437
+   },
+   "reason": "on the selected B2-EW frame the 112-cycle round trip is within 6-10 cycles of the 2 x farthest-tile floor (106); the W12-frame detour recovery (W2) is 2.0% on the selected design and does not exist on B2-EW; the best wire-side lever (W7) is 2.3% and an upper bound; level 4 has nothing independent to interleave at batch 1. All are below the 3% bar on the selected design (B, C). W2 reaches 4.4% only on basis A (the measured position-0 runtime with on-core attention and the W12 frame), which is not the design being built"
+  },
+  "recommended": {
+   "id": "L5pkg",
+   "name": "asynchronous collective: L5b1 + L5c (no new arithmetic)",
+   "per_layer_saved": 286,
+   "B": {
+    "per_layer_saved": 286,
+    "token_cycles": 192438,
+    "token_us": 160.365,
+    "per_user_rate_gain": 0.0535
+   },
+   "C": {
+    "per_layer_saved": 286,
+    "token_cycles": 176634,
+    "token_us": 147.195,
+    "per_user_rate_gain": 0.0583
+   },
+   "A": {
+    "per_layer_saved": 286,
+    "token_cycles": 134226,
+    "token_us": 111.855,
+    "per_user_rate_gain": 0.0767
+   },
+   "reason": "the one priced lever above 3% on every basis without new arithmetic; L5b2's receive-path epilogue adds a further 150 cycles a layer but needs fp32 mul/add that must close at SS (fp32_mul is open at SS 1.2 GHz)"
+  },
+  "gates": {
+   "agents_priced_gate": 0.01,
+   "user_threshold": 0.03
+  }
+ },
+ "sources_sha256": {
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/tp4_sw64_L1_d0_program_split128.hex": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/tp4_sw64_L1_d0_program_onestream256.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/tp4_sw64_L1_d0_segments_split128.hex": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/tp4_sw64_L1_d0_segments_onestream256.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/layer0_tp4_g6144_sw64_itrace_a17a3c79.txt": "19117af0eec1cb356109966e609208208161b4c0d722a95f674194bf2c4c5092",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/allreduce_oneseg_measured_7d736e8e6.json": "5d5e0a7f7cf5d87653ef1a3782efac387762f0d410289ce1fb306301665e1287",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/allreduce_oneseg_verilator_gate_7d736e8e6.json": "8b92e4e673736e2738c05d601647d037e6fdfeb4df6ee16c212b0945efb0feb7",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/floorplan_w12_tp4_g6144_ss504_c6e6b845.json": "9aa07f0c3e7ceeafecb666485c72404fa4494b140e0d25b637fd3f3d777c06e7",
+  "results/uarch/qwen_body_wire_latency_20261003/inputs/floorplan_b2ew_model_r2_ced04cd96.json": "e1e8ac2ddab4711d1a6e476a31a7b9f01813a67aa6c27dfd473225d771e7b951",
+  "results/uarch/qwen_rom_calibrated_calendar_20261003/near-hbm-selected-r1.json": "b7862b22c589a95b452f8ff12036c8b6c99163945c8754187955b5124c16b0ef",
+  "tools/hdc_timing.py": "f7135f8007a3fc5ad24274c7a5b0ed8c16d24205210620afba8f6061a0edae36",
+  "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+  "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+  "tools/qwen_body_wire_latency.py": "a9fad0ee22b1920e24e26670341d186116fc9e9e4a0444a8715c65fcfa946f16"
+ },
+ "claim_boundary": "analytical model calibrated to one TP4 runtime trace at position 0 (die 0, split build) and the one-stream measured layer; no RTL or P&R; geometry from two floorplan models (W12 estimate, B2-EW r2); level-5 terms use the Verilator-gate all-reduce timing (256 words + LAT 339 + fold 17 + handoff); per-user gains are on the stated bases, not measured"
+}

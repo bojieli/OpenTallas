@@ -1,0 +1,7 @@
+{
+  "cause": "Expected cut deficit was misadded. Actual1685 tracks minus pinned1360 capacity is325.",
+  "disposition": "Corrected test and explanatory text; original failed record retained. No physical model override.",
+  "observed": "AssertionError: 325 != 425",
+  "test": "test_joint_model_preserves_source_failures_and_single_debit",
+  "verdict": "FAIL_TEST_EXPECTATION_ARITHMETIC"
+}

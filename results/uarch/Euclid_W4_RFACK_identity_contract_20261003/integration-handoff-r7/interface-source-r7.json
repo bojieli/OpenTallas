@@ -1,0 +1,132 @@
+{
+  "RF_geometry": {
+    "FP32lanes": 128,
+    "RF_macro_count_per_SM": 128,
+    "RFslots_per_SM": 512,
+    "SMs_priced": 32,
+    "SRAM_ports_and_replicas_changed": false,
+    "frame_bits": 4096,
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "per_copy_pages": 4,
+    "per_page_banks": 16,
+    "physical_copies": 2
+  },
+  "connector": {
+    "ACK_excludes": "backendvisibility/providercompletion/framecredit/nativecalendar/globalreverseretirement",
+    "KVclient": 5,
+    "NC": 6,
+    "W2_p_wr_done_ready_required": true,
+    "backend_echo": "preserve full16bits including gen4; dont truncatehigh4",
+    "metadata": "childowner46 through mapping; stableparent55 from actualparentref32; meta92 held through consumer/reverse",
+    "sector": "R14LEN1BEAT0 is32B; full512B RFframe needs16validatedchildren",
+    "seventh_directory_client": false
+  },
+  "cost_records": [
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/component-price-r3.json",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/ACK-match-control-pricing-r4.json",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/allocator-context-r6/once-only-join.json"
+  ],
+  "cost_scope": "32SM raw55+ACK72+SIMD72 plus1sticky/matcher; resetbuffers/CTS/PGwire/slotfit/CDC/calendar unknown. Subtract old debit once only with matching indices/lifetime/ports.",
+  "default_parameters": {
+    "FULL_SM_ACK_ID": 0,
+    "FULL_SM_ENABLE": 0,
+    "RF_ACK_ID": 0
+  },
+  "exact_module_headers": {
+    "ot_gpu_full_sm_service": "`timescale 1ns/1ps\nmodule ot_gpu_full_sm_service #(parameter integer ENABLE=0,parameter integer ACK_ID=0) (\n input wire clk,rst_n,\n input wire host_rd_valid, output wire host_rd_ready,\n input wire [8:0] host_a,host_b,\n output wire host_rsp_valid, input wire host_rsp_ready,\n output wire [4095:0] host_rsp_a,host_rsp_b,\n input wire host_wr_valid, output wire host_wr_ready,\n input wire [8:0] host_dst, input wire [4095:0] host_wdata,\n output wire host_ack_valid, input wire host_ack_ready,\n input wire simd_valid, output wire simd_ready,\n input wire simd_mul, input wire [8:0] simd_a,simd_b,simd_dst,\n output wire simd_done, input wire simd_done_ready, output wire simd_fault,\n input wire scratch_valid,scratch_write,output wire scratch_ready,\n input wire [9:0] scratch_addr,input wire [511:0] scratch_wdata,\n output wire scratch_done,input wire scratch_done_ready,output wire [511:0] scratch_rdata,\n input wire [45:0] host_owner,simd_owner,\n output wire [45:0] host_ack_owner,simd_done_owner,\n output wire [8:0] host_ack_slot,simd_done_slot,output wire identity_fault\n);",
+    "ot_gpu_rf_service": "`timescale 1ns/1ps\nmodule ot_gpu_rf_service #(parameter integer ACK_ID=0) (\n input wire clk, rst_n,\n input wire rd_valid, output wire rd_ready,\n input wire [8:0] rd_a, rd_b,\n output reg rsp_valid, input wire rsp_ready,\n output reg [4095:0] rsp_a, rsp_b,\n input wire wr_valid, output wire wr_ready,\n input wire [8:0] wr_addr, input wire [4095:0] wr_data,\n output reg ack_valid, input wire ack_ready,\n input wire [45:0] wr_owner,output wire [45:0] ack_owner,\n output wire [8:0] ack_slot,output wire ack_identity_fault\n);"
+  },
+  "exclude_duplicate_top_definitions": [
+    "rtl/gpu/ot_gpu_rf_service.sv",
+    "rtl/gpu/ot_gpu_full_sm_service.sv"
+  ],
+  "gate": {
+    "RF_leaf_directed_marker": "PASS_W4_RFACK owner46_slot9 writes2 ACK1 resetAbort1 bothcopies singlebit72 doublebit2556 addedACKedge1 cycles18 CONDITIONAL_COMPONENT_ONLY",
+    "compiler_PID": 2978842,
+    "iverilog_PID": 2978839,
+    "out": "/tmp/W4-Euclid-component-native-20261003-r2",
+    "pending": [
+      "actual128lane fullSM numeric",
+      "defaultbranch original",
+      "validcoded wrongowner/wrongslot"
+    ],
+    "phase": "tb_W4_full_service-compile",
+    "status": "LIVE_NOT_QUALIFIED",
+    "supervisor_PID": 2970098,
+    "terminal_pending_path": "/tmp/W4-Euclid-component-native-20261003-r2/terminal.json"
+  },
+  "identity_configuration": {
+    "FULL_SM_ACK_ID": 1,
+    "FULL_SM_ENABLE": 1,
+    "RF_ACK_ID": 1
+  },
+  "live_source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+  "live_source_root": "/tmp/opentallas-W4-RFACK-identity-contract-20261003",
+  "no_duplicate_system_MTP_or_gate": true,
+  "owner46": {
+    "MSB_to_LSB": [
+      [
+        "PC",
+        7
+      ],
+      [
+        "client",
+        3
+      ],
+      [
+        "original_client_tag",
+        32
+      ],
+      [
+        "generation",
+        4
+      ]
+    ],
+    "PC": "[45:39]",
+    "RFcapture55": "{owner46,RFslot9}",
+    "binding": "real accepted caller tuple; stableparent through validated boundref32 after assembly, never arbitrary lastchild or fixturetoken",
+    "check_bits": 8,
+    "client": "[38:36]",
+    "extra_generation_storage": 0,
+    "generation": "[3:0]",
+    "originaltag": "[35:4]",
+    "padding_bits": 9,
+    "protected_shadow_bits": 72
+  },
+  "reset_clock": {
+    "CDC_cycles": null,
+    "actual_SSFF": null,
+    "generation_wrap_admitted": false,
+    "global_drain_cycles": null,
+    "installed_commonreset_or_allcopy_reverseCDC_drain": false,
+    "reset": "local async rst_n aborts pending/ACK/SIMD; no macrodata reset",
+    "single_RF_clock": true,
+    "target_1p2GHz_is_not_closure": true
+  },
+  "schema": "EUCLID_W4_PEER_INTEGRATION_FROZEN_INTERFACE_R7",
+  "source_changed": false,
+  "source_events": {
+    "ACK_consume": "ack_valid&&ack_ready&&!decoded_ACK.bad; onecommonACK",
+    "ACK_hold": "ack_valid blocks newRFacceptance; tuple held to matching consumeracceptance",
+    "ACK_publish": "next RFedge write_pending -> protected_ACK encode(accepted_identity),ack_valid=1; local1addededge versus original, not installedclock guarantee",
+    "SIMD_ACK_ready": "stateACK AND exactsavedowner46+dst9 match AND nofault; validcoded mismatch blocksready, asserts immediatefault then sticky untilreset; noSIMDdone/consumer/reverse release",
+    "SIMD_identity_accept": "sg=simd_valid&&simd_ready -> protected {simd_owner,simd_dst}; operand/dstindices retained",
+    "host_ACK_validation": "W4 returns acceptedprotectedtuple; external expectedowner/slot validation/retirement belongs W6/parent",
+    "read_accept": "rd_valid&&rd_ready; read_pending then4096bit registeredresponses held to rsp_ready",
+    "write_accept": "write_go=wr_valid&&wr_ready; accepted_identity<={wr_owner,wr_addr}; samewrite_go clocks both physical copyWCE paths"
+  },
+  "source_pins": {
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv": "1467492957a70900e969ffee3493e6969a6ac4b0244202a8c0cdd06f6ccfdd18",
+    "rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9"
+  },
+  "source_selector": "sources-full-service-r7.f = exact10 design files of livegate, no benches. Select once, replacing originalRF/fullSM definitions; dont compile both. Archive arithmetic/scratch providers have same module names as their original source. Do not list both copies.",
+  "time_UTC": "2026-10-03T06:35:48.417711+00:00"
+}

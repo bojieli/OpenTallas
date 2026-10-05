@@ -1,0 +1,23 @@
+{
+  "verdict": "FAIL_RUNTIME_RESET_ACCEPTED_DEBT",
+  "top_sha256": "406400f32366213d2e5679ff38dac6c7dc54f2d69132fd188d42043ae641b84b",
+  "fixture_commit": "fdddba07e",
+  "cases_passed": 24,
+  "same_client_II_measured": 19,
+  "correction_II_measured": false,
+  "failure_ps": 1485501,
+  "request_accept_cycle": 1483,
+  "backend_read_accept_cycle": 1485,
+  "client_read_retire_after_request": false,
+  "independent_accepted_debt": 1,
+  "current_table_plus_journal_debt": 0,
+  "source_cause": "Local reset is asserted after request acceptance before four-edge issue commit. Primary182CW and secondary37CW async reset loops erase accepted issue journal, table, cache and stickyfault. When reset releases, normal_permit follows current clean/fault state without mandatory reset-fence/rearm. Old backend return can enter query while original external accepted debt remains. No terminal has consumed that debt.",
+  "source_evidence": [
+    "primary ot_w2_nc6_protected_completion.sv:1393-1395 reset every cw to seal0",
+    "secondary ot_w2_nc6_coded_secondary_acyclic.sv reset every cw to encoded0",
+    "secondary normal_permit=!fault&&!repair_busy; provider/reverse/reset fences checked only rearm_ready",
+    "fixture cold then issue1/tag44/gen3; rst_n0 step rst_n1 then raw old read return"
+  ],
+  "next_owner_action": "Nash owns source fix/enrollment: preserve accepted debt or authoritative retained reset quarantine forbidding all ordinary grants/normal retirement until actual provider+reverse+reset drain/fenced rearm. Do not fake fences, clear oracle accepted debt, or count local empty as allcopies drained. Price new state/ports/edges if required. Russell next sole runtime only after changed-source qualified lint.",
+  "physical_or_fulltoken_admission": false
+}

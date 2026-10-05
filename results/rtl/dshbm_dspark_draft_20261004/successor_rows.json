@@ -1,0 +1,265 @@
+{
+ "schema": "opentallas.uarch.hbm_mtp_both_drafts_measured.v1",
+ "status": "AUTHORITATIVE successor for MTP (owner 2026-10-04); AR unchanged",
+ "hbm_draft_record": "results/rtl/dshbm_dspark_draft_20261004/composition.json",
+ "rom_draft_record": "results/rtl/dsrom_dspark_step_slices_20261004/composition.json",
+ "tau": 3.8879,
+ "hbm_variants": {
+  "as_built": "the HBM design as built (ctl DHEAD = one 5-column head pass; bias + argmax fused in the SM epilogue): HBM already has the ROM's L1 and L2",
+  "per_step_head": "the ROM as-built structure on HBM (one 1-column head pass a chain step), the like-for-like structural row"
+ },
+ "rom_columns": {
+  "rom_as_built": "ROM as built (measured)",
+  "rom_l1": "ROM L1 fused head (measured record)",
+  "rom_l1l2_expected": "ROM L1+L2 k=5 (EXPECTED projection)"
+ },
+ "collective_count": {
+  "draft": 23,
+  "stages": 18,
+  "chain_merges": 5,
+  "seed": 1,
+  "model_assumed": 26.33
+ },
+ "rows": [
+  {
+   "ctx": "1M",
+   "design": "ablation_w19",
+   "scenario": "nvls_measured",
+   "ar_tok_s": 1481.9,
+   "rom_over_hbm_ar": 1.664,
+   "seed_commit_us": 4.461,
+   "model_draft_us": 74.99,
+   "mtp_tok_s_model_draft": 3855.1,
+   "as_built": {
+    "draft_us": 69.93,
+    "step_us": 1007.91,
+    "mtp_tok_s": 3857.4,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.632,
+     "rom_l1": 1.742,
+     "rom_l1l2_expected": 1.904
+    }
+   },
+   "per_step_head": {
+    "draft_us": 82.01,
+    "step_us": 1019.99,
+    "mtp_tok_s": 3811.7,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.651,
+     "rom_l1": 1.762,
+     "rom_l1l2_expected": 1.927
+    }
+   }
+  },
+  {
+   "ctx": "1M",
+   "design": "accelerator_firm_switch",
+   "scenario": "tomahawk_ultra_protocol",
+   "ar_tok_s": 2624.4,
+   "rom_over_hbm_ar": 0.94,
+   "seed_commit_us": 3.464,
+   "model_draft_us": 47.23,
+   "mtp_tok_s_model_draft": 5937.8,
+   "as_built": {
+    "draft_us": 44.5,
+    "step_us": 655.5,
+    "mtp_tok_s": 5931.2,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.061,
+     "rom_l1": 1.133,
+     "rom_l1l2_expected": 1.239
+    }
+   },
+   "per_step_head": {
+    "draft_us": 56.46,
+    "step_us": 667.46,
+    "mtp_tok_s": 5824.9,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.081,
+     "rom_l1": 1.153,
+     "rom_l1l2_expected": 1.261
+    }
+   }
+  },
+  {
+   "ctx": "1M",
+   "design": "accelerator_measured_composition",
+   "scenario": "tomahawk_ultra_protocol",
+   "ar_tok_s": 2562.7,
+   "rom_over_hbm_ar": 0.962,
+   "seed_commit_us": 3.567,
+   "model_draft_us": 48.04,
+   "mtp_tok_s_model_draft": 5639.2,
+   "as_built": {
+    "draft_us": 45.28,
+    "step_us": 690.24,
+    "mtp_tok_s": 5632.7,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.118,
+     "rom_l1": 1.193,
+     "rom_l1l2_expected": 1.304
+    }
+   },
+   "per_step_head": {
+    "draft_us": 57.36,
+    "step_us": 702.33,
+    "mtp_tok_s": 5535.7,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.137,
+     "rom_l1": 1.214,
+     "rom_l1l2_expected": 1.327
+    }
+   }
+  },
+  {
+   "ctx": "1M",
+   "design": "gpu_faithful_r0",
+   "scenario": "gpu_fenced",
+   "ar_tok_s": 358.9,
+   "rom_over_hbm_ar": 6.872,
+   "seed_commit_us": 15.218,
+   "model_draft_us": 282.04,
+   "mtp_tok_s_model_draft": 1168.5,
+   "as_built": {
+    "draft_us": 253.45,
+    "step_us": 3314.0,
+    "mtp_tok_s": 1173.2,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 5.366,
+     "rom_l1": 5.726,
+     "rom_l1l2_expected": 6.261
+    }
+   },
+   "per_step_head": {
+    "draft_us": 270.69,
+    "step_us": 3331.25,
+    "mtp_tok_s": 1167.1,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 5.394,
+     "rom_l1": 5.756,
+     "rom_l1l2_expected": 6.294
+    }
+   }
+  },
+  {
+   "ctx": "200K",
+   "design": "ablation_w19",
+   "scenario": "nvls_measured",
+   "ar_tok_s": 1483.7,
+   "rom_over_hbm_ar": 1.735,
+   "seed_commit_us": 4.461,
+   "model_draft_us": 74.89,
+   "mtp_tok_s_model_draft": 3860.6,
+   "as_built": {
+    "draft_us": 69.93,
+    "step_us": 1006.58,
+    "mtp_tok_s": 3862.5,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.677,
+     "rom_l1": 1.793,
+     "rom_l1l2_expected": 1.966
+    }
+   },
+   "per_step_head": {
+    "draft_us": 82.01,
+    "step_us": 1018.66,
+    "mtp_tok_s": 3816.7,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.697,
+     "rom_l1": 1.814,
+     "rom_l1l2_expected": 1.99
+    }
+   }
+  },
+  {
+   "ctx": "200K",
+   "design": "accelerator_firm_switch",
+   "scenario": "tomahawk_ultra_protocol",
+   "ar_tok_s": 2629.9,
+   "rom_over_hbm_ar": 0.979,
+   "seed_commit_us": 3.464,
+   "model_draft_us": 47.13,
+   "mtp_tok_s_model_draft": 5950.0,
+   "as_built": {
+    "draft_us": 44.5,
+    "step_us": 654.26,
+    "mtp_tok_s": 5942.4,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.09,
+     "rom_l1": 1.165,
+     "rom_l1l2_expected": 1.278
+    }
+   },
+   "per_step_head": {
+    "draft_us": 56.46,
+    "step_us": 666.22,
+    "mtp_tok_s": 5835.8,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.11,
+     "rom_l1": 1.187,
+     "rom_l1l2_expected": 1.301
+    }
+   }
+  },
+  {
+   "ctx": "200K",
+   "design": "accelerator_measured_composition",
+   "scenario": "tomahawk_ultra_protocol",
+   "ar_tok_s": 2568.1,
+   "rom_over_hbm_ar": 1.002,
+   "seed_commit_us": 3.567,
+   "model_draft_us": 47.94,
+   "mtp_tok_s_model_draft": 5650.7,
+   "as_built": {
+    "draft_us": 45.28,
+    "step_us": 688.93,
+    "mtp_tok_s": 5643.4,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.148,
+     "rom_l1": 1.227,
+     "rom_l1l2_expected": 1.346
+    }
+   },
+   "per_step_head": {
+    "draft_us": 57.36,
+    "step_us": 701.02,
+    "mtp_tok_s": 5546.1,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 1.168,
+     "rom_l1": 1.249,
+     "rom_l1l2_expected": 1.369
+    }
+   }
+  },
+  {
+   "ctx": "200K",
+   "design": "gpu_faithful_r0",
+   "scenario": "gpu_fenced",
+   "ar_tok_s": 359.0,
+   "rom_over_hbm_ar": 7.169,
+   "seed_commit_us": 15.218,
+   "model_draft_us": 281.88,
+   "mtp_tok_s_model_draft": 1169.2,
+   "as_built": {
+    "draft_us": 253.45,
+    "step_us": 3311.99,
+    "mtp_tok_s": 1173.9,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 5.517,
+     "rom_l1": 5.899,
+     "rom_l1l2_expected": 6.469
+    }
+   },
+   "per_step_head": {
+    "draft_us": 270.69,
+    "step_us": 3329.24,
+    "mtp_tok_s": 1167.8,
+    "rom_over_hbm_mtp": {
+     "rom_as_built": 5.545,
+     "rom_l1": 5.93,
+     "rom_l1l2_expected": 6.503
+    }
+   }
+  }
+ ]
+}

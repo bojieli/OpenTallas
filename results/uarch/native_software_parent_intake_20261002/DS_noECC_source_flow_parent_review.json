@@ -1,0 +1,22 @@
+{
+  "all_r2_outputs_byte_identical_replay": true,
+  "arbitrary_128_or512_seat_constraint": false,
+  "focused_tests_passed": 18,
+  "fullphase_no_token_loss_proven": false,
+  "historical_area_input_source": "5fc7ff1a6 immutable padding-binding record only; ECC tools not runtime dependencies",
+  "manifest_hashes_verified": 20,
+  "new_global_ECC_request_seats": 0,
+  "new_local_owner_ACK_wire": false,
+  "physical_admitted": false,
+  "remaining": [
+    "actual absolutephase configuration/VM/activation delivery acceptance",
+    "root/writer completion identity and flow credits",
+    "coordinated complete physical element/selector placement and SSFF",
+    "complete golden differential connected execution"
+  ],
+  "runtime_dependency_hashes_verified": 9,
+  "schema": "opentallas.parent.noECC_source_flow_review.v1",
+  "scope": "Conditional source-controlled ready-feed at selected full per-element shapes, not full upstream phase acceptance",
+  "source_commit": "a1e56e775",
+  "source_flow": "mainCE n -> originalbankcapture n+2 -> originallaneconsume n+3"
+}

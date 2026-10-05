@@ -1,0 +1,265 @@
+{
+  "base": "d9e461c6395f5331e0c3f304ba26ee1743bf2c70",
+  "cases": [
+    {
+      "actual_exit": 0,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/real_RF24_scratch18_directed_snapshot.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/real_RF24_scratch18_directed_snapshot.receipt.json"
+      ],
+      "case": "real_RF24_scratch18_directed_snapshot",
+      "expected_exit": 0,
+      "status": "PASS_STATIC_INSTANCE_TRACK_CENTRES"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/RF_origin0.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/RF_origin0.receipt.json"
+      ],
+      "case": "RF_origin0",
+      "expected_exit": 1,
+      "status": "REFUSE_OFFTRACK_INSTANCE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/scratch_origin0.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/scratch_origin0.receipt.json"
+      ],
+      "case": "scratch_origin0",
+      "expected_exit": 1,
+      "status": "REFUSE_OFFTRACK_INSTANCE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_orientation.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_orientation.receipt.json"
+      ],
+      "case": "wrong_orientation",
+      "expected_exit": 1,
+      "status": "REFUSE_OFFTRACK_INSTANCE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/rotation.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/rotation.receipt.json"
+      ],
+      "case": "rotation",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_orientation.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_orientation.receipt.json"
+      ],
+      "case": "unknown_orientation",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_site.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_site.receipt.json"
+      ],
+      "case": "wrong_site",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_row.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/wrong_row.receipt.json"
+      ],
+      "case": "wrong_row",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/empty_tracks.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/empty_tracks.receipt.json"
+      ],
+      "case": "empty_tracks",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_tracks.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_tracks.receipt.json"
+      ],
+      "case": "unknown_tracks",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/multilayer_same_origin_conflict.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/multilayer_same_origin_conflict.receipt.json"
+      ],
+      "case": "multilayer_same_origin_conflict",
+      "expected_exit": 1,
+      "status": "REFUSE_OFFTRACK_INSTANCE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/polygon.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/polygon.receipt.json"
+      ],
+      "case": "polygon",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_LEF_layer.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/unknown_LEF_layer.receipt.json"
+      ],
+      "case": "unknown_LEF_layer",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    },
+    {
+      "actual_exit": 1,
+      "argv": [
+        "python3",
+        "tools/check_macro_instance_tracks_strict.py",
+        "--manifest",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/empty_PORT.manifest.json",
+        "--root",
+        ".",
+        "--json",
+        "results/uarch/macro_instance_track_preflight_20261003/r1/empty_PORT.receipt.json"
+      ],
+      "case": "empty_PORT",
+      "expected_exit": 1,
+      "status": "REFUSE_INPUT_COVERAGE"
+    }
+  ],
+  "directed_snapshots_are_not_live_job_placements": true,
+  "frozen_checker_commit": "9b7b120388ff0c8888f69bcf38211865c7cee8e7",
+  "historical_test_setup_failure": {
+    "cause": "4 original tests initially lacked ROM LEF in sparse checkout; materialized pinned input then all23PASS",
+    "source_defect": false,
+    "status": "FAILED_SPARSE_INPUT_MISSING"
+  },
+  "hooks_changed": false,
+  "independent_real_mirror_arithmetic": [
+    {
+      "all_on_M4": true,
+      "formula": "2*y_origin+2*height-ylo-yhi; congruent24 mod96",
+      "instance": "rf_mirror",
+      "signal_RECT_centres": 819
+    },
+    {
+      "all_on_M4": true,
+      "formula": "2*y_origin+2*height-ylo-yhi; congruent24 mod96",
+      "instance": "scratch_mirror",
+      "signal_RECT_centres": 829
+    }
+  ],
+  "multirect_scope": "Every signal/CLOCK RECT centre conjunctive across all PORTs/layers; no alternate-access inference.",
+  "row_scope": "Checks origin membership in finite supplied row/site grid; does not certify footprint occupancy, overlap, neighbor/blockage or row legality across macro footprint.",
+  "scope": "Restricted RECT LEF and static instance snapshot gate. Actual row/site origins/pitches and every instance must be supplied from the selected placement. No DEF/ODB extraction or placement-hook installation. Unsupported rotations fail closed. No DRC/via/PG/SSFF qualification.",
+  "source_pins": {
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+    "tools/check_macro_instance_tracks_strict.py": "d9bbfb3565cc81477eee94827c6b776001ffd517095bdd019801505c7952e743",
+    "tools/check_macro_track_alignment.py": "21f4957b432b14b142598ee334b9cdb9ef18f09efbbcaa0d2cbd629582ff8a84",
+    "tools/test_check_macro_instance_tracks_strict.py": "2bc88f8316298419ccc86411410d0197ecfe5bbad05e1d67c25b3b9a5d929afb",
+    "tools/test_check_macro_track_alignment.py": "90bfff88d90862e0355730d0fd52be1f660ab6f42871b6e6d3546622f8d5209d"
+  },
+  "status": "PASS_DIRECTED_STATIC_GATE_TESTS"
+}

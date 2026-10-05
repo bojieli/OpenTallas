@@ -1,0 +1,167 @@
+{
+  "acceptance": {
+    "capacitor_element_count": 68,
+    "device_count": 10,
+    "electrical_cases_failed_max": 0,
+    "electrical_cases_per_style": 33,
+    "extraction_feedback_errors_max": 0,
+    "extraction_stats": {
+      "common_subcells": {
+        "sg13_lv_nmos_3CGW2K": {
+          "nets_extracted": 1,
+          "nets_output": 1,
+          "nets_total": 4
+        },
+        "sg13_lv_pmos_GBCT8S": {
+          "nets_extracted": 1,
+          "nets_output": 1,
+          "nets_total": 5
+        }
+      },
+      "top_by_style": {
+        "high_r_high_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 41
+        },
+        "high_r_low_c": {
+          "nets_extracted": 15,
+          "nets_output": 15,
+          "nets_total": 41
+        },
+        "low_r_high_c": {
+          "nets_extracted": 14,
+          "nets_output": 14,
+          "nets_total": 41
+        },
+        "low_r_low_c": {
+          "nets_extracted": 14,
+          "nets_output": 14,
+          "nets_total": 41
+        },
+        "nominal": {
+          "nets_extracted": 14,
+          "nets_output": 14,
+          "nets_total": 41
+        }
+      }
+    },
+    "model_counts": {
+      "sg13_lv_nmos": 6,
+      "sg13_lv_pmos": 4
+    },
+    "nmos_body_paths": {
+      "body_terminal_index": 3,
+      "ground_node": "VGND",
+      "non_ground_body_count": 6
+    },
+    "programming_connectivity": {
+      "absent_forbidden_nodes": [
+        "BL_ABSENT",
+        "BL_PRESENT"
+      ],
+      "absent_required_node": "ROM_DRAIN_ABSENT",
+      "absent_row_gate": "WL_ABSENT",
+      "gate_terminal_index": 1,
+      "present_forbidden_nodes": [
+        "BL_ABSENT",
+        "ROM_DRAIN_ABSENT"
+      ],
+      "present_required_node": "BL_PRESENT",
+      "present_row_gate": "WL_PRESENT",
+      "programmed_terminal_index": 2
+    },
+    "resistor_element_count": 41,
+    "semantic_replay_required": true,
+    "unexpected_ngspice_warnings_max": 0
+  },
+  "claim_boundary": {
+    "establishes": [
+      "Magic full-RC extraction methodology for the exact archived two-column IHP SG13G2 demonstration layout under all five public interconnect styles",
+      "explicit resistor-network preservation of the programmed-drain and absent-via connectivity distinction, including extracted nonzero NMOS substrate/body paths",
+      "local full-RC electrical behavior over the same 33 deterministic device-PVT, supply, temperature, and output-load points used by the capacitance-only IHP campaign",
+      "semantic extraction replay despite any non-semantic SPICE statement ordering differences"
+    ],
+    "evidence_class": "independent_public_open_pdk_distributed_rc_extraction_and_simulation_of_local_demonstration_slice",
+    "forbidden_inferences": [
+      "compact ROM cell, row, column, decoder, sense-amplifier, repair, clock, or full-array resistance and capacitance",
+      "full-array simultaneous-current, IR-drop, noise, electromigration, aging, thermal, or power-delivery behavior",
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "whole-wafer timing, inference throughput, or GPU speedup",
+      "target-foundry late-via availability, sign-off extraction, manufacturing sign-off, or silicon correlation"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "ihp_sg13g2_via_rom_distributed_rc_v1",
+  "extraction": {
+    "integrated_extresist": true,
+    "mindelay_ps": 0.0,
+    "minres_milliohm": 0.0,
+    "random_seed": 12345,
+    "replay_each_style": true,
+    "semantic_comparison": "exact_multiset_of_ports_devices_resistors_and_capacitors",
+    "simplify": false,
+    "style_total_net_note": "All five styles emit the same 10-device, 41-resistor, 68-capacitor RC netlist element counts. The two high-R styles extract and output 15 of 41 top-cell networks; nominal and both low-R styles extract and output 14 of 41. Both primitive subcells extract and output one substrate/well network.",
+    "styles": [
+      {
+        "id": "nominal",
+        "magic_style": "ngspice()"
+      },
+      {
+        "id": "high_r_high_c",
+        "magic_style": "ngspice(hrhc)"
+      },
+      {
+        "id": "high_r_low_c",
+        "magic_style": "ngspice(hrlc)"
+      },
+      {
+        "id": "low_r_high_c",
+        "magic_style": "ngspice(lrhc)"
+      },
+      {
+        "id": "low_r_low_c",
+        "magic_style": "ngspice(lrlc)"
+      }
+    ],
+    "threshold_milliohm": 0.0
+  },
+  "inputs": {
+    "deterministic_pvt_contract": "spice/ihp_sg13g2/rom_slice/extracted_pvt_contract.json",
+    "deterministic_pvt_result": "results/spice/ihp_sg13g2_extracted_pvt.json",
+    "extractor_script": "spice/ihp_sg13g2/rom_slice/extract_resistance.tcl",
+    "nfet_layout": "results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_nmos_3CGW2K.mag",
+    "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+    "pfet_layout": "results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_pmos_GBCT8S.mag",
+    "physical_result": "results/spice/ihp_sg13g2_physical/physical.json",
+    "spice_init": "spice/ihp_sg13g2/device_smoke/.spiceinit",
+    "testbench_template": "spice/ihp_sg13g2/rom_slice/extracted_testbench.spice.in",
+    "top_layout": "results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.mag"
+  },
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_resistance/artifacts",
+    "json": "results/spice/ihp_sg13g2_resistance/resistance.json",
+    "markdown": "results/spice/ihp_sg13g2_resistance/REPORT.md"
+  },
+  "schema_version": 1,
+  "simulation": {
+    "case_timeout_seconds": 300,
+    "default_workers": 4,
+    "pvt_case_source": "deterministic_pvt_contract",
+    "threshold_source": "deterministic_pvt_contract"
+  },
+  "top_cell": "ihp_sg13g2_rom_slice",
+  "top_ports": [
+    "VGND",
+    "VPWR",
+    "WL_PRESENT",
+    "EN_PRESENT",
+    "PRE_PRESENT",
+    "Q_PRESENT",
+    "WL_ABSENT",
+    "EN_ABSENT",
+    "PRE_ABSENT",
+    "Q_ABSENT"
+  ]
+}

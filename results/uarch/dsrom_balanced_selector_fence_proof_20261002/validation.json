@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python3",
+    "tests/test_prove_dsrom_balanced_selector_fence.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "explicit_mutants": 3,
+  "fullshape_source_cases": 37,
+  "log_sha256": "f4da1be413a2f638b7d4ba4bafbb9d06b93a700c9f7062a8cf2ab58ab942e089",
+  "scope": "Source arithmetic and caller event algebra only; not HDL equivalence/physical closure",
+  "tests": 10
+}

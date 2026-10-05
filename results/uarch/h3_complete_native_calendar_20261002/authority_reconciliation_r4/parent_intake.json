@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.parent.hbm_authority_intake.v1",
+  "owner_commit": "63f75956ebb83c2effda8dfa0efcfca44e25b9f9",
+  "parent_base": "42437d39a",
+  "verdict": "PASS_EXACT_HISTORICAL_ANALYTICAL_RECONCILIATION_ONLY",
+  "checks": {
+    "standalone_authority_tests": 6,
+    "cold_replay_scratch_and_main": "Historical, selected-unfused and selected-fused records byte-exact",
+    "archive_input_manifest_entries": 27,
+    "record_source_and_input_pins": "All eight wide-select records resolved to retained input bytes",
+    "check_figures_main": "PASS"
+  },
+  "production_owner_join_r3_intaken": false,
+  "production_owner_join_r3_review": "Assigned independently to Goodall; not a prerequisite for standalone archived cost replay.",
+  "same_W19_program_ops": 2213,
+  "difference_microseconds": {
+    "collective": -43.27,
+    "unfused_local_recipe": 6.5,
+    "lane_fusion": -16.32,
+    "fetch": 0.0
+  },
+  "once_paid_fetch_microseconds": 5.33,
+  "new_hardware_qualified": false,
+  "qualified_headline": null,
+  "remaining": [
+    "Finite installed owner/ACK/visibility/consumer/reverse/CDC/backend service",
+    "Literal physical endpoint bandwidth versus assumed 749.7-byte product slots",
+    "Context SS/FF clock and complete native-token physical calibration",
+    "Workload-matched agentic MTP acceptance and draft/verify cost"
+  ]
+}

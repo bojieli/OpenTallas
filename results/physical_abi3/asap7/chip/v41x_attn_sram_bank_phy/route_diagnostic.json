@@ -1,0 +1,66 @@
+{
+  "completed_stages": [
+    "synthesis",
+    "macro_placement",
+    "pin_placement",
+    "global_placement",
+    "clock_tree",
+    "global_route"
+  ],
+  "detail_route": {
+    "error_code": "DRT-0255",
+    "example_macro_pin": "u_mem/w_mask_in[1]",
+    "example_net": "wr_data_q[141]",
+    "log_sha256": "9b1833d4f11f044fa0f0e7e1322bdcd9cadab4c150fbea2824a58eafc0359141",
+    "maze_route_failures": 5,
+    "power_claim": false,
+    "routed_drc_claim": false,
+    "routed_timing_claim": false
+  },
+  "floorplan_um": {
+    "core": [
+      2,
+      2,
+      248,
+      138
+    ],
+    "die": [
+      0,
+      0,
+      250,
+      140
+    ],
+    "macro_origin": [
+      44,
+      44
+    ]
+  },
+  "flow_completed": false,
+  "global_route_estimates_only": {
+    "hold_violation_count": 0,
+    "hold_worst_slack_ps": 14.9788,
+    "setup_violation_count": 0,
+    "setup_worst_slack_ps": 339.82,
+    "wirelength_um": 32296
+  },
+  "interpretation": "The one-sided SRAM LEF pin access is not routable in this floorplan at the chosen constraints. Global-route slacks cannot establish closure.",
+  "primary_record": {
+    "error_class": "TimeoutExpired after 1200 seconds",
+    "path": "results/physical_abi3/asap7/chip/v41x_attn_sram_bank_phy/physical.json",
+    "sha256": "908bfb4f85529c68823882fc864e819f972e3cdc55c23f1b75716de786cb14fc",
+    "status": "error"
+  },
+  "schema": "v41x_attn_sram_bank_physical_diagnostic/1",
+  "scope": "one literal 256x256 1R1W ASAP7 SRAM bank with registered I/O; no full attention engine or die claim",
+  "sources": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+    "physical/v41x_attn_bank_post_macro_place.tcl": "33d6c68027d9e92bcc3328d0e3a3795357947087bf8b7cb1f6105e8bee610b3b",
+    "rtl/chip/ot_chip_v41x_attn_sram_bank_phy.sv": "30f759b0348da050fed3d3a381514a5e7b9c22458168b27f300316dee8698aca"
+  },
+  "status": "detail_route_failed",
+  "synthesis": {
+    "macro_area_um2": 7091.71,
+    "stdcell_area_um2": 177.482
+  },
+  "target_period_ns": 0.92
+}

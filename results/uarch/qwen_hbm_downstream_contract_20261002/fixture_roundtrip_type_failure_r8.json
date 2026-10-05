@@ -1,0 +1,6 @@
+{
+  "status": "FAIL_INITIAL_JSON_TYPE_COMPARISON",
+  "reason": "Direct Python dict comparison used integer stack-count keys against JSON string keys. No metadata or provider event changed.",
+  "correction": "Compare exact canonical JSON serialization; do not change fixture address rows.",
+  "RTL_execution": false
+}

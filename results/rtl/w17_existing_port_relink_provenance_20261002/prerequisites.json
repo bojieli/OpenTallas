@@ -1,0 +1,20 @@
+{
+  "required_for_parent_parallel12tests": [
+    {
+      "commit": "4356ccf1e87740d07db18fb7973f3fc5ab9f2420",
+      "parent_intake": "ac60756f5",
+      "path": "results/rtl/w17_connected_observation_fulltoken_preparation_20261002/retained_build_metadata.json",
+      "sha256": "3bdff945febf25fc6ada2793951d7fefb506862e9c6620717e65ca7795cfd3eb"
+    },
+    {
+      "commit": "dab6ea8a53b4da4b18c94e4234794e2da0009f4c",
+      "parent_intake": "65c6a4bcd",
+      "path": "results/rtl/w17_owned_progress_native_build_handoff_20261002/native_commands.json",
+      "sha256": "d247b1ef142986a8c9c99b0f3267fa76f76c00df3596d2ab5ed5c07bca1f4757"
+    }
+  ],
+  "native_owned_progress_helper": "2682b69ed84fbc2a0a2687c0a7357654c19bae36",
+  "parallel_price": "7ad66d8e356386c6bde59747ea5ff3b1234c256f",
+  "existing_port_copy": "a7f1d74178c92cfe16ae28e26691432dd288992f",
+  "capacity_only_c9f_commit_not_test_dependency": true
+}

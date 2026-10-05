@@ -1,0 +1,105 @@
+{
+  "actual_metadata_replay": "replay_r2.log",
+  "alias_guard_weakened": false,
+  "artifacts": [
+    {
+      "bytes": 3398,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/HANDOFF.md",
+      "sha256": "9f9ff300cc1b959279a67d7803acc055c98626163258363805b6c5596e0d39ae"
+    },
+    {
+      "bytes": 79,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/build_r2.log",
+      "sha256": "0b6156ae3b67da7673bf58deea59bda4ca8c8ee2d256ee3bd823a18431d38acf"
+    },
+    {
+      "bytes": 22984,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/diagnosis.json",
+      "sha256": "a251a66fdd6967053bbe1d0b1e7c8dcc084b0cc54c8cad73881b069ffbe9a4a6"
+    },
+    {
+      "bytes": 39048,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/diagnosis_r2.json",
+      "sha256": "fa70e6a3c15dc9eaa0547caf7833177d6c3521d63646ef73266426600e0581d3"
+    },
+    {
+      "bytes": 1177,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/handoff.json",
+      "sha256": "e1ecd0af221aea1ed5f76fe72e626054347c32b5354fe3686a5a62941ecdf7e9"
+    },
+    {
+      "bytes": 2232,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/input_manifest.json",
+      "sha256": "3679f36acf778538165ddccdd6eddfb05a17c3759e0f1c1ffa9d0bc9c58c8376"
+    },
+    {
+      "bytes": 4011420,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/bound_homes.json.gz",
+      "sha256": "0aeda6f6eca216f73608eef2e1afd41c3e14ce6ee308e57dd970420ae1bc8b9a"
+    },
+    {
+      "bytes": 14881760,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/bound_native.json.gz",
+      "sha256": "1bca266785a062b9396f6704116982b5944a1f915b8acdad945000b3d7ba612d"
+    },
+    {
+      "bytes": 10588,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/driver.py",
+      "sha256": "2ef4c0ea75bfe1781b58de80346bb6518e9e8bf807e095135e817d189e63bd8e"
+    },
+    {
+      "bytes": 8779,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/failure_receipt.json",
+      "sha256": "7606fbc96545c9907d201b0505aa5a96ef9b770d6a7c5df5015ed64b5ed65dda"
+    },
+    {
+      "bytes": 6678,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/numeric_calls.json.gz",
+      "sha256": "2a92c895ff9673f8a17407fe29cc7f2904cb7f752f40ef560c97b96d74b9b4e9"
+    },
+    {
+      "bytes": 52395,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/observed_outputs.json.gz",
+      "sha256": "45942d5177aa02b96571f9b2c0a745ab65702e665a0007d38d2ba6b305de63aa"
+    },
+    {
+      "bytes": 11578,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/prefix.py",
+      "sha256": "df7be9f0ad6f84d57e04c5a9cec0d71e95e38d7255c38c709cc826ee03e63159"
+    },
+    {
+      "bytes": 27845,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/inputs/provider.py",
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    {
+      "bytes": 79,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/replay_r2.log",
+      "sha256": "0b6156ae3b67da7673bf58deea59bda4ca8c8ee2d256ee3bd823a18431d38acf"
+    },
+    {
+      "bytes": 104,
+      "path": "results/uarch/h4_hbm_r43_rf_lifetime_diagnosis_20261002/tests.log",
+      "sha256": "c6b9b1f09add0403cc07e90bfdf272129b1ddfa2f8f7675ea8218862f2516371"
+    }
+  ],
+  "authoritative": "diagnosis_r2.json",
+  "hardware_admitted": false,
+  "numeric_rerun": false,
+  "runtime_modified": false,
+  "schema": "HBM_R43_RF_LIFETIME_DIAGNOSIS_VALIDATION_V1",
+  "source_pins": [
+    {
+      "bytes": 8180,
+      "path": "tools/h4_hbm_r43_rf_lifetime_diagnosis.py",
+      "sha256": "471f2923a750dff549c2724c24a97fc0d9a9919e6cf1ee334c321386311f92ef"
+    },
+    {
+      "bytes": 2090,
+      "path": "tests/test_h4_hbm_r43_rf_lifetime_diagnosis.py",
+      "sha256": "bf6a725e729185923d745a9222c7274121a44177bee2aa25458be48433b4d48b"
+    }
+  ],
+  "test_log": "tests.log",
+  "tests": 6
+}

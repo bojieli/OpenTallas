@@ -1,0 +1,299 @@
+{
+  "PVE2_or_PVE3_used": false,
+  "atomic_ABI": {
+    "accept_fields": [
+      "ticket=(generation,PC,sequence,rank,SM)",
+      "kind=shared64|L2_128",
+      "logical_base",
+      "extent",
+      "byte_address",
+      "physical_base",
+      "lease",
+      "producer_ref",
+      "RF_drained",
+      "shared_drained",
+      "producer_bank",
+      "producer_stack",
+      "write",
+      "opaque_payload"
+    ],
+    "legacy_writer_requirement": "Every GU/KV writer must participate in bank-range fence before endpoint admission.",
+    "retirement": [
+      "all backend word receipts",
+      "visible ACK with lease",
+      "consumer acceptance",
+      "reverse grant",
+      "release physical range and tag"
+    ],
+    "unsupported_reject": [
+      "cross-slice producer route",
+      "absent physical home",
+      "numerical opcode",
+      "stale/foreign owner",
+      "partial write visibility",
+      "unbounded address alias"
+    ]
+  },
+  "build_constraints": [
+    "Use selected32SM enlargement and source SM identity adapter; do not return to deficient original slot.",
+    "Bind actual original FF/cone placement and exhaustive parent routing before admitting implementation.",
+    "Bind one atomic gateway to actual RF/shared idle/ACK drains and generic L2 four-word adapter.",
+    "Do not expand36client tag namespace or add C0 seats beyond existing512 per slice.",
+    "Serialize fetch/value on retained512data+512metadata C0 trunks; charge extra leaf/transport/ACK edges.",
+    "Bind actual PG, crossing vias and clock networks against reserved tracks;50percent PG reservation is a constructive screen.",
+    "Dewey must reconcile actual event intervals; B1 and queue511 are bounded example parameters, not measurements; do not double charge existing I64/RMW/C0.",
+    "Clock1.2GHz requires context SS setup60ps and FF hold25ps qualification."
+  ],
+  "entrypoint": "tools/h4_hbm_service_context_g0.py",
+  "entrypoint_sha256": "09969fe726fafe0fbe4b79365a63d5d9cf467763faaebb1b6d68eb40239669da",
+  "expanded_context_commit": "4885f71d419c8a14443377b399c148459e05584a",
+  "hardware_admitted": false,
+  "independent_of_native_build": true,
+  "model": "final/model.json",
+  "models": {
+    "DeepSeek": {
+      "L2_controller_footprint_um2_per_slice": 24263.6216,
+      "L2_cut_demand_tracks": 2368,
+      "L2_cut_margin_tracks": 4832,
+      "L2_cut_signal_capacity_tracks": 7200,
+      "L2_new_endpoint_cuts": 4,
+      "SM_tile_um": [
+        1800.0,
+        3816.0
+      ],
+      "SMs_per_die": 32,
+      "admission": "FAIL_PHYSICAL_SOURCE_BINDING",
+      "area_screen_pass": true,
+      "calendar_profiles": {
+        "L2_128_read": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 17408,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "L2_128",
+          "leaf_no_stall_ticks": 12,
+          "leaf_transactions": 4,
+          "no_stall_ticks": 30,
+          "payload64B_beats": 2,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": false
+        },
+        "L2_128_write": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 15360,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "L2_128",
+          "leaf_no_stall_ticks": 8,
+          "leaf_transactions": 4,
+          "no_stall_ticks": 26,
+          "payload64B_beats": 2,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": true
+        },
+        "shared64_read": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 10752,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "shared64",
+          "leaf_no_stall_ticks": 3,
+          "leaf_transactions": 1,
+          "no_stall_ticks": 20,
+          "payload64B_beats": 1,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": false
+        },
+        "shared64_write": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 10240,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "shared64",
+          "leaf_no_stall_ticks": 2,
+          "leaf_transactions": 1,
+          "no_stall_ticks": 19,
+          "payload64B_beats": 1,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": true
+        }
+      },
+      "complete_die_um": [
+        31800.0,
+        25628.930817610064
+      ],
+      "connector_footprint_um2_per_SM": 5033.0112,
+      "constructive_cut_screen_pass": true,
+      "corridor_cuts": 14,
+      "die_mm2": 815,
+      "exact_remaining_dependencies": [
+        "actual mapped parent FF/cone placement and exhaustive routes remain unbound",
+        "new atomic connector/shared-L2 gateway has no connected source endpoint",
+        "all GU/KV cache writers must join the producer-range fence; generic L2 line read/write adapter absent; Qwen GU scalar producer is not generic L2 hardware coverage",
+        "new PG/via/crossing geometry and context SS/FF remain unqualified",
+        "Dewey actual event/provider interval reconciliation before total-token latency"
+      ],
+      "expanded_SM_array_mm2": 219.8016,
+      "global_cuts": 6688,
+      "ranks": 96,
+      "reserved_occupancy_mm2": 471.8800554201599,
+      "selected_H1_C0_V1_service_mm2_per_die": 123.4944
+    },
+    "Qwen": {
+      "L2_controller_footprint_um2_per_slice": 24263.6216,
+      "L2_cut_demand_tracks": 2368,
+      "L2_cut_margin_tracks": 4832,
+      "L2_cut_signal_capacity_tracks": 7200,
+      "L2_new_endpoint_cuts": 4,
+      "SM_tile_um": [
+        2200.0,
+        4676.0
+      ],
+      "SMs_per_die": 32,
+      "admission": "FAIL_PHYSICAL_SOURCE_BINDING",
+      "area_screen_pass": true,
+      "calendar_profiles": {
+        "L2_128_read": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 17408,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "L2_128",
+          "leaf_no_stall_ticks": 12,
+          "leaf_transactions": 4,
+          "no_stall_ticks": 30,
+          "payload64B_beats": 2,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": false
+        },
+        "L2_128_write": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 15360,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "L2_128",
+          "leaf_no_stall_ticks": 8,
+          "leaf_transactions": 4,
+          "no_stall_ticks": 26,
+          "payload64B_beats": 2,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": true
+        },
+        "shared64_read": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 10752,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "shared64",
+          "leaf_no_stall_ticks": 3,
+          "leaf_transactions": 1,
+          "no_stall_ticks": 20,
+          "payload64B_beats": 1,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": false
+        },
+        "shared64_write": {
+          "C0_front_recharged": false,
+          "RF_I64_RMW_recharged": false,
+          "bounded_ticks": 10240,
+          "clock_qualified": false,
+          "cost_scope": "standalone service demand; reconcile existing Dewey provider interval before insertion, not automatic delta",
+          "kind": "shared64",
+          "leaf_no_stall_ticks": 2,
+          "leaf_transactions": 1,
+          "no_stall_ticks": 19,
+          "payload64B_beats": 1,
+          "request_hops": 5,
+          "response_hops": 5,
+          "write": true
+        }
+      },
+      "complete_die_um": [
+        31800.0,
+        25628.930817610064
+      ],
+      "connector_footprint_um2_per_SM": 5033.0112,
+      "constructive_cut_screen_pass": true,
+      "corridor_cuts": 10,
+      "die_mm2": 815,
+      "exact_remaining_dependencies": [
+        "actual mapped parent FF/cone placement and exhaustive routes remain unbound",
+        "new atomic connector/shared-L2 gateway has no connected source endpoint",
+        "all GU/KV cache writers must join the producer-range fence; generic L2 line read/write adapter absent; Qwen GU scalar producer is not generic L2 hardware coverage",
+        "new PG/via/crossing geometry and context SS/FF remain unqualified",
+        "Dewey actual event/provider interval reconciliation before total-token latency"
+      ],
+      "expanded_SM_array_mm2": 329.1904,
+      "global_cuts": 6688,
+      "ranks": 2,
+      "reserved_occupancy_mm2": 457.48399132671994,
+      "selected_H1_C0_V1_service_mm2_per_die": 123.4944
+    }
+  },
+  "owners": [
+    "parent integration",
+    "Dewey calendar",
+    "Sagan physical ownership",
+    "Goodall provider"
+  ],
+  "port_contract": {
+    "L2": {
+      "C0_max_per_slice": 8,
+      "all_word_visibility_before_consumer": true,
+      "client_credits": 512,
+      "clients": 36,
+      "line_bytes": 128,
+      "read_leaf_edges": 12,
+      "shared_C0_KV_clients": 4,
+      "tag_bits": 16,
+      "word_bytes": 32,
+      "words_per_line": 4,
+      "write_leaf_edges": 8
+    },
+    "RF": {
+      "ACK_requires_all_32_bank_mirror_receipts": true,
+      "lanes": 128,
+      "physical_read_vectors": 2,
+      "physical_write_vectors": 1,
+      "read_II_cycles": 3,
+      "read_payload_bytes": 1024,
+      "read_port_payload_bound_bytes_per_cycle": 341.3333333333333,
+      "third_operand_read_edges": 6,
+      "vectors": 512,
+      "word_bits": 32,
+      "write_mirrored_II_cycles": 2,
+      "write_payload_bytes": 512,
+      "write_port_payload_bound_bytes_per_cycle": 256
+    },
+    "shared": {
+      "beat_bytes": 64,
+      "commands_outstanding_per_SM": 1,
+      "read_II_cycles": 3,
+      "write_II_cycles": 2
+    },
+    "weight_bulk_copy": {
+      "connector_must_never_mask_owned_response": true,
+      "maximum_outstanding_per_SM": 512,
+      "response_has_ready": false,
+      "staging_ring_bytes_per_SM": 131072
+    }
+  },
+  "schema": "opentallas.HBM.selected-enlargement.handoff.v1",
+  "source_SM_adapter_required": true,
+  "tests": "tests/test_h4_hbm_service_context_g0.py",
+  "tests_passed": 49
+}

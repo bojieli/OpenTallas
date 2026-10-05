@@ -1,0 +1,37 @@
+{
+  "11stage_SS_capacity_um": "5544.0",
+  "11stage_capacity_deficit_um": "2615.616",
+  "16stage_capacity_deficit_um": "95.616",
+  "17stage_capacity_margin_um": "408.384",
+  "actual_CROM_bus_routing_reach_verified": false,
+  "actual_CROM_layer_capacity_and_SS_FF": null,
+  "candidate_streaming_clock_GHz": 1.2,
+  "chosen_measured_reach_stage_floor_each_direction": 17,
+  "hardware_admission": false,
+  "historical_formula_reach_um": "768.2017543859649122807017543",
+  "historical_stage_count_each_direction": 11,
+  "local_manhattan_envelope_um": "8159.616",
+  "required_repricing": [
+    "both-direction payload/control pipeline FF and gates",
+    "credit return and cold fill calendar",
+    "all bank-count alternatives and catalog deadlines",
+    "typed clock/data power and occupied physical slots",
+    "actual routed1152bit bus, CTS and SS/FF context"
+  ],
+  "same_source_measured_SS_reach_um": "504.0",
+  "schema": "parent_CROM_local_SS_route_basis_failure",
+  "scope": "17 is the minimum analytical stage count under the existing measured504um model basis; it does not establish reach for this1152bit bus or actual placement. No clock or uncertainty change.",
+  "source_pins": {
+    "local_home": {
+      "commit": "47b715428",
+      "path": "results/quality/w16_w17_crom_finite_prefetch_20261001/local_home.json",
+      "sha256": "f75149f47f51e081d003dd815cd1d610463b2bc6579d529cc17233fd4d8eda1e"
+    },
+    "uarch": {
+      "commit": "541a1d2f",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    }
+  },
+  "verdict": "REJECT_11_FAST_STAGE_QUALIFICATION_BASIS"
+}

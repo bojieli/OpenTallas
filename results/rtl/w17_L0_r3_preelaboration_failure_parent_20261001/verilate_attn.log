@@ -1,0 +1,26 @@
+%Error: Invalid option: -j8
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+Command exited with non-zero status 1
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --build -j8 --top-module ot_hdc_v41x_attn --prefix Vattn --Mdir /home/ubuntu/w17-current-L0-fastpp-20261001-r3/build/attn -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD -Wno-lint -Wno-style --output-split 20000 --output-split-cfuncs 2000 --unroll-count 1 --unroll-limit 131072 -CFLAGS -O0 -MAKEFLAGS OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0 --hierarchical /home/ubuntu/w17-current-fastpp-l0-measured-r3/results/rtl/v41_attention_elaboration_archive/tools/v41_attention_hierarchy.vlt -GH=16 -GD=512 -GTD=32 -GNL=4 -GTROWS=640 -GPWORDS=1 /home/ubuntu/w17-current-fastpp-l0-measured-r3/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv /home/ubuntu/w17-current-fastpp-l0-measured-r3/rtl/hdc/v41x/ot_hdc_v41x_attn.sv /home/ubuntu/w17-current-fastpp-l0-measured-r3/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv /home/ubuntu/w17-current-fastpp-l0-measured-r3/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v /home/ubuntu/w17-current-fastpp-l0-measured-r3/rtl/hdc/ot_hdc_fastfp.sv"
+	User time (seconds): 0.03
+	System time (seconds): 0.00
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 13312
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5789
+	Voluntary context switches: 9
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

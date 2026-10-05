@@ -1,0 +1,57 @@
+{
+   "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+   "invocation": "stat -width -json ",
+   "modules": {
+      "\\ot_numeric_dot": {
+         "num_wires":         228,
+         "num_wire_bits":     5679,
+         "num_pub_wires":     21,
+         "num_pub_wire_bits": 647,
+         "num_ports":         11,
+         "num_port_bits":     430,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         215,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$add_32": 64,
+            "$dff_1": 2,
+            "$dff_32": 1,
+            "$dff_4": 1,
+            "$gt_32": 1,
+            "$lt_32": 1,
+            "$mul_12": 64,
+            "$mux_1": 7,
+            "$mux_32": 71,
+            "$mux_4": 3
+         }
+      }
+   },
+      "design": {
+         "num_wires":         228,
+         "num_wire_bits":     5679,
+         "num_pub_wires":     21,
+         "num_pub_wire_bits": 647,
+         "num_ports":         11,
+         "num_port_bits":     430,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         215,
+         "num_submodules":       0,
+         "num_cells_by_type": {
+            "$add_32": 64,
+            "$dff_1": 2,
+            "$dff_32": 1,
+            "$dff_4": 1,
+            "$gt_32": 1,
+            "$lt_32": 1,
+            "$mul_12": 64,
+            "$mux_1": 7,
+            "$mux_32": 71,
+            "$mux_4": 3
+         }
+      }
+}
+

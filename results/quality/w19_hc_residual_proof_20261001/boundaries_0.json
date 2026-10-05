@@ -1,0 +1,453 @@
+[
+  {
+    "ordinal": 0,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "825b85222891739ea4f6b0e5b83f2e63810170a32c57f8780b0c99dfbf34741f",
+    "golden_sha256": "825b85222891739ea4f6b0e5b83f2e63810170a32c57f8780b0c99dfbf34741f",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 1,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "4358ff6f724904e1d561c7ad416cc7d868763f08f0ad50c11b9927301b93e4a8",
+    "golden_sha256": "4358ff6f724904e1d561c7ad416cc7d868763f08f0ad50c11b9927301b93e4a8",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 2,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "30264b1ca879921da903ec5eccd4136d999ec67445b8c1f656113f1b8cab57fe",
+    "golden_sha256": "30264b1ca879921da903ec5eccd4136d999ec67445b8c1f656113f1b8cab57fe",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 3,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "9a129ac5769f414d53b8c469b3b3dd475beb69c80af9cdefa068d6d427e581ec",
+    "golden_sha256": "9a129ac5769f414d53b8c469b3b3dd475beb69c80af9cdefa068d6d427e581ec",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 4,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "42b1ad80626f8a07243033871f0cde5af0244a5a5ef24d6f81c9e7ccf8056906",
+    "golden_sha256": "42b1ad80626f8a07243033871f0cde5af0244a5a5ef24d6f81c9e7ccf8056906",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 5,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "69e72b3e3ae104f3de9a17302a5ad7b74c95e3eae361f527460f8750d9af7db0",
+    "golden_sha256": "69e72b3e3ae104f3de9a17302a5ad7b74c95e3eae361f527460f8750d9af7db0",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 6,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "1aab1cadf65a6bf8fd07a6d32f1c9e14046baab14d520915728402725399ad6b",
+    "golden_sha256": "1aab1cadf65a6bf8fd07a6d32f1c9e14046baab14d520915728402725399ad6b",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 7,
+    "instruction": "bf16",
+    "shape": [
+      5120
+    ],
+    "sha256": "6edae8d822bc318da7458f680f30fd24003da389027f4d9f77cb5e4bc2add8c5",
+    "golden_sha256": "6edae8d822bc318da7458f680f30fd24003da389027f4d9f77cb5e4bc2add8c5",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 8,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "d0607012a9fe9464f05b89fb110ac19c2dc1f31b163e24d343c0d552d239e647",
+    "golden_sha256": "d0607012a9fe9464f05b89fb110ac19c2dc1f31b163e24d343c0d552d239e647",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 9,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "a64fba025252cd0b953dc28fa4d0a5e22f8404d613db5c20ebc2979d29b014d8",
+    "golden_sha256": "a64fba025252cd0b953dc28fa4d0a5e22f8404d613db5c20ebc2979d29b014d8",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 10,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "5826d0cc5a463ff8489bde96f00a7a971f645c2de8025ed8a33c609c63a321a5",
+    "golden_sha256": "5826d0cc5a463ff8489bde96f00a7a971f645c2de8025ed8a33c609c63a321a5",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 11,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "261e1a8c3e4bb08cb9e5ab7fed57a66bdf9c511877601445249acf8d92d2404c",
+    "golden_sha256": "261e1a8c3e4bb08cb9e5ab7fed57a66bdf9c511877601445249acf8d92d2404c",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 12,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "ff2374543c72e97530d39f2b825846d727fd32a4321ffe47e2624e571ad74f91",
+    "golden_sha256": "ff2374543c72e97530d39f2b825846d727fd32a4321ffe47e2624e571ad74f91",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 13,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "b8d97dac9fe21283ea05ce058e8008e3e49cfb4db067f9f9d14a6d177fe92233",
+    "golden_sha256": "b8d97dac9fe21283ea05ce058e8008e3e49cfb4db067f9f9d14a6d177fe92233",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 14,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "c3ed796b90d33d4934af7b6e9ee4d7d8fa76ae380eb67b54eea4e77a99f800b1",
+    "golden_sha256": "c3ed796b90d33d4934af7b6e9ee4d7d8fa76ae380eb67b54eea4e77a99f800b1",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 15,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "433fa968bf2ab318791ad83da8b7a7d2d52227fce7c76587f8788fc9e7f1d076",
+    "golden_sha256": "433fa968bf2ab318791ad83da8b7a7d2d52227fce7c76587f8788fc9e7f1d076",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 16,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "034cf3c0b3931c7515ab07d4ef8b92b1bff00ec07788e420880b9ab6ae37f6a9",
+    "golden_sha256": "034cf3c0b3931c7515ab07d4ef8b92b1bff00ec07788e420880b9ab6ae37f6a9",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 17,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "1902a3dda597358363a6c92f94d240de3cc5a44b94631d24aa2a6aac30c87173",
+    "golden_sha256": "1902a3dda597358363a6c92f94d240de3cc5a44b94631d24aa2a6aac30c87173",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 18,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "1283eae7fde639e7d9daaca0cf5489f11bfa7af69b56cc1052efec4e5c99ca65",
+    "golden_sha256": "1283eae7fde639e7d9daaca0cf5489f11bfa7af69b56cc1052efec4e5c99ca65",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 19,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "5af0bc055f8b3d4f6625855c492a10e2a9e464927280caf3ef0b72b73bbd4d3c",
+    "golden_sha256": "5af0bc055f8b3d4f6625855c492a10e2a9e464927280caf3ef0b72b73bbd4d3c",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 20,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "cd9c3a6715f6a573af06373b001b7153d35ae09036daf70f425e02d49d891f90",
+    "golden_sha256": "cd9c3a6715f6a573af06373b001b7153d35ae09036daf70f425e02d49d891f90",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 21,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "8f33ecda18919da253962f35033e0c8b3b9f177b5180142f51015d42b6bd2681",
+    "golden_sha256": "8f33ecda18919da253962f35033e0c8b3b9f177b5180142f51015d42b6bd2681",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 22,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "084916b5cb7f4fdd527ea7c94159a10cea8d31a9a3e8d876900218016ad10360",
+    "golden_sha256": "084916b5cb7f4fdd527ea7c94159a10cea8d31a9a3e8d876900218016ad10360",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 23,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "6ff68aa4db0be009501b543efba9f1c1118084b02d6623937d7ff7b016969a8d",
+    "golden_sha256": "6ff68aa4db0be009501b543efba9f1c1118084b02d6623937d7ff7b016969a8d",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 24,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "58024c2a8e485fab234059e0a7bb3138c27a89774529c9f00a647c8bb453721d",
+    "golden_sha256": "58024c2a8e485fab234059e0a7bb3138c27a89774529c9f00a647c8bb453721d",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 25,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "d8de63d85ef16dd57eab66ec5e6920f80ba59d7c7187f356691c6cb24038b737",
+    "golden_sha256": "d8de63d85ef16dd57eab66ec5e6920f80ba59d7c7187f356691c6cb24038b737",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 26,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "4e9d8f471d0fb76db0fcb559ba4ccddc351ecbd12dc2248c53c0ac1333635211",
+    "golden_sha256": "4e9d8f471d0fb76db0fcb559ba4ccddc351ecbd12dc2248c53c0ac1333635211",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 27,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "8fc3d22ebf3e30fb86bd4c1b9404fe34efa79449178d8e2093b557b7fea8db59",
+    "golden_sha256": "8fc3d22ebf3e30fb86bd4c1b9404fe34efa79449178d8e2093b557b7fea8db59",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 28,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "4325f50b129a7d0b5f3de9e3f910b682e42bc3e14c1da26723dfcb4a3623fab3",
+    "golden_sha256": "4325f50b129a7d0b5f3de9e3f910b682e42bc3e14c1da26723dfcb4a3623fab3",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 29,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "efd5c6ddb3f706cc8201ff307c46c6f072184e0d6bb8eb7c82be104e3da154e1",
+    "golden_sha256": "efd5c6ddb3f706cc8201ff307c46c6f072184e0d6bb8eb7c82be104e3da154e1",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 30,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "00e0bf134db155d51ce8be7a7b5d1f021fd29c59c9931271476e6157de689ab1",
+    "golden_sha256": "00e0bf134db155d51ce8be7a7b5d1f021fd29c59c9931271476e6157de689ab1",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 31,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "092e5674abd78f053da69857c83f2947f6cdc5d30ba5e8f0fdc9c58753ed995c",
+    "golden_sha256": "092e5674abd78f053da69857c83f2947f6cdc5d30ba5e8f0fdc9c58753ed995c",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 32,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "7bc79320a36076a017efea0267be98ab621650347f7680a647142e940f52401b",
+    "golden_sha256": "7bc79320a36076a017efea0267be98ab621650347f7680a647142e940f52401b",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 33,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "b702de9ceb3a7936058040f3d93f989a31cc19e7cb17a5161dfe17a87cc91797",
+    "golden_sha256": "b702de9ceb3a7936058040f3d93f989a31cc19e7cb17a5161dfe17a87cc91797",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 34,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "460cd3c02ff57804fd95d282b6cf8bcfbc7034721d0e1e41cd6edea414f70267",
+    "golden_sha256": "460cd3c02ff57804fd95d282b6cf8bcfbc7034721d0e1e41cd6edea414f70267",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 35,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "fcf761188d5d81e7c43916db5add260f40933881b392607040b2a8cc3553da65",
+    "golden_sha256": "fcf761188d5d81e7c43916db5add260f40933881b392607040b2a8cc3553da65",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 36,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "e78b7643b452038c6a7b32aa35c171f8e3c1ec55ee3ba9ca9a81cf73c9fb4181",
+    "golden_sha256": "e78b7643b452038c6a7b32aa35c171f8e3c1ec55ee3ba9ca9a81cf73c9fb4181",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 37,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "473e43c5650637cdfdf18ac300ca043b38d6da788cb06385724f150fcaa727a6",
+    "golden_sha256": "473e43c5650637cdfdf18ac300ca043b38d6da788cb06385724f150fcaa727a6",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 38,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "aafbb2313ac7d96b2198a1a57b2be2f2612f7f92eae98dddcfa5980100fdcabe",
+    "golden_sha256": "aafbb2313ac7d96b2198a1a57b2be2f2612f7f92eae98dddcfa5980100fdcabe",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 39,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "8ec209b1da956c1c847e94702d8087d3e3c9b238d91c426e465787ed805c9fc8",
+    "golden_sha256": "8ec209b1da956c1c847e94702d8087d3e3c9b238d91c426e465787ed805c9fc8",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 40,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "cd4ad04c84fbcb58eebe66a53253429776ca4f7eded8e5c1f807816ff9a0dc9c",
+    "golden_sha256": "cd4ad04c84fbcb58eebe66a53253429776ca4f7eded8e5c1f807816ff9a0dc9c",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 41,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "980e3e54196ed65347f21cfc3a835925e50da964d2e59cdf3bc2700e8ad470b0",
+    "golden_sha256": "980e3e54196ed65347f21cfc3a835925e50da964d2e59cdf3bc2700e8ad470b0",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 42,
+    "instruction": "mul",
+    "shape": [
+      5120
+    ],
+    "sha256": "705979bada769f7693563085a4024e209975ea5f6e6b5ca064a94ba529a1c542",
+    "golden_sha256": "705979bada769f7693563085a4024e209975ea5f6e6b5ca064a94ba529a1c542",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 43,
+    "instruction": "add",
+    "shape": [
+      5120
+    ],
+    "sha256": "3f433d6eddc372f1dc7d18cbce8b3d850ee530c7ee7474c052b832d2d8387db0",
+    "golden_sha256": "3f433d6eddc372f1dc7d18cbce8b3d850ee530c7ee7474c052b832d2d8387db0",
+    "mismatched_bits": 0
+  },
+  {
+    "ordinal": 44,
+    "instruction": "bf16",
+    "shape": [
+      4,
+      5120
+    ],
+    "sha256": "135677f83ebfda8e2cf4684374d1754e7d522e97ea7124830c55e5231753ff49",
+    "golden_sha256": "135677f83ebfda8e2cf4684374d1754e7d522e97ea7124830c55e5231753ff49",
+    "mismatched_bits": 0
+  }
+]

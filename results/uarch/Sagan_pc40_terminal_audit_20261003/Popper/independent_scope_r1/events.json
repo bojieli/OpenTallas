@@ -1,0 +1,520 @@
+[
+  {
+    "cycle": 7,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000001",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 8,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 11,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 12,
+    "identity": "0100000001a413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 13,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 14,
+    "identity": "0100000001a413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 15,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 21,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 22,
+    "identity": "0100000001a413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 23,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 24,
+    "identity": "0100000001a413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 25,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 29,
+    "phase": "mirrored_write",
+    "slot": "19"
+  },
+  {
+    "cycle": 30,
+    "identity": "0100000001a413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 35,
+    "identity": "0100000001a413",
+    "phase": "visible"
+  },
+  {
+    "a": "19",
+    "b": "19",
+    "cycle": 36,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 41,
+    "identity": "0100000001a413",
+    "phase": "FMIN_result_accept"
+  },
+  {
+    "cycle": 42,
+    "identity": "0100000001a413",
+    "phase": "W6_consumer"
+  },
+  {
+    "cycle": 57,
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000001",
+    "phase": "retire"
+  },
+  {
+    "cycle": 62,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000002",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 63,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 66,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 67,
+    "identity": "0100000001c413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 68,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 69,
+    "identity": "0100000001c413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 77,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000003",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "cycle": 90,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000004",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 91,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 94,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 95,
+    "identity": "01000000020413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 96,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 97,
+    "identity": "01000000020413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 98,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 104,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 105,
+    "identity": "01000000020413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 106,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 107,
+    "identity": "01000000020413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 108,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 112,
+    "phase": "mirrored_write",
+    "slot": "19"
+  },
+  {
+    "cycle": 113,
+    "identity": "01000000020413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 127,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000005",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 128,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 131,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 132,
+    "identity": "01000000022413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 133,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 134,
+    "identity": "01000000022413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 135,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 141,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 142,
+    "identity": "01000000022413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 143,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 144,
+    "identity": "01000000022413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 145,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 149,
+    "phase": "mirrored_write",
+    "slot": "19"
+  },
+  {
+    "cycle": 150,
+    "identity": "01000000022413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 152,
+    "identity": "01000000022413",
+    "phase": "visible"
+  },
+  {
+    "a": "19",
+    "b": "19",
+    "cycle": 153,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 156,
+    "identity": "01000000022413",
+    "phase": "FMIN_result_accept"
+  },
+  {
+    "cycle": 157,
+    "identity": "01000000022413",
+    "phase": "W6_consumer"
+  },
+  {
+    "cycle": 171,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000006",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 172,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 175,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 176,
+    "identity": "01000000024413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 177,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 178,
+    "identity": "01000000024413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 179,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 185,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 186,
+    "identity": "01000000024413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 187,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 188,
+    "identity": "01000000024413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 189,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 193,
+    "phase": "mirrored_write",
+    "slot": "19"
+  },
+  {
+    "cycle": 194,
+    "identity": "01000000024413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 196,
+    "identity": "01000000024413",
+    "phase": "visible"
+  },
+  {
+    "a": "19",
+    "b": "19",
+    "cycle": 197,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 200,
+    "identity": "01000000024413",
+    "phase": "FMIN_result_accept"
+  },
+  {
+    "cycle": 201,
+    "identity": "01000000024413",
+    "phase": "W6_consumer"
+  },
+  {
+    "cycle": 222,
+    "enteringWorkspaceLive": "0",
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000007",
+    "phase": "accepted",
+    "scope": "cold_exclusive_actor"
+  },
+  {
+    "a": "38",
+    "b": "38",
+    "cycle": 223,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 226,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 227,
+    "identity": "01000000026413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 228,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 229,
+    "identity": "01000000026413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 230,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 236,
+    "phase": "mirrored_write",
+    "slot": "17"
+  },
+  {
+    "cycle": 237,
+    "identity": "01000000026413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 238,
+    "phase": "mirrored_write",
+    "slot": "18"
+  },
+  {
+    "cycle": 239,
+    "identity": "01000000026413",
+    "phase": "common_ACK"
+  },
+  {
+    "a": "17",
+    "b": "18",
+    "cycle": 240,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 244,
+    "phase": "mirrored_write",
+    "slot": "19"
+  },
+  {
+    "cycle": 245,
+    "identity": "01000000026413",
+    "phase": "common_ACK"
+  },
+  {
+    "cycle": 247,
+    "identity": "01000000026413",
+    "phase": "visible"
+  },
+  {
+    "a": "19",
+    "b": "19",
+    "cycle": 248,
+    "phase": "RF_read"
+  },
+  {
+    "cycle": 251,
+    "identity": "01000000026413",
+    "phase": "FMIN_result_accept"
+  },
+  {
+    "cycle": 252,
+    "identity": "01000000026413",
+    "phase": "W6_consumer"
+  },
+  {
+    "cycle": 267,
+    "nativeGen": "0000000100000012",
+    "nativeTag": "0000000100000007",
+    "phase": "retire"
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.rtl.build_provenance.v1",
+  "result": "results/rtl/hdc_v41x_whbm_pooled_single.json",
+  "source_commit": "351aecd4a1827eaccb2c4476282db4db1629d5a6",
+  "verilator": "4.038",
+  "compiler": "11.4.0",
+  "build_note": "Verilator elaboration used the campaign all-unit X_IDX=2 DPI configuration. The generated C++ build was completed using OPT_FAST=-O0 OPT_SLOW=-O0 after default -Os compiled all but one large translation unit. Compiler optimization changes host simulation speed, not RTL configuration.",
+  "executable_sha256": "26538ca8742455df037efd835384a804f5f4953b5fed2efd001f3b7a6b4365f1",
+  "run_command": "python3 -u tools/rtl_hdc_v41x_whbm_pooled_campaign.py --reuse-images --reuse-executable",
+  "claim_boundary": "Reduced single-token functional gate with DPI arithmetic stand-ins, QE weight HBM, pooled index-key HBM and timed four-stack HBM models. The 438968 simulation cycles are not a production performance estimate."
+}

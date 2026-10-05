@@ -1,0 +1,30 @@
+PORT_EVENT request_accept cycle16 tag5fedcba98 genf we0
+PORT_EVENT backend_read_accept cycle17 tag5fedcba98 genf
+PORT_EVENT client_read_accept cycle31 client5
+CASE_PASS heldrequest_read_KV5 cycle=41
+PORT_EVENT request_accept cycle53 tag2ffffffff gen7 we1
+PORT_EVENT backend_write_accept cycle54 tag2ffffffff gen7
+PORT_EVENT client_write_accept cycle70 client2
+CASE_PASS heldwrite_ready cycle=80
+PORT_EVENT request_accept cycle92 tag000000000 gen1 we0
+PORT_EVENT request_accept cycle111 tag000000001 gen1 we0
+PORT_EVENT request_accept cycle130 tag000000002 gen1 we0
+PORT_EVENT request_accept cycle149 tag000000003 gen1 we0
+PORT_EVENT request_accept cycle168 tag000000004 gen1 we0
+PORT_EVENT request_accept cycle187 tag000000005 gen1 we0
+PORT_EVENT request_accept cycle206 tag000000006 gen1 we0
+PORT_EVENT request_accept cycle225 tag000000007 gen1 we0
+PORT_EVENT request_accept cycle244 tag000000008 gen1 we0
+PORT_EVENT request_accept cycle263 tag000000009 gen1 we0
+PORT_EVENT request_accept cycle282 tag00000000a gen1 we0
+PORT_EVENT request_accept cycle301 tag00000000b gen1 we0
+PORT_EVENT request_accept cycle320 tag00000000c gen1 we0
+PORT_EVENT request_accept cycle339 tag00000000d gen1 we0
+PORT_EVENT request_accept cycle358 tag00000000e gen1 we0
+PORT_EVENT request_accept cycle377 tag00000000f gen1 we0
+PORT_EVENT backend_read_accept cycle382 tag00000000f gen1
+PORT_EVENT client_read_accept cycle393 client0
+PORT_EVENT request_accept cycle412 tag000000063 gen1 we0
+[412501] %Fatal: tb.sv:87: Assertion failed in tb_w2_fullnc6.step.unnamedblk4: accepted backend full tuple differs from held caller original
+%Error: /srv/opentallas-scratch/jobs/w2-fullnc6-f368c122d-verilator-r5/out/inputs/tb.sv:87: Verilog $stop
+Aborting...

@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas-v41x-index-shard-write-v1",
+  "status": "pass",
+  "scope": "writer address/mask and one-hot HBM bridge; read scheduler and full token not covered",
+  "layout": "16-key groups round-robin over 4 stacks, compact local groups, 68 B/key/stack placement",
+  "writer_cases": 15,
+  "bridge_records": 4,
+  "bridge_sector_writes": 12,
+  "bridge_reads": 8,
+  "writer_stdout": "V41XPOOLKWRSHARD checked=15 errors=0 keys=15",
+  "bridge_stdout": "V41XPOOLBRIDGESHARD records=4 writes=12 reads=8 errors=0",
+  "sources": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/test/tb_hdc_v41x_idx_pool_kwr_sharded.sv": "41990b9334ca63de4ff278a70b46b36e7fa5c2f00935fae87eb2745c91e468fd",
+    "rtl/test/tb_hdc_v41x_idx_pool_bridge_sharded.sv": "4ac8fd21305cbc138b25a6a02328711ca1ede069be97b354507aae80bcf54784",
+    "tools/rtl_hdc_v41x_idx_shard_write_campaign.py": "85cc3855a0c39690f9a6158759f1c658f6c2c38b0e49917a8b12b69689d68bf5"
+  }
+}

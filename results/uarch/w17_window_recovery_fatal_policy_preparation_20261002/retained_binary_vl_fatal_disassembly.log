@@ -1,0 +1,41 @@
+
+/tmp/window-recovery-phase-single-run-20261002-r1/discard_retirement_omitted/obj/Vtb:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+000000000000e407 <_Z8vl_fatalPKciS0_S0_>:
+    e407:	41 54                	push   %r12
+    e409:	41 89 f4             	mov    %esi,%r12d
+    e40c:	55                   	push   %rbp
+    e40d:	48 89 fd             	mov    %rdi,%rbp
+    e410:	48 83 ec 18          	sub    $0x18,%rsp
+    e414:	48 89 4c 24 08       	mov    %rcx,0x8(%rsp)
+    e419:	e8 38 92 00 00       	call   17656 <_ZN9Verilated14threadContextpEv>
+    e41e:	be 01 00 00 00       	mov    $0x1,%esi
+    e423:	48 89 c7             	mov    %rax,%rdi
+    e426:	e8 7b a4 ff ff       	call   88a6 <_ZN16VerilatedContext8gotErrorEb>
+    e42b:	e8 26 92 00 00       	call   17656 <_ZN9Verilated14threadContextpEv>
+    e430:	be 01 00 00 00       	mov    $0x1,%esi
+    e435:	48 89 c7             	mov    %rax,%rdi
+    e438:	e8 b9 a4 ff ff       	call   88f6 <_ZN16VerilatedContext9gotFinishEb>
+    e43d:	48 8b 4c 24 08       	mov    0x8(%rsp),%rcx
+    e442:	44 89 e2             	mov    %r12d,%edx
+    e445:	48 89 ee             	mov    %rbp,%rsi
+    e448:	48 8d 3d 88 4b 06 00 	lea    0x64b88(%rip),%rdi        # 72fd7 <_IO_stdin_used+0xfd7>
+    e44f:	e8 34 85 ff ff       	call   6988 <_Z19vl_print_warn_errorPKcS0_iS0_>
+    e454:	e8 5f ae ff ff       	call   92b8 <_ZN9Verilated17runFlushCallbacksEv>
+    e459:	48 8d 3d 7e 4b 06 00 	lea    0x64b7e(%rip),%rdi        # 72fde <_IO_stdin_used+0xfde>
+    e460:	e8 9b 73 ff ff       	call   5800 <puts@plt>
+    e465:	e8 4e ae ff ff       	call   92b8 <_ZN9Verilated17runFlushCallbacksEv>
+    e46a:	e8 e5 ae ff ff       	call   9354 <_ZN9Verilated16runExitCallbacksEv>
+    e46f:	bf 01 00 00 00       	mov    $0x1,%edi
+    e474:	e8 97 71 ff ff       	call   5610 <exit@plt>
+
+Disassembly of section .fini:

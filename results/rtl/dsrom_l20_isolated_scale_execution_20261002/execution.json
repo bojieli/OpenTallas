@@ -1,0 +1,81 @@
+{
+  "GO_pin": {
+    "commit": "9604860cae70ee78a34038a8f001aafbfffd92e0",
+    "path": "results/rtl/parent_L20_isolated_scale_GO_20261002/GO.json",
+    "sha256": "e7f14e85c40dad06e49c6acb324660b660b46f1a3c6dc764e2fdcb755e787bf9"
+  },
+  "actual_terminal": "PASS 21088 beats including full512 rows, sidebands, optoff equality, invalid fault",
+  "actual_workdir_bytes": 9106082,
+  "executor_sha256": "ff4564f70f4bd39e675a9470c87526897cb3a6eb596d849f3808c697b1fafed5",
+  "expected_terminal": "PASS 21088 beats including full512 rows, sidebands, optoff equality, invalid fault",
+  "files_sha256": {
+    "GO.json": "e7f14e85c40dad06e49c6acb324660b660b46f1a3c6dc764e2fdcb755e787bf9",
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "iverilog_resource.txt": "28f74394219d93df41aebf1b8f3dfae6bf6b9371c7cd237b8855d895a65610a6",
+    "iverilog_version.txt": "454cabf67591a005567fa498b7cfd2dcc82a63ca4908bcb232a3878aa41357ee",
+    "result.json": "27ed4c239c9451dcecb692d5b354c83535bb155199176468b2ba81e590189751",
+    "runner_stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "runner_stdout.txt": "82889ecf3bc1f7595fcebd6e636e3c568bd0686456dd508ef6a252ace02e74d3",
+    "simulate.log": "5eff782783bc86a6db973e6f7b803b92123818b1c137854344483e85a4975c6c",
+    "vvp_resource.txt": "41f05d02afc0016a95c6e2a0e680d0a1a36fe29d50ce282a93c6b680c8a76609",
+    "vvp_version.txt": "8cc82936d1b6552bbe7b86b9b52a0997201c72738e255ff77d5e90726099710b"
+  },
+  "preparation_sha256": "abe8783a626255cf99e7acd7d5c09d08a48c6289e8c042da9ae5ac3b918d0b54",
+  "runner_exit": 0,
+  "runner_result": {
+    "collector_engine_elaboration": false,
+    "compiler_invoked": true,
+    "full_QE_elaboration": false,
+    "limits": {
+      "compile_parallel_jobs": 1,
+      "cpu_seconds_each_process": 120,
+      "file_descriptors": 64,
+      "individual_file_bytes": 67108864,
+      "memory_bytes": 2147483648,
+      "total_workdir_bytes": 134217728,
+      "wall_seconds_each_process": 180
+    },
+    "preparation_sha256": "abe8783a626255cf99e7acd7d5c09d08a48c6289e8c042da9ae5ac3b918d0b54",
+    "prepared_status": "PREPARED_NOT_COMPILED_NOT_SIMULATED",
+    "scratch": "/tmp/dsrom-l20-scale-reviewed-pfjfi5_7",
+    "simulation_sha256": "5eff782783bc86a6db973e6f7b803b92123818b1c137854344483e85a4975c6c",
+    "sources": [
+      "tb_l20_scale_optin.sv",
+      "source/original/ot_hdc_delay.sv",
+      "source/original/ot_hdc_fp4qdq.sv",
+      "source/optin/ot_hdc_fp4qdq_l20_scale_optin.sv"
+    ],
+    "status": "PASS_ISOLATED_EXECUTED_FIXTURE_ONLY"
+  },
+  "runner_sha256": "874a0124c015a7a59ab3caea1e81062b5b2c06a9a3f367ae72d58a99b12a688e",
+  "schema": "opentallas.dsrom.L20-isolated-quantizer-executed.v1",
+  "scope": {
+    "PnR": false,
+    "SS_FF_credit": false,
+    "collector": false,
+    "full_FP32_exhaustive_credit": false,
+    "full_QE": false,
+    "full_token_credit": false,
+    "reservation_credit": false
+  },
+  "source_commit": "9f9b8e8e6b18731ee68bd74ac4907180a5eef5db",
+  "terminal_exact_match": true,
+  "tools": {
+    "iverilog": {
+      "binary_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "path": "/usr/bin/iverilog",
+      "resource_wrapper_sha256": "8beb17610230f98cf454c75e1e0114b6dcc9a1926c1d2ce58735f955fa223d10",
+      "version_exit": 0,
+      "version_file_sha256": "454cabf67591a005567fa498b7cfd2dcc82a63ca4908bcb232a3878aa41357ee"
+    },
+    "vvp": {
+      "binary_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "path": "/usr/bin/vvp",
+      "resource_wrapper_sha256": "ed263d7250b66674815b3184ccaa8f69696bef0e30f7c2906f9671be0edd60a0",
+      "version_exit": 0,
+      "version_file_sha256": "8cc82936d1b6552bbe7b86b9b52a0997201c72738e255ff77d5e90726099710b"
+    }
+  },
+  "verdict": "PASS_ISOLATED_QUANTIZER_ONLY",
+  "wall_seconds_including_compile_and_sim": 33.53172962926328
+}

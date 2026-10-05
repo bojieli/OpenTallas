@@ -1,0 +1,51 @@
+{
+  "scope": "standalone bounded 16-key ingress and mathematical local-topK-union proof; no score RTL, selector merge, HBM integration or routed rate",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_stack_major_ingest.sv": "0affbbbe96b64db93e2cd70c1669a524d8794b4948dccf196eaa804e330068cd",
+    "rtl/test/tb_hdc_v41x_idx_stack_major_ingest.sv": "37bd6b5c0e2a70daf901609ffb1e3c83ed91ec1de9331787fa3fde8d9ca1b3c7",
+    "tools/rtl_v41x_idx_stack_major_ingest.py": "0c2981c28b341fa1d970a291299ad32a84ab8b46e6ad98830337f00c5b8fe7ff"
+  },
+  "rtl_gate": {
+    "beats": 16449,
+    "keys": 263184,
+    "atomic_four_lane_handshake": true,
+    "local_rank_to_global_index": true,
+    "tested_nkeys": [
+      1040,
+      262144
+    ]
+  },
+  "generic_synthesis": {
+    "yosys_cells": 814,
+    "yosys_reset_flops": 88,
+    "scope": "ingress control only; excludes score arithmetic, selector, HBM, and physical routing"
+  },
+  "topk_proof": [
+    {
+      "nkeys": 1040,
+      "k": 512,
+      "local_survivor_bound": 2048,
+      "winner_digest": "12b3c80463ddfb366d134f1d6ea07b537c8a41002f1f35ffe5c35a4edda3d3f7"
+    },
+    {
+      "nkeys": 262144,
+      "k": 512,
+      "local_survivor_bound": 2048,
+      "winner_digest": "315e5affcbb48b27e000dfccb15fc5261b98eaf79bd51cfac1f8a68cbeedea84"
+    }
+  ],
+  "design": {
+    "keys_per_beat": 16,
+    "score_lanes": 4,
+    "keys_per_lane": 4,
+    "score_order": "stack local-rank ascending; global index reconstructed as 64*(j>>4)+16*s+(j&15)",
+    "selector_plan": "four independent local top-512 selectors, then exact global top-512 from at most 2048 survivors, tie by lower global index; emit selected indices ascending",
+    "bounded_score_index_storage_bits": 94208,
+    "raw_key_buffer_bits": 0
+  },
+  "limits": [
+    "score tile throughput not measured",
+    "cross-stack survivor selector not implemented",
+    "HBM same-controller rate and physical timing not measured"
+  ]
+}

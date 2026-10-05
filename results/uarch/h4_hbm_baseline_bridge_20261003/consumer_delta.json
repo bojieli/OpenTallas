@@ -1,0 +1,189 @@
+{
+  "FIFO_candidate": {
+    "read_return": {
+      "depth": 16,
+      "payload_bits_per_entry": 1108,
+      "protected_control_bits": 2304,
+      "protected_data_bits": 663552,
+      "qualification": "new FIFO16 implementation, not installed FIFO2 credit",
+      "replicas": 32,
+      "source_control_bits_per_FIFO16_candidate": 50
+    },
+    "request": {
+      "depth": 16,
+      "payload_bits_per_entry": 1252,
+      "protected_control_bits": 2304,
+      "protected_data_bits": 737280,
+      "qualification": "new FIFO16 implementation, not installed FIFO2 credit",
+      "replicas": 32,
+      "source_control_bits_per_FIFO16_candidate": 50
+    },
+    "reverse": {
+      "depth": 16,
+      "payload_bits_per_entry": 23,
+      "protected_control_bits": 2304,
+      "protected_data_bits": 36864,
+      "qualification": "new FIFO16 implementation, not installed FIFO2 credit",
+      "replicas": 32,
+      "source_control_bits_per_FIFO16_candidate": 50
+    },
+    "write_completion": {
+      "depth": 16,
+      "payload_bits_per_entry": 23,
+      "protected_control_bits": 2304,
+      "protected_data_bits": 36864,
+      "qualification": "new FIFO16 implementation, not installed FIFO2 credit",
+      "replicas": 32,
+      "source_control_bits_per_FIFO16_candidate": 50
+    }
+  },
+  "W10_RTL_admitted": false,
+  "W2_table3bit_lower": 36864,
+  "address_mapping": {
+    "concrete_translate_and_retained_original_address_required": true,
+    "legacy_PC_service": "PC selects address low7 bits",
+    "physical_provider": "r17 fourstack stripe and pc_of mapping use fullphysical source address; must not substitute legacy low7 selector",
+    "qualified": false
+  },
+  "area_is_screen_only": true,
+  "audit_main": "7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865",
+  "bank_gate_fields": {
+    "ACK": 1,
+    "client_class": 3,
+    "endpoint_kind": 2,
+    "nwords": 2,
+    "parent_beat": 5,
+    "parent_generation": 4,
+    "phase": 3,
+    "remaining_words": 3,
+    "reverse": 1,
+    "tag": 16,
+    "valid": 1,
+    "word_offset": 13,
+    "word_valid_mask": 4
+  },
+  "cache_RMW_pending_bits": 11520,
+  "candidate_FF_mux_ECC_area_mm2_ASSUMED": 15.275092992,
+  "common_ACK_bits": 2304,
+  "common_RF_ACK": "one identity-bearing combined copy ACK, not two mirror events",
+  "compact_gate_bits": 4608,
+  "complete_PC_metadata_bits": 3538944,
+  "credit": {
+    "conditional128B_line_slot_Bpc_upper": 2072.284584980237,
+    "conditional32B_slot_Bpc_upper": 518.0711462450593,
+    "installed_PC_accepted_slots": 12288,
+    "minimum_line_slots_per_client_PC": 22,
+    "minimum_sector_slots_per_client_PC": 86,
+    "no_wholeprogram_service_rate_until_slot_unit_and_root_line_maps_connected": true,
+    "source_backend_loaded_plus_jitter_FAST_edges_PROVISIONAL": 759,
+    "source_bulk_512line_SM_capacity_Bpc": 2763.046113306983
+  },
+  "critical_path": {
+    "CDC_forward_and_reverse_finite_wait_upper": null,
+    "incremental_route_ns": null,
+    "onebit_or_zero_added_match_stage_not_SS_FF_qualified": true,
+    "priced_one_lane_transfer_lower_bound_ratio_3to4": 3.5977162933684674,
+    "priced_one_lane_transfer_lower_bound_ratio_equalclock": 2.6982872200263506,
+    "proposed_commonACK_match_edges": 1,
+    "proposed_credit_release_edges": 1,
+    "proposed_forward_reverse_route_FAST_edges": 76,
+    "proposed_owner_match_edges": 1,
+    "proposed_route_pair_ns_at1p2GHz": 63.333333333333336,
+    "reused_held_route_transfer_ratio_128PC": 26.982872200263504,
+    "route_component_may_overlap_existing72wire_edges_only_with_emitted_ID_receipt": true,
+    "visibility_consumer_reverse_min_NEW_edges": 2,
+    "whole_operator_ns": null,
+    "whole_token_ns": null
+  },
+  "decoded_directory_capture_bits": 64512,
+  "existing_ingress_gather_MACRO_area_mm2_ASSUMED": 3.22632293616,
+  "existing_ingress_gather_not_credited_as_installed": true,
+  "fence_bits": 2304,
+  "fields_remain_private_context": {
+    "RF_slot": 9,
+    "SM": 5,
+    "byte_count": 32,
+    "captured": 1,
+    "client": 3,
+    "generation": 4,
+    "home_id": 32,
+    "home_offset": 32,
+    "original_tag": 32,
+    "phase": 3,
+    "physical_sector": 34,
+    "physical_stack": 2,
+    "rank": 7,
+    "reverse_seen": 1,
+    "valid": 1,
+    "write": 1
+  },
+  "generation_reason": "requires all forward/completion/commonACK/consumer/reverse copies drained before slot reuse; current source has no such composite proof",
+  "generic324bit_identity_rejected": true,
+  "hardware_admitted": false,
+  "local_gate_fields": {
+    "client_class": 3,
+    "common_ACK": 1,
+    "consumer_seen": 1,
+    "endpoint_kind": 2,
+    "fault": 1,
+    "phase": 3,
+    "reverse_pending": 1,
+    "tag": 16,
+    "valid": 1,
+    "write": 1
+  },
+  "minimal_20bit_claim": "selected reduced key only, not sufficient for generic current32bit client tags, rank-multiplexed homes or source bulk ring512outstanding",
+  "onebit_generation_not_admitted": true,
+  "original_source_tag32_is_retained": true,
+  "physical_tag_candidate_bits": 16,
+  "pipelined_route_candidate_bits": 3502080,
+  "protected_PC_context_bits": 3538944,
+  "read_capture_bits": 64512,
+  "required_maps": "PC exact live context->coalescer original line->SM ring; map complete BEFORE SM CDC, do not dropPC when aggregating",
+  "schema": "HBM_ACTUAL_CONSUMER_FIELD_CDC_DELTA_R1",
+  "service": {
+    "candidate4lane_payload_Bpc_3to4": 3072,
+    "candidate4lane_payload_Bpc_equalclock": 4096,
+    "full128B_line_return_requires_four32B_sector_lanes": true,
+    "priced320bit_FIFO_fraction_3to4": 0.2779541015625,
+    "priced320bit_FIFO_fraction_equalclock": 0.37060546875,
+    "priced320bit_FIFO_payload_Bpc_3to4": 768,
+    "priced320bit_FIFO_payload_Bpc_equalclock": 1024,
+    "proposed_depth16_does_not_prove_contender_wait": true,
+    "source_ceiling_Bpc": 2763.046113306983
+  },
+  "software_generation64_sequence40_lease64_provenance_refs_are_not_wire_fields": true,
+  "source_KV_RMW": {
+    "actual_partial_sector_mask_merge_count": 18432,
+    "fullhead128B_RMW_avoidance_not_transferred": true,
+    "reason": "actual source strided partialsector requests preserve neighboring bytes; wholehead packing is another source change"
+  },
+  "source_bulk_ring": {
+    "depth1024": true,
+    "exact_completion_validation": false,
+    "outstanding512": true,
+    "return_ready": false,
+    "tag10": true
+  },
+  "source_constraints": [
+    "actual source mapping from PC completion to each line/SM consumer",
+    "Dewey exact returned-line/sector eligibility, leases and finite contend/hold intervals",
+    "rank and original32bit client tags cannot be discarded without source compiler/consumer contract",
+    "new FIFO16 and throughput pipeline must fit actual clock/PG/via/widened cuts before W10RTL"
+  ],
+  "source_route": {
+    "EDGES": 38,
+    "cannot_replace_with_one_entry_per_cycle": true,
+    "ceiling128PC_1lane_Bpc": 102.4,
+    "ceiling32SM_1lane_Bpc": 25.6,
+    "minimum_packet_acceptance_spacing_FAST_edges": 40,
+    "same_edge_release_and_reaccept": false,
+    "single_owned": true
+  },
+  "tag_namespaces": [
+    "PC {client3,SM5,slot4,generation4}=16; namespace implicit at PC lane",
+    "coalescer {client6,batch_slot6,generation4}=16; NOT the same numeric identity",
+    "SM line ring needs original10bit slot plus generation; source ring lacks matching/ready"
+  ],
+  "total_candidate_bits": 8674560
+}

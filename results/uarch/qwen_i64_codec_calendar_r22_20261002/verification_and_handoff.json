@@ -1,0 +1,65 @@
+{
+  "Dewey": "01a0fc12-35e2-71f0-873e-d6aa6ab2d24e",
+  "additional_controls": [
+    "Empty extent cannot free live allocation",
+    "Foreign-rank write cannot mutate local provider namespace"
+  ],
+  "affected_PCs": 144,
+  "artifacts": [
+    {
+      "SHA256": "490708135e9369197cb280bcb66820797d3f4305ac00d0099f5f2155026d55c5",
+      "fresh_replay_byteidentical": true,
+      "path": "output/join.json"
+    },
+    {
+      "SHA256": "3a779bb418732165443119445c23a35688453843d6cb109303d860baa048e599",
+      "fresh_replay_byteidentical": true,
+      "path": "output/codec_calendar.json.gz"
+    },
+    {
+      "SHA256": "a26cf00c5b563c65b26be35f70ad5a5a5c761a658ae68e996e37b29c29eb7e26",
+      "fresh_replay_byteidentical": true,
+      "path": "output/source_pc14_software_journal.json.gz",
+      "scope": "128 explicit fixture values; source integer subsequence at PC14 homes, not whole operator/token/PHY"
+    }
+  ],
+  "commands": [
+    "python3 -m pytest -q tests/test_hbm_provider_microvm_r21.py tests/test_qwen_i64_codec_calendar_r22.py",
+    "python3 tools/qwen_i64_codec_calendar_r22.py --output /tmp/FRESH_OUTPUT",
+    "python3 tools/qwen_split64_diagnostic_r22.py --output /tmp/source_pc14_software_journal.json.gz"
+  ],
+  "consumer_interface": "qwen_i64_codec_calendar_r22.augment(program, actual_r20_homes, positive_endpoint_costs); re-run finite DAG after augmentation. Executable storage uses tensor_from_native_binding and retained split64 leases.",
+  "failed_partial_write_lease_test": "../hbm_provider_microvm_r21_20261002/partial_split_write_failure_preserved.log",
+  "hardware_or_rate_admission": false,
+  "jobs": [],
+  "parent_owns_publication_and_all_software_integration": true,
+  "passed_tests": 24,
+  "portable_inputs": "All required metadata and pure checker source snapshot committed here; no private calendar directory orGit dependency for replay",
+  "portable_test_replay": {
+    "exit_code": 0,
+    "isolated_no_git_checkout": true,
+    "scope": "Copied only declared tools/tests/static metadata; no outputs required by tests"
+  },
+  "proof": {
+    "dependency_edges": 356675,
+    "events": 108441,
+    "resource_slots_used": 449,
+    "status": "PASS_FINITE_INTERVAL_PROOF"
+  },
+  "r20_source_homes": "33b741b4e",
+  "software_calibration": "All costs positive explicit provisional abstract ticks. No physical time/rate or admission credit.",
+  "source_SHA256": {
+    "tests/test_hbm_provider_microvm_r21.py": "a265703d295aded37b564a40d12cd6a2f692738f0c8e07a6d9553a2f9c0b6daf",
+    "tests/test_qwen_i64_codec_calendar_r22.py": "ecf75e510a1e664238550de2f19151d74244113074efe7a05d247de988deb61f",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2",
+    "tools/qwen_i64_codec_calendar_r22.py": "329882b5ac3ab4b03f908fe234e6e586b8d1ca34aaab15c8165753ae910dfb20",
+    "tools/qwen_split64_diagnostic_r22.py": "0f1b399e863bed2c3f727d717c55ca56ed49a60775943d24c2868a35ba88eee4"
+  },
+  "source_calendar": "5881a3b92",
+  "source_native": "8fab95560",
+  "status": "READY_SOFTWARE_CODEC_AND_CALENDAR_MILESTONE_PARENT_INTEGRATES",
+  "symbols": 432,
+  "test_log": "milestone_tests.log",
+  "unsupported_semantics_record": "../hbm_provider_microvm_r21_20261002/scope_and_interfaces.json",
+  "whitespace_check": "PASS source/metadata excluding two immutable raw failed pytest logs; original pytest separator/trailing spaces retained in failure evidence"
+}

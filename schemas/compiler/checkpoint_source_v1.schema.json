@@ -1,0 +1,86 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/checkpoint_source_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checkpoint_index": {
+      "$ref": "#/$defs/path"
+    },
+    "expected_files": {
+      "items": {
+        "$ref": "#/$defs/expected_file"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "remote_code_policy": {
+      "enum": [
+        "disabled",
+        "reviewed_and_pinned"
+      ]
+    },
+    "repository": {
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}/[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+      "type": "string"
+    },
+    "required_files": {
+      "items": {
+        "$ref": "#/$defs/path"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "revision": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "schema": {
+      "const": "opentallas.checkpoint_source.v1"
+    }
+  },
+  "required": [
+    "checkpoint_index",
+    "expected_files",
+    "remote_code_policy",
+    "repository",
+    "required_files",
+    "revision",
+    "schema"
+  ],
+  "title": "OpenTallas checkpoint source v1",
+  "type": "object",
+  "$defs": {
+    "expected_file": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "path": {
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?/)(?!.*//)[^\\u0000\\\\]+$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

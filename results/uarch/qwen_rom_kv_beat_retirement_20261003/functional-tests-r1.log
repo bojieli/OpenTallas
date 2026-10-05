@@ -1,0 +1,11 @@
+test_Ampere_price_named_once_and_unknown_protection_nonzero_scope (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+test_V_multiword_beat_waits_all_words_and_readers (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+test_address_mapping_four_quarters_matches_source_cohort (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+test_all_ACK_reader_remaining_PC_drains_before_generation_reuse (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+test_epoch_duplicate_and_backpressure_do_not_mutate (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+test_word_dispatch_precedes_unrelated_member_but_tag_quarantine (test_qwen_rom_kv_beat_retirement.CausalTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+OK

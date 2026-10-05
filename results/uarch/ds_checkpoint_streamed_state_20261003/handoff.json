@@ -1,0 +1,37 @@
+{
+  "APIs": [
+    "stream_typed_state",
+    "save_streamed",
+    "profile_streamed_state"
+  ],
+  "actual_payloads_used_for_production_restore": 0,
+  "artifacts": {
+    "results/uarch/ds_checkpoint_streamed_state_20261003/allocation_phase_audit.json": "8c119b9a7b8cf19fed93b7d7f1173a311f601b0bdeafaa3cea8801ffce2bac87",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/inputs/V3_source.py": "e323ce55e837e32418a74ae271897357952780681a5161205d8a12498060321e",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/inputs/ds_hbm_checkpointed_prefix_r63.py": "cbc8f6ff0a1ed38d643f8b89ad4869b89747ded1d03da9c95880772a4ec22aa3",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/inputs/ds_hbm_dual_resources_r56.py": "edbf6366f660e205fcbc40a703e83e7b11237748412524dbde6e36906a71831d",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/inputs/ds_hbm_pc01_child_r68.py": "1880f9271bfff2359115cd2d80aec8053925226f9f312d2dfa722bf104c01759",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/inputs/ds_hbm_per_pc_r67.py": "80199f8f7956b8d7d90156929c13e22657bcc0ccd44f55f395f9a7361c0a9c55",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/preparation_failure_pytest.log": "ae3fae333ad5d08e15c99850cd348c1fd8a7deb692eb80bba428be6a88c2fa23",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/preparation_failures.json": "4d830f552ebaa160c5c0c5f9a94e11b756c845676642d4b9fb065cc1664ea1d4",
+    "results/uarch/ds_checkpoint_streamed_state_20261003/pytest.log": "4fc583baeca397a631c46b8da4618cd8168428b56abc3cc164c5e94acd9179dc",
+    "tests/test_ds_checkpoint_streamed_state.py": "2b9f26547973295a57e7db6d97fa98c16f321dcf8d650442720058c8a1c3f7fa",
+    "tools/ds_checkpoint_streamed_state.py": "8937819c4f1429081a85ff57e1ac9cd5171486aab0172ff216d24b6bb6eb958b"
+  },
+  "candidate_base_before_streaming_restore_pages_filecache_peer_bytes": 43899508682,
+  "default_off": true,
+  "fresh_physical_fleet_admission": false,
+  "helper": "tools/ds_checkpoint_streamed_state.py",
+  "inherited_guard_replacement_admitted": false,
+  "next_owner": "Kepler reviews additive source-capture/project/atomic selection; Chandra exact page+peer lease",
+  "numeric_duplicate_jobs": 0,
+  "old_R68_V3_R56_unmodified": true,
+  "original_R68_commit": "915558caaa3742e32ab46343fef9c437807a1f28",
+  "production_capture_wrapper_integrated": false,
+  "removed_allowance_for_prospective_source_price_only": 27365014854,
+  "schema": "DS_STREAMED_CHECKPOINT_SOURCE_ALLOCATION_HANDOFF_V1",
+  "source_audit": "allocation_phase_audit.json",
+  "test_scope": "Pinned V3 Writer/canonical AST source: actual primitive array/sector metadata and payload byte comparisons; schema/fault/defaultoff/cycle/partial-write controls. No full actual producer capture/restore run.",
+  "tests": 16,
+  "tests_command": "python3 -m pytest -q tests/test_ds_checkpoint_streamed_state.py"
+}

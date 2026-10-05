@@ -1,0 +1,573 @@
+{
+  "counts_are_PC_template_field_references_not_unique_payloads": true,
+  "first_source_references": {
+    "explicit_auxiliary_provider": {
+      "PC": 4,
+      "field": "ownership_mask",
+      "source_binding": {
+        "identity_from_versions": [
+          "DeepSeek.2.qa.56",
+          "DeepSeek.3.kvraw.57"
+        ],
+        "kind": "explicit_auxiliary_provider",
+        "layer": 0,
+        "name": "ownership_mask",
+        "no_generated_payload_substitution": true,
+        "position": 1048575,
+        "provider_owner": "Kepler",
+        "role": "nonoverlapping complete owned extents",
+        "unqualified_timing": true
+      },
+      "template": "219625a7fc4e8c261c03e992f9791f995effa8041bddefae8ab6102d113268c7"
+    },
+    "immutable_parameter_provider": {
+      "PC": 0,
+      "field": "hc_base",
+      "source_binding": {
+        "kind": "immutable_parameter_provider",
+        "logical_tensor": "layers.0.hc_attn_base",
+        "payload_read": false,
+        "provider_owner": "Kepler"
+      },
+      "template": "a18e65da33b4c422ecd959d9b523aa129713d20327c7f33f74d6737a9d499e23"
+    },
+    "immutable_weight_provider": {
+      "PC": 2,
+      "field": "weight_codes",
+      "source_binding": {
+        "accepted_descriptor_identity": "layer,sorted route ID,slot,matrix,row,Kblock",
+        "format": "fp8",
+        "kind": "immutable_weight_provider",
+        "logical_tensor": "layers.0.attn.wq_a.weight",
+        "provider_owner": "Kepler",
+        "row_intervals": [
+          [
+            0,
+            13
+          ],
+          [
+            13,
+            26
+          ],
+          [
+            26,
+            40
+          ],
+          [
+            40,
+            53
+          ],
+          [
+            53,
+            66
+          ],
+          [
+            66,
+            80
+          ],
+          [
+            80,
+            93
+          ],
+          [
+            93,
+            106
+          ],
+          [
+            106,
+            120
+          ],
+          [
+            120,
+            133
+          ],
+          [
+            133,
+            146
+          ],
+          [
+            146,
+            160
+          ],
+          [
+            160,
+            173
+          ],
+          [
+            173,
+            186
+          ],
+          [
+            186,
+            200
+          ],
+          [
+            200,
+            213
+          ],
+          [
+            213,
+            226
+          ],
+          [
+            226,
+            240
+          ],
+          [
+            240,
+            253
+          ],
+          [
+            253,
+            266
+          ],
+          [
+            266,
+            280
+          ],
+          [
+            280,
+            293
+          ],
+          [
+            293,
+            306
+          ],
+          [
+            306,
+            320
+          ],
+          [
+            320,
+            333
+          ],
+          [
+            333,
+            346
+          ],
+          [
+            346,
+            360
+          ],
+          [
+            360,
+            373
+          ],
+          [
+            373,
+            386
+          ],
+          [
+            386,
+            400
+          ],
+          [
+            400,
+            413
+          ],
+          [
+            413,
+            426
+          ],
+          [
+            426,
+            440
+          ],
+          [
+            440,
+            453
+          ],
+          [
+            453,
+            466
+          ],
+          [
+            466,
+            480
+          ],
+          [
+            480,
+            493
+          ],
+          [
+            493,
+            506
+          ],
+          [
+            506,
+            520
+          ],
+          [
+            520,
+            533
+          ],
+          [
+            533,
+            546
+          ],
+          [
+            546,
+            560
+          ],
+          [
+            560,
+            573
+          ],
+          [
+            573,
+            586
+          ],
+          [
+            586,
+            600
+          ],
+          [
+            600,
+            613
+          ],
+          [
+            613,
+            626
+          ],
+          [
+            626,
+            640
+          ],
+          [
+            640,
+            653
+          ],
+          [
+            653,
+            666
+          ],
+          [
+            666,
+            680
+          ],
+          [
+            680,
+            693
+          ],
+          [
+            693,
+            706
+          ],
+          [
+            706,
+            720
+          ],
+          [
+            720,
+            733
+          ],
+          [
+            733,
+            746
+          ],
+          [
+            746,
+            760
+          ],
+          [
+            760,
+            773
+          ],
+          [
+            773,
+            786
+          ],
+          [
+            786,
+            800
+          ],
+          [
+            800,
+            813
+          ],
+          [
+            813,
+            826
+          ],
+          [
+            826,
+            840
+          ],
+          [
+            840,
+            853
+          ],
+          [
+            853,
+            866
+          ],
+          [
+            866,
+            880
+          ],
+          [
+            880,
+            893
+          ],
+          [
+            893,
+            906
+          ],
+          [
+            906,
+            920
+          ],
+          [
+            920,
+            933
+          ],
+          [
+            933,
+            946
+          ],
+          [
+            946,
+            960
+          ],
+          [
+            960,
+            973
+          ],
+          [
+            973,
+            986
+          ],
+          [
+            986,
+            1000
+          ],
+          [
+            1000,
+            1013
+          ],
+          [
+            1013,
+            1026
+          ],
+          [
+            1026,
+            1040
+          ],
+          [
+            1040,
+            1053
+          ],
+          [
+            1053,
+            1066
+          ],
+          [
+            1066,
+            1080
+          ],
+          [
+            1080,
+            1093
+          ],
+          [
+            1093,
+            1106
+          ],
+          [
+            1106,
+            1120
+          ],
+          [
+            1120,
+            1133
+          ],
+          [
+            1133,
+            1146
+          ],
+          [
+            1146,
+            1160
+          ],
+          [
+            1160,
+            1173
+          ],
+          [
+            1173,
+            1186
+          ],
+          [
+            1186,
+            1200
+          ],
+          [
+            1200,
+            1213
+          ],
+          [
+            1213,
+            1226
+          ],
+          [
+            1226,
+            1240
+          ],
+          [
+            1240,
+            1253
+          ],
+          [
+            1253,
+            1266
+          ],
+          [
+            1266,
+            1280
+          ]
+        ]
+      },
+      "template": "32bb78fbe85d25c35644f7514ce20c565825437a5926d14672b6b441a583bf8f"
+    },
+    "versioned_operand": {
+      "PC": 0,
+      "field": "h",
+      "source_binding": {
+        "additional_versions": [],
+        "kind": "versioned_operand",
+        "native_address_view": "full source value reshaped to declared LOAD shape",
+        "residence_archive": "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz",
+        "source_view_contract": "tools/w19_hbm_tp96_isa.py:hc_mixes",
+        "version": "DeepSeek.-1.h.0",
+        "view": "source-defined rank/global slice, tensor shape [4, 5120]"
+      },
+      "template": "a18e65da33b4c422ecd959d9b523aa129713d20327c7f33f74d6737a9d499e23"
+    },
+    "zero_initial_partial_destination": {
+      "PC": 23,
+      "field": "ea_old",
+      "source_binding": {
+        "full_elements": 16128,
+        "kind": "zero_initial_partial_destination",
+        "new_version": "DeepSeek.23.ea.86"
+      },
+      "template": "014fdbe36f8f46f91c100b2702e91d6df410b8f3710d819228ff2c80b5fd9259"
+    }
+  },
+  "full_token_ready": false,
+  "missing_typed_initial_versions": [
+    "DeepSeek.-1.window.L0.2",
+    "DeepSeek.-1.window.L1.3",
+    "DeepSeek.-1.window.L10.12",
+    "DeepSeek.-1.window.L11.13",
+    "DeepSeek.-1.window.L12.14",
+    "DeepSeek.-1.window.L13.15",
+    "DeepSeek.-1.window.L14.16",
+    "DeepSeek.-1.window.L15.17",
+    "DeepSeek.-1.window.L16.18",
+    "DeepSeek.-1.window.L17.19",
+    "DeepSeek.-1.window.L18.20",
+    "DeepSeek.-1.window.L19.21",
+    "DeepSeek.-1.window.L2.4",
+    "DeepSeek.-1.window.L20.22",
+    "DeepSeek.-1.window.L21.23",
+    "DeepSeek.-1.window.L22.24",
+    "DeepSeek.-1.window.L23.25",
+    "DeepSeek.-1.window.L24.26",
+    "DeepSeek.-1.window.L25.27",
+    "DeepSeek.-1.window.L26.28",
+    "DeepSeek.-1.window.L27.29",
+    "DeepSeek.-1.window.L28.30",
+    "DeepSeek.-1.window.L29.31",
+    "DeepSeek.-1.window.L3.5",
+    "DeepSeek.-1.window.L30.32",
+    "DeepSeek.-1.window.L31.33",
+    "DeepSeek.-1.window.L32.34",
+    "DeepSeek.-1.window.L33.35",
+    "DeepSeek.-1.window.L34.36",
+    "DeepSeek.-1.window.L35.37",
+    "DeepSeek.-1.window.L36.38",
+    "DeepSeek.-1.window.L37.39",
+    "DeepSeek.-1.window.L38.40",
+    "DeepSeek.-1.window.L39.41",
+    "DeepSeek.-1.window.L4.6",
+    "DeepSeek.-1.window.L5.7",
+    "DeepSeek.-1.window.L6.8",
+    "DeepSeek.-1.window.L7.9",
+    "DeepSeek.-1.window.L8.10",
+    "DeepSeek.-1.window.L9.11"
+  ],
+  "next_independent_step": "implement source-declared view/zero/route bindings and acquire exact source context/aux inputs; pin each binding against Peirce native references; no D1/ROM dependency",
+  "provider_kind_PC_counts": {
+    "explicit_auxiliary_provider": 397,
+    "immutable_parameter_provider": 287,
+    "immutable_weight_provider": 1103,
+    "versioned_operand": 2211,
+    "zero_initial_partial_destination": 40
+  },
+  "provider_kind_reference_counts": {
+    "explicit_auxiliary_provider": 671,
+    "immutable_parameter_provider": 497,
+    "immutable_weight_provider": 2938,
+    "versioned_operand": 108474,
+    "zero_initial_partial_destination": 3840
+  },
+  "remaining_concrete_bindings": [
+    "real retained context windows, compressed/index history and append ownership",
+    "source auxiliary/CROM/Engram/RoPE images with PC/template/field, shape, generation and payload hashes",
+    "accepted expert descriptor to checkpoint tensor and ordered row/K views",
+    "floating/BF16/wo_a exact source K/rounding tensor views",
+    "zero_initial_partial_destination source-defined typed zero view",
+    "source versioned subview reshape/slice and non-row collective mappings",
+    "compound code/scale publication fields where required"
+  ],
+  "source_bound_initial_versions": [
+    "DeepSeek.-1.h.0",
+    "DeepSeek.-1.pre.1"
+  ],
+  "source_native_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "typed_initial_versions": [
+    "DeepSeek.-1.h.0",
+    "DeepSeek.-1.pre.1",
+    "DeepSeek.-1.window.L0.2",
+    "DeepSeek.-1.window.L1.3",
+    "DeepSeek.-1.window.L10.12",
+    "DeepSeek.-1.window.L11.13",
+    "DeepSeek.-1.window.L12.14",
+    "DeepSeek.-1.window.L13.15",
+    "DeepSeek.-1.window.L14.16",
+    "DeepSeek.-1.window.L15.17",
+    "DeepSeek.-1.window.L16.18",
+    "DeepSeek.-1.window.L17.19",
+    "DeepSeek.-1.window.L18.20",
+    "DeepSeek.-1.window.L19.21",
+    "DeepSeek.-1.window.L2.4",
+    "DeepSeek.-1.window.L20.22",
+    "DeepSeek.-1.window.L21.23",
+    "DeepSeek.-1.window.L22.24",
+    "DeepSeek.-1.window.L23.25",
+    "DeepSeek.-1.window.L24.26",
+    "DeepSeek.-1.window.L25.27",
+    "DeepSeek.-1.window.L26.28",
+    "DeepSeek.-1.window.L27.29",
+    "DeepSeek.-1.window.L28.30",
+    "DeepSeek.-1.window.L29.31",
+    "DeepSeek.-1.window.L3.5",
+    "DeepSeek.-1.window.L30.32",
+    "DeepSeek.-1.window.L31.33",
+    "DeepSeek.-1.window.L32.34",
+    "DeepSeek.-1.window.L33.35",
+    "DeepSeek.-1.window.L34.36",
+    "DeepSeek.-1.window.L35.37",
+    "DeepSeek.-1.window.L36.38",
+    "DeepSeek.-1.window.L37.39",
+    "DeepSeek.-1.window.L38.40",
+    "DeepSeek.-1.window.L39.41",
+    "DeepSeek.-1.window.L4.6",
+    "DeepSeek.-1.window.L5.7",
+    "DeepSeek.-1.window.L6.8",
+    "DeepSeek.-1.window.L7.9",
+    "DeepSeek.-1.window.L8.10",
+    "DeepSeek.-1.window.L9.11"
+  ]
+}

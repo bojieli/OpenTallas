@@ -1,0 +1,20 @@
+{
+  "owner_commit": "e57e08aadb7baf9cf50526c1ad50698cd3eb479d",
+  "canonical_catalog_source": "3c99ce15f compiled_v2",
+  "original_persisted_all_use_replay": 549760,
+  "counterexamples": [
+    {
+      "case": "predicate_wrong_vs_encoded_ISA",
+      "mutation": "commands[0].pred xor1; controlwords unchanged",
+      "verifier_accepted_uses": 549760
+    },
+    {
+      "case": "zero_commands_vs_full_program",
+      "mutation": "commands=[] andcoefficient_uses_per_rank=0;controlwords unchanged",
+      "verifier_accepted_uses": 0
+    }
+  ],
+  "scope": "Software persisted catalog verifier missing independent immutable-source completeness/binding guards; original generated canonicalcatalog remainscorrect. NotliveRTLfailure.",
+  "required_before_catalog_admission": "Bind exact491commands/pc/layer/pred/operandmetadata and counts to immutableencoded/demand sources; rejectsubset andmetadata-mutants beforeworduse replay.",
+  "hardware_admission": false
+}

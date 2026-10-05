@@ -1,0 +1,120 @@
+{
+  "branch": "codex/dsrom-field-tree-bridge-model-20261003",
+  "build_admitted": false,
+  "commands": {
+    "actual_queue_replay": "PYTHONPATH=tools python3 -c \"import dsrom_field_bridge_queue_bounds as q; print(q.actual_certificate())\"",
+    "parent_replay": "python3 tools/dsrom_field_bridge_parent.py --out /tmp/FRESH-parent.json",
+    "tests": "python3 -m pytest -q tests/test_dsrom_field_bridge_parent.py tests/test_dsrom_field_tree_bridge_model.py"
+  },
+  "fulltoken": false,
+  "future_physical_preflight": {
+    "checker_commit": "9b7b12038",
+    "review": "Read perorientation integergrid/source transform and pin/OBS checks; use exact targetLEF and archived make_tracks with actualorientation/origins. Necessary static guard, not routedaccess/SSFF or historical density/pin failure-cause proof. No TP8/adoptedreframe.",
+    "tool": "tools/check_macro_track_alignment.py"
+  },
+  "live_global_clock_solver": {
+    "mutation": false,
+    "output": "/tmp/dsrom-global-clock-constraints-20261003-r1",
+    "pid_readback": 2629663,
+    "status": "active/running",
+    "unit": "dsrom-global-clock-constraints-20261003-r1.service"
+  },
+  "new_jobs": [],
+  "next_parallel_implementation_plan": [
+    {
+      "next": "Keep source count gate and exact-once phase owner/GO reservation together; compile phase-specific reservations, preserve all physical source roots. Review13-edge registered read construction and local16-seat credit transfer against charged packet memory; source raw debt remains separate. No e899 failedcut or unused-fault fix closure transfer.",
+      "owner": "Maxwell"
+    },
+    {
+      "next": "One current enrolledPHW10 actual accepted trace. Add pairaccepted/tag exact-once, nodeac/bc/pop/add/vp/AP and rootqc/held/overflow/quiet; actual postNBA all12writer exclusions and native SUreadR+2. RetainedI66 certificate is alreadyreplayed; no duplicate retainedrun.",
+      "owner": "Hubble"
+    },
+    {
+      "next": "Own full512 CKV ready/gen immutablelease andactualcaller engine/outputdrain. Join acceptedstaging+engine retirement+allnineownerwritevisible+positive reverseCDC/reset, never requestaccepted/mergerdone. Field parent uses169owner separatephysicalshard and no debt erasure on wronggeneration.",
+      "owner": "Epicurus"
+    },
+    {
+      "next": "No diversion fromW2HBM. Consume frozen915 lifetime facts only; W2field1280 capture obligation separate from chosen HBM task.",
+      "owner": "Nash"
+    },
+    {
+      "next": "Existingglobalclocksolver untouched. Newfull8192capture+registeredreader require expanded homes, named raw/control/clock/reset/PG/pin/route union; old576 home cannot qualify newarea. Do not relaunch oldqframe or alterselectedS58.",
+      "owner": "Archimedes"
+    }
+  ],
+  "no_admission_limits": [
+    "Count proof requires exact-once admitted pair outputs and no phase overlap; pairXFIFO/segment input notcertified acrossfullprogram.",
+    "I66 actual retainedunitcoefficients/nonzero input/singleclock only; actual nodeoccupancy notrecorded, reconstructed recurrence agreesroots exactly.",
+    "Sixposition90countinconclusive notoverflow/no systematicdepth orcount sweep. Head provider omitted.",
+    "Prospective13stage reader, finiteVMpublication/writer guard/packetCRC/serviceclock and CDC/control not implemented or physicallyqualified; existingfailedcapture1024timeout andphysicalrecords preserved.",
+    "Read/allarea floors excludecodec/control/PG/OBS/route/skew/actualclockresetcosts; originalreturnstorage credited0/recharged0.",
+    "Actualacceptedfullprogram/violation set/C/F/tokencost notsupplied, notzero."
+  ],
+  "originals_modified": [],
+  "owned_PVE2_PVE3_jobs": [],
+  "physical_fit": false,
+  "prerequisite": "8842b42178f81e432bff929cf2cd7ba2e8059465",
+  "prospective_selected": {
+    "admitted_I66_reserved": [
+      320,
+      256
+    ],
+    "admitted_W2_required_each_shard": [
+      640,
+      640
+    ],
+    "all_area_components_exclude_actual_PG_route_CDC_VM_control_fit": true,
+    "candidate_timeout4096_original1024FAIL_preserved": true,
+    "codec_physical_transport": [
+      330,
+      12,
+      684
+    ],
+    "existing_packet_memory_is_explicitly_charged_not_free": true,
+    "finite_read_tokens_per_shard": 16,
+    "forward_reverse_screen_edges": [
+      1337,
+      1337
+    ],
+    "full_program_token_delta": null,
+    "header_fullowner_bits": 231,
+    "installed_P1_raw_records_each_shard": 4096,
+    "installed_P1_raw_records_logical": 8192,
+    "prospective_I66_F": 3714,
+    "prospective_I66_F_delta_cycles": 3293,
+    "prospective_I66_F_delta_us": 2.7441666666666666,
+    "raw_capture_R49_reservation_logical_mm2": 0.9065447424,
+    "reader_levels": 12,
+    "reader_sink_edge": 1,
+    "registered_read_allowed_cell_budget_logical_mm2": 2.08514132064,
+    "source_raw_debt_released_only_visible_positive_credit": true
+  },
+  "results": {
+    "actual_I66_reconstructed_node_peaks": [
+      2,
+      1,
+      2,
+      2,
+      1,
+      1
+    ],
+    "actual_I66_root_queue_peak": 1,
+    "actual_replay_matching_retained_roots_and_visible": true,
+    "cold_all46509_queue_profiles_byteidentical": true,
+    "cold_parent_model_byteidentical": true,
+    "compiled_singleposition_count_certificate_PASS": 46509,
+    "node_lifetime_write_maxima": [
+      3,
+      6,
+      12,
+      24,
+      48,
+      64
+    ],
+    "root_max_lifetime_raw_partials": 64,
+    "sixposition_count_certificate_inconclusive": 90,
+    "tests_PASS": 46
+  },
+  "status": "SOURCE_COUNT_AND_RETAINED_ACTUAL_CONSERVATION_PASS_PROSPECTIVE_PARENT_NO_RTL_ADMISSION",
+  "worktree": "/home/ubuntu/dsrom-field-tree-bridge-model-20261003"
+}

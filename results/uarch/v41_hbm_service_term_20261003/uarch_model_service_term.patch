@@ -1,0 +1,47 @@
+diff --git a/tools/uarch_model.py b/tools/uarch_model.py
+index 15b76f992..6b9709b03 100644
+--- a/tools/uarch_model.py
++++ b/tools/uarch_model.py
+@@ -1188,8 +1188,29 @@ def sm_op_cycles(rows_die: float, K: int, fmt: str, drain: int, group_slot: bool
+ V41_HBM_FABRIC_US = dict(collective_latency=125.9, collective_bytes=1.5, pipeline_hops=0.9, control=2.0)
+ V41_HBM_DIES = 96          # G = 96: every matrix 1/96 per die (W9 handoff 8)
+ 
++# Per-boundary owner/ACK/visibility service term of the V4.1 HBM chain (opt-in, OFF by default; review 2026-10-03,
++# /tmp/claude-review-20261003/dshbm_term).  boundary_cycles is charged on every one of the chain's global
++# boundaries (v41_boundaries), consumer-side and serial: the mirrored RF/SMEM write ACK (2: ot_gpu_rf_service.sv
++# registers ack_valid the edge after write_go; h4_v1_physical_join.SerializedOwner.ack time += 2), the visibility
++# fence (ot_gpu_rf_visibility_fence.sv fence_valid one edge after the ACK retire; 0 if the arrive is driven from
++# writes_visible), the owner tag/generation compare (W5 owner gate, unbuilt: 0 same-cycle, 1 registered) and the RF
++# read/write alternation stall (ot_gpu_rf_service.sv: a write behind a just-granted read waits read_pending +
++# rsp_valid = 2).  Reverse retirement is off the path (double-buffered x store and staging ring) and the 329
++# boundaries cross no clock domain (one SM clock, as a GPU's SIMT lanes).  routed_fetch_ns is charged once per
++# routed-expert matvec on the path: the router-dependent first access that the prefetching bulk copy cannot hide
++# (results/rtl/w19_expert_fetch.json audit_comparison.exposed_ns: 133.2 refresh postponed, 409.8-526.4 refresh
++# live) plus two async CDC crossings HBM service <-> SM (results/rtl/v41_link_cdc_campaign.json: 3.0-4.1 RX cycles
++# each, 2-flop Gray FIFO) plus the M/D/1 PC queue wait at the chain's weight-sweep utilisation (0.105) or the W19
++# bg80 measured excess (+18.3 ns) as the high bound.
++V41_HBM_SERVICE = dict(
++    off=dict(boundary_cycles=0, routed_fetch_ns=0.0),
++    low=dict(boundary_cycles=2, routed_fetch_ns=133.2 + 5.4),
++    central=dict(boundary_cycles=4, routed_fetch_ns=469.5 + 6.4 + 0.1),
++    high=dict(boundary_cycles=6, routed_fetch_ns=526.4 + 7.4 + 18.3),
++)
++
+ 
+-def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
++def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None, service="off"):
+     """V4.1 HBM token on the SM design, K-chain aware: the arch DAG's critical path at 1M with every matvec
+     re-priced as an SM op on its 1/96 row slice (sm_op_cycles), the dedicated units' nodes (W11 spec widths)
+     at their arch price, one barrier per global boundary, and the comparator's switched-fabric terms.  The
+@@ -1223,6 +1244,11 @@ def v41_hbm_chain(group_slot: bool, positions: int = 1, barrier_cycles=None):
+     parts = dict(sm_matvec=mv * 1e6, x_broadcast_fill=xfill * 1e6, dedicated_and_su=other * 1e6,
+                  verify_extra_issue=extra * 1e6, barrier=nb * bc / clock * 1e6, **V41_HBM_FABRIC_US)
+     parts["collective_bytes"] *= positions             # every position's activations cross the fabric
++    sv = V41_HBM_SERVICE[service] if isinstance(service, str) else service
++    if sv["boundary_cycles"] or sv["routed_fetch_ns"]:    # opt-in: OFF leaves every record byte-identical
++        n_routed = sum(1 for x in path if x.endswith(".ffn.experts_gu"))
++        parts["boundary_service"] = nb * sv["boundary_cycles"] / clock * 1e6
++        parts["routed_fetch"] = n_routed * sv["routed_fetch_ns"] * 1e-3
+     chain = sum(parts.values())
+     T = max(chain, 37.4)
+     return T, parts, nb

@@ -1,0 +1,31 @@
+{
+  "outputs": [
+    {
+      "bytes": 34589,
+      "path": "model.json",
+      "sha256": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e"
+    },
+    {
+      "bytes": 8278,
+      "path": "implementation_graph.json",
+      "sha256": "769e98ff120eeb4c31e63b83cc5efa397ad1f54674f5f720140d5d04bc561110"
+    },
+    {
+      "bytes": 7276,
+      "path": "consumer_delta.json",
+      "sha256": "a8034cf8df06963187e9af17ebef4babaee910b74e2d1fbb21430031475a2c9f"
+    },
+    {
+      "bytes": 358243,
+      "path": "Qwen_directory.bin.gz",
+      "sha256": "3532f02d42ed259033ac2744c4d8100a1291a9bb39c649429c7097e9f7284721"
+    },
+    {
+      "bytes": 3498932,
+      "path": "DS_directory.bin.gz",
+      "sha256": "6ad31f796a1828d7390bdd5c2c94a46af535d8a432ed66c55e816b1e6bfbe025"
+    }
+  ],
+  "scope": "generator only, no Git or remote audit files; no physical credit",
+  "verdict": "PASS"
+}

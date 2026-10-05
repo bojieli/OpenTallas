@@ -1,0 +1,171 @@
+{
+  "actual_whole_margin_W": null,
+  "actual_whole_power_W": null,
+  "admission_verdict": "FAIL_ALL12_CURRENT_SU_SLOT_CONSTRUCTIONS_AND_SOURCE_SERVICE_GATES",
+  "cases": [
+    {
+      "coefficient_only_calendar_us": "1240.5175",
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.13984032064",
+      "fresh_conditional_area_mm2": "0.9888295968",
+      "hardware_admission": false,
+      "macro_count": 8,
+      "parameter_banks": 6,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "1205.8075",
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.14381996080",
+      "fresh_conditional_area_mm2": "0.99280923696",
+      "hardware_admission": false,
+      "macro_count": 8,
+      "parameter_banks": 6,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "1205.8075",
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.39042643072",
+      "fresh_conditional_area_mm2": "1.23941570688",
+      "hardware_admission": false,
+      "macro_count": 8,
+      "parameter_banks": 6,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "1215.351666666666666666666667",
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.16670974432",
+      "fresh_conditional_area_mm2": "1.01569902048",
+      "hardware_admission": false,
+      "macro_count": 11,
+      "parameter_banks": 9,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "824.4741666666666666666666667",
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.17068938448",
+      "fresh_conditional_area_mm2": "1.01967866064",
+      "hardware_admission": false,
+      "macro_count": 11,
+      "parameter_banks": 9,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "824.4741666666666666666666667",
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.41729585440",
+      "fresh_conditional_area_mm2": "1.26628513056",
+      "hardware_admission": false,
+      "macro_count": 11,
+      "parameter_banks": 9,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "856.3366666666666666666666667",
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.22940537728",
+      "fresh_conditional_area_mm2": "1.07839465344",
+      "hardware_admission": false,
+      "macro_count": 18,
+      "parameter_banks": 16,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "486.5708333333333333333333333",
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.23338501744",
+      "fresh_conditional_area_mm2": "1.0823742936",
+      "hardware_admission": false,
+      "macro_count": 18,
+      "parameter_banks": 16,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "486.5708333333333333333333333",
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.47999148736",
+      "fresh_conditional_area_mm2": "1.32898076352",
+      "hardware_admission": false,
+      "macro_count": 18,
+      "parameter_banks": 16,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "731.0183333333333333333333333",
+      "credits": 2,
+      "exclusive_SU_slot_area_deficit_mm2": "0.50571807232",
+      "fresh_conditional_area_mm2": "1.35470734848",
+      "hardware_admission": false,
+      "macro_count": 49,
+      "parameter_banks": 45,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "450.0066666666666666666666667",
+      "credits": 4,
+      "exclusive_SU_slot_area_deficit_mm2": "0.50969817904",
+      "fresh_conditional_area_mm2": "1.3586874552",
+      "hardware_admission": false,
+      "macro_count": 49,
+      "parameter_banks": 45,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    },
+    {
+      "coefficient_only_calendar_us": "199.655",
+      "credits": 128,
+      "exclusive_SU_slot_area_deficit_mm2": "0.75630371584",
+      "fresh_conditional_area_mm2": "1.6052929920",
+      "hardware_admission": false,
+      "macro_count": 49,
+      "parameter_banks": 45,
+      "physical_slot_verdict": "FAIL_CHOSEN_RETAINED_STAGING_RESERVATION"
+    }
+  ],
+  "checkpoint_reads": 0,
+  "exact_relocation": "3977 scalar request/fill and retained value validity checks; compiler89a653 separately diagnostic NOT_RUNNABLE",
+  "failures_are_chosen_constructions_not_physical_minimum": true,
+  "fastest_coefficient_only_banks": 45,
+  "full_token_cycles": null,
+  "hardware_admission": false,
+  "jobs_launched": 0,
+  "next_minimum_corrections": [
+    "source-priced135existing1024x72 alternative including90extra clock endpoints and all captures",
+    "or explicit relocated coefficienthome preserving retainedSU/HC/currentdie geometry with pricedroutes",
+    "complete actualcatalog and consumer service deadlines",
+    "L1 actualsource provenance"
+  ],
+  "no_proportional_power_transfer": true,
+  "no_undersized_instance_credit": true,
+  "schema": "opentallas.CROM-stage-local-admission.v1",
+  "selected_adopted_point": null,
+  "source_pins": {
+    "fresh_typed": {
+      "commit": "4276c2587",
+      "path": "results/uarch/w10_crom_actual_stage_budget_r1/budget.json",
+      "sha256": "94eeb17522f5c0caa700cad1a70b1d077ec78e3f76a056552e471591b37a5861"
+    },
+    "model16": {
+      "commit": "3977c3392",
+      "path": "results/quality/w16_engram_initializer_20261001/stage_local16.json",
+      "sha256": "e377476b3e4a52cc0346598e6aaeca45bd062fc10086d7f4772d212c66086076"
+    },
+    "model6": {
+      "commit": "3977c3392",
+      "path": "results/quality/w16_engram_initializer_20261001/stage_local6.json",
+      "sha256": "fde3fbbce7f74b0956d05cdbfbf058276bf9a21608ae2e38efd62ad6b6a7e2ea"
+    },
+    "model9": {
+      "commit": "3977c3392",
+      "path": "results/quality/w16_engram_initializer_20261001/stage_local9.json",
+      "sha256": "6317991fb10ea9b254c8a51405ed51b26a7a886c5d490afbd3b7daf20baa6b16"
+    },
+    "preserved45": {
+      "commit": "3977c3392",
+      "path": "results/quality/w16_engram_initializer_20261001/stage_local45_rows.json",
+      "sha256": "9f39b772b8095b84eb2616a5436dfa43a75007a9cbc31463bc042bddf63dc74a"
+    }
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_dynamic_session_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aggregate_counter_sha256": {"$ref": "#/$defs/sha256"},
+    "aggregate_counters": {
+      "additionalProperties": false,
+      "maxProperties": 70,
+      "minProperties": 70,
+      "patternProperties": {
+        "^(arithmetic|commands|hbm|matrix|sram|state)\\.[A-Za-z0-9_.]+$": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_only_short_generation_complete": {"const": true},
+        "exact_8000_token_acceptance": {"const": false},
+        "target_precision_reference_verified": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "artifact_only_short_generation_complete",
+        "exact_8000_token_acceptance",
+        "target_precision_reference_verified",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "decode_transaction_count": {
+      "maximum": 7999,
+      "minimum": 0,
+      "type": "integer"
+    },
+    "decoded": {
+      "additionalProperties": false,
+      "properties": {
+        "full_text": {"type": "string"},
+        "generated_text": {"type": "string"},
+        "prompt_text": {"minLength": 1, "type": "string"}
+      },
+      "required": ["full_text", "generated_text", "prompt_text"],
+      "type": "object"
+    },
+    "eos_observed": {"const": false},
+    "final_state": {
+      "items": {"$ref": "#/$defs/state"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "generated_token_count": {
+      "maximum": 8000,
+      "minimum": 32,
+      "type": "integer"
+    },
+    "generated_token_ids": {
+      "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+      "maxItems": 8000,
+      "minItems": 32,
+      "type": "array"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "mode": {"const": "artifact_only_data_bearing_short_generation"},
+    "prompt_token_count": {
+      "maximum": 8000,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "prompt_token_ids": {
+      "items": {"maximum": 151935, "minimum": 0, "type": "integer"},
+      "maxItems": 8000,
+      "minItems": 1,
+      "type": "array"
+    },
+    "runner_version": {
+      "const": "tensor-accelerator-qwen-dynamic-session-runner-0.1.0"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_full_model_dynamic_session_execution.v1"
+    },
+    "session_execution_id": {"$ref": "#/$defs/sha256"},
+    "session_id": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"},
+    "step_chain_sha256": {"$ref": "#/$defs/sha256"},
+    "steps": {
+      "items": {"$ref": "#/$defs/step"},
+      "maxItems": 8000,
+      "minItems": 32,
+      "type": "array"
+    },
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "tokenizer": {
+      "additionalProperties": false,
+      "properties": {
+        "decoded_prompt_exact": {"const": true},
+        "library": {"const": "tokenizers"},
+        "library_version": {"const": "0.22.2"},
+        "path": {"const": "tokenizer.json"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "vocabulary_size": {"const": 151936}
+      },
+      "required": [
+        "decoded_prompt_exact",
+        "library",
+        "library_version",
+        "path",
+        "sha256",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "transaction_count": {
+      "maximum": 8000,
+      "minimum": 32,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "aggregate_counter_sha256",
+    "aggregate_counters",
+    "build_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "decode_transaction_count",
+    "decoded",
+    "eos_observed",
+    "final_state",
+    "generated_token_count",
+    "generated_token_ids",
+    "graph_id",
+    "mode",
+    "prompt_token_count",
+    "prompt_token_ids",
+    "runner_version",
+    "schema",
+    "session_execution_id",
+    "session_id",
+    "status",
+    "step_chain_sha256",
+    "steps",
+    "timing",
+    "tokenizer",
+    "transaction_count"
+  ],
+  "title": "Qwen artifact-only dynamic short-generation execution v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {"minimum": 1, "type": "integer"},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "length": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "resource_id": {
+          "pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$",
+          "type": "string"
+        },
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "generation",
+        "key_payload_sha256",
+        "layer",
+        "length",
+        "resource_id",
+        "value_payload_sha256"
+      ],
+      "type": "object"
+    },
+    "step": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_token_index": {
+          "oneOf": [
+            {"minimum": 0, "type": "integer"},
+            {"type": "null"}
+          ]
+        },
+        "input_role": {"enum": ["generated", "prompt"]},
+        "input_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "logits_sha256": {"$ref": "#/$defs/sha256"},
+        "output_role": {"enum": ["generated_token", "prefill_intermediate"]},
+        "output_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "phase": {"enum": ["decode", "prefill"]},
+        "previous_report_id": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "report_sha256": {"$ref": "#/$defs/sha256"},
+        "report_size_bytes": {"minimum": 1, "type": "integer"},
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "state_generation": {"minimum": 1, "type": "integer"},
+        "state_length": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "state_metadata_after_sha256": {"$ref": "#/$defs/sha256"},
+        "state_metadata_before_sha256": {"$ref": "#/$defs/sha256"},
+        "step_index": {"maximum": 7999, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "generated_token_index",
+        "input_role",
+        "input_token_id",
+        "logits_sha256",
+        "output_role",
+        "output_token_id",
+        "phase",
+        "previous_report_id",
+        "report_id",
+        "report_sha256",
+        "report_size_bytes",
+        "request_id",
+        "state_generation",
+        "state_length",
+        "state_metadata_after_sha256",
+        "state_metadata_before_sha256",
+        "step_index"
+      ],
+      "type": "object"
+    }
+  }
+}

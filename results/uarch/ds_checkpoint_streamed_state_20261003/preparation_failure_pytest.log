@@ -1,0 +1,156 @@
+FFFFF...F.F                                                              [100%]
+=================================== FAILURES ===================================
+__________________ test_exact_nested_actual_types_and_aliases __________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_exact_nested_actual_types0')
+
+    def test_exact_nested_actual_types_and_aliases(tmp_path):
+        m=pinned_leaf_module();array=np.arange(24,dtype='<u4').reshape(4,6);array.flags.writeable=False
+        value={'provider':{('v',95):array,'alias':array,'str':'α\n','int':2**64-1,'float':-0.0,'scalar':np.int64(3),'bytes':b'\x00\xff','mutable':bytearray(b'actual')},'retired':{0,1},'dtype':np.dtype('<f4'),'extra':(None,True,[False])}
+>       compare(m,value,tmp_path)
+
+tests/test_ds_checkpoint_streamed_state.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_checkpoint_streamed_state.py:28: in compare
+    encoded=m.canonical(a.tree(value));sink=io.BytesIO()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'dict': [['provider', {'dict': [[{...}, {...}], ['alias', {...}], ['str', 'α\n'], ['int', 18446744073709551615], ['fl.....]}], ['retired', {'set': [0, 1]}], ['dtype', {'dtype': '<f4'}], ['extra', {'tuple': [None, True, {'list': [...]}]}]]}
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+_____________ test_original_strided_array_copy_and_flags_preserved _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_original_strided_array_co0')
+
+    def test_original_strided_array_copy_and_flags_preserved(tmp_path):
+>       m=pinned_leaf_module();compare(m,{'a':np.arange(128,dtype=np.float32)[::3]},tmp_path)
+
+tests/test_ds_checkpoint_streamed_state.py:44: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_checkpoint_streamed_state.py:28: in compare
+    encoded=m.canonical(a.tree(value));sink=io.BytesIO()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'dict': [['a', {'array': [0, 172, '<f4', [43], True]}]]}
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+______________ test_sector_owner_address_mask_and_payload_parity _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_sector_owner_address_mask0')
+
+    def test_sector_owner_address_mask_and_payload_parity(tmp_path):
+        m=pinned_leaf_module();port=types.SimpleNamespace(backing={('DeepSeek',0,4):[None if i%3 else i for i in range(32)],('DeepSeek',0,5):list(range(32))},extents={('DeepSeek',0):[{'base':128,'bytes':64}]})
+>       compare(m,{'ports':{'rf':{0:m.SectorBacking(port)}}},tmp_path)
+
+tests/test_ds_checkpoint_streamed_state.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_checkpoint_streamed_state.py:28: in compare
+    encoded=m.canonical(a.tree(value));sink=io.BytesIO()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'dict': [['ports', {'dict': [['rf', {...}]]}]]}
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+________________ test_empty_and_nonfinite_legacy_encoding_exact ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_empty_and_nonfinite_legac0')
+
+    def test_empty_and_nonfinite_legacy_encoding_exact(tmp_path):
+>       compare(pinned_leaf_module(),{'a':{},'b':[],'c':set(),'d':(float('nan'),float('inf'),float('-inf'))},tmp_path)
+
+tests/test_ds_checkpoint_streamed_state.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_checkpoint_streamed_state.py:28: in compare
+    encoded=m.canonical(a.tree(value));sink=io.BytesIO()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'dict': [['a', {'dict': []}], ['b', {'list': []}], ['c', {'set': []}], ['d', {'tuple': [nan, inf, -inf]}]]}
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+_________ test_metadata_container_count_scales_but_live_frames_do_not __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_metadata_container_count_0')
+
+    def test_metadata_container_count_scales_but_live_frames_do_not(tmp_path):
+        m=pinned_leaf_module();value={'retired':list(range(10000))}
+>       stats=compare(m,value,tmp_path)
+
+tests/test_ds_checkpoint_streamed_state.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_checkpoint_streamed_state.py:28: in compare
+    encoded=m.canonical(a.tree(value));sink=io.BytesIO()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'dict': [['retired', {'list': [0, 1, 2, 3, 4, 5, ...]}]]}
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+_______________ test_cycle_refuses_and_partial_evidence_retained _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_cycle_refuses_and_partial0')
+
+    def test_cycle_refuses_and_partial_evidence_retained(tmp_path):
+        m=pinned_leaf_module();w=writer(m,tmp_path/'payload');v=[];v.append(v);sink=io.BytesIO()
+>       with pytest.raises(ValueError,match='cyclic'):stream.stream_typed_state(m,v,w,sink,enabled=True)
+
+tests/test_ds_checkpoint_streamed_state.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_checkpoint_streamed_state.py:61: in stream_typed_state
+    walk(value,0)
+tools/ds_checkpoint_streamed_state.py:41: in walk
+    emit(b'{'+base.canonical(kind)+b':[')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = 'list'
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+______________________ test_short_metadata_write_refuses _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-7179/test_short_metadata_write_refu0')
+
+    def test_short_metadata_write_refuses(tmp_path):
+        m=pinned_leaf_module();w=writer(m,tmp_path/'payload')
+        class Short:
+            def write(self,data):return 0
+>       with pytest.raises(ValueError,match='short'):stream.stream_typed_state(m,{},w,Short(),enabled=True)
+
+tests/test_ds_checkpoint_streamed_state.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/ds_checkpoint_streamed_state.py:61: in stream_typed_state
+    walk(value,0)
+tools/ds_checkpoint_streamed_state.py:41: in walk
+    emit(b'{'+base.canonical(kind)+b':[')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = 'dict'
+
+>   ???
+E   NameError: name 'json' is not defined
+
+<PINNED_LEAF_WRITER_ONLY>:71: NameError
+=========================== short test summary info ============================
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_exact_nested_actual_types_and_aliases
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_original_strided_array_copy_and_flags_preserved
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_sector_owner_address_mask_and_payload_parity
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_empty_and_nonfinite_legacy_encoding_exact
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_metadata_container_count_scales_but_live_frames_do_not
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_cycle_refuses_and_partial_evidence_retained
+FAILED tests/test_ds_checkpoint_streamed_state.py::test_short_metadata_write_refuses
+7 failed, 4 passed in 1.14s

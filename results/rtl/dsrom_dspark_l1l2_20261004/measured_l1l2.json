@@ -1,0 +1,1072 @@
+{
+ "schema": "opentallas.dsrom-dspark-l1l2-composition.v1",
+ "status": "measured",
+ "measured_inputs": {
+  "l1_chain_ratio": 1.010642,
+  "l2_chain_ratio": 0.010642,
+  "l2_sweep_ratio": {
+   "5": 1.0461
+  },
+  "source": "l1_chain_ratio: results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json (record.json, RTL-measured fused chain step / head step); l2_chain_ratio = l1_chain_ratio - 1 (the same measured step without its head matvec); l2_sweep_ratio 5: results/rtl/dsrom_dspark_batched_head_20261004/record_n16_timingfix.json batched_x2_over_single (NV5 XS8, timing-fixed RTL 5a7e0410f)"
+ },
+ "result": {
+  "tau": 4.159,
+  "head_occ_us": 12.37,
+  "block5_us": 14.405,
+  "transfer_ratios": {
+   "block5_over_verify_layer6": 0.7474,
+   "chain_step_over_head_step": 1.63665,
+   "markov_over_head_macs_full": 0.00781,
+   "markov_over_head_macs_reduced": 0.2,
+   "seed_commit_over_verify": 0.00347
+  },
+  "chain_fixed_us": 0.0,
+  "reference": {
+   "as_built": {
+    "draft_us": 144.44,
+    "chain_step_us": 20.245,
+    "sweep_us": 0.0,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      }
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      }
+     }
+    }
+   },
+   "l1": {
+    "draft_us": 105.72,
+    "chain_step_us": 12.502,
+    "sweep_us": 0.0,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      }
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      }
+     }
+    }
+   }
+  },
+  "levers": {
+   "l2/rom_read/k1": {
+    "variant": "l2",
+    "bound": "rom_read",
+    "vectors": 1,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 5,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    }
+   },
+   "l2/rom_read/k2": {
+    "variant": "l2",
+    "bound": "rom_read",
+    "vectors": 2,
+    "draft_us": 119.7,
+    "draft_over_ar": {
+     "1048576": 0.2952,
+     "200000": 0.3081
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 3,
+    "sweep_us": 37.11,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 592.9,
+       "mtp_tok_s": 7014.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 627.39,
+       "mtp_tok_s": 6629.1
+      },
+      "gain_vs_as_built_occupancy": 0.0417
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 575.62,
+       "mtp_tok_s": 7225.2
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 590.93,
+       "mtp_tok_s": 7038.0
+      },
+      "gain_vs_as_built_occupancy": 0.043
+     }
+    }
+   },
+   "l2/rom_read/k3": {
+    "variant": "l2",
+    "bound": "rom_read",
+    "vectors": 3,
+    "draft_us": 107.33,
+    "draft_over_ar": {
+     "1048576": 0.2647,
+     "200000": 0.2763
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 2,
+    "sweep_us": 24.74,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 580.53,
+       "mtp_tok_s": 7164.2
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 615.02,
+       "mtp_tok_s": 6762.4
+      },
+      "gain_vs_as_built_occupancy": 0.0639
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 563.25,
+       "mtp_tok_s": 7383.9
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 578.56,
+       "mtp_tok_s": 7188.5
+      },
+      "gain_vs_as_built_occupancy": 0.0659
+     }
+    }
+   },
+   "l2/rom_read/k5": {
+    "variant": "l2",
+    "bound": "rom_read",
+    "vectors": 5,
+    "draft_us": 94.96,
+    "draft_over_ar": {
+     "1048576": 0.2342,
+     "200000": 0.2444
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 1,
+    "sweep_us": 12.37,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 568.16,
+       "mtp_tok_s": 7320.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 602.65,
+       "mtp_tok_s": 6901.2
+      },
+      "gain_vs_as_built_occupancy": 0.0871
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 550.88,
+       "mtp_tok_s": 7549.7
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 566.19,
+       "mtp_tok_s": 7345.5
+      },
+      "gain_vs_as_built_occupancy": 0.0898
+     }
+    }
+   },
+   "l2/rom_read/k6": {
+    "variant": "l2",
+    "bound": "rom_read",
+    "vectors": 6,
+    "draft_us": 94.96,
+    "draft_over_ar": {
+     "1048576": 0.2342,
+     "200000": 0.2444
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 1,
+    "sweep_us": 12.37,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 568.16,
+       "mtp_tok_s": 7320.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 602.65,
+       "mtp_tok_s": 6901.2
+      },
+      "gain_vs_as_built_occupancy": 0.0871
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 550.88,
+       "mtp_tok_s": 7549.7
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 566.19,
+       "mtp_tok_s": 7345.5
+      },
+      "gain_vs_as_built_occupancy": 0.0898
+     }
+    },
+    "verify_head_batched_sensitivity": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 466.22,
+       "step_us": 564.4,
+       "mtp_tok_s": 7368.9
+      },
+      "window": null
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 413.53,
+       "step_us": 511.43,
+       "mtp_tok_s": 8132.2
+      },
+      "window": null
+     }
+    }
+   },
+   "l2/mac/k1": {
+    "variant": "l2",
+    "bound": "mac",
+    "vectors": 1,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 5,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    }
+   },
+   "l2/mac/k2": {
+    "variant": "l2",
+    "bound": "mac",
+    "vectors": 2,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 3,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    }
+   },
+   "l2/mac/k3": {
+    "variant": "l2",
+    "bound": "mac",
+    "vectors": 3,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 2,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    }
+   },
+   "l2/mac/k5": {
+    "variant": "l2",
+    "bound": "mac",
+    "vectors": 5,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 1,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    }
+   },
+   "l2/mac/k6": {
+    "variant": "l2",
+    "bound": "mac",
+    "vectors": 6,
+    "draft_us": 144.44,
+    "draft_over_ar": {
+     "1048576": 0.3562,
+     "200000": 0.3718
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 1,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 617.64,
+       "mtp_tok_s": 6733.7
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 652.13,
+       "mtp_tok_s": 6377.6
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 600.36,
+       "mtp_tok_s": 6927.5
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 615.67,
+       "mtp_tok_s": 6755.2
+      },
+      "gain_vs_as_built_occupancy": 0.0
+     }
+    },
+    "verify_head_batched_sensitivity": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 466.22,
+       "step_us": 613.88,
+       "mtp_tok_s": 6775.0
+      },
+      "window": null
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 413.53,
+       "step_us": 560.91,
+       "mtp_tok_s": 7414.8
+      },
+      "window": null
+     }
+    }
+   },
+   "l2/measured/k5": {
+    "variant": "l2",
+    "bound": "measured",
+    "vectors": 5,
+    "draft_us": 95.53,
+    "draft_over_ar": {
+     "1048576": 0.2356,
+     "200000": 0.2459
+    },
+    "chain_step_us": 7.875,
+    "sweeps": 1,
+    "sweep_us": 12.94,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 568.73,
+       "mtp_tok_s": 7312.8
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 603.22,
+       "mtp_tok_s": 6894.7
+      },
+      "gain_vs_as_built_occupancy": 0.086
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 551.45,
+       "mtp_tok_s": 7541.9
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 566.76,
+       "mtp_tok_s": 7338.2
+      },
+      "gain_vs_as_built_occupancy": 0.0887
+     }
+    }
+   },
+   "l1l2/rom_read/k1": {
+    "variant": "l1l2",
+    "bound": "rom_read",
+    "vectors": 1,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 5,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    }
+   },
+   "l1l2/rom_read/k2": {
+    "variant": "l1l2",
+    "bound": "rom_read",
+    "vectors": 2,
+    "draft_us": 80.98,
+    "draft_over_ar": {
+     "1048576": 0.1997,
+     "200000": 0.2085
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 3,
+    "sweep_us": 37.11,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 554.18,
+       "mtp_tok_s": 7504.8
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 588.67,
+       "mtp_tok_s": 7065.1
+      },
+      "gain_vs_as_built_occupancy": 0.1145
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 536.91,
+       "mtp_tok_s": 7746.2
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 552.22,
+       "mtp_tok_s": 7531.5
+      },
+      "gain_vs_as_built_occupancy": 0.1182
+     }
+    }
+   },
+   "l1l2/rom_read/k3": {
+    "variant": "l1l2",
+    "bound": "rom_read",
+    "vectors": 3,
+    "draft_us": 68.61,
+    "draft_over_ar": {
+     "1048576": 0.1692,
+     "200000": 0.1766
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 2,
+    "sweep_us": 24.74,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 541.81,
+       "mtp_tok_s": 7676.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 576.3,
+       "mtp_tok_s": 7216.7
+      },
+      "gain_vs_as_built_occupancy": 0.14
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 524.54,
+       "mtp_tok_s": 7928.9
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 539.85,
+       "mtp_tok_s": 7704.1
+      },
+      "gain_vs_as_built_occupancy": 0.1446
+     }
+    }
+   },
+   "l1l2/rom_read/k5": {
+    "variant": "l1l2",
+    "bound": "rom_read",
+    "vectors": 5,
+    "draft_us": 56.24,
+    "draft_over_ar": {
+     "1048576": 0.1387,
+     "200000": 0.1448
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 1,
+    "sweep_us": 12.37,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 529.44,
+       "mtp_tok_s": 7855.5
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 563.93,
+       "mtp_tok_s": 7375.0
+      },
+      "gain_vs_as_built_occupancy": 0.1666
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 512.17,
+       "mtp_tok_s": 8120.4
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 527.48,
+       "mtp_tok_s": 7884.7
+      },
+      "gain_vs_as_built_occupancy": 0.1722
+     }
+    }
+   },
+   "l1l2/rom_read/k6": {
+    "variant": "l1l2",
+    "bound": "rom_read",
+    "vectors": 6,
+    "draft_us": 56.24,
+    "draft_over_ar": {
+     "1048576": 0.1387,
+     "200000": 0.1448
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 1,
+    "sweep_us": 12.37,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 529.44,
+       "mtp_tok_s": 7855.5
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 563.93,
+       "mtp_tok_s": 7375.0
+      },
+      "gain_vs_as_built_occupancy": 0.1666
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 512.17,
+       "mtp_tok_s": 8120.4
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 527.48,
+       "mtp_tok_s": 7884.7
+      },
+      "gain_vs_as_built_occupancy": 0.1722
+     }
+    },
+    "verify_head_batched_sensitivity": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 466.22,
+       "step_us": 525.68,
+       "mtp_tok_s": 7911.7
+      },
+      "window": null
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 413.53,
+       "step_us": 472.71,
+       "mtp_tok_s": 8798.3
+      },
+      "window": null
+     }
+    }
+   },
+   "l1l2/mac/k1": {
+    "variant": "l1l2",
+    "bound": "mac",
+    "vectors": 1,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 5,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    }
+   },
+   "l1l2/mac/k2": {
+    "variant": "l1l2",
+    "bound": "mac",
+    "vectors": 2,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 3,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    }
+   },
+   "l1l2/mac/k3": {
+    "variant": "l1l2",
+    "bound": "mac",
+    "vectors": 3,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 2,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    }
+   },
+   "l1l2/mac/k5": {
+    "variant": "l1l2",
+    "bound": "mac",
+    "vectors": 5,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 1,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    }
+   },
+   "l1l2/mac/k6": {
+    "variant": "l1l2",
+    "bound": "mac",
+    "vectors": 6,
+    "draft_us": 105.72,
+    "draft_over_ar": {
+     "1048576": 0.2607,
+     "200000": 0.2721
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 1,
+    "sweep_us": 61.85,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 578.92,
+       "mtp_tok_s": 7184.1
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 613.41,
+       "mtp_tok_s": 6780.1
+      },
+      "gain_vs_as_built_occupancy": 0.0669
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 561.65,
+       "mtp_tok_s": 7405.0
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 576.96,
+       "mtp_tok_s": 7208.5
+      },
+      "gain_vs_as_built_occupancy": 0.0689
+     }
+    },
+    "verify_head_batched_sensitivity": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 466.22,
+       "step_us": 575.16,
+       "mtp_tok_s": 7231.1
+      },
+      "window": null
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 413.53,
+       "step_us": 522.19,
+       "mtp_tok_s": 7964.6
+      },
+      "window": null
+     }
+    }
+   },
+   "l1l2/measured/k5": {
+    "variant": "l1l2",
+    "bound": "measured",
+    "vectors": 5,
+    "draft_us": 56.81,
+    "draft_over_ar": {
+     "1048576": 0.1401,
+     "200000": 0.1462
+    },
+    "chain_step_us": 0.132,
+    "sweeps": 1,
+    "sweep_us": 12.94,
+    "ctx": {
+     "1048576": {
+      "occupancy": {
+       "verify_us": 469.98,
+       "step_us": 530.01,
+       "mtp_tok_s": 7847.0
+      },
+      "window": {
+       "verify_us": 504.47,
+       "step_us": 564.5,
+       "mtp_tok_s": 7367.6
+      },
+      "gain_vs_as_built_occupancy": 0.1653
+     },
+     "200000": {
+      "occupancy": {
+       "verify_us": 452.99,
+       "step_us": 512.74,
+       "mtp_tok_s": 8111.4
+      },
+      "window": {
+       "verify_us": 468.3,
+       "step_us": 528.05,
+       "mtp_tok_s": 7876.2
+      },
+      "gain_vs_as_built_occupancy": 0.1709
+     }
+    }
+   }
+  }
+ },
+ "basis": "Successor of tools/dsrom_dspark_mtp_step_compose.py (whose bytes are pinned by its composition.json): it reads that\nrecord's measured slices and transfer ratios and prices the draft under each lever.  Nothing here is measured; the\nmeasured lever cycles enter through --l1-chain-ratio / --l2-sweep-ratio / --l2-chain-ratio.\nThe DSpark draft is 3 blocks over the 5 draft positions plus a SERIAL sampling chain: position i needs the token of\ni - 1 for its Markov term, so as built every chain step runs a full lm_head matvec, the Markov matvec, a vocab-length\nbias add and a vocab argmax select.  But the lm_head matvec of position i depends only on the block output h_i, not\non the previous token; only the Markov add and the argmax are serial.\n  as built   chain step = head_occ x R_chain                        (R_chain = measured chain step / head step, 1.637)\n  L1 fused   bias add and argmax ride the head's output stream, as the verify head's me_amax does:\n             chain step = head_occ x (1 + R_markov)                 (R_markov = Markov / lm_head MACs, 32 / 4096)\n  L2 batched the 5 lm_head matvecs leave the chain and run as one batched sweep over the block outputs, k vectors per\n             ROM read (ot_v41_rom_elem_nv_w10, NV = k).  The serial chain keeps the Markov add + argmax only:\n             draft head = sweeps(k) + 5 x chain_L2\n             sweeps(k) = ceil(5 / k) x T_sweep(k)\n               ROM-read-bound: T_sweep(k) = head_occ             (the MACs replicated per vector keep pace with the read)\n               MAC-bound:      T_sweep(k) = (vectors in it) x head_occ, so sweeps(k) = 5 x head_occ (no gain)\n               measured:       T_sweep(k) = head_occ x --l2-sweep-ratio k=R  (batched k-vector sweep / single head step)\n             chain_L2 = head_occ x (R_chain - 1)   with the as-built separate SU add + XU select (L2 alone)\n             chain_L2 = head_occ x R_markov        with L1's fused bias + argmax (L1 + L2)\n  draft = 3 x block5 + draft head;  step = wavefront verify + draft + seed/commit;  MTP tok/s = tau x 1e6 / step.\nA vector count k >= 6 can also batch the 6 verify heads (sensitivity only, occupancy rule): the head leaves the\nwavefront II, which becomes the next-slowest stage, and its single batched sweep stays inside the AR term.",
+ "source_commit": "5a7e0410f0ad48c8643131e44002ef120d74378d",
+ "input_sha256": {
+  "tools/dsrom_dspark_l1l2_compose.py": "c8c26872547147110fb55d3afe916f18f04513562e2cdd0827a92da782464426",
+  "results/rtl/dsrom_dspark_step_slices_20261004/composition.json": "523aaacfbf787534b443e1df5bc42bd9629facae4069b0a332edee470b15cc1f",
+  "results/rtl/dsrom_wavefront_verify_20261004/record.json": "4d7aeff663fb7e9c6264d9c5d184dd1e6dfdef5bfca18d1c615b14aff8f4aad1"
+ }
+}

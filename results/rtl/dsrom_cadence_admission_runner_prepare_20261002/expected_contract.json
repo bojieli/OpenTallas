@@ -1,0 +1,62 @@
+{
+  "activation_e10": 1016,
+  "activation_proof": "independent G.quant_fp8([1]*512): q values256 -> G.E4M3[0x78]=256; signed exponent-8 ->10bit3f8. Expected bits only parser/assertions, never input activation injection.",
+  "activation_qword": "7878787878787878787878787878787878787878787878787878787878787878",
+  "control_active_ticks": "4ready gap +1 q_go tick +1024 observation =1029 edges; fixture total1032ticks",
+  "control_edge_count": 1029,
+  "control_reset_ticks_excluded": 3,
+  "control_terminal": {
+    "emitted": 16,
+    "issues": 16,
+    "pops": 16,
+    "pushes": 16,
+    "rows": 2
+  },
+  "fatal_or_crash_is_never_DIAG_PASS": true,
+  "first_failure_preserved_no_retry": true,
+  "loader_expected_samples": 1029,
+  "malformed_duplicate_or_foreign_markers_rejected": true,
+  "ordered_case_list": [
+    "existing_fast8"
+  ],
+  "public_oracle": {
+    "FP32": "44000000",
+    "activation_code_values": [
+      256.0
+    ],
+    "activation_exponents": [
+      -8
+    ],
+    "block_dots": [
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0,
+      32.0
+    ],
+    "chunks": [
+      256.0,
+      256.0
+    ],
+    "err": 0,
+    "nseg": 1,
+    "positions": [
+      0,
+      1
+    ],
+    "row": 256,
+    "seg": 0
+  },
+  "valid_configuration_writes": 25
+}

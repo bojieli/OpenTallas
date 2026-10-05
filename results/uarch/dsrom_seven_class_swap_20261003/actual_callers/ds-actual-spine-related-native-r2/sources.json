@@ -1,0 +1,46 @@
+{
+  "tests/rtl/dsrom_related_native/tb.sv": {
+    "sha256": "c84f1d384b4b612138f35354ff38ff3a65ab83a98d087e2ec8c14c56e033981b",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/0_tb.sv"
+  },
+  "rtl/model_ready_ds_seven_class_20261003/ot_ds_field_x_related_native.sv": {
+    "sha256": "d9a0741545c78bef5503d9dee6b4a3d5e0663c71867b67124cdc59f4a0a8dfe2",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/1_ot_ds_field_x_related_native.sv"
+  },
+  "rtl/model_ready_ds_seven_class_20261003/ot_v41_spine_related_vm.sv": {
+    "sha256": "eb7d6a6f3be713bb5ebe256575c4b84faca34254a7086effaea1558d809683dd",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/2_ot_v41_spine_related_vm.sv"
+  },
+  "rtl/model_ready_ds_seven_class_20261003/ot_ds_owned_ratio_boundary.sv": {
+    "sha256": "9a567e896e7fe2b203938c091ebc1b0714cd3cc8fe25c5242141d46786c0a3f8",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/3_ot_ds_owned_ratio_boundary.sv"
+  },
+  "results/uarch/dsrom_seven_class_swap_20261003/inputs/ratio_fifo.sv": {
+    "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/4_ratio_fifo.sv"
+  },
+  "rtl/model_ready_ds_native_vm_r2_20261003/ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv": {
+    "sha256": "a0d6c5b0058d3ef997b4f862cd7f02a53b87876efd6b40cceb19874980624984",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/5_ot_v41_vm_bank4_macro_pipe_masked_visible_r2.sv"
+  },
+  "results/uarch/dsrom_protected_VM_service_20261003/inputs/native_sram.v": {
+    "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/6_native_sram.v"
+  },
+  "rtl/hdc/v41/ot_hdc_actquant.sv": {
+    "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/7_ot_hdc_actquant.sv"
+  },
+  "rtl/hdc/ot_hdc_delay.sv": {
+    "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/8_ot_hdc_delay.sv"
+  },
+  "rtl/hdc/ot_hdc_fpu.sv": {
+    "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/9_ot_hdc_fpu.sv"
+  },
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+    "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "snapshot": "/tmp/ds-actual-spine-related-native-r2/sources/10_ot_hdc_fp32_mul_pipe.sv"
+  }
+}

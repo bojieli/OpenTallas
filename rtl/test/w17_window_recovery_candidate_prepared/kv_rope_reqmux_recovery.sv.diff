@@ -1,0 +1,39 @@
+--- rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv
++++ kv_rope_reqmux_recovery.sv_enabled
+@@ -6,7 +6,9 @@
+ // keep both high bits zero. The inner window/CKV mux uses one of those bits.
+ module ot_chip_v41x_kv_rope_reqmux #(
+     parameter integer HAW = 30,
+-    parameter integer TAGW = 16
++    parameter integer TAGW = 16,
++    parameter bit OPT_RECOVERY = 0,
++    parameter integer SELECT_STACK = 2
+ ) (
+     input  wire clk, rst_n,
+     input  wire [3:0] w_v,
+@@ -68,7 +70,25 @@
+     output reg  fault,
+     output reg  [31:0] rope_grants,
+     output reg  [31:0] rope_wait_cycles
++,
++    input wire rec_freeze,
++    input wire rec_token,
++    input wire rec_commit,
++    input wire rec_down_empty,
++    input wire rec_down_visible,
++    input wire rec_down_token_ack,
++    output wire rec_owner_empty,
++    output wire rec_visible_empty,
++    output wire rec_token_ack
+ );
++    // Direct mux/arbiter: control only, no new request/response holding state.
++    assign rec_owner_empty = rec_freeze && rec_down_empty && !w_v[SELECT_STACK] && !w_sv[SELECT_STACK] && !w_wr_done[SELECT_STACK];
++    assign rec_visible_empty = rec_down_visible;
++    assign rec_token_ack = (rec_owner_empty && rec_visible_empty &&
++        rec_down_token_ack == rec_token) ? rec_token : !rec_token;
++    initial if (SELECT_STACK != 2 || TAGW != 16 || HAW != 30)
++        $fatal(1,"recovery direct-path aperture");
++
+ `ifndef SYNTHESIS
+     initial if (TAGW < 4) $fatal(1,"KV/RoPE mux needs two owner-tag bits");
+ `endif

@@ -1,0 +1,24 @@
+test_actual_selected_demand (__main__.VMContract) ... ok
+test_bounds_not_silently_wrapped (__main__.VMContract) ... ok
+test_collective_lane_priority (__main__.VMContract) ... ok
+test_duplicate_read_identity_refused_before_lookup (__main__.VMContract) ... ok
+test_finite_iterator_requests_not_consumed_by_validation (__main__.VMContract) ... ok
+test_finite_service_requires_nonzero_contract (__main__.VMContract) ... ok
+test_idle_requires_actual_drain_and_epoch (__main__.VMContract) ... ok
+test_invalid_identity_refused_both_directions (__main__.VMContract) ... ok
+test_issue_mask_not_all_unit_barrier (__main__.VMContract) ... ok
+test_lane_loop_last_wins (__main__.VMContract) ... ok
+test_no_blanket_pinaccess_reclassification (__main__.VMContract) ... ok
+test_no_small_VM_or_fitted_parent_claim (__main__.VMContract) ... ok
+test_noninteger_addresses_refused_both_directions (__main__.VMContract) ... ok
+test_read_old_even_after_write_in_source (__main__.VMContract) ... ok
+test_read_write_address_boundaries (__main__.VMContract) ... ok
+test_same_address_fanout_keeps_distinct_requests (__main__.VMContract) ... ok
+test_superseded_write_never_visible (__main__.VMContract) ... ok
+test_transaction_identity (__main__.VMContract) ... ok
+test_uninitialized_memory_not_synthetic_zero (__main__.VMContract) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.015s
+
+OK

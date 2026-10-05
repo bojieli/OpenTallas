@@ -1,0 +1,35 @@
+{
+  "status": "PASS_INDEPENDENT_FINITE_INTERVAL_AND_NATIVE_PRIMITIVE_COMPOSITION",
+  "targets": {
+    "DeepSeek": {
+      "dependency_edges": 22839443,
+      "events": 6589361,
+      "resource_slots_used": 21505,
+      "status": "PASS_FINITE_INTERVAL_PROOF"
+    },
+    "Qwen": {
+      "dependency_edges": 356675,
+      "events": 108441,
+      "resource_slots_used": 449,
+      "status": "PASS_FINITE_INTERVAL_PROOF"
+    }
+  },
+  "artifact_hashes": {
+    "DeepSeek.json.gz": "687caff494088d870eb3ced6ee8176ba634730eae041c6814e48eaf2d3780726",
+    "Qwen.json.gz": "b6501bdafd305c2ae5c80ff9d6983f20f810deaf577bf7bd2781738c089e63c1"
+  },
+  "checks": [
+    "positive service components",
+    "everyPC macro admission/consume/commit/retirement",
+    "exact native package PC/version identity",
+    "source input manifest closure",
+    "finite concrete home alias proof",
+    "R17 reuse release events",
+    "persistent future reader rejection",
+    "atomic rank/global rendezvous",
+    "ordered native repetition tree and stage composition",
+    "double-buffered finite native scratch bounds"
+  ],
+  "physical_base_or_lease_qualification": false,
+  "CPU_numerical_cycles_used": false
+}

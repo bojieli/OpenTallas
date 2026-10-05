@@ -1,0 +1,21 @@
+{
+  "recipient": "01a0f698-2d29-7910-b17b-a3110baecc79",
+  "owner": "W19 DeepSeek HBM",
+  "protected": [
+    "/home/ubuntu/w19-production"
+  ],
+  "retired_candidates": [
+    "/tmp/claude-1000/wt/w19c",
+    "/tmp/claude-1000/wt/w19-runtime-fetch",
+    "/tmp/claude-1000/w19/runtime-fetch-89f6a20a",
+    "/tmp/claude-1000/w19/runtime-fetch-bbf32f59",
+    "/tmp/claude-1000/w19/runtime-fetch-db86e1ff",
+    "/tmp/claude-1000/w19/runtime-fetch-f8fe5203",
+    "/tmp/claude-1000/w19/runtime-fetch-control",
+    "/tmp/claude-1000/w19/runtime-fetch-final",
+    "/tmp/claude-1000/w19/payload-production"
+  ],
+  "condition": "Evidence committed; ready to retire candidates after no-live-cwd check and lightweight preservation of unique changes. Only current sparse worktree protected.",
+  "qwen": "Other worker owns Qwen; do not retire Qwen paths on this receipt.",
+  "ready_commit": "f1a463bf2"
+}

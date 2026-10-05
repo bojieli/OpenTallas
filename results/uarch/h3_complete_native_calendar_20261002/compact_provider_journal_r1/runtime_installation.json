@@ -1,0 +1,38 @@
+{
+  "all_event_files_required": true,
+  "changed_aliases": [
+    "h3_ds_checkpoint_provider_r30:BoundSectorProvider",
+    "h3_ds_checkpoint_provider_r30:JournalBudget",
+    "h3_ds_query_provider_r36:BoundSectorProvider",
+    "hbm_bound_event_journal_r30:BoundSectorProvider",
+    "hbm_bound_event_journal_r30:DiskEvents",
+    "hbm_bound_event_journal_r30:JournalBudget"
+  ],
+  "existing_instances_modified": false,
+  "hardware_qualified": false,
+  "immutable_files_modified": false,
+  "payload_checksums": "actual write payload at request/visibility and actual read return at capture",
+  "schema": "H4_ACTUAL_PROVIDER_COMPACT_JOURNAL_INSTALL_V1",
+  "source_pins": {
+    "h3_ds_checkpoint_provider_r30": {
+      "path": "/home/ubuntu/OpenTallas/tools/h3_ds_checkpoint_provider_r30.py",
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    "h3_ds_checkpoint_provider_r34": {
+      "path": "/home/ubuntu/OpenTallas/tools/h3_ds_checkpoint_provider_r34.py",
+      "sha256": "9d47acf6f44481cf15458e8162118ec53395a03b3aa1d5242c1d1423e7d8b014"
+    },
+    "h3_ds_history_provider_r36": {
+      "path": "/home/ubuntu/OpenTallas/tools/h3_ds_history_provider_r36.py",
+      "sha256": "04b8f20c9aec5591be7fd86f2c4e11e31e42967a08918ab42bd98b0dcd4545df"
+    },
+    "h3_ds_query_provider_r36": {
+      "path": "/home/ubuntu/OpenTallas/tools/h3_ds_query_provider_r36.py",
+      "sha256": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9"
+    },
+    "hbm_bound_event_journal_r30": {
+      "path": "/home/ubuntu/OpenTallas/tools/hbm_bound_event_journal_r30.py",
+      "sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+    }
+  }
+}

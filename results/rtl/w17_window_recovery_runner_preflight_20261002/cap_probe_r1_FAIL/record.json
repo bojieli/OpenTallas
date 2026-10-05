@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_CAP_PROPERTY_PARSER_PRESERVED_NO_RTL_COMPILE",
+  "reason": "systemd prints CPUAffinity30-31; parser expected whitespace-only IDs",
+  "terminal": "MainPID0 Resultexit-code",
+  "no_compile": true,
+  "no_runtime": true
+}

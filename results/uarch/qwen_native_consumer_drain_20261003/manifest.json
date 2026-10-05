@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "path": "results/uarch/h3_complete_native_calendar_20261002/inputs/Qwen_native.json.gz",
+      "sha256": "2348ff89f8c1967090c554edb75bb44432a7045711d0678ed6943c4725bdeb9c"
+    },
+    {
+      "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/HANDOFF.txt",
+      "sha256": "31f6d95565fbf8c25ad349018b910e2a353bbfd7f52a1d39e46ee518d5025440"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/composed-initial-loop.log",
+      "sha256": "742c6cebd8c63f402397fb5a203ba9fa8eeaacf3e855464579270e29c6e89c07"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/composed-lint.log",
+      "sha256": "374c4fd25457f054745cd0fa467167421819b42329a73e8b7ade7c74c6501592"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/lint.log",
+      "sha256": "bcb741d9da7fc82b5e4a3ffa7a85a36105ab7b9801692a8991c644356c6869c8"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/model.json",
+      "sha256": "d59e9973344cba328e469cbd3e7a132eac822fdaa809e4e0bc547a76289fd1ee"
+    },
+    {
+      "path": "results/uarch/qwen_native_consumer_drain_20261003/tests.log",
+      "sha256": "78e2eac006f1546047ffeedefee8aed88cbe980db6f7fa89017a1c4209f5e5b1"
+    },
+    {
+      "path": "rtl/model/qwen_kv_lifecycle_20261003/ot_gpu_qwen_kv_lifecycle_controller.sv",
+      "sha256": "dc5857a61d3fdfb188888b9d8f6d30a8b4b0dbcc4afca6438c699884fe35396c"
+    },
+    {
+      "path": "rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_kv_native_lifecycle.sv",
+      "sha256": "7d5f1242004b2a37681337adbcd674010a90604072250bc82326144cf8dc7935"
+    },
+    {
+      "path": "rtl/model/qwen_native_consumer_drain_20261003/ot_gpu_qwen_native_consumer_drain.sv",
+      "sha256": "df9d4483a72d6098189af4350d6791f5778013c44054265651c7bf9de0e3f7de"
+    },
+    {
+      "path": "tests/test_qwen_native_consumer_drain.py",
+      "sha256": "bcb943965e41f4566147bb87fb5f0531f737f566a4b5fe179386928055cc61a3"
+    },
+    {
+      "path": "tools/gpu_sys/canonical_qwen_native_consumer_drain.py",
+      "sha256": "675fc374f769a141008dc7ca710f81e4ae685313223d015001234e8eee215be9"
+    },
+    {
+      "path": "tools/gpu_sys/qwen_native_consumer_drain_model.py",
+      "sha256": "f49018893146e5a6583d97de5b5ac3ec5a71405194d85882ffe9bb86dde90552"
+    },
+    {
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    }
+  ]
+}

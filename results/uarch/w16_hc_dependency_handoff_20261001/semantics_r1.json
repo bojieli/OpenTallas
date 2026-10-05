@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.w16.HC22_dependency_handoff.v1",
+  "main_commit": "a8fa28c863af30436745ec249f9555d573daf8e5",
+  "cherry_pick_sequence": [
+    "ec351a66d88a92b12f114ec21add4b0f89bed2ea",
+    "f5d180edf1314df9d84d1503509abdf8ebf5f918"
+  ],
+  "already_integrated_as": [
+    "1319ab9e8",
+    "49c9c190a"
+  ],
+  "prerequisites": "Current main already hasd801resourcehelper, correctedr3 GPUcontract, normcalendar5a55, accepted256 residentprogram/inventory, bank083/e7 and nonlinear836/0724/c461. No generator changes/pin refresh required.",
+  "expanded_graph_order": "Parent now publishes tools/w19_composed_schedule_r2.py exactowner1ee at7803ad69a. Do NOT apply0095/b2df to protected historical path. ec351 thenf5d remain the HC22source/receipt sequence; newvector helper explicitlyrebinds actualr2 phase/schema.",
+  "immutable_git_objects_required": [
+    {
+      "commit": "ec351a66d",
+      "path": "tools/w16_gpu_hc_dot_schedule.py",
+      "sha256": "822a43210764a5df3d872558a5b51d0f5215bb6f672bf5d7280b7391e6c40222"
+    },
+    {
+      "commit": "0095fc4bc",
+      "path": "tools/w19_composed_schedule.py",
+      "sha256": "dd85580b8bc9660fddfe39644d82eea3fe7d916c40744774931ed88a59da9598"
+    },
+    {
+      "commit": "c4613d8fe",
+      "path": "tools/w19_hc_nonlinear_proof.py",
+      "sha256": "461908f934a74a3b332b84b8dd5a01410a8daac7155229e320791d30cbc777d9"
+    },
+    {
+      "commit": "0833a6613",
+      "path": "tools/w19_landing_banks.py",
+      "sha256": "227de15a43b36c6be3fc58bbd696d3e0b570060b9038b70d183b909517059f71"
+    },
+    {
+      "commit": "4f19cb695",
+      "path": "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z/receipt.json",
+      "sha256": "246a444047d1cdc624e7b43ad73d6e6ee24c444efe446007c644f85d4c63df0b"
+    },
+    {
+      "commit": "609af8387",
+      "path": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+      "sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+    },
+    {
+      "commit": "14c57fd85",
+      "path": "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json",
+      "sha256": "c4aad8b9c059536e5f7e5ce9a94619341cb2895c53af0f7b6bba6805bc8d2436"
+    },
+    {
+      "commit": "d801a2419",
+      "path": "results/uarch/w16_gpu_hc_simt_contract_20261001/contract_r1.json",
+      "sha256": "6f9ba82090ad6b607a97ffd05a47e331241305b06d33ad21585da3cef32e6763"
+    }
+  ],
+  "retention": "Receipt --check requires original git objects, even after cherry-pick. Retain/push lightweight worker refs containing original ec/0095/c461/083/4f19/609/14c/d801 history; main-only cherry-pick reachability does not retain all these objects on a fresh clone.",
+  "current_landing_r1": {
+    "exit_code": 0,
+    "stdout": "PASS banked cycle model; RTL/PnR/composed service/adoption remain OFF",
+    "scope": "Current main still has frozen6f286 graph. PASS establishes byte-identical old source replay, notHC22qualification."
+  },
+  "frozen_landing_r1": {
+    "exit_code": 0,
+    "stdout": "PASS banked cycle model; RTL/PnR/composed service/adoption remain OFF",
+    "archive_sha256": "6910fb0119d4cb9325111f58a5f893459dc69ed6040f51b064376b376a21982d",
+    "invocation": "Extract validated12-member source_snapshot_r1.tar.gz into isolated directory; GIT_DIR=/home/ubuntu/OpenTallas/.git python3 <archive>/tools/w19_landing_banks.py --check <recorded contract_r1.json>. Git object DB supplies frozen HC reference only."
+  },
+  "main_modified": false,
+  "TASKS_modified": false,
+  "physical_qualified": false,
+  "complete_rate": null,
+  "protected_source_replacement_test": {
+    "exit_code": 1,
+    "refusal": "Turing composed source input drift: tools/w19_composed_schedule.py",
+    "expected": true,
+    "semantics": "Only replacing protected historical tools/w19_composed_schedule.py with0095 bytes triggers refusal. Adding separate tools/w19_composed_schedule_r2.py leaves current/frozen landingr1 PASS; r1 never qualifies r2."
+  },
+  "versioned_r2_coexistence": {
+    "exit_code": 0,
+    "stdout": "PASS banked cycle model; RTL/PnR/composed service/adoption remain OFF",
+    "main_commit": "e94236f9674268a1dee197ee361ab26417c376e3",
+    "semantics": "Current5phase historicalsourceguardPASS coexists with versionedr2. No source refresh/relabel oflandingr1."
+  }
+}

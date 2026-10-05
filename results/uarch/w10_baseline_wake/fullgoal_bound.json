@@ -1,0 +1,226 @@
+{
+  "schema": "opentallas.w10.wake.fullgoal_binding.v1",
+  "verdict": "PASS_SIZING_ONLY",
+  "kind": "MANDATORY_BASELINE_IMPLEMENTATION_CORRECTION",
+  "adopted": false,
+  "parameters": {
+    "WAKE_REG": 1,
+    "default": 0,
+    "FAST": 1,
+    "PP": 1,
+    "FRONT_PAR": 0,
+    "NB": 2,
+    "LAT": 8
+  },
+  "original_modules_preserved": true,
+  "compute": {
+    "fp4_macs_per_cycle": 128,
+    "fp8_macs_per_cycle": 64,
+    "fp4_weight_macs_per_byte": 1.8686131386861313,
+    "fp8_weight_macs_per_byte": 0.9343065693430657,
+    "bf16_modes": {
+      "columns": {
+        "bp": 0,
+        "hold": 1,
+        "macs": 32,
+        "bf16_weight_bytes_per_cycle": 64,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      },
+      "pair_option_iii": {
+        "bp": 1,
+        "hold": 4,
+        "macs": 8,
+        "bf16_weight_bytes_per_cycle": 16,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      },
+      "pair_option_ii": {
+        "bp": 2,
+        "hold": 8,
+        "macs": 4,
+        "bf16_weight_bytes_per_cycle": 8,
+        "activation_macs_per_byte": 0.5,
+        "status": "existing exact gate; contextual SS/FF pending"
+      }
+    }
+  },
+  "ports": {
+    "rom_effective_bytes_per_cycle": 68.5,
+    "physical_rom_ports": 4,
+    "bytes_per_port_per_two_cycle_read": 34.25,
+    "quantized_x_payload_bytes_per_cycle": 64,
+    "quantized_x_exponent_bits": 20,
+    "bf16_column_x_bytes_per_cycle": 128,
+    "partial_data_bytes_per_cycle": 8,
+    "partial_metadata_bits_per_cycle": 60
+  },
+  "latency": {
+    "boundary_cycles": 1,
+    "added_walker_cycles": 0,
+    "rationale": "go and x captured on free edge; registered wake opens next edge when existing go_e is consumed",
+    "actual_lat8": {
+      "ar_tokens_s": 2770.4,
+      "token_us": 360.9587063239965,
+      "dies": 208,
+      "element_adder_stages": 8
+    },
+    "one_added_cycle_fallback": "Must reprice and rerun exact gate before any build if protocol requires a cycle"
+  },
+  "full_size": {
+    "stages": 41,
+    "layer_dies": 164,
+    "maximum_pairs_per_die": 4773,
+    "bf16_column_pairs_per_die": 1024,
+    "macros_per_element": 4,
+    "local_icgs_per_element": 8,
+    "wake_ff_fanout_per_leaf": 1,
+    "wake_next_fanout": 8,
+    "external_port_fanout_delta": 0,
+    "mux_demux": "existing PP muxes and alternating bank enables unchanged; no FRONT_PAR",
+    "layer_die_clock_w_3x_estimate": 2.492408796667207,
+    "conservative_all_layer_dies_clock_w": 408.755042653422,
+    "layer_die_busy_fifo_clock_w_3x_estimate": 1.4010834640778036,
+    "layer_die_all_busy_clock_w_3x_estimate": 3.8934922607450106
+  },
+  "elements": {
+    "q": {
+      "outline_um": [
+        510.84,
+        126.9
+      ],
+      "tile_um2": 64825.596,
+      "existing_boundary_register_bits": 549,
+      "extra_register_bits": 8,
+      "extra_gate_count": 7,
+      "extra_area_um2_upper": 13.501080000000002,
+      "incremental_placement_um2_at_50pct": 27.002160000000003,
+      "incremental_slot_fraction": 0.00041653546848994654,
+      "allocated_slots_per_element": 1,
+      "boundary_bits_per_cycle": 549,
+      "local_signal_tracks_needed": 1113,
+      "channel_tracks_estimate": 2881.1376,
+      "track_fraction": 0.38630574256502015,
+      "additional_clock_pin_cap_ff": 263.221866,
+      "additional_clock_pin_w_ss": 0.00012536731033848002,
+      "additional_clock_w_3x_estimate": 0.0003761019310154401,
+      "fit": true
+    },
+    "column": {
+      "outline_um": [
+        1002.89,
+        142.56
+      ],
+      "tile_um2": 142971.9984,
+      "existing_boundary_register_bits": 1616,
+      "extra_register_bits": 2152,
+      "extra_gate_count": 7,
+      "extra_area_um2_upper": 1064.29148,
+      "incremental_placement_um2_at_50pct": 2128.58296,
+      "incremental_slot_fraction": 0.014888110845626957,
+      "allocated_slots_per_element": 1,
+      "boundary_bits_per_cycle": 1616,
+      "local_signal_tracks_needed": 4308,
+      "channel_tracks_estimate": 5656.299599999999,
+      "track_fraction": 0.7616286803478374,
+      "additional_clock_pin_cap_ff": 739.7846119999999,
+      "additional_clock_pin_w_ss": 0.00035234461500336,
+      "additional_clock_w_3x_estimate": 0.0010570338450100801,
+      "fit": true,
+      "baseline_core_um2": 138042,
+      "baseline_stdcell_um2": 65051.7,
+      "baseline_macro_um2": 31525.5,
+      "spare_placement_um2": 41464.8,
+      "additional_busy_fifo_clock_w_3x_estimate": 0.00136824557038848
+    }
+  },
+  "clock_power_basis": {
+    "voltage_ss": 0.63,
+    "clock_hz": 1200000000.0,
+    "dff_clk_ff": 0.446638,
+    "icg_clk_ff": 2.0635,
+    "lib_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "margin": "3x pin C*V^2*f estimate, not measured CTS power; always-clocked activation stage",
+    "excludes": "Always-on upstream trunk already priced by model; actual internal/CTS power must replace estimate"
+  },
+  "boundaries": {
+    "hub_port_bits_delta": 0,
+    "shared_memory_bytes_delta": 0,
+    "clock_domains": "same source clock, local gated leaves; physical skew and min paths must close",
+    "layer_restriction": "local strip wiring; inherited hub layer contract unchanged, post-route audit required"
+  },
+  "gates": [
+    "exact startup/reset/idle-to-work, immediate beat, final partial and drain",
+    "leaf wake registers must survive synthesis, no raw go/reset path to ICG ENA",
+    "same fixed 0.833ns /60ps setup /25ps hold and original I/O delays",
+    "SS setup and FF hold with actual macro own-corner views",
+    "full-size macro pin access and clean route, ROM slew/fanout, measured power",
+    "actual abstracts then W18 composed root/region and die route/IR"
+  ],
+  "other_designs": {
+    "qwen_rom": "unchanged",
+    "qwen_hbm": "unchanged",
+    "v41_hbm": "unchanged"
+  },
+  "source_commit": "96aa908036a358f692e8a9b8eee11b83b2550fff",
+  "source_sha256": {
+    "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "results/arch/v41_stage_owner_product.json": "8b0196e6dbb9fb0420628b0942e75549ec91e9c61f35fbd1f432ab2453852b81",
+    "results/uarch/w10_baseline_main_prequalification_bb01.json": "e383f7cd89c88da71635f5ba1495b00d7c33e0a6d4781ac468ada2baad2837e9",
+    "results/quality/w10_parent_model_pin_refresh_20261001.json": "316c301c229aae8293aafcd72b922d33c4698052d22833ced92e6d850f0bed99",
+    "tools/w10_wake_prebuild.py": "eb073b8017f56ce723ebda1e9dfb0eabc1cfcf2c54e618528e50dd24260a1d26",
+    "tools/w10_wake_fullgoal.py": "819ab1e5c67dce04c651ca1b3887161d11901498da86ff8cad46f7f8053b91f1",
+    "results/uarch/w10_baseline_wake/prebuild.json": "f41cd67a72571d597ce81c617d252993ae867b820247a1ba4654aba2157c8bb9",
+    "results/uarch/w10_baseline_wake/qualification/golden_n4_r1.json": "b29ad7dce69b99426078c5d817fceb2c0b017d043883dd18e5cfa63d03f753b8",
+    "results/uarch/w10_baseline_wake/c8_area_anchor.json": "4dd30b8cdffb4297d307a65b257d6bde2609ecd684084a5ae48a5163e1b92b83"
+  },
+  "mode_binding": {
+    "q": {
+      "top": "ot_v41_rom_elem_q_wake_w10",
+      "BF16": 0,
+      "XF": 4,
+      "NB": 2,
+      "FAST": 1,
+      "PP": 1,
+      "WAKE_REG": 1
+    },
+    "column": {
+      "top": "ot_v41_rom_elem_wake_w10",
+      "BF16": 1,
+      "XF": 8,
+      "NB": 2,
+      "FAST": 1,
+      "PP": 1,
+      "WAKE_REG": 1
+    },
+    "common": {
+      "CUT": 379,
+      "LAT": 8,
+      "MTP": 1,
+      "EARLY": 1,
+      "FRONT_PAR": 0,
+      "BP": 0
+    }
+  },
+  "qualification_boundary": {
+    "N": 4,
+    "NB": 2,
+    "MTP_positions": 6,
+    "cases": 13,
+    "rows": 240,
+    "completion_cycle_delta": 0,
+    "note": "N2 failures retained separately, not qualified or recast as passing; composed full-field RTL pending"
+  },
+  "fifo_sizing": {
+    "column_original_depth": 4,
+    "column_qualified_depth": 8,
+    "extra_storage_bits": 2128,
+    "extra_storage_um2": 620.5248,
+    "extra_mux_control_um2_estimate": 430.2656,
+    "latency_delta_cycles": 0,
+    "read_bytes_per_cycle": 66.5,
+    "write_bytes_per_cycle": 66.5,
+    "spine_port_delta_bits": 0
+  }
+}

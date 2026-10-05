@@ -1,0 +1,52 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ayer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 18.033um) - (795.660um, 18.321um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 23.433um) - (795.660um, 23.721um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 28.833um) - (795.660um, 29.121um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 34.233um) - (795.660um, 34.521um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 39.633um) - (795.660um, 39.921um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 45.033um) - (795.660um, 45.321um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 50.433um) - (795.660um, 50.721um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 55.833um) - (795.660um, 56.121um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 61.233um) - (795.660um, 61.521um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 66.633um) - (795.660um, 66.921um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (532.248um, 72.033um) - (795.660um, 72.321um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 12.633um) - (1061.244um, 12.921um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 18.033um) - (1061.244um, 18.321um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 23.433um) - (1061.244um, 23.721um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 28.833um) - (1061.244um, 29.121um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 34.233um) - (1061.244um, 34.521um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 39.633um) - (1061.244um, 39.921um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 45.033um) - (1061.244um, 45.321um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 50.433um) - (1061.244um, 50.721um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 55.833um) - (1061.244um, 56.121um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 61.233um) - (1061.244um, 61.521um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 66.633um) - (1061.244um, 66.921um), layer: M6.
+[WARNING PSM-0038] Unconnected shape on net VDD at (797.832um, 72.033um) - (1061.244um, 72.321um), layer: M6.
+[WARNING PSM-0039] Unconnected instance g_s\[0\].g_h.u_s/VDD at location (132.786um, 42.477um).
+[WARNING PSM-0039] Unconnected instance g_s\[1\].g_h.u_s/VDD at location (398.370um, 42.477um).
+[WARNING PSM-0039] Unconnected instance g_s\[2\].g_h.u_s/VDD at location (663.954um, 42.477um).
+[WARNING PSM-0039] Unconnected instance g_s\[3\].g_h.u_s/VDD at location (929.538um, 42.477um).
+[ERROR PSM-0069] Check connectivity failed on VDD.
+Error: final_report.tcl, 7 PSM-0069
+
+Elapsed time: 0:05.52[h:]min:sec. CPU time: user 5.28 sys 0.22 (99%). Peak memory: 410736KB.
+Elapsed time: 1:30.58[h:]min:sec. CPU time: user 91.88 sys 0.52 (102%). Peak memory: 528868KB.
+Elapsed time: 0:06.28[h:]min:sec. CPU time: user 7.76 sys 0.30 (128%). Peak memory: 615612KB.
+Elapsed time: 0:04.71[h:]min:sec. CPU time: user 4.44 sys 0.21 (98%). Peak memory: 365016KB.
+Elapsed time: 0:06.52[h:]min:sec. CPU time: user 6.28 sys 0.23 (99%). Peak memory: 422516KB.
+Elapsed time: 0:30.44[h:]min:sec. CPU time: user 134.82 sys 0.42 (444%). Peak memory: 613992KB.
+Elapsed time: 0:05.37[h:]min:sec. CPU time: user 5.14 sys 0.23 (99%). Peak memory: 414448KB.
+Elapsed time: 4:21.41[h:]min:sec. CPU time: user 891.50 sys 4.24 (342%). Peak memory: 1919496KB.
+Elapsed time: 1:18.12[h:]min:sec. CPU time: user 83.52 sys 1.64 (109%). Peak memory: 742008KB.
+Elapsed time: 1:35.20[h:]min:sec. CPU time: user 100.56 sys 1.79 (107%). Peak memory: 999620KB.
+Elapsed time: 3:12.14[h:]min:sec. CPU time: user 209.63 sys 2.78 (110%). Peak memory: 1107440KB.
+Elapsed time: 10:40.24[h:]min:sec. CPU time: user 1168.38 sys 18.97 (185%). Peak memory: 2981772KB.
+Elapsed time: 17:08.61[h:]min:sec. CPU time: user 6256.92 sys 108.17 (618%). Peak memory: 11546988KB.
+Elapsed time: 0:06.77[h:]min:sec. CPU time: user 6.21 sys 0.55 (99%). Peak memory: 1086436KB.
+Elapsed time: 0:05.54[h:]min:sec. CPU time: user 4.92 sys 0.59 (99%). Peak memory: 652108KB.
+Elapsed time: 2:17.06[h:]min:sec. CPU time: user 134.24 sys 2.71 (99%). Peak memory: 3890584KB.
+make[1]: *** [Makefile:654: do-6_report] Error 1
+make: *** [Makefile:654: /work/logs/asap7/opentallas_ot_chip_v41x_karb_pregion_asap7_w2a_karb_pregionh_aw30_w18e8p5_1p2_h160ksr/base/6_report.log] Error 2
+
+partial record written to /tmp/claude-1000/wt/w18/results/physical_abi3/asap7/chip/v41x_karb_local/pregionh_aw30_w18e8p5_1p2_h160ksr/physical.json

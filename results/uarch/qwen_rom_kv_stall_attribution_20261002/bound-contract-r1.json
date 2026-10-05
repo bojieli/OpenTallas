@@ -1,0 +1,350 @@
+{
+  "schema": "qrom-same-topology-and-fixed-lease-bounds.v1",
+  "trace_sha256": "0fd637801967dfef3ca7feeea1c34aac0a960728cf573477cb8d5d639c4b6bd8",
+  "frozen_calendar_sha256": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
+  "target_s": 0.0003333333333333333,
+  "source_port_bounds": {
+    "fill_demand_port_s": 0.0002814,
+    "owner_DATA_plus_GRANT_port_s": 0.000294912,
+    "column_payload_only_port_s": 0.000294624,
+    "column_with_observed_maintenance_witness_s": 0.000308227,
+    "maintenance_scope": "Observed source-native command counts depend on this finite ordering and refresh placement; not a universal lower bound for another ordering.",
+    "PC_feedback_payload_only_port_s": 0.00018414,
+    "refresh_source_interval_edges": 3900,
+    "refresh_busy_edges": 350,
+    "owner_counts_include_two_receipts_not_two_payload_transfers": true,
+    "bounds_overlap_not_sum": true,
+    "PHY_wait_assumed": 0,
+    "actual_PHY_qualified": false,
+    "scope": "Same8/4/7 topology and conditional cold demand. Physical/producer qualification is separate. Strict refresh still unqualified."
+  },
+  "optimistic_same_topology_causal_floor_s": 0.0003047548,
+  "topology_causal_lower_rows": [
+    {
+      "layer": 0,
+      "begin_ps": 0.0,
+      "fill_lower_ps": 7975833.333333333,
+      "grant_lower_ps": 8331000.0,
+      "compute_lower_ps": 10533133.333333334
+    },
+    {
+      "layer": 1,
+      "begin_ps": 8331000.0,
+      "fill_lower_ps": 16306833.333333334,
+      "grant_lower_ps": 16662000.0,
+      "compute_lower_ps": 18864133.333333332
+    },
+    {
+      "layer": 2,
+      "begin_ps": 16662000.0,
+      "fill_lower_ps": 24637833.333333332,
+      "grant_lower_ps": 24993000.0,
+      "compute_lower_ps": 27195133.333333332
+    },
+    {
+      "layer": 3,
+      "begin_ps": 24993000.0,
+      "fill_lower_ps": 32968833.333333332,
+      "grant_lower_ps": 33324000.0,
+      "compute_lower_ps": 35526133.333333336
+    },
+    {
+      "layer": 4,
+      "begin_ps": 33324000.0,
+      "fill_lower_ps": 41299833.333333336,
+      "grant_lower_ps": 41655000.0,
+      "compute_lower_ps": 43857133.333333336
+    },
+    {
+      "layer": 5,
+      "begin_ps": 41655000.0,
+      "fill_lower_ps": 49630833.333333336,
+      "grant_lower_ps": 49986000.0,
+      "compute_lower_ps": 52188133.333333336
+    },
+    {
+      "layer": 6,
+      "begin_ps": 49986000.0,
+      "fill_lower_ps": 57961833.333333336,
+      "grant_lower_ps": 58317000.0,
+      "compute_lower_ps": 60519133.333333336
+    },
+    {
+      "layer": 7,
+      "begin_ps": 58317000.0,
+      "fill_lower_ps": 66292833.333333336,
+      "grant_lower_ps": 66648000.0,
+      "compute_lower_ps": 68850133.33333333
+    },
+    {
+      "layer": 8,
+      "begin_ps": 66648000.0,
+      "fill_lower_ps": 74623833.33333333,
+      "grant_lower_ps": 74979000.0,
+      "compute_lower_ps": 77181133.33333333
+    },
+    {
+      "layer": 9,
+      "begin_ps": 74979000.0,
+      "fill_lower_ps": 82954833.33333333,
+      "grant_lower_ps": 83310000.0,
+      "compute_lower_ps": 85512133.33333333
+    },
+    {
+      "layer": 10,
+      "begin_ps": 83310000.0,
+      "fill_lower_ps": 91285833.33333333,
+      "grant_lower_ps": 91641000.0,
+      "compute_lower_ps": 93843133.33333333
+    },
+    {
+      "layer": 11,
+      "begin_ps": 91641000.0,
+      "fill_lower_ps": 99616833.33333333,
+      "grant_lower_ps": 99972000.0,
+      "compute_lower_ps": 102174133.33333333
+    },
+    {
+      "layer": 12,
+      "begin_ps": 99972000.0,
+      "fill_lower_ps": 107947833.33333333,
+      "grant_lower_ps": 108303000.0,
+      "compute_lower_ps": 110505133.33333333
+    },
+    {
+      "layer": 13,
+      "begin_ps": 108303000.0,
+      "fill_lower_ps": 116278833.33333333,
+      "grant_lower_ps": 116634000.0,
+      "compute_lower_ps": 118836133.33333333
+    },
+    {
+      "layer": 14,
+      "begin_ps": 116634000.0,
+      "fill_lower_ps": 124609833.33333333,
+      "grant_lower_ps": 124965000.0,
+      "compute_lower_ps": 127167133.33333333
+    },
+    {
+      "layer": 15,
+      "begin_ps": 124965000.0,
+      "fill_lower_ps": 132940833.33333333,
+      "grant_lower_ps": 133296000.0,
+      "compute_lower_ps": 135498133.33333334
+    },
+    {
+      "layer": 16,
+      "begin_ps": 133296000.0,
+      "fill_lower_ps": 141271833.33333334,
+      "grant_lower_ps": 141627000.0,
+      "compute_lower_ps": 143829133.33333334
+    },
+    {
+      "layer": 17,
+      "begin_ps": 141627000.0,
+      "fill_lower_ps": 149602833.33333334,
+      "grant_lower_ps": 149958000.0,
+      "compute_lower_ps": 152160133.33333334
+    },
+    {
+      "layer": 18,
+      "begin_ps": 149958000.0,
+      "fill_lower_ps": 157933833.33333334,
+      "grant_lower_ps": 158289000.0,
+      "compute_lower_ps": 160491133.33333334
+    },
+    {
+      "layer": 19,
+      "begin_ps": 158289000.0,
+      "fill_lower_ps": 166264833.33333334,
+      "grant_lower_ps": 166620000.0,
+      "compute_lower_ps": 168822133.33333334
+    },
+    {
+      "layer": 20,
+      "begin_ps": 166620000.0,
+      "fill_lower_ps": 174595833.33333334,
+      "grant_lower_ps": 174951000.0,
+      "compute_lower_ps": 177153133.33333334
+    },
+    {
+      "layer": 21,
+      "begin_ps": 174951000.0,
+      "fill_lower_ps": 182926833.33333334,
+      "grant_lower_ps": 183282000.0,
+      "compute_lower_ps": 185484133.33333334
+    },
+    {
+      "layer": 22,
+      "begin_ps": 183282000.0,
+      "fill_lower_ps": 191257833.33333334,
+      "grant_lower_ps": 191613000.0,
+      "compute_lower_ps": 193815133.33333334
+    },
+    {
+      "layer": 23,
+      "begin_ps": 191613000.0,
+      "fill_lower_ps": 199588833.33333334,
+      "grant_lower_ps": 199944000.0,
+      "compute_lower_ps": 202146133.33333334
+    },
+    {
+      "layer": 24,
+      "begin_ps": 199944000.0,
+      "fill_lower_ps": 207919833.33333334,
+      "grant_lower_ps": 208275000.0,
+      "compute_lower_ps": 210477133.33333334
+    },
+    {
+      "layer": 25,
+      "begin_ps": 208275000.0,
+      "fill_lower_ps": 216250833.33333334,
+      "grant_lower_ps": 216606000.0,
+      "compute_lower_ps": 218808133.33333334
+    },
+    {
+      "layer": 26,
+      "begin_ps": 216606000.0,
+      "fill_lower_ps": 224581833.33333334,
+      "grant_lower_ps": 224937000.0,
+      "compute_lower_ps": 227139133.33333334
+    },
+    {
+      "layer": 27,
+      "begin_ps": 224937000.0,
+      "fill_lower_ps": 232912833.33333334,
+      "grant_lower_ps": 233268000.0,
+      "compute_lower_ps": 235470133.33333334
+    },
+    {
+      "layer": 28,
+      "begin_ps": 233268000.0,
+      "fill_lower_ps": 241243833.33333334,
+      "grant_lower_ps": 241599000.0,
+      "compute_lower_ps": 243801133.33333334
+    },
+    {
+      "layer": 29,
+      "begin_ps": 241599000.0,
+      "fill_lower_ps": 249574833.33333334,
+      "grant_lower_ps": 249930000.0,
+      "compute_lower_ps": 252132133.33333334
+    },
+    {
+      "layer": 30,
+      "begin_ps": 249930000.0,
+      "fill_lower_ps": 257905833.33333334,
+      "grant_lower_ps": 258261000.0,
+      "compute_lower_ps": 260463133.33333334
+    },
+    {
+      "layer": 31,
+      "begin_ps": 258261000.0,
+      "fill_lower_ps": 266236833.33333334,
+      "grant_lower_ps": 266592000.0,
+      "compute_lower_ps": 268794133.3333333
+    },
+    {
+      "layer": 32,
+      "begin_ps": 266592000.0,
+      "fill_lower_ps": 274567833.3333333,
+      "grant_lower_ps": 274923000.0,
+      "compute_lower_ps": 277125133.3333333
+    },
+    {
+      "layer": 33,
+      "begin_ps": 274923000.0,
+      "fill_lower_ps": 282898833.3333333,
+      "grant_lower_ps": 283254000.0,
+      "compute_lower_ps": 285456133.3333333
+    },
+    {
+      "layer": 34,
+      "begin_ps": 283254000.0,
+      "fill_lower_ps": 291229833.3333333,
+      "grant_lower_ps": 291585000.0,
+      "compute_lower_ps": 293787133.3333333
+    },
+    {
+      "layer": 35,
+      "begin_ps": 291585000.0,
+      "fill_lower_ps": 299560833.3333333,
+      "grant_lower_ps": 299916000.0,
+      "compute_lower_ps": 302118133.3333333
+    }
+  ],
+  "topology_scope": "Source ports/cold21/lookup12/links/whole-cohort first-fill fence/two windows/36 sequential layers retained. Relaxed bank/refresh/deadline/producer constraints only weaken this lower bound; it does not prove8/4/7 feasible.",
+  "fixed_lease": {
+    "group16_full_token_floor_s": 0.0003511698541666667,
+    "global128_full_token_floor_s": 0.00033586701822916666,
+    "maximum_group_work_sum_ps": 5576531000,
+    "global_lease_work_sum_ps": 42653485000,
+    "minimum_uniform_group_credits": 17,
+    "minimum_global_credits": 129,
+    "group17_floor_if_lifetimes_unchanged_s": 0.0003306679019607843,
+    "scope": "Little law / area under occupancy: sum(cohort retirement-allocation)<=credits*span. Apply independently to each group/layer, sum sequentiallayer spans, add known nonlayer cost once. Fixed recorded lifetimes, not universal lower bound under another ordering or earlier per-beat retirement.",
+    "necessary_change": "Current16/group and128global cannot sustain the recorded lease work within333.333us. Change credit circulation: increase finite capacity or reduce source-valid lease holds; no additional fill/column/owner port is implied."
+  },
+  "wait_attribution": {
+    "allocator_interval_start_signatures_ps": {
+      "PC64_pending_credit+global_cohort_credit+group16_credit": 131103000.0,
+      "PC64_pending_credit+global_cohort_credit+group16_credit+request_allocator_II1": 170836000.0,
+      "PC64_pending_credit+group16_credit": 15986000.0,
+      "PC64_pending_credit+group16_credit+request_allocator_II1": 14313000.0,
+      "final_drain_no_unissued_heads": 9655000.0,
+      "group16_credit": 7788000.0,
+      "group16_credit+request_allocator_II1": 1968000.0,
+      "request_allocator_II1": 4320000.0
+    },
+    "credit_blocked_wall_s": 0.000341994,
+    "request_only_wall_s": 4.32e-06,
+    "final_drain_wall_s": 9.655e-06,
+    "signature_scope": "Mixed labels describe interval-start blockers; request_II1 may expire before a credit wait ends. Credit state persists until the next retirement event. Signature durations partition allocator wall time; do not add mixed categories twice.",
+    "overlapping_PC_wait_edges": {
+      "cold_lookahead21": 96768,
+      "older_PC_reserved_work": 1061066445,
+      "PC_command_feedback_II5": 23403625,
+      "refresh_busy350": 4026064,
+      "bank_ACT_source_deadline": 74624,
+      "shared_column_command_path_occupied": 9795369,
+      "bank_ACT_command1": 189314,
+      "source_RD_WR_bank_turnaround": 3569588,
+      "column_accept": 0,
+      "refresh_PREALL_bank_deadline": 12576,
+      "refresh_PREALL17": 196112,
+      "refresh_entry_deadline": 0,
+      "refresh_command1": 11536,
+      "row_change_PRE_deadline": 59,
+      "row_PRE_command1": 4664
+    },
+    "PC_scope": "Sum over4stacks/128PCs/columns; not token critical-path duration. Older reserved work separated from actual5-edge feedback; refresh debt may propagate into older-work waits."
+  },
+  "ONE_next_target": {
+    "change": "Regular credit-window sizing17/group; prove end-to-end service with finite spill rather than add transport lanes.",
+    "group_credits": 17,
+    "regular_total_cohort_capacity": 136,
+    "global_necessary_bound": 129,
+    "pending_entries_per_PC": 68,
+    "existing_pending_return_RAM_entries": 64,
+    "additional_FF_spill_entries_per_PC": 4,
+    "words_per_group_lane_pool": 85,
+    "group_lane_pools": 56,
+    "total_assembly_words": 4760,
+    "source_context_RAM_entries_per_PC": 128,
+    "needed_context_records_per_PC_at_most": 17,
+    "no_context_macro_replication": true,
+    "return_groups_per_stack": 8,
+    "column_paths_per_stack": 4,
+    "global_fill_lanes": 7,
+    "write_slots_per_PC": 4,
+    "lookup_edges": 12,
+    "source_tag_namespace_copied": false,
+    "proof": "17cohorts/group*<=4sectors/PC/cohort=68 combined pending. 17*<=5words/group/lane=85 slots. Source context128 records/PC can hold17 burst contexts; context records are not per-sector pending slots. Eight identical17-cohort banks require136 physical header slots;129 is only the pooled fixed-work minimum.",
+    "qualification": "Necessary fixed-work sizing only. Larger windows change queueing and refresh, so17 is not a fit prediction.68 spill/protection/1R1W selection/collectors/route/CDC and source-active tag/update/ACK must be fully priced and replayed before any build."
+  },
+  "PHY_qualified": false,
+  "actual_production_policy_bound": false,
+  "hardware": false,
+  "adopted_rate": null,
+  "implementation_sha256": "d5ae34d06daf20ffeb28b9d6c8067ab37e3b030d1a386814c2c3a6b4ee0161ee"
+}

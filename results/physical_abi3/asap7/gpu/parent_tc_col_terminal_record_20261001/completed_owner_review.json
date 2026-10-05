@@ -1,0 +1,27 @@
+{
+  "FF_hold_ps": -0.9053036098549683,
+  "SS_setup_ps": -102.65510663742816,
+  "component_intake_complete": true,
+  "engineering_verdict": "FAIL_SS_SETUP_AND_FF_HOLD",
+  "exit_evidence": "original_wrapper.log matching remote_gate finished marker and 14 returned files",
+  "full_SM_or_die_qualification": false,
+  "hardware_admission": false,
+  "independent_archive_hashes_verified": 24,
+  "independent_source_identity_files_verified": 15,
+  "native_corner_rc": {
+    "FF": 0,
+    "SS": 0
+  },
+  "new_jobs_launched": 0,
+  "original_wrapper_exit_proven": 0,
+  "original_wrapper_job": "70bbc5e9a2",
+  "owner_archive_commit": "becd52d18",
+  "power_calibration": false,
+  "prior_partial_archives_preserved": [
+    "f67c2e0b1",
+    "89f08b4eb",
+    "0be114653"
+  ],
+  "receipt_sha256": "f6464972f70582e47ec0848c5e8a910e767423aa1dc06e72de3e880deecbf2d1",
+  "schema": "parent.TC-column-complete-owner-terminal-intake.v1"
+}

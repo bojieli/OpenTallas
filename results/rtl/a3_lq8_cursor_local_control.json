@@ -1,0 +1,552 @@
+{
+  "schema": "opentallas.lq8_runtime_operands.v1",
+  "status": "pass",
+  "scope": "LQ8 + two 512x128 SRAM banks, 32-word tiles, four-word FIFO, complete auxiliary response from behavioral backing memory with variable delay. Not G2 integration, bounded activation storage, row reuse or physical closure.",
+  "serial_refill": false,
+  "integrated_service": true,
+  "completion_barrier": true,
+  "mutate_array_config": true,
+  "rtl_weight_scheduler": true,
+  "future_auxiliary": true,
+  "auxiliary_depth": 2,
+  "sources": {
+    "rtl/ot_fp32_rne_pkg.sv": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+    "rtl/abi3/ot_a3_format_pkg.sv": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "ec4a4dad51501026e86a7f3af7e067407f001ee4956ba3a8b14739abbbdd16c9",
+    "rtl/abi3/ot_a3_lq8.sv": "d263afcc19c5c1883d3973227b338e9d2034a591cf5065a5ea3de8a444cbd785",
+    "rtl/abi3/ot_a3_operand_bank_owner.sv": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086",
+    "rtl/abi3/ot_a3_runtime_weight_banks.sv": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e",
+    "rtl/abi3/ot_a3_weight_tile_prefetch.sv": "472d0df8f746717f555bff86bc886fa004d3b9b5306f2d73ba95df0753962fc7",
+    "rtl/abi3/ot_a3_weight_tile_scheduler.sv": "f436b037918045abca93046bded7e4796f52471b44f8d3d00e142cf14c77e820",
+    "rtl/abi3/ot_a3_lq8_operand_join.sv": "db6de6fcc0e2c1a1b820e0d3b014274627c4cbb5f99ad5a22840bd86b6fb6792",
+    "rtl/abi3/ot_a3_lq8_operand_cursor.sv": "5488afb3b5e3df2ca1571945e3fbd5d88c5e3df2ccde797be79541649c7e1f7d",
+    "rtl/abi3/ot_a3_lq8_operand_admission.sv": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10",
+    "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv": "b28e4179cc7c8c7a0f42b77a96ff91143431533bbfbbef63104680aec2c1e4bd",
+    "rtl/abi3/ot_a3_lq8_runtime_operands.sv": "b4e89524a14c0266b34e76488cafa7ba283d326bf5e803544bfc00f61255ed60",
+    "rtl/abi3/ot_a3_runtime_operation_lifetime.sv": "eaa9f8e6790773490eb35ca0a0b8d8043e915f56c028e2861a8ba91ec17c4cdb",
+    "rtl/test/tb_a3_runtime_weight_banks.sv": "bca837fd6c317b28b5983d4a084d0c850c62058993b119c3787c5309fcd863ff",
+    "rtl/test/tb_a3_lq8.sv": "3ce4a259bd5c5704b89e38a3d4a9d93f4335af646ffa9fdd8bff8525401d4cc1",
+    "rtl/test/a3_lq8_top.sv": "e473a79c737d8927272498f1b7fc97c6c1afe1c9c938372ef2f8b77fa496338f",
+    "rtl/test/a3_lq8_runtime_service.svh": "ed7b176bfdf82728609d6d32f6744b73dc1375c702daa69f7a351a6559e93275",
+    "rtl/test/a3_lq8_integrated_service.svh": "7c0e13a329d2170bbe77681001724b133d32cc57d12a50b7a2d12f00b5c1bf1f",
+    "rtl/test/a3_lq8_completion_barrier.svh": "3ef9119e358881bde2e3a7796ffdf53412571fcd97a9dea82c8070a17ac984fa",
+    "rtl/test/a3_lq8_scheduled_weights.svh": "c05a5f7be53133148812246e969d6a9ae1ae19ff0d5892f65bb10ce091698604",
+    "rtl/test/a3_lq8_future_auxiliary.svh": "2c249bfdae9cb8f64354d72c5295f7eae8c27b4ff20afb8705fcb89bedc850ed",
+    "tools/check_lq8_runtime_operands.py": "e54dc5fbdb11dda83f02879741db648e02cac621905f70b734c32ac31a2c2d81"
+  },
+  "operations": [
+    {
+      "issues": 1,
+      "tiles": 1,
+      "cycles": 52
+    },
+    {
+      "issues": 2,
+      "tiles": 1,
+      "cycles": 56
+    },
+    {
+      "issues": 2,
+      "tiles": 1,
+      "cycles": 58
+    },
+    {
+      "issues": 2,
+      "tiles": 1,
+      "cycles": 62
+    },
+    {
+      "issues": 15,
+      "tiles": 1,
+      "cycles": 151
+    },
+    {
+      "issues": 12,
+      "tiles": 1,
+      "cycles": 125
+    },
+    {
+      "issues": 35,
+      "tiles": 2,
+      "cycles": 304
+    },
+    {
+      "issues": 14,
+      "tiles": 1,
+      "cycles": 142
+    },
+    {
+      "issues": 72,
+      "tiles": 3,
+      "cycles": 544
+    },
+    {
+      "issues": 72,
+      "tiles": 3,
+      "cycles": 544
+    },
+    {
+      "issues": 105,
+      "tiles": 4,
+      "cycles": 758
+    },
+    {
+      "issues": 12,
+      "tiles": 1,
+      "cycles": 137
+    },
+    {
+      "issues": 156,
+      "tiles": 5,
+      "cycles": 1088
+    },
+    {
+      "issues": 512,
+      "tiles": 16,
+      "cycles": 3402
+    },
+    {
+      "issues": 2673,
+      "tiles": 84,
+      "cycles": 17449
+    },
+    {
+      "issues": 24,
+      "tiles": 1,
+      "cycles": 219
+    },
+    {
+      "issues": 192,
+      "tiles": 6,
+      "cycles": 1320
+    },
+    {
+      "issues": 48,
+      "tiles": 2,
+      "cycles": 384
+    },
+    {
+      "issues": 2048,
+      "tiles": 64,
+      "cycles": 13384
+    },
+    {
+      "issues": 48,
+      "tiles": 2,
+      "cycles": 384
+    },
+    {
+      "issues": 144,
+      "tiles": 5,
+      "cycles": 1008
+    },
+    {
+      "issues": 144,
+      "tiles": 5,
+      "cycles": 1008
+    },
+    {
+      "issues": 16,
+      "tiles": 1,
+      "cycles": 157
+    },
+    {
+      "issues": 256,
+      "tiles": 8,
+      "cycles": 1736
+    },
+    {
+      "issues": 16,
+      "tiles": 1,
+      "cycles": 157
+    },
+    {
+      "issues": 12,
+      "tiles": 1,
+      "cycles": 131
+    },
+    {
+      "issues": 12,
+      "tiles": 1,
+      "cycles": 131
+    },
+    {
+      "issues": 72,
+      "tiles": 3,
+      "cycles": 540
+    },
+    {
+      "issues": 1200,
+      "tiles": 38,
+      "cycles": 7872
+    },
+    {
+      "issues": 1410,
+      "tiles": 45,
+      "cycles": 9241
+    },
+    {
+      "issues": 1620,
+      "tiles": 51,
+      "cycles": 10602
+    },
+    {
+      "issues": 1830,
+      "tiles": 58,
+      "cycles": 11975
+    },
+    {
+      "issues": 2040,
+      "tiles": 64,
+      "cycles": 13340
+    },
+    {
+      "issues": 1536,
+      "tiles": 48,
+      "cycles": 10064
+    },
+    {
+      "issues": 300,
+      "tiles": 10,
+      "cycles": 2026
+    },
+    {
+      "issues": 1024,
+      "tiles": 32,
+      "cycles": 6728
+    },
+    {
+      "issues": 27,
+      "tiles": 1,
+      "cycles": 249
+    },
+    {
+      "issues": 4096,
+      "tiles": 128,
+      "cycles": 26706
+    },
+    {
+      "issues": 2048,
+      "tiles": 64,
+      "cycles": 13395
+    },
+    {
+      "issues": 1536,
+      "tiles": 48,
+      "cycles": 10067
+    },
+    {
+      "issues": 1536,
+      "tiles": 48,
+      "cycles": 10067
+    },
+    {
+      "issues": 384,
+      "tiles": 12,
+      "cycles": 2579
+    },
+    {
+      "issues": 128,
+      "tiles": 4,
+      "cycles": 915
+    },
+    {
+      "issues": 192,
+      "tiles": 6,
+      "cycles": 1331
+    },
+    {
+      "issues": 1,
+      "tiles": 1,
+      "cycles": 52
+    },
+    {
+      "issues": 1,
+      "tiles": 1,
+      "cycles": 52
+    },
+    {
+      "issues": 9,
+      "tiles": 1,
+      "cycles": 108
+    },
+    {
+      "issues": 64,
+      "tiles": 2,
+      "cycles": 492
+    },
+    {
+      "issues": 336,
+      "tiles": 11,
+      "cycles": 2260
+    },
+    {
+      "issues": 1024,
+      "tiles": 32,
+      "cycles": 6732
+    },
+    {
+      "issues": 72,
+      "tiles": 3,
+      "cycles": 544
+    },
+    {
+      "issues": 16,
+      "tiles": 1,
+      "cycles": 161
+    },
+    {
+      "issues": 43,
+      "tiles": 2,
+      "cycles": 357
+    },
+    {
+      "issues": 768,
+      "tiles": 24,
+      "cycles": 5063
+    },
+    {
+      "issues": 2048,
+      "tiles": 64,
+      "cycles": 13383
+    },
+    {
+      "issues": 64,
+      "tiles": 2,
+      "cycles": 487
+    },
+    {
+      "issues": 48,
+      "tiles": 2,
+      "cycles": 382
+    },
+    {
+      "issues": 1024,
+      "tiles": 32,
+      "cycles": 6727
+    },
+    {
+      "issues": 1,
+      "tiles": 1,
+      "cycles": 54
+    },
+    {
+      "issues": 1,
+      "tiles": 1,
+      "cycles": 55
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 68
+    },
+    {
+      "issues": 80,
+      "tiles": 3,
+      "cycles": 594
+    },
+    {
+      "issues": 216,
+      "tiles": 7,
+      "cycles": 1478
+    },
+    {
+      "issues": 512,
+      "tiles": 16,
+      "cycles": 3402
+    },
+    {
+      "issues": 64,
+      "tiles": 2,
+      "cycles": 490
+    },
+    {
+      "issues": 512,
+      "tiles": 16,
+      "cycles": 3403
+    },
+    {
+      "issues": 1024,
+      "tiles": 32,
+      "cycles": 6731
+    },
+    {
+      "issues": 8,
+      "tiles": 1,
+      "cycles": 98
+    },
+    {
+      "issues": 1562,
+      "tiles": 49,
+      "cycles": 10229
+    },
+    {
+      "issues": 24,
+      "tiles": 1,
+      "cycles": 217
+    },
+    {
+      "issues": 32,
+      "tiles": 1,
+      "cycles": 279
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 87
+    },
+    {
+      "issues": 48,
+      "tiles": 2,
+      "cycles": 382
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 87
+    },
+    {
+      "issues": 48,
+      "tiles": 2,
+      "cycles": 382
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 88
+    },
+    {
+      "issues": 192,
+      "tiles": 6,
+      "cycles": 1319
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 88
+    },
+    {
+      "issues": 192,
+      "tiles": 6,
+      "cycles": 1319
+    },
+    {
+      "issues": 4,
+      "tiles": 1,
+      "cycles": 78
+    },
+    {
+      "issues": 12,
+      "tiles": 1,
+      "cycles": 131
+    },
+    {
+      "issues": 0,
+      "tiles": 0,
+      "cycles": 31
+    },
+    {
+      "issues": 56,
+      "tiles": 2,
+      "cycles": 425
+    },
+    {
+      "issues": 84,
+      "tiles": 3,
+      "cycles": 628
+    },
+    {
+      "issues": 50,
+      "tiles": 2,
+      "cycles": 401
+    },
+    {
+      "issues": 84,
+      "tiles": 3,
+      "cycles": 624
+    },
+    {
+      "issues": 84,
+      "tiles": 3,
+      "cycles": 616
+    },
+    {
+      "issues": 0,
+      "tiles": 0,
+      "cycles": 11
+    },
+    {
+      "issues": 0,
+      "tiles": 0,
+      "cycles": 11
+    },
+    {
+      "issues": 6144,
+      "tiles": 192,
+      "cycles": 40014
+    },
+    {
+      "issues": 3072,
+      "tiles": 96,
+      "cycles": 20046
+    },
+    {
+      "issues": 1536,
+      "tiles": 48,
+      "cycles": 10062
+    }
+  ],
+  "total_operation_cycles": 323316,
+  "compile_command": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_a3_lq8",
+    "--Mdir",
+    "/home/ubuntu/OpenTallas/build/runtime_cursor_local_control_corpus/obj",
+    "-o",
+    "sim",
+    "/home/ubuntu/OpenTallas/rtl/ot_fp32_rne_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_format_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_engine_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pkg.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lane_pipelined.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_operand_bank_owner.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_runtime_weight_banks.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_join.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_operand_admission.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+    "/home/ubuntu/OpenTallas/rtl/abi3/ot_a3_runtime_operation_lifetime.sv",
+    "/home/ubuntu/OpenTallas/rtl/test/tb_a3_runtime_weight_banks.sv",
+    "/home/ubuntu/OpenTallas/rtl/test/tb_a3_lq8.sv",
+    "/home/ubuntu/OpenTallas/build/runtime_cursor_local_control_corpus/top.sv"
+  ],
+  "markers": [
+    "PASS: ABI3 lq8 cases=92 lane_ops=389495 products=592002 outputs=17103 faults=18 reference_cases=90 reference_outputs=17103 identity=17103 lanes=8 adder_stages=3",
+    "checks=115748",
+    "RUNTIME issues=48804 fills=49042 tiles=1562 refill_issue_overlap=7057"
+  ],
+  "artifacts": {
+    "build/runtime_cursor_local_control_corpus/top.sv": "9c8d0d2ac49c85a9b8999004fa976a312675bb2ef033e42677be60b73c6ef6e5",
+    "build/runtime_cursor_local_control_corpus/simulation.log": "3a26c78c9283c69517f4c2a2dd170041a8417d0e8149cdc2f47da798ca75b1f7",
+    "build/runtime_cursor_local_control_corpus/manifest.json": "04bc3515e01b93e9ec722c83051e4841e7fbfff1222e5a0392f6ecd9316a8671",
+    "build/runtime_cursor_local_control_corpus/lq8_case.hex": "e60138fac0bf15c30ce847cf9f5f46679198fa6d3613b7057f67afc330a21b30",
+    "build/runtime_cursor_local_control_corpus/lq8_expect.hex": "64536a1be1c758c8e176a7a58332823bfbcd3a43d3466bb2cd57f8c14a873cb2",
+    "build/runtime_cursor_local_control_corpus/lq8_m0.hex": "b7049d2d649ddce60cced8a6dd8fab5a89e4e9fdc788d6472d40936bc7429570",
+    "build/runtime_cursor_local_control_corpus/lq8_m1.hex": "457265944f55f20bfba9bb8673105c77b7e7ad47a43858158730b8e85796a5b5",
+    "build/runtime_cursor_local_control_corpus/lq8_m2.hex": "2250da76171ada4fbbb8ece923f49f16cae0bd9eed27df21351c6d5540e94e41",
+    "build/runtime_cursor_local_control_corpus/lq8_m3.hex": "68b7fe6dbed39e8760e149d6fe15b1dbbd1782f8787131ddf3e65057c4ea1aa2",
+    "build/runtime_cursor_local_control_corpus/lq8_meta.hex": "e6cad5b49105fa89fa3b82f286064fa493cdefd871f380dbf212c30afe30e46d",
+    "build/runtime_cursor_local_control_corpus/lq8_w.hex": "05328be14159fd8dc701596d098f9c1fbc93190050c923c4fb1e6db10fe3c13d",
+    "build/runtime_cursor_local_control_corpus/lq8_ws.hex": "cfaefd0343f9882faadcb6ac4118857918817de7dcd4cc7c37e25a821c212d87"
+  }
+}

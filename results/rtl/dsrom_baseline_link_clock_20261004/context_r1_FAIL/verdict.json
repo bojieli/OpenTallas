@@ -1,0 +1,70 @@
+{
+  "verdict": "FAIL_CONTEXT_CLOCK",
+  "tool_run_completed": true,
+  "tool_exit_code": 0,
+  "source_origin": "1664d6962",
+  "implementation_and_exact_evidence_main_merge": "1e2b42ee400ad57003ab143879b5a03bcd6494f2",
+  "host": "ot-agidock128",
+  "remote_output": "/home/ubuntu/maxwell-dsrom-baseline-link-clock-1664/context-r1",
+  "terminal_pids_absent": [
+    650916,
+    650918
+  ],
+  "drc_errors": 0,
+  "drc_evidence": [
+    "reports/asap7/dsrom_baseline_clock1/base/5_route_drc.rpt",
+    "logs/asap7/dsrom_baseline_clock1/base/5_2_route.json"
+  ],
+  "corners": {
+    "SS": {
+      "wns_ps": -176.56887063566273
+    },
+    "FF": {
+      "wns_ps": -44.738907023500474
+    }
+  },
+  "worst_paths": {
+    "SS": {
+      "startpoint": "una[1]$_DFF_PN0_ (rising edge-triggered flip-flop clocked by clk)",
+      "endpoint": "st_replays[31]$_DFFE_PN0P_"
+    },
+    "FF": {
+      "startpoint": "in_data[183] (input port clocked by clk)",
+      "endpoint": "rb_data[0][183]$_DFFE_PP_"
+    }
+  },
+  "clock_period_ps": 833.333333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "context_io": {
+    "input_max_ps": 100,
+    "input_min_ps": 30,
+    "output_max_ps": 60,
+    "output_min_ps": 25,
+    "load_fF": 0.6
+  },
+  "die_um": [
+    240,
+    180
+  ],
+  "params": {
+    "FLIT_BYTES": 64,
+    "TX_STAGES": 2,
+    "RX_STAGES": 2,
+    "CHANNEL_CYCLES": 1,
+    "CREDITS": 16,
+    "SEQW": 5
+  },
+  "propagated_cts": true,
+  "final_extracted_spef": true,
+  "mapped_final_stdcell_area_um2": 15343.1,
+  "default_enable_clock_repair": 0,
+  "physical_integration_admitted": false,
+  "selected_512_queue_qualified": false,
+  "phy_qualified": false,
+  "full_token_qualified": false,
+  "disposition": "Do not enable this candidate in a current caller: both SS setup and FF hold fail. Preserve the baseline and rejected cut-through evidence. No rescue or additional route launched.",
+  "functional_exactness": "Prior committed exact_r2_PASS unchanged; actual hop 911 cycles versus baseline 909. Functional exactness does not transfer clock qualification.",
+  "finish_report_corner_caveat": "ORFS finish hold ws is WC-flow data, not the separately measured FF signoff. The terminal verdict uses SS.log and FF.log with their own actual libraries.",
+  "reset_scope": "rst_n falsepathed as pinned; reset-release qualification is not established."
+}

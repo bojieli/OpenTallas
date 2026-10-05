@@ -1,0 +1,89 @@
+{
+  "RTL_written": false,
+  "codec_cost": {
+    "SSFF_loaded_latency_or_clock_qualified": false,
+    "addressed_seal_and_padding_semantics_extra": true,
+    "balanced_pairs_conservative_unused_encoders": true,
+    "body_area_mm2_no_CSE": 1.07152257456,
+    "pair_counts_by_concurrent_port": {
+      "bank_owner": 2048,
+      "packet": 768,
+      "receipt": 512,
+      "reservation": 256,
+      "reverse_context": 1,
+      "reverse_counter": 128,
+      "ring_control": 1
+    },
+    "pair_gate_counts": {
+      "INVx1_ASAP7_75t_R": 760,
+      "NAND2x1_ASAP7_75t_R": 2918
+    },
+    "parallel_balanced_pairs": 3714,
+    "source_codec": "ot_gpu_w6_secded_pkg.encode64/decode64 unchanged64data/72code; syndrome<=71 andoverall, UE quarantine",
+    "total_gate_counts": {
+      "INVx1_ASAP7_75t_R": 2822640,
+      "NAND2x1_ASAP7_75t_R": 10837452
+    }
+  },
+  "fault_contract": {
+    "accepted_phase_stop_hook_proven": false,
+    "fault_recovery_service_and_rearm_not_enrolled": true,
+    "four_slots_proven_only_for_uninterrupted_schedule": true,
+    "healthy_slot_return_not_reset_or_physical_ACK": true,
+    "proposal": "Reserve and retain complete accepted P1 phase image until matched bank+reverse/allcopy retirement; no slot reuse inside phase. Correctable/uncorrectable words never retire unchecked. Faulted phase stays owned; no second GO.",
+    "quarantine_drain_may_stop": true,
+    "source_NO_READY": true,
+    "source_suffix_discard_not_allowed": true
+  },
+  "jobs_launched": false,
+  "pins": {
+    "generator": "82a492cb5264955c655096074692c7742feda5fd5f276f74e3a2dbd4b538d735",
+    "joint_r3": "816e2b147d6a5af73f638a1a7ea2145952d9d1f45c31e2064029f4d30ffb789c",
+    "results/rtl/dsrom_s81_source_binding_20261004/native_conversion/s0_r0/prog.hex": "fa1376bb38c1087bc1889c766c2d55baf7be6a7ef19a75fe62744475cb71ee4a",
+    "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "results/uarch/dsrom_native_masked_backend_prepare_20261003/inputs/w6_codec.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
+    "source_census_r2": "7588429a660b9947804640c9002f9b15a5aceb033910349a7d8828153c12bbc8",
+    "tools/dsrom_s81_capture_parent.py": "12a3ed7a463e3bed2d8238f08939580a1c2b856b5ded29e5ee19aeafb7062e1e"
+  },
+  "prospective_area": {
+    "codec_construction_added_placement_mm2": 2.14304514912,
+    "combined_placement_floor_mm2": 7.178652265920001,
+    "excludes": [
+      "addressed seal/expectedslot/padding logic",
+      "loaded clock/reset/route buffers",
+      "bank priority/steering",
+      "codec pipeline FF chosen from loaded SSFF",
+      "consumer absolute deadline"
+    ],
+    "joint_r3_placement_floor_mm2": 4.709139532800001,
+    "replaces_r3_healthy_only_not_adopted": true,
+    "retained_suffix_added_placement_mm2": 0.32646758400000003
+  },
+  "schema": "dsrom.s81.vm.source_suffix_cost.v1",
+  "selected_binding": {
+    "VM_clock_GHz": null,
+    "absolute_consumer_deadline_ns": null,
+    "codec_loaded_stages": null,
+    "fit": null,
+    "physical_or_RTL_admission": false,
+    "physical_slot_area_mm2": null,
+    "rate_delta": null,
+    "route_stage_count": null
+  },
+  "source_consumer": {
+    "C8_source_wait": "tools/dsrom_s81_capture_parent.py c8_write_quiet depends on !capture_live && capture_drained && !capture_fault && !any_accept",
+    "consequence": "Next accepted context may wait for physical publication. Unknown absolute origin/deadline/slack is not zero.",
+    "native_behavioral_visible_not_physical": true,
+    "native_fragment": "field followed by END wait31, no subsequent consumer in emitted two-instruction fragment"
+  },
+  "source_suffix": {
+    "additional_FF_vs_joint_r3": 552960,
+    "coded_retained_phase_bits": 995328,
+    "max_actual_fragment_rows": 4608,
+    "max_fast_vector_frames": 36,
+    "max_root_quota": 36,
+    "required_four_frame_slots": 9,
+    "scope": "P1 geometries in retained1149-call census, no new allocator/runtime proof; not MTP/other writers."
+  }
+}

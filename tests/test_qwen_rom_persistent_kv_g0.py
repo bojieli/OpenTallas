@@ -1,0 +1,130 @@
+"""Focused functional fixture tests; no final numerical/RTL qualification."""
+import sys
+from pathlib import Path
+import unittest
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'tools'))
+from qwen_rom_persistent_kv_g0 import Owner, Homes, Delivery, PublishedProvider, compose, calendar
+
+class DeliveryTests(unittest.TestCase):
+    def setUp(self):
+        self.state = {}
+        self.owner = Owner(0,3,35,7)
+        self.homes = Homes()
+        # Explicit initialized fixture state only. Production callback must
+        # obtain real sector contents; this fixture is not qualification.
+        for kind in ('K','V'):
+            for h in range(2):
+                for d in range(128):
+                    key,_ = self.homes.byte(self.owner,kind,h,0,d)
+                    self.state[key] = bytes([91])*32
+        self.d = Delivery(self.state.__getitem__,credits=2)
+    def write(self, owner=None):
+        owner = owner or self.owner
+        k = bytes(range(256)); v = bytes(reversed(range(256)))
+        token = self.d.reserve(owner,0,k,v)
+        waves = 0
+        while len(self.d.live[token]['retired']) != 136:
+            wave = self.d.issue(token); self.assertTrue(wave)
+            count = {}
+            for t,o,key,data in wave:
+                count[key[:3]] = count.get(key[:3],0)+1
+                self.assertLessEqual(count[key[:3]],2)
+                self.state[key] = data # explicit backing callback fixture
+                self.d.acknowledge(t,o,key,self.state[key])
+                self.d.reverse_credit(t,o,key)
+            waves += 1
+        self.assertGreater(waves,1)
+        self.d.publish(token)
+        return k,v
+    def test_finite_write_and_exact_masked_delivery(self):
+        k,v = self.write()
+        self.d.acquire(self.owner,1)
+        words = self.d.fill(self.owner)
+        self.assertEqual(sum(sum(x==255 for x in mask) for data,mask in words.values()),512)
+        for kind,payload in [('K',k),('V',v)]:
+            for h in range(2):
+                for dim in range(128):
+                    tile,row,lane = self.homes.tile(kind,h,0,dim)
+                    self.assertEqual(words[tile,row][0][lane],payload[h*128+dim])
+        self.d.visible(self.owner); self.d.drain(self.owner)
+    def test_rmw_preserves_unwritten_bytes(self):
+        self.write()
+        for h in range(2):
+            for dim in range(128):
+                key,offset = self.homes.byte(self.owner,'K',h,0,dim)
+                self.assertEqual(self.state[key][offset+1],91)
+    def test_stale_duplicate_ack_and_early_publication(self):
+        t = self.d.reserve(self.owner,0,bytes(256),bytes(256))
+        _,o,key,data = self.d.issue(t)[0]
+        with self.assertRaisesRegex(ValueError,'writer not drained'): self.d.publish(t)
+        with self.assertRaisesRegex(ValueError,'unbacked'): self.d.reverse_credit(t,o,key)
+        with self.assertRaisesRegex(ValueError,'stale'): self.d.acknowledge(t,Owner(0,3,35,8),key,data)
+        with self.assertRaisesRegex(ValueError,'payload'): self.d.acknowledge(t,o,key,bytes([1])*32)
+        self.d.acknowledge(t,o,key,data)
+        with self.assertRaisesRegex(ValueError,'duplicate'): self.d.acknowledge(t,o,key,data)
+        self.d.reverse_credit(t,o,key)
+        with self.assertRaisesRegex(ValueError,'duplicate'): self.d.reverse_credit(t,o,key)
+    def test_absent_actual_backing_refused(self):
+        d = Delivery({}.__getitem__)
+        t = d.reserve(self.owner,0,bytes(256),bytes(256))
+        with self.assertRaises(KeyError): d.issue(t)
+    def test_window_visibility_and_drain(self):
+        self.write(); self.d.acquire(self.owner,1); self.d.fill(self.owner)
+        with self.assertRaisesRegex(ValueError,'not visible'): self.d.drain(self.owner)
+        with self.assertRaisesRegex(ValueError,'not drained'): self.d.fill(self.owner)
+        with self.assertRaisesRegex(ValueError,'stale'): self.d.visible(Owner(0,3,34,7))
+        self.d.visible(self.owner); self.d.drain(self.owner)
+    def test_single_writer_per_rank(self):
+        self.d.reserve(self.owner,0,bytes(256),bytes(256))
+        with self.assertRaisesRegex(ValueError,'already live'):
+            self.d.reserve(Owner(0,3,34,7),0,bytes(256),bytes(256))
+    def test_owner_and_extent_nonalias(self):
+        keys = set()
+        for rank in range(4):
+            for layer in range(36):
+                for kind in ('K','V'):
+                    key,offset = self.homes.byte(Owner(0,rank,layer,7),kind,0,0,0)
+                    self.assertNotIn((key,offset),keys); keys.add((key,offset))
+        for kind in ('K','V'):
+            for pos in (0,15,16,511,512,8191):
+                for h in range(2):
+                    for dim in range(128):
+                        tile,row,lane = self.homes.tile(kind,h,pos,dim)
+                        self.assertTrue(0<=tile<1536 and 0<=row<54 and 0<=lane<64)
+    def test_byte_cost_charged_once(self):
+        r = compose(100,80,50)
+        self.assertEqual(r['token_cycles'],180)
+        self.assertEqual(r['incremental_read_bytes'],0)
+        self.assertEqual(compose(100,80,50,30)['token_cycles'],150)
+        with self.assertRaises(ValueError): compose(100,80,50,81)
+    def test_source_calendar_is_finite(self):
+        r = calendar(range(32))
+        self.assertGreater(r['cycles_1p2GHz'],32)
+        self.assertEqual(r['max_live_sectors'],1)
+
+class ActualProviderTests(unittest.TestCase):
+    def test_existing_persistent_memory_raw_bytes(self):
+        # Existing actual state implementation, explicit raw fixture publication.
+        # No fp8_encode, golden arithmetic or new numerical position is run.
+        from qwen_hbm_complete_executor import PersistentMemory
+        graph = dict(TP=4,context_capacity=8192,
+            config=dict(head_dim=128,num_key_value_heads=8),
+            memory_allocation=[dict(die=r,extents=[dict(name=f'L0.{k}',
+                base=i*2097152,bytes=2097152) for i,k in enumerate(('K','V'))]) for r in range(4)])
+        mem = PersistentMemory(graph); owner = Owner(0,2,0,7)
+        mem.published[0,2,0] = 99
+        for kind in ('K','V'):
+            for h in range(2):
+                for dim in range(128):
+                    mem.bytes[mem._address(2,0,kind,h,0,dim)] = (h*128+dim)%256
+        provider = PublishedProvider(mem,0,7)
+        d = Delivery({}.__getitem__,read_byte=provider.read_byte)
+        d.bind_published(provider,owner,1); d.acquire(owner,1)
+        words = d.fill(owner)
+        self.assertEqual(sum(sum(m==255 for m in mask) for data,mask in words.values()),512)
+        with self.assertRaisesRegex(ValueError,'prefix absent'): provider.validate(owner,2)
+        del mem.bytes[mem._address(2,0,'K',0,0,0)]
+        with self.assertRaises(KeyError): provider.read_byte(owner,'K',0,0,0)
+        with self.assertRaisesRegex(ValueError,'owner'): provider.validate(Owner(0,2,0,8),1)
+
+if __name__ == '__main__': unittest.main()

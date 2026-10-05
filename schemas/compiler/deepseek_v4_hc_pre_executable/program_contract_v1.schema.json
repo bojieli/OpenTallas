@@ -1,0 +1,137 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/program_contract_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": { "const": 1 },
+        "magic_ascii": { "const": "OTEQ" },
+        "minor": { "const": 0 },
+        "record_bytes": { "const": 60 }
+      },
+      "required": ["major", "magic_ascii", "minor", "record_bytes"],
+      "type": "object"
+    },
+    "claim_boundary": {
+      "const": "Exact executable HC_PRE plus COMPLETE program and typed resource/state bindings only; checkpoint execution requires a separately verified deployment, request, artifact-only result, and independent differential."
+    },
+    "contract_id": {
+      "const": "08446f291c0080b5fdfeffb8165cf5939e09f43c2d6ac77216b65a01a56b5428"
+    },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "flattened_width": { "const": 16384 },
+        "hc_multiplier": { "const": 4 },
+        "hidden_size": { "const": 4096 },
+        "maximum_token_count": { "const": 4 },
+        "minimum_token_count": { "const": 1 },
+        "mix_fields": { "const": 24 },
+        "sinkhorn_iterations": { "const": 20 }
+      },
+      "required": [
+        "flattened_width",
+        "hc_multiplier",
+        "hidden_size",
+        "maximum_token_count",
+        "minimum_token_count",
+        "mix_fields",
+        "sinkhorn_iterations"
+      ],
+      "type": "object"
+    },
+    "evidence_observables": {
+      "items": false,
+      "maxItems": 5,
+      "minItems": 5,
+      "prefixItems": [
+        { "const": "ATTENTION_INPUT" },
+        { "const": "ATTENTION_PRE" },
+        { "const": "ATTENTION_POST" },
+        { "const": "ATTENTION_COMBINATION" },
+        { "const": "ATTENTION_RESIDUAL" }
+      ],
+      "type": "array"
+    },
+    "live_at_complete": {
+      "items": false,
+      "maxItems": 4,
+      "minItems": 4,
+      "prefixItems": [
+        { "const": "ATTENTION_INPUT" },
+        { "const": "ATTENTION_POST" },
+        { "const": "ATTENTION_COMBINATION" },
+        { "const": "ATTENTION_RESIDUAL" }
+      ],
+      "type": "array"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_bindings": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_epsilon_binary32": { "const": "0x358637bd" },
+        "norm_epsilon_binary32": { "const": "0x358637bd" }
+      },
+      "required": ["hc_epsilon_binary32", "norm_epsilon_binary32"],
+      "type": "object"
+    },
+    "operator_sequence": {
+      "items": false,
+      "maxItems": 2,
+      "minItems": 2,
+      "prefixItems": [{ "const": "HC_PRE" }, { "const": "COMPLETE" }],
+      "type": "array"
+    },
+    "program_bytes": { "const": 136 },
+    "program_sha256": {
+      "const": "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+    },
+    "required_nonclaims": {
+      "items": false,
+      "maxItems": 9,
+      "minItems": 9,
+      "prefixItems": [
+        { "const": "checkpoint_execution" },
+        { "const": "weighted_rms_norm" },
+        { "const": "query_projection" },
+        { "const": "attention_completion" },
+        { "const": "transformer_block_completion" },
+        { "const": "full_model_execution" },
+        { "const": "cycle_accuracy" },
+        { "const": "ppa" },
+        { "const": "nvidia_comparison" }
+      ],
+      "type": "array"
+    },
+    "resource_ids": {
+      "items": false,
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [{ "const": 4 }, { "const": 5 }, { "const": 6 }],
+      "type": "array"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_program.v1" },
+    "status": { "const": "exact_hc_pre_program_contract" }
+  },
+  "required": [
+    "abi",
+    "claim_boundary",
+    "contract_id",
+    "dimensions",
+    "evidence_observables",
+    "live_at_complete",
+    "model_id",
+    "numeric_bindings",
+    "operator_sequence",
+    "program_bytes",
+    "program_sha256",
+    "required_nonclaims",
+    "resource_ids",
+    "schema",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE exact program contract v1",
+  "type": "object"
+}

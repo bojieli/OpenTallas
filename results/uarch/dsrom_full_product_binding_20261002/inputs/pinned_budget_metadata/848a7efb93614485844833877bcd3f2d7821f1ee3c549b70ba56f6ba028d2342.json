@@ -1,0 +1,1654 @@
+{
+  "binding_sha256": "1f2755d740d819c3f9e79af4fcdc1e69b9b00082cfb1ce80d0c68b3aea3daee9",
+  "candidate_count_selected": null,
+  "candidate_id": "DSROM4096_COMPLETE_ELEMENT_RETICLE_4c8b7f2_C1",
+  "elements": {
+    "BF16_column_pair": {
+      "MACs_and_intensity": {
+        "activation_macs_per_byte": 0.5,
+        "bf16_weight_bytes_per_cycle": 64,
+        "bp": 0,
+        "hold": 1,
+        "macs": 32,
+        "status": "existing exact gate; contextual SS/FF pending"
+      },
+      "WAKE_increment": {
+        "extra_area_um2_upper": 1064.29148,
+        "extra_gate_count": 7,
+        "extra_register_bits": 2152,
+        "incremental_placement_um2_at_50pct": 2128.58296
+      },
+      "WAKE_increment_embedding_credit": 0,
+      "boundary_bits_per_cycle": 1616,
+      "catalog_local_capacity_estimate": 5656.299599999999,
+      "local_tracks": 4308,
+      "local_tracks_scope": "Owner catalog local estimate only; not translated parent OBS/PG/pin-access fit",
+      "macro_template_body_containment": true,
+      "orientation_template": [
+        {
+          "capture_fix": 0,
+          "orientation": "R0",
+          "relative_instance": "g_mac[0].g_pp.u_rom0",
+          "requested_origin_um": [
+            14.16,
+            6.16
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "MX",
+          "relative_instance": "g_mac[0].g_pp.u_rom1",
+          "requested_origin_um": [
+            14.16,
+            73.39
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "MY",
+          "relative_instance": "g_mac[1].g_pp.u_rom0",
+          "requested_origin_um": [
+            863.44,
+            6.16
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "R180",
+          "relative_instance": "g_mac[1].g_pp.u_rom1",
+          "requested_origin_um": [
+            863.44,
+            73.39
+          ]
+        }
+      ],
+      "outline_um": [
+        1002.89,
+        142.56
+      ],
+      "port_contract": {
+        "BF16_stream_data_bits": 1024,
+        "BF16_stream_metadata_bits": 43,
+        "boundary_excludes_config_return_status_clock_reset": true,
+        "busy_fault_bits": 2,
+        "clk_reset_pins": 2,
+        "config_valid_address_data_bits": 54,
+        "fanout_replication_requires_shared_parent_routing_budget": true,
+        "pingpong_each_leaf_period_cycles": 2,
+        "q_activation_codes_bits": 512,
+        "q_activation_exponents_bits": 20,
+        "q_stream_total_bits": 549,
+        "q_stream_valid_pair_block_slotvalid_position_bits": 17,
+        "return_partial_NB2_bits": 126,
+        "return_partial_per_NB_bits": 63,
+        "source": "rtl/v41rom/ot_v41_rom_elem_w10.sv and ot_v41_rom_elem_q_w10.sv",
+        "source_XD_pipeline_parameter_cycles": 3,
+        "weight_ROM_captured_bits_per_active_cycle": 548,
+        "weight_ROM_captured_bytes_per_active_cycle": 68.5
+      },
+      "whole_element_hard_abstract_available": false
+    },
+    "q_pair": {
+      "MACs_and_intensity": {
+        "fp4_macs_per_cycle": 128,
+        "fp4_weight_macs_per_byte": 1.8686131386861313,
+        "fp8_macs_per_cycle": 64,
+        "fp8_weight_macs_per_byte": 0.9343065693430657
+      },
+      "WAKE_increment": {
+        "extra_area_um2_upper": 13.501080000000002,
+        "extra_gate_count": 7,
+        "extra_register_bits": 8,
+        "incremental_placement_um2_at_50pct": 27.002160000000003
+      },
+      "WAKE_increment_embedding_credit": 0,
+      "boundary_bits_per_cycle": 549,
+      "catalog_local_capacity_estimate": 2881.1376,
+      "local_tracks": 1113,
+      "local_tracks_scope": "Owner catalog local estimate only; not translated parent OBS/PG/pin-access fit",
+      "macro_template_body_containment": true,
+      "orientation_template": [
+        {
+          "capture_fix": 0,
+          "orientation": "R0",
+          "relative_instance": "u_e.g_mac[0].g_pp.u_rom0",
+          "requested_origin_um": [
+            5.4,
+            0.54
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "MX",
+          "relative_instance": "u_e.g_mac[0].g_pp.u_rom1",
+          "requested_origin_um": [
+            5.4,
+            63.45
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "MY",
+          "relative_instance": "u_e.g_mac[1].g_pp.u_rom0",
+          "requested_origin_um": [
+            380.16,
+            0.54
+          ]
+        },
+        {
+          "capture_fix": 0,
+          "orientation": "R180",
+          "relative_instance": "u_e.g_mac[1].g_pp.u_rom1",
+          "requested_origin_um": [
+            380.16,
+            63.45
+          ]
+        }
+      ],
+      "outline_um": [
+        510.84,
+        126.9
+      ],
+      "port_contract": {
+        "BF16_stream_data_bits": 0,
+        "BF16_stream_metadata_bits": 0,
+        "boundary_excludes_config_return_status_clock_reset": true,
+        "busy_fault_bits": 2,
+        "clk_reset_pins": 2,
+        "config_valid_address_data_bits": 54,
+        "fanout_replication_requires_shared_parent_routing_budget": true,
+        "pingpong_each_leaf_period_cycles": 2,
+        "q_activation_codes_bits": 512,
+        "q_activation_exponents_bits": 20,
+        "q_stream_total_bits": 549,
+        "q_stream_valid_pair_block_slotvalid_position_bits": 17,
+        "return_partial_NB2_bits": 126,
+        "return_partial_per_NB_bits": 63,
+        "source": "rtl/v41rom/ot_v41_rom_elem_w10.sv and ot_v41_rom_elem_q_w10.sv",
+        "source_XD_pipeline_parameter_cycles": 3,
+        "weight_ROM_captured_bits_per_active_cycle": 548,
+        "weight_ROM_captured_bytes_per_active_cycle": 68.5
+      },
+      "whole_element_hard_abstract_available": false
+    }
+  },
+  "generator_sha256": "248c4a2951ec6d5f186769c06cd05a783e91aa1229c313884b7a229b90043c09",
+  "independent_input_hash_checks": 47,
+  "input_artifacts_sha256": {
+    "09358afc825bc531d95575dff710ee554ab9ba60:results/uarch/dsrom_4096_reticle_inventory_20261002/inventory.json": "bf0ed18a47a53bdbae6123450a7208b89b1aae27e78da17f7680312b7ec79b86",
+    "09358afc825bc531d95575dff710ee554ab9ba60:results/uarch/dsrom_4096_reticle_inventory_20261002/macro_classes.json": "ef109aeca27ff9c71c49469cea3c061059fd85c9bee7b2472f39b8ec4a83e27c",
+    "09358afc825bc531d95575dff710ee554ab9ba60:results/uarch/dsrom_4096_reticle_inventory_20261002/per_element_envelope.json": "97797846d768e2dd5e156efeeac993e7810acb8494a9d4cbe70e514c6389f57d",
+    "09358afc825bc531d95575dff710ee554ab9ba60:results/uarch/dsrom_4096_reticle_inventory_20261002/validation_and_handoff.json": "825e639bee2bd3e63f5963732ed8cf2a515dba5979c2bc182551399b6891883c",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/abi3/w10_wake_column_place.tcl": "61e3ab8de7ce257ad42700dd5924e1124fa47f5002b9bdd493cd8474eb20dfbd",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/abi3/w10_wake_pdn.tcl": "ccfb2a247310f235fcb5d845b7c2745163ba180974c08578361b0d9c5668f3f3",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/abi3/w10_wake_pp_multicycle.sdc": "60d2718be32143e524e7386d3b0cbff5063caa2c14f46d01ae85e6204b69d7b8",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/abi3/w10_wake_q_place.tcl": "08f2ffdbc3655594c2a245cab2fc9a88096f899e146427846f1f8c6bcc09cd54",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.json": "52c50fa02029fa8cd120a66928e2cb13adaad6a504c696722eb38730661201df",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5.lef": "f38a056344291b7fa949291563be9ba1bb3a19a2aa8f468f9ff1118f173bce14",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "7402e4489915fd8a8220626b4235f82f4826d163cc88784213e368f2ff087706",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "180cee9f3c62dc72970f89e589bdfb70eed8aea0c70cd8e15ba62ca1903daf1e",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "08316f92e3a1e1413c169f02162fa53fa50e46960aae2c9b312a462716b0083a",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.json": "d14325dd9aded6ea3109fd48b9a40614086618bdc598e0551a56579fa4c7b611",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8.lef": "86004770b7b30de920c2504f940eef796f30fc1fa15865215fa94dca3047a03c",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ff.lib": "51add7c291724dc77d33d9fbbfe5fe6293f37fa038da10f377b6c63150bf7064",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_ss.lib": "aaf35a188f02e091a24ba0112295962bfb4067fdb19cc0bb0dc66bcc93848f61",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_1024x72_m8/ot_rom_1024x72_m8_tt.lib": "64d2c67c81ea891c883efe9472241eb2f5da2cee112c9b48ac9c4c38b278ab33",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.json": "da05b0fef4aa9283ecdba8bfcedc49e4dff706dba5f21af2fbc36f7e8bac0794",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib": "b61a1754a9745d3a2039fcc7417f63f72082f4767028fdd4686b0ef18a075b1f",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ss.lib": "a2dc21cb376ff58354fd4fe666ab6b4616336ae911ff252766408d3dc4a09a39",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib": "fd9e01f8ca926e05bf417b3219e9c2cb5659e8a072ec1d18017d3053b2f280a4",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.json": "b5effa123e43fd5ffb0249c2b44870acc83a77d4c05856f217ccc1e3102a95e9",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2.lef": "6f72948ce518c0d0d2cbabed97f4785b58e0702bd10559a2e32d13537ad16dd3",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2_ff.lib": "1c065c7110060ffeb03baa88ad77b79c04f190eb43365cfed6a7019e05081990",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2_ss.lib": "0792d628fa8abe85b92dc773750ef1463667ccaeda1eb467ba6b21af2c2c35bf",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:physical/asap7_memory_macros/ot_sram_1rw_2048x128_m4_r2c2/ot_sram_1rw_2048x128_m4_r2c2_tt.lib": "80b5511d0e9c3a5ca27febe456dd82a3261517813d0cbffb8bb625b4ab5fb581",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/arch/v41_stage_owner_product.json": "8e1a3d2730372f597550004deed4da2c6a5408a6cd2b432a44d215b157970651",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/floorplan/v41_die_macromap_expanded_woa.json": "01f10d3d3f03cfa93ca5212803883e54daa7d05a936938ac2f78dbbcf785c775",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/floorplan/v41_pack_refit_w18_e8p5.json": "472e9f5e9ba4a462b9042ec19d7048fd33cbc64623e2640f3c66cc3e1077afbb",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/floorplan/v41_stage17_bankmap.json": "70e707fb4ab3a630618f3557ae47bd1bc85bd03017adbf4baf00f2dce3cd17af",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/consolidation.json": "0d99324bb6e983f75fb786901ae2e6db3000072443c351549f661af35bda3976",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/dsrom_4096_comparable_capacity_20261002/model.json": "f48a5866432fa45a6f70aa822cae7607b100919ef1a397ff6e7a72e2eda02087",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/dsrom_l20_reticle_prerequisite_20261002/model.json": "1d6f40e14007e569caeaf61cef00f532e343d6b4b7e9956a4409c3cfce001869",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/v41_rom_depth_study.json": "2486182dfd3bfd8f37db72ee59c254222d2586292efdead2697bd71ccf095c5b",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/w10_baseline_wake/c8_area_anchor.json": "4dd30b8cdffb4297d307a65b257d6bde2609ecd684084a5ae48a5163e1b92b83",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/w10_baseline_wake/fullgoal_bound.json": "22ec42a393a34fb639d9ea8766b1da3b5682dfca761405ce5d0fb2c29c72be58",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:results/uarch/w10_wake_pinaccess_contract_review/inputs.json": "714ccc241080a55d4649d1c3992610d3b26b5276eab75a3ea6162229add9a61c",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_array.sv": "ff6d9c47c9b92f52e27f39eee9e342b85fcd5261d80ac9eaab6cbc91e4fd7f99",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_elem_q_w10.sv": "5eace5ca4ee8d319fb0e8ef3ea6a38f9ba07e55a18c15bf6b2e5d02692a2861a",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_elem_q_wake_w10.sv": "9aeb72b660dc07ea28b4b3404606cd03c97390f2c21675790bffc2dc97caea5c",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:rtl/v41rom/ot_v41_rom_elem_wake_w10.sv": "cb23633abfb9e0125b5637efc6ba9c374cbed65c40adb33ed9d0752acd287eb0",
+    "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574:tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "inventory_commit": "09358afc825bc531d95575dff710ee554ab9ba60",
+  "larger_unpartitionable_ownership_bound": {
+    "BF1024_indivisible_floor_proven": false,
+    "proven": false,
+    "required": [
+      "Exact tensor/expert row and address ownership",
+      "Compiler golden reduction subtree grouping and namespace limits",
+      "Largest operator source-matched repeated-element footprint",
+      "Actual service and return-buffer ownership per die"
+    ]
+  },
+  "latency_terms_separate": [
+    "Stage hops with accepted producer-to-consumer events",
+    "TP and collectives preserving golden reduction order",
+    "Mandatory finite index/return correction held constant in partition comparison",
+    "Clock crossings and priced physical pipeline cuts"
+  ],
+  "macro": {
+    "OBS": [
+      {
+        "layer": "M1",
+        "rectangle_um": [
+          0.0,
+          0.0,
+          125.28,
+          62.91
+        ]
+      },
+      {
+        "layer": "M2",
+        "rectangle_um": [
+          0.0,
+          0.0,
+          125.28,
+          62.91
+        ]
+      },
+      {
+        "layer": "M3",
+        "rectangle_um": [
+          0.0,
+          0.0,
+          125.28,
+          62.91
+        ]
+      },
+      {
+        "layer": "M4",
+        "rectangle_um": [
+          0.072,
+          0.0,
+          125.208,
+          62.91
+        ]
+      }
+    ],
+    "clock_and_PG_pins": [
+      {
+        "direction": "INPUT",
+        "layers": [
+          "M4"
+        ],
+        "name": "clk",
+        "rectangles_um": [
+          [
+            0.0,
+            0.768,
+            0.024,
+            0.792
+          ]
+        ],
+        "use": "CLOCK"
+      },
+      {
+        "direction": "INOUT",
+        "layers": [
+          "M4"
+        ],
+        "name": "VDD",
+        "rectangles_um": [
+          [
+            0.3,
+            0.384,
+            124.98,
+            0.48
+          ],
+          [
+            0.3,
+            1.152,
+            124.98,
+            1.248
+          ],
+          [
+            0.3,
+            1.92,
+            124.98,
+            2.016
+          ],
+          [
+            0.3,
+            2.688,
+            124.98,
+            2.784
+          ],
+          [
+            0.3,
+            3.456,
+            124.98,
+            3.552
+          ],
+          [
+            0.3,
+            4.224,
+            124.98,
+            4.32
+          ],
+          [
+            0.3,
+            4.992,
+            124.98,
+            5.088
+          ],
+          [
+            0.3,
+            5.76,
+            124.98,
+            5.856
+          ],
+          [
+            0.3,
+            6.528,
+            124.98,
+            6.624
+          ],
+          [
+            0.3,
+            7.296,
+            124.98,
+            7.392
+          ],
+          [
+            0.3,
+            8.064,
+            124.98,
+            8.16
+          ],
+          [
+            0.3,
+            8.832,
+            124.98,
+            8.928
+          ],
+          [
+            0.3,
+            9.6,
+            124.98,
+            9.696
+          ],
+          [
+            0.3,
+            10.368,
+            124.98,
+            10.464
+          ],
+          [
+            0.3,
+            11.136,
+            124.98,
+            11.232
+          ],
+          [
+            0.3,
+            11.904,
+            124.98,
+            12.0
+          ],
+          [
+            0.3,
+            12.672,
+            124.98,
+            12.768
+          ],
+          [
+            0.3,
+            13.44,
+            124.98,
+            13.536
+          ],
+          [
+            0.3,
+            14.208,
+            124.98,
+            14.304
+          ],
+          [
+            0.3,
+            14.976,
+            124.98,
+            15.072
+          ],
+          [
+            0.3,
+            15.744,
+            124.98,
+            15.84
+          ],
+          [
+            0.3,
+            16.512,
+            124.98,
+            16.608
+          ],
+          [
+            0.3,
+            17.28,
+            124.98,
+            17.376
+          ],
+          [
+            0.3,
+            18.048,
+            124.98,
+            18.144
+          ],
+          [
+            0.3,
+            18.816,
+            124.98,
+            18.912
+          ],
+          [
+            0.3,
+            19.584,
+            124.98,
+            19.68
+          ],
+          [
+            0.3,
+            20.352,
+            124.98,
+            20.448
+          ],
+          [
+            0.3,
+            21.12,
+            124.98,
+            21.216
+          ],
+          [
+            0.3,
+            21.888,
+            124.98,
+            21.984
+          ],
+          [
+            0.3,
+            22.656,
+            124.98,
+            22.752
+          ],
+          [
+            0.3,
+            23.424,
+            124.98,
+            23.52
+          ],
+          [
+            0.3,
+            24.192,
+            124.98,
+            24.288
+          ],
+          [
+            0.3,
+            24.96,
+            124.98,
+            25.056
+          ],
+          [
+            0.3,
+            25.728,
+            124.98,
+            25.824
+          ],
+          [
+            0.3,
+            26.496,
+            124.98,
+            26.592
+          ],
+          [
+            0.3,
+            27.264,
+            124.98,
+            27.36
+          ],
+          [
+            0.3,
+            28.032,
+            124.98,
+            28.128
+          ],
+          [
+            0.3,
+            28.8,
+            124.98,
+            28.896
+          ],
+          [
+            0.3,
+            29.568,
+            124.98,
+            29.664
+          ],
+          [
+            0.3,
+            30.336,
+            124.98,
+            30.432
+          ],
+          [
+            0.3,
+            31.104,
+            124.98,
+            31.2
+          ],
+          [
+            0.3,
+            31.872,
+            124.98,
+            31.968
+          ],
+          [
+            0.3,
+            32.64,
+            124.98,
+            32.736
+          ],
+          [
+            0.3,
+            33.408,
+            124.98,
+            33.504
+          ],
+          [
+            0.3,
+            34.176,
+            124.98,
+            34.272
+          ],
+          [
+            0.3,
+            34.944,
+            124.98,
+            35.04
+          ],
+          [
+            0.3,
+            35.712,
+            124.98,
+            35.808
+          ],
+          [
+            0.3,
+            36.48,
+            124.98,
+            36.576
+          ],
+          [
+            0.3,
+            37.248,
+            124.98,
+            37.344
+          ],
+          [
+            0.3,
+            38.016,
+            124.98,
+            38.112
+          ],
+          [
+            0.3,
+            38.784,
+            124.98,
+            38.88
+          ],
+          [
+            0.3,
+            39.552,
+            124.98,
+            39.648
+          ],
+          [
+            0.3,
+            40.32,
+            124.98,
+            40.416
+          ],
+          [
+            0.3,
+            41.088,
+            124.98,
+            41.184
+          ],
+          [
+            0.3,
+            41.856,
+            124.98,
+            41.952
+          ],
+          [
+            0.3,
+            42.624,
+            124.98,
+            42.72
+          ],
+          [
+            0.3,
+            43.392,
+            124.98,
+            43.488
+          ],
+          [
+            0.3,
+            44.16,
+            124.98,
+            44.256
+          ],
+          [
+            0.3,
+            44.928,
+            124.98,
+            45.024
+          ],
+          [
+            0.3,
+            45.696,
+            124.98,
+            45.792
+          ],
+          [
+            0.3,
+            46.464,
+            124.98,
+            46.56
+          ],
+          [
+            0.3,
+            47.232,
+            124.98,
+            47.328
+          ],
+          [
+            0.3,
+            48.0,
+            124.98,
+            48.096
+          ],
+          [
+            0.3,
+            48.768,
+            124.98,
+            48.864
+          ],
+          [
+            0.3,
+            49.536,
+            124.98,
+            49.632
+          ],
+          [
+            0.3,
+            50.304,
+            124.98,
+            50.4
+          ],
+          [
+            0.3,
+            51.072,
+            124.98,
+            51.168
+          ],
+          [
+            0.3,
+            51.84,
+            124.98,
+            51.936
+          ],
+          [
+            0.3,
+            52.608,
+            124.98,
+            52.704
+          ],
+          [
+            0.3,
+            53.376,
+            124.98,
+            53.472
+          ],
+          [
+            0.3,
+            54.144,
+            124.98,
+            54.24
+          ],
+          [
+            0.3,
+            54.912,
+            124.98,
+            55.008
+          ],
+          [
+            0.3,
+            55.68,
+            124.98,
+            55.776
+          ],
+          [
+            0.3,
+            56.448,
+            124.98,
+            56.544
+          ],
+          [
+            0.3,
+            57.216,
+            124.98,
+            57.312
+          ],
+          [
+            0.3,
+            57.984,
+            124.98,
+            58.08
+          ],
+          [
+            0.3,
+            58.752,
+            124.98,
+            58.848
+          ],
+          [
+            0.3,
+            59.52,
+            124.98,
+            59.616
+          ],
+          [
+            0.3,
+            60.288,
+            124.98,
+            60.384
+          ],
+          [
+            0.3,
+            61.056,
+            124.98,
+            61.152
+          ],
+          [
+            0.3,
+            61.824,
+            124.98,
+            61.92
+          ],
+          [
+            0.3,
+            62.592,
+            124.98,
+            62.688
+          ]
+        ],
+        "use": "POWER"
+      },
+      {
+        "direction": "INOUT",
+        "layers": [
+          "M4"
+        ],
+        "name": "VSS",
+        "rectangles_um": [
+          [
+            0.3,
+            0.768,
+            124.98,
+            0.864
+          ],
+          [
+            0.3,
+            1.536,
+            124.98,
+            1.632
+          ],
+          [
+            0.3,
+            2.304,
+            124.98,
+            2.4
+          ],
+          [
+            0.3,
+            3.072,
+            124.98,
+            3.168
+          ],
+          [
+            0.3,
+            3.84,
+            124.98,
+            3.936
+          ],
+          [
+            0.3,
+            4.608,
+            124.98,
+            4.704
+          ],
+          [
+            0.3,
+            5.376,
+            124.98,
+            5.472
+          ],
+          [
+            0.3,
+            6.144,
+            124.98,
+            6.24
+          ],
+          [
+            0.3,
+            6.912,
+            124.98,
+            7.008
+          ],
+          [
+            0.3,
+            7.68,
+            124.98,
+            7.776
+          ],
+          [
+            0.3,
+            8.448,
+            124.98,
+            8.544
+          ],
+          [
+            0.3,
+            9.216,
+            124.98,
+            9.312
+          ],
+          [
+            0.3,
+            9.984,
+            124.98,
+            10.08
+          ],
+          [
+            0.3,
+            10.752,
+            124.98,
+            10.848
+          ],
+          [
+            0.3,
+            11.52,
+            124.98,
+            11.616
+          ],
+          [
+            0.3,
+            12.288,
+            124.98,
+            12.384
+          ],
+          [
+            0.3,
+            13.056,
+            124.98,
+            13.152
+          ],
+          [
+            0.3,
+            13.824,
+            124.98,
+            13.92
+          ],
+          [
+            0.3,
+            14.592,
+            124.98,
+            14.688
+          ],
+          [
+            0.3,
+            15.36,
+            124.98,
+            15.456
+          ],
+          [
+            0.3,
+            16.128,
+            124.98,
+            16.224
+          ],
+          [
+            0.3,
+            16.896,
+            124.98,
+            16.992
+          ],
+          [
+            0.3,
+            17.664,
+            124.98,
+            17.76
+          ],
+          [
+            0.3,
+            18.432,
+            124.98,
+            18.528
+          ],
+          [
+            0.3,
+            19.2,
+            124.98,
+            19.296
+          ],
+          [
+            0.3,
+            19.968,
+            124.98,
+            20.064
+          ],
+          [
+            0.3,
+            20.736,
+            124.98,
+            20.832
+          ],
+          [
+            0.3,
+            21.504,
+            124.98,
+            21.6
+          ],
+          [
+            0.3,
+            22.272,
+            124.98,
+            22.368
+          ],
+          [
+            0.3,
+            23.04,
+            124.98,
+            23.136
+          ],
+          [
+            0.3,
+            23.808,
+            124.98,
+            23.904
+          ],
+          [
+            0.3,
+            24.576,
+            124.98,
+            24.672
+          ],
+          [
+            0.3,
+            25.344,
+            124.98,
+            25.44
+          ],
+          [
+            0.3,
+            26.112,
+            124.98,
+            26.208
+          ],
+          [
+            0.3,
+            26.88,
+            124.98,
+            26.976
+          ],
+          [
+            0.3,
+            27.648,
+            124.98,
+            27.744
+          ],
+          [
+            0.3,
+            28.416,
+            124.98,
+            28.512
+          ],
+          [
+            0.3,
+            29.184,
+            124.98,
+            29.28
+          ],
+          [
+            0.3,
+            29.952,
+            124.98,
+            30.048
+          ],
+          [
+            0.3,
+            30.72,
+            124.98,
+            30.816
+          ],
+          [
+            0.3,
+            31.488,
+            124.98,
+            31.584
+          ],
+          [
+            0.3,
+            32.256,
+            124.98,
+            32.352
+          ],
+          [
+            0.3,
+            33.024,
+            124.98,
+            33.12
+          ],
+          [
+            0.3,
+            33.792,
+            124.98,
+            33.888
+          ],
+          [
+            0.3,
+            34.56,
+            124.98,
+            34.656
+          ],
+          [
+            0.3,
+            35.328,
+            124.98,
+            35.424
+          ],
+          [
+            0.3,
+            36.096,
+            124.98,
+            36.192
+          ],
+          [
+            0.3,
+            36.864,
+            124.98,
+            36.96
+          ],
+          [
+            0.3,
+            37.632,
+            124.98,
+            37.728
+          ],
+          [
+            0.3,
+            38.4,
+            124.98,
+            38.496
+          ],
+          [
+            0.3,
+            39.168,
+            124.98,
+            39.264
+          ],
+          [
+            0.3,
+            39.936,
+            124.98,
+            40.032
+          ],
+          [
+            0.3,
+            40.704,
+            124.98,
+            40.8
+          ],
+          [
+            0.3,
+            41.472,
+            124.98,
+            41.568
+          ],
+          [
+            0.3,
+            42.24,
+            124.98,
+            42.336
+          ],
+          [
+            0.3,
+            43.008,
+            124.98,
+            43.104
+          ],
+          [
+            0.3,
+            43.776,
+            124.98,
+            43.872
+          ],
+          [
+            0.3,
+            44.544,
+            124.98,
+            44.64
+          ],
+          [
+            0.3,
+            45.312,
+            124.98,
+            45.408
+          ],
+          [
+            0.3,
+            46.08,
+            124.98,
+            46.176
+          ],
+          [
+            0.3,
+            46.848,
+            124.98,
+            46.944
+          ],
+          [
+            0.3,
+            47.616,
+            124.98,
+            47.712
+          ],
+          [
+            0.3,
+            48.384,
+            124.98,
+            48.48
+          ],
+          [
+            0.3,
+            49.152,
+            124.98,
+            49.248
+          ],
+          [
+            0.3,
+            49.92,
+            124.98,
+            50.016
+          ],
+          [
+            0.3,
+            50.688,
+            124.98,
+            50.784
+          ],
+          [
+            0.3,
+            51.456,
+            124.98,
+            51.552
+          ],
+          [
+            0.3,
+            52.224,
+            124.98,
+            52.32
+          ],
+          [
+            0.3,
+            52.992,
+            124.98,
+            53.088
+          ],
+          [
+            0.3,
+            53.76,
+            124.98,
+            53.856
+          ],
+          [
+            0.3,
+            54.528,
+            124.98,
+            54.624
+          ],
+          [
+            0.3,
+            55.296,
+            124.98,
+            55.392
+          ],
+          [
+            0.3,
+            56.064,
+            124.98,
+            56.16
+          ],
+          [
+            0.3,
+            56.832,
+            124.98,
+            56.928
+          ],
+          [
+            0.3,
+            57.6,
+            124.98,
+            57.696
+          ],
+          [
+            0.3,
+            58.368,
+            124.98,
+            58.464
+          ],
+          [
+            0.3,
+            59.136,
+            124.98,
+            59.232
+          ],
+          [
+            0.3,
+            59.904,
+            124.98,
+            60.0
+          ],
+          [
+            0.3,
+            60.672,
+            124.98,
+            60.768
+          ],
+          [
+            0.3,
+            61.44,
+            124.98,
+            61.536
+          ],
+          [
+            0.3,
+            62.208,
+            124.98,
+            62.304
+          ]
+        ],
+        "use": "GROUND"
+      }
+    ],
+    "outline_um": [
+      125.28,
+      62.91
+    ],
+    "signal_pin_layers": [
+      "M4"
+    ],
+    "timing_scope": "Catalog calibrated not signoff"
+  },
+  "main_pin": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+  "minimum_partition_rule": "Complete-element area lower bound after service/routes/clockPG is not legal minimum. Bind largest operator/reduction ownership and bank-specific payload conservation before count selection.",
+  "new_RTL_compile_PnR": 0,
+  "new_pve2_pve3_jobs": 0,
+  "ordered_reduction_contract": "Preserve source golden reduction order and subtree ownership. Repartition transport without algebraic regrouping.",
+  "ownership_atom": "One complete NB2/PP1 weight-plus-adjacent-compute element; never separate either slot or any of its four physical macros",
+  "physical_admission": false,
+  "physical_gates": [
+    "Actual field-slot hard abstract",
+    "Source-matched WAKE/RNE physical growth",
+    "Executable row/operator ownership and common element count",
+    "Full138469120bit return provider with finite ports/credits",
+    "DS-owned native bridge and service hardtile/clockPG/pin escape",
+    "Finite whole-token service guarantees"
+  ],
+  "reference_inventory": {
+    "busiest": {
+      "BF16_column_pairs": 1024,
+      "BF16_macros": 4096,
+      "ROM_storage_bits": 21427027968,
+      "logical_payload_bits_capacity_basis": 14437898262,
+      "pairs": 4773,
+      "payload_to_bank_exactness": false,
+      "q_macros": 14996,
+      "q_pairs": 3749,
+      "stages_tied": [
+        1
+      ],
+      "total_macros": 19092
+    },
+    "complete_pairs": 781840,
+    "head_table_dies_in_layer_sum": false,
+    "layer_dies": 164,
+    "physical_macro_leaves": 3127360,
+    "reference_is_executable": false
+  },
+  "return_provider": {
+    "bits": 138469120,
+    "bound": false,
+    "no_embedded_credit": true
+  },
+  "roles": {
+    "actual_inventory": "Nash",
+    "full_token": "Maxwell",
+    "service_overlay": "controller-gap owner",
+    "shared_placement": "Archimedes9568",
+    "single_SVG": "Keplerfde"
+  },
+  "schema": "opentallas.DSROM.shared4096.inventory-service-join.v1",
+  "selected_historical_prior_inputs": [],
+  "service": {
+    "DBU_per_um": 1000,
+    "actual_clock_PG_shapes_bound": false,
+    "corridors": [
+      {
+        "candidate_anchor_band_um": [
+          1000.0,
+          21819.04,
+          10974.880000000001,
+          23650.72
+        ],
+        "margin_tracks": 72,
+        "name": "index_HBM_all128responses",
+        "per_layer": [
+          {
+            "layer": "M2",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 47488,
+            "unique_phased_positions": 47488
+          },
+          {
+            "layer": "M4",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 38160,
+            "unique_phased_positions": 38160
+          }
+        ],
+        "required_parallel_tracks": 42752,
+        "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+        "signal_tracks_after50pct_PG_clock_via_reserve": 42824
+      },
+      {
+        "candidate_anchor_band_um": [
+          1000.0,
+          23650.719999999998,
+          10974.880000000001,
+          25147.6
+        ],
+        "margin_tracks": 46,
+        "name": "index_quarter_join_to_batch",
+        "per_layer": [
+          {
+            "layer": "M2",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 38808,
+            "unique_phased_positions": 38808
+          },
+          {
+            "layer": "M4",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 31185,
+            "unique_phased_positions": 31185
+          }
+        ],
+        "required_parallel_tracks": 34950,
+        "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+        "signal_tracks_after50pct_PG_clock_via_reserve": 34996
+      },
+      {
+        "candidate_anchor_band_um": [
+          1000.0,
+          25147.6,
+          10974.880000000001,
+          25875.519999999997
+        ],
+        "margin_tracks": 52,
+        "name": "mergedKV_to_stage",
+        "per_layer": [
+          {
+            "layer": "M2",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 18872,
+            "unique_phased_positions": 18872
+          },
+          {
+            "layer": "M4",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 15165,
+            "unique_phased_positions": 15165
+          }
+        ],
+        "required_parallel_tracks": 16966,
+        "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+        "signal_tracks_after50pct_PG_clock_via_reserve": 17018
+      },
+      {
+        "candidate_anchor_band_um": [
+          1000.0,
+          25875.519999999997,
+          10974.880000000001,
+          25886.319999999996
+        ],
+        "margin_tracks": 49,
+        "name": "directproducer_registered_boundary",
+        "per_layer": [
+          {
+            "layer": "M2",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 280,
+            "unique_phased_positions": 280
+          },
+          {
+            "layer": "M4",
+            "translated_OBS_and_4p32um_halo_blocked": 0,
+            "unblocked": 225,
+            "unique_phased_positions": 225
+          }
+        ],
+        "required_parallel_tracks": 203,
+        "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+        "signal_tracks_after50pct_PG_clock_via_reserve": 252
+      },
+      {
+        "candidate_anchor_band_um": [
+          1000.0,
+          16205.56,
+          3125.44,
+          17100.088
+        ],
+        "macro_OBS_intersections": 0,
+        "margin_tracks": 4,
+        "name": "collector_combined",
+        "required_parallel_tracks": 20909,
+        "signal_tracks_after50pct_PG_clock_via_reserve": 20913
+      }
+    ],
+    "die_DBU": [
+      33000000,
+      26000000
+    ],
+    "legal_scope": "Static reservation rectangles contained and nonoverlap per b551e90be. Source-counted logic proxies, proposed banked collector. Not a source-matched hard service island.",
+    "native_bridge_state_area_priced": false,
+    "overlay_sha256": "2285056f7c43691314f7334988da21afb980aa59f0b77abc4a1d0a9148a8f4e0",
+    "rectangles": [
+      {
+        "area_mm2": 2.3381710387199997,
+        "bbox_DBU": [
+          1000000,
+          16000000,
+          3125440,
+          17100088
+        ],
+        "name": "BANKED_COLLECTOR_MACROS_AND_CLEAR20909TRACK_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.483249152000001,
+        "bbox_DBU": [
+          1000000,
+          17100088,
+          3125440,
+          20620888
+        ],
+        "name": "ACTUAL_POOLED_INDEXER_AND4RING_READERS",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.3075936768,
+        "bbox_DBU": [
+          1000000,
+          20620888,
+          3125440,
+          20765608
+        ],
+        "name": "X_SEL_TOPK_STORE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.08263710720000002,
+        "bbox_DBU": [
+          1000000,
+          20765608,
+          3125440,
+          20804488
+        ],
+        "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 45.6762053376,
+        "bbox_DBU": [
+          3125440,
+          16000000,
+          10974880,
+          21819040
+        ],
+        "name": "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.270788198400005,
+        "bbox_DBU": [
+          1000000,
+          21819040,
+          10974880,
+          23650720
+        ],
+        "name": "index_HBM_all128responses_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 14.931198374400003,
+        "bbox_DBU": [
+          1000000,
+          23650720,
+          10974880,
+          25147600
+        ],
+        "name": "index_quarter_join_to_batch_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 7.260914649600001,
+        "bbox_DBU": [
+          1000000,
+          25147600,
+          10974880,
+          25875520
+        ],
+        "name": "mergedKV_to_stage_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.10772870400000001,
+        "bbox_DBU": [
+          1000000,
+          25875520,
+          10974880,
+          25886320
+        ],
+        "name": "directproducer_registered_boundary_CLEAR_ROUTE_BAND",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.389602304,
+        "bbox_DBU": [
+          10974880,
+          16000000,
+          11605600,
+          18203200
+        ],
+        "name": "HUB_COLLECTIVE",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 0.892342656,
+        "bbox_DBU": [
+          10974880,
+          18203200,
+          11605600,
+          19618000
+        ],
+        "name": "HUB_VM",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 1.3882399488000001,
+        "bbox_DBU": [
+          10974880,
+          19618000,
+          11605600,
+          21819040
+        ],
+        "name": "HUB_GATHER",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 12.80542597632,
+        "bbox_DBU": [
+          11605600,
+          16000000,
+          13806208,
+          21819040
+        ],
+        "name": "HUB_SU_VECTOR",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      },
+      {
+        "area_mm2": 18.3132171648,
+        "bbox_DBU": [
+          13806208,
+          16000000,
+          16953328,
+          21819040
+        ],
+        "name": "HUB_HC",
+        "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+      }
+    ]
+  },
+  "source_artifact_hash_checks": 3,
+  "source_boundary_scope": "549/1616-bit activation streams exclude config,126-bit partial return,status,clock/reset; all separate ports exported. Parent fanout/mux/skids require actual source-owned net placement; do not multiply all replicated ports into a serial path or assert free multicast.",
+  "verdict": "PASS_STATIC_INVENTORY_SERVICE_CONTRACT_JOIN_ONLY_NO_FULL_FIT"
+}

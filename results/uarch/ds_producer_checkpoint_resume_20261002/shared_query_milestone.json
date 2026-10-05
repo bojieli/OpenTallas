@@ -1,0 +1,80 @@
+{
+  "schema": "DS_QUIESCENT_PC10_SHARED_AND_QUERY_CLOSURE_MILESTONE_V1",
+  "prior_helper_commit": "e598478bb719da11a7224abb55154710323898fd",
+  "source_sha256": {
+    "tools/ds_producer_checkpoint_resume.py": "37820483bd77058f453f19b2f6243b7679ed582f43c98bb07d758f1237d41cf7",
+    "tests/test_ds_producer_checkpoint_resume.py": "fc5eda0e4b02ff708eee103fda662399d446a0fb723c7a51451f28952ccd9b49",
+    "tools/h4_hbm_w19_pc10_endpoints.py": "5013e5695ef6ae80fa1988d5f5529f766d8dad60ae7254ff2139fd29834329fc",
+    "tools/h3_ds_query_provider_r36.py": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9",
+    "tools/ds_hbm_history_codec_r36.py": "24e0a760b926b0b439120e757fbfffe5f42a2f72198e8794510b4acaf9b53dcf",
+    "tools/hbm_bound_event_journal_r30.py": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "tools/hbm_provider_microvm_r21.py": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+  },
+  "tests": 43,
+  "command": "python3 -m pytest -q tests/test_ds_producer_checkpoint_resume.py",
+  "tests_log": "tests_shared_query_milestone.log",
+  "tests_log_sha256": "986dbc9a5d6b6525242d1315dd44f9f5e97162596004680091f1927df955e4ea",
+  "shared": {
+    "factory": "original ProductionSharedFactory",
+    "allocation_per_SM_bytes": 65536,
+    "operand_double_buffer_bytes_distinct": 8192,
+    "ranks": 96,
+    "SMs_per_rank": 32,
+    "maximum_existing_allocated_bytes": 201326592,
+    "serialization": "actual extent/owner/serial and all PORT_STATE bytes/counters; complete shared source bundle hashes included in cold enrollment",
+    "actual_test": "original factory Memory.transact actual512B write/read -> r47 capture/verify/restore -> same512B read; all saved PORT_STATE equal before continued read; original factory and completed-set objects retained; no transaction/ACK events during reconstruction",
+    "quiescence": "exact owner PC10 already retired; queue/live/calendar/resident/faults empty; unknown fields rejected; actual source journal budget object unchanged",
+    "restored_journal": "new continuation evidence stream; never replay old events as data or completions",
+    "maximum_serial": 1099511627776
+  },
+  "compound_fields": {
+    "actual_test_provider": "original QueryMixin composed over r34 Provider; full32x128 parent data, 32x64 codes and32x4 exponents; history mixin not instantiated in this isolated component",
+    "verification": "exact immutable manifest field homes/shape/dtype/bytes/PC/generation, visible parent RF identity/home; actual addressed field bytes reconstructed read-only then unchanged source FP4E8 decoder checks bit identity to actual RF parent",
+    "exponent_forms": [
+      "U32 two complement sign extension",
+      "I64 signed"
+    ],
+    "negative_zero": "retained packed0x88 source signed-zero bitpatterns",
+    "restore_stimulus": "ONLY saved actual sector bytes; expected outputs never serialized or used"
+  },
+  "coverage": [
+    "all prior26 tests",
+    "shared512B write/read continuation with owner, home, next serial, positive software ticks, costs and tag generations byteexact",
+    "shared live queue/residence, wrong generation, extent, serial, allocation, unknown fields, out-of-home backing refusal",
+    "shared unretired PC10 refusal",
+    "query U32/I64 exponent forms with source decode/parent bit comparison",
+    "wrong query code, absent backing, wrong immutable home, stale visible generation, missing parent refusal"
+  ],
+  "journal_fixture_failure_preserved": {
+    "path": "tests_shared_query_attempt1.log",
+    "reason": "old8MiB component journal budget exhausted during fullquery RF mirrored publication before checkpoint; no runtime arithmetic/resume verdict",
+    "successor_component_projection": "<=4096 transactions at65536B metadata allowance each =268435456B declared source journal budget; this is not a host process cap and not a production journal-cap change"
+  },
+  "later_control_adjustment": "Each shared negative now asserts its exact refusal reason after PC10 retirement; an independent unretired-owner test covers that gate.",
+  "resource_model": "actual payload and typed metadata measured by existing serializer; shared actual retained sectors now included in projection; full compiled extent is not assumed resident payload; old journals remain separate immutable evidence; incremental continuation/index/dictionary demand must be reviewed and joined by runner",
+  "ready_APIs": [
+    "project_checkpoint",
+    "capture_quiescent",
+    "verify_checkpoint",
+    "restore_quiescent",
+    "join_storage_projection"
+  ],
+  "Kepler_join": {
+    "cold_shared_factory": "same exact source ProductionSharedFactory, same provider.journal_budget, empty memories; do not prepopulate or replace factory on restore",
+    "shared_owner": "{PC:10,rank,SM,generation,tile,template}; no new synthetic owner or ACK provider",
+    "source_fields": "only exact reviewed schemas; future provider object fields remain failclosed",
+    "future_use": "full native/homes/last_use/retention hashes remain mandatory; surviving aliases/locations/raw sectors retained; no truncation to prefix",
+    "next_PC": "boundary+1 only, contiguous verified retired prefix"
+  },
+  "remaining_production_preconditions": [
+    "Kepler R50 exact cold constructor/source/calendar binding and Dewey reviewed incremental storage reservation",
+    "Capture real produced payload while actual process is quiescent; exited R45 witnesses cannot regenerate it",
+    "Fresh full-model composite checkpoint/restore gate still required before production skip grants"
+  ],
+  "actual_R45_payload_checkpoint_exists": false,
+  "production_resume_qualified": false,
+  "fulltoken_qualified": false,
+  "hardware_qualified": false,
+  "prefix_rerun": false,
+  "new_jobs": false
+}

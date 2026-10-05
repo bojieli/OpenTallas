@@ -1,0 +1,13 @@
+test_active_mask_does_not_resize_forest (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_all_inputs_bound_to_committed_source (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_exact_regeneration_and_no_execution_admission (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_full_declaration_exact (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_illegal_unpadded_compiled_shapes_refused (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_lifetime_and_port_credits_remain_zero (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_ports_and_root_contexts_not_discarded (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+test_scaling_is_affine_not_fixed_workload_or_pure_ratio (test_dsrom_return_scaling_source_audit.ScalingAudit) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.023s
+
+OK

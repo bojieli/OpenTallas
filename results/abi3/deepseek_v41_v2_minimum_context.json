@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.abi3.v41_reduced_minimum_context.v1",
+ "question": "can the reduced V4.1 vehicle run a shorter prompt, so that fewer routing decisions are exposed to the one-ulp difference?",
+ "answer": "no. Eight positions is the minimum, and the device fails closed below it with a precise reason rather than producing a wrong token.",
+ "measured_on": "build/abi3/deepseek-v41-reduced-v2-rom-array",
+ "by_context": [
+  {"positions": 1, "tokens": [], "stop_reason": "failed", "failure": "prefill failed: ROUTE.INDEX_TOPK: a context of 1 at compression ratio 2 completes no candidate and no window block is joined, so the operator has nothing to select and nothing to emit"},
+  {"positions": 2, "tokens": [], "stop_reason": "failed", "failure": "prefill failed: ROUTE.INDEX_TOPK: a context of 2 at compression ratio 8 completes no candidate and no window block is joined"},
+  {"positions": 4, "tokens": [], "stop_reason": "failed", "failure": "prefill failed: ROUTE.INDEX_TOPK: a context of 4 at compression ratio 8 completes no candidate and no window block is joined"},
+  {"positions": 6, "tokens": [], "stop_reason": "failed", "failure": "prefill failed: ROUTE.INDEX_TOPK: a context of 6 at compression ratio 8 completes no candidate and no window block is joined"},
+  {"positions": 8, "tokens": [1126], "stop_reason": "max_new_tokens", "failure": null}
+ ],
+ "why": "candidate_block_size is 8, so a context shorter than one block completes no candidate and the sparse-attention index selection has nothing to emit. The refusal is correct behaviour, not a limitation to route around.",
+ "correction": {
+  "what_i_reported": "that a one-token prompt gave expert-selection agreement of 1.0 with no divergence at any decision, read as evidence that fewer positions would stabilise routing",
+  "why_it_was_wrong": "the device never ran. Its prefill failed at ROUTE.INDEX_TOPK, so the comparison scored two trivial rows against a device that emitted nothing. An agreement figure computed against a failed run is not evidence of agreement.",
+  "how_to_avoid_it": "read stop_reason and failure before reading any agreement number; a comparison tool that does not surface them will happily score a device that never executed"
+ },
+ "consequence": "the eight-position workload is the shortest this vehicle admits, so the 320 routing decisions that the one-ulp difference can flip cannot be reduced by shortening the prompt. That route to closing the three V4.1 cells is closed.",
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "this measures the REDUCED vehicle's minimum context, which follows from its own candidate_block_size; it says nothing about the shipped configuration"
+ ]
+}

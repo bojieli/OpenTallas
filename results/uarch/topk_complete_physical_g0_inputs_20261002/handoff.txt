@@ -1,0 +1,12 @@
+Complete fixed N4/NMAX2048/LDW4 selector physical G0 inputs
+Authoritative model: model_r2.json. Drafts retained, not runtime verdicts.
+
+One 698354bit complete selector: 841209.80868um2 cell construction, 1.68241961736mm2 at source50pct; rowgrid aligned slot1.6848787968mm2. No mapped area, clockPG/repair or final instance-union credit.
+4210 distinct product signal pins; no score/result phase alias. Horizontal M2/M4 screen4242 and vertical M3/M5 screen4252 after50pct reserve. Grid explicitly analytically extended; not full-die ODB.
+Concrete corridor union2.6571105216mm2 + selector correction0.1744561152mm2 = 2.8315666368mm2 additional parent reservation with no containment credit. Checked field2048, weightmacros8192, cfg14336, bands4, services14: no positive rectangle overlap. Unknown allocations/vias/clockPG/hubinterior remain OPEN.
+
+Service339edges n512 /819edges n2048. Nine actual caller commands, 3531service-envelope edges +768minimum burstload edges =4299; not observed absolute time. Mandatory service increment1278edges/1065ns at policy1.2GHz.
+Relocated transport is NOT zero: conditional nearest reserved-rectangle distances14.10352mm COLL /16.30672mm VM. Retained loaded-wire screen implies19/22 segments before stage logic; actual source transport segments/delta unbound, no stages silently added. Flat64lane wholewidth xor32 hop1062.72um exceeds767.763um nonlogic wire budget; need actual local placement and source context.
+
+Archimedes accepts actual fullslot/corridor/pin/via/clockPG placement and local stage hop envelope. Maxwell binds actual endpoint/transport/caller residence. Then Epicurus mandatory defaultoff implementation + exact fullshape gate/contextSSFF, without D1/HBM dependency.
+Current G0 OPEN; no RTL/compile/PnR/newfleetjobs. Thirdpartyagentic median provenance pending, no fulltoken/MTP/physical credit.

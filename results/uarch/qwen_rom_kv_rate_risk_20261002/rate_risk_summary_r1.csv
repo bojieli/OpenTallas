@@ -1,0 +1,10 @@
+item,value,unit,scope
+KV distinct read/rank/token,150994944,bytes,source8K
+KV logical new write/rank/token,18432,bytes,source8K
+KV closing-tail physical write/rank,156672,bytes,conditionalselectedposition8191
+Current tile KV capacity/rank,12582912,bytes,actual2currentmacros/tile
+One candidate64B fill full-read bound,0.00196608,seconds,candidate1.2GHz
+Owner read+closingwrite slot lower bound,0.016498944,seconds,candidate1GHz4owner
+Conditional perfect-overlap rate ceiling,60.60993964219771,tokens/s,NOT ADOPTED
+Capacity-only added current macro area,131.50416998400001,mm2/rank,excludescontrol/routing
+Literal-map added macro area,179.32386816,mm2/rank,excludescontrol/routing

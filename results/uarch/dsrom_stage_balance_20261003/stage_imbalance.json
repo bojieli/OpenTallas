@@ -1,0 +1,2697 @@
+{
+ "schema": "opentallas.dsrom.stage_imbalance.review.v1",
+ "date": "2026-10-03",
+ "basis": {
+  "model": "tools/uarch_model.py sha256 2da5b6d90adfbeb5... at origin/main 103d3ec89 (worktree /home/ubuntu/dsrom-stage-balance-20261003)",
+  "settings": "S58 selection pricing (tools/dsrom_4096_partition_token_options.py / dsrom_fit/price_options.py): cons_v41_rom(58,8,36,bf16=columns,PRODUCT_CLOCK,...,die=DIE_SHRUNK_INTERIM); reproduces AR 390.06 us @1M, 373.05 us @200K",
+  "par2": "The model has no PAR2 term: per-stage figures are per die of the TP-4 group. PAR2 splits each rank over 2 dies (fixed services incl. indexer replicated on both: dsrom_reticle_fixed_debit_reconciliation_20261002/model-r4.json:329).",
+  "stage_cut": "cons_stage_plan: equal-BYTE cut (tools/uarch_model.py:3492-3519); non-expert nodes on the layer start stage, experts by byte fraction (_cons_occupancy, 3735-3748)"
+ },
+ "layer20": {
+  "what": "Layer 20 is the only csa2-1-full layer: compression ratio 1, KV owner, scans_index with index_scan_entries_cap 0 (uncapped), and candidate_source_layer_id (block-max top-2048 for reindex layers 24/28/32/36). configs/models/candidates/deepseek-v4.1-flash.json:433-441, 757, 759; csa2-2-full layers 2/8/14 scan ctx/2 uncapped; reindex layers 24-36 capped at 16384 (:474-594).",
+  "ops": "attn.idx.score (kvscan, 262,144 keys/die x 32 heads x 128, FP4) -> idx.topk_local (ot_hdc_tselect, top-512 of 262,144) -> topk_merge (4x512 all-gather) -> topk_final; side branch cand.topk_local (block max /8 + top-2048 of 32,768 blocks). decode_critical_path.py:1103-1135; arch_budget_v41.py:241-245,295",
+  "binding": "HBM bandwidth: 262,144 x 68 B = 17.8 MB/die/token over 4 stacks x 0.9 TB/s = 3.6 TB/s -> 4.95 us (compute floor 4,096 cycles = 3.41 us at idx_macs 262,144/cycle). uarch_model.py:352-361; arch_budget_v41.py:137-139",
+  "serial": "idx.topk_local is added with stream=False (decode_critical_path.py:276 default; 843-848), so its 4,096-beat ingest (3.41 us) runs AFTER the last score although the docstring (816-819) says the tselect is chased by the scorer. On the 1M critical path layer 20 costs 9.17 us of idx/cand chain (score 5.09 + topk_local 3.58 + merge/final 0.5) vs 0.88 us for a capped reindex layer.",
+  "context_dependence": "Linear in context: 1M 4.95+3.41 us, 200K 0.94+0.65 us. The four uncapped scans (L2/8/14/20) account for 17.02 us of the 17.01 us AR difference between 1M (390.06) and 200K (373.05): all of the context sensitivity of the token."
+ },
+ "stage_tables": {
+  "1048576": {
+   "layer_stage_mean_us": 2.225,
+   "std_us": 2.036,
+   "max_us": 11.57,
+   "min_us": 0.184,
+   "max_over_mean": 5.2,
+   "head_stage_us": 12.371,
+   "ranked": [
+    [
+     "head",
+     12.371
+    ],
+    [
+     "29",
+     11.57
+    ],
+    [
+     "20",
+     7.51
+    ],
+    [
+     "11",
+     7.005
+    ],
+    [
+     "2",
+     7.002
+    ],
+    [
+     "1",
+     2.835
+    ],
+    [
+     "34",
+     2.716
+    ],
+    [
+     "40",
+     2.716
+    ]
+   ],
+   "per_stage": [
+    {
+     "stage": "0",
+     "layers": [
+      [
+       0,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 2.33,
+     "critical_path_window_us": 8.114,
+     "resources_us": {
+      "reduce": 0.272,
+      "vector": 0.23,
+      "matvec": 0.16,
+      "field": 1.597,
+      "attn": 0.065
+     }
+    },
+    {
+     "stage": "1",
+     "layers": [
+      [
+       0,
+       0.3094
+      ],
+      [
+       1,
+       0.3732
+      ]
+     ],
+     "occupancy_us": 2.835,
+     "critical_path_window_us": 8.768,
+     "resources_us": {
+      "field": 1.915,
+      "reduce": 0.412,
+      "vector": 0.278,
+      "matvec": 0.16,
+      "attn": 0.065
+     }
+    },
+    {
+     "stage": "2",
+     "layers": [
+      [
+       1,
+       0.6268
+      ],
+      [
+       2,
+       0.0503
+      ]
+     ],
+     "occupancy_us": 7.002,
+     "critical_path_window_us": 14.846,
+     "resources_us": {
+      "field": 1.767,
+      "reduce": 0.371,
+      "vector": 0.281,
+      "matvec": 0.16,
+      "idx_hbm": 2.476,
+      "tselect": 1.712,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "3",
+     "layers": [
+      [
+       2,
+       0.6891
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "4",
+     "layers": [
+      [
+       2,
+       0.2606
+      ],
+      [
+       3,
+       0.4294
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "5",
+     "layers": [
+      [
+       3,
+       0.5706
+      ],
+      [
+       4,
+       0.12
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "6",
+     "layers": [
+      [
+       4,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "7",
+     "layers": [
+      [
+       4,
+       0.1894
+      ],
+      [
+       5,
+       0.5011
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "8",
+     "layers": [
+      [
+       5,
+       0.4989
+      ],
+      [
+       6,
+       0.1917
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "9",
+     "layers": [
+      [
+       6,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "10",
+     "layers": [
+      [
+       6,
+       0.1177
+      ],
+      [
+       7,
+       0.5729
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "11",
+     "layers": [
+      [
+       7,
+       0.4271
+      ],
+      [
+       8,
+       0.2629
+      ]
+     ],
+     "occupancy_us": 7.005,
+     "critical_path_window_us": 14.846,
+     "resources_us": {
+      "field": 1.771,
+      "reduce": 0.371,
+      "vector": 0.281,
+      "matvec": 0.16,
+      "idx_hbm": 2.476,
+      "tselect": 1.712,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "12",
+     "layers": [
+      [
+       8,
+       0.6891
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "13",
+     "layers": [
+      [
+       8,
+       0.048
+      ],
+      [
+       9,
+       0.6424
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "14",
+     "layers": [
+      [
+       9,
+       0.3576
+      ],
+      [
+       10,
+       0.333
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "15",
+     "layers": [
+      [
+       10,
+       0.667
+      ],
+      [
+       11,
+       0.0236
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "16",
+     "layers": [
+      [
+       11,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "17",
+     "layers": [
+      [
+       11,
+       0.2858
+      ],
+      [
+       12,
+       0.4048
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "18",
+     "layers": [
+      [
+       12,
+       0.5952
+      ],
+      [
+       13,
+       0.0953
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "19",
+     "layers": [
+      [
+       13,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "20",
+     "layers": [
+      [
+       13,
+       0.2141
+      ],
+      [
+       14,
+       0.4656
+      ]
+     ],
+     "occupancy_us": 7.51,
+     "critical_path_window_us": 15.133,
+     "resources_us": {
+      "field": 2.088,
+      "reduce": 0.511,
+      "vector": 0.329,
+      "matvec": 0.16,
+      "idx_hbm": 2.476,
+      "tselect": 1.712,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "21",
+     "layers": [
+      [
+       14,
+       0.5344
+      ],
+      [
+       15,
+       0.1436
+      ]
+     ],
+     "occupancy_us": 2.551,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.594,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "22",
+     "layers": [
+      [
+       15,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "23",
+     "layers": [
+      [
+       15,
+       0.1658
+      ],
+      [
+       16,
+       0.5247
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "24",
+     "layers": [
+      [
+       16,
+       0.4753
+      ],
+      [
+       17,
+       0.2153
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "25",
+     "layers": [
+      [
+       17,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "26",
+     "layers": [
+      [
+       17,
+       0.0941
+      ],
+      [
+       18,
+       0.5965
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "27",
+     "layers": [
+      [
+       18,
+       0.4035
+      ],
+      [
+       19,
+       0.2871
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "28",
+     "layers": [
+      [
+       19,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "29",
+     "layers": [
+      [
+       19,
+       0.0224
+      ],
+      [
+       20,
+       0.6672
+      ]
+     ],
+     "occupancy_us": 11.57,
+     "critical_path_window_us": 18.614,
+     "resources_us": {
+      "field": 1.731,
+      "reduce": 0.371,
+      "vector": 0.277,
+      "matvec": 0.16,
+      "idx_hbm": 4.952,
+      "tselect": 3.845,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "30",
+     "layers": [
+      [
+       20,
+       0.3328
+      ],
+      [
+       21,
+       0.3573
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "31",
+     "layers": [
+      [
+       21,
+       0.6427
+      ],
+      [
+       22,
+       0.0479
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "32",
+     "layers": [
+      [
+       22,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "33",
+     "layers": [
+      [
+       22,
+       0.2615
+      ],
+      [
+       23,
+       0.4291
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "34",
+     "layers": [
+      [
+       23,
+       0.5709
+      ],
+      [
+       24,
+       0.1196
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.695,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "35",
+     "layers": [
+      [
+       24,
+       0.6901
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "36",
+     "layers": [
+      [
+       24,
+       0.1904
+      ],
+      [
+       25,
+       0.5001
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "37",
+     "layers": [
+      [
+       25,
+       0.4999
+      ],
+      [
+       26,
+       0.1906
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "38",
+     "layers": [
+      [
+       26,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "39",
+     "layers": [
+      [
+       26,
+       0.1188
+      ],
+      [
+       27,
+       0.5718
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "40",
+     "layers": [
+      [
+       27,
+       0.4282
+      ],
+      [
+       28,
+       0.2622
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.695,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "41",
+     "layers": [
+      [
+       28,
+       0.6901
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "42",
+     "layers": [
+      [
+       28,
+       0.0478
+      ],
+      [
+       29,
+       0.6428
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "43",
+     "layers": [
+      [
+       29,
+       0.3572
+      ],
+      [
+       30,
+       0.3334
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "44",
+     "layers": [
+      [
+       30,
+       0.6666
+      ],
+      [
+       31,
+       0.024
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "45",
+     "layers": [
+      [
+       31,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "46",
+     "layers": [
+      [
+       31,
+       0.2855
+      ],
+      [
+       32,
+       0.4048
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.324,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "47",
+     "layers": [
+      [
+       32,
+       0.5952
+      ],
+      [
+       33,
+       0.0949
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "48",
+     "layers": [
+      [
+       33,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "49",
+     "layers": [
+      [
+       33,
+       0.2145
+      ],
+      [
+       34,
+       0.4761
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "50",
+     "layers": [
+      [
+       34,
+       0.5239
+      ],
+      [
+       35,
+       0.1667
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "51",
+     "layers": [
+      [
+       35,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "52",
+     "layers": [
+      [
+       35,
+       0.1427
+      ],
+      [
+       36,
+       0.5474
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.324,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "53",
+     "layers": [
+      [
+       36,
+       0.4526
+      ],
+      [
+       37,
+       0.2377
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "54",
+     "layers": [
+      [
+       37,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "55",
+     "layers": [
+      [
+       37,
+       0.0717
+      ],
+      [
+       38,
+       0.6188
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "56",
+     "layers": [
+      [
+       38,
+       0.3812
+      ],
+      [
+       39,
+       0.3094
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "57",
+     "layers": [
+      [
+       39,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "head",
+     "layers": null,
+     "occupancy_us": 12.371,
+     "critical_path_window_us": 15.269,
+     "resources_us": {
+      "vector": 0.029,
+      "reduce": 0.076,
+      "field": 12.267
+     }
+    }
+   ],
+   "ar_us": 390.061,
+   "sum_windows_us": 390.066,
+   "pipeline_hops_us": 22.954,
+   "saturated_ar_tok_s": 80833.5,
+   "saturated_bound": "head",
+   "power": {
+    "model_reported_busiest_w": 189.0,
+    "model_reported_busiest_stage": "head",
+    "hottest_layer_die_w": 204.4,
+    "hottest_layer_stage": 29,
+    "mean_layer_die_w": 95.7,
+    "balanced_w": 95.7,
+    "note": "_cons_cooling (uarch_model.py:3713-3722) takes the busiest of ALL stages incl. head; at S58 that is the head stage (no layer pairs), so the published 189.0/203.6 W is not the hottest layer die. Per die without PAR2; PAR2 halves the dynamic part."
+   }
+  },
+  "200000": {
+   "layer_stage_mean_us": 1.927,
+   "std_us": 1.224,
+   "max_us": 4.456,
+   "min_us": 0.184,
+   "max_over_mean": 2.31,
+   "head_stage_us": 12.371,
+   "ranked": [
+    [
+     "head",
+     12.371
+    ],
+    [
+     "29",
+     4.456
+    ],
+    [
+     "20",
+     4.126
+    ],
+    [
+     "11",
+     3.621
+    ],
+    [
+     "2",
+     3.618
+    ],
+    [
+     "1",
+     2.835
+    ],
+    [
+     "34",
+     2.716
+    ],
+    [
+     "40",
+     2.716
+    ]
+   ],
+   "per_stage": [
+    {
+     "stage": "0",
+     "layers": [
+      [
+       0,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 2.33,
+     "critical_path_window_us": 8.114,
+     "resources_us": {
+      "reduce": 0.272,
+      "vector": 0.23,
+      "matvec": 0.16,
+      "field": 1.597,
+      "attn": 0.065
+     }
+    },
+    {
+     "stage": "1",
+     "layers": [
+      [
+       0,
+       0.3094
+      ],
+      [
+       1,
+       0.3732
+      ]
+     ],
+     "occupancy_us": 2.835,
+     "critical_path_window_us": 8.768,
+     "resources_us": {
+      "field": 1.915,
+      "reduce": 0.412,
+      "vector": 0.278,
+      "matvec": 0.16,
+      "attn": 0.065
+     }
+    },
+    {
+     "stage": "2",
+     "layers": [
+      [
+       1,
+       0.6268
+      ],
+      [
+       2,
+       0.0503
+      ]
+     ],
+     "occupancy_us": 3.618,
+     "critical_path_window_us": 11.439,
+     "resources_us": {
+      "field": 1.767,
+      "reduce": 0.371,
+      "vector": 0.281,
+      "matvec": 0.16,
+      "idx_hbm": 0.472,
+      "tselect": 0.331,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "3",
+     "layers": [
+      [
+       2,
+       0.6891
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "4",
+     "layers": [
+      [
+       2,
+       0.2606
+      ],
+      [
+       3,
+       0.4294
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "5",
+     "layers": [
+      [
+       3,
+       0.5706
+      ],
+      [
+       4,
+       0.12
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "6",
+     "layers": [
+      [
+       4,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "7",
+     "layers": [
+      [
+       4,
+       0.1894
+      ],
+      [
+       5,
+       0.5011
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "8",
+     "layers": [
+      [
+       5,
+       0.4989
+      ],
+      [
+       6,
+       0.1917
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "9",
+     "layers": [
+      [
+       6,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "10",
+     "layers": [
+      [
+       6,
+       0.1177
+      ],
+      [
+       7,
+       0.5729
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "11",
+     "layers": [
+      [
+       7,
+       0.4271
+      ],
+      [
+       8,
+       0.2629
+      ]
+     ],
+     "occupancy_us": 3.621,
+     "critical_path_window_us": 11.439,
+     "resources_us": {
+      "field": 1.771,
+      "reduce": 0.371,
+      "vector": 0.281,
+      "matvec": 0.16,
+      "idx_hbm": 0.472,
+      "tselect": 0.331,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "12",
+     "layers": [
+      [
+       8,
+       0.6891
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "13",
+     "layers": [
+      [
+       8,
+       0.048
+      ],
+      [
+       9,
+       0.6424
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "14",
+     "layers": [
+      [
+       9,
+       0.3576
+      ],
+      [
+       10,
+       0.333
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "15",
+     "layers": [
+      [
+       10,
+       0.667
+      ],
+      [
+       11,
+       0.0236
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "16",
+     "layers": [
+      [
+       11,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "17",
+     "layers": [
+      [
+       11,
+       0.2858
+      ],
+      [
+       12,
+       0.4048
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "18",
+     "layers": [
+      [
+       12,
+       0.5952
+      ],
+      [
+       13,
+       0.0953
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "19",
+     "layers": [
+      [
+       13,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "20",
+     "layers": [
+      [
+       13,
+       0.2141
+      ],
+      [
+       14,
+       0.4656
+      ]
+     ],
+     "occupancy_us": 4.126,
+     "critical_path_window_us": 11.727,
+     "resources_us": {
+      "field": 2.088,
+      "reduce": 0.511,
+      "vector": 0.329,
+      "matvec": 0.16,
+      "idx_hbm": 0.472,
+      "tselect": 0.331,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "21",
+     "layers": [
+      [
+       14,
+       0.5344
+      ],
+      [
+       15,
+       0.1436
+      ]
+     ],
+     "occupancy_us": 2.551,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.594,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "22",
+     "layers": [
+      [
+       15,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "23",
+     "layers": [
+      [
+       15,
+       0.1658
+      ],
+      [
+       16,
+       0.5247
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "24",
+     "layers": [
+      [
+       16,
+       0.4753
+      ],
+      [
+       17,
+       0.2153
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "25",
+     "layers": [
+      [
+       17,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "26",
+     "layers": [
+      [
+       17,
+       0.0941
+      ],
+      [
+       18,
+       0.5965
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "27",
+     "layers": [
+      [
+       18,
+       0.4035
+      ],
+      [
+       19,
+       0.2871
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "28",
+     "layers": [
+      [
+       19,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "29",
+     "layers": [
+      [
+       19,
+       0.0224
+      ],
+      [
+       20,
+       0.6672
+      ]
+     ],
+     "occupancy_us": 4.456,
+     "critical_path_window_us": 11.823,
+     "resources_us": {
+      "field": 1.731,
+      "reduce": 0.371,
+      "vector": 0.277,
+      "matvec": 0.16,
+      "idx_hbm": 0.944,
+      "tselect": 0.738,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "30",
+     "layers": [
+      [
+       20,
+       0.3328
+      ],
+      [
+       21,
+       0.3573
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "31",
+     "layers": [
+      [
+       21,
+       0.6427
+      ],
+      [
+       22,
+       0.0479
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "32",
+     "layers": [
+      [
+       22,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "33",
+     "layers": [
+      [
+       22,
+       0.2615
+      ],
+      [
+       23,
+       0.4291
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "34",
+     "layers": [
+      [
+       23,
+       0.5709
+      ],
+      [
+       24,
+       0.1196
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.695,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "35",
+     "layers": [
+      [
+       24,
+       0.6901
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "36",
+     "layers": [
+      [
+       24,
+       0.1904
+      ],
+      [
+       25,
+       0.5001
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "37",
+     "layers": [
+      [
+       25,
+       0.4999
+      ],
+      [
+       26,
+       0.1906
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "38",
+     "layers": [
+      [
+       26,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "39",
+     "layers": [
+      [
+       26,
+       0.1188
+      ],
+      [
+       27,
+       0.5718
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "40",
+     "layers": [
+      [
+       27,
+       0.4282
+      ],
+      [
+       28,
+       0.2622
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.695,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "41",
+     "layers": [
+      [
+       28,
+       0.6901
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "42",
+     "layers": [
+      [
+       28,
+       0.0478
+      ],
+      [
+       29,
+       0.6428
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "43",
+     "layers": [
+      [
+       29,
+       0.3572
+      ],
+      [
+       30,
+       0.3334
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "44",
+     "layers": [
+      [
+       30,
+       0.6666
+      ],
+      [
+       31,
+       0.024
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "45",
+     "layers": [
+      [
+       31,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "46",
+     "layers": [
+      [
+       31,
+       0.2855
+      ],
+      [
+       32,
+       0.4048
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.324,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "47",
+     "layers": [
+      [
+       32,
+       0.5952
+      ],
+      [
+       33,
+       0.0949
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "48",
+     "layers": [
+      [
+       33,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "49",
+     "layers": [
+      [
+       33,
+       0.2145
+      ],
+      [
+       34,
+       0.4761
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "50",
+     "layers": [
+      [
+       34,
+       0.5239
+      ],
+      [
+       35,
+       0.1667
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "51",
+     "layers": [
+      [
+       35,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "52",
+     "layers": [
+      [
+       35,
+       0.1427
+      ],
+      [
+       36,
+       0.5474
+      ]
+     ],
+     "occupancy_us": 2.716,
+     "critical_path_window_us": 10.324,
+     "resources_us": {
+      "field": 1.624,
+      "reduce": 0.291,
+      "vector": 0.27,
+      "matvec": 0.16,
+      "idx_hbm": 0.077,
+      "tselect": 0.058,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "53",
+     "layers": [
+      [
+       36,
+       0.4526
+      ],
+      [
+       37,
+       0.2377
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.625,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "54",
+     "layers": [
+      [
+       37,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "55",
+     "layers": [
+      [
+       37,
+       0.0717
+      ],
+      [
+       38,
+       0.6188
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "56",
+     "layers": [
+      [
+       38,
+       0.3812
+      ],
+      [
+       39,
+       0.3094
+      ]
+     ],
+     "occupancy_us": 2.554,
+     "critical_path_window_us": 8.254,
+     "resources_us": {
+      "field": 1.597,
+      "reduce": 0.291,
+      "vector": 0.266,
+      "matvec": 0.16,
+      "attn": 0.235
+     }
+    },
+    {
+     "stage": "57",
+     "layers": [
+      [
+       39,
+       0.6906
+      ]
+     ],
+     "occupancy_us": 0.184,
+     "critical_path_window_us": 0,
+     "resources_us": {
+      "field": 0.184
+     }
+    },
+    {
+     "stage": "head",
+     "layers": null,
+     "occupancy_us": 12.371,
+     "critical_path_window_us": 15.269,
+     "resources_us": {
+      "vector": 0.029,
+      "reduce": 0.076,
+      "field": 12.267
+     }
+    }
+   ],
+   "ar_us": 373.051,
+   "sum_windows_us": 373.057,
+   "pipeline_hops_us": 22.954,
+   "saturated_ar_tok_s": 80833.5,
+   "saturated_bound": "head",
+   "power": {
+    "model_reported_busiest_w": 203.6,
+    "model_reported_busiest_stage": "head",
+    "hottest_layer_die_w": 131.8,
+    "hottest_layer_stage": 29,
+    "mean_layer_die_w": 95.2,
+    "balanced_w": 95.2,
+    "note": "_cons_cooling (uarch_model.py:3713-3722) takes the busiest of ALL stages incl. head; at S58 that is the head stage (no layer pairs), so the published 189.0/203.6 W is not the hottest layer die. Per die without PAR2; PAR2 halves the dynamic part."
+   }
+  }
+ },
+ "options": {
+  "base": {
+   "description": "Current S58 equal-byte cut",
+   "reduces_single_user_latency": false,
+   "cost": "-",
+   "1048576": {
+    "ar_us": 390.06,
+    "ar_tok_s": 2563.7,
+    "ar_delta_pct": 0.0,
+    "mtp_tok_s": 3809.4,
+    "mtp_delta_pct": 0.0,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 11.57,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 86431,
+    "hottest_layer_die_w": 204.4
+   },
+   "200000": {
+    "ar_us": 373.05,
+    "ar_tok_s": 2680.6,
+    "ar_delta_pct": 0.0,
+    "mtp_tok_s": 4176.7,
+    "mtp_delta_pct": 0.0,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 4.46,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 224411,
+    "hottest_layer_die_w": 131.8
+   }
+  },
+  "chase": {
+   "description": "Chase idx/cand tselect on the scorer stream (stream=True): ingest overlaps the HBM-bound scan",
+   "reduces_single_user_latency": true,
+   "cost": "0 dies; exact (same position-order stream, same tselect)",
+   "1048576": {
+    "ar_us": 381.27,
+    "ar_tok_s": 2622.8,
+    "ar_delta_pct": 2.31,
+    "mtp_tok_s": 4031.2,
+    "mtp_delta_pct": 5.82,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 11.57,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 86431,
+    "hottest_layer_die_w": 204.4
+   },
+   "200000": {
+    "ar_us": 371.53,
+    "ar_tok_s": 2691.6,
+    "ar_delta_pct": 0.41,
+    "mtp_tok_s": 4228.6,
+    "mtp_delta_pct": 1.24,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 4.46,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 224411,
+    "hottest_layer_die_w": 131.8
+   }
+  },
+  "cp8": {
+   "description": "Context-parallel L20 index scan over the PAR2 pair (8 dies), position-order 8x512 final merge",
+   "reduces_single_user_latency": true,
+   "cost": "0 dies if PAR2 partner keeps its indexer+HBM; exact",
+   "1048576": {
+    "ar_us": 385.98,
+    "ar_tok_s": 2590.8,
+    "ar_delta_pct": 1.06,
+    "mtp_tok_s": 3893.5,
+    "mtp_delta_pct": 2.21,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 7.51,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 133149,
+    "hottest_layer_die_w": 166.1
+   },
+   "200000": {
+    "ar_us": 372.36,
+    "ar_tok_s": 2685.6,
+    "ar_delta_pct": 0.19,
+    "mtp_tok_s": 4195.2,
+    "mtp_delta_pct": 0.44,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 4.13,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 242368,
+    "hottest_layer_die_w": 131.9
+   }
+  },
+  "cp8:2,8,14,20:200": {
+   "description": "cp8 on all four uncapped scans, +200 ns PAR2 crossing per merge",
+   "reduces_single_user_latency": true,
+   "cost": "as cp8",
+   "1048576": {
+    "ar_us": 380.81,
+    "ar_tok_s": 2626.0,
+    "ar_delta_pct": 2.43,
+    "mtp_tok_s": 4022.3,
+    "mtp_delta_pct": 5.59,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 7.17,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 139390,
+    "hottest_layer_die_w": 162.8
+   },
+   "200000": {
+    "ar_us": 372.59,
+    "ar_tok_s": 2683.9,
+    "ar_delta_pct": 0.12,
+    "mtp_tok_s": 4218.2,
+    "mtp_delta_pct": 0.99,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 3.73,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 268317,
+    "hottest_layer_die_w": 127.4
+   }
+  },
+  "chase+cp8:2,8,14,20:200": {
+   "description": "chase + cp8 on all four scans (+200 ns)",
+   "reduces_single_user_latency": true,
+   "cost": "as cp8",
+   "1048576": {
+    "ar_us": 376.28,
+    "ar_tok_s": 2657.6,
+    "ar_delta_pct": 3.66,
+    "mtp_tok_s": 4144.7,
+    "mtp_delta_pct": 8.8,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 7.17,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 139390,
+    "hottest_layer_die_w": 162.8
+   },
+   "200000": {
+    "ar_us": 371.76,
+    "ar_tok_s": 2689.9,
+    "ar_delta_pct": 0.35,
+    "mtp_tok_s": 4246.7,
+    "mtp_delta_pct": 1.68,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 3.73,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 268317,
+    "hottest_layer_die_w": 127.4
+   }
+  },
+  "cp16:2,8,14,20:200": {
+   "description": "16-way: PAR2 pair + next stage pair, +200 ns",
+   "reduces_single_user_latency": true,
+   "cost": "keys of the scan layer placed on stage s+1 HBM too; exact",
+   "1048576": {
+    "ar_us": 376.22,
+    "ar_tok_s": 2658.0,
+    "ar_delta_pct": 3.68,
+    "mtp_tok_s": 4137.7,
+    "mtp_delta_pct": 8.62,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 4.98,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 200955,
+    "hottest_layer_die_w": 139.0
+   },
+   "200000": {
+    "ar_us": 372.58,
+    "ar_tok_s": 2684.0,
+    "ar_delta_pct": 0.13,
+    "mtp_tok_s": 4239.0,
+    "mtp_delta_pct": 1.49,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 3.53,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 283494,
+    "hottest_layer_die_w": 125.2
+   }
+  },
+  "chase+cp16:2,8,14,20:500": {
+   "description": "chase + 16-way, +500 ns",
+   "reduces_single_user_latency": true,
+   "cost": "as cp16",
+   "1048576": {
+    "ar_us": 375.25,
+    "ar_tok_s": 2664.9,
+    "ar_delta_pct": 3.95,
+    "mtp_tok_s": 4197.3,
+    "mtp_delta_pct": 10.18,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 4.98,
+    "max_layer_stage": "29",
+    "saturated_if_head_not_binding_tok_s": 200955,
+    "hottest_layer_die_w": 139.0
+   },
+   "200000": {
+    "ar_us": 373.12,
+    "ar_tok_s": 2680.1,
+    "ar_delta_pct": -0.02,
+    "mtp_tok_s": 4249.1,
+    "mtp_delta_pct": 1.73,
+    "saturated_ar_tok_s": 80833.5,
+    "bound": "head",
+    "layer_stage_max_us": 3.53,
+    "max_layer_stage": "20",
+    "saturated_if_head_not_binding_tok_s": 283494,
+    "hottest_layer_die_w": 125.2
+   }
+  }
+ },
+ "options_analytical": {
+  "time_cut": {
+   "desc": "Re-cut the 40 layers by TIME instead of bytes (or give layer 20 its own stage).",
+   "finding": "Per-layer expert issue is only 0.27 us/die (6 of 384 experts active); the non-expert attention block of a layer is indivisible on its start stage. Layer 20's block is 11.39 us at 1M, so NO cut can bring the stage below 11.39 us (vs 11.57 now, -1.6%). Equal bytes is already ~equal expert count; the imbalance is one indivisible operator, not the cut.",
+   "single_user": "0 (same work, same 57 hops; isolating L20 onto its own stage adds 1 hop = +0.40 us)",
+   "throughput": "0 at S58: the head stage (lm_head 12.27 us/die) binds saturation at 80,833 tok/s in every variant",
+   "dies": "+0 (re-cut) / +4 (+8 PAR2) for an isolated stage; the cut moves bytes to the other stages (field area)"
+  },
+  "replicate": {
+   "desc": "Two copies of the layer-20 stage, users alternate",
+   "single_user": "0",
+   "throughput": "stage 29 interval 11.57 -> 5.79 us; system gain 0 while the head binds; then stages 20/11/2 (7.0-7.5 us) bind -> replicate all four = +16 dies (+32 PAR2) for 1/7.51->1/2.84 us",
+   "dies": "+4 per replicated stage (+8 PAR2), ROM masks reused, HBM capacity per user unchanged"
+  },
+  "dedicated_scan_units": {
+   "desc": "More indexer MACs / tselect lanes on the same die",
+   "finding": "No gain on the score: it is HBM-bound (4.95 us bytes vs 3.41 us compute) and the die is at HBM_STACKS_PER_DIE_MAX=4 (arch_budget_v41.py:137). More tselect lanes only shorten the 3.41 us ingest, which chase hides for free. An SRAM key cache needs 17.8 MB/die per user."
+  },
+  "head": {
+   "finding": "lm_head [129280,5120] is split 4 ways (decode_critical_path.py:1048) although n_head=8 head dies are provisioned; at 12.37 us it is the saturated bound at S58 for both contexts. Splitting the vocabulary 8 ways (6.2 us) is a prerequisite for any stage-29 throughput gain. Hand-off to the parallelism study."
+  },
+  "per_resource_caveat": "Stage occupancy sums issue over all units on the die (uarch_model.py:3735-3748). If the indexer HBM reader, tselect, field and SU pipeline different users concurrently, stage 29 interval is max(4.95 idx HBM, 3.85 tselect, 1.73 field) = 4.95 us at 1M, not 11.57."
+ },
+ "answer": {
+  "single_user": "The imbalance itself costs single-user latency nothing: a batch-1 token is the sum of the stage windows (sum = AR time exactly) and the layer-20 work is serial wherever it is placed. What costs latency is the scan: the four uncapped index scans are 27.6 us of the 390.06 us 1M token (layer 20 alone 9.17 us, 2.4%); 10.6 us of 373.05 at 200K. 8.8 us of it is a serialised tselect ingest the model does not chase.",
+  "best_fix": "chase + context-parallel scan over the PAR2 pair on layers 2/8/14/20: AR 390.06 -> 376.28 us (+3.7% tok/s), MTP +8.8% at 1M; +0.35%/+1.7% at 200K; 0 extra dies; class A exact (scores are per key; local top-512s concatenated in position order into one tselect_final, the RTL-verified two-level form). Throughput stays head-bound (80,833 tok/s) until lm_head is split 8 ways; then the layer stage max falls 11.57 -> 7.17 us (cp16: 4.98).",
+  "gates": [
+   "RTL: tselect fed directly by the scorer stream (chase) measured, AGENTS.md lever rule",
+   "index-key placement over the PAR2 pair HBM confirmed (each PAR2 die keeps its 4 stacks and indexer)",
+   "8-way position-order final merge exact vs golden",
+   "PAR2 crossing latency priced (100-500 ns sensitivity used)"
+  ]
+ }
+}

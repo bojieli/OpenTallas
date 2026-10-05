@@ -1,0 +1,672 @@
+{
+  "adoption": false,
+  "cases": [
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d0_sm0",
+      "exact": true,
+      "file": "d0_sm0.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a6227ccb6219d08e38eb932867f460ba57d3c761fe046c9b9415b2fe4ea430ed",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "76d4c9e049299836c95eeb832c31cc713f11fb9133d98254162213db3da32892",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "51f62a7fef76cc896fe5f6d34f583271d97ee3833f00f434440516ca3b875e62",
+          "rows": [
+            0,
+            96
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "evidence_dir": "/tmp/w19-qwen-sm-retry21",
+      "exact": true,
+      "file": "d0_sm21.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "498a4ddd88bc307b96adfedfd3d4fef87bb38c0896d0a1138f6c888fd2ff4f2b",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "retry_reason": "Debugger-induced simulator abort; same binary and operands, original failed log preserved",
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "137ba4ee935471ddd5260b18e97f72bed69cb7beab3242810c4219a2f64ecbc0",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "1d3471f0ef3200e7efee3ab6e23fd49862073fe5e38a3f6f519e7fa2d4d75e35",
+          "rows": [
+            2016,
+            2048
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "d3714651119eb749959d74e4d232d1fefe7e463a49636336c9d524248feefb41",
+          "rows": [
+            0,
+            64
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d0_sm26",
+      "exact": true,
+      "file": "d0_sm26.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a8b9434d985ae5f5f610418d7f65265c4f5f482ee914b3753412f9b712957023",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "3054f2fcd72e6b5951fe4dc6ac862b2ae84aeda7ca27221acec29c417aeda6a9",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "a70d8d22f1fb626224eda4a5891bd0d3f55f1710ab47d26b2ba1a9c530a784e9",
+          "rows": [
+            448,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "8fad1e3997b06cec83d4f48dcf572a60a15bedef4f3b1aa9b10844113ac115c7",
+          "rows": [
+            0,
+            32
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 0,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d0_sm31",
+      "exact": true,
+      "file": "d0_sm31.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "5c86f1cbff9c454ddc6b607d7ce16ab68426c7c472e12d2e09596c245eb4cb4e",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "9abc25a6724d975548397bacd1c83b38ba4ed68280885db54f9feca91da3157b",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "1e622bd0a800e7c84c8673e72dc242a7b4b9cf5c45e88d082f5f3d9901b26c97",
+          "rows": [
+            416,
+            512
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d1_sm0",
+      "exact": true,
+      "file": "d1_sm0.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "401289810606276ba9fc9cd6a00373b15febb18632ebc369f40fe26b43cddf43",
+      "qkv_rows": [
+        0,
+        96
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "16d342d1d9f17693b25220e6a83cb9dfc80b8481ff91f7828961977a52014497",
+      "sm": 0,
+      "sources": [
+        {
+          "bf16_sha256": "a1121c5e56331767dd87f0eb79291a2cf6cd49c7ee81b9aacadbdb3e6280ec69",
+          "rows": [
+            2048,
+            2144
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d1_sm21",
+      "exact": true,
+      "file": "d1_sm21.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "44b430ef6683270178e8670ce49bbe0ccc950cfb7d761f8bacfff73c084f65e1",
+      "qkv_rows": [
+        2016,
+        2112
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "052d3a9444e3e7dc92064dc5c3700818fe413e6bbad42c0950dcff11192384b4",
+      "sm": 21,
+      "sources": [
+        {
+          "bf16_sha256": "2b6cc5bd4921eb4832d915b060da18e1e0d2a5694931c5ae4c18580354266cc4",
+          "rows": [
+            4064,
+            4096
+          ],
+          "tensor": "model.layers.0.self_attn.q_proj.weight"
+        },
+        {
+          "bf16_sha256": "669e33079a73266480e486adcf4c612cc3ae8ad903a614be6cc09c2317dfb656",
+          "rows": [
+            512,
+            576
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "evidence_dir": "/tmp/w19-qwen-sm-parallel/d1_sm26",
+      "exact": true,
+      "file": "d1_sm26.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "a045709c3d9a1989bd102eb36f39fec7b228a866efb511e0da354966e684919e",
+      "qkv_rows": [
+        2496,
+        2592
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "d0112e4f77d43a0333464521c4e6398afe54a1f9a062e0ad0b32f4f4405bd74d",
+      "sm": 26,
+      "sources": [
+        {
+          "bf16_sha256": "9502e720fd1d8b4edb72271948101fad662a134c4bd9e5ecad685fc5d32d1c17",
+          "rows": [
+            960,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.k_proj.weight"
+        },
+        {
+          "bf16_sha256": "1a4ece6ad1c3030d2442779f296a9230a44e625c69026b90953697ef1cd2c9f6",
+          "rows": [
+            512,
+            544
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    },
+    {
+      "K": 4096,
+      "cols": 1,
+      "die": 1,
+      "evidence_dir": "/tmp/w19-qwen-sm-recovery-d1-sm31",
+      "exact": true,
+      "file": "d1_sm31.npz",
+      "host_epilogue_mismatches": 0,
+      "mismatches": 0,
+      "output_sha256": "7f7c00f10004e067a97f4091623e87a8a80825dbaef48aef7e2aa4496bb80a48",
+      "qkv_rows": [
+        2976,
+        3072
+      ],
+      "rows": 96,
+      "rtl": {
+        "consumed": 3072,
+        "cycles_start_to_done": 4785,
+        "drain_last_line_to_last_result": 82,
+        "fault": 0,
+        "first_result": 1023,
+        "last_result": 4782,
+        "lines": 3072,
+        "released": 1
+      },
+      "sha256": "9aff0e3b804d039fb230d89b395f39d3d8f43ca231e83dce1885ed237a233ac7",
+      "sm": 31,
+      "sources": [
+        {
+          "bf16_sha256": "27c2fca2a57214c12b9a6b4459ac6c18e433dbddcb6ff0c4c80f76e8bab3eb35",
+          "rows": [
+            928,
+            1024
+          ],
+          "tensor": "model.layers.0.self_attn.v_proj.weight"
+        }
+      ],
+      "split": 256,
+      "weight_lines": 3072
+    }
+  ],
+  "claim_boundary": "Eight real-checkpoint complete-K QKV SM windows on both TP2 dies, GPU bulk copy/SRAM/MMA/row scale RTL, host embedding/norm/rstd and behavioral HBM/release. Not a complete QKV stage, RTL layer or token. All-64 model partitions are the next gate.",
+  "compile_receipt": {
+    "compile_log_sha256": "259c4710fb5ee72b57bc910d8f56386a5825d54d41d0bd59436794634a575ad4",
+    "driver_pid": 396468,
+    "executable": "/tmp/w19-qwen-sm-2f781e517/build/sim.vvp",
+    "executable_sha256": "7a7477ed6696445aadbde62c85798ce901ffff4d3453b29ca18d63604eaf8996",
+    "first_simulation_pid": 398332,
+    "preflight": "/tmp/claude-1000/wt/w19-qwen-hbm/results/uarch/w19_qwen_hbm_checkpoint_preflight_w13.json",
+    "preflight_sha256": "105051ee965857cef96b489a17b58a89a0b20badf9638cedd0d454a7f7bd076a",
+    "scope": "Successful elaboration from clean 2f781e517; binary reused, first simulation preserved; serial driver stopped to dispatch remaining cases in parallel",
+    "source_commit": "2f781e517",
+    "testbench_params": {
+      "JIT": 55,
+      "LAT": 550,
+      "LEV": 5,
+      "LS": 32,
+      "NC": 1,
+      "NXM": 1,
+      "RMAX": 256,
+      "SUB": 4,
+      "XDEPTH": 96
+    }
+  },
+  "full_rtl_token": false,
+  "model_feedback": {
+    "drain_cycles": 82,
+    "full_token_cycles": null,
+    "partition_start_to_done_cycles": 4785
+  },
+  "operand_manifest": {
+    "arithmetic": "Existing W8 folded-weight TP2 contract, input BF16, FP32 tree then BF16 row scale then separate rstd multiply",
+    "cases": [
+      {
+        "die": 0,
+        "file": "d0_sm0.npz",
+        "qkv_rows": [
+          0,
+          96
+        ],
+        "sha256": "76d4c9e049299836c95eeb832c31cc713f11fb9133d98254162213db3da32892",
+        "sm": 0,
+        "sources": [
+          {
+            "bf16_sha256": "51f62a7fef76cc896fe5f6d34f583271d97ee3833f00f434440516ca3b875e62",
+            "rows": [
+              0,
+              96
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm21.npz",
+        "qkv_rows": [
+          2016,
+          2112
+        ],
+        "sha256": "137ba4ee935471ddd5260b18e97f72bed69cb7beab3242810c4219a2f64ecbc0",
+        "sm": 21,
+        "sources": [
+          {
+            "bf16_sha256": "1d3471f0ef3200e7efee3ab6e23fd49862073fe5e38a3f6f519e7fa2d4d75e35",
+            "rows": [
+              2016,
+              2048
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          },
+          {
+            "bf16_sha256": "d3714651119eb749959d74e4d232d1fefe7e463a49636336c9d524248feefb41",
+            "rows": [
+              0,
+              64
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm26.npz",
+        "qkv_rows": [
+          2496,
+          2592
+        ],
+        "sha256": "3054f2fcd72e6b5951fe4dc6ac862b2ae84aeda7ca27221acec29c417aeda6a9",
+        "sm": 26,
+        "sources": [
+          {
+            "bf16_sha256": "a70d8d22f1fb626224eda4a5891bd0d3f55f1710ab47d26b2ba1a9c530a784e9",
+            "rows": [
+              448,
+              512
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          },
+          {
+            "bf16_sha256": "8fad1e3997b06cec83d4f48dcf572a60a15bedef4f3b1aa9b10844113ac115c7",
+            "rows": [
+              0,
+              32
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 0,
+        "file": "d0_sm31.npz",
+        "qkv_rows": [
+          2976,
+          3072
+        ],
+        "sha256": "9abc25a6724d975548397bacd1c83b38ba4ed68280885db54f9feca91da3157b",
+        "sm": 31,
+        "sources": [
+          {
+            "bf16_sha256": "1e622bd0a800e7c84c8673e72dc242a7b4b9cf5c45e88d082f5f3d9901b26c97",
+            "rows": [
+              416,
+              512
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm0.npz",
+        "qkv_rows": [
+          0,
+          96
+        ],
+        "sha256": "16d342d1d9f17693b25220e6a83cb9dfc80b8481ff91f7828961977a52014497",
+        "sm": 0,
+        "sources": [
+          {
+            "bf16_sha256": "a1121c5e56331767dd87f0eb79291a2cf6cd49c7ee81b9aacadbdb3e6280ec69",
+            "rows": [
+              2048,
+              2144
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm21.npz",
+        "qkv_rows": [
+          2016,
+          2112
+        ],
+        "sha256": "052d3a9444e3e7dc92064dc5c3700818fe413e6bbad42c0950dcff11192384b4",
+        "sm": 21,
+        "sources": [
+          {
+            "bf16_sha256": "2b6cc5bd4921eb4832d915b060da18e1e0d2a5694931c5ae4c18580354266cc4",
+            "rows": [
+              4064,
+              4096
+            ],
+            "tensor": "model.layers.0.self_attn.q_proj.weight"
+          },
+          {
+            "bf16_sha256": "669e33079a73266480e486adcf4c612cc3ae8ad903a614be6cc09c2317dfb656",
+            "rows": [
+              512,
+              576
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm26.npz",
+        "qkv_rows": [
+          2496,
+          2592
+        ],
+        "sha256": "d0112e4f77d43a0333464521c4e6398afe54a1f9a062e0ad0b32f4f4405bd74d",
+        "sm": 26,
+        "sources": [
+          {
+            "bf16_sha256": "9502e720fd1d8b4edb72271948101fad662a134c4bd9e5ecad685fc5d32d1c17",
+            "rows": [
+              960,
+              1024
+            ],
+            "tensor": "model.layers.0.self_attn.k_proj.weight"
+          },
+          {
+            "bf16_sha256": "1a4ece6ad1c3030d2442779f296a9230a44e625c69026b90953697ef1cd2c9f6",
+            "rows": [
+              512,
+              544
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      },
+      {
+        "die": 1,
+        "file": "d1_sm31.npz",
+        "qkv_rows": [
+          2976,
+          3072
+        ],
+        "sha256": "9aff0e3b804d039fb230d89b395f39d3d8f43ca231e83dce1885ed237a233ac7",
+        "sm": 31,
+        "sources": [
+          {
+            "bf16_sha256": "27c2fca2a57214c12b9a6b4459ac6c18e433dbddcb6ff0c4c80f76e8bab3eb35",
+            "rows": [
+              928,
+              1024
+            ],
+            "tensor": "model.layers.0.self_attn.v_proj.weight"
+          }
+        ]
+      }
+    ],
+    "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "claim_boundary": "Golden producer operands; no RTL norm, embedding, or complete token.",
+    "embedding_bf16_sha256": "6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb",
+    "layer": 0,
+    "norm_bf16_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+    "position": 0,
+    "rstd_bits": "4209fe78",
+    "schema": "opentallas.w19-qwen-hbm-checkpoint-operands.v1",
+    "source_sha256": {
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "tools/hdc_qwen_int8_image.py": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
+      "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+      "tools/w19_qwen_hbm_checkpoint.py": "b9994814e23f1ddb99f3bc2b775d1bfcca893123b6de7ada59dfa5aab9239e39"
+    },
+    "split": 256,
+    "status": "real_checkpoint_producer_exact",
+    "token": 0
+  },
+  "outputs_checked": 768,
+  "remaining_full_token_exit": [
+    "All 32 SM row slices per die, all 36 layers and vocabulary head",
+    "RTL norm/QK/RoPE/FP8 KV/attention/SFU/residual and ordered TP scale composition",
+    "L2 gather, x broadcast and 32-SM barrier runtime; physical 16-column element",
+    "Bit-exact reference token and every checkpoint boundary with connected RTL cycle count fed to unified model",
+    "In-context SS setup/FF hold, 60ps/25ps uncertainties and hub routing gate"
+  ],
+  "schema": "opentallas.w19-qwen-hbm-checkpoint-rtl.v1",
+  "sm_snapshot": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "prefix_equivalence": {
+      "path": "results/rtl/ot_hdc_prefix_vec_equiv.json",
+      "sha256": "79a9889cf3ab92fc043baab9afc035629a110206a5bf6e3404f53fb1252ca4ce",
+      "widths": [
+        {
+          "W": 28,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 9,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 12,
+          "equivalent": true,
+          "module": "ot_hdc_ksadd_k"
+        },
+        {
+          "W": 24,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        },
+        {
+          "W": 25,
+          "equivalent": true,
+          "module": "ot_hdc_inc_k"
+        }
+      ]
+    },
+    "source_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+      "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+      "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "rtl/gpu/ot_gpu_sm_q.sv": "8e0aa477664f385a8536b1610c508fdd637bb020377adf744671c960d984b06f",
+      "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "rtl/gpu/ot_gpu_tc_col.sv": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940",
+      "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/sim/ot_hdc_prefix_vec.sv": "dd4cd5d6b650b83a32dfd56f8af739fe295573be64babcde4554cb713d1fe55c",
+      "rtl/test/tb_gpu_sm_q.sv": "6b34330e15229579e141e0d647aa7d1074976c5cb443d94514d3be220c34b78e",
+      "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "rtl/v41rom/ot_v41_fadd.sv": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    }
+  },
+  "source_commit": "2612c6282",
+  "status": "pass"
+}

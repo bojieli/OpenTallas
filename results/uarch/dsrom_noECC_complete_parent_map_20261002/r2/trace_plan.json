@@ -1,0 +1,41 @@
+{
+  "case": "L0.exp0.w1, stage0/rank0/shard1/phase10/key2149580800/runtimeEID0",
+  "checks": [
+    "Matching stage/rank/shard/phase/key/reset-era and runtime EID0 branch",
+    "No injected XFIFO push/root result, no made-up ACK, no global seat pool",
+    "All emitted paired reads across both shard inventories preserve address/order/captureN+2/consumerN+3; knownshard1 exp0w1 subset10240 is not fullowner count",
+    "Fullowner phase10 source nrow576 root/destination writes conserved; builder must pin both shard readcounts and rowtag coverage, no duplicate/lost writes",
+    "No arithmetic/XFIFO/tree/root/control faults",
+    "Do not replace firstCE7/last196/consume199 conditional indices with actual acceptance"
+  ],
+  "events": [
+    "Accepted q_go/runtime EID read with address/value/owner",
+    "accepted s_go under source ready/idle",
+    "actual cfg_go and each c_v/c_a/c_d delivery, final class/act visibility",
+    "VM x_re acceptance and registered x_q/quant/have visibility",
+    "s_ok/s_adv,xs/xb receipts and native mainCE/cap/lane events",
+    "tree/root r_v row/pos/value/fault receipt",
+    "w_we/address/data and postNBA VM visibility",
+    "source phase idle plus writer drain; coll_busy only if actual connected core/provider included"
+  ],
+  "hierarchy": "Complete logical owner NP4096/NBF724/R128/PHW10/NB2/PP1, split inventory observed as two NP2048/R64 shards. Same LAT8/RNE/WAKE source; all padding retained, no constant root producers. One logical-owner trace does not qualify inter-die transport/CDC.",
+  "launch_admitted": false,
+  "no_ECC_requirements": true,
+  "no_RTL_engine_changes": true,
+  "no_simulator_cycle_to_physical_clock_credit": true,
+  "owner_split": {
+    "Epicurus": "reuse actual LAT8 bench/source; implement sole complete-phase observer/root/writer connection",
+    "Maxwell": "consume accepted trace and complete-phase/root/cfg/visibility costs",
+    "Nash": "phase10 exact native cfg/key/address/image and valid EID source binding",
+    "parent": "source/admission review and fleet lease; no duplicate active job"
+  },
+  "reason": "Complete phase source/image/root-writer package and measured resources not yet supplied; historical bench lacks root/writer connections.",
+  "required_existing_bench_adaptation": [
+    "PHW6 singlepair historical diagnostic -> PHW10 full logical-owner selected product source pins, preserving R128 across two64root inventories",
+    "Replace one-pair-only connection with complete field/ordered forest/root provider",
+    "Connect actual spine w_we/w_addr/w_data to registered VM destination writes; observe postNBA visibility",
+    "Use exact phase10 cfg/stream/key/matrix address and native runtime EID path",
+    "Use committed directed macro images accepted by real source loader; record payload provenance, do not replace producer or inject golden results"
+  ],
+  "source_reference": "106fdd686 r3 + retained actual LAT8 adapter/spine/pair bench"
+}

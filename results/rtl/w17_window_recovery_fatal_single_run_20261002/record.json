@@ -1,0 +1,309 @@
+{
+  "verdict": "PASS_CONNECTED_SELECTED_OWNER_BOOKKEEPING_PROJECTED_VISIBILITY_AND_CONTROLS",
+  "aggregate_memory_stats": {
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.peak": "638758912"
+  },
+  "plan_sha256": "ea163e263e427c5c2a50a8e0cdb2e4e57af1ed7b7f9a4d52a2f5627b4c43ec1c",
+  "GO_commit": "7f51aa993c956e0e28abb49c0e3039ebc5d01bfa",
+  "sampled_output_peak_bytes": 156503446,
+  "live_output_bytes_terminal": 1223949,
+  "output_resource_model_sha256": "284e5ee3b7f95da19b91d2d1b74ba3547c4705ec851bd6e8cc52b20043c297d9",
+  "fatal_policy_sha256": "217a37399ef93351751a58057f87e9a9da8319d05f93ed0f8c80de569167383f",
+  "steps": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 16.142024649772793,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/compile.log",
+      "log_sha256": "92b1350c905196ac67f984b15cd6f1fd96465f0fecc96344917bb5867fa770b8"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=READ_HELD"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10254825418815017,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/case0.log",
+      "log_sha256": "6aa8c59ca2cc54f7a9a2eacf1242abe09445a5c161fe8228dacbf31a894dd16e",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=WC_INTENT"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10263347905129194,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/case1.log",
+      "log_sha256": "937146168b0184454edfa99c9a1708c42eea9fd8a12935d1bdf978cd3afd798e",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/obj/Vtb",
+        "+CASE=WS_VISIBLE"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10266376286745071,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/case2.log",
+      "log_sha256": "1214f1cddf580be2480bef0e54bc7985cf3a1b9c11d7b939030af21b74f7e259",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/baseline/sources"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 15.875543056055903,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/compile.log",
+      "log_sha256": "a3f28a0c55a57fb09a83f98519227053e21aaab8048eb0be783b0c004ad3a1ad"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/obj/Vtb",
+        "+CASE=READ_HELD",
+        "+CONTROL=discard_retirement_omitted"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.10655980184674263,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/case0.log",
+      "log_sha256": "3d26df263471d961ffedbc7c97b83837f498b4c49b08078d352f2db29cf9749a",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/discard_retirement_omitted/sources"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 16.45519474102184,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/compile.log",
+      "log_sha256": "70c2faa266d99769744d1d98f4d9fa42a235d0d353a9037807aee97d593d6fe4"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/obj/Vtb",
+        "+CASE=WC_INTENT",
+        "+CONTROL=accepted_WS_intent_dropped"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.10346430400386453,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/case0.log",
+      "log_sha256": "f073717b7cd57e44e23fa07ff5d1d3acc5ff6b7d0bae1e056f60d05f80d7417d",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/accepted_WS_intent_dropped/sources"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 15.991604994051158,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/compile.log",
+      "log_sha256": "9bda8e8a7a67a3d2afb6d6045b0963ca9aa6dcb4b63b7b6a2f6c636bc79d1b4d"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj/Vtb",
+        "+CASE=WS_VISIBLE",
+        "+CONTROL=issue_ACK_as_visibility"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.10397307015955448,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/case0.log",
+      "log_sha256": "1132e2d16dbe4769190103bfd398f58f500b9b2570b5f327e6be529bab3a02c1",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb_provider_fence_ghost",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources/tb_provider_fence_ghost.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 3.198148077353835,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/compile.log",
+      "log_sha256": "87e8a7dbc522c9ca7e13b2805fc09787422c0db0449331d451c9c28c85df7c50"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj/Vtb_provider_fence_ghost"
+      ],
+      "returncode": 0,
+      "wall_seconds": 0.10342098027467728,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/case0.log",
+      "log_sha256": "666bbf2c904015e88410040b058f2049443a40b4205313efeb682a14d49404c4",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/obj/Vtb_provider_fence_ghost",
+        "+VIOLATE_FENCE"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.11621369002386928,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/case1.log",
+      "log_sha256": "905020125a5f19d1f4115b3a3375929dc5cdcdeaebf7ad701190c3eb94b23551",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/provider_ghost_assumption/sources"
+    }
+  ],
+  "source_manifest_sha256": "340f4aee12dc22b6424839870ced96d32c83a2ec7bbdcc3a585b0791a9bbc529",
+  "scope": "Local connected source fault drain/restart, simulation provider only. No producer-wide cancellation, global reset, physical PHY, fulltoken or QDQ8-based fence credit.",
+  "ghost_limitation": "Oracle distinguishes hidden operation0/512, wire fields identical. Hostile post-fence emission violates provider provenance; WINDOW has no detection claim. Uncertified provenance prohibits restart.",
+  "visibility_oracle_scope": "Pinned idx schedule h_tcol/last_wr+CWL6250+BURST1024 projected deadline only. Scheduled command times can be retrospective relative to actual dispatch; this is not causal PHY completion. No fixed-floor/ACK-as-visible replacement.",
+  "physical_credit": false,
+  "service_provider_admission": false,
+  "physical_drain_admission": false,
+  "wholeprovider_admission": false
+}

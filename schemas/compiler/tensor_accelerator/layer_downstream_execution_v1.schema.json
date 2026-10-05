@@ -1,0 +1,139 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_downstream_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {"major": {"const": 2}, "minor": {"const": 4}},
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "command_count": {"minimum": 1, "type": "integer"},
+    "counter_reconciliation": {"const": "exact"},
+    "counters": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/counters"},
+    "intermediate_payload_sha256": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/intermediate_hashes"},
+    "numeric_diagnostics": {
+      "additionalProperties": false,
+      "properties": {
+        "rmsnorm": {
+          "additionalProperties": false,
+          "properties": {
+            "inverse_rms_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+            "mean_square_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+            "normalized_payload_sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "required": [
+            "inverse_rms_binary32_codes_sha256",
+            "mean_square_binary32_codes_sha256",
+            "normalized_payload_sha256"
+          ],
+          "type": "object"
+        }
+      },
+      "required": ["rmsnorm"],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {"hidden_1": {"$ref": "#/$defs/output_tensor"}},
+      "required": ["hidden_1"],
+      "type": "object"
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "saturated_element_count": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/saturation"},
+    "schema": {"const": "opentallas.tensor_accelerator.layer_downstream_execution.v1"},
+    "status": {"const": "pass"},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "trace": {
+      "items": {"$ref": "#/$defs/trace_event"},
+      "maxItems": 16777216,
+      "minItems": 1,
+      "type": "array"
+    },
+    "trace_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "build_id",
+    "command_abi",
+    "command_count",
+    "counter_reconciliation",
+    "counters",
+    "intermediate_payload_sha256",
+    "numeric_diagnostics",
+    "output",
+    "physical_plan_id",
+    "qualification_report_id",
+    "report_id",
+    "request_id",
+    "saturated_element_count",
+    "schema",
+    "status",
+    "timing",
+    "trace",
+    "trace_sha256"
+  ],
+  "title": "Layer downstream artifact-only execution report v1",
+  "type": "object",
+  "$defs": {
+    "output_tensor": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {"maximum": 65535, "minimum": 0, "type": "integer"},
+          "maxItems": 4096,
+          "minItems": 4096,
+          "type": "array"
+        },
+        "dtype": {"const": "bf16"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"const": [1, 4096]},
+        "size_bytes": {"const": 8192}
+      },
+      "required": ["codes", "dtype", "payload_sha256", "shape", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "trace_event": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "engine": {"enum": ["CONTROL", "DMA", "TENSOR", "VECTOR"]},
+        "final": {"type": "boolean"},
+        "index": {"minimum": 0, "type": "integer"},
+        "k_start": {"minimum": 0, "type": "integer"},
+        "kernel_index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "n_start": {"minimum": 0, "type": "integer"},
+        "opcode": {
+          "enum": [
+            "DMA_HBM_TO_SRAM",
+            "MATMUL_BF16_TILE",
+            "ADD_BF16",
+            "RMSNORM_BF16",
+            "SILU_MUL_BF16",
+            "COMPLETE"
+          ]
+        },
+        "output": {"enum": ["post_attention", "mlp_norm", "gated_mlp", "hidden_1"]},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "projection": {"enum": ["attention_output", "gate", "up", "down"]},
+        "role": {"enum": ["hidden_0", "attention", "post_attention_norm_weight"]},
+        "tile_index": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["engine", "index", "kernel_index", "opcode"],
+      "type": "object"
+    }
+  }
+}

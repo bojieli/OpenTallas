@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.hdc-v41x-idx-four-stack-verilator.v1",
+  "status": "pass",
+  "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
+  "simulator": "Verilator",
+  "configuration": {
+    "stacks": 4,
+    "contexts_per_stack": 4,
+    "WB": 32,
+    "GA": 24,
+    "quantum": 64,
+    "hbm_QD": 64,
+    "hbm_RQD": 32,
+    "hbm_REFPB": 3
+  },
+  "cases": [
+    {
+      "keys": 65,
+      "checked": 65,
+      "sectors": 139,
+      "cycles": 82,
+      "sector_per_cycle": 1.695122,
+      "collector_empty_cycles": 76,
+      "request_stall_cycles": 0,
+      "response_stall_cycles": 0,
+      "build_wall_seconds": 429.928,
+      "simulation_wall_seconds": 0.027
+    },
+    {
+      "keys": 1040,
+      "checked": 1040,
+      "sectors": 2210,
+      "cycles": 149,
+      "sector_per_cycle": 14.832215,
+      "collector_empty_cycles": 128,
+      "request_stall_cycles": 0,
+      "response_stall_cycles": 0,
+      "build_wall_seconds": 440.347,
+      "simulation_wall_seconds": 0.042
+    },
+    {
+      "keys": 262144,
+      "checked": 262144,
+      "sectors": 557056,
+      "cycles": 13131,
+      "sector_per_cycle": 42.422969,
+      "collector_empty_cycles": 9031,
+      "request_stall_cycles": 7025,
+      "response_stall_cycles": 0,
+      "build_wall_seconds": 435.39,
+      "simulation_wall_seconds": 4.448
+    }
+  ],
+  "coverage": "Same six RTL modules and exact key/mask/last/reference-bit testbench checks as Icarus gate; external C++ clock/reset/command driver; short-case cycle equality required before full run.",
+  "limitation": "Behavioral timed HBM; no physical or model throughput claim.",
+  "input_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "549b8c2acb3530ffebdb46a395f8adee56eb5403fa1416feadcdb8f5cb379237",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_range.sv": "6e47d8e09370a84244b3e69de9438a6cd57fddecac357fa9f537198b2f88603d",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_range_pc_arb.sv": "298084d727242936b12fbacab8f00a181fc29afeea50b727b03254ce9b83424a",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_quarter_ranges.sv": "d6956ae3b1519df1cbac709e2c65134fc6c4e81ba4188d9acf073371407fc065",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv": "97f11ed51b33e5b4313d9e8922298dd8f3f9645895747059a22a2a220d678946",
+    "rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv": "282efecd6562b84e6299f04ee5aa0a3ff568579d1676b0c32f4811d1b42f9d6a",
+    "rtl/test/hdc_v41x_idx_four_stack_verilator.cpp": "3056098db7a702d6e951ce3150923079a7241daf76113957a744206634b41f57",
+    "tools/rtl_v41x_idx_four_stack_verilator.py": "913e89f412de464c0994d34c2e513bc6912d8977a6d7b3444ab47e06fb69b5e2"
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "copy": "envelope.json",
+    "path": "results/uarch/dsrom_4096_reticle_inventory_20261002/per_element_envelope.json",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "97797846d768e2dd5e156efeeac993e7810acb8494a9d4cbe70e514c6389f57d"
+  },
+  {
+    "copy": "grid.json",
+    "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/inputs/grid.json",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018"
+  },
+  {
+    "copy": "element.sv",
+    "path": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79"
+  },
+  {
+    "copy": "pair.sv",
+    "path": "rtl/v41die/ot_v41_pair_w17w10_rne_wake_prepare.sv",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "6268b4c17ef3d4fef18f60de9ad7fdddc467efb2e1b51e260bb58467430c4c88"
+  },
+  {
+    "copy": "source_model.json",
+    "path": "results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/model.json",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "5abd83a52537c5a9b7745846b726a716bc5431ff254d364c1077af541edda0c7"
+  },
+  {
+    "copy": "numerical_terminal.json",
+    "path": "results/rtl/parent_dsrom_actual_element_rne_wake_execution_20261002_r1/record.json",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "190b0a49083d5bb8c23440ebf8bf843e0f74ec4c9b8e00541d2a93157ca2bf1a"
+  },
+  {
+    "copy": "pdn.tcl",
+    "path": "physical/abi3/w10_wake_pdn.tcl",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "ccfb2a247310f235fcb5d845b7c2745163ba180974c08578361b0d9c5668f3f3"
+  },
+  {
+    "copy": "pp.sdc",
+    "path": "physical/abi3/w10_wake_pp_multicycle.sdc",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "60d2718be32143e524e7386d3b0cbff5063caa2c14f46d01ae85e6204b69d7b8"
+  },
+  {
+    "copy": "macro_model.json",
+    "path": "results/uarch/dsrom_noECC_physical_transition_20261002/model.json",
+    "commit": "c3afef62a0a277ae5b19a948413efebba80abecb",
+    "sha256": "d799cb9841579b88f87f325a8e9899dfa822aa968bf5d3e3fd2920f499af6d94"
+  },
+  {
+    "copy": "unified_noECC.json",
+    "path": "results/uarch/dsrom_ROM_noECC_candidate_20261002/model-r5.json",
+    "commit": "636db46842fb25bce441e241b17e6151975271cf",
+    "sha256": "017ad4036d631de84b1833ff814b90e64f5b45c2b4b852fe9a05e66e3f8191b6"
+  }
+]

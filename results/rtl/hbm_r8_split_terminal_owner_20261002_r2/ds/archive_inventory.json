@@ -1,0 +1,106 @@
+{
+  "GO_commit": "6d09d349ba69f0b06a6f0e2fa51592237fd6df4a",
+  "external_large_artifacts": {
+    "/tmp/hbm-ds-runtime-calibration-parent-20261002-r2/DS/obj/Vconnected": {
+      "bytes": 656159544,
+      "sha256": "c5bf3c458674e37d0d0c4dce3f23bd5e12b0973da369a5de1475573d1c4b7822"
+    }
+  },
+  "failure": null,
+  "physical_credit": false,
+  "raw_files": {
+    "DS-reuse_binary-end.json": {
+      "bytes": 707,
+      "sha256": "b8f2eb78a88086ad5f48d82e1373dbb218ac70eb76f129e95d7ef0b378d7009b"
+    },
+    "DS-reuse_binary-start.json": {
+      "bytes": 581,
+      "sha256": "22daecdc718e26cde91681bff2179423a9416567e5eb7c54c8d720181a6a7d79"
+    },
+    "DS-simulation-end.json": {
+      "bytes": 289,
+      "sha256": "5b08f3b9c4714fb6bad7ff6fbbdd4fb8334bfba0184ef9cb5b7b9937f4fb2c94"
+    },
+    "DS-simulation-start.json": {
+      "bytes": 161,
+      "sha256": "1363ac987d9f5460600166cbf995905610ecc0309e85de0a07d4f4f604a889bf"
+    },
+    "DS-trace-end.json": {
+      "bytes": 443,
+      "sha256": "78c2d3cfb482ababde762a0c26f39498e516cafa4c9b072706f05eccc2b7cd82"
+    },
+    "DS-trace-start.json": {
+      "bytes": 316,
+      "sha256": "9aaa987d7b723e83bc8aae07c1ccd97c75e9de03a2f0ab7e29498ad7cb8c9a7b"
+    },
+    "DS/actual_sim.log": {
+      "bytes": 167466,
+      "sha256": "157c5c8bbfe7aee185ff52e27fcbc81622b636341e53bd9b09b8ca81a441d5a4"
+    },
+    "DS/reuse_binary.log": {
+      "bytes": 233,
+      "sha256": "ee4d4c3f24872fe99e03a48c067ba4a821541d6b9794ad2a48e8df767f8510c1"
+    },
+    "DS/reuse_binary_receipt.json": {
+      "bytes": 245,
+      "sha256": "98f97b6d11b9450c03a6d7d31c0406266a34f4bb29bf239a0862c1136a1d0511"
+    },
+    "DS/trace.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "DS/trace_verdict.json": {
+      "bytes": 2132,
+      "sha256": "0cf42709d4eeaaca5eae00ea40aedc4bb93eab17985d387a30dc201e99cb66d6"
+    },
+    "GO.json": {
+      "bytes": 2258,
+      "sha256": "3ec1d25456c9f4f08054978f9e83b887e64db6703364617cbd27ac8d797603ab"
+    },
+    "progress-DS-reuse_binary.json": {
+      "bytes": 4966,
+      "sha256": "0a8e4ea046e7265d52314bcdb6321ee561254cc4c414851e966b791b8009cdfd"
+    },
+    "progress-DS-simulation.json": {
+      "bytes": 5308,
+      "sha256": "92c6af412a04353465c60d621d5fa4f75149abef3c5b50621d3ef8a1ea0925db"
+    },
+    "progress-DS-trace.json": {
+      "bytes": 5820,
+      "sha256": "b1b55dd5208ee4db23b700e29c894d496532c5df0ce40b399991f50c4d1a4afc"
+    },
+    "proposal.json": {
+      "bytes": 36162,
+      "sha256": "28e31b0143115e7d19989b4226d999813378a9ed13d62965387954316ad0e388"
+    },
+    "run_start.json": {
+      "bytes": 3669,
+      "sha256": "b9118d35c9c390687be87d0a215985be1d58da76545cb1edf5d5ec244c93f469"
+    },
+    "verdict.json": {
+      "bytes": 6440,
+      "sha256": "1e9161babd9fd4b247ed84a335285789c25620e20b4f89acb44d04c4db31ccb9"
+    }
+  },
+  "retry": false,
+  "runner_caps": {
+    "aggregate_output_bytes": 8589934592,
+    "build_jobs": 1,
+    "cpus": [
+      0
+    ],
+    "disk_headroom_bytes": 12884901888,
+    "kill_grace_s": 5,
+    "memory_bytes": 34359738368,
+    "per_file_bytes": 1073741824,
+    "poll_s": 1,
+    "sequential_targets": true,
+    "swap_bytes": 0,
+    "whole_wall_s": 7110
+  },
+  "scope": "DS actual connected directed4cases+reset only",
+  "source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954",
+  "token_credit": false,
+  "verdict": "PASS_DIRECTED_NATIVE_DS_CONNECTED_ONLY",
+  "wall_s": 693.0164533439092
+}

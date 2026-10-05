@@ -1,0 +1,181 @@
+{
+  "NO_DEPENDENCY_CHERRY_PICKS_REQUIRED_FOR_PACKET": true,
+  "benches": [
+    {
+      "archive": "benches/tb_W4_RFACK.sv",
+      "original_path": "rtl/test/W4_euclid_20261003/tb_W4_RFACK.sv",
+      "sha256": "6908b2af1f709a1d385b17124f5fac61cb8e68b947fcccbfd5db60d6df84529f",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "benches/tb_W4_full_service.sv",
+      "original_path": "rtl/test/W4_euclid_20261003/tb_W4_full_service.sv",
+      "sha256": "d0f3098d507045964d81137bb0afb06980c0e9fef3767ad3adef0ca4ccba2217",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "benches/tb_W4_default_original.sv",
+      "original_path": "rtl/test/W4_euclid_20261003/tb_W4_default_original.sv",
+      "sha256": "841a48e601692fe5b5c2c4544ed5e98781ab542dc01592bd0316dcf46ef36ff5",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "benches/tb_W4_valid_code_mismatch.sv",
+      "original_path": "rtl/test/W4_euclid_20261003/tb_W4_valid_code_mismatch.sv",
+      "sha256": "2ea18d41defa978b1edad3387407cf7c1fecd6349574a156f41ecdafd5c552a9",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    }
+  ],
+  "cold_checker": "tools/Euclid_W4_selfcontained_review.py",
+  "costs": [
+    {
+      "archive": "cost-inputs/component-price-r3.json",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/component-price-r3.json",
+      "sha256": "210e976ce87aaa9d81c3a38233e1f244da29353af692ddb1545fa462f6bbafb7",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/ACK-match-control-pricing-r4.json",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/ACK-match-control-pricing-r4.json",
+      "sha256": "bb36f6c02c20cce68b5bc8e71abcc3d1954a65d6bdc456f8f8623833945a6c04",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/allocator-context-r6/once-only-join.json",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/allocator-context-r6/once-only-join.json",
+      "sha256": "13acf4b657041af1a02202ec79cef4845ce51cc254703a55df7a52cbfa1a535b",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/allocator-context-r6/allocator.json",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/allocator-context-r6/allocator.json",
+      "sha256": "3081fba04e9afbec8d1b6093136fbb921c2546e7a05e9efaac43f24d64c09b8a",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/canonical-r3/canonical-fullwidth-C0-KV-read-r1.json",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/canonical-r3/canonical-fullwidth-C0-KV-read-r1.json",
+      "sha256": "22e2e3c718807d91e3ef4bfd8b8a3db704583f452592975fc651b538f2827212",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/canonical-r3/FULLWIDTH_HANDOFF.txt",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/canonical-r3/FULLWIDTH_HANDOFF.txt",
+      "sha256": "2a7c931dd3256e6642324778eaf397a90548daeebe88ae889c39e83ddac9a4c2",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/canonical-r3/Popper-protection-reference.py",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/canonical-r3/Popper-protection-reference.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    },
+    {
+      "archive": "cost-inputs/inputs/tools/uarch_model.py",
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/inputs/tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "source_context_commit": "b3551c996a7d4981d6edf2fe5fd4cd418645e292"
+    }
+  ],
+  "design": [
+    {
+      "archive": "design/ot_gpu_rf_service.sv",
+      "bytes": 6585,
+      "original_path": "rtl/gpu_w4_euclid_20261003/ot_gpu_rf_service.sv",
+      "sha256": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_gpu_full_sm_service.sv",
+      "bytes": 12431,
+      "original_path": "rtl/gpu_w4_euclid_20261003/ot_gpu_full_sm_service.sv",
+      "sha256": "1467492957a70900e969ffee3493e6969a6ac4b0244202a8c0cdd06f6ccfdd18",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_gpu_scratch_service.sv",
+      "bytes": 1113,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_scratch_service.sv",
+      "sha256": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_gpu_fadd.sv",
+      "bytes": 1459,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/gpu/ot_gpu_fadd.sv",
+      "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_hdc_fp32_add_lat.sv",
+      "bytes": 12112,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_hdc_fp32_mul_lat.sv",
+      "bytes": 11377,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_hdc_fastfp.sv",
+      "bytes": 19069,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_hdc_prefix.sv",
+      "bytes": 2803,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "bytes": 6668,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "design/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "bytes": 6673,
+      "original_path": "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    }
+  ],
+  "no_actual_job_changed": true,
+  "original_bodies": [
+    {
+      "archive": "original-default-bodies/ot_gpu_rf_service.sv",
+      "original_path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    },
+    {
+      "archive": "original-default-bodies/ot_gpu_full_sm_service.sv",
+      "original_path": "rtl/gpu/ot_gpu_full_sm_service.sv",
+      "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+      "source_commit": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f"
+    }
+  ],
+  "original_source_hashes_changed": false,
+  "parent_c74_failure_immutable": {
+    "missing": "rtl-source-inputs-r4/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "repair": "additive packet includes all10exactfiles+costrecords; no weakening pins",
+    "reported_main": "6c67",
+    "status": "FAIL_MISSING_UNPUBLISHED_DEPENDENCY"
+  },
+  "provider_or_caller_CDC_SSFF_or_rate": false,
+  "schema": "W4_SELFCONTAINED_FROZEN_SOURCE_AND_ENABLED_STAGE_R10",
+  "source_list_usage": "cd packet; -f sources.f supplies exact ten design files; exclude originalRF/fullSM+duplicate providers. This is source package, no new launch.",
+  "source_only_milestone": "enabled128lane actual compile/run0; 13cycles exactRNE/sign/subnormal/refusal owner46/slot9/mirrors/leases; default andvalidcoded mismatch pending",
+  "sourcefreeze": "c4c794ad0b4b3c295d11330fc06de3be0e94da0f",
+  "status": "SOURCE_PACKAGE_COMPLETE_ENABLED_FULLSM_PASS_OVERALL_GATE_LIVE",
+  "whole_gate_terminal": false
+}

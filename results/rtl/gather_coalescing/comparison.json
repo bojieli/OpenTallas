@@ -1,0 +1,99 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Same-line coalescing within one coordinate; ordered responses; no next-coordinate prefetch or extra SRAM. General all-target qualification remains open.",
+  "loaded_depth2": [
+    {
+      "record": "results/rtl/gather_coalescing/loaded_before_depth2.json",
+      "sha256": "6083f929415d733da097a13d564555018fe664fc029e316aa7e5f93f393ec720",
+      "median_successful_phase_cycles": 704.5,
+      "first_reads": 53,
+      "first_bytes": 836,
+      "outputs": 2234,
+      "write_acknowledgements": 295
+    },
+    {
+      "record": "results/rtl/gather_coalescing/loaded_after_depth2.json",
+      "sha256": "36274d74b94d0a64fae5b3330bbd86ad64c74aacbdd1e170620915efbb39c9f8",
+      "median_successful_phase_cycles": 570.5,
+      "first_reads": 14,
+      "first_bytes": 212,
+      "outputs": 2234,
+      "write_acknowledgements": 295
+    }
+  ],
+  "loaded_cycle_reduction_percent": 19.020581973030517,
+  "directed": {
+    "credits": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "response_delay_cycles": 32,
+    "coordinates": 8,
+    "baseline_reads": 64,
+    "baseline_cycles": [
+      2281,
+      1181,
+      661,
+      461
+    ],
+    "coalesced": [
+      {
+        "stride": 0,
+        "reads": 8,
+        "cycles": [
+          329,
+          329,
+          329,
+          329
+        ]
+      },
+      {
+        "stride": 2,
+        "reads": 16,
+        "cycles": [
+          601,
+          346,
+          346,
+          346
+        ]
+      },
+      {
+        "stride": 8,
+        "reads": 64,
+        "cycles": [
+          2281,
+          1181,
+          661,
+          461
+        ]
+      }
+    ],
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ]
+  },
+  "regression_tests": {
+    "gather": 26,
+    "credits": 6,
+    "transport": 24,
+    "layout_cursor": 9
+  },
+  "small_stride_cases_per_gather_configuration": 320,
+  "abort_fixture": "Both old and new gather failed the previous K2 abort trigger after successful first phase. Changed trigger to first pending object read before operand issue; retained logs and previous bench.",
+  "physical": "running: results/physical_abi3/asap7/bf16_weight_transport/pnr_coalesced_credits4_slew10_cts12_1ns.json",
+  "sources": {
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "0f500dfa3844f89e59de972ef00809e734124754f7c5626838a723eddbcbfac3",
+    "rtl/test/tb_a3_g2_runtime_program.sv": "bebd1397f289682f6c38ea9f833cdab5db596f3aee5e9e3cbe6eee1be0f25e8d",
+    "tests/test_bf16_weight_gather.py": "aca6ef1223335b8d87eb358199595fedce406e549b46da11f01d45920be986ec",
+    "tests/test_weight_gather_credits.py": "126690a4500bf40633a27654585beaf07d85be90268dd6ebab45fd9f0c499502"
+  },
+  "loaded_depth344": {
+    "record": "results/rtl/gather_coalescing/loaded_after_depth344.json",
+    "status": "pass",
+    "median_successful_phase_cycles": 80903.5,
+    "note": "Distinct-line workload; same successful-phase median as recorded pre-coalescing credit4 experiment; abort trigger changed."
+  }
+}

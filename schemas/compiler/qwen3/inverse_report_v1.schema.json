@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/inverse_report_v1.schema.json",
+  "title": "OpenTallas Qwen3 physical-image inverse report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "checkpoint_lock_id",
+    "image_bytes_checked",
+    "images",
+    "padding_bytes_checked_zero",
+    "payload_bytes_reconstructed",
+    "physical_map_id",
+    "report_id",
+    "schema",
+    "tensor_count_reconstructed"
+  ],
+  "properties": {
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "image_bytes_checked": {
+      "minimum": 16381470720,
+      "type": "integer"
+    },
+    "images": {
+      "items": {
+        "$ref": "#/$defs/image"
+      },
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "padding_bytes_checked_zero": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "payload_bytes_reconstructed": {
+      "const": 16381470720
+    },
+    "physical_map_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.qwen3.inverse_report.v1"
+    },
+    "tensor_count_reconstructed": {
+      "const": 399
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes",
+        "stage"
+      ],
+      "properties": {
+        "path": {
+          "pattern": "^images/qwen3-stage-[0-9]{2}\\.rom\\.bin$",
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "stage": {
+          "maximum": 35,
+          "minimum": 0,
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "source_module": "rtl/experimental/qwen_native_fp32_20261003/ot_qwen_native_fp32_lanes.sv",
+  "top": "ot_qwen_native_fp32_lanes",
+  "OPT": {
+    "default": 0,
+    "unit_test": 1
+  },
+  "source_dependency_files": [
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv"
+  ],
+  "ports_order": [
+    "clk",
+    "rst_n",
+    "lane_valid[3:0]",
+    "lane_ready[3:0]",
+    "select_add[3:0]",
+    "select_mul[3:0]",
+    "select_div[3:0]",
+    "select_sqrt[3:0]",
+    "a[127:0]",
+    "b[127:0]",
+    "canonical_zero[3:0]",
+    "result_valid[3:0]",
+    "result_ready[3:0]",
+    "result_bits[127:0]",
+    "result_error[7:0]",
+    "protocol_error[3:0]"
+  ],
+  "layout": "lanei is a/b/result[32*i+:32],error[2*i+:2]; operand32B beat yields16B FP32 results",
+  "owner": "Pauli ONE controller, upstream opcode decode,held beat,SSA/gen/user/tile identity,RF/shared/packet publication. Datapath keeps only arithmetic completion capacity; no instruction/context identity duplication.",
+  "flags": "exactly one of four selects for every requesting lane; invalidmask rejects BEFORE reserve/pipeline mutation and reports protocol_error. canonical_zero must be driven default1 or explicit0.",
+  "source_contract_gap": "Existing fail-closed pipe error data0 differs from retained nonfinite data in some COMMON_NATIVE host operations. Unit gate proves finite bitwise arithmetic and exact reused-source fault refusal convention. Do not claim fault-result payload equivalence/full1737PC/fulltoken without controller contract/integration evidence.",
+  "source_error_codes": {
+    "0": "healthy",
+    "1": "nonfinite/illegal argument",
+    "2": "finiteoverflow/range"
+  },
+  "timing_edges": "input accepted N; heldresult visible afterN+5 add/mul orN+31 div/sqrt. First result acceptance N+6/N+32; lane reaccept earliestN+7/N+33. Canonical/sign flags captured at input, no same-edge seat reuse.",
+  "singleclock": true,
+  "source_preservation": "Five inherited source files unchanged; no frontend/fulltoken/P&R/hardwareprimitive rewrite. New defaultoff namespace only.",
+  "required_integration": "Pauli bind operationflags/lanemask/canonical option; consume error before publication; exact32Boperandpack/resultlayout; true resultready handshake; no numerical callback fallback. Physicalmap/slot/tracks/clock/power and composed latency/gain remain unqualified."
+}

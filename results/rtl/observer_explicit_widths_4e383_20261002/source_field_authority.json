@@ -1,0 +1,432 @@
+[
+  {
+    "mode": "WINDOW_actual_L0",
+    "fields": [
+      {
+        "field": "dut.u_tile.qrom_rom_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+        "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+        "declaration": "    reg qrom_rom_pending, qrom_rom_fault;"
+      },
+      {
+        "field": "dut.u_tile.rope_read_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+        "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+        "declaration": "    reg rope_read_fault;"
+      },
+      {
+        "field": "dut.u_tile.idx_user_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+        "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+        "declaration": "    reg idx_user_fault;"
+      },
+      {
+        "field": "dut.u_tile.kb_ring_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+        "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+        "declaration": "    wire kb_ring_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.coll_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    input  wire              coll_busy, coll_fault,"
+      },
+      {
+        "field": "dut.u_tile.u_core.rope_pf_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    input  wire              rope_pf_fault,"
+      },
+      {
+        "field": "dut.u_tile.u_core.win_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire win_idle, win_issue_ready, win_cap_ready, win_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.win_capture_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire win_capture_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.rom_fault_w",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire rom_ready_w, rom_idle_w, rom_fault_w;"
+      },
+      {
+        "field": "dut.u_tile.u_core.he_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.xu_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.qe_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.su_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.me_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.e_fault",
+        "width": 4,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire [3:0]            e_go, e_ready, e_idle, e_fault, e_kv_re, e_ov;"
+      },
+      {
+        "field": "dut.u_tile.u_core.fuse_orphan",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    reg fuse_orphan;"
+      },
+      {
+        "field": "dbg_fsticky",
+        "width": 32,
+        "path": "rtl/test/v41_runtime/ot_v41_rt_die_sim_observe_l0_window.sv",
+        "sha256": "2113dc2a1ab3a49e298e973027a5011d11d96ab881718ad0fc47c324d52a06d1",
+        "declaration": "    reg [31:0] dbg_fsticky;"
+      },
+      {
+        "field": "4'(dut.u_tile.u_core.st)",
+        "width": 4,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    reg [3:0]  st;"
+      },
+      {
+        "field": "dut.u_tile.u_core.d_unit",
+        "width": 3,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    reg [2:0]  d_unit;"
+      },
+      {
+        "field": "dut.u_tile.u_core.idles",
+        "width": 5,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire [4:0] idles = {he_idle, xu_idle, qe_idle, su_idle, me_idle};"
+      },
+      {
+        "field": "dut.coll_busy",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+        "declaration": "    output wire              coll_busy,"
+      },
+      {
+        "field": "dut.u_tile.u_core.waited",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv",
+        "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+        "declaration": "    wire waited = ((d_wait & ~(idles & ~gos)) == 5'd0);"
+      },
+      {
+        "field": "dut.u_cdma.busy",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg busy, fault,"
+      },
+      {
+        "field": "dut.u_cdma.e_mode",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg e_mode,"
+      },
+      {
+        "field": "dut.u_cdma.fault",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg busy, fault,"
+      },
+      {
+        "field": "dut.e_valid",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+        "declaration": "    wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;"
+      },
+      {
+        "field": "dut.e_ready",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+        "declaration": "    wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;"
+      },
+      {
+        "field": "dut.o_valid",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+        "declaration": "    wire o_valid, o_ready, o_last, o_err, cl_fault;"
+      },
+      {
+        "field": "dut.o_ready",
+        "width": 1,
+        "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+        "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+        "declaration": "    wire o_valid, o_ready, o_last, o_err, cl_fault;"
+      }
+    ],
+    "packed_input": {
+      "path": "rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+      "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+      "formula": "4*((FULL_SHAPE ? 512 : 32)/32)*265",
+      "FULL_SHAPE": 1,
+      "width": 16960
+    }
+  },
+  {
+    "mode": "CKV_source_available",
+    "fields": [
+      {
+        "field": "dut.u_tile.qrom_rom_fault",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+        "declaration": "    reg qrom_rom_pending, qrom_rom_fault;"
+      },
+      {
+        "field": "dut.u_tile.rope_read_fault",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+        "declaration": "    reg rope_read_fault;"
+      },
+      {
+        "field": "dut.u_tile.idx_user_fault",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+        "declaration": "    reg idx_user_fault;"
+      },
+      {
+        "field": "dut.u_tile.kb_ring_fault",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_tile.sv",
+        "sha256": "9cd30164f708f512341c1c8d4e91f35f3fd1e6f000403bfa2b2396064152f6b6",
+        "declaration": "    wire kb_ring_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.coll_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    input  wire              coll_busy, coll_fault,"
+      },
+      {
+        "field": "dut.u_tile.u_core.rope_pf_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    input  wire              rope_pf_fault,"
+      },
+      {
+        "field": "dut.u_tile.u_core.win_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire win_idle, win_issue_ready, win_cap_ready, win_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.win_capture_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire win_capture_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.rom_fault_w",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire rom_ready_w, rom_idle_w, rom_fault_w;"
+      },
+      {
+        "field": "dut.u_tile.u_core.he_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.xu_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.qe_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.su_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.me_fault",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire       me_fault, su_fault, qe_fault, xu_fault, he_fault;"
+      },
+      {
+        "field": "dut.u_tile.u_core.e_fault",
+        "width": 4,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire [3:0]            e_go, e_ready, e_idle, e_fault, e_kv_re, e_ov;"
+      },
+      {
+        "field": "dut.u_tile.u_core.fuse_orphan",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    reg fuse_orphan;"
+      },
+      {
+        "field": "dbg_fsticky",
+        "width": 32,
+        "path": "rtl/test/v41_runtime/ot_v41_rt_die_l20_sim_observe.sv",
+        "sha256": "7032e7705a4540a4be9a3ef454c1a561e4842fbc582a57ff36671360e295a4b5",
+        "declaration": "    reg [31:0] dbg_fsticky;"
+      },
+      {
+        "field": "4'(dut.u_tile.u_core.st)",
+        "width": 4,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    reg [3:0]  st;"
+      },
+      {
+        "field": "dut.u_tile.u_core.d_unit",
+        "width": 3,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    reg [2:0]  d_unit;"
+      },
+      {
+        "field": "dut.u_tile.u_core.idles",
+        "width": 5,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire [4:0] idles = {he_idle, xu_idle, qe_idle, su_idle, me_idle};"
+      },
+      {
+        "field": "dut.coll_busy",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+        "declaration": "    output wire              coll_busy,"
+      },
+      {
+        "field": "dut.u_tile.u_core.waited",
+        "width": 1,
+        "path": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+        "sha256": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+        "declaration": "    wire waited = ((d_wait & ~(idles & ~gos)) == 5'd0);"
+      },
+      {
+        "field": "dut.u_cdma.busy",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg busy, fault,"
+      },
+      {
+        "field": "dut.u_cdma.e_mode",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg e_mode,"
+      },
+      {
+        "field": "dut.u_cdma.fault",
+        "width": 1,
+        "path": "rtl/chip/ot_w15_coll_dma.sv",
+        "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab",
+        "declaration": "    output reg busy, fault,"
+      },
+      {
+        "field": "dut.e_valid",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+        "declaration": "    wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;"
+      },
+      {
+        "field": "dut.e_ready",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+        "declaration": "    wire e_valid, e_ready, e_last, e_mode; wire [CL_FW-1:0] e_data; wire [CL_TAGW-1:0] e_tag;"
+      },
+      {
+        "field": "dut.o_valid",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+        "declaration": "    wire o_valid, o_ready, o_last, o_err, cl_fault;"
+      },
+      {
+        "field": "dut.o_ready",
+        "width": 1,
+        "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+        "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+        "declaration": "    wire o_valid, o_ready, o_last, o_err, cl_fault;"
+      }
+    ],
+    "packed_input": {
+      "path": "rtl/chip/ckvsel/ot_chip_v41x_die.sv",
+      "sha256": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+      "formula": "4*((FULL_SHAPE ? 512 : 32)/32)*265",
+      "FULL_SHAPE": 1,
+      "width": 16960
+    }
+  }
+]

@@ -1,0 +1,34 @@
+F.........................................                               [100%]
+=================================== FAILURES ===================================
+________ test_ready_artifact_pins_exact_relocated_module_and_all_source ________
+
+    def test_ready_artifact_pins_exact_relocated_module_and_all_source():
+>       report=D.readiness()
+
+tests/test_qwen_bounded_trained_driver.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/qwen_bounded_trained_driver.py:65: in readiness
+    if B.sha(ROOT/path) != want: raise ValueError('bounded dependency source pin: '+path)
+tools/qwen_trained_byte_provider.py:13: in sha
+    with Path(path).open('rb')as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/OpenTallas-qwen-trained-native-execution/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/OpenTallas-qwen-trained-native-execution/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_qwen_bounded_trained_driver.py::test_ready_artifact_pins_exact_relocated_module_and_all_source
+1 failed, 41 passed in 180.46s (0:03:00)

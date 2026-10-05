@@ -1,0 +1,80 @@
+{
+  "causal_distinctions": [
+    "requests are accepted only by taken valid/ready or source-defined accept",
+    "reply observation is not successful response retirement without native validation and identity proof",
+    "WINDOW staged/row publication differs from source/descriptor completion",
+    "CKV local fetch/three remote/own row all retained as parallel collector sources",
+    "rows_ready/fetch_done differs from selection lifetime quiescence",
+    "QK/PV replay share selection epoch but have distinct acceptance IDs/generations",
+    "frozen queues/PC/busy/state changes cannot reset or supply operation deadlines"
+  ],
+  "event_envelope": {
+    "association_proven": "strict bool model input only; actual source/epoch/fence binding certificate is currently unavailable",
+    "beat": "u4, must0 for pinned one-sector reply",
+    "cycle": "u64 ordered source rising-edge observation (equal for concurrent lanes)",
+    "gid": "u21",
+    "kind": [
+      "op_accept",
+      "request_accept",
+      "read_reply",
+      "write_done",
+      "row_commit",
+      "phase",
+      "op_retire",
+      "link_queue"
+    ],
+    "link_queue": "operation/request must absent; does not create outstanding DUT operation",
+    "qualified": "strict bool native validation/fault predicate; false cannot retire work",
+    "retire_label": "exact source-owned completion per family; no selection lifetime-retire hook available",
+    "row_rank": "u10, <K512 for CKV collector"
+  },
+  "name": "opentallas.operation-deadline-provider-observation.v1",
+  "operation_identity": {
+    "accept_serial": "u64 monotonic host observation of actual named accept",
+    "die_rank": "u2 physical rank, distinct from selection_rank",
+    "family": [
+      "window_source",
+      "window_stream",
+      "window_block_write",
+      "packed_descriptor",
+      "ckv_selection",
+      "ckv_fetch",
+      "ckv_stream"
+    ],
+    "native_generation": "optional u16 descriptor generation; missing remains DESCRIPTOR_CONTEXT_UNAVAILABLE",
+    "reset_epoch": "u64 host observation, requires reset/transport fence provenance",
+    "selection_epoch": "optional full accepted ckV_selection OperationID; same physical rank/reset epoch; missing for fetch/replay remains SELECTION_CONTEXT_UNAVAILABLE"
+  },
+  "provider": "project(immutable_observation_tuple, source_cycle_u64, missing_or_synthetic_bounds) -> immutable_View_tuple",
+  "provider_outputs": {
+    "ages": "now-actual acceptance, fixed accepted-request timestamps; no heartbeat slides origin",
+    "deadline": "None with missing bounds; optional numbers labeled SYNTHETIC only",
+    "status": "BOUND_MISSING plus missing context/association/native-qualification statuses; synthetic violations remain visible after late completion",
+    "universal_timeout_admitted": false
+  },
+  "registered_stage_identity": {
+    "first_row": "u21",
+    "mask": "nonzero u4",
+    "ordinal": "u64",
+    "parent": "window_source/window_stream OperationID",
+    "reply": "wb_rsp_v (no rsp_ready), same user/first/mask, lane-valid mask covering request and no source fault",
+    "user": "u10"
+  },
+  "request_identity": {
+    "client": "window or selected_ckv",
+    "client_tag": "u14, before two owner transport bits",
+    "mode": "read/write; WINDOW write_done distinct; selected CKV writes rejected by pinned mux",
+    "ordinal": "u64 unique for operation even if wire metadata changes",
+    "stack": "u2"
+  },
+  "retire_hooks": {
+    "ckv_fetch": "ckv_fetch_done",
+    "ckv_selection": null,
+    "ckv_stream": "ckv_stream_job_done",
+    "packed_descriptor": "descriptor_done_after_engine_idle",
+    "window_block_write": "window_scale_write_done",
+    "window_source": "window_schedule_done",
+    "window_stream": "window_merge_done"
+  },
+  "scope": "model only; no provider callback/getter selected"
+}

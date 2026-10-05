@@ -1,0 +1,133 @@
+`timescale 1ns/1ps
+// Independent future-address walk for admitted LQ8 operations. Geometry comes
+// from admission (division performed once there, never on the per-word path).
+// Advance only when a downstream request slot is reserved. Arithmetic may lag
+// arbitrarily behind this cursor. clear aborts the generation at any position.
+// Weight scale rows correspond to lane-local columns (LQ8 block_rows_b = 1).
+module ot_a3_lq8_operand_cursor #(
+    parameter integer INTERLEAVE=3,
+    parameter bit PASS_FIRST=0
+)(
+    input wire clk,rst_n,clear,start,
+    input wire [31:0] cfg_generation,
+    input wire [15:0] cfg_rows,cfg_local_cols,cfg_depth_words,
+    input wire [15:0] cfg_rows_per_scale_a,
+    input wire [15:0] cfg_scale_stride_a,cfg_scale_stride_b,
+    input wire [15:0] cfg_groups_per_scale_a,cfg_groups_per_scale_b,
+    input wire [31:0] cfg_a_base,cfg_s_base,cfg_ws_base,cfg_w_base,
+    output wire request_valid,
+    input wire request_ready,
+    output reg [31:0] generation,
+    output wire [31:0] a_address,s_address,ws_address,
+    output reg [31:0] w_address,
+    output wire last,
+    output reg active,
+    output reg invalid_geometry
+);
+    localparam integer IW=(INTERLEAVE<2)?1:$clog2(INTERLEAVE);
+    reg [15:0] rows_left,cols_left,cols_q,depth_q,kg;
+    reg [IW-1:0] col;
+    reg [15:0] rpb_a,rows_in_scale,sa_stride,sb_stride,bwa,bwb,kga,kgb;
+    reg [15:0] ksa;
+    reg [31:0] a_base,s_base,ws_cursor;
+    reg [31:0] ws_columns[0:INTERLEAVE-1];
+    wire [15:0] pass_cols=(cols_left<16'(INTERLEAVE))?cols_left:16'(INTERLEAVE);
+    wire end_col=16'(col)==pass_cols-1'b1;
+    wire end_k=kg==depth_q-1'b1;
+    wire end_row=cols_left<=16'(INTERLEAVE);
+    reg [31:0] ws_base_q;
+    reg [15:0] rows_q;
+    reg [31:0] a_origin,s_origin,ws_pass_base;
+    // At depth one the last column's scale increment occurs on this edge.
+    wire [31:0] next_ws_pass=ws_cursor+(kg==0?{16'b0,sb_stride}:32'd0);
+    assign request_valid=rst_n && !clear && active;
+    assign a_address=a_base+{16'b0,kg};
+    assign s_address=s_base+{16'b0,ksa};
+    // Each column stores its next absolute scale address. Advance on that
+    // column's accepted request, removing addition after the output mux.
+    wire advance_ws=bwb!=0 && kgb==bwb-1'b1;
+    assign ws_address=kg==0?ws_cursor:ws_columns[col];
+    assign last=end_col && end_k && end_row && rows_left==1;
+    wire take=request_valid && request_ready;
+    wire launch=start && !active;
+    wire geometry_ok=cfg_rows!=0 && cfg_local_cols!=0 &&
+                     cfg_depth_words!=0 && cfg_rows_per_scale_a!=0;
+    // Reset only publication state. Every live payload is initialized by
+    // launch; per-column state is written during k=0 before it can be read.
+    always @(posedge clk or negedge rst_n)begin
+        if(!rst_n)begin active<=0;invalid_geometry<=0;end
+        else if(clear)begin active<=0;invalid_geometry<=0;end
+        else if(launch)begin active<=geometry_ok;invalid_geometry<=!geometry_ok;end
+        else if(take && last)active<=0;
+    end
+    // Payload values while inactive are not published. Capture can occur on a
+    // clear/reset edge without granting ownership or exposing a request.
+    always @(posedge clk)begin
+        if(launch)begin
+            generation<=cfg_generation;
+            rows_left<=cfg_rows;cols_left<=cfg_local_cols;cols_q<=cfg_local_cols;
+            depth_q<=cfg_depth_words;kg<=0;col<=0;
+            rpb_a<=cfg_rows_per_scale_a;rows_in_scale<=0;
+            sa_stride<=cfg_scale_stride_a;sb_stride<=cfg_scale_stride_b;
+            bwa<=cfg_groups_per_scale_a;bwb<=cfg_groups_per_scale_b;
+            kga<=0;kgb<=0;ksa<=0;
+            a_base<=cfg_a_base;s_base<=cfg_s_base;ws_cursor<=cfg_ws_base;
+            ws_base_q<=cfg_ws_base;w_address<=cfg_w_base;
+            rows_q<=cfg_rows;a_origin<=cfg_a_base;s_origin<=cfg_s_base;
+            ws_pass_base<=cfg_ws_base;
+        end else if(take)begin
+            w_address<=w_address+1'b1;
+            if(kg==0)ws_cursor<=ws_cursor+{16'b0,sb_stride};
+            if(end_col)begin
+                col<=0;
+                if(end_k)begin
+                    kg<=0;kga<=0;kgb<=0;ksa<=0;
+                    if(PASS_FIRST)begin
+                        if(rows_left!=1)begin
+                            rows_left<=rows_left-1'b1;
+                            a_base<=a_base+{16'b0,depth_q};
+                            ws_cursor<=ws_pass_base;
+                            if(rows_in_scale==rpb_a-1'b1)begin
+                                rows_in_scale<=0;s_base<=s_base+{16'b0,sa_stride};
+                            end else rows_in_scale<=rows_in_scale+1'b1;
+                        end else if(!end_row)begin
+                            rows_left<=rows_q;cols_left<=cols_left-pass_cols;
+                            a_base<=a_origin;s_base<=s_origin;rows_in_scale<=0;
+                            ws_pass_base<=next_ws_pass;
+                        end
+                    end else if(end_row)begin
+                        cols_left<=cols_q;ws_cursor<=ws_base_q;
+                        if(rows_left!=1)begin
+                            rows_left<=rows_left-1'b1;
+                            a_base<=a_base+{16'b0,depth_q};
+                            if(rows_in_scale==rpb_a-1'b1)begin
+                                rows_in_scale<=0;s_base<=s_base+{16'b0,sa_stride};
+                            end else rows_in_scale<=rows_in_scale+1'b1;
+                        end
+                    end else cols_left<=cols_left-pass_cols;
+                end else begin
+                    kg<=kg+1'b1;
+                    if(bwa!=0)begin
+                        if(kga==bwa-1'b1)begin kga<=0;ksa<=ksa+1'b1;end
+                        else kga<=kga+1'b1;
+                    end
+                    if(bwb!=0)begin
+                        if(kgb==bwb-1'b1)begin kgb<=0;end
+                        else kgb<=kgb+1'b1;
+                    end
+                end
+            end else col<=col+1'b1;
+        end
+    end
+    // Decode the selected column locally; start and clear do not enable a
+    // wide resettable column array. take already includes live ownership.
+    genvar c;
+    generate for(c=0;c<INTERLEAVE;c=c+1)begin: scale_column
+        always @(posedge clk)begin
+            if(take && col==IW'(c))begin
+                if(kg==0)ws_columns[c]<=ws_cursor+{31'd0,advance_ws};
+                else if(advance_ws)ws_columns[c]<=ws_columns[c]+1'b1;
+            end
+        end
+    end endgenerate
+endmodule

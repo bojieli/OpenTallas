@@ -1,0 +1,30 @@
+{
+  "harness_commits": [
+    "938ff5b8a",
+    "c82f2ec9d"
+  ],
+  "original_commits_and_exact_parents": {
+    "afd8a8915000aec5ced7b22eb50c5ce36398711f": [
+      "9a0d0f6d3219b0d9d70b085731245d24898f39ab"
+    ],
+    "d2631dd9051c30d7ab1aeab6fdaab4f9200d3f5a": [
+      "afd8a8915000aec5ced7b22eb50c5ce36398711f"
+    ]
+  },
+  "source_sha256": {
+    "tools/deepseek_v41_nam_quality.py": "8ac87308954049fdb603431da0bb854b8a64ebfdd748506ef321d7f729ce0f40",
+    "tools/deepseek_v41_greedy_reference.py": "e888ab033177a220189ac68b69f82b978df7685efa864bcadcf5c3d4463de26d",
+    "tests/test_deepseek_v41_nam_quality.py": "00e2fa26f60e78fabe43d47aa17eaf9fdfef47abbb24622af7f3a3561942bde1"
+  },
+  "byte_identical_to_live_pin": true,
+  "live_pin_unmodified": true,
+  "tests": {
+    "cpu_guard": "33 passed",
+    "harness": "4 skipped; CUDA hidden, no duplicate evaluation"
+  },
+  "smoke_disclosure": "The stability rule was tightened after two three-layer smoke runs and before full-model results. It was not fixed before all observations. Original smoke2 stability FAIL and adopt=false preserved in smoke2_final.json. No completed full-model verdict exists.",
+  "calibration_scope": "W11 5599cb758 / f553c36a2: reduced historical wired token398676 to376638, 22038 cycles saved (5.53%); both overallFAIL, adoptionfalse. No raw ratio or rate promotion to product.",
+  "claim_edits": "Per-user latency primary. Product overlap remains uncalibrated; reduced overallFAIL cannot replace product timing exposure. Six model records have refreshed pins/labels and no numerical changes.",
+  "merge_ready": true,
+  "hardware_adopted": false
+}

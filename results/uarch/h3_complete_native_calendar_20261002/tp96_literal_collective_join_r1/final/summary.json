@@ -1,0 +1,151 @@
+{
+  "PCs": 2213,
+  "case_reconciliation": [
+    {
+      "bound_verdict": "NORMAL_WITHIN_PREFLIGHT_NOT_STALL_PROOF",
+      "consumer_floor_cycles": 512,
+      "name": "w19_oreduce",
+      "normal_cycles": 12790,
+      "normal_minus_preflight_cycles": -450672,
+      "payload_bytes_per_rank": 32768,
+      "physical_bytes_per_rank": 32768,
+      "prior_preflight_cycles": 463462,
+      "words_per_rank": 512
+    },
+    {
+      "bound_verdict": "FAIL_NORMAL_EXCEEDS_PREFLIGHT",
+      "consumer_floor_cycles": 480,
+      "name": "expert_intermediate",
+      "normal_cycles": 8235,
+      "normal_minus_preflight_cycles": 3234,
+      "payload_bytes_per_rank": 288,
+      "physical_bytes_per_rank": 320,
+      "prior_preflight_cycles": 5001,
+      "words_per_rank": 5
+    },
+    {
+      "bound_verdict": "NORMAL_WITHIN_PREFLIGHT_NOT_STALL_PROOF",
+      "consumer_floor_cycles": 6144,
+      "name": "index_candidates",
+      "normal_cycles": 42861,
+      "normal_minus_preflight_cycles": -21152,
+      "payload_bytes_per_rank": 4096,
+      "physical_bytes_per_rank": 4096,
+      "prior_preflight_cycles": 64013,
+      "words_per_rank": 64
+    }
+  ],
+  "collective_PCs": 270,
+  "complete_program_latency": null,
+  "endpoint_only_provisional_cycles": 21290258,
+  "explicit_endpoint_costs": {
+    "admit": 2,
+    "consumer_record": 1,
+    "gather_word_route": 1647,
+    "reduce_word_route": 906,
+    "reverse": 2,
+    "visible_ACK": 2
+  },
+  "finite_resource_proof": {
+    "atomic_all_endpoint_admission": true,
+    "global_collective_capacity": 1,
+    "landing_capacity_each": 128,
+    "maximum_word_reservation_each": 96,
+    "no_overlap_assumed": true,
+    "proof_scope": "constructive repeated-word software reservations; production runtime UNKNOWN",
+    "rank_count": 96,
+    "word_release_after_all_consumers": true
+  },
+  "hardware_admitted": false,
+  "headline_delta": null,
+  "legacy_product_slot_geometry": {
+    "clock_hz": 1200480192.0768306,
+    "fit": {
+      "all_gather": {
+        "cycles_per_word": 89.7,
+        "fixed_cycles": 932.8,
+        "points": [
+          [
+            1,
+            996
+          ],
+          [
+            6,
+            1471
+          ],
+          [
+            1,
+            1049
+          ],
+          [
+            6,
+            1471
+          ],
+          [
+            6,
+            1471
+          ]
+        ]
+      },
+      "all_reduce": {
+        "points": [
+          [
+            1,
+            1022
+          ],
+          [
+            1,
+            1022
+          ],
+          [
+            1,
+            1022
+          ]
+        ]
+      }
+    },
+    "headline_delta": null,
+    "implementable_wideport_and_credits": null,
+    "index64B_consumer_floor_cycles": 6144,
+    "index_product_fit_cycles": 1471.0,
+    "index_product_slot_count": 6.0,
+    "literal_geometry_equivalent": false,
+    "reading_guide": "the bench moves one record a switch cycle on each package downlink, and its frame carries a whole record, so timing does not depend on record width; the _prod configs time a product gather of B bytes a rank as ceil(B / slot_bytes) records, slot_bytes = 0.9 TB/s port x clock period (750.4 B at 1.2 GHz, 870.5 B at 1.034 GHz). Use cycles = fixed_cycles + cycles_per_word x ceil(B_per_rank / slot_bytes) for a product gather; the 64 B-word slope (~90 cycles a word a rank at P=48) is the BENCH width, not the product port",
+    "record_bytes": 64,
+    "slot_bytes": 749.7
+  },
+  "native_software_ticks_changed": false,
+  "normal_scope": "actual96 endpoint functional rounds and harness credit admission only",
+  "physical_timings_changed": false,
+  "prior_preflight_serial_clock_ns": 1.1111111111111112,
+  "retained_native_provider_calendar": {
+    "I64_RMW_added_again": false,
+    "endpoint_cycles_added_to_native_ticks": false,
+    "native_V1_replacement_applied_again": false,
+    "shared64_or_RF_mirror_cost_changed": false,
+    "source_commit": "a67150839",
+    "summary": {
+      "C0_provider_and_shared_charges_retained": true,
+      "DS_PCs": 2213,
+      "DS_native_only_successor_software_ticks": 432013822897,
+      "Qwen_PCs": 1737,
+      "Qwen_reduced_fixture_native_only_successor_software_ticks": 89427618,
+      "RF_additional_debit": null,
+      "complete_MTP_iteration_calibrated_us": null,
+      "hardware_admitted": false,
+      "headline_agentic_median_rate": null,
+      "index_key_full_history_binding": null,
+      "index_key_produced_fragment_bindings": 4,
+      "native_state_homes": 4616,
+      "new_r22_charge": 0,
+      "schema": "H4_PROVIDER_V1_MTP_COMPOSED_JOIN_V1",
+      "shared_unknown_calls": 189476,
+      "status": "PASS_COMPONENT_JOIN_PARENT_MOVEMENT_AND_MTP_GATES_OPEN"
+    },
+    "summary_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/summary.json",
+    "summary_sha256": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259"
+  },
+  "schema": "H4_TP96_LITERAL_COLLECTIVE_FULL_PC_COMPONENT_V1",
+  "serial_test_clock_ns": 1.111111,
+  "stalled_case_status": "NOT_JOINED_PENDING_INDEPENDENT_RECEIPT"
+}

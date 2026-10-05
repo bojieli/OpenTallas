@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/tools/build_ds_v41_request_deployment.py", line 34, in <module>
+    raise SystemExit(main())
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/tools/build_ds_v41_request_deployment.py", line 24, in main
+    graph,plan,deployment=build_request_deployment(a.ir,cap,phase=a.phase,
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/request_deployment.py", line 16, in build_request_deployment
+    deployment = lowering.lower_to_abi3(graph, capability, plan=plan, **kwargs)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 335, in lower_to_abi3
+    deployment = emitter.run()
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 523, in run
+    self._emit_sequence(body)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 3537, in _emit_sequence
+    self._emit_kernel(first)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 3683, in _emit_kernel
+    self._check_join_extent(plan, kernel)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 4999, in _check_join_extent
+    phase_layout = self._phase_layout_extents(plan, kernel)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/lower.py", line 4959, in _phase_layout_extents
+    extent, static = join_extent_under(
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/plan.py", line 1506, in join_extent_under
+    extent = request_extent_of(tensor, span_max)
+  File "/tmp/opentallas-ds-request-runtime-popper-20261003/compiler/backends/hbm_sram/plan.py", line 1851, in request_extent_of
+    raise PlanError(
+compiler.backends.hbm_sram.plan.PlanError: tensor 'main.layer02.attention.compressed_view.valid' declares maximum 131072 for 'context_groups_ratio2', but amendment A18's function 1 * 1 / 2 + 0 gives 0; one of the two is wrong and an extent that is silently wrong is what A18 exists to stop

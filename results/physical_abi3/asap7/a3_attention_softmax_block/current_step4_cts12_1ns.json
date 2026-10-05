@@ -1,0 +1,250 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-23T05:12:07.080422+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_a3_attention_softmax_block",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+        "size_bytes": 3047
+      },
+      {
+        "path": "results/rtl/small_divider_step4_current/softmax.sv",
+        "sha256": "343111b1747ae1c2b1c122873364f9372d6bc7407bc848c8f136c8918d732810",
+        "size_bytes": 20484
+      },
+      {
+        "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+        "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+        "size_bytes": 31759
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_seq.sv",
+        "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+        "size_bytes": 6360
+      },
+      {
+        "path": "rtl/lib/ot_wide_div_small_seq.sv",
+        "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+        "size_bytes": 6561
+      },
+      {
+        "path": "rtl/lib/ot_wide_mul_seq.sv",
+        "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+        "size_bytes": 11118
+      }
+    ],
+    "top": "ot_a3_attention_softmax_block"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n94] Start detail routing.\n[INFO DRT-0195] Start 0th optimization iteration.\n    Completing 10% with 0 violations.\n    elapsed time = 00:00:30, memory = 8262.25 (MB).\n    Completing 20% with 0 violations.\n    elapsed time = 00:01:05, memory = 13016.86 (MB).\n    Completing 30% with 4873 violations.\n    elapsed time = 00:01:55, memory = 15307.61 (MB).\n    Completing 40% with 4873 violations.\n    elapsed time = 00:02:14, memory = 15292.72 (MB).\n    Completing 50% with 4873 violations.\n    elapsed time = 00:02:42, memory = 16705.71 (MB).\n    Completing 60% with 9742 violations.\n    elapsed time = 00:03:26, memory = 17382.55 (MB).\n    Completing 70% with 9742 violations.\n    elapsed time = 00:03:58, memory = 17819.46 (MB).\n    Completing 80% with 13389 violations.\n    elapsed time = 00:04:48, memory = 18675.81 (MB).\n    Completing 90% with 13389 violations.\n    elapsed time = 00:05:42, memory = 18548.08 (MB).\n    Completing 100% with 17341 violations.\n    elapsed time = 00:06:50, memory = 18464.98 (MB).\n[INFO DRT-0199]   Number of violations = 22925.\nViol/Layer          M1     V1     M2     V2     M3     V3     M4     V4     M5     V5     M6     V6     M7\nCutSpcTbl            0      0      0      0      0    101      0     35      0    137      0    106      0\nEOL                  0      0   1224      0    201      0     58      0     10      0      7      0      4\nMetal Spacing     2391      0    440      0   1024      0     21      0     23      0    276      0      4\nRecheck              2      0   2541      0   1448      0    539      0    598      0    401      0     55\nShort              601      1   1698     10    210      1     39     45     56     81    487     12     14\neolKeepOut           0      0   6972      0    708      0    248      0     45      0     39      0     12\n[INFO DRT-0267] cpu time = 00:48:31, elapsed time = 00:06:54, memory = 18417.11 (MB), peak = 19930.34 (MB)\nTotal wire length = 707564 um.\nTotal wire length on LAYER M1 = 0 um.\nTotal wire length on LAYER M2 = 220270 um.\nTotal wire length on LAYER M3 = 269203 um.\nTotal wire length on LAYER M4 = 60967 um.\nTotal wire length on LAYER M5 = 22564 um.\nTotal wire length on LAYER M6 = 68900 um.\nTotal wire length on LAYER M7 = 65658 um.\nTotal wire length on LAYER M8 = 0 um.\nTotal wire length on LAYER M9 = 0 um.\nTotal wire length on LAYER Pad = 0 um.\nTotal number of vias = 1198309.\nUp-via summary (total 1198309):\n\n------------------\n Active          0\n     M1     345638\n     M2     634654\n     M3      97364\n     M4      45189\n     M5      43015\n     M6      32449\n     M7          0\n     M8          0\n     M9          0\n------------------\n       1198309\n\n\n[INFO DRT-0195] Start 1st optimization iteration.\n    Completing 10% with 22925 violations.\n    elapsed time = 00:00:37, memory = 19725.13 (MB).\n    Completing 20% with 22925 violations.\n    elapsed time = 00:01:26, memory = 20091.89 (MB).\n    Completing 30% with 16968 violations.\n    elapsed time = 00:02:13, memory = 20638.30 (MB).\n\nElapsed time: 0:02.87[h:]min:sec. CPU time: user 2.60 sys 0.19 (96%). Peak memory: 443348KB.\nElapsed time: 4:24.17[h:]min:sec. CPU time: user 173.76 sys 20.68 (73%). Peak memory: 643216KB.\nElapsed time: 0:02.33[h:]min:sec. CPU time: user 2.07 sys 0.19 (97%). Peak memory: 371244KB.\nElapsed time: 0:01.79[h:]min:sec. CPU time: user 1.41 sys 0.14 (86%). Peak memory: 313552KB.\nElapsed time: 0:03.60[h:]min:sec. CPU time: user 3.13 sys 0.23 (93%). Peak memory: 394796KB.\nElapsed time: 16:13.16[h:]min:sec. CPU time: user 1596.92 sys 1.38 (164%). Peak memory: 596280KB.\nElapsed time: 0:02.84[h:]min:sec. CPU time: user 2.35 sys 0.20 (89%). Peak memory: 392840KB.\nElapsed time: 38:06.09[h:]min:sec. CPU time: user 3865.53 sys 5.28 (169%). Peak memory: 1665396KB.\nElapsed time: 1:03.54[h:]min:sec. CPU time: user 63.74 sys 1.03 (101%). Peak memory: 863952KB.\nElapsed time: 1:32.65[h:]min:sec. CPU time: user 94.91 sys 1.54 (104%). Peak memory: 1116708KB.\nElapsed time: 8:14.04[h:]min:sec. CPU time: user 476.37 sys 23.45 (101%). Peak memory: 1256264KB.\nElapsed time: 21:12.66[h:]min:sec. CPU time: user 2643.68 sys 18.66 (209%). Peak memory: 2503392KB.\nElapsed time: 11:57.26[h:]min:sec. CPU time: user 4530.66 sys 132.75 (650%). Peak memory: 21425048KB.\nmake[1]: *** [Makefile:589: do-5_2_route] Error 247\nmake: *** [Makefile:589: /work/results/asap7/opentallas_ot_a3_attention_softmax_block_asap7/base/5_2_route.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-23T03:19:43.232034+00:00",
+  "git": {
+    "commit": "1059a52327fc8f7b06f4f57891f99dbbc5d44119",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_abi3/asap7/a3_g2_runtime_writer/pnr_cts8_1ns.json",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t2p4_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t3p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/pnr_tight_t4p0_artifacts/",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_baseline_abc2p6.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p2.json",
+      "results/physical_abi3/asap7/a3_lq8_array/prelayout_L3_fixed_abc2p6.json",
+      "results/physical_abi3/asap7/a3_vector_index_score/physical_artifacts/",
+      "results/physical_abi3/asap7/a3_vector_mhc_pre_tile_scheduler/pnr_3p2ns_coverage.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_double_buffer_slew15_0p8.json",
+      "results/physical_abi3/asap7/compute_unit/pnr_frontier_single_buffer_0p8.json",
+      "results/physical_abi3/asap7/lq8_array/",
+      "results/physical_abi3/asap7/recovered_session_experiments.json",
+      "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns.json",
+      "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_artifacts/",
+      "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns_audit.json",
+      "results/physical_abi3/asap7/state_controller/pnr_combinational_modulo_cts12_1ns.json",
+      "results/physical_abi3/asap7/state_controller/pnr_combinational_modulo_cts12_1ns_artifacts/",
+      "results/physical_abi3/asap7/wide_mul_chain/pnr_1p0ns.json",
+      "results/physical_abi3/asap7/wide_mul_chain/pnr_1p0ns_artifacts/",
+      "results/physical_abi3/asap7/wide_mul_tree/pnr_1p0ns.json",
+      "results/physical_abi3/asap7/wide_mul_tree/pnr_1p0ns_artifacts/",
+      "results/rtl/before_adapter_view_payload/",
+      "results/rtl/before_descriptor_capture/",
+      "results/rtl/before_input_resolution/",
+      "results/rtl/before_layout_admission_pipeline/"
+    ],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M compiler/backends/rom/common/program.py",
+      " M results/abi3/nine_cell_token_matrix.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/route_block_max/physical.json",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/route_block_max/physical_artifacts/metadata.json",
+      " M results/physical_abi3/asap7/vector_engram_gate/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/asap7/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical.json",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/dma_ngram_hash/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical.json",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/1_2_yosys.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/route_candidate_mask/physical_artifacts/metadata.json",
+      " M results/physical_abi3/sky130hd/vector_engram_gate/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical.json",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_final.v",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/6_finish.rpt",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/config.mk",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/constraint.sdc",
+      " M results/physical_abi3/sky130hd/vector_fp4kv_dequant/physical_artifacts/metadata.json",
+      " M results/rtl/a3_v41_block_max_campaign.json",
+      " M results/rtl/a3_v41_candidate_mask_campaign.json",
+      " M results/rtl/small_divider_scratch_reset/default_step10/comparison.json",
+      " M rtl/abi3/ot_a3_wafer_multicast_adapter.sv",
+      " M tools/abi3_g1_models.py",
+      " M tools/run_accelerator_tokens.py",
+      "?? configs/hardware/abi3_capability/rom_deepseek_v41_reduced_array_12_comparator.json",
+      "?? configs/hardware/abi3_capability/rom_deepseek_v41_wafer_reduced_comparator.json",
+      "?? docs/ASAP7_OPTIMIZATION_CONTINUATION.md",
+      "?? rtl/proto/ot_compute_unit_gemm.sv"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_a3_attention_softmax_block",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "results/rtl/small_divider_step4_current/softmax.sv",
+      "--source",
+      "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--source",
+      "rtl/lib/ot_wide_div_seq.sv",
+      "--source",
+      "rtl/lib/ot_wide_div_small_seq.sv",
+      "--source",
+      "rtl/lib/ot_wide_mul_seq.sv",
+      "--clock-period-ns",
+      "1",
+      "--stages",
+      "pnr",
+      "--cts-cluster-size",
+      "12",
+      "--max-fanout",
+      "16",
+      "--max-transition-ns",
+      "library",
+      "--core-utilization",
+      "25",
+      "--output",
+      "results/physical_abi3/asap7/a3_attention_softmax_block/current_step4_cts12_1ns.json",
+      "--keep-workdir",
+      "build/softmax_current_step4_cts12_1ns"
+    ],
+    "driver": {
+      "commit": "1059a52327fc8f7b06f4f57891f99dbbc5d44119",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/OpenTallas/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "d404183b351e6ce99f069c98a1d79bd64ec4ea654bb85cc76603611c9ae38a63",
+      "tree": "/home/ubuntu/OpenTallas"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/OpenTallas"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 1.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

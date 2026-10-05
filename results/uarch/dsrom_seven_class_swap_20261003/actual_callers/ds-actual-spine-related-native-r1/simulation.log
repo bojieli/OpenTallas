@@ -1,0 +1,6 @@
+EVENT request t=345000 addr=0 cookie=0
+EVENT reply t=423000 cookie=0
+EVENT request t=477000 addr=64 cookie=64
+EVENT reply t=525000 cookie=0
+FATAL: /tmp/ds-actual-spine-related-native-r1/sources/0_tb.sv:63: directed event bound
+       Time: 200000000 Scope: tb

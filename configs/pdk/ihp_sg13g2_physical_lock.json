@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "purpose": "independent foundry-backed open-PDK replication of the local ROM methodology; never a target-node scaling anchor",
+  "pdk": {
+    "family": "ihp-open-pdk",
+    "variant": "ihp-sg13g2",
+    "release": "v0.3.0",
+    "release_published_utc": "2026-03-11T13:57:24Z",
+    "repository": "https://github.com/IHP-GmbH/IHP-Open-PDK.git",
+    "commit": "5cccb161f7492697cfa52eb14dc03beb00bdca9e",
+    "public_status": "preview",
+    "process_role": "manufacturable 0.13 um SiGe BiCMOS process with 1.2 V thin-oxide CMOS; public PDK preview used only for independent local topology and methodology replication",
+    "submodules": {
+      "ihp-sg13g2/libs.tech/digital": "9a6e7c9d404f9f4334513a24788aa8454918d400",
+      "ihp-sg13g2/libs.tech/klayout/python/pycell4klayout-api": "4c463c43991fb0967a824906518b66047bfb33c4",
+      "ihp-sg13g2/libs.tech/klayout/python/pypreprocessor": "cf1ff9bad0fb5338cf1c5b990b2b816b1ea01a64",
+      "ihp-sg13g2/libs.tech/openems/openems_ihp_sg13g2": "e29417aa1e5fb97b4ebd27dd1e4fcf043f97ef63",
+      "ihp-sg13g2/libs.tech/palace": "bb0edb0fb73b242db3f3bb6a552a47f4c32890d4"
+    },
+    "installed_tree": {
+      "regular_files": 5120,
+      "symlinks": 1,
+      "gitlinks": 5,
+      "payload_entries": 5121,
+      "semantic_records": 5126,
+      "payload_bytes": 812058771,
+      "manifest_algorithm": "sha256 of lexically sorted UTF-8 records over every tracked regular file and symlink in the superproject and initialized submodules plus each gitlink; records contain logical path, semantic type, Git mode, size and file/target sha256 or gitlink commit; Git administrative files are excluded; every repository must be pristine",
+      "manifest_sha256": "4f68be98efe69635e11b412296e54300f70b5d583cabc4cd0d5a8659e7943ae3"
+    },
+    "physical_decks": {
+      "magic_rc": {
+        "path": "ihp-sg13g2/libs.tech/magic/ihp-sg13g2.magicrc",
+        "sha256": "e6bed4232a25ade95505db29201d7b053ab98e7e2cab5801dd8f60652d5de819"
+      },
+      "magic_technology": {
+        "path": "ihp-sg13g2/libs.tech/magic/ihp-sg13g2.tech",
+        "sha256": "13c82e848a6c78dee1e5bb818c9b19d94a817ae41d864cce1f3bc84b84ce41a7"
+      },
+      "magic_drc": {
+        "path": "ihp-sg13g2/libs.tech/magic/ihp-sg13g2-drc.tech",
+        "sha256": "7ccf0a9cfa06cd68ff4d0bc00846f2526ead9d37c31028f4af0dcb259f0d4d97"
+      },
+      "magic_extract": {
+        "path": "ihp-sg13g2/libs.tech/magic/ihp-sg13g2-extract.tech",
+        "sha256": "9f6ffa0c4dfa44b2422d7829b429f524a965709e89c0c3eede0ac52919fd3bda"
+      },
+      "netgen_setup": {
+        "path": "ihp-sg13g2/libs.tech/netgen/ihp-sg13g2_setup.tcl",
+        "sha256": "9981101e0bbe9d8f6af656f03475d0d00fb7507559645e85e4d9d5f704b3878e"
+      }
+    }
+  },
+  "tools": {
+    "magic": {
+      "repository": "https://github.com/RTimothyEdwards/magic.git",
+      "commit": "17ac06a24a952380ade3a7d33cd2f0c3943dfc12",
+      "version": "8.3.674",
+      "pdk_minimum_version": "8.3.573"
+    },
+    "netgen_lvs": {
+      "repository": "https://github.com/RTimothyEdwards/netgen.git",
+      "tag": "1.5.322",
+      "commit": "5e48c4e8762d7b58e296b59392572633ba9b184d",
+      "version": "1.5.322"
+    },
+    "ngspice": {
+      "version": "43",
+      "source_url": "https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/43/ngspice-43.tar.gz/download",
+      "source_sha256": "14dd6a6f08531f2051c13ae63790a45708bd43f3e77886a6a84898c297b13699",
+      "source_size_bytes": 10279606,
+      "configure": [
+        "--enable-osdi",
+        "--with-x=no",
+        "--with-readline=yes"
+      ],
+      "executable_sha256": "ae32c8d9862d2b8611e133a7bf055dd6b1c5c760a208728456987b1eadd1f2d0",
+      "executable_size_bytes": 8110504
+    },
+    "openvaf": {
+      "version": "23.5.0",
+      "repository": "https://github.com/pascalkuthe/OpenVAF.git",
+      "tag": "OpenVAF-v23.5.0",
+      "commit": "d4079e776f4b54b23e158b7857c4e238e5cacd05",
+      "upstream_binary_url": "https://openva.fra1.cdn.digitaloceanspaces.com/openvaf_23_5_0_linux_amd64.tar.gz",
+      "upstream_binary_archive_sha256": "79c0e08ad948a7a9f460dc87be88b261bbd99b63a4038db3c64680189f44e4f0",
+      "source_patch": {
+        "path": "tools/patches/openvaf-23.5.0-target-cpu.patch",
+        "sha256": "15e2a788c3078c194116a51a5f31d0457f826f28ae5ce87d873c5e3408ba3e93",
+        "scope": "fix the Clap String-to-&str conversion in --target_cpu so the documented generic target works; no compiler backend or model semantics are changed"
+      },
+      "executable_sha256": "1b4417e5faad179e3a3abe7eb6ef03f23f95edeb31bf2c5167ca74082a0c3fb3",
+      "executable_size_bytes": 239991808,
+      "rust_toolchain": "1.64.0",
+      "compile_command": "LLVM_CONFIG=<pinned LLVM>/bin/llvm-config cargo build --release --bin openvaf"
+    },
+    "llvm": {
+      "version": "15.0.7",
+      "archive_url": "https://openva.fra1.cdn.digitaloceanspaces.com/llvm-15.0.7-x86_64-unknown-linux-gnu.tar.zst",
+      "archive_sha256": "fec7009230510cbc9e745a7e2e1f51eb74b7dc7c2682760f338a87d7aa48820a",
+      "archive_size_bytes": 30052042,
+      "llvm_config_sha256": "48e6ca87ff254d2dd38506fb07f0cf0f9563a7b16e1e4ce6cdbed12c8a6d9008"
+    },
+    "host_llvm_drivers": {
+      "version": "1:15.0.7-0ubuntu0.22.04.3",
+      "clang_sha256": "22f8651e4eba296325daed391a432b11c3db82d8166da127ccb43b4f6f229e18",
+      "lld_sha256": "382a6b6fce4424a6bf4ec18b25ea37c8d606eaf7cfbea8c14396ade0500b9486",
+      "scope": "build-host clang-cl and lld drivers required by the pinned OpenVAF build; not target transistor evidence"
+    }
+  },
+  "osdi_models": {
+    "compiler_defines": [
+      "__NGSPICE__"
+    ],
+    "target_cpu": "generic",
+    "output_location_boundary": "generated OSDI modules are stored outside the immutable PDK checkout",
+    "models": {
+      "psp103": {
+        "source": "ihp-sg13g2/libs.tech/verilog-a/psp103/psp103.va",
+        "source_sha256": "127be82891919323e60eec7ae02b0c034b396800884e8daf5561c9d3588684ba",
+        "output_sha256": "97b6aeb215fbe98b6cb6ad71e4fbf50a468955e8530895e75cd603b09ef21091",
+        "output_size_bytes": 725928
+      },
+      "psp103_nqs": {
+        "source": "ihp-sg13g2/libs.tech/verilog-a/psp103/psp103_nqs.va",
+        "source_sha256": "5612aa9e75aa467e320f19db7cc40f01dbb9a81212e9660e3939cf3bc2cac00d",
+        "output_sha256": "e82230ea41719cac2d9bfccf06d235d4a7d6b0530d9383af2ea4d6cb33b1f84d",
+        "output_size_bytes": 1124704
+      },
+      "r3_cmc": {
+        "source": "ihp-sg13g2/libs.tech/verilog-a/r3_cmc/r3_cmc.va",
+        "source_sha256": "398746f45048a9e075913e85a982258b929c9042257339bf1fc47d7e25303551",
+        "output_sha256": "ad6b78a518677111dccc920007b9a7b2024d2625383fd8311ebc336a1522c009",
+        "output_size_bytes": 117144,
+        "expected_compile_warnings": 3
+      },
+      "mosvar": {
+        "source": "ihp-sg13g2/libs.tech/verilog-a/mosvar/mosvar.va",
+        "source_sha256": "146eec0c2a9c3c437c53109f8ec42af68f75bd9d341e79797d2feda0340a19f6",
+        "output_sha256": "b62bae8ecbdada070a4c6524b015b11a69e0810a26f76873954b8175fa90eb12",
+        "output_size_bytes": 101536
+      }
+    }
+  },
+  "claim_boundary": {
+    "establishes": [
+      "a pristine and semantically locked public IHP SG13G2 release",
+      "portable generic-x86-64 compilation of every official IHP ngspice Verilog-A model",
+      "an independent official-device simulation path before ROM-layout replication"
+    ],
+    "forbidden_inferences": [
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "target-foundry late-via personalization availability or mask economics",
+      "whole-wafer inference throughput or GPU speedup",
+      "production signoff or silicon-yield qualification"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  }
+}

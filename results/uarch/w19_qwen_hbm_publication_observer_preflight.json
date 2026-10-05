@@ -1,0 +1,43 @@
+{
+  "adoption": false,
+  "analytical_replay": true,
+  "enabled_by_default": false,
+  "equivalent_r4_generator_revision": "577d195ba2ed090f609e751d80809b957ba38a1a",
+  "exact_RTL": false,
+  "full_token": false,
+  "geometry": {
+    "banks_per_die": 32,
+    "dies": 2,
+    "epoch_bits": 16,
+    "publication_capacity_per_bank": 256,
+    "readers_per_bank": 36,
+    "row_bits": 18,
+    "rows_in_QKV_window": 96,
+    "ticket_bits": 16
+  },
+  "model_engine_build_ready": false,
+  "new_hardware": false,
+  "observation_only": "Trace events must come from actual dispatch, matching commits, readissue, macroresponse, consumercompletion andretire. Offline modelchecks metadata only; it never supplies publication state or numerical data toDUT and cannot prove authenticity ofsource events.",
+  "owner_commit_sequence": [
+    "86c7a2ea5",
+    "07a07ec5d",
+    "66aa67ed1",
+    "e6eafa055",
+    "d79fdf6e5",
+    "78b8f19ae"
+  ],
+  "passive_read_observer_limit": "Existingrawobserver checksrow/epoch/duplicate andbytes butdoesnotprove storedpublication, actualwritecommit orreaderfences. Bothrealpublicationeventtrace andacceptednumericalboundarytrace required; neitherexistsfromthishelper.",
+  "publication_reference_revision": "66aa67ed13ca6827fe7db6d05e32f9c50ad17dfc",
+  "publication_reference_sha256": "86a89b34f78e85aedd06f9bdc105e6e3809cfb46107c8aa90899999a19ea5084",
+  "scenario_count": 90,
+  "schema": "opentallas.w19-qwen-publication-observation-preflight.v1",
+  "source_binding_scope": "Verification_R4 hash andallmodelinputpins verifiedfromgitobjects only; no ninety-case replay or productioncampaign duplicated.",
+  "source_revision": "78b8f19ae050082097deb67019d0272d789610c9",
+  "source_sha256": {
+    "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c",
+    "results/uarch/common_gpu_sector_crossbar_20261001/verification_r4.json": "75427915266000dd95756a92fbd8a750e2eadd3cd250d89fc9ca20708a942db9",
+    "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979",
+    "tools/qwen_l2_publication_contract.py": "86a89b34f78e85aedd06f9bdc105e6e3809cfb46107c8aa90899999a19ea5084"
+  },
+  "status": "HOST_TRACE_ADAPTER_ONLY_OWNER_RTL_BUILD_BLOCKED"
+}

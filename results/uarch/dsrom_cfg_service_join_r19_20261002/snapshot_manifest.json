@@ -1,0 +1,54 @@
+{
+  "archive_sha256": "100187c78f6ba79d3baeb6febbff30ed24b08f4651e6e87e8b50f1cdb0ec6c0d",
+  "entries": [
+    {
+      "bytes": 19833,
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "member": "interface.json",
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/interface.json",
+      "sha256": "4a610084dc95fc45fc7f87bd4fc1962f496f93b316e22fc78b324310831e3eb1"
+    },
+    {
+      "bytes": 3045517,
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "member": "phase_directory.jsonl.gz",
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/phase_directory.jsonl.gz",
+      "sha256": "964cc4c64f9c795cd20e194392f22d93e4b1fffeaefd93db971666096d64a192"
+    },
+    {
+      "bytes": 175468,
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "member": "key_tables.jsonl.gz",
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/key_tables.jsonl.gz",
+      "sha256": "7f85393928143ecbdab5f5b74617db07e31493142426583a5f4ba6f683b599cb"
+    },
+    {
+      "bytes": 3512,
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "member": "immutable_provider_directory.jsonl.gz",
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/immutable_provider_directory.jsonl.gz",
+      "sha256": "3897e59a03e34ffa4a69fc87f4fa5d70c77b869c311730f041731bcef1364bd6"
+    },
+    {
+      "bytes": 895,
+      "commit": "f6073fffddebb24b0c6dc8bbea17440c6c10dbf4",
+      "member": "FP4_ECC_provider_directory.jsonl.gz",
+      "path": "results/uarch/dsrom_owner_cfg_interface_20261002/export_r1/FP4_ECC_provider_directory.jsonl.gz",
+      "sha256": "e86e6b1cf6743a2a8ee192862db1e60d7f06c561f4c4c88293403f82bcd32072"
+    },
+    {
+      "bytes": 708142,
+      "commit": "2d6e75fd9407840e82e97d7edf8dc54e32e795a0",
+      "member": "demand-r5.json.gz",
+      "path": "results/uarch/dsrom_full_product_binding_20261002/demand-r5.json.gz",
+      "sha256": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f"
+    },
+    {
+      "bytes": 4841,
+      "commit": "2d6e75fd9407840e82e97d7edf8dc54e32e795a0",
+      "member": "calendar_provider_gaps-r5.json",
+      "path": "results/uarch/dsrom_full_product_binding_20261002/calendar_provider_gaps-r5.json",
+      "sha256": "99b84c5cea251cc2b02d624b6e373733fd367928768f5fbb5c5052367fe9fe17"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+%Warning-WIDTHEXPAND: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:40:90: Bit extraction of array[23:0] requires 5 bit index, not 3 bits.
+                                                                                                : ... note: In instance 'tb.dut'
+   40 |  if(tokx_v&&base_s)if(tokx_lease!=key||tokx_slot==0||tokx_slot>gamma||tokx_tok>=129280||d[tokx_slot][21])bad=1;
+      |                                                                                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:48:113: Bit extraction of array[23:0] requires 5 bit index, not 3 bits.
+                                                                                                 : ... note: In instance 'tb.dut'
+   48 |  if(d[SQ][49])if(phase!=COLLECT||d[SQ][24:0]!=key||d[SQ][25+:3]==0||d[SQ][25+:3]>gamma||d[SQ][28+:21]>=129280||d[d[SQ][25+:3]][21])bad=1;
+      |                                                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:66:22: Bit extraction of array[23:0] requires 5 bit index, not 3 bits.
+                                                                                                : ... note: In instance 'tb.dut'
+   66 |  if(d[SQ][49])begin n[d[SQ][25+:3]]=0;n[d[SQ][25+:3]][20:0]=d[SQ][28+:21];n[d[SQ][25+:3]][21]=1;n[SQ][49]=0;end
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:66:40: Bit extraction of array[23:0] requires 5 bit index, not 3 bits.
+                                                                                                : ... note: In instance 'tb.dut'
+   66 |  if(d[SQ][49])begin n[d[SQ][25+:3]]=0;n[d[SQ][25+:3]][20:0]=d[SQ][28+:21];n[d[SQ][25+:3]][21]=1;n[SQ][49]=0;end
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:66:76: Bit extraction of array[23:0] requires 5 bit index, not 3 bits.
+                                                                                                : ... note: In instance 'tb.dut'
+   66 |  if(d[SQ][49])begin n[d[SQ][25+:3]]=0;n[d[SQ][25+:3]][20:0]=d[SQ][28+:21];n[d[SQ][25+:3]][21]=1;n[SQ][49]=0;end
+      |                                                                            ^
+%Warning-CMPCONST: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv:39:35: Comparison is constant due to limited range
+                                                                                             : ... note: In instance 'tb.dut'
+   39 |  if(start_v&&base_start)if(start_g>7||start_tok>=129280||({1'b0,start_pos}+{19'b0,start_g}>22'd2097151))bad=1;
+      |                                   ^
+                   ... For warning description see https://verilator.org/warn/CMPCONST?v=5.050
+                   ... Use "/* verilator lint_off CMPCONST */" and lint_on around source to disable this message.
+%Warning-CMPCONST: rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_source_holders.sv:21:46: Comparison is constant due to limited range
+                                                                                             : ... note: In instance 'tb.holder'
+   21 |  if((i==0&&p_slot[3*i+:3]==0)||p_slot[3*i+:3]>7)bad=1;
+      |                                              ^
+%Error: Exiting due to 7 warning(s)

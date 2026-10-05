@@ -1,0 +1,249 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "mistral-small-4-119b",
+ "repo": "mistralai/Mistral-Small-4-119B-2603",
+ "revision": "a11f36bebf709121056b1dbcc943d1c6afbe494d",
+ "original_repo": "mistralai/Mistral-Small-4-119B-2603",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "113ea221dcf0dc7adc2af52ad84933a5830b663b679a4753a78a98f757de8737",
+ "index_sha256": "30f9eae8bd2738cad0cd3bd4f7db8e3aac177f2b644bba0ff35a46a15efc8f39",
+ "shards": 3,
+ "tensors": 1485,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 3042905216,
+  "F8_E4M3": 117879865344
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "mistral4",
+ "architectures": [
+  "Mistral3ForConditionalGeneration"
+ ],
+ "layers": 36,
+ "hidden": 4096,
+ "heads": 32,
+ "kv_heads": 32,
+ "head_dim": 128,
+ "vocab": 131072,
+ "tied_embeddings": false,
+ "max_context": 1048576,
+ "intermediate": 12288,
+ "moe_intermediate": 2048,
+ "moe": {
+  "experts": 128,
+  "top_k": 4,
+  "shared": 1
+ },
+ "params": {
+  "dense_layers": 1934967808,
+  "routed": 115964116992,
+  "embed": 536870912,
+  "head": 536870912,
+  "mtp": 0,
+  "vision": 428472320,
+  "total_text": 118972826624,
+  "total_all": 119401298944,
+  "active_per_token": 6095717376,
+  "active_routed": 3623878656,
+  "head_streamed": 536870912
+ },
+ "header_bytes": {
+  "head": 1073741824,
+  "embed": 1073741824,
+  "dense": 1954188416,
+  "routed": 115964153856,
+  "vision": 856944640
+ },
+ "layer_count_in_headers": 36,
+ "kv_layers": [
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  },
+  {
+   "kind": "mla",
+   "bytes_per_pos": 320,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle": "mistralai/Mistral-Small-4-119B-2603-eagle"
+ },
+ "quantization": "fp8"
+}

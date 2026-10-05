@@ -1,0 +1,22 @@
+{
+  "DBU_per_um": 1000,
+  "ODB_sha256": "5014f27a0ba5f3aaa15e3e4393f958320426e742ea7267a801226f5d5931a47d",
+  "PG_shape_counts": {
+    "VDD": 977534,
+    "VSS": 987102
+  },
+  "PG_vias_missing_layer": {
+    "VDD": 731406,
+    "VSS": 738571
+  },
+  "current_ROM_exclusion_credit": false,
+  "die_DBU": [
+    0,
+    0,
+    1400000,
+    1640000
+  ],
+  "geometry_sha256": "62502d2dddc54f1e76d7c107338f0b965be07033ef2c474757d47fd94dc4af90",
+  "macro_instances": 168,
+  "qualification": "GPU HBM parent; no S58 ROM instance/source match. No PG or via placement transfer."
+}

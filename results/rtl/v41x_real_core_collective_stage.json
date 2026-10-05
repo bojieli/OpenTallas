@@ -1,0 +1,173 @@
+{
+  "claim_boundary": "Reduced 4-rank, two-package RTL stage gate: adopted V4.1x X_SU=1 core produces rank0 partials and consumes committed rank0 results; other three rank producers are deterministic synthetic sources. Four real one-shot engines and finite queues/credit links run with modeled delays. The same single core executes producer then consumer instructions, while consumer words overlap later network output. Core vector memory, link PHY, and other rank producers are behavioral; this does not establish full-model, whole-rack, or production throughput closure.",
+  "configurations": [
+    {
+      "binary_sha256": "668a686a4456a8796599f299343ef96c898f47d661ba2fed63bee2d6baa7dfde",
+      "checker": {
+        "collective_fault": 0,
+        "consumed_words": 8,
+        "core_fault": 0,
+        "cycles": 1126,
+        "mismatches": 0,
+        "produced_words": 8,
+        "ranks": [
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 852,
+            "qmax": 2,
+            "rank": 0,
+            "stall": 568
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 881,
+            "qmax": 2,
+            "rank": 1,
+            "stall": 597
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 855,
+            "qmax": 2,
+            "rank": 2,
+            "stall": 571
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 852,
+            "qmax": 2,
+            "rank": 3,
+            "stall": 568
+          }
+        ],
+        "read_before_write": 0,
+        "reduced_words_per_rank": 8,
+        "timeout": 0
+      },
+      "cross_package_link_delay_cycles": 142,
+      "docker_container": "otjob-v41x-real-stage-pinned142",
+      "docker_exit_code": 0,
+      "finished_utc": "2026-09-28T01:34:02.369699809Z",
+      "full_log": "results/rtl/v41x_real_core_stage_rankwise142.log",
+      "full_log_sha256": "3bc858097d5c4850b105c0031f45e48121048411ae87b08ed9ba3a7bd215b715",
+      "image_sha256": {
+        "consumed.hex": "9159925132ebbaab02bae71cedce02196ee52d63cd5853294fd5d00d0141ba44",
+        "expect.hex": "7b8c5eb3e1fe702f2a7abc600a4278d1380e01572ed06c65197d649726ff87da",
+        "init.hex": "73a58dba97127bc0cfcd60438078d68e8176a52e2fef250cf34e7596236c42b7",
+        "part.hex": "c1c5adffa84823f6956ed8eaecb57dccf713e2800bc0bf4beb1b5b9514dbfed3",
+        "program.hex": "3350ee7982a0a892e60e39e2f4287149df7091d7bd8cf288300021585fd36851"
+      },
+      "origin_build_log": "results/rtl/v41x_real_core_stage_build142.log",
+      "origin_build_log_sha256": "969359702ff96595a6495d856495c9d17e92cc5824caffe0f750abbad16709bc",
+      "origin_build_result": "results/rtl/v41x_real_core_stage_origin142.json",
+      "origin_build_result_sha256": "c41699077eb2c59073194fdbae8d2bf0d36b66f8a060e94bde7d4542002c65f2",
+      "result_file": "results/rtl/v41x_real_core_stage_rankwise142.json",
+      "result_sha256": "99711c0fb26db4b108f54e347ec7c98edce202eeea6c1e548199f092c779027a",
+      "same_package_link_delay_cycles": 11,
+      "source_count": 67
+    },
+    {
+      "binary_sha256": "9d6922b6066fe2e31ae5d91547c61f77d3b0cf27125606c7e0f0b2e2ccffdbad",
+      "checker": {
+        "collective_fault": 0,
+        "consumed_words": 8,
+        "core_fault": 0,
+        "cycles": 1728,
+        "mismatches": 0,
+        "produced_words": 8,
+        "ranks": [
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 1368,
+            "qmax": 2,
+            "rank": 0,
+            "stall": 912
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 1397,
+            "qmax": 2,
+            "rank": 1,
+            "stall": 941
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 1371,
+            "qmax": 2,
+            "rank": 2,
+            "stall": 915
+          },
+          {
+            "accepted": 8,
+            "code": 0,
+            "delivered": 8,
+            "fault": 0,
+            "hold": 1368,
+            "qmax": 2,
+            "rank": 3,
+            "stall": 912
+          }
+        ],
+        "read_before_write": 0,
+        "reduced_words_per_rank": 8,
+        "timeout": 0
+      },
+      "cross_package_link_delay_cycles": 228,
+      "docker_container": "otjob-v41x-real-stage-pinned228",
+      "docker_exit_code": 0,
+      "finished_utc": "2026-09-28T01:34:02.940114126Z",
+      "full_log": "results/rtl/v41x_real_core_stage_rankwise228.log",
+      "full_log_sha256": "0b72fcf47e4b9d9893e583af1e8809a5ebad6aaa4670b07fbeca2fcfdf1b5f75",
+      "image_sha256": {
+        "consumed.hex": "9159925132ebbaab02bae71cedce02196ee52d63cd5853294fd5d00d0141ba44",
+        "expect.hex": "7b8c5eb3e1fe702f2a7abc600a4278d1380e01572ed06c65197d649726ff87da",
+        "init.hex": "73a58dba97127bc0cfcd60438078d68e8176a52e2fef250cf34e7596236c42b7",
+        "part.hex": "c1c5adffa84823f6956ed8eaecb57dccf713e2800bc0bf4beb1b5b9514dbfed3",
+        "program.hex": "3350ee7982a0a892e60e39e2f4287149df7091d7bd8cf288300021585fd36851"
+      },
+      "origin_build_log": "results/rtl/v41x_real_core_stage_build228.log",
+      "origin_build_log_sha256": "b39357fa86d178c8abc23ae7a3b98b04fdbaeef9be2a9697dcbf8164f50036e7",
+      "origin_build_result": "results/rtl/v41x_real_core_stage_origin228.json",
+      "origin_build_result_sha256": "dc5ab19e08d0127b1f0cb53dc7d5f9fc298a70e383d48c9d10e8fdefd2ef57fe",
+      "result_file": "results/rtl/v41x_real_core_stage_rankwise228.json",
+      "result_sha256": "ade817ef62dba4e32b2e99dc56fa38b4cbc9fcade8721331c0dda187cb8929b2",
+      "same_package_link_delay_cycles": 11,
+      "source_count": 67
+    }
+  ],
+  "cross_package_bytes_per_cycle": "157.58",
+  "docker_image_sha256": "760104a7f8f31f970fb3c1ff5bf91cfa0cb79ace21ada4454b157421df715555",
+  "fp_simulation": "bit-equivalent DPI FP stand-ins in the adopted V4.1x core; actual ot_rom_oneshot_die rank-order FP32 arithmetic",
+  "input_queue_depth": 2,
+  "lanes_per_word": 16,
+  "oracle": "Each rank, word, and lane has a distinct exactly representable FP32 integer; exact rank-order sum and core consumer +1 are checked bit for bit.",
+  "rank_count": 4,
+  "receive_fifo_depth": 2,
+  "remote_host": "ot-pve1",
+  "same_package_bytes_per_cycle": "3864",
+  "schema": "opentallas.rtl.v41x_real_core_collective_stage.v1",
+  "source_commit": "f91fd3a77b1b0cd64ccdc4303deac09370e28ce3",
+  "status": "pass",
+  "word_count": 8
+}

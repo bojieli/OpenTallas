@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.qwen3-dflash-int8-acceptance-summary.v1",
+ "summary_tool_sha256": "2f22c935483ace7ffad481debd02a73581101ce377b011e318b848010996ecf6",
+ "source_record": "results/speculative/qwen3_o4_tp2_int8_reasoning_2k.json",
+ "source_record_sha256": "816d3f53916b3927129405a3d7c098f4155ac796625c69c22c7ebab28e8ee85f",
+ "scope": "Bounded greedy acceptance of a signed-INT8/FP8 TP-2 target with a per-row INT8 drafter. Not a routed RTL throughput or nine-workload production tau.",
+ "measurement": {
+  "post_prefill_tokens": 4094,
+  "int8_verify_cycles": 1375,
+  "bf16_verify_cycles_at_matched_output_length": 1366,
+  "int8_tau": 2.9774545454545454,
+  "bf16_prefix_tau": 2.9970717423133237,
+  "int8_over_bf16_tau": 0.9934545454545455
+ },
+ "ci95_prompt_bootstrap_stratified_by_workload": {
+  "reason": "At least two prompts per workload are needed for a stratified prompt bootstrap."
+ },
+ "sample": {
+  "prompts": 2,
+  "workloads": {
+   "reasoning_humaneval": 1,
+   "reasoning_math500": 1
+  },
+  "max_new_tokens": 2048,
+  "block": 5
+ },
+ "limitations": [
+  "The paired BF16 reference is the prefix of a 2048-token BF16 run on the same prompts; target arithmetic can change the later greedy trajectory.",
+  "DFlash's released block-16 drafter runs at block 5 outside its training distribution.",
+  "The INT8 drafter follows the released separate q/k/v and context K/V calls, with per-linear K-splits and BF16 output boundaries; its non-matrix operations are the released BF16 implementation. A matching TP-2 drafter program and RTL timing gate are pending.",
+  "The prompt subset excludes the longest agentic contexts and does not support replacing the nine-workload production tau."
+ ]
+}

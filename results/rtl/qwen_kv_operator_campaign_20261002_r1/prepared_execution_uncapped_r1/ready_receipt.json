@@ -1,0 +1,28 @@
+{
+  "status": "READY_REVIEWED_GO_REQUIRED_NO_EXECUTION",
+  "source_commit": "796508cad2877dd42238050e3b66afbd81002879",
+  "source_dependency": "5784f3727f6f7db3de5689ba2703e664180d1b6f plus796508cad",
+  "historical_evidence": "ccdb0efbc preserved; superseded hard-cap recipe must not execute",
+  "proposal_sha256": "0ac72c8803d1744ece5da2ac0350d74f057c12bc493e3044fc6a1563c48619c6",
+  "GO_template_sha256": "fb6cd30e1e46eb21b1e17170907deb4f3d56c6bb1a9936599c42c72ddd2ead84",
+  "model_sha256": "f83eadc546b1b9b530c00abe839e816ce83bf9362022ca5117d1f8b04da7aff5",
+  "local_tests": "24PASS19.435s",
+  "lease_keeper_PID": 2283193,
+  "fresh_MemAvailable_bytes": 110154289152,
+  "fresh_disk_available_bytes": 988545736704,
+  "memory_reservation_bytes": 34359738368,
+  "memory_limit": null,
+  "swap_limit": null,
+  "OOM_forced_stop": false,
+  "production_lifecycle_qualified": false,
+  "native_decode": false,
+  "physical_credit": false,
+  "setup_note": "VM skip-worktree bits initially prevented checkout; cleared only five changed paths, clean checkout successful. Old22-test run not counted for newsource; fresh24test replay follows.",
+  "VM_tests": "24PASS38.653s",
+  "VM_tests_raw_tail": [
+    "----------------------------------------------------------------------",
+    "Ran 24 tests in 38.653s",
+    "",
+    "OK"
+  ]
+}

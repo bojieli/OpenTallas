@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.qwen-rom-allreduce-oneseg-measured.v1",
+ "source_commit": "c5ae2f69dcd64f042d1c75d0d0d92c3005295605",
+ "host": "ot-pve1 /home/ubuntu/qar1",
+ "status": "pass",
+ "runs": {
+  "A": {
+   "result": "runtime/runA_split128_d1024.json",
+   "ar256_images": false,
+   "coll_depth": 1024,
+   "binary_sha256": "621b1e41f0873d012cb547b02daf9b3cce862837916a58dd100cb090126d0984",
+   "cycles": {
+    "L0": 4669,
+    "L1": 4668
+   },
+   "x_sha256": {
+    "L0_die0_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die1_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die2_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die3_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L1_die0_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die1_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die2_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die3_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df"
+   },
+   "mismatches": 0,
+   "source_stable": true
+  },
+  "B": {
+   "result": "runtime/runB_one256_d1024.json",
+   "ar256_images": true,
+   "coll_depth": 1024,
+   "binary_sha256": "621b1e41f0873d012cb547b02daf9b3cce862837916a58dd100cb090126d0984",
+   "cycles": {
+    "L0": 3931,
+    "L1": 3930
+   },
+   "x_sha256": {
+    "L0_die0_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die1_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die2_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die3_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L1_die0_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die1_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die2_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die3_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df"
+   },
+   "mismatches": 0,
+   "source_stable": true
+  },
+  "C": {
+   "result": "runtime/runC_one256_d256.json",
+   "ar256_images": true,
+   "coll_depth": 256,
+   "binary_sha256": "21ae04cbdfc6aeac816bfe5585c5a7d56c85030df6070e6297e447cf1201649a",
+   "cycles": {
+    "L0": 3931,
+    "L1": 3930
+   },
+   "x_sha256": {
+    "L0_die0_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die1_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die2_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L0_die3_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+    "L1_die0_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die1_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die2_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+    "L1_die3_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df"
+   },
+   "mismatches": 0,
+   "source_stable": true
+  }
+ },
+ "retained_terminal": {
+  "cycles": {
+   "L0": 4669,
+   "L1": 4668
+  },
+  "x_sha256": {
+   "L0_die0_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "L0_die1_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "L0_die2_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "L0_die3_x": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47",
+   "L1_die0_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+   "L1_die1_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+   "L1_die2_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df",
+   "L1_die3_x": "bd9051639f28c6d35521a148ac88a01d1b165741b73944e9e69f58d5c103b4df"
+  }
+ },
+ "bit_exact_vs_retained": true,
+ "baseline_reproduces_retained_cycles": true,
+ "measured_saved_per_layer": 738,
+ "measured_saved_per_allreduce": 369,
+ "token_projection": {
+  "now": 171090,
+  "layers": 36,
+  "projected": 144522,
+  "saved_fraction": 0.1553,
+  "per_user_rate_gain": 0.1838,
+  "basis": "measured L1 delta x 36 layers (every layer runs the same program); head stage (argmax all-gather) unchanged; full token not run"
+ },
+ "claim_boundary": "TP4 W12 companion runtime (qwen_rom_rt_w12.cpp), position 0, host-serviced, L0+L1 only; collective DEPTH 256 and 1024 both stall-free. Physical: no RTL change; macro FIFO not implemented."
+}

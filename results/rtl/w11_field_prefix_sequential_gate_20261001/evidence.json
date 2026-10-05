@@ -1,0 +1,550 @@
+{
+  "adoption": false,
+  "census_commit": "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+  "compile_seconds": [
+    3.022,
+    3.121,
+    3.12,
+    2.92,
+    3.021
+  ],
+  "counts_three_seed_candidate": {
+    "async_resets": 216,
+    "checked_samples": 26565,
+    "clock_cycles": 26349,
+    "random_clock_cycles": 24678,
+    "reset_held_edges": 198
+  },
+  "directed_scope": {
+    "FP": [
+      "zero/sign/cancellation",
+      "subnormal operand/result",
+      "halfway rounding even/odd",
+      "round carry",
+      "overflow",
+      "NaN/Inf refusal",
+      "BF16 significand carry and ignored lower input bits"
+    ],
+    "dot": [
+      "FP8/FP4 signed 32-term dot",
+      "exact signed cancellation",
+      "NaN code",
+      "scaled overflow/underflow/subnormal",
+      "near significand/scale boundaries"
+    ],
+    "reset_inflight_stages": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "seeds": [
+      305419896,
+      2654435769,
+      3221344269
+    ],
+    "vector_count": 84
+  },
+  "hardware_credit": false,
+  "implementation_commit": "1b5981ee4e12f1f5ecdfe80e23456a29dd6fc662",
+  "limitations": [
+    "Two-state Verilator, default zero initialization of unreset state; no four-state proof",
+    "Directed/random same-RTL integration equality, not all-input sequential proof or golden FP qualification",
+    "Seven common-prefix SAT proofs remain independent Hubble prerequisite",
+    "Only fadd CUT379, bmul LAT5, bterm TW17 LAT11; no field wrappers, queue/tree integration, full-field/die or live acceleration qualification"
+  ],
+  "live_source_substitution": false,
+  "main_based_worktree_base": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "max_observed_compile_rss_kib": 189540,
+  "mutant_failures": [
+    {
+      "first_mismatch": {
+        "candidate": [
+          3221225472,
+          0,
+          1,
+          864026624,
+          0,
+          1107296256,
+          0,
+          1,
+          36858
+        ],
+        "cycle": 76,
+        "inputs": [
+          2139095039,
+          2139095039,
+          1,
+          1,
+          1,
+          17744
+        ],
+        "phase": "directed_II1",
+        "property": "fadd_tuple_every_sample",
+        "reference": [
+          0,
+          0,
+          1,
+          864026624,
+          0,
+          1107296256,
+          0,
+          1,
+          36858
+        ],
+        "rst_n": 1
+      },
+      "variant": "carry_mutant"
+    },
+    {
+      "first_mismatch": {
+        "candidate": [
+          1077936128,
+          0,
+          1,
+          1073741824,
+          0,
+          3254779902,
+          0,
+          1,
+          126159
+        ],
+        "cycle": 17,
+        "inputs": [
+          1065353216,
+          1073741824,
+          1,
+          1,
+          1,
+          48037
+        ],
+        "phase": "directed_II1",
+        "property": "bterm_tuple_every_sample",
+        "reference": [
+          1077936128,
+          0,
+          1,
+          1073741824,
+          0,
+          3254779904,
+          0,
+          1,
+          126159
+        ],
+        "rst_n": 1
+      },
+      "variant": "increment_mutant"
+    },
+    {
+      "first_mismatch": {
+        "candidate": [
+          0,
+          0,
+          0,
+          1065361408,
+          0,
+          32768,
+          0,
+          0,
+          0
+        ],
+        "cycle": 4,
+        "inputs": [
+          1065353216,
+          1073741824,
+          1,
+          1,
+          1,
+          67992
+        ],
+        "phase": "directed_II1",
+        "property": "bmul_tuple_every_sample",
+        "reference": [
+          0,
+          0,
+          0,
+          1065353216,
+          0,
+          32768,
+          0,
+          0,
+          0
+        ],
+        "rst_n": 1
+      },
+      "variant": "mul_sum_mutant"
+    },
+    {
+      "first_mismatch": {
+        "candidate": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "cycle": 0,
+        "inputs": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "phase": "startup_async",
+        "property": "fadd_tuple_every_sample",
+        "reference": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "rst_n": 0
+      },
+      "variant": "reset_mutant"
+    }
+  ],
+  "preserved_completed_files": [
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "rtl/test/tb_w11_fastfp_prefix_sequential_gate.sv",
+      "sha256": "e092b45e0e3564e5830ab2424d6db68a902b693ebff3d3c7036e7b71b1d9489b",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/rtl/test/tb_w11_fastfp_prefix_sequential_gate.sv"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "rtl/test/w11_fastfp_prefix_sequential_gate.cpp",
+      "sha256": "ec591aad27887fb8b62e921de67cca25bca58465b50ddd5be2c70f8cf08b2e2a",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/rtl/test/w11_fastfp_prefix_sequential_gate.cpp"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "tests/test_w11_fastfp_prefix_sequential_gate.py",
+      "sha256": "4286dc7fa60d3c7da44536d2e4db482af372874327006f073d0dbdb23ff3990c",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/tests/test_w11_fastfp_prefix_sequential_gate.py"
+    },
+    {
+      "byte_identical": true,
+      "commit": "ca875c1183eb0cd8bacad6c42cd218e32e740730",
+      "path": "tools/w11_fastfp_prefix_sequential_gate.py",
+      "sha256": "9f84474bf68e79f97c6c6a414cff2be488b9d2e6bd820b8ba738e42482aa2cdd",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/tools/w11_fastfp_prefix_sequential_gate.py"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/build.log",
+      "sha256": "bdbbb328f81f83e7f3fc894280fdb283c670cff4283bd0de148ce0f55ecc5d6f",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/candidate.sv",
+      "sha256": "d1cdc8ffd09e109c8abe878a4df717d8ed59846be4115a5c2e6b11b7e0ba6ff4",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/candidate.sv"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_2654435769.log",
+      "sha256": "4e5e3461ed6448658a5096a2a3a8e9b810a05f7c8909d90ff1288af4e13045ca",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_2654435769.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_305419896.log",
+      "sha256": "a7c834d0684825ba030cbf5dabe7d493bf80d14ead715c5ce8cb7ffdc0126b39",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_3221344269.log",
+      "sha256": "e325bb2202abd22fc31f0fb6a8f113513fd4143ad0d06304d1dfc8e734d24729",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/candidate/seed_3221344269.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/build.log",
+      "sha256": "8f4db8c7ee9fdbe4d317b6047b19087b95ab130bad2e82d75bab114f119f02e2",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/candidate.sv",
+      "sha256": "658048c7012ed59f8520cb756724b735994c29568f2223188d8cf9e5e7719a29",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/candidate.sv"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/seed_305419896.log",
+      "sha256": "00566cc1f2eaaaa30b3dbf619121bb0dbf6bf20bdd559a6da2410ef8a842e6ce",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/carry_mutant/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/consumer_width_census.json",
+      "sha256": "b769a4447bedd9edb49875afe9d5a27c7610850b7c174a242b7b37acaf29e98f",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/consumer_width_census.json"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generated/reference.sv",
+      "sha256": "d8338eeafe77d7476817d73c4136c3d0ee625312dbd4c1dec77e030eece80231",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generated/reference.sv"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generic_extension_scope.json",
+      "sha256": "8b7ee36cead952568b9a25749d5b42e930350c22515c0dbbf4fa1d3c9ee67b36",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/generic_extension_scope.json"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/pytest.log",
+      "sha256": "cf426ab35f3b06fccef8290fde5325d90af130a79da1d1752031518df77c4236",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/pytest.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/record.json",
+      "sha256": "08f8f63cee305edb5f0ed904db8e202258c210d737c99395e4918d77a9b67f87",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/record.json"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/build.log",
+      "sha256": "a2dce0e5c602b5b1709a510ea038c4ec694571e021bbef7d34f37176df0e47de",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/candidate.sv",
+      "sha256": "e7b41cc5e9f02ff5bc44bd7aba018210b34604acaa309d763c96c6249947814b",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/candidate.sv"
+    },
+    {
+      "byte_identical": true,
+      "commit": "38f65a224720566fc68e32785e8f7622e8652b50",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/seed_305419896.log",
+      "sha256": "f490524fe947e8036b13aa82a3876b03a13aa722675e9dffe872a980899910b5",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/reset_mutant/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/build.log",
+      "sha256": "85218914c24e5617a1fbd508bf4fbc2b5da01aa5e502c419f08aa2191da8b08c",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_2654435769.log",
+      "sha256": "4e5e3461ed6448658a5096a2a3a8e9b810a05f7c8909d90ff1288af4e13045ca",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_2654435769.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_305419896.log",
+      "sha256": "a7c834d0684825ba030cbf5dabe7d493bf80d14ead715c5ce8cb7ffdc0126b39",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_3221344269.log",
+      "sha256": "e325bb2202abd22fc31f0fb6a8f113513fd4143ad0d06304d1dfc8e734d24729",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/candidate/seed_3221344269.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/build.log",
+      "sha256": "8cddc7791dbf0d3bbd17d6f02ceb59b0b6f70f41cf7524af87ca31465f9173a5",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/seed_305419896.log",
+      "sha256": "00566cc1f2eaaaa30b3dbf619121bb0dbf6bf20bdd559a6da2410ef8a842e6ce",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/carry_mutant/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/build.log",
+      "sha256": "59abc0df2f51c167a4068be529a3859caa1b9983f861c1d876617918178fe777",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/build.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/seed_305419896.log",
+      "sha256": "f490524fe947e8036b13aa82a3876b03a13aa722675e9dffe872a980899910b5",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_r2_logs/reset_mutant/seed_305419896.log"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_rerun_r2.json",
+      "sha256": "537c8d7febdff9a5ec187f399f622427adceafa0e382b563d11dc63ae4f91154",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_rerun_r2.json"
+    },
+    {
+      "byte_identical": true,
+      "commit": "95182d990459829d210d06eebf39267bc865b445",
+      "path": "results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_review.json",
+      "sha256": "83b357cb9b4ae69df4019a0895658f9bddbc39c263ddb4d8f407962d19bc97c0",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_fastfp_prefix_sequential_gate_20261001/parent_review.json"
+    },
+    {
+      "commit": "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/record.json",
+      "sha256": "80b0202fda3fb3b277915fe3a8d6d8c49ada56365bd0127fafc826a27c965156",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_field_common_prefix_coverage_gap_20261001/record.json"
+    },
+    {
+      "commit": "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/census.json",
+      "sha256": "2df2408f702a814f3128f2eb28d4f2f9d49d520c7e502cda52b4559777ed3b8f",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_field_common_prefix_coverage_gap_20261001/census.json"
+    },
+    {
+      "commit": "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/source_pins.json",
+      "sha256": "165dc3b690052b2f551ed0f6b2bff6983f597a71b99ccd8739c72f6aa5c92a06",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_field_common_prefix_coverage_gap_20261001/source_pins.json"
+    },
+    {
+      "commit": "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/retained_records.json",
+      "sha256": "0ed55889acb68ae72c42908981636f4cc40fcfc8a96a94da6bfdcb9e215e2659",
+      "verified_location": "/tmp/field-prefix-gap-0Rsii6/worktree/results/rtl/w11_field_common_prefix_coverage_gap_20261001/retained_records.json"
+    }
+  ],
+  "pytest": "3 PASS",
+  "record_sha256": "25ab06819e8e91d94e3aae34a31327484d56f1667327ab114cf58fef5acf2346",
+  "retained_logs": [
+    {
+      "path": "candidate_build.log",
+      "sha256": "1d7dcf0d2120d959c7fda625bf6ef0750d0d0b1e9d7f500f1b16c4b5d64a1e29"
+    },
+    {
+      "path": "candidate_seed_305419896.log",
+      "sha256": "4f0f4602027b15ab277fe2ed5d243187aac95d0f66d6c3994724666f75e95c81"
+    },
+    {
+      "path": "candidate_seed_2654435769.log",
+      "sha256": "3361da9cf2e1fa4ecb10df13691c3adc679af2ee2dc8a386430efa4318294f0d"
+    },
+    {
+      "path": "candidate_seed_3221344269.log",
+      "sha256": "401a1a801c4bf948420fe8e26ac77fc713c24ecafbc1e3c38ad074270de91de0"
+    },
+    {
+      "path": "carry_mutant_build.log",
+      "sha256": "ade9e0f5e3741bad95228c961d9b69e592d4e3f44ce15d75c26880660be28e9f"
+    },
+    {
+      "path": "carry_mutant_seed_305419896.log",
+      "sha256": "d09e5251b7d03a06a00ebaf95b7888f24ba8276e23671982456807b63bf294ce"
+    },
+    {
+      "path": "increment_mutant_build.log",
+      "sha256": "4adfb1d3270c3ed0a80f28ed3698ce9eb5444422c559e707e58713654228164e"
+    },
+    {
+      "path": "increment_mutant_seed_305419896.log",
+      "sha256": "3a6bd153f067d01b121bbc923d52b0f4df52f8df474967c04cd41dde75b6cfc6"
+    },
+    {
+      "path": "mul_sum_mutant_build.log",
+      "sha256": "a94beba3cdbe218935a245d6d795cd96cd6e76e805cc626596cc5d942c7bad09"
+    },
+    {
+      "path": "mul_sum_mutant_seed_305419896.log",
+      "sha256": "ab556a16a7576acb64118062268f5cb3b684ccaec434ce0cd7cdd77e10f1d0e4"
+    },
+    {
+      "path": "reset_mutant_build.log",
+      "sha256": "a3018b73fab6aa9875ccc345b12054dfaf71ccbba454c282c46400e6c209826d"
+    },
+    {
+      "path": "reset_mutant_seed_305419896.log",
+      "sha256": "7846972bd2fe8f18d5616e7213bac4640deeca16657bc66db6374855b886d4e5"
+    },
+    {
+      "path": "pytest.log",
+      "sha256": "cf426ab35f3b06fccef8290fde5325d90af130a79da1d1752031518df77c4236"
+    }
+  ],
+  "schema": "opentallas.w11.field_prefix_sequential_intake_evidence.v1",
+  "source_checks": [
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul2.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "retained_live_bytes_match": true,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    }
+  ],
+  "status": "PASS_BOUNDED_GATE_ONLY"
+}

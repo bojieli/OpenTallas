@@ -1,0 +1,28 @@
+{
+  "GO_commit": "026847e37d735d7dcdc1d0bda8bb332d9dfd233d",
+  "source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "host": "ot-pve1",
+  "unit": "hbm-qwen-trained-native-token-pve1-20261002-r1.service",
+  "job": "/home/ubuntu/otjobs/qwen-trained-native-token-pve1-20261002-r1",
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=hbm-qwen-trained-native-token-pve1-20261002-r1.service",
+    "--property=WorkingDirectory=/home/ubuntu/OpenTallas-qwen-trained-native-execution",
+    "--property=MemoryMax=85899345920",
+    "--property=MemorySwapMax=0",
+    "--property=OOMPolicy=stop",
+    "--property=RuntimeMaxSec=infinity",
+    "--property=LimitFSIZE=infinity",
+    "--property=LimitAS=infinity",
+    "--property=LimitCORE=0",
+    "--property=CPUAffinity=0-7",
+    "--property=Nice=10",
+    "--setenv=OMP_NUM_THREADS=8",
+    "--setenv=MKL_NUM_THREADS=8",
+    "--setenv=OPENBLAS_NUM_THREADS=1",
+    "--setenv=PYTHONUNBUFFERED=1",
+    "/home/ubuntu/.local/qwen-trained-provider-pve1/bin/python",
+    "/home/ubuntu/otjobs/qwen-trained-native-token-pve1-20261002-r1/launcher.py"
+  ]
+}

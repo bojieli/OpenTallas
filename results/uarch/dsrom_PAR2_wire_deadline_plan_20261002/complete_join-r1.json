@@ -1,0 +1,347 @@
+{
+  "SRAM_HBM_link_semantic_checks_retained": true,
+  "all_ROM_ECC_mandatory": false,
+  "area": {
+    "BF_complete_frame_growth_charged_once_mm2": 4.705078492800028,
+    "RNE_WAKE_band_shadow_retained_as_policy_not_extra_instances": true,
+    "actual_instantiated_area_credit_mm2": 0,
+    "additional_field_row_envelope_mm2": 16.25184,
+    "combined_noncontainment_policy_screen_mm2": 744.7902508320059,
+    "complete_selector_extra_charged_once_mm2": 1.3155131592,
+    "extra_row_whitespace_noncontainment_policy_mm2": 11.546761507199975,
+    "fit_proven": false,
+    "new_row_void_may_already_be_contained_in_inherited418_no_credit_until_disjoint_union": true,
+    "new_selector_vs_prior_complete_map_increment_mm2": 0.17445611520000015,
+    "prior_proposal_screen_mm2": 727.2228976728057,
+    "remaining_before_unpriced_interfaces_mm2": 113.20974916799412
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock": {
+    "ff": 17,
+    "ss": 15
+  },
+  "current_clock_basis": "branch-aware15SS17FF before compute/control/wire; supersedes old12/14 aggregate reference",
+  "field": {
+    "BF_pairs": 362,
+    "all_compiled_pairs": 2048,
+    "all_field_frames_disjoint": true,
+    "cfg_macros": 14336,
+    "cfg_return_band_y_translation_DBU": 492480,
+    "field_end_DBU": 6315840,
+    "final_band_end_DBU": 8944560,
+    "full_macro_pin_OBS_PG_templates_from_complete4b15": true,
+    "full_stdcell_placement_not_available": true,
+    "macros": 8192,
+    "old_field_end_DBU": 5823360,
+    "placement_rows": 38,
+    "q_pairs": 1686,
+    "root_regions": 64
+  },
+  "fulltoken_rate": false,
+  "generator_sha256": "a494f813af5fc4a8a711293b4a59f36d9b769905d1baf02a1b4417eaea48cc73",
+  "geometry_G0": {
+    "actual_cell_row_channel_OBS_PDN_union_available": false,
+    "cfg_macros": 14336,
+    "compiled_pairs": 2048,
+    "complete_q_BF_frame_inventory_preserved": true,
+    "fullslot_SS_FF_clock_closure": false,
+    "physical_build_admitted": false,
+    "reservation_no_overlap": true,
+    "reticle_dimensions_um": [
+      33000,
+      26000
+    ],
+    "weight_macros": 8192
+  },
+  "input_sha256": {
+    "LAT8_bench.sv": "380eb3b19fe2be2bef13a6a19aa622b31edec5a1fa38a39dc8184d77998b6be8",
+    "LAT8_preparation.json": "dbb108e80d3a4ae75de57bf0cdc3d2b05d3a6bd2a885a939a4f56e5f19119b5b",
+    "element.json.gz": "d47001abf31fbd4db03331c079a6a62d6e2db0fe93c67822e0ce2a465d71a83c",
+    "field.json.gz": "a19e401d527053eb84941637c98b77dc46b18821c3e3e6127d09e57941672940",
+    "join.json.gz": "b394dd5f102ea3460c8343d572de1504b8a2d80e36e18000a676c76747c7429d",
+    "local_physical.json": "1f7cb420e693e1d058913d6162a788e2def420cd1fc7f417e93604acc5ce8e88",
+    "macros.json.gz": "e15d9f1f773ad6cdd8522307b569362fde8d2dc8cdb45dcbaa8bdb457a87dbd9",
+    "origins.json": "74c78a0206c1a448a59ce6037041b1c10724fc7ee5b13fd26f9ff15fcfcd4f29",
+    "services.json": "06bd52db3edefe90463593ee03d39fd0c962341c61b7853d86c9d030c58014a2"
+  },
+  "new_jobs": 0,
+  "origins": {
+    "LAT8_bench.sv": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/rtl/dsrom_upstream_pair_cadence_r3_diagnosis_20261002/retained_tb_dsrom_upstream_pair_cadence.sv"
+    },
+    "LAT8_preparation.json": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/rtl/dsrom_upstream_pair_cadence_prepare_20261002/model.json"
+    },
+    "element.json.gz": {
+      "commit": "4b15fab658a8d88a6e2efa2e77d1a12b0964e477",
+      "decompress_for_gitshow": true,
+      "path": "results/uarch/dsrom_noECC_complete_element_20261002/model.json"
+    },
+    "field.json.gz": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/field_placement.json.gz"
+    },
+    "join.json.gz": {
+      "commit": "73c2e754b3e8539cd014d8911be2327897bdca25",
+      "decompress_for_gitshow": true,
+      "path": "results/uarch/dsrom_noECC_source_geometry_join_20261002/model-r1.json"
+    },
+    "local_physical.json": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/model.json"
+    },
+    "macros.json.gz": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/macro_placement.json.gz"
+    },
+    "services.json": {
+      "commit": "843729bb949f9b73996ec7655a35baf36cd46621",
+      "decompress_for_gitshow": false,
+      "path": "results/uarch/dsrom_PAR2_shard_physical_binding_20261002/inputs/service.json"
+    }
+  },
+  "physical_GATE": {
+    "PnR_launch_requires": "Reviewed mapped completecell union and endpoint-specific constraints plus actual pin/via/PG/clock reservations in the shared noECC parent map",
+    "admitted": false,
+    "next_independent_gate": "Map the complete reviewed element source, preserve all real ROM ports and arithmetic/control, extract cell/CLKpin union into this reservation; no placeholder cones or new engine RTL",
+    "scope": "Complete local reservation with constructive sourcegeometry; positive area/track screen is not full load/via/clock admission"
+  },
+  "physical_fit": false,
+  "schema": "opentallas.dsrom.PAR2.complete-selector-wire-join.v1",
+  "selector": {
+    "actual_mapped_fullslot_not_available": true,
+    "balanced_filter_full_G0_not_closed": true,
+    "does_not_displace_preserved_controller_and_corridors": true,
+    "full_proxy_mm2": 1.6824196173600001,
+    "inherited_state_charge_is_candidateFF_plus_remaining_state": true,
+    "new_location_transport_latency_unpriced": true,
+    "old_complete_slot_replaced_not_added": true,
+    "old_storage_only_0p06177_not_additional_credit": true,
+    "old_store_location_not_reused_or_credited": true,
+    "only_additional_full_proxy_charge_mm2": 1.3155131592,
+    "prior_full_proxy_replaced_mm2": 1.5104226816,
+    "proxy_not_variant_adoption": true,
+    "reserved_rectangle_mm2": 1.6848787968,
+    "single_full_slot_bbox_DBU": [
+      1000000,
+      8953200,
+      3125440,
+      9745920
+    ],
+    "state_already_priced_mm2": 0.3693656376,
+    "state_bits": 698354
+  },
+  "selector_latency": {
+    "added_stream_cycles_per_call": 142,
+    "added_stream_cycles_per_position": 1278,
+    "calls_per_position": 9,
+    "conditional_ns_at_1p2GHz": 1065,
+    "conditional_sixposition_ns": 6390,
+    "drafter_and_commit_rollback_extra_unknown": true,
+    "fulltoken_latency_credit": false,
+    "sixposition_verification_only_upper_no_overlap_cycles": 7668,
+    "source_count_not_actual_token_schedule": true
+  },
+  "single_user_objective": {
+    "AR": "baseline reported separately",
+    "assumed_iteration_budget_us": 1216.3333333333333,
+    "assumed_tau": 3.649,
+    "changes_to_stages_dies_or_selector_location_require_entire_iteration_delta": true,
+    "headline": "strictly >3000 accepted tokens/s afterMTP",
+    "historical_4500_rate_not_candidate_qualification": true,
+    "phase_trace_not_MTP_rate": true,
+    "required_iteration": "actual sixposition verification + drafter + commit/rollback + exposed crossings/service stalls",
+    "tau_is_assumption_not_measured": true
+  },
+  "source_selector": {
+    "commit": "aa745a879e20",
+    "path": "results/uarch/topk_balanced_filter_successor_model_20261002/model.json",
+    "sha256": "5757ddcce52cd366018bf604c3601341f52e978c250ddf8ab96c307ed9f9db47"
+  },
+  "trace_plan": {
+    "accepted_runtime_receipt_available": false,
+    "case": "L0.exp0.w1, stage0/rank0/shard1/phase10/key2149580800/runtimeEID0",
+    "checks": [
+      "Matching stage/rank/shard/phase/key/reset-era and runtime EID0 branch",
+      "No injected XFIFO push/root result, no made-up ACK, no global seat pool",
+      "All emitted paired reads across both shard inventories preserve address/order/captureN+2/consumerN+3; knownshard1 exp0w1 subset10240 is not fullowner count",
+      "Fullowner phase10 source nrow576 root/destination writes conserved; builder must pin both shard readcounts and rowtag coverage, no duplicate/lost writes",
+      "No arithmetic/XFIFO/tree/root/control faults",
+      "Do not replace firstCE7/last196/consume199 conditional indices with actual acceptance"
+    ],
+    "events": [
+      "Accepted q_go/runtime EID read with address/value/owner",
+      "accepted s_go under source ready/idle",
+      "actual cfg_go and each c_v/c_a/c_d delivery, final class/act visibility",
+      "VM x_re acceptance and registered x_q/quant/have visibility",
+      "s_ok/s_adv,xs/xb receipts and native mainCE/cap/lane events",
+      "tree/root r_v row/pos/value/fault receipt",
+      "w_we/address/data and postNBA VM visibility",
+      "source phase idle plus writer drain; coll_busy only if actual connected core/provider included"
+    ],
+    "hierarchy": "Complete logical owner NP4096/NBF724/R128/PHW10/NB2/PP1, split inventory observed as two NP2048/R64 shards. Same LAT8/RNE/WAKE source; all padding retained, no constant root producers. One logical-owner trace does not qualify inter-die transport/CDC.",
+    "launch_admitted": false,
+    "no_ECC_requirements": true,
+    "no_RTL_engine_changes": true,
+    "no_simulator_cycle_to_physical_clock_credit": true,
+    "owner_split": {
+      "Epicurus": "reuse actual LAT8 bench/source; implement sole complete-phase observer/root/writer connection",
+      "Maxwell": "consume accepted trace and complete-phase/root/cfg/visibility costs",
+      "Nash": "phase10 exact native cfg/key/address/image and valid EID source binding",
+      "execution_owner": "Nash/current sole wholephase source chain; no duplicate launch",
+      "parent": "source/admission review and fleet lease; no duplicate active job"
+    },
+    "reason": "Complete phase source/image/root-writer package and measured resources not yet supplied; historical bench lacks root/writer connections.",
+    "required_existing_bench_adaptation": [
+      "PHW6 singlepair historical diagnostic -> PHW10 full logical-owner selected product source pins, preserving R128 across two64root inventories",
+      "Replace one-pair-only connection with complete field/ordered forest/root provider",
+      "Connect actual spine w_we/w_addr/w_data to registered VM destination writes; observe postNBA visibility",
+      "Use exact phase10 cfg/stream/key/matrix address and native runtime EID path",
+      "Use committed directed macro images accepted by real source loader; record payload provenance, do not replace producer or inject golden results"
+    ],
+    "source_reference": "106fdd686 r3 + retained actual LAT8 adapter/spine/pair bench"
+  },
+  "wire_deadline_plan": {
+    "RTL_build_admitted": false,
+    "activation": {
+      "AQ_capture_edges": [
+        54,
+        133
+      ],
+      "VM_read_edges": [
+        40,
+        119
+      ],
+      "accepted_broadcast_edges": [
+        62,
+        292
+      ],
+      "conservative_full_packet_bits": 1681,
+      "first_CE": 65,
+      "native_pair_accept_to_first_CE_edges": 3,
+      "packet_basis": "1632 full source bus plus49 identity bits; interface proposal, not accepted network ABI",
+      "requirement": "Bind each producer-ready receipt to pair acceptance and preserve native have/s_ok; any later pair receipt propagates through actual source schedule.",
+      "those_three_edges_are_not_free_wire_slack": true,
+      "upstream_packet_ready_edges": null
+    },
+    "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+    "cfg": {
+      "aggregate_payload_bits_per_shard": 2457600,
+      "capture_edges": [
+        15,
+        39
+      ],
+      "command_accept_edge": 13,
+      "go_edge": 40,
+      "hard_ROM_clkq_capture_and_fanout_cost": null,
+      "independent_ports_per_shard": 2048,
+      "local_parallel_ports_not_shared_link_bandwidth": true,
+      "payload_bits_per_word": 48,
+      "read_edges": [
+        14,
+        38
+      ],
+      "remote_command_identity_bits": 37,
+      "requirement": "All local configuration visible before GO; command crossing must shift or precede cfg origin; no invented prefetch lead.",
+      "words_per_pair": 25
+    },
+    "fulltoken_rate": false,
+    "generator_sha256": "a596970a179653da31d4bed086d98ce51bd4730cfd344c6bcee4efbbf2ae2834",
+    "iteration_requirement": "Six verification positions plus drafter and commit/rollback; cannot multiply this synthetic phase into a token rate.",
+    "measured_physical_provider_values_available": false,
+    "new_ACK_wire": false,
+    "new_global_seat_pool": false,
+    "new_jobs": 0,
+    "no_ROM_ECC": true,
+    "origins": {
+      "VM_write_prediction.jsonl": {
+        "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+        "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/VM_write_prediction.jsonl",
+        "sha256": "c5a195c591ce33ee29260d81c080ef4c5e878dcca4f9657228712d15fecf046f"
+      },
+      "prediction.json": {
+        "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+        "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/prediction.json",
+        "sha256": "97f3b0ba779974c5f38b26728239ed380e976f17739149c040986ce598753a72"
+      },
+      "root_prediction.jsonl": {
+        "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+        "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/root_prediction.jsonl",
+        "sha256": "b7817d79108c3dca5fec1161ccb68bd32ef547551cfb68772292c99a370c649e"
+      },
+      "upstream_prediction.jsonl": {
+        "commit": "136c9c7ab87b9407243fa62103fc37c40532bf9c",
+        "path": "results/rtl/dsrom_PAR2_wholephase_source_trace_20261002/preparation_r2/upstream_prediction.jsonl",
+        "sha256": "13809efb96df153560ed6f0ecde5cd142f356100059cd4b447b9c1c169572e0e"
+      }
+    },
+    "physical_fit": false,
+    "provider_contract": {
+      "mutable_control_SRAM_HBM_link_protection_retained": true,
+      "required_fields": [
+        "source_receipt",
+        "resource_domain",
+        "bits_per_edge",
+        "latency_edges",
+        "owned_queue_capacity",
+        "registered_delivery",
+        "owner_visibility_edge"
+      ],
+      "shared_resource_across_event_classes": true
+    },
+    "root": {
+      "native_local_root_to_VM_write_edges": 1,
+      "peak_proposed_payload_bits_per_edge": 6912,
+      "physical_CDC_edges": null,
+      "physical_shared_domain_bandwidth": null,
+      "proposed_packet_bits": 108,
+      "registered_delivery_requires_next_edge_sample": true,
+      "requirement": "Hold exact ordered identity/data until destination visibility. Original source has no new ACK; crossing receiver storage/credits require separately priced implementation.",
+      "shard1_burst_rows_by_edge": {
+        "394": 64,
+        "395": 64,
+        "396": 64,
+        "397": 64
+      },
+      "shard1_crossing_rows": 256,
+      "total_rows": 576
+    },
+    "schema": "opentallas.dsrom.PAR2.wire-deadline-plan.v1",
+    "source_edges": {
+      "field_GO": 40,
+      "first_CE": 65,
+      "first_VM_read": 40,
+      "first_activation": 62,
+      "last_CE": 296,
+      "last_VM_write": 400,
+      "last_activation": 292,
+      "last_root": 399,
+      "op_accept": 10,
+      "reset_high_idle": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "reset_low": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "spine_idle_preedge": 400
+    },
+    "source_prediction_not_measured": true,
+    "whole_iteration_delta": null,
+    "wholephase_exposed_delta": null
+  }
+}

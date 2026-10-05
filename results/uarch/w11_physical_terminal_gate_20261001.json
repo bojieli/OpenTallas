@@ -1,0 +1,236 @@
+{
+  "CKV": {
+    "HBM_transfer_qualified": false,
+    "conditional_ROM_staging_baseline": {
+      "actual_SS_FF_latency_cycles": null,
+      "actual_consumer_interface_changed": true,
+      "aggregate_payload_bits_per_cycle": 256,
+      "area_scope": "Analytical .2916um2/register and.2um2/muxbit at50% density; storage/mux FLOOR only, excludes control, decode, clock, CDC, RF ports/routes. Not measured area or fit.",
+      "boundary_routing_tracks": null,
+      "candidate_header_bits": 36,
+      "candidate_header_fields": {
+        "beat": 8,
+        "group": 4,
+        "job": 16,
+        "row_format_flags": 4,
+        "row_mask": 4
+      },
+      "channel_capacity_tracks": null,
+      "consumer_ports_and_enable_costs": null,
+      "exact_gate_passed": false,
+      "known_floor_mm2": "0.0420962304",
+      "maximum_padded_packet_bits": 1280,
+      "mux_bit_equivalents": 2784,
+      "mux_footprint_floor_mm2": "0.0011136",
+      "packet_credit_release": "Actual complete serialization, CDC landing, destination group write and consumerdone; no accept/timer release",
+      "policy": "Serialize exact raw32-element groups over one256bit source port, expand source format only inside consumer tiles, preserve row/group order and golden qdq; no arithmetic reassociation",
+      "power_IR": null,
+      "priced_extents": [
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 4672,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 2560,
+          "packet_bits": 559104,
+          "packets": 512,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 540672,
+          "raw_input_serialization_cycles": 2112,
+          "selected_rows": 0,
+          "window_rows": 128
+        },
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 15424,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 8704,
+          "packet_bits": 1812480,
+          "packets": 2560,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 1720320,
+          "raw_input_serialization_cycles": 6720,
+          "selected_rows": 512,
+          "window_rows": 128
+        },
+        {
+          "connected_cycles": null,
+          "conservative_no_overlap_service_cycles": 15376,
+          "excluded": [
+            "actual ingress latency/stalls",
+            "CDC",
+            "consumer tile writes and done/credit delay",
+            "attention compute",
+            "descriptor/route/setup/hold/wake costs"
+          ],
+          "output_serialization_cycles": 8672,
+          "packet_bits": 1808256,
+          "packets": 2560,
+          "physical_clock_qualified": false,
+          "raw_input_bits": 1716096,
+          "raw_input_serialization_cycles": 6704,
+          "selected_rows": 512,
+          "window_rows": 127
+        }
+      ],
+      "queue_packet_capacity": 2,
+      "replicas": 1,
+      "slot_fit": null,
+      "source_port_payload_bits_per_cycle": 256,
+      "storage_bits": 70272,
+      "storage_footprint_floor_mm2": "0.0409826304"
+    },
+    "connected_rate_credit": false,
+    "current_RTL_matches_failed_source": {
+      "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": true,
+      "rtl/chip/physical/ot_v41_ckv_merge_phys.sv": true
+    },
+    "independent_FF_hold_PASS": false,
+    "measured_configuration": {
+      "clock_ps": 833,
+      "hold_uncertainty_ps": 25,
+      "io_delay_fraction": 0.2,
+      "loaded_corners": [
+        "WC:SS",
+        "BC:FF"
+      ],
+      "reported_path_corner": "WC shown in finish log; no independent FF PASS established",
+      "routing_scope": "full metal actualM2..M7, notM2-M5hub",
+      "setup_uncertainty_ps": 60
+    },
+    "metrics": {
+      "area_um2": 45207.2,
+      "hold_violations": 449,
+      "hold_worst_slack_ps": -9.34994,
+      "route_drc": 0,
+      "setup_violations": 17543,
+      "setup_worst_slack_ps": -817.655,
+      "slew_violations": 15
+    },
+    "original_source_Git_replay": "NOT_ESTABLISHED_BY_THIS_ARCHIVE",
+    "original_source_binding": [
+      {
+        "created": "2026-09-30T14:54:34.622602426Z",
+        "head": "d982a59053b4adda2ea2ce7fbd44ba22794685ab",
+        "id": "5e9fbabb94b5d22d9958eade09a54e8537b9e4b81fb1067000a42f023b6f6246",
+        "source": "/home/ubuntu/w11ckv_wt",
+        "source_sha256": {
+          "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166",
+          "rtl/chip/physical/ot_v41_ckv_merge_phys.sv": "1afb1f8cf9f6c525f17ccf3d5243b3bf8b99505c8f303931e1a3c16feaa55177"
+        },
+        "started": "2026-09-30T14:54:34.952730581Z"
+      }
+    ],
+    "physical_admission": false,
+    "required_hub_layers": [
+      "M2",
+      "M5"
+    ],
+    "status": "MEASURED_FINISH_NOT_CLOSED"
+  },
+  "applies_to": [
+    "DeepSeek-V4.1 ROM",
+    "DeepSeek-V4.1 HBM"
+  ],
+  "controller": {
+    "actual_constraints": {
+      "hold_corners": [
+        "WC/SS",
+        "BC/FF"
+      ],
+      "hold_uncertainty_ns": 0.025,
+      "period_ns": 0.833,
+      "routing_layers": [
+        "M2",
+        "M5"
+      ],
+      "setup_corner": "WC/SS",
+      "setup_uncertainty_ns": 0.06
+    },
+    "completed_at": "2026-10-01T14:15:47.502762+00:00",
+    "connected_rate_credit": false,
+    "flow_completed": false,
+    "original_source_commit": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+    "physical_admission": false,
+    "returncode": 1,
+    "route_corner_verdict": null,
+    "status": "TERMINAL_FLOW_ERROR_DRT0305",
+    "wrapper_corner_label": "TT"
+  },
+  "full_token_cycles": null,
+  "full_token_rate": null,
+  "graph_sha256": "ba0d17e0af29a02ba892d7a50f56cf45a07c82bb1adc6aef3204006ae467f9a6",
+  "hardware_adopted": false,
+  "maximum_qualified_clock_hz": null,
+  "old_composed_service_changed": false,
+  "physical_admission": false,
+  "restart": false,
+  "schema": "opentallas.w11.composed-physical-terminal-gate.v1",
+  "source_sha256": {
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/collection.json": "f08e5957ae30b1a6064904d23a36a40b2944ec430697bfdf953c7fba08556ad2",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/driver.log.gz": "6af11f314c12bad6e2d531792be0a53dfe6967b6a6c3a0fa5aca72d4487b6afa",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/exit.json": "8869ca5e7f3ae989b151917c32f706ea8b83fd8d2ab5fd425117c4860c4e595f",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/launch.json": "641d24a3a003d2e7308f5ee91ab22449931a307967b7ab539ed63c9d9df4c3c7",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/1_1_yosys_canonicalize.log.gz": "aee04224eedef8e20ed0e775abf5cfcbd59cfc52adb61f33133692d099390cf2",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/1_2_yosys.log.gz": "967657c5af90bc0dbea78853c11878f9aa4bc764797870d9835f8357d7b15f5b",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/1_synth.json.gz": "03768e2c5345858504e32b95b186a777b3b3542d58f3ca0de612a4e76573cee7",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/1_synth.log.gz": "d2ae5e92d9deb2c22243b1d54387e97c88ede2c5147a384f7c05434839694f4b",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_1_floorplan.json.gz": "5dfac2d15b8d3b30aed156fad2d528092f1fd9211ce479570e2b17236512757e",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_1_floorplan.log.gz": "7f7b5607c338f30794a179892b01af26546931ce6a50b035960df2c130b96bd8",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_2_floorplan_macro.json.gz": "3b0da562cbb32a1507976f471bc82873f504b4032738e573c5d8be7f964f3174",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_2_floorplan_macro.log.gz": "94cb6e1e60c29e8d67f26d57a22070d9ae37dfaab28d6b3fe9a89fdd8d3fb940",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_3_floorplan_tapcell.json.gz": "3b0da562cbb32a1507976f471bc82873f504b4032738e573c5d8be7f964f3174",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_3_floorplan_tapcell.log.gz": "6854d18b99997670ebc7da8b81e18f63fe671f881241edd8cba157f59a76a49a",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_4_floorplan_pdn.json.gz": "1fd02e0553cf90f100b0d5167a0954e1e258c3115903256f249571a0891396eb",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/2_4_floorplan_pdn.log.gz": "832f01e3b5e334e155e1fb46cb77ad0dec301d827886b2a7211f841b4fc9d745",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_1_place_gp_skip_io.json.gz": "3b0da562cbb32a1507976f471bc82873f504b4032738e573c5d8be7f964f3174",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_1_place_gp_skip_io.log.gz": "53726c55cc4a281b7283d9bac6db29cffd7aa6fe23ccf3117870c03af1bf86d5",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_2_place_iop.json.gz": "b6b610b1a09ece245872a37bc94df9c4cc55b33796a374fd0d04c1d017545611",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_2_place_iop.log.gz": "9444edda1a4db2c887ef5a12a7680bde8bb3e086e011b82c588c52d87a76c8ae",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_3_place_gp.json.gz": "82fb3c32dcccb729defadbb47c863adda8ae93256e185cbbe99d5c48484960f2",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_3_place_gp.log.gz": "bdfe88262f0b69abd8900405e5f524b0846df7b9cf64dec04649b2279cd4609d",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_4_place_resized.json.gz": "371f3c71af434a5e08743c09f0f51ad9d665bb135bb9a632b650a5ccce6fa403",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_4_place_resized.log.gz": "867889b1a8c6b7e58f55828a674581005216a04f366084c7775c52003cb35e1c",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_5_place_dp.json.gz": "e3da815ec7c168614aa9146884c98337ea6cc2a1d9b0dad3ab9ea194a069994a",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/3_5_place_dp.log.gz": "04dd582f34d7d2aafeb189ed62e00e1c690dfd1b82aa2c39eda961aaafebb74d",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/4_1_cts.json.gz": "e5baf41e78c4068effaaf778cba7109186b88cb7ef44d1269b34fa4459b88691",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/4_1_cts.log.gz": "3806413773298ce5706ed04d2f0b0af9ef62b472c078eebf64f66bcdcc13df59",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/5_1_grt.json.gz": "49b54e9912846975d782e44ad6521ada588b637ac3c5494f0842393530bf9a82",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/logs/5_1_grt.log.gz": "9fc7c85f08baffac46794457759b02d71732afdbe12580e726bdc0e06268084a",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/physical.json": "e24dfa9d1ace8d6b8bf3b3c00d63c847c95079b7eb3f822a80987e423b045472",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/reports/2_floorplan_final.rpt.gz": "9688a1d38ffb3357cc1a5523ea9bf1b3dbb3af05b8f276b4864b49abcc8d31be",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/reports/3_detailed_place.rpt.gz": "7a8f9aa911369f019f63429a56dc0e2006f86a08110bb9156ff91a178f70c55f",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/reports/3_global_place.rpt.gz": "7099e81e3e0ae67698a9d73c626fcc5d1f6f054358ba636c8b73ddc502d2e639",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/reports/3_resizer.rpt.gz": "c45be0082bf6d6f96d02480a114526db161e82f73e428905b57775188c6b7e52",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/reports/4_cts_final.rpt.gz": "f645c589d6da42a57dc7b558ef03053e1f6e93c5fbd7672e37a996c8b135ec60",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/stat.txt": "521538027f0c98a37f715eb6a852cc5e3cb270b04838c279a1928040ebf21001",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/synth.ys": "cd52e31da13407d1a68f590a4f6b8eafbe5a553d5592ffc108e55c2b268fad9e",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/w11_endpoint_guard.json": "6e99adc2956c0216902d59182aa110e5f55434db8efcf48ec84d43cf88dd8938",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8_terminal/work/w11_endpoint_guard.json": "6e99adc2956c0216902d59182aa110e5f55434db8efcf48ec84d43cf88dd8938",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/5_2_route.json.gz": "a2cc5e045c08dad076212482c86f225a12c1a9b673896b81c0f0c09ca8233dcd",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/5_2_route.log.gz": "195d865e89ee944968273f2e07986a229ae4b4fbc52d59cc73fb1aa11551a4b2",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/6_report.json.gz": "272748c2354f30473b8ca9cb82fefef09d523e3bb78867c8c6024814f12a83a8",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/6_report.log.gz": "2b30fb9774a4aa3bc95d3a44a70e560597fc7459ea3f111f931388c11465350e",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/config.mk": "955252ce0130c886e0012898a388ac7abd2205f0213c62ea9aa46f50d8129f5b",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/constraint.sdc": "683a665baacb5dfcc2f05041196bef16542ec4faf59c75d556e5869463db9da0",
+    "results/physical_abi3/asap7/chip/w11_ckv_merge_finish_20261001/measurement.json": "b498f0f5744fc94e8349f0664719db5a2c16d1bc06df044c9aaec8a30e5881fe",
+    "results/quality/w16_w11_ckv_feasibility_20261001/feasibility.json": "619516232d7c959f46a0feaa325b566470747b239081e8387d3d302979b772fd",
+    "results/quality/w16_w19_composed_schedule_20261001_r2/service_readiness.json": "c35f77713b275eba8c22c080b4611f7c21a9506bfac5a6d9fbd1c74356fda4c6",
+    "rtl/chip/ot_chip_v41x_ckv_stream_merge.sv": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166",
+    "rtl/chip/physical/ot_v41_ckv_merge_phys.sv": "1afb1f8cf9f6c525f17ccf3d5243b3bf8b99505c8f303931e1a3c16feaa55177",
+    "tools/w11_physical_terminal_gate.py": "4c57fe8eccdd48bec313ff4b3a85d41aec408e54f177f5f2548cd8b396a25048"
+  },
+  "status": "BLOCKED_W11_PHYSICAL_TERMINALS",
+  "tuning": false
+}

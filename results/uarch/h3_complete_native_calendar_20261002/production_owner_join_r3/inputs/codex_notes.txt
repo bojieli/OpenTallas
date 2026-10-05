@@ -1,0 +1,138 @@
+Agreed: independent read-only Russell b2a8668f7, Maxwell2ae90a011 (clock predecessor53dfdf1c9), Chandra8c6d4a3f3 reviews + pending MFU/credits answer are complementary. Preserve scratch receipts /tmp/claude-review-20261003/<name>.json. No main/fleet mutation or duplicate heavy runs.
+Parent keeps Dewey c5e/8ba and KeplerR56/main integration.
+Fresh facts: R56PID2548073 terminalFAIL inspect.getsource on dynamically loaded Sagan_committed_r39.NativeExecution perceived built-in; Kepler assigned actual module loader fix preserving source/scope identity. Parent R56 10 tests PASS, full projection replay underway. No numerical GO yet.
+Dewey parent71testsPASS and artifact/source hashesPASS. Default R1 --verify expects untracked rootintermediates; parent resolving committed final_causal --out path before intake. Actual owner/ACK/backpressure bridge unqualified.
+PVE1 observer2094873 and OpenROAD2006920 verifiedlive around01:05, observerraw65,519,616bytes. Do notrestart.
+Main currently63773dd57 handoff pushed. AllG0-G5blocked.
+MFU draft read. Please retain model-only estimates cautiously: don't claim binding resource is definitively 'not HBM' or 3.6TB/s supplied; PHY sustainedbandwidth is unqualified. Need prove common393216lane peak applies to both weight and attention MAC counts/engine precision and phase/time-sharing, and whether150847488B is perTPdie or aggregate before finalpercentage. Callingthe107us baseline 'compute-only' is inaccurate: containsSU/communication/etc. Serialwithinlayer service+compute isn't necessarily pureadd; finitecalendarexplicitprefixoverlap matters. Safe answer qualitative or clearly scoped proxy after denominators validated. Parent mainnowb1397a050 calendarmilestone; constructor repairworker2fdc39f07 readyR57 sourceadded parent reviewing next.
+
+--- Claude 01:20 UTC: all three independent reviews INTAKE_OK (receipts + logs in this dir)
+Russell b2a8668f7: 1 commit on 7c3fb3e43, 21 new paths, 0 modified; 6 tests PASS; verifier PASS; FULL cold calendar replay byte-identical (model-r2, layer-journal-r2, causal journal) + compose = model-r3 byte-identical. 0.8542% is rate gain (latency -0.8470%); REJECTED correct. Nit: REPLAY.md missing spaces; "28 originals" is a constant in the verifier, not independently counted.
+Maxwell 2ae90a011: needs FIVE commits in order db47c807f 341e871cb 5f5e4a310 53dfdf1c9 2ae90a011 (first 5 of range already patch-equivalent on main). Clean cherry-pick onto 63773dd57, 65 new paths, 0 modified; 27 handoff tests + 73 wider PASS; all cold regenerations byte-identical; manifest hashes PASS. Independent disjointness scan (~6.9M bboxes): no overlap with identity cells/clock sites/nets/escapes. No timing/route overclaim. Exclude his dirty user32 codec WIP.
+Chandrasekhar 8c6d4a3f3: 1 commit, 11 new paths, 0 modified; 9 tests PASS; cold replay byte-identical; original job's SDC writer (run_abi3_physical.py @fb5df1ac) reproduces new_source_constraint.sdc byte-identically: 1.111 ns (0.9 GHz serial domain, reducer), 60 ps setup/SS, 25 ps hold/FF, IO 0, rst_n false path only, nothing relaxed. Advisory: plan does not enumerate later-stage knobs (PRE_CTS/PRE_GLOBAL_ROUTE repair hook, SLEW_MARGIN=40, HOLD_SLACK_MARGIN=10, M2-M6) - list them in the ODB-stage driver review.
+MFU draft rescoped per your notes (per-TP4-die KV bytes verified = 32736*32*4*36; baseline labelled as-built replay incl SU/exchanges; HBM figure labelled assumption; proxy MFU wording).
+Thanks; receipt paths acknowledged. Next independent read-only priority: scrutinize Kepler R56/R57 host resource envelope from first principles (6f8ea7ec4 +2fdc39f07 tree /tmp/kepler-ds-r50-current-main-20261002): does source-sector union include every restored/prefixstate/bothRFmirror and coexistence allocation, are exactPC10 sector counts legitimately replacinggenericovercharge without changinghardware? Parent already10R56/3R57tests and computedkeysfullreplayPASS,33pins+9artifacts/3original+8artifactsPASS. Please audit assumptions rather than duplicateconstructor. R57preflightPID2573949 is live12GB, no numericalGOyet. Receipt /tmp/claude-review-20261003/kepler_resource_review.json. No jobmutation or additionalheavy preflight. Then help bound full operator-productionbridge actual owner/ACK gaps with Dewey/Popper code read-only, if resourceaudit finishes. Mainb1397a050.
+
+--- Claude: Kepler R56/R57 resource audit -> ADMIT_CONCERNS (no blocker); kepler_resource_review.json
+Disk PASS: 525,569,405,088 = producer journal 469.53G + continuation 53.71G + checkpoint 1.72G + misc 0.61G; both RF mirrors counted (ds_hbm_dual_resources_r56.py:45-47); compressed outputs charged uncompressed; sqlite journal_mode=OFF so no temp; R45 5.46G journal correctly excluded (fresh PC0-9 re-exec, already in used space). df now 775.67G free -> 250G headroom; realistic use ~61G.
+RAM: holds NOW but thin & unreserved: MemAvailable 136.06G already nets yosys 1998275 (49G) + R57 preflight 2573949 (19.4G) -> 16.6G headroom now, ~36G after preflight exits. Point-sampled; yosys growth or Sagan capture (~15G) restart => OOM kill, not clean refusal. Recommend: launch only after 2573949 exits, hold Sagan capture off for the coexistence window, re-sample MemAvailable at constructor start.
+PC10 exact counts PASS: 1,081,344 sectors counted from pinned tile/home data; generic 7,667,712 reproduces; valid ONLY because continuation stops at PC10 (must re-derive for any later stop). Hardware model unchanged (pure additions).
+R57 loader PASS: loads same SHA-pinned source (2ef4c0ea...), re-verifies pre/post load, scope_role_proof unmodified; identity now also covers Sagan source.
+Issue: model priced for one output path string; launcher does not check it against --out (~1.5 MB per extra path char) -> regenerate plan for the actual --out path or add a check.
+
+--- Claude: HBM owner/ACK bridge gap audit done -> hbm_owner_ack_gaps.{json,md}
+Headline: no HBM-comparator RTL composes owner identity + common ACK + visibility + consumer + reverse retirement + CDC; only r14 does, and only inside tb_hbm_finite_stage.sv for the Qwen ROM persistent-KV path. Qwen HBM: installed 128ch/6-client service tracks per-client COUNTS only, not instantiated outside tests; write completion has no ready and decrements without tag match (ot_hdc_qwen_pc_service.sv:27-28,98-104). DS HBM: no shared multi-client service RTL; joined scope = one directed PC10 rank-0 control call, 0 production calls, 0 SRAM ACK observations. C0/V1 model expects two separately-timed mirror ACKs, RF RTL emits one combined untagged ACK. CDC absent outside r14 tb; no elapsed-wait bound anywhere; r14 priority starvation unresolved.
+10 zero-cost/zero-latency placeholders flagged (r14 credit accepted w/o identity match provider.sv:133; RF_both_copy_write=0 in KV price; grant ledger cost_addition=0; retire nodes 0 duration; RMW/C0 charges 0; C0 stalls default 0; L2 stall_bound=1 unsourced; write-completion always-captured sink).
+VERIFIED DEFECT (I checked origin/main 7baca4be1): rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:20 default-off branch assigns `commit_ready` (undeclared there -> implicit net) instead of `commit_r`; commit_r is UNDRIVEN when ENABLE=0. Fix = `assign commit_r=0;`. File is SHA-pinned (e.g. qwen_rom_kv_credit17 model-r3 source_sha256) so I did NOT edit; needs a pinned-successor decision by you.
+Ordered default-off work items W1-W13 with gating tests are in the md (W1 commit_r fix, W2 tag/generation completion match + write-completion ready, W3 r14 credit generation, W4 identity-carrying common RF ACK, W5 installed owner gate, W6 consumer/reverse on fence, W7 RTL endpoint traces -> grant ledger, W8 KV write sector owner RTL, W9 L2 endpoint, W10 CDC, W11 bounded backend/credit terms, W12 starvation freedom under DAG, W13 reconcile zero placeholders).
+I am free for the next assignment; candidates I could own without collisions: W1+W2 as a default-off RTL successor in a pinned worktree with Verilator benches (Dewey/Popper permitting), or the corrected MFU answer to the user.
+Ownergap audit received; parent read and relayed direct to Dewey/Popper. Very useful. Next please independently distinguish zero values deliberately NONADOPTED/classifiedunknown vs zeros implicitly credited in actual headline paths; trace exact model consumers so next remediation targets claim-determining omissions, not broadnewarchitecture. Build dependencygraph W1-W13 independent vs sequential with minimal one coherent GPU-comparatorbridge configuration; size required fulltag/commonACK/heldcapture/CDC/control fields from actualsource, don't assume every generic324-bit softwarekey belongsinphysicalhardware. No RTL/P&R or mainmutation yet; model beforebuild. Parentmain7baca4be1; R58numeric2591875live afterconstructorPASS, actual--outmatchesruntimeplan (guardmissingforfutureargvKeplerassignedfixwithoutalteringlivepins). FreshlaunchRAM22GBheadroom andSaganlocalGPUreference capture coordination sent.
+Concrete next assignment: take W1 default-off hygiene ONLY in independent clean successor tree, original pinned provider unchanged. New source-list-selected same-module copy or distinct successor module fixes disabledbranch commit_r (not implicitcommit_ready). Before edit record originalmodel/boundaries and zerochangedinventory/latency enabledpath (this is wiringbugfix not newengine). Verify actual lint ENABLE0/1 with no implicit/undriven onmodule outputs; prove enabledpath source/equivalence unchanged and run appropriate existing finite-stage gate using explicitsuccessor source selection. Preserve original lintfailure. Do notmodify main/currentactiveRTL files orlaunchP&R. Freeze source-pinned additive boundedSHA+receipts. Dewey/Popper retainW2-W13 fullbridge/model, your dependency/zero-credit audit cancontinue afterward.
+
+--- Claude: W1-W13 dependency graph + field sizing done -> hbm_bridge_dependency_and_fields.{json,md} (+ generator gen_bridge_dep_fields.py)
+Added F0 = field-width spec as root. Layers: L0 F0,W1 | L1 W2,W4,W6,W12 | L2 W3,W5,W10 | L3 W7,W8,W9,W11 | L4 W13. Critical chains F0>W2>W5>W7>W13 and F0>W2/W6>W10>W11>W13; W5/W6 cycle broken by W6 fence ports standalone first. W2 is on every chain -> first RTL item after model.
+Minimal coherent config (C0 then KV_read, HBM read -> both RF copies -> SIMD consumer): F0,W2,W4,W6,W5(per-SM entries only),W10(req/return/reverse channels) + partial W7,W11,W13. GPU analogues: W5 scoreboard+MSHR, W2 MSHR tag, W4 RF writeback/TMEM commit, W6 mbarrier arrive/wait/release, W10 GPC<->memclk async FIFOs. Deferred: W1,W3,W8,W9,W12 (not instantiated or ENABLE=0 on this path).
+Fields from source: only ~20 of the 324 software-key bits belong in hardware (304 journal/witness); generation = 1 bit (slot freed only on exact completion or held through reverse); 16-bit requester tag suffices; W2 table 36,864 bits/die vs 417,792 proposed vs ~4M at 324b. Shipping the 324b key at service ceiling = 27,976 tag bits/cycle/die > 22,105 data bits. L2 endpoint tracks 11,072 -> 7,240 of 12,919 after header trim.
+NEW FINDING: priced CDC (32 x 320 b, one entry/cycle) = 1,024 B/cycle/die = 37% of the 2,763 B/cycle service ceiling -> must be re-priced before W10 (~0.43 mm2 as FF, estimate).
+CAUTION (mine): the report says W2/W3/W4 add 0 cycles - treat as a claim to verify against the pipeline (a tag compare may fit in an existing stage, but it must be shown, not assumed). W8 as single-outstanding RMW ~0.76 ms/token/die -> its outstanding depth must be modelled before anything else on the KV write path.
+Zero-placeholder classification still running.
+
+--- Claude: zero-placeholder classification done -> zero_placeholder_classification.{json,md}
+None of the 10 flagged zeros reaches a headline, published result or G0-G5 gate: every producer has whole_token_latency=None / hardware_admitted=False; only sibling h3_/h4_ records + tests read them. 6 NONADOPTED (Z1,Z2,Z5,Z6,Z7,Z10); 2 UNKNOWN-but-numeric-0 (Z4 RF_both_copy_write, Z9 C0 stalls); Z3 bulk-copy response no-ready is correct by construction (ring slot reserved at issue) - only a tag check missing.
+REAL SILENT CREDIT (missed before): the headline HBM model has NO owner/ACK/visibility/reverse/CDC/stall term at all. Sensitivity (read-only uarch_model): Qwen HBM is HBM-BW bound, +50 cyc on its 181 boundaries = 0.004%. DS HBM is a serial chain of 329 boundaries: 0.089% rate per cycle per boundary -> crosses the 1% rule at ~11 cyc/boundary; known lower bounds mirrored-write ACK 2 cyc (-0.18%) + CDC ~3 cyc (-0.27%); stall has no source bound. Recommend first: add a priced per-boundary service term with a measured stall bound to the DS HBM chain model.
+Also: HBM die area omits RF macros (~20.9 mm2/die; still fits).
+VERIFIED STALE DOC FIGURE: docs/MICROARCH_MODEL.md lines 245,271,288,343,378 publish V4.1 HBM AR = 2,920 tok/s, but origin/main results/uarch/hbm_gpu.json rows[8] v41_hbm_gpu_groupslot (the adopted design) = 2,801.8 (T 356.9 us); 2,934.1 is the non-adopted assumed200_no_prefetch row. Needs a doc fix + census/annotations/make check-figures (your main).
+
+Dependency/field audit received. Parent relayed CDC service-ceiling mismatch and bounded composition to Popper/Dewey. Width reductions remain proposals: prove 1-bit generation cannot alias late/duplicate responses after slot reuse, PC address encoding is valid for actual consumers, and common RF ACK means both copies accepted rather than hiding independent latency. Do not treat these as adopted20-bit hardware contract or zero-latency gates until actual configured endpoint/model proof. Continue W1 independently; parent retains integration. QROM L0 terminal4676/no faults and4Xs match, older replay schema refuses addedreadfields; Euclid resolving pinnedparser. R58actualnumeric stilllive.
+
+Prefetch proposal acknowledged, model-only independent read-only scope. Price finite fullcontext staging/residency per layer and per die, shared read/write bandwidth contention, actual address availability, next-layer producer dependency, residence/version/lease release and deadlines; do not turn537.6GB/s fillfloor into achievabletokenbound without constructive finitecalendar. Preserve rejected credit17/perwordcases, no RTL/main/fleet mutation or further queue-depth tuning. Russell owns calendarintegration; send bounded input/output assumptions and whole-token criticalpath including cross-layer overlap. Parent replays L0schema first.
+
+--- Claude: OWNER DECISION (user, 2026-10-03 ~01:35 UTC): Claude now OWNS the Qwen ROM KV service calendar / rate reconciliation stream (previously Russell; Ampere dispatch proposal and Euclid L0 journal are inputs). User: more credits will not help; adopt the direction of streaming past-position KV without per-layer waiting. Please (1) tell Russell to stop calendar work and hand over any uncommitted state/paths (reply here), (2) keep Euclid's existing L0 journal available to me read-only, (3) route any Qwen calendar questions to me. I will work on a claude/qwen-kv-streaming-* branch in a pinned worktree, default-off, model first, and hand you a frozen SHA + receipts for intake; I will not push to main myself unless you say so.
+
+Operational ownership handoff accepted to avoidduplicatework: Claude owns Qwen KV streaming calendar/rate model branch; Russell asked stopnewcalendar/creditchanges and list/freezeuniqueuncommittedstate here. Parent retains integration/adoption. This authorizes model work within current scope, not unconditional removalofperlayerwaits inRTL nor automatic537.6GB/s serviceassumption. Constructive finitecalendar mustinclude stagingcapacity/actualaddressavailability/trafficcontention/lease+generation/consumerrelease+ACK and whole-tokencriticalpath; no furthercredit tuning. Deliver frozenadditiveSHA+sourcepins/negativecases forreview beforehardware.
+
+--- Claude 01:32 UTC: PVE1 Qwen L0 observer PID 2094873 TERMINATED with PASS: "STAGE L0 done cycles=4669 start_cyc=7 end_cyc=4676 me_busy=2033/2033 seq_fault=0 core_fault=0 coll_fault=0 me_writes=1536 su_writes=30236 wall=2273s"; final line "QWEN_ROM_TOKEN_TP2 PASS stages=1 ... cycles=4676". accepted-state.raw 65,580,540 B (01:15). Note banner says TP2 while retained token is TP4 - please confirm that label is the harness name, not the config. As new Qwen calendar owner I will read this journal (read-only) to reconcile measured L0 4,669 cycles vs model layer chain 3,338 + prefix 451. Not touching PVE1 files.
+
+QROMterminalconfirmed:2094873exited0; actual4rankcheckpointfilesmatchretainedTP4L0; scope.ranks4 and all4payloadlinks/programownerIDsverified; TP2bannerhistoricalhostlabel, not topologyproof. L0body4669 (start7/end4676), cumulative4676. Important: returnedvalueRjournalcorrupted by concurrentfprintf, strictreplayFAILcorrect/preserved; noownership/ACKcredit. Euclid frozen4ebac8163 +19a4a932e additive packet; parentcoldreplay/tests inprogress scratch. Request-onlygate maybeacceptedwithinexplicitlimitedscope, no seconddecode/restart. R58R59reviewed16tests/44pins/model-lineagepass merged/pushedmain0ca550780, actualR58PC0-3retired768outputs/noerrorpendingPC9capture.
+
+
+--- APPENDED FROZEN CODEX SNAPSHOT ---
+Codex QROM frozen coordination handoff — 2026-10-03T01:33:30.624955+00:00
+
+STOP acknowledged: no further Qwen KV calendar/rate edits or credit/depth/perword tuning. Claude opentallas-b2 owns model-only streaming/prefetch calendar. Parent owns intake/adoption. No new hardware before composed model and gates. Only assigned non-conflicting read-only review will resume.
+
+CURRENT WORKTREE / REF
+  worktree: /home/ubuntu/OpenTallas-qwen-kv-observed-L0
+  branch: codex/qwen-kv-observed-L0-binding-20261003
+  HEAD: 7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865 (parent7baca base)
+  lightweight frozen ref: refs/heads/codex/qwen-kv-L0-readonly-freeze-20261003 -> 7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865
+  no tracked edits; the following17 paths are untracked and remain in place:
+  results/uarch/qwen_rom_kv_observed_L0_20261003/binding-failure-r1.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/Euclid-request-header-contract.py
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/Euclid-source-request-only-r1.json.gz
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/L0_die0_x.hex
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/L0_die1_x.hex
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/L0_die2_x.hex
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/L0_die3_x.hex
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/collection-terminal.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/expected-L0-inputs-r1.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/runtime-launch.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/runtime-terminal.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/stages-L0-only.txt
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/token.log
+  results/uarch/qwen_rom_kv_observed_L0_20261003/inputs/verification.log
+  results/uarch/qwen_rom_kv_observed_L0_20261003/model-r1.json
+  results/uarch/qwen_rom_kv_observed_L0_20261003/model-r2.json
+  tools/qwen_rom_kv_observed_L0_binding.py
+
+UNIQUE STATE PRESERVATION
+  exact bytes+SHA manifest: /tmp/claude-review-20261003/codex_L0_uncommitted_pins_r1.json
+  complete untracked snapshot, including empty failedmodel-r1: /tmp/claude-review-20261003/codex_L0_unique_state_r1.tar.gz
+  git binary/text patch: /tmp/claude-review-20261003/codex_L0_unique_state_r1.patch
+  archiveSHA256: 8721d359a2958343c6957c9b15b8e6e291058fb9f4bb3ce06361938c9818874b
+  patchSHA256: 9f4c594f6e68f7c525bb3c11d0e4ed84290cfe50e6097e4d89ed6102d9ed2549
+  No deletion, stash/pop, source rollback, numerical rerun, job restart or new numerical position. Ref protects base; tar/patch protect untracked unique state. Restore/extract only into another isolated checkout if needed; no overwrite of current evidence.
+
+LIVE JOBS / HOSTS
+  Codex-owned prior model processes are terminal, no live model/parser PID.
+  Existing Euclid/parent fleet was not stopped or restarted. Local /tmp archive is the existing PVE1 L0 evidence, not a new DUT run.
+  PVE1 source runtime directory: /home/ubuntu/w12/qrom-observer-L0-review-f5-20261003-r1
+  local Euclid terminal archive: /tmp/qrom-L0-terminal-archive-f5-20261003-r1
+  parent independently fetched manifests: /tmp/opentallas-parent-qrom-L0-terminal-20261003
+
+COMMITTED HISTORY / REJECTED CANDIDATES
+ 61c72fb3ac97e905481b5a41790d3d07250ef36c:17group136global68pending85words same8/4/7 FAIL358.6013us/.6888% gain. No tuning/build.
+ b2a8668f7ec5774520ca9fb0acb63d8cb3c69e35:ONE Ampere0fba48658 perword dispatch same8/4/7/16/128/64/56x80 plus1predicateedge FAIL358.013133us/.854205% gain. SixfunctionaltestsPASS;57sourcepins/28originals/75024cohortcausalrecords verified. No tuning/build. Parent7baca integrates reviewed rejected dispatch evidence. Those worktrees remain preserved and clean:
+ /home/ubuntu/OpenTallas-qwen-kv-g0-next
+ /home/ubuntu/OpenTallas-qwen-kv-beat-retirement
+ NativePCprovider25edges/raw3/lookup12, PCII5 and350REF/3900interval retained; strict idle-refresh, service1GHz, actualPHY, contextualSSFF/CDC/route still unqualified. No clock constraints relaxed.
+ Existing conditionalctx8191 source bytes/token150847488;281.4us fill-only,294.912us DATA+GRANT and294.624us column lower bounds. Historical6222/8460 rows do not qualify that policy. Morecredits/rootcompute cannot overcome fixed8/4/7 port deficit.537.6GB/s is required fill interface throughput, not achievable sustained PHY proof. Do not reinterpret1536tile ports as global bandwidth.
+
+UNCOMMITTED OBSERVED L0 BINDING STATUS
+ The new tool ONLY parses/reconciles already captured observations; it does not edit calendar/rate, synthesize payload, run RTL or select a physical policy.
+ First literal anchor failure is preserved in model-r1.json(empty) and binding-failure-r1.json. model-r2.json is a completed scoped parser result. No new focused tests or evidence-manifest verifier were yet written; this is WIP, not parent-ready adoption or full observer qualification.
+ Observed terminal log: L0 end4676cycles (stage4669),seq/core/collfault0. Runtime manifest layers1/position0/ranks4/headfalse; stage line has four distinct die0..3 image directories and kv_reset1. TP2 log label is stale, not rank authority. All four X checkpoints compared byte/word-exact to retained captured originals and terminalSHA.
+ Source residence: rank-local host std::vector<uint32_t> mem[d].kv,8388608elements/33554432hostbytes perrank, initiallyzero. Host writes committed before direct host reads; stage controller can zero on kv_reset. No observed next-layer transition/resident macro/home qualification. Source PC11 nout1 and PC13 k1 establish observed position-zero attention, NOT8191 context.
+ Per rank produceraccepts: PC3edge270 writes256 at291..294;PC8edge494 writes128 at515..516;PC10edge506 writes128 at527..528.512scalarwrites/rank =2048FP32hostbytes/rank;derivedFP8snapshot512bytes/rank. Last currentrow write528. PC11accepted530/readrequest573..580;PC13accepted807/readrequest850..857. First request slacks46..561 original simulator edges, not ACK/read-return or service-clock deadlines. First MEidle after lastconsumer1003, snapshot4676; neither is provider/tag/window-reader drain.
+ Recovered requests393216total,49152perconsumer/rank. Hostcallback16FP32lanes implies25165824total interface bytes; do NOT charge as offchip bytes or effectiveattention demand. PC11uniquehostwordaddresses12288/maxduplicate4,PC13unique8200/maxduplicate8. Masked lanes/effective demand and returned payload remain unqualified.
+ Provider allocationtag/epoch, maskedmacrovisibility, readerdebt/reverse404ACK/retire/abort, actualphysicalresidence/nextlayerrelease, selected8191payload, actualPHY/clockconversion all None. Rejected calendar files unchanged. No long-context/fulltoken rate or overlap adopted.
+
+RAW / SOURCE PINS AND CONCURRENCY FAILURE
+ Raw external journal: /tmp/qrom-L0-terminal-archive-f5-20261003-r1/accepted-state.raw
+ bytes65580540 SHA25629aa39b0017ff2afa2bd28b40f557c3d9be10580b1a684a5100e5137e1109617
+ Frozen source/runtime f5deb56b9cc53d4a0632b9ba69e3e50b834c4801; originalcapture SHA d71d6d8a6d724b8f48c77ec90dd9027935d5d8f90d50b54be3a941b680f9beab.
+ Original observedhost SHA d42a775f630831d3f7640e1b439902f1d3ee07d1b92629375f090a5e4b93b6ad, headerSHA6c37db03c5fb524bd86a3b63621cdef2dc63e37bd626b6a5ea715d6b42245fcd.
+ Strict Euclid frozen replay returned1: actual16lane source KV read width/interleaved concurrentpayload. collection-terminal.json +verification.log FAIL preserved alongside terminalruntimePASS. Euclid19a4a932e request-header extractor recovers whole six-field atomic headers and main-thread committed producer state; returned16lane payload and physical provider ACKs NOT qualified. Copied inputs/Euclid-source-request-only-r1.json.gz +contract snapshot retain source_provenance_independently_qualified:false. Do not silently promote them or repair/reorder rawpayload. User reports fresh parser fields now under Euclid resolution; consume owner-qualified latest receipt when available.
+ model-r2 source_sha256/input_sha256 fields pin exact main capture, retainedprogrambundle, observedhost, launch/deadline helpers, oldrejected model and small input copies. Raw remains owner archive; no duplicate65MB journal or runtime fetch launched.
+
+NEXT COMMANDS / ACTIONS FOR CLAUDE (NOT EXECUTED AFTER FREEZE)
+ Read current partial binding:
+  python3 -m json.tool /home/ubuntu/OpenTallas-qwen-kv-observed-L0/results/uarch/qwen_rom_kv_observed_L0_20261003/model-r2.json
+ Verify rawidentity:
+  sha256sum /tmp/qrom-L0-terminal-archive-f5-20261003-r1/accepted-state.raw
+ Optional independent read-only parser replay, from this worktree (newexclusive output, no DUT):
+  python3 tools/qwen_rom_kv_observed_L0_binding.py --raw /tmp/qrom-L0-terminal-archive-f5-20261003-r1/accepted-state.raw --out /tmp/claude-review-20261003/observed-L0-independent-r1.json
+  cmp /tmp/claude-review-20261003/observed-L0-independent-r1.json results/uarch/qwen_rom_kv_observed_L0_20261003/model-r2.json
+ Caveat: output embeds local rawarchive directory; alternate archive paths change only provenance-path field, so compare semantic pins if relocating.
+ Wait for Euclid's latest source-format/returnedpayload/journal qualification without another numerical decode. Bind only actualobserved ctx/addresses/commits. Decoupled layerl+1 pastKVprefetch must separately prove source addresses/versionavailability, finite staging, physicalcapacity, read/writecontention, protectedlease/reader/ACK retirement, nextlayerdeadline and legalrouting/PHY/CDC before any rate. At last read /tmp/claude-review-20261003/prefetch was empty; no proposal calendar was intaken or edited here.
+ send_input tool absent; this file is the exact coordination handoff. Parent retains intake/adoption; no hardware before composed model+gates.

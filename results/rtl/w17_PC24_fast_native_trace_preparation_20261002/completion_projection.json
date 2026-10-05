@@ -1,0 +1,42 @@
+{
+  "current_cycle": 92800,
+  "rate_seconds_per_1000": 320,
+  "conditional_PC_only_watchdog": {
+    "cycles": [
+      112202,
+      112401
+    ],
+    "remaining_cycles": [
+      19402,
+      19601
+    ],
+    "estimated_remaining_seconds": [
+      6208.64,
+      6272.32
+    ]
+  },
+  "conditional_cold_refill": {
+    "cycles": [
+      136671,
+      138146
+    ],
+    "remaining_cycles": [
+      43871,
+      45346
+    ],
+    "estimated_remaining_seconds": [
+      14038.72,
+      14510.72
+    ]
+  },
+  "refill_elapsed_cycles": [
+    123964,
+    125727
+  ],
+  "reads_per_rank": 2176,
+  "rows_per_rank": 128,
+  "guaranteed_completion_cycle": null,
+  "guaranteed_wall_bound": null,
+  "causal_service": "BOUND_MISSING",
+  "live_health_or_deadlock": "UNDETERMINED"
+}

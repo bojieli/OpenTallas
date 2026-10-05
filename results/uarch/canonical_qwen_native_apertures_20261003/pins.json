@@ -1,0 +1,23 @@
+{
+  "new_source_sha256": {
+    "tools/gpu_sys/canonical_qwen_native_aperture_model.py": "fed77569e3fa58175f85c152586b75cd61e4e0aad2ff7a1921c0e52036ccdebc",
+    "tools/gpu_sys/canonical_qwen_native_aperture_rtl.py": "e06e32e376902b3c312365ddf182e5fbd8fdf32dcfb8ccd22a5eb915bf6f217f",
+    "tools/gpu_sys/canonical_qwen_native_aperture_template.sv": "1fc1e4992c02d6cc2fb80a98ad6e55790fbc3a796719cd1df1bf65e5995f87c4",
+    "tools/gpu_sys/canonical_qwen_native_bank_views.py": "029ef1522bb597939b53857c5d42aaff33f2b2e375d03aa4b516ba252c390015",
+    "tools/gpu_sys/canonical_qwen_native_aperture_bindings.py": "a78639593d6bc4816933a18f8acc0eb32a71f9a727898e0e1013007c8ec4c52f",
+    "tests/test_canonical_qwen_native_apertures.py": "7c1b8371e47ebba16dc2891860203e762c55c4928887e1a53f5aff3d60aca6de",
+    "rtl/experimental/canonical_qwen_native_apertures_20261003/ot_gpu_qwen_native_aperture_collector.sv": "45c812a1267369b2f67695e948c613f762c86b15bab93b318863b236ce8542a7",
+    "rtl/experimental/canonical_qwen_native_apertures_20261003/ot_gpu_qwen_native_aperture_range_owner.sv": "4fc66ebc77c68cfa7d88dd55fb0d830ac161ba81e1683c8cf0fc1153bcf42c65"
+  },
+  "unchanged_prerequisites_sha256": {
+    "rtl/experimental/canonical_qwen_banked_manifest_owner_20261003/ot_gpu_qwen_banked_manifest_range_owner.sv": "eb8a74eb0386fdecf5b3c2b5dc904536e1a2f8d3f7da32a415d823ea5e927f58",
+    "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "tools/gpu_sys/canonical_qwen_banked_manifest_owner.py": "179fd80de751b53b478290603c06c9fc9a791889628be8c919f82b6458dc2ce8",
+    "tools/gpu_sys/canonical_qwen_range_owner_bindings.py": "da17fd3b3bb645844d1517d8207a3113b0dd5f5914f1faeb8e56e891869916f5",
+    "tools/gpu_sys/canonical_qwen_rf_ports.py": "3e6e3ade6aad8c9b7d7a7632e934591ed2ed4a51922fe6da93392513f19f4b1b"
+  },
+  "base_commit": "4c4adbcd7e4345a5852e9379c0e7c297f6449166",
+  "source_cursor_commit": "88f26a3831acea0147c587edd26058a441277155",
+  "source_cursor_sha256": "76358e3f2e6d70e568b72027c652ccd1feac2006d3d656e792173624da79b9b2",
+  "canonical_program_sha256": "ab3fe8d6469d6a1552e2eeaa9efe945c025cc35a567f0d8161e3c2a02fc59354"
+}

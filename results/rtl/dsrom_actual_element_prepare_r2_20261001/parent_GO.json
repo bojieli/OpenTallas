@@ -1,0 +1,20 @@
+{
+  "GO": "BOUNDED_EXISTING_SOURCE_DIFFERENTIAL_VERIFICATION_ONLY",
+  "bench_revision": "r2",
+  "bench_sha256": "a149aa0d0d53dd4e9d293f253ec6eea99af28baa29ebda43be6ea08c54316681",
+  "full_die_build": false,
+  "hardware_admission": false,
+  "limits": {
+    "CPUs": 2,
+    "aggregate_build_seconds": 600,
+    "aggregate_memory_bytes": 4294967296,
+    "aggregate_sim_seconds": 60,
+    "swap_bytes": 0
+  },
+  "parent_tests_passed": 7,
+  "prepared_commit": "90fc0535712cbc5c80417f1a60a8eb3cef865aae",
+  "prepared_model_sha256": "6ee5c330dd07d81e6ee953a31c2b98b99367eabce8b3393045973cc1ac221f92",
+  "prior_failure_preserved": "338141d39 fixture failure before workload",
+  "scope": "Sampling-only fixture correction; source/model geometry and all predicates preserved; single bounded attempt; no fallback or shape reduction",
+  "timing_qualification": false
+}

@@ -1,0 +1,19 @@
+Bounded independent readonly review of9b7b120388ff0c8888f69bcf38211865c7cee8e7.
+Parent intake can preserve this as DIAGNOSTIC ONLY; no engine/physical adoption or installed prelaunch-guard/placement PASS inferred.
+
+Cold original7tests PASS. Parsed committed ORFS make_tracks entries exactly match all embedded ASAP7 offsets/pitches. Actual RF128x256 MX needs y24mod48nm; scratch1024x256 MX needs y18mod48nm. check_placement at these offsets yields0 offtrack vsorigin0offtrack; it does NOT certify row placement. Full21catalog cold --fail-on-offtrack returns1 for existingPHY M5phase incompatibility; prior record preserved, not repaired.
+
+Preliminary admission concerns:
+- CLI examines abstract legal residues, no DEF/ODB input/placement instances. Its rc0 cannot mean actual placed pins legal. A required workflow could use this diagnostic alongside separately bound instance checks; it is not a complete launch guard.
+- Preferred-axis constraints intersected perlayer only. M4y0mod48 andM6y2mod64 each have legal270nm-row intersections, yet no ONEcommony origin. Empty row/site intersection also does not affect CLI failure.
+- Unknown/no parsed tracks or unsupported pin POLYGON/no RECT can produce0 without auditing signal geometry. Must failclosed/declare restricted LEF/track syntax before general mandatory-guard use.
+- Rotated records computed but no_legal_origin/CLI only4mirror orientations. Current catalog has actual rotated no-origin macros. R90-only symmetry also omits R180; X+R90 misses closureMY/R180. Current four-orientation placement scope can be stated explicitly without solving every future PDK class.
+- Nonzero track offsets work; audit site/row origin defaults0 despite joint_grid accepting site_origin. CLI does not bind actual row origin. LEF ORIGIN/UNITS/generalTcl/POLYGON/PORT semantics not supported.
+- Multirect PIN rectangles conjunctively checked at individualcentres and counted as pins; port grouping/term bbox/alternative access semantics need scope. Via checks omit actual cut/enclosure/partialOBS/neighbor/blockage/PDN rules. Findings are access diagnostics, not DRC qualification.
+
+These do not block DIAGNOSTIC-ONLY intake. Minimal future guard followup: failclosed coverage, combined sameaxis layer+row/site residues for selected allowed orientation, actual frozenDEF/ODB instance check. No ownerfix attempted. No live P&R/source/constraint edits.
+
+Replay:
+python3 tools/test_check_macro_track_alignment.py
+python3 results/uarch/macro_track_checker_independent_review_20261003/review.py --verify
+No optional broad PDK survey/job. Corner probes are synthetic checker tests only, not physical source qualification.

@@ -1,0 +1,22 @@
+{
+  "checked_artifacts": {
+    "Dewey_handoff.json": "ea3ba019188b1b4494f64f88eda2294d95e43eb36fe713fcfd8665f57c1746a3",
+    "candidate_RTL_elsewhere.json": "b0110381ff10734cc6974a8645488edb6af57c264f4bad05174e7dd27963c2fd",
+    "family_bindings.json.gz": "5bdc7b20a289ab9677c3e6e78e3dc204da2faada259426e5d80fd0224d3af865",
+    "family_summary.tsv": "9fb7227f978c710d91e1108fbec2ee9c49b910bed074b4ee278271e4505e3ea9",
+    "hardware_inventory.json": "d2510a49dce061129409d0ad028c19253f78afd5260215f7bf8381a52855ffa6",
+    "primitive_capabilities.json": "ba1f13f4957f165c10fd36d9a9e600ee726de8a6985444eca16b009fb9f405fe",
+    "remaining_work.json": "bfd4f1578fc7ad5f6da172309ff647a05e468d9418eaaea6b5dfe1b1b0625b14",
+    "source_pins.json": "4864f685e779df2c831491bc92c9d07c7b854d68fdd136a7c69c4a439dfe617e",
+    "validation.json": "330bbd133cf190fb4191c0728f70a2995540da362c5634fb2e7005ad4a41cea3"
+  },
+  "checks": [
+    "coverage equals committed family counts",
+    "each PC appears exactly once",
+    "all referenced rank/buffer templates resolve",
+    "90 prepared-source RTL hashes match",
+    "control-only empty primitive families explicitly bounded"
+  ],
+  "jobs_launched": 0,
+  "status": "PASS_BYTE_IDENTICAL_REPLAY"
+}

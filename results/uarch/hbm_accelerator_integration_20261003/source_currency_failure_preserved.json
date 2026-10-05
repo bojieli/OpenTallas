@@ -1,0 +1,12 @@
+{
+  "status": "OBSERVED_TEST_CURRENCY_FAILURE_PRESERVED_SUMMARY",
+  "scope": "first focused suite after opt-in source edit; no numeric/build/runtime failure",
+  "failed_tests": [
+    "tests/test_uarch_gpu_index_scan.py::test_current_repricing_record_matches_sources_and_retains_old_results",
+    "tests/test_uarch_hub_edge_wires.py::test_composed_model_binds_current_sources_and_preserves_historical_record"
+  ],
+  "expected_preintegration_uarch_sha256": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9",
+  "observed_first_edit_uarch_sha256": "07879f2be9000d47e8f30f68d6f1f93ea78d4b65d8caeb205a27bee13dcf662d",
+  "retention": "summary of retained tool-call diagnostics; not a reconstructed raw pytest log",
+  "correction": "additive current-module successor pins plus preserved default numeric and ROM/wire AST checks; old model records unchanged"
+}

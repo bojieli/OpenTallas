@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.dsrom-1m.draft-blocks.links.v1",
+ "generated_utc": "2026-10-04T16:48:59Z",
+ "hop": {
+  "exact": true,
+  "payload_B": 204880,
+  "payload_flits": 3202,
+  "link_rt_first_to_last_cycles": 3380,
+  "vendor_channel_cycles": {
+   "board": 156,
+   "ucie_fanout": 11
+  },
+  "measured_endpoint_cycles": 3213,
+  "phy_serialization_ns": 1196.07,
+  "phy_serialization_extra_cycles": 0,
+  "wire_stage_cycles": 90,
+  "total_cycles": 3470,
+  "us": 2.8917,
+  "summary": "HOP_SUMMARY case=hop5_lfec_fanout result=PASS bytes=204880 flits=3202 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=3202 rcvd=3202 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=3203 first_flit=179 last_flit=3380 leg1_first_flit=162 leg1_last_flit=3363 out_span=3201 in_span=3201 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=319 max_replay_occ2=29 seed=81",
+  "sources": {
+   "rtl/test/dsrom_sys/tb_dsrom_1m_hop.sv": "3e2cf11992ff00284207ff28a356c19cfefc415cfd43ee9d71b5d02f90385a7b",
+   "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+   "rtl/dsrom_sys/ot_dsrom_link_chan.sv": "48707d46a11d11a38669e8bb77fa6fdeb129357e30f4c587f0cc5e1d308ef835",
+   "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  }
+ }
+}

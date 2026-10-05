@@ -1,0 +1,244 @@
+{
+  "all_family_provisional_projection_hours": {
+    "16": {
+      "max": 31.0227327913596,
+      "min": 9.723461305285388,
+      "weighted": 23.128903607229457
+    },
+    "24": {
+      "max": 20.6818218609064,
+      "min": 6.482307536856926,
+      "weighted": 15.419269071486303
+    },
+    "48": {
+      "max": 10.3409109304532,
+      "min": 3.241153768428463,
+      "weighted": 7.7096345357431515
+    }
+  },
+  "cold_PCH_repeat": false,
+  "execution_wall_limit": null,
+  "family_census": {
+    "attention_tile/fast": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 889,
+      "cpp_bytes": 789119857,
+      "remaining_cpp_bytes": 789119857
+    },
+    "attention_tile/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 353,
+      "cpp_bytes": 328913534,
+      "remaining_cpp_bytes": 328913534
+    },
+    "root/fast": {
+      "completed_count": 26,
+      "completed_cpp_bytes": 25571945,
+      "count": 846,
+      "cpp_bytes": 1151316122,
+      "remaining_cpp_bytes": 1125744177
+    },
+    "root/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 797,
+      "cpp_bytes": 1101270799,
+      "remaining_cpp_bytes": 1101270799
+    },
+    "support_other/fast": {
+      "completed_count": 2,
+      "completed_cpp_bytes": 287625,
+      "count": 3,
+      "cpp_bytes": 288630,
+      "remaining_cpp_bytes": 1005
+    },
+    "support_other/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 15,
+      "cpp_bytes": 892980,
+      "remaining_cpp_bytes": 892980
+    },
+    "vec_lane/fast": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 422,
+      "cpp_bytes": 314499989,
+      "remaining_cpp_bytes": 314499989
+    },
+    "vec_lane/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 356,
+      "cpp_bytes": 265045457,
+      "remaining_cpp_bytes": 265045457
+    },
+    "vec_queue/fast": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 43,
+      "cpp_bytes": 28826179,
+      "remaining_cpp_bytes": 28826179
+    },
+    "vec_queue/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 39,
+      "cpp_bytes": 24541811,
+      "remaining_cpp_bytes": 24541811
+    },
+    "vec_reducer/fast": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 35,
+      "cpp_bytes": 24076132,
+      "remaining_cpp_bytes": 24076132
+    },
+    "vec_reducer/slow": {
+      "completed_count": 0,
+      "completed_cpp_bytes": 0,
+      "count": 31,
+      "cpp_bytes": 20128820,
+      "remaining_cpp_bytes": 20128820
+    }
+  },
+  "frontend_repeat": false,
+  "historical_attempt_budget_formula": "ceil_to_2_hours(1.5 * remaining_cpp_bytes * observed_max_wall_per_byte / jobs +1800s archive/link allowance)",
+  "limits": [
+    "Rates from early root/fast TUs do not measure root/slow, attention or vector family costs; scenarios apply the same provisional source-byte rate and must be replaced by family samples.",
+    "Right-censored slowroot0 and nonexclusive scheduling prevent a finite measured whole-build completion guarantee.",
+    "Historical18hVM/32hlocal attempt pricing is preserved as resource context; user now removes executionwalllimits. No automaticretry.",
+    "PCH/source/object/depfiles must retain original mtimes and hashes for incremental make; changing compiler, flags or sysheaders invalidates reuse admission.",
+    "Actual local28objects/PCHs verified; no completed native binary, no archive, runtime unauthorized, causalBOUND_MISSING."
+  ],
+  "objects_reusable": 28,
+  "observed_rate_basis": "15 first-wave root/fast completion wall samples; origin approximated from actual firstwave root0 process lifetime, unfinishedroot0 right-censored. Wall/source-byte rates are empirical screening ratios, not per-TU CPU or causal compiler upper bounds.",
+  "proposals": {
+    "VM48": {
+      "CPU_mask": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ],
+      "CXX_AS_bytes": 3221225472,
+      "FSIZE": "unlimited",
+      "compile_jobs": 48,
+      "container_memory_bytes": 77309411328,
+      "historical_priced_attempt_seconds": 64800,
+      "host_disk_reserve_bytes": 17179869184,
+      "host_memory_reserve_bytes": 25769803776,
+      "link_AS_bytes": 4294967296,
+      "memory_bytes": 85899345920,
+      "ordinary_archive": true,
+      "output_bytes": 21474836480,
+      "pids_max": 160,
+      "scratch": "/home/ubuntu/... disk-backed; never VM/tmp tmpfs",
+      "status": "COMPATIBILITY_REVIEW_ONLY_NO_VM_BUILD",
+      "supervisor_memory_bytes": 8589934592,
+      "swap_bytes": 0,
+      "sysroot_admission": "Entire exact local headers/GCC/CRT/runtime closure SHA-enrolled and read-only bound; on-entry fast/slow PCH acceptance mandatory. Base-image package revision not selected for these files.",
+      "wall_limit": null
+    },
+    "local24": {
+      "CPU_mask": [
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "CXX_AS_bytes": 3221225472,
+      "FSIZE": "unlimited",
+      "compile_jobs": 24,
+      "historical_priced_attempt_seconds": 115200,
+      "host_disk_reserve_bytes": 17179869184,
+      "host_memory_reserve_bytes": 34359738368,
+      "link_AS_bytes": 4294967296,
+      "memory_bytes": 68719476736,
+      "output_bytes": 21474836480,
+      "pids_max": 96,
+      "status": "PARENT_LOCAL24_UNIT_ACTIVE",
+      "swap_bytes": 0,
+      "wall_limit": null
+    }
+  },
+  "rate_seconds_per_cpp_byte": {
+    "max": 0.0004441666492915822,
+    "min": 0.00013921524117591085,
+    "weighted": 0.0003311470877211803
+  },
+  "remaining_cpp_files": 3801,
+  "root_only_VM48_projection_hours": {
+    "max": 5.724339003542207,
+    "min": 1.7941807117257254,
+    "weighted": 4.267763446839435
+  },
+  "schema": "opentallas.D1.incremental-source-family-budget.v1",
+  "user_policy": "Native builds run until completion with no seconds/timeout/RuntimeMaxSec; aggregate disk/memory safeguards and unlimitedFSIZE retained."
+}

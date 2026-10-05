@@ -1,0 +1,71 @@
+{
+ "and_the_comparator_is_sound_here": {
+  "reading": "identical, so unlike the 32-token case this disagreement is the device's.  The 8-token workload is what makes the comparison usable at all.",
+  "two_fresh_oracle_processes": [
+   [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   [
+    14,
+    1320,
+    16,
+    42250
+   ]
+  ]
+ },
+ "answer": "at the first decode step whose ratio-2 compressor predicate is TRUE.  The device's third token is the oracle's fourth, so it is a SEQUENCE defect at one boundary rather than a wrong value everywhere.",
+ "not_a_claim": [
+  "the compressor's decode path is not shown to be wrong; it is what remains after the predicate and the comparator were both checked",
+  "no cell is closed by this record"
+ ],
+ "question": "with the resolver guard the V4.1 HBM cell emits four tokens, [14, 1320, 42250, 294], against the oracle's [14, 1320, 16, 42250].  Where exactly does it turn?",
+ "schema": "opentallas.result.v41_divergence_at_the_first_compression.v1",
+ "the_step_arithmetic_read_off_the_driver": {
+  "prompt_tokens": 8,
+  "reading": "the first two tokens agree and the divergence begins at the step where the compressor fires for the first time.  The token the device produces there is the one the oracle produces at the NEXT step, which is what a history one row too long would give.",
+  "source": "runtime/driver.py: position starts at len(prompt) and binds CONTEXT_LENGTH = position + 1, POSITION_END = position + 1",
+  "steps": [
+   {
+    "agree": true,
+    "context_length": 8,
+    "oracle": 14,
+    "step": "prefill",
+    "token": 14
+   },
+   {
+    "agree": true,
+    "compressor_predicate": "9 % 2 != 0 -> false",
+    "context_length": 9,
+    "oracle": 1320,
+    "position_start": 8,
+    "step": "decode 1",
+    "token": 1320
+   },
+   {
+    "agree": false,
+    "compressor_predicate": "10 % 2 == 0 -> TRUE, the first firing",
+    "context_length": 10,
+    "oracle": 16,
+    "position_start": 9,
+    "step": "decode 2",
+    "token": 42250
+   },
+   {
+    "agree": false,
+    "compressor_predicate": "11 % 2 != 0 -> false",
+    "context_length": 11,
+    "oracle": 42250,
+    "position_start": 10,
+    "step": "decode 3",
+    "token": 294
+   }
+  ]
+ },
+ "why_this_is_the_compressor_and_not_the_predicate": {
+  "the_predicate_was_checked_and_is_right": "the graph declares ``context_length % 2 == 0`` and both lowerings materialise it as ``POSITION_END % 2 == 0``.  Those look off by one and are not: runtime/driver.py binds POSITION_END and CONTEXT_LENGTH to the same value, ``position + 1``, which is what program.py's own comment states -- 'CONTEXT_LENGTH and POSITION_END are the same request scalar in ABI 3.0'.  Refuted before any edit.",
+  "what_is_left": "the compressor's DECODE path itself -- kernel main.layerNN.attention.compressor.carry, the same kernel whose gather the resolver guard just unblocked.  The guard let that gather run; nothing yet shows it runs with the right CONTENT."
+ }
+}

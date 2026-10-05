@@ -1,0 +1,336 @@
+{
+  "C0_bridge_owner": "Sagan",
+  "area_basis": "unified sm_area pure unit-sum; RF macro footprints + explicitly assumed C0 DFF/mux; lower bound",
+  "composed_model_owner": "Dewey",
+  "designs": {
+    "DeepSeek": {
+      "RF": {
+        "credit_held_until": "mirrored_visible_ACK",
+        "footprint_mm2_per_SM": 0.6525396246528,
+        "logical_bytes_per_SM": 262144,
+        "logical_bytes_per_rank": 8388608,
+        "logical_vectors": 512,
+        "macros_per_SM": 128,
+        "physical_bytes_per_rank": 16777216,
+        "physical_mirrored_bytes_per_SM": 524288,
+        "physical_write_copies": 2,
+        "read_ports": 2,
+        "retained_source_vectors": 480,
+        "transaction_credit": 1,
+        "workspace_reserved_vectors": 32,
+        "write_ports": 1
+      },
+      "SMs_per_rank": 32,
+      "actual_H1_config": {
+        "IL": 8,
+        "LBS": 2,
+        "LEV": 4,
+        "LSB": 16,
+        "MAX_OUT": 512,
+        "NC": 8,
+        "RMAX": 4096,
+        "SUB": 4,
+        "XD": 128,
+        "op_fmt": 0,
+        "op_gs": 0
+      },
+      "area": {
+        "C0_ASSUMED_mm2_per_SM": 0.0365072384,
+        "RF_added_mm2_per_SM": 0.6525396246528,
+        "excluded": "unimplemented generic SFU/reduction/movement/collective units; measured slot-fit UNKNOWN",
+        "matrix_and_SIMT_unit_sum": {
+          "footprint_logic_mm2": 1.676,
+          "hardened_columns": {},
+          "logic_mm2": 0.838,
+          "logic_um2": {
+            "blockdot_and_trees": 190151,
+            "mma_lanes_and_trees": 469375,
+            "row_scale": 6266,
+            "simt": 149605,
+            "stack": 12971,
+            "x_operand_regs": 9854
+          },
+          "macs_per_clk": 2560,
+          "sram_kb": {
+            "scratch": 64,
+            "staging": 64,
+            "x_store": 80.0
+          },
+          "sram_macros": {
+            "scratch": 2,
+            "staging": 2,
+            "x_store": 13
+          },
+          "sram_mm2": 0.274,
+          "total_mm2": 1.951
+        },
+        "modeled_lower_mm2_per_SM": 2.6400468630528002,
+        "modeled_lower_mm2_per_rank": 84.48149961768961
+      },
+      "boundary_bits_per_transaction": {
+        "C0_command": 512,
+        "RF_mirrored_write": 8192,
+        "RF_operands": 8192,
+        "matrix_ingest": 1024,
+        "scratch": 512
+      },
+      "clock_policy": {
+        "SS_FF_qualification": false,
+        "hold_uncertainty_ps": 25,
+        "serial_chain_target_Hz": 900000000,
+        "setup_uncertainty_ps": 60,
+        "software_tick_to_hardware_clock_conversion": null,
+        "streaming_target_Hz": 1200000000
+      },
+      "compute": {
+        "actual_H1_opcode_exercised": [
+          "FADD"
+        ],
+        "communication_intensity_matrix_macs_per_ingest_byte": 20.0,
+        "general_native_issue_rate": "UNKNOWN_POSITIVE_PROVISIONAL_REQUIRED",
+        "matrix_macs_per_issue_clk": 2560,
+        "native_hardware_bound_families": 0
+      },
+      "finite_credits_per_SM": {
+        "C0_command": 1,
+        "RF_transaction": 1,
+        "provider_tag": 1,
+        "reverse_grant": 1,
+        "scoreboard_entries": 256,
+        "scratch_transaction": 1
+      },
+      "formula_drain_cycles_actual_config": 91,
+      "formula_drain_cycles_before": 84,
+      "hardware_admission": false,
+      "matvec_issue_comparison": [
+        {
+          "K": 5120,
+          "actual_row_slot_cycles": 321,
+          "format": "fp8",
+          "previous_group_slot_cycles": 65,
+          "rows_per_rank": 32
+        },
+        {
+          "K": 5120,
+          "actual_row_slot_cycles": 321,
+          "format": "fp8",
+          "previous_group_slot_cycles": 129,
+          "rows_per_rank": 64
+        },
+        {
+          "K": 5120,
+          "actual_row_slot_cycles": 321,
+          "format": "fp8",
+          "previous_group_slot_cycles": 321,
+          "rows_per_rank": 256
+        }
+      ],
+      "port_peak_Bpc_is_not_achieved_rate": true,
+      "ports_bytes_per_accepted_transaction": {
+        "RF_read_A": 512,
+        "RF_read_B": 512,
+        "RF_write_A": 512,
+        "RF_write_B": 512,
+        "matrix_ingest": 128,
+        "scratch": 64
+      },
+      "previous_model_element": {
+        "bf16_lanes": 64,
+        "blockdot_lanes": 8,
+        "cols": 8,
+        "group_slot": true,
+        "gs_cols": 8,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "int8_lanes": 0,
+        "k_max": 5120,
+        "scratch_kb": 64,
+        "simt_lanes": 128,
+        "stack_levels": 3,
+        "subparts": 4,
+        "x_bytes": 2
+      },
+      "ranks": 96,
+      "reconciled_model_element": {
+        "bf16_lanes": 64,
+        "blockdot_lanes": 8,
+        "cols": 8,
+        "group_slot": false,
+        "gs_cols": 8,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "int8_lanes": 0,
+        "k_max": 5120,
+        "scratch_kb": 64,
+        "simt_lanes": 128,
+        "stack_levels": 4,
+        "subparts": 4,
+        "x_bytes": 2
+      },
+      "routing": {
+        "admission": "BLOCKED until actual floorplan channel/escape and complete endpoint areas",
+        "broadcast_fanout": 32,
+        "channel_capacity_tracks": null,
+        "command_demux_destinations": 32,
+        "command_mux_2to1_bit_equivalents": 15872,
+        "local_payload_tracks_lower": 18432,
+        "replicas": 32,
+        "slot_fit": null
+      },
+      "total_SM_replicas": 3072
+    },
+    "Qwen": {
+      "RF": {
+        "credit_held_until": "mirrored_visible_ACK",
+        "footprint_mm2_per_SM": 0.6525396246528,
+        "logical_bytes_per_SM": 262144,
+        "logical_bytes_per_rank": 8388608,
+        "logical_vectors": 512,
+        "macros_per_SM": 128,
+        "physical_bytes_per_rank": 16777216,
+        "physical_mirrored_bytes_per_SM": 524288,
+        "physical_write_copies": 2,
+        "read_ports": 2,
+        "retained_source_vectors": 480,
+        "transaction_credit": 1,
+        "workspace_reserved_vectors": 32,
+        "write_ports": 1
+      },
+      "SMs_per_rank": 32,
+      "actual_H1_config": {
+        "IL": 8,
+        "LEV": 5,
+        "LS": 32,
+        "MAX_OUT": 512,
+        "NC": 16,
+        "NXM": 16,
+        "RMAX": 4096,
+        "SUB": 4,
+        "op_scale": 0,
+        "sw_en": 0
+      },
+      "area": {
+        "C0_ASSUMED_mm2_per_SM": 0.0365072384,
+        "RF_added_mm2_per_SM": 0.6525396246528,
+        "excluded": "unimplemented generic SFU/reduction/movement/collective units; measured slot-fit UNKNOWN",
+        "matrix_and_SIMT_unit_sum": {
+          "footprint_logic_mm2": 4.359,
+          "hardened_columns": {},
+          "logic_mm2": 2.179,
+          "logic_um2": {
+            "blockdot_and_trees": 0,
+            "mma_lanes_and_trees": 1965738,
+            "row_scale": 12532,
+            "simt": 149605,
+            "stack": 32428,
+            "x_operand_regs": 19110
+          },
+          "macs_per_clk": 2048,
+          "sram_kb": {
+            "scratch": 64,
+            "staging": 64,
+            "x_store": 384.0
+          },
+          "sram_macros": {
+            "scratch": 2,
+            "staging": 2,
+            "x_store": 16
+          },
+          "sram_mm2": 0.323,
+          "total_mm2": 4.681
+        },
+        "modeled_lower_mm2_per_SM": 5.370046863052799,
+        "modeled_lower_mm2_per_rank": 171.84149961768958
+      },
+      "boundary_bits_per_transaction": {
+        "C0_command": 512,
+        "RF_mirrored_write": 8192,
+        "RF_operands": 8192,
+        "matrix_ingest": 1024,
+        "scratch": 512
+      },
+      "clock_policy": {
+        "SS_FF_qualification": false,
+        "hold_uncertainty_ps": 25,
+        "serial_chain_target_Hz": 900000000,
+        "setup_uncertainty_ps": 60,
+        "software_tick_to_hardware_clock_conversion": null,
+        "streaming_target_Hz": 1200000000
+      },
+      "compute": {
+        "actual_H1_opcode_exercised": [
+          "FADD"
+        ],
+        "communication_intensity_matrix_macs_per_ingest_byte": 16.0,
+        "general_native_issue_rate": "UNKNOWN_POSITIVE_PROVISIONAL_REQUIRED",
+        "matrix_macs_per_issue_clk": 2048,
+        "native_hardware_bound_families": 0
+      },
+      "finite_credits_per_SM": {
+        "C0_command": 1,
+        "RF_transaction": 1,
+        "provider_tag": 1,
+        "reverse_grant": 1,
+        "scoreboard_entries": 256,
+        "scratch_transaction": 1
+      },
+      "formula_drain_cycles_actual_config": 108,
+      "formula_drain_cycles_before": 108,
+      "hardware_admission": false,
+      "matvec_issue_comparison": [],
+      "port_peak_Bpc_is_not_achieved_rate": true,
+      "ports_bytes_per_accepted_transaction": {
+        "RF_read_A": 512,
+        "RF_read_B": 512,
+        "RF_write_A": 512,
+        "RF_write_B": 512,
+        "matrix_ingest": 128,
+        "scratch": 64
+      },
+      "previous_model_element": {
+        "bf16_lanes": 0,
+        "blockdot_lanes": 0,
+        "cols": 16,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "int8_lanes": 128,
+        "k_max": 12288,
+        "scratch_kb": 64,
+        "simt_lanes": 128,
+        "stack_levels": 5,
+        "subparts": 4,
+        "x_bytes": 2
+      },
+      "ranks": 2,
+      "reconciled_model_element": {
+        "bf16_lanes": 0,
+        "blockdot_lanes": 0,
+        "cols": 16,
+        "group_slot": false,
+        "il": 8,
+        "ingest_Bpc": 128,
+        "int8_lanes": 128,
+        "k_max": 12288,
+        "scratch_kb": 64,
+        "simt_lanes": 128,
+        "stack_levels": 5,
+        "subparts": 4,
+        "x_bytes": 2
+      },
+      "routing": {
+        "admission": "BLOCKED until actual floorplan channel/escape and complete endpoint areas",
+        "broadcast_fanout": 32,
+        "channel_capacity_tracks": null,
+        "command_demux_destinations": 32,
+        "command_mux_2to1_bit_equivalents": 15872,
+        "local_payload_tracks_lower": 18432,
+        "replicas": 32,
+        "slot_fit": null
+      },
+      "total_SM_replicas": 64
+    }
+  },
+  "measured_costs": "UNKNOWN; positive provisional calendar separate",
+  "schema": "H4_SOURCE_PINNED_ACTUAL_CONFIG_UNIFIED_COMPOSITION_V1",
+  "status": "MODELED_SOFTWARE_SERVICE_DEMAND_HARDWARE_UNQUALIFIED"
+}

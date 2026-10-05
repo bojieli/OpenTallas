@@ -1,0 +1,150 @@
+{
+  "status": "ANALYTICAL_PREPARATION_NOT_COMPILED",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_count": 166,
+  "source_digest": "69b369d2170eae062a0ab66d8feee0a69448d4f205914ae49a455d382032fecf",
+  "old163pins_retained_plus_new_bench_model_generator": true,
+  "source_geometry": {
+    "SUN": 256,
+    "SUM": 64,
+    "BL": 16,
+    "IL": 8,
+    "NBMAX": 192,
+    "CHUNK8": 1,
+    "MP": 1,
+    "AW": 30,
+    "NW": 21
+  },
+  "control": {
+    "same_marker": "registered go cut accepted QE",
+    "new_fatal_site": {
+      "basename": "tb.sv",
+      "line": 1261,
+      "top": "tb"
+    },
+    "old_end_assertion_preserved": true,
+    "local_ACK_and_all_other_checks_preserved": true,
+    "no_broader_fatal_accepted": true,
+    "expression": "rst_n && physical qe_go_e && qe_ready_e && (cut==ISSUE || cut==GO) && (recover || fault_pulse)",
+    "why_not_injected": "inject() sets recover/fault_pulse at preceding negedge, then waits tick() before injected=1. injected is false at the prohibited acceptance posedge.",
+    "edge_calendar": [
+      {
+        "edge": "start-relative6 NBA",
+        "source_event": "actual sequencer registers raw qe_go=1 for PC20 mode1"
+      },
+      {
+        "edge": "preceding negedge of acceptance7",
+        "source_event": "GO cut inject() sets recover=1 and fault_pulse=1; no direct QEgo/force"
+      },
+      {
+        "edge": "acceptance7 pre-NBA",
+        "source_event": "qe_go_e && qe_ready_e are sampled by both actual QE and existing posedge observer; healthy rec_stop suppresses physical go, exact gate-removal mutant passes raw go"
+      },
+      {
+        "edge": "same observer before acceptance calendar/counter",
+        "source_event": "new assertion rejects prohibited physical acceptance with the unchanged marker"
+      },
+      {
+        "edge": "later after localACK",
+        "source_event": "all old ACK/suffix/acceptance assertions still execute unless an earlier real failure terminates the run"
+      }
+    ],
+    "analytical_truth_table": {
+      "valuations": 512,
+      "healthy_prohibited_accepts": 0,
+      "mutant_prohibited_accepts": 12,
+      "false_fatals_without_physical_acceptance": 0
+    },
+    "proof_scope": "Exhaustive nine-Boolean source-equation model only, not RTL runtime, formal whole-core proof or proof of an unlogged acceptance counter in the prior failure.",
+    "$fatal_hardware_cost": 0
+  },
+  "resource": {
+    "caps": {
+      "MemoryMax": 34359738368,
+      "MemorySwapMax": 0,
+      "CPUAffinity": [
+        30,
+        31
+      ],
+      "LimitFSIZE": 1073741824,
+      "LimitCORE": 0,
+      "RuntimeMaxSec": 4500,
+      "KillMode": "control-group",
+      "KillSignal": 9,
+      "OOMPolicy": "stop"
+    },
+    "budget": {
+      "compile_shared_seconds": 3250,
+      "phase_compile_seconds": 650,
+      "frontend_phase_seconds": 300,
+      "runtime_shared_seconds": 720,
+      "short_case_seconds": 10,
+      "long_case_seconds": 120,
+      "supervision_reserve_seconds": 530,
+      "whole_seconds": 4500,
+      "aggregate_output_bytes": 8589934592,
+      "sample_interval_seconds": 0.25,
+      "compile_workers_max": 2,
+      "automatic_retries": 0,
+      "phase_count": 5,
+      "baseline_frontend_repeats": 1,
+      "baseline_CXX_repeats": 1,
+      "new_frontend_processes": 5,
+      "CXX_processes": 5
+    },
+    "measured_prior_first_mutant_frontend_seconds": 99.38094308739528,
+    "measured_prior_first_mutant_CXX_seconds": 362.1715525514446,
+    "measured_prior_first_mutant_sum_seconds": 461.5524956388399,
+    "conservative_reference_front_plus_CXX_seconds": 489.8183427019976,
+    "five_reference_compile_seconds": 2449.091713509988,
+    "aggregate_compile_margin_seconds": 800.908286490012,
+    "reference_is_not_new_compile_timing": true,
+    "all_five_fresh_frontend_CXX": true,
+    "prior_binary_reuse": false,
+    "case_runtime_total_seconds": 710,
+    "runtime_reservations_unchanged": true,
+    "baseline23_measured_native_runtime_seconds": 74.11421680497006,
+    "memory_reference_sampled_peak_bytes": 7066202112,
+    "memory_reference_receipt_sha256": "7b40392242403f00798e2fff989b1063e8d2977df0b0dae7b13198e1bfba2f1e",
+    "memory32GiB_and_output8GiB_same_as_prior": true,
+    "new_peak_unmeasured": true,
+    "failed_output_retained": true,
+    "successful_new_owned_obj_reclaim_only_after_semantic_fsynced_hash_closure": true
+  },
+  "unified_component_cost": {
+    "provider_bits": 259,
+    "core_bits": 8,
+    "producer_ACK_token_bits": 2,
+    "concrete_bits": 269,
+    "envelope_bits": 278,
+    "reserve_bits": 9,
+    "new_hardware_bits": 0,
+    "new_boundary_ports_routes_replicas": 0,
+    "new_healthy_latency_cycles": 0,
+    "area_or_slot_credit": false,
+    "note": "Bench-only fatal observer has no synthesis/adoption claim; unchanged pinned source/model component allocations. No optional228-bit diagnostic ledger added."
+  },
+  "scope": {
+    "SUN256_SUM64_full_QE": true,
+    "positive_cases": 23,
+    "mutants": 4,
+    "actual_selected_core_FSM": true,
+    "full_core_or_token_execution": false,
+    "VM": "Masked full-address fixture shadow, not production fabric.",
+    "SU_data": "Fixture-zero read ports; producer-to-SU arithmetic not qualified.",
+    "owner": "Selected STACK2 WINDOW/mux/KARB/idx; competitor ownership preserved.",
+    "delivery_visibility_provenance_defaults": false,
+    "visibility": "Projected h_tcol+CWL+BURST model deadline only; not causal PHY completion.",
+    "ghost": "Wire-identical epoch512 ghost requires closed-provider delivery suppression, not WINDOW detection.",
+    "guard": "Registered DRAIN simulation hierarchy observer; production raw-intent signal absent.",
+    "physical_provider": false,
+    "production_cancellation": false,
+    "fulltoken": false,
+    "adoption": false
+  },
+  "prior_results_immutable": {
+    "baseline23": "PASS retained",
+    "first_mutant": "FAIL_EXPECTED_MARKER_MISMATCH retained",
+    "other_three_mutants": "NOT_RUN retained"
+  }
+}

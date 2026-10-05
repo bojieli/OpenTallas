@@ -1,0 +1,172 @@
+{
+  "actual_RTL_executed": false,
+  "actual_hardware_memory_provider": false,
+  "actual_process_returncode": 0,
+  "artifacts_verified": {
+    "admission.json": {
+      "bytes": 1653,
+      "sha256": "6aa99cfe7cc48790aa80d8be69ddaee94a0dbcb52ee9a00cfb2764f4506ab4f2"
+    },
+    "execution/checkpoint_reader_provenance.json": {
+      "bytes": 4852535,
+      "sha256": "49965bde9e2f27cdb6c5c1e02180063497573ff284294a9a9711588212eed9d8"
+    },
+    "execution/instruction_output_hashes.json": {
+      "bytes": 898925,
+      "sha256": "f85ec86923232d4e6d63a2166df4c3b5eb6466720e93df1041b13ab287c9d71d"
+    },
+    "execution/post_execution_comparisons.json": {
+      "bytes": 10561,
+      "sha256": "d024c40376e1c010d3d2e8c895965b83ad77e44404b8007dd7efe248fe97a8db"
+    },
+    "execution/terminal.json": {
+      "bytes": 377,
+      "sha256": "ae71da8b3d7f7dcca340fe1422641ec9cab7b5d14865ec8b719bcbc5368a67f6"
+    },
+    "execution/token0_execution.json": {
+      "bytes": 398775,
+      "sha256": "a6b05229734fbe1bd4fc82b80e6d432b282d21694765e33c5e7d83aed5d37fe3"
+    },
+    "execution/token1_execution.json": {
+      "bytes": 473419,
+      "sha256": "460bea0fa47955f6ee63cab80d3cbc48957f97ddfce5011eca7611b12119bda8"
+    },
+    "execution_rc.json": {
+      "bytes": 283,
+      "sha256": "2ad66be3faa5f226c2c74e0e2a4a96ac7ae3fe07a39b334b22b13723ff3a2ea0"
+    }
+  },
+  "comparison_boundaries": 78,
+  "comparisons_scope": "Pinned harness results inspected; arithmetic NOT rerun",
+  "limitations": [
+    "No checkpoint shard reread or independent scientific arithmetic rerun",
+    "Software publication order is not finite hardware credit/port/calendar evidence",
+    "Whole terminal archive remains exclusive Einstein owner scope"
+  ],
+  "negative_controls": {
+    "fabricated_software_cycles": "unqualified software calendar",
+    "read_before_publication": "read before publication",
+    "release_before_PV": "early lease release"
+  },
+  "original_worker_present": false,
+  "parent_review_commit": "167bc968a47f8be29e3c9d79cb2e01e36d7194ff",
+  "parent_review_sha256": "6f6fe1f3dfe00629e1d85be147d5da37500df2350a46685096ae129b46cb7f8c",
+  "physical_qualification": false,
+  "retained_payload_file_sha256": {
+    "token0_L00.npy": "19bc47209fa396d3be9646cfa8f8210a5ef6b17f0976030b68cc54208ec779c1",
+    "token0_L01.npy": "6ea6b0d79802cc1366efea7e5229496bfb90a8681849b7023e98b7ad20d6dd81",
+    "token0_L02.npy": "4fb49394468cde31c3ece31d5002aaa5e9e704a0aa31f99c20a7ee823786fc56",
+    "token0_L03.npy": "073aba0621526e2535f40ddb55eec26383dfd650f518ba0e63bf383d4769c3a7",
+    "token0_L04.npy": "589c4e4aebdf83e649f953d27d460793e84add3405149dc277baca2ff39a52c9",
+    "token0_L05.npy": "fcb1bd8be69ca9b6c14988606a8c04ac65afa116b8ad31e02747e8a6a9305c32",
+    "token0_L06.npy": "a9ef98362447c7915aab96166fcf3d1aa711aea145e78131f0b9dcac1bd5c5dd",
+    "token0_L07.npy": "200ba6328f10a40261f969d47116822f3a32d156e2fd52e69218296ba74e7f1c",
+    "token0_L08.npy": "7982c4d7d3634f70013cb8cdfcc3c0cbdcda3f9e6b4172d80b61806f9b146bc1",
+    "token0_L09.npy": "d19c278c8cdba0f77c784fb23050fda5e74f4bdbe859277e8dfeaf46bc392b26",
+    "token0_L10.npy": "3ad7b8f7743999d1233148f42f494348ea980922ff6b3ddffdfef86cfb30c8c0",
+    "token0_L11.npy": "07e80857b508459d30d5c64bbd66ec5574c74cf18f695ac14ca2d1630e7e9003",
+    "token0_L12.npy": "d2be5d83671b949b5449a461c2971c614ec8e3479cfd0aa6e52b54f9ffbfa0f5",
+    "token0_L13.npy": "97d1482d8a8325f6ac79ba6ae9f4b23413b376d0aae7bdda53bb2d244bb2dc1d",
+    "token0_L14.npy": "d2e4d316d2274768b1866eda15ca936df2a2a94556a7a6114edc4d7b9a4ea03f",
+    "token0_L15.npy": "fa92d8fbc19c5e82bcd42a14e02b43f743b1f4d3cb06ac37c47101caf70af90c",
+    "token0_L16.npy": "9acd46b3b6be473828f36dd863b381fcde3547df5645a4d1feeaa9a85867cbb4",
+    "token0_L17.npy": "d861bc6107d144c392d89dd750bc7d03fb059b124495598eb4abac26a6665af7",
+    "token0_L18.npy": "0d890e72f86202927c496dad77b827ff52a4a956b26f3f55aa97a8a35ede7550",
+    "token0_L19.npy": "f6f5c7c2add320f0cb9084a4b0b1ccc6070be51ac30c89b6cc102243c8eb7f0f",
+    "token0_L20.npy": "8c6f34556349013d14baab2a10535850626f7bea526de055b10ed92a5a41668a",
+    "token0_L21.npy": "a0b5ca0468fc24d7133be21c1687d3b5accd7ed5a659fd73a284caa80312dd03",
+    "token0_L22.npy": "81763ae6867a21b325d5cbf6a3b604e1ad0988ad551d78849b9cde02865d089d",
+    "token0_L23.npy": "6c8ada8917ea07a92ceeb0e3e61e652f021b53ccdef0d40b0497280ced9de1e2",
+    "token0_L24.npy": "8d02a3f2893fb452aa1c7e36d7f6f9b9f919d0f82fc8424fcefbb823bd8d9a5d",
+    "token0_L25.npy": "2de8aea1cb10b8f2962df9b91b03aebe67be17f906d092c7e0f12ddc41f9ca13",
+    "token0_L26.npy": "b7f138b7cd17c78385a6b77e9a29c12c07f770dd326022e29e484a0f96865ff9",
+    "token0_L27.npy": "88d24687cd02f0de481c8caa93567585a2f9d81cf9adc16ac392b3201291e65c",
+    "token0_L28.npy": "38b5357cb950ffeaed7d0290dc80b8803f655e752953f24000154ad6603122ea",
+    "token0_L29.npy": "ac15e51d4a227356c5a8fbcf4fc24031c4a1657acc1bac685676e8712b88c003",
+    "token0_L30.npy": "20aca61b2ee8bc2a37f61e932aabd842c9c42c0622a5b894b9318975b724a11a",
+    "token0_L31.npy": "0f61237e8a88bc0b873589624d94199a7992ec5dab306b84c3a6bdf424a47214",
+    "token0_L32.npy": "3e2676dd46a8428da96db95da150eae38b54f6d73390b3b25e48b7b456d87cbf",
+    "token0_L33.npy": "328635f0ca619dab672c34e55e7ebbf8f0c10a404d15e9b67ad03e6c1495e498",
+    "token0_L34.npy": "62a21ee2d1ca9aabd4252b5562c55ca0b65f1f321d20f61355d26a2644c206ed",
+    "token0_L35.npy": "9f6bf20ca16089c94502d86ba7dea582fcc80c1ec6f87fdee8c7e21e65f8593c",
+    "token0_head.d0.scaled.npy": "fd17e801b96d97a2580ca96635f720ac4a5f36413e68ff467892603fef380b69",
+    "token0_head.d1.scaled.npy": "b1f902fd4b2ae26de45a52a71566661d6ddf5afe3568d7ffd4b48fff204124d0",
+    "token1_L00.npy": "60b8a8bec77b19d5687f47c84bbda6187e4386b9b9353e8ac0c64ce9a3baad0e",
+    "token1_L01.npy": "29f550aa9a1c06e2169b6861197e2bb576e0c7862521d0049b4868283fbc0a74",
+    "token1_L02.npy": "213538ada0ca935381c26b9de44804812d169ce33fc89ca5b138bed34731051c",
+    "token1_L03.npy": "4140cfed32c7eff937680861d458d65687530055dc4379d4a208b60d3a2fcd3a",
+    "token1_L04.npy": "26e078c6ad3fed0c0b7644c4d64925b93c694c464d87092a7e8830eea435f49c",
+    "token1_L05.npy": "6c4fd48899ba286537001aab8738b67dc10fa07c92c1f21edce3ca7c039da1eb",
+    "token1_L06.npy": "15ac15a290fb9222ddf603345f15225de3ec2bebe8749d673faf6847f54b5c30",
+    "token1_L07.npy": "a71f50046e24dc5dc11401612a65248ef90ed9293f9e5fa585b623ff5a840432",
+    "token1_L08.npy": "ad3b790bd405bcefdc6c487e00ee0924f3e1024c1eb907fea81557280350dd97",
+    "token1_L09.npy": "4f5de077ae4f790428ebb55c5389189e8f07176c8996833b6675f0d86d271dc7",
+    "token1_L10.npy": "fa051286813a27b499fda706b01e8918761b3c30e2aef8bef41ce85e926ea18b",
+    "token1_L11.npy": "0e20d30ce35757c84f801ef48919bfa59c6484ec5d01d7c170ed003c760be118",
+    "token1_L12.npy": "7ff535d71b5d868deed702920d9f8ddca2f59b0149393885961b81d0a437e6f5",
+    "token1_L13.npy": "88f20bf7f17c6f8b72f5eb3cdf409f069ad962b235fe0feacfe3e15d3f7f4606",
+    "token1_L14.npy": "4c860c4ef15c83f64a7da154ffa902efb89896369c7dfe13ef7cc72ed8aff761",
+    "token1_L15.npy": "244c7ce14f44f63f6612539d8c310578dd8058e84bed4d96d6df4b0e907ead77",
+    "token1_L16.npy": "107fa57d21a0c670d265c7c54d75c488f53123f460253c0d7cab710d0b3b822b",
+    "token1_L17.npy": "db1ff279e4903e9189e29df2e9d72718893aa7b43971d917b8cb4d7d78f3eada",
+    "token1_L18.npy": "a744b0842a3b256172022728600e4f029a49baa669941ae0372f2413569a8b84",
+    "token1_L19.npy": "210f143faa3fc6bd263b535e6367f8b8b38c0092cb7744b4df57548111d9dc5d",
+    "token1_L20.npy": "93fa7828b283ae7bc1bb3a24a978bbbf21f5c265b4d428c488525916880168a1",
+    "token1_L21.npy": "b1a6d4cc82cbf42b9c786699ee2cd2c4300f0a8079dd38b268fabc48a7b7b0ff",
+    "token1_L22.npy": "307037a81fceed89a6ca02c9b9629496b9c471c50bd04b83be2666b2ef3ca1c3",
+    "token1_L23.npy": "110e876d09c07948c4db4821867b0f2533c125a378b28bfff25034679822026e",
+    "token1_L24.npy": "b68c4cf2b12f26a958c3f242fd7ae7b46260825991a89d42c1a34874dbb3e01f",
+    "token1_L25.npy": "29c001c7686aeefd538fc9aeaa42c1c931697d5594bedf0e26571d4bb6645737",
+    "token1_L26.npy": "e15faa18be6c806e4e326f7c92116a2f4a62796528aeb4ba189eb666fbcd8f72",
+    "token1_L27.npy": "6875d7009b50ef5f0c5e7a7c08be7aadc4c0378f2c666e8a6c16bdfebd6f669f",
+    "token1_L28.npy": "8d94333669e53928a84af828a23f39f0cb0c6592efa6f7efa71d541e0ba0011a",
+    "token1_L29.npy": "e3090f2ec8af21b7eab2e6dec36978d5bc309aedcaea4a2bcf39225e65f36574",
+    "token1_L30.npy": "ab2a77886037a722bd897fa8d8108b89e60832aadddc03cd31e073b04c05f1e5",
+    "token1_L31.npy": "054b6dba1c107b686f6e486bc916745e25cd148cc6e960d522403118b527d072",
+    "token1_L32.npy": "079a6392d8a33eb5985e9d7b51b584456f61c44956b9ec23725d19ca1b69e914",
+    "token1_L33.npy": "f316575a4a3e22b79a09b0140d0ac0060e331645587e1e5470934d6146452442",
+    "token1_L34.npy": "e2d2009684d27c36e4b9934b77480ae3e6474a5035f6238b2e74490fa45caf8c",
+    "token1_L35.npy": "84958aa243dcc0a12f9ce9b34416042fa5bfc020fae3a689df4f3142b4c50657",
+    "token1_head.d0.scaled.npy": "0e6765c6bc585e792c81166053b7c456555dc22d231597ab36eb1b95d31ca6fc",
+    "token1_head.d1.scaled.npy": "66320189ea1e9c125bd5dd118c29d549320bd3312224bba697503d51898ff918"
+  },
+  "software_memory_event_order_verified": {
+    "committed_publications": 144,
+    "context1_reads": 72,
+    "context2_reads": 72,
+    "events": 1008,
+    "outstanding_leases": 0,
+    "outstanding_writes": 0
+  },
+  "source_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "source_pins_verified": {
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_checkpoint.py": "d59615948a326fc28d26d629ba2a5c77c029c8da580a1dfd630081267783a97d",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_launch.py": "01caaf71d440515879c1e6b8564aeab72c46874ab3498d21c778e53033b0f3f2",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8"
+  },
+  "token_cycles": null,
+  "token_rate": null,
+  "tokens": [
+    {
+      "head_fp32_sha256": "331609e9e82a62d474797124c9f83e2311f8c3ef73216a356bb863351fcc97d7",
+      "input_token": 9707,
+      "instructions_retired": 1737,
+      "next_token": 11,
+      "position": 0
+    },
+    {
+      "head_fp32_sha256": "d4ffd5bc5921dcd968e6f41a049184290f06b8b32ae855e884aaa2fb620f117b",
+      "input_token": 11,
+      "instructions_retired": 1737,
+      "next_token": 358,
+      "position": 1
+    }
+  ],
+  "verdict": "PASS_bounded_retained_terminal_provenance",
+  "whole_hardware_calendar_priced": false
+}

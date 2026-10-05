@@ -1,0 +1,28 @@
+{
+  "expected_function_exception_proof": "ForfiniteBFcodes, f32 rejectsnooperand; finiteFractionmultiplication hasnoNaNInf; round32 onlyraisesValueError onoverflow. ThereforeexistingexceptValueError inexpected() maps onlythisreviewedoverflowrefusal, notunderflow or genericfixturefailures. Nonfinitecheckedfirst. Existingfunction/tableunchanged.",
+  "golden_source_pins": {
+    "tools/dsrom_actual_element_numerical_oracle.py": "058a008e92797efb285de03f822fcad83066a37c7a92cc24fe674dac2ea81daf",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/prepare_dsrom_bmul_rne_primitive.py": "ab5c67491288c867ec8d3c7e7bd4be82e7f0094e60b1d1de25a27ad6fe6a7846"
+  },
+  "nonfinite": "Originalbmul2 s3_nf givesy0/fault1, includingzero*nonfinite; correctedvariantretainsguard. GeneralFP32multiply E_NONFINITE precedeszero bypassthroughs1_err. ExpectedchecksBF exponent255 beforecallingfiniteoracle.",
+  "old_failure_preserved": "bad80089193d5bf065a54c32efb1f3a4364b3b8e; oldfinite low-rangefaultwitnessstillrequiredbyprimitivebench; nooldflagrecalibration or tinystimulusremoval.",
+  "overflow": "Originalbmul2 s3_be>254 givesy0/fault1; correctedvariantretainsguard. BF8bitnormalizedsignificandsproductis16bits, normalFP32productexact, no normal-roundcarry. s3_be=floor(log2(abs(product)))+127, so>254 exactlyfloor>127. Independentround32 overflowValueError iffrounded exponent>127; finiteBFnormalexact meanssamebound. Signsdo notchangeoverflow.",
+  "source_pins": {
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    }
+  },
+  "status": "SOURCE_DERIVED_REFUSAL_AUTHORITY_NOT_NEW_NUMERICAL_POLICY",
+  "underflow": "GeneralFP32multiply normalizessubnormaloperands, RNEencodessubnormalresults andcanonical+0 with E_NONE; originalspecializedbmul2 lowguard<-6 isknownfiniteexactnessgap. Correctedvariantremovesonlylowrefusal androundsonce. No IEEEunderflow/inexactstickyexceptionflagport isdefined bythesesources.",
+  "valid": "fault=s4_v&&s4_bad, notfloatingpointexceptionstatus; invalidcyclesmustfault0. Bench independentlytracksfiveedgevalidschedule."
+}

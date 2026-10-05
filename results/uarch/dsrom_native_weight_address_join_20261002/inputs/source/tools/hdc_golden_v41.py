@@ -1,0 +1,1277 @@
+#!/usr/bin/env python3
+"""Golden model of a hardwired decode core (HDC) for the reduced DeepSeek-V4.1-Flash.
+
+The arithmetic SPECIFICATION of a future HDC-based V4.1 ROM package, written the
+way tools/hdc_golden.py specifies the reduced Qwen3 core: every operation is one
+IEEE binary32 operation (the qualified add/mul pipes: RNE, gradual underflow,
+every zero result canonical +0), applied in exactly the order the hardware
+applies it.  The primitives (add, mul, neg, exp, rsqrt, reduce_sum, to_bf16,
+matvec_fp32) are imported from hdc_golden; this file composes the V4.1
+operators from them.  It is an independent model of the MATH: it reads the
+checkpoint bytes and the release's published semantics (inference/model.py,
+inference/engram.py, inference/kernel.py), never the ABI3 compiler.
+
+Numerics the model DECLARES (the release's own storage and quantisation points,
+kept because they are the model, not an implementation accident):
+
+* residual stream, sublayer inputs and outputs are BF16 tensors: every value
+  that the reference stores in a BF16 tensor is rounded to BF16 (RNE) here;
+* FP8 linears (wq_a, wq_b, wkv, wo_b, the indexer's wq_b, the Engram wkv, the
+  shared expert) quantise their activation per 32-element block to E4M3 with a
+  power-of-two (UE8M0) scale; FP4 routed experts (E2M1 weights, UE8M0 scale per
+  row and 32-column block) take the same FP8 activation;
+* the window KV row is FP8 quantise-dequantised (block 32), index keys and index
+  queries FP4 quantise-dequantised (block 32, UE8M0 scale), compressed KV rows
+  FP4 quantise-dequantised (block 16, E4M3 scale);
+* attention probabilities are rounded to BF16 before the probability x value
+  product, as the release's sparse-attention kernel does.
+
+Orders the model CHOOSES (the reference leaves them to a GPU library):
+
+* BF16/FP32 matvec: per output, K is cut into S contiguous chunks, each chunk
+  accumulated sequentially from +0 and the chunk sums added by a pairwise tree
+  (hdc_golden.matvec(split=S); BF16 x BF16 products are exact).  S is the
+  matrix engine's split, hdc_golden.split_for(n, k) -- the fewest engine
+  cycles on 4 groups of 16 lanes x 8 interleaved outputs (the router gate,
+  indexer and compressor projections: S = 4; lm_head: S = 1) -- except the
+  grouped wo_a, each group's 256 terms in WO_A_SPLIT = 2 chunks, and the
+  hyper-connection mixes fn [24, 640], HC_SPLIT = 8 chunks of 80 (their own
+  engine, NL x HC_SPLIT lanes);
+* FP8/FP4 linear: per 32-wide K block the dot product of the two quantised
+  operands is formed EXACTLY and rounded once to FP32 (every product has at most
+  8 significant bits and the block sum spans < 42 bits, so a small fixed-point
+  accumulator is exact); the block sum is scaled by 2^(e_w + e_x) (exact) and
+  the blocks are accumulated sequentially from +0 -- the release kernel's own
+  outer order;
+* every long sum (sums of squares, softmax denominators, the index-head sum,
+  hyper-connection norms) is hdc_golden.reduce_sum: P=8 interleaved partials
+  then a pairwise tree; an RMSNorm's sum of squares is split_sum over
+  RMS_SPLIT = 8 contiguous segments and the hyper-connection norm's over its 4
+  copies (HC_SS_SPLIT): each segment reduce_sum, the segment sums a pairwise
+  tree -- so the stream unit's lanes each own a segment; sums of 2-6 terms (hyper-connection mixes, Sinkhorn
+  rows/columns, routing-weight sums, the compressor's 2-slot pooling) are
+  sequential from the first term, in index order;
+* where the reference divides (attention normalisation, Sinkhorn, the
+  compressor's pooling softmax, routing-weight normalisation, sigmoid, SiLU, a
+  mean) the model divides: IEEE binary32 division, the qualified divider pipe
+  rtl/abi3/ot_a3_fp32_div_rne_pipe.sv; a Newton reciprocal-and-multiply there
+  measurably disagrees with the reference more often (see the inventory);
+  sqrt is IEEE; rsqrt is hdc_golden's Newton pipeline (the reference's rsqrt is
+  itself approximate);
+* softmax over attention scores is two-pass (max, then exp) over the whole
+  selected set; the attention sink joins only the denominator, after the sum,
+  exactly as the release's kernel adds it;
+* top-k selections rank by value descending with ties to the LOWER index;
+  argmax of the logits takes the lowest id on ties.
+
+New special functions (see docs/HDC_DEEPSEEK_V41_OPERATOR_INVENTORY.md):
+
+* softplus(x) = max(x, 0) + log1p(t), t = exp(-|x|) in (0, 1]; log1p(t) =
+  2 atanh(u), u = t / (2 + t) in (0, 1/3], by a degree-17 odd Horner series in
+  u (error < 5e-10); no logarithm unit and no branch but a sign;
+* sigmoid(x) = 1 / (1 + exp(-x)) and silu(x) = x / (1 + exp(-x)), the
+  reference's forms;
+* FP8/FP4 quantisers: power-of-two scale from the block's absolute maximum
+  (exponent arithmetic on the bits), E4M3/E2M1 round-to-nearest-even with
+  saturation; the E4M3-scaled FP4 quantiser rounds by comparing |x| against
+  the seven code midpoints times the scale, exactly (no divider);
+* the Engram hash: 64-bit integer multiply by a constant, XOR, and a modulo by
+  a constant prime (a Barrett reduction in hardware).
+
+`Model.decode_token` runs one token through the 40 backbone layers and returns
+the FP32 logits; `generate` feeds a prompt one position at a time, as the HDC
+does, then decodes greedily.  `python3 tools/hdc_golden_v41.py` decodes the oracle's workload.
+"""
+from __future__ import annotations
+
+import json
+import math
+import os
+import struct
+import sys
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from hdc_golden import (  # noqa: E402
+    F, add, bits, exp, from_bits, matvec, matvec_fp32, mul, neg, reduce_sum, rsqrt, split_for, to_bf16, z,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+BUILD = Path(os.environ.get("OPENTALLAS_BUILD", ROOT / "build"))
+SNAPSHOT = BUILD / "models/deepseek-v4.1-flash-reduced-v2"
+CHECKPOINT = SNAPSHOT / "model-00001-of-00001.safetensors"
+MODEL_DIR = ROOT / "compiler/models/deepseek-v4.1-flash-reduced-v2"
+CONFIG = MODEL_DIR / "inference_config.json"
+TOKENIZER = MODEL_DIR / "tokenizer.json"
+ORACLE = ROOT / "results/abi3/deepseek_v41_reduced_v2_reference_oracle_fp8.json"
+WORKLOAD = "TA-DS41-REDUCED-EOS-1"
+
+FP8_MAX = F(448.0)
+FP8_MAX_INV = F(1.0 / 448.0)
+FP4_MAX = 6.0
+FP4_MAX_INV = F(1.0 / 6.0)
+FP8_AMAX_FLOOR = F(1e-4)                 # act_quant's clamp_min on the block maximum
+FP4_AMAX_FLOOR_E8M0 = F(6.0 * 2.0 ** -126)
+FP4_AMAX_FLOOR_E4M3 = F(6.0 * 2.0 ** -9)  # compressed KV: keeps an all-zero block's scale nonzero
+E2M1_VALUES = np.array([0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0])
+E2M1_MIDPOINTS = (E2M1_VALUES[:-1] + E2M1_VALUES[1:]) / 2   # 0.25 .. 5.0
+# log1p(t) = 2*atanh(u) = 2*(u + u^3/3 + u^5/5 + ...), u = t/(2+t) <= 1/3
+LOG1P_ODD = [F(1.0 / (2 * i + 1)) for i in range(8, -1, -1)]  # 1/17 .. 1/1, Horner in u^2
+# accumulation splits (see "Orders the model CHOOSES")
+HC_SPLIT = 8             # hyper-connection mixes: K = 640 in 8 chunks of 80
+HC_SS_SPLIT = 4          # hyper-connection norm: one segment per copy
+RMS_SPLIT = 8            # RMSNorm sums of squares
+WO_A_SPLIT = 2           # grouped wo_a: 256 terms per group in 2 chunks
+ME_GROUPS, ME_LANES, ME_IL = 4, 16, 8
+# R-ARITH (docs/ARCH_SPEC_V41.md 4): the arithmetic contract at shipped shapes.  "legacy" keeps the orders above
+# (the as-built reduced core implements them); "chunk8" cuts EVERY accumulation into contiguous chunks of at
+# most CHUNK terms, each summed sequentially from +0, the chunk sums added by a pairwise tree padded with +0
+# (csum) -- independent of the engine's geometry, so any engine that sums power-of-two-aligned runs of chunks
+# and combines them by the same padded tree reproduces it bit for bit.
+# For unit-by-unit bring-up of the re-specified core, ARITH may also be a comma list of the operator classes
+# that follow chunk8 while the rest stay legacy: me (BF16/FP32 weight matvecs: mv, wo_a), qe (linear_q),
+# he (hyper-connection mixes), att (q.k, p.v), idx (index dots and the index head sum), su (stream-unit sums:
+# norms, softmax denominators, Engram dots).
+ARITH_CLASSES = ("me", "qe", "he", "att", "idx", "su")
+ARITH = os.environ.get("HDC_V41_ARITH", "legacy")
+CHUNK = 8
+
+
+def _check(mode):
+    assert mode in ("legacy", "chunk8") or set(mode.split(",")) <= set(ARITH_CLASSES), mode
+
+
+_check(ARITH)
+
+
+def set_arith(mode):
+    """Switch the accumulation contract at run time (tests; the RTL campaigns set HDC_V41_ARITH)."""
+    global ARITH
+    _check(mode)
+    ARITH = mode
+
+
+# R-ARITH v2 (docs/ARCH_SPEC_V41.md 12, lever 1: reductions off the critical path), a comma list:
+#   nfold  an RMSNorm feeding matrix products (the sublayer norms, q_norm, the final norm) returns the gained
+#          input x*w (BF16) and its rstd; every consumer matvec multiplies its FP32 accumulator by rstd before
+#          its own output rounding, so the sum of squares and the rsqrt run beside the weight sweep;
+#   osm    attention is always the online softmax in the release kernel's 64-entry blocks (vendor_blocks:
+#          window ring oldest slot first, then the compressed selections; running max, exp(m_old - m_new)
+#          rescale of the partial sums).
+FUSE = set(filter(None, os.environ.get("HDC_V41_FUSE", "").split(",")))
+assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+def set_fuse(names):
+    global FUSE
+    FUSE = set(filter(None, names.split(","))) if isinstance(names, str) else set(names)
+    assert FUSE <= {"nfold", "osm"}, FUSE
+
+
+class Folded:
+    """A normed activation under nfold: xw = bf16(x * gain), r = rstd; consumers scale their outputs by r."""
+    __slots__ = ("xw", "r")
+
+    def __init__(self, xw, r):
+        self.xw, self.r = xw, r
+
+    def __len__(self):
+        return len(self.xw)
+
+
+def chunked(cls):
+    """Does operator class `cls` follow R-ARITH under the current mode?"""
+    return ARITH == "chunk8" or (ARITH != "legacy" and cls in ARITH.split(","))
+
+
+def csum(t, axis=-1, c=CHUNK):
+    """R-ARITH sum along `axis`: chunks of <= c contiguous terms, each sequential from +0, then a pairwise tree
+    over the chunk sums padded with +0 to a power of two.  n <= c is a plain sequential sum from +0."""
+    t = np.moveaxis(np.asarray(t, dtype=F), axis, -1)
+    n = t.shape[-1]
+    nc = max(1, -(-n // c))
+    pad = nc * c - n
+    if pad:
+        t = np.concatenate([t, np.zeros(t.shape[:-1] + (pad,), dtype=F)], axis=-1)
+    t = t.reshape(t.shape[:-1] + (nc, c))
+    acc = np.zeros(t.shape[:-1], dtype=F)
+    for i in range(c):
+        acc = add(acc, t[..., i])
+    while acc.shape[-1] & (acc.shape[-1] - 1):
+        acc = np.concatenate([acc, np.zeros(acc.shape[:-1] + (1,), dtype=F)], axis=-1)
+    while acc.shape[-1] > 1:
+        acc = add(acc[..., 0::2], acc[..., 1::2])
+    return acc[..., 0]
+
+
+def matvec_c(w, x, split, cls="me"):
+    """hdc_golden.matvec (legacy, K in `split` chunks) or the R-ARITH csum over all K (chunk8)."""
+    if not chunked(cls):
+        return matvec(w, x, split)
+    xb = to_bf16(x)
+    return csum(mul(np.asarray(w, dtype=F), xb[None, :]))
+
+
+def reduce_sum_c(v, cls="su"):
+    return F(csum(v)) if chunked(cls) else reduce_sum(v)
+
+
+# -- storage formats -------------------------------------------------------------
+def _e4m3_table():
+    out = np.zeros(256, dtype=np.float64)
+    for c in range(256):
+        s, e, m = c >> 7, (c >> 3) & 15, c & 7
+        if e == 15 and m == 7:
+            v = np.nan
+        elif e == 0:
+            v = m / 8 * 2.0 ** -6
+        else:
+            v = (1 + m / 8) * 2.0 ** (e - 7)
+        out[c] = -v if s else v
+    return out
+
+
+E4M3 = _e4m3_table()
+E2M1 = np.concatenate([E2M1_VALUES, -E2M1_VALUES])
+
+
+class Q8:
+    """A block-quantised weight: `q` holds the E4M3 or E2M1 values (float64, exact),
+    `e` the power-of-two exponent of every (row, 32-column block)."""
+
+    def __init__(self, q, e):
+        self.q, self.e = q, e
+        self.shape = q.shape
+
+    def dense(self):
+        return (self.q * np.exp2(np.repeat(self.e, 32, axis=1)[:, :self.q.shape[1]])).astype(F)
+
+
+def load_checkpoint(path=CHECKPOINT, mtp=True):
+    """Every tensor of the checkpoint; mtp=False leaves out the DSpark draft
+    stages (mtp.*)."""
+    raw = Path(path).read_bytes()
+    n = struct.unpack("<Q", raw[:8])[0]
+    header = json.loads(raw[8:8 + n])
+    base = 8 + n
+    t = {}
+    for name, meta in header.items():
+        if name == "__metadata__" or (name.startswith("mtp.") and not mtp):
+            continue
+        s, e = meta["data_offsets"]
+        buf, shape, dt = raw[base + s:base + e], meta["shape"], meta["dtype"]
+        if dt == "F32":
+            v = np.frombuffer(buf, dtype=np.float32).reshape(shape).copy()
+        elif dt == "BF16":
+            v = from_bits(np.frombuffer(buf, dtype=np.uint16).astype(np.uint32) << 16).reshape(shape)
+        elif dt == "F8_E4M3":
+            v = np.frombuffer(buf, dtype=np.uint8).reshape(shape)       # codes; decoded below
+        elif dt == "F8_E8M0":
+            v = np.frombuffer(buf, dtype=np.uint8).astype(np.int32).reshape(shape) - 127
+        elif dt == "I8":                                                   # packed E2M1, low nibble first
+            b = np.frombuffer(buf, dtype=np.uint8).reshape(shape)
+            v = np.stack([E2M1[b & 15], E2M1[b >> 4]], axis=-1).reshape(shape[0], shape[1] * 2)
+        else:
+            raise ValueError(f"{name}: unsupported dtype {dt}")
+        t[name] = v
+    return t
+
+
+def decode_engram_rows(codes, exps, ids):
+    """Decode selected FP8 Engram rows with one UE8M0 exponent per 32 columns."""
+    selected = codes[ids]
+    scales = exps[ids]
+    if selected.shape[-1] != scales.shape[-1] * 32:
+        raise ValueError("Engram row width must match its 32-column scale blocks")
+    blocks = E4M3[selected].reshape(*selected.shape[:-1], scales.shape[-1], 32)
+    return to_bf16((blocks * np.exp2(scales)[..., None]).astype(F)).reshape(selected.shape)
+
+
+def _blocked(codes, exps, name):
+    """E4M3 codes with a 32x32-block (or per-row) UE8M0 exponent -> Q8."""
+    q = E4M3[codes] if codes.dtype == np.uint8 else codes
+    rows, cols = q.shape
+    kb = -(-cols // 32)
+    if exps.shape == (rows, kb):            # per row (FP4 experts, Engram rows)
+        e = exps
+    else:                                    # per 32x32 block
+        assert exps.shape == (-(-rows // 32), kb), (name, exps.shape)
+        e = np.repeat(exps, 32, axis=0)[:rows]
+    return Q8(q.astype(np.float64), e.astype(np.int64))
+
+
+# -- quantisers (the release's act_quant / fp4_act_quant, as hardware) ---------
+def _ceil_log2(v):
+    """ceil(log2(v)) of positive normal binary32 values from their bits, as the
+    release's fast_log2_ceil: exponent - 127, plus one if any mantissa bit is set."""
+    b = bits(v).astype(np.int64)
+    return ((b >> 23) & 0xFF) - 127 + ((b & 0x7FFFFF) != 0)
+
+
+def _round_grid(v, min_exp, mant_bits):
+    """Round |v| to a float grid with `mant_bits` mantissa bits and minimum normal
+    exponent `min_exp`, nearest-even.  v: float64, exact inputs."""
+    a = np.abs(v)
+    e = np.floor(np.log2(np.where(a > 0, a, 1.0)))
+    e = np.maximum(e, min_exp)
+    step = np.exp2(e - mant_bits)
+    return np.sign(v) * np.round(a / step) * step      # np.round is half-to-even
+
+
+def quant_fp8(x, block=32):
+    """E4M3 codes (as float64 values) and the per-block exponent of act_quant with a
+    UE8M0 scale: s = 2^ceil(log2(amax * (1/448))), q = e4m3(clamp(x / s))."""
+    x = np.asarray(x, dtype=F).reshape(-1, block)
+    amax = np.maximum(np.max(np.abs(x), axis=1), FP8_AMAX_FLOOR).astype(F)
+    e = _ceil_log2(mul(amax, FP8_MAX_INV))
+    v = np.clip(x.astype(np.float64) * np.exp2(-e)[:, None], -448.0, 448.0)
+    q = _round_grid(v, -6, 3)
+    return q.reshape(-1), e
+
+
+def qdq_fp8(x, block=32):
+    """act_quant(..., inplace=True): quantise then dequantise, stored as BF16."""
+    q, e = quant_fp8(x, block)
+    return to_bf16((q.reshape(-1, block) * np.exp2(e)[:, None]).astype(F).reshape(-1))
+
+
+def qdq_fp4_e8m0(x, block=32):
+    """fp4_act_quant with a UE8M0 scale (index keys and queries), dequantised to BF16."""
+    x = np.asarray(x, dtype=F).reshape(-1, block)
+    amax = np.maximum(np.max(np.abs(x), axis=1), FP4_AMAX_FLOOR_E8M0).astype(F)
+    e = _ceil_log2(mul(amax, FP4_MAX_INV))
+    v = np.clip(x.astype(np.float64) * np.exp2(-e)[:, None], -FP4_MAX, FP4_MAX)
+    q = _round_grid(v, 0, 1)
+    return to_bf16((q * np.exp2(e)[:, None]).astype(F).reshape(-1))
+
+
+def _e4m3_round(v):
+    return _round_grid(np.asarray(v, dtype=np.float64), -6, 3)
+
+
+def qdq_fp4_e4m3(x, block=16):
+    """fp4_act_quant with a saturating E4M3 scale (compressed KV rows):
+    s = min(e4m3(amax / 6), 448),
+    q = e2m1(clamp(x / s)).  The E2M1 code is chosen by comparing |x| with each
+    code midpoint times s -- exact products, so the rounding is the exact rounding
+    of the real quotient (ties to even code) and no divider is needed."""
+    x = np.asarray(x, dtype=F).reshape(-1, block)
+    amax = np.maximum(np.max(np.abs(x), axis=1), FP4_AMAX_FLOOR_E4M3).astype(F)
+    # T.Cast(FP8, ...) uses __NV_SATFINITE.  Above |x| = 6 * 448, the
+    # representable scale stays at 448 and the E2M1 code saturates at 6.
+    s = np.minimum(_e4m3_round(amax.astype(np.float64) / FP4_MAX), 448.0)
+    a = np.abs(x.astype(np.float64))
+    code = np.zeros(a.shape, dtype=np.int64)
+    for i, m in enumerate(E2M1_MIDPOINTS):
+        t = m * s[:, None]
+        # above the midpoint -> next code; on it -> the even code (odd codes 1,3,5 round up to i+1 only when i+1 is even)
+        code = np.where((a > t) | ((a == t) & ((i + 1) % 2 == 0)), i + 1, code)
+    q = np.sign(x) * E2M1_VALUES[code]
+    return to_bf16((q * s[:, None]).astype(F).reshape(-1))
+
+
+# -- linears -------------------------------------------------------------------
+def linear_q(w: Q8, x):
+    """FP8 activation x FP8/FP4 weight, output BF16.  Per 32-wide K block: exact dot
+    product of the quantised operands, rounded once to FP32, scaled by 2^(e_w+e_x);
+    blocks accumulated sequentially from +0."""
+    scale = None
+    if isinstance(x, Folded):
+        x, scale = x.xw, x.r
+    xq, xe = quant_fp8(x)
+    n, k = w.q.shape
+    blocks = [np.ldexp((w.q[:, b * 32:(b + 1) * 32] @ xq[b * 32:(b + 1) * 32]).astype(F),   # exact, rounded once
+                       w.e[:, b] + xe[b]).astype(F) for b in range(k // 32)]
+    if chunked("qe"):
+        acc = csum(np.stack(blocks, axis=-1))
+    else:
+        acc = np.zeros(n, dtype=F)
+        for d in blocks:
+            acc = add(acc, d)
+    if scale is not None:
+        acc = mul(acc, scale)
+    return to_bf16(acc)
+
+
+def mv(w, x):
+    """A matrix-engine matvec: the engine's K-split (hdc_golden.split_for), each
+    chunk sequential from +0, the chunks a pairwise tree; x BF16-rounded."""
+    n, k = w.shape
+    if isinstance(x, Folded):
+        return mul(matvec_c(w, x.xw, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL)), x.r)
+    return matvec_c(w, x, split_for(n, k, ME_GROUPS, ME_LANES, ME_IL))
+
+
+def linear_bf16(w, x):
+    """BF16 weight, BF16 activation: exact products, split FP32 sum (mv), BF16 out."""
+    if isinstance(x, Folded):
+        return to_bf16(mv(w, x))
+    return to_bf16(mv(w, to_bf16(x)))
+
+
+def dots(a, b, cls="att"):
+    """out[i, j] = sum_k a[i, k] * b[j, k], each sum sequential over k from +0: one
+    matvec_fp32 per row of `a`, evaluated for all rows at once."""
+    if chunked(cls):
+        return csum(mul(np.asarray(a, dtype=F)[:, None, :], np.asarray(b, dtype=F)[None, :, :]))
+    acc = np.zeros((a.shape[0], b.shape[0]), dtype=F)
+    for k in range(a.shape[1]):
+        acc = add(acc, mul(a[:, k][:, None], b[:, k][None, :]))
+    return acc
+
+
+def dots_q4(a, b, block=32):
+    """Index scores under R-ARITH: a, b are FP4 (E2M1 x UE8M0 per 32) quantise-dequantised rows, so inside one
+    32-element block every product shares the two blocks' scales and the block dot is an exact small integer
+    times a power of two.  Each block dot is formed exactly and rounded once to FP32 (the block-dot lane,
+    exactly as linear_q's blocks), canonical +0; the blocks combine by csum.  legacy: dots()."""
+    if not chunked("idx"):
+        return dots(a, b, cls="idx")
+    a64, b64 = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
+    k = a64.shape[1]
+    nb = k // block
+    assert nb * block == k
+    blk = np.stack([a64[:, i * block:(i + 1) * block] @ b64[:, i * block:(i + 1) * block].T for i in range(nb)],
+                   axis=-1)
+    blk = (blk.astype(F) + F(0)).astype(F)          # round once (RNE); -0 -> +0
+    return csum(blk)
+
+
+def reduce_rows(v, cls="su"):
+    """hdc_golden.reduce_sum of every row of a 2-D array at once (P=8 interleaved
+    partials, then the pairwise tree)."""
+    v = np.asarray(v, dtype=F)
+    if chunked(cls):
+        return csum(v)
+    part = np.zeros((v.shape[0], 8), dtype=F)
+    for i in range(v.shape[1]):
+        part[:, i % 8] = add(part[:, i % 8], v[:, i])
+    while part.shape[1] > 1:
+        part = add(part[:, 0::2], part[:, 1::2])
+    return part[:, 0]
+
+
+def split_sum_parts(parts):
+    """The pairwise tree ((s0+s1)+(s2+s3))+... over segment sums, padded with +0
+    to a power of two (x + 0 = x exactly, so the padding changes nothing)."""
+    parts = [F(p) for p in parts]
+    while len(parts) & (len(parts) - 1):
+        parts.append(F(0))
+    while len(parts) > 1:
+        parts = [add(parts[i], parts[i + 1]) for i in range(0, len(parts), 2)]
+    return F(parts[0])
+
+
+def split_sum(v, s):
+    """A long sum cut into s contiguous segments: each segment is reduce_sum (P=8
+    interleaved partials, pairwise tree), the segment sums a pairwise tree."""
+    if chunked("su"):
+        return F(csum(v))
+    v = np.asarray(v, dtype=F).reshape(s, -1)
+    return split_sum_parts([reduce_sum(seg) for seg in v])
+
+
+def seqsum(terms):
+    acc = terms[0]
+    for t in terms[1:]:
+        acc = add(acc, t)
+    return acc
+
+
+# -- special functions ------------------------------------------------------------
+def div(a, b):
+    """IEEE binary32 division, RNE, canonical +0: the qualified divider pipe
+    (rtl/abi3/ot_a3_fp32_div_rne_pipe.sv).  Used exactly where the reference divides."""
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return z(np.asarray(a, dtype=F) / np.asarray(b, dtype=F))
+
+
+def sqrt(a):
+    """IEEE binary32 square root, RNE."""
+    return z(np.sqrt(np.asarray(a, dtype=F)))
+
+
+def sigmoid(x):
+    """1 / (1 + exp(-x)), the reference's form."""
+    return div(F(1.0), add(exp(neg(x)), F(1.0)))
+
+
+def silu(x):
+    """x / (1 + exp(-x)), the form of torch's SiLU kernel."""
+    return div(x, add(exp(neg(x)), F(1.0)))
+
+
+def log1p_unit(t):
+    """log1p(t) for t in [0, 1]: 2*atanh(t / (2 + t)), odd series to u^17."""
+    u = div(t, add(t, F(2.0)))
+    u2 = mul(u, u)
+    p = np.full_like(u, LOG1P_ODD[0])
+    for c in LOG1P_ODD[1:]:
+        p = add(mul(p, u2), c)
+    return mul(mul(u, p), F(2.0))
+
+
+def softplus(x):
+    x = np.asarray(x, dtype=F)
+    t = exp(neg(np.abs(x).astype(F)))
+    return add(np.maximum(x, F(0)).astype(F), log1p_unit(t))
+
+
+def rmsnorm_bf16(x, w, eps):
+    """The release's RMSNorm: x * rsqrt(mean(x^2) + eps), times the gain, stored BF16."""
+    r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
+    return to_bf16(mul(w, mul(x, r)))
+
+
+def rmsnorm_fold(x, w, eps):
+    """rmsnorm_bf16, or under nfold the Folded (bf16(x * gain), rstd) its consumer matvecs scale by."""
+    if "nfold" not in FUSE:
+        return rmsnorm_bf16(x, w, eps)
+    r = rsqrt(add(div(split_sum(mul(x, x), RMS_SPLIT), F(len(x))), F(eps)))
+    return Folded(to_bf16(mul(w, x)), r)
+
+
+def topk_lowest_index(v, k):
+    """Indices of the k largest values, ties to the lower index, in rank order.  In
+    hardware: rank_i = #{j : v_j > v_i or (v_j == v_i and j < i)}, selected when
+    rank_i < k -- one comparator per pair, so no sorting network state."""
+    v = np.asarray(v, dtype=np.float64)
+    order = np.lexsort((np.arange(len(v)), -v))
+    return order[:k]
+
+
+# -- RoPE ---------------------------------------------------------------------------
+def rope_freqs(dim, original_seq_len, base, factor, beta_fast, beta_slow):
+    """precompute_freqs_cis' frequencies in binary32, op by op (a table ROM)."""
+    freqs = (F(1.0) / (F(base) ** (np.arange(0, dim, 2, dtype=F) / F(dim)).astype(F))).astype(F)
+    if original_seq_len > 0:
+        def corrected(rot):
+            return dim * math.log(original_seq_len / (rot * 2 * math.pi)) / (2 * math.log(base))
+        low = max(math.floor(corrected(beta_fast)), 0)
+        high = min(math.ceil(corrected(beta_slow)), dim - 1)
+        ramp = np.clip((np.arange(dim // 2, dtype=F) - F(low)) / F(max(high - low, 1e-3)), 0, 1).astype(F)
+        smooth = (F(1) - ramp).astype(F)
+        freqs = ((freqs / F(factor)).astype(F) * (F(1) - smooth)).astype(F) + (freqs * smooth).astype(F)
+    return freqs.astype(F)
+
+
+def rope_cs(freqs, position):
+    angle = (F(position) * freqs).astype(F)
+    return np.cos(angle.astype(np.float64)).astype(F), np.sin(angle.astype(np.float64)).astype(F)
+
+
+def rope_tail(v, cs, inverse=False):
+    """Rotate the last 2*len(cos) elements of each row of v as ADJACENT pairs (the
+    release's complex view), stored BF16.  inverse=True applies the conjugate."""
+    c, s = cs
+    v = np.array(v, dtype=F)
+    rd = 2 * len(c)
+    a, b = v[..., -rd::2], v[..., -rd + 1::2]
+    if inverse:
+        re, im = add(mul(a, c), mul(b, s)), add(mul(b, c), neg(mul(a, s)))
+    else:
+        re, im = add(mul(a, c), neg(mul(b, s))), add(mul(a, s), mul(b, c))
+    v[..., -rd::2], v[..., -rd + 1::2] = to_bf16(re), to_bf16(im)
+    return v
+
+
+# -- Engram tables --------------------------------------------------------------------
+def _is_prime(n):
+    if n < 2:
+        return False
+    i = 2
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 1
+    return True
+
+
+def compressed_token_map(tokenizer_path, size):
+    """engram.build_compressed_token_map, restated: tokens that normalise alike share
+    an id.  A ROM table in hardware."""
+    from tokenizers import Regex, Tokenizer, normalizers
+    tok = Tokenizer.from_file(str(tokenizer_path))
+    sentinel = ""
+    norm = normalizers.Sequence([
+        normalizers.NFKC(), normalizers.NFD(), normalizers.StripAccents(), normalizers.Lowercase(),
+        normalizers.Replace(Regex(r"[ \t\r\n]+"), " "), normalizers.Replace(Regex(r"^ $"), sentinel),
+        normalizers.Strip(), normalizers.Replace(sentinel, " "),
+    ])
+    key_to_new, lookup = {}, []
+    for tid in range(size):
+        text = tok.decode([tid], skip_special_tokens=False)
+        if "�" in text:
+            key = tok.id_to_token(tid)
+        else:
+            n = norm.normalize_str(text)
+            key = n if n else text
+        lookup.append(key_to_new.setdefault(key, len(key_to_new)))
+    return np.array(lookup, dtype=np.int64), len(key_to_new)
+
+
+class EngramTables:
+    """Primes, offsets and multipliers of engram.EngramLayout / NgramHashState."""
+
+    def __init__(self, c, vocab):
+        self.layer_ids = list(c["engram_layer_ids"])
+        self.n = c["engram_max_ngram_size"]
+        heads = c["engram_n_heads"]
+        seen, primes = set(), []
+        for _ in self.layer_ids:
+            per = []
+            for _ in range(self.n - 1):
+                cur, row = c["engram_vocab_size"] - 1, []
+                for _ in range(heads):
+                    cur += 1
+                    while not _is_prime(cur) or cur in seen:
+                        cur += 1
+                    seen.add(cur)
+                    row.append(cur)
+                per.append(row)
+            primes.append(per)
+        self.primes = np.array(primes, dtype=np.int64)                    # [layer, ngram-1, head]
+        flat = self.primes.reshape(len(self.layer_ids), -1)
+        self.offsets = np.concatenate([np.zeros((len(flat), 1), np.int64), np.cumsum(flat, 1)[:, :-1]], 1)
+        self.token_map, cv = compressed_token_map(TOKENIZER, vocab)
+        assert cv == c["engram_compressed_vocab_size"], (cv, c["engram_compressed_vocab_size"])
+        bound = max(1, (np.iinfo(np.int64).max // cv) // 2)
+        self.multipliers = np.stack([
+            np.random.default_rng(10007 * lid).integers(0, bound, size=(self.n,), dtype=np.int64) * 2 + 1
+            for lid in self.layer_ids])                                    # [layer, n]
+        self.pad = int(self.token_map[c["engram_pad_id"]])
+
+    def hashes(self, history, li):
+        """Hash ids of the n-grams ending at the newest token of `history` (raw ids,
+        oldest first) for engram layer index li: [(n-1) * heads]."""
+        toks = [int(self.token_map[history[-1 - s]]) if s < len(history) else self.pad for s in range(self.n)]
+        out, rolling = [], None
+        for s in range(self.n):
+            p = toks[s] * int(self.multipliers[li, s])          # < 2^63 by the multiplier bound
+            rolling = p if rolling is None else rolling ^ p
+            if s:
+                out.extend(int(rolling % int(q)) for q in self.primes[li, s - 1])
+        return np.array(out, dtype=np.int64) + self.offsets[li]
+
+
+# -- the model ------------------------------------------------------------------------
+class Model:
+    def __init__(self, config=CONFIG, checkpoint=CHECKPOINT, vendor_decode_from=None):
+        """`vendor_decode_from`: VALIDATION ONLY.  From this position on, attention
+        streams its KV in the release decode kernel's 64-entry blocks (vendor_blocks)
+        instead of the specified two-pass softmax.  The release computes a prompt in
+        one prefill call, whose kernel sees at most 64 entries per query here (one
+        block), and every later token in a decode call, whose ring-buffer layout
+        splits the context across blocks.  Setting it to the prompt length makes
+        this model follow the reference's own evaluation order."""
+        self.vendor_decode_from = vendor_decode_from
+        c = self.c = json.loads(Path(config).read_text())
+        t = load_checkpoint(checkpoint)
+        self.L = c["n_layers"]
+        self.has_mtp = any(k.startswith("mtp.") for k in t)
+        self.dim, self.hc = c["dim"], c["hc_mult"]
+        self.heads, self.hd, self.rd = c["n_heads"], c["head_dim"], c["rope_head_dim"]
+        self.eps, self.hc_eps = F(c["norm_eps"]), F(c["hc_eps"])
+        self.ratio = c["compress_ratios"][:self.L]
+        self.kv_src = list(c["kv_source_layers"])
+        self.idx_src = list(c["index_source_layers"])
+        self.cand_src = c["candidate_source_layer"]
+        self.topk, self.cand_k, self.cand_b = c["index_topk"], c["candidate_topk_blocks"], c["candidate_block_size"]
+        self.ih, self.ihd = c["index_n_heads"], c["index_head_dim"]
+        self.groups, self.o_rank = c["o_groups"], c["o_lora_rank"]
+        self.n_exp, self.k_exp = c["n_routed_experts"], c["n_activated_experts"]
+        self.route_scale, self.limit = F(c["route_scale"]), F(c["swiglu_limit"])
+        self.window = c["window_size"]
+        self.attn_scale = F(self.hd ** -0.5)
+        self.index_w_scale = F(self.ihd ** -0.5 * self.ih ** -0.5)
+        self.engram_scale = F(self.dim ** -0.5)
+        self.sinkhorn_iters = c["hc_sinkhorn_iters"]
+        # DSpark, V4.1's multi-token-prediction head (inference/model.py DSparkBlock):
+        # n_mtp draft stages appended as layers L .. L+n_mtp-1 (checkpoint mtp.*)
+        self.n_mtp = c.get("n_mtp_layers", 0) if c.get("dspark_block_size", 0) else 0
+        self.dspark_block = c.get("dspark_block_size", 0)
+        self.dspark_targets = list(c.get("dspark_target_layer_ids", ()))
+        self.dspark_n_exp = c.get("dspark_n_routed_experts", 0) or self.n_exp
+        self.dspark_k_exp = c.get("dspark_n_activated_experts", 0) or self.k_exp
+        # The released noise id (128799) lies outside the reduced vocabulary; the
+        # reduced vehicle maps every released token id by id % vocab_size (the rule
+        # tools/build_deepseek_v41_reduced_model.py applies to prompts and EOS ids).
+        self.noise_id = int(c.get("dspark_noise_token_id", 0)) % int(c["vocab_size"])
+        self.ratio_all = list(c["compress_ratios"])
+        self.freqs_plain = rope_freqs(self.rd, 0, c["rope_theta"], c["rope_factor"], c["beta_fast"], c["beta_slow"])
+        self.freqs_yarn = rope_freqs(self.rd, c["original_seq_len"], c["compress_rope_theta"], c["rope_factor"],
+                                     c["beta_fast"], c["beta_slow"])
+        self.w = {}
+        for name, v in t.items():
+            if name.endswith(".scale"):
+                continue
+            sc = name[:-len(".weight")] + ".scale" if name.endswith(".weight") else None
+            if sc in t and not name.endswith("engram.embed.weight"):
+                self.w[name] = _blocked(v, t[sc], name)
+            else:
+                self.w[name] = v
+        # wo_a ships FP8 with a 32x32 UE8M0 scale and the release dequantises it to BF16 (convert.py)
+        for L in range(self.L + (self.n_mtp if self.has_mtp else 0)):
+            k = self.P(L) + "attn.wo_a.weight"
+            self.w[k] = to_bf16(self.w[k].dense())
+        self.emb_codes = {L: (t[f"layers.{L}.engram.embed.weight"], t[f"layers.{L}.engram.embed.scale"])
+                          for L in c["engram_layer_ids"]}
+        self.engram = EngramTables(c, c["vocab_size"])
+        # the source layer each layer reads compressed KV / index selections from
+        self.kv_of = {L: max(s for s in self.kv_src if s <= L) for L in range(self.L) if self.ratio[L]}
+        self.idx_of = {L: max(s for s in self.idx_src if s <= L) for L in range(self.L) if self.ratio[L]}
+
+    def P(self, L):
+        """Checkpoint prefix of layer L: the backbone, then the DSpark stages."""
+        return f"layers.{L}." if L < self.L else f"mtp.{L - self.L}."
+
+    def lw(self, L, name):
+        return self.w[self.P(L) + name]
+
+    def new_state(self, mtp=False):
+        """Decode state, every entry indexed by position (or by compressed group):
+        `tokens`, per-layer window KV rows `win`, compressed rows `ckv` and index
+        keys `ik` per source layer, the compressor's open group `slots` (with
+        `slotrec`, every position's slot contents, so a rollback can rebuild it).
+        mtp=True adds `dsk`: per DSpark stage its window cache (main_kv rows, one
+        per position, from the main model's hidden state at that position)."""
+        st = {"tokens": [], "win": [[] for _ in range(self.L)], "ckv": {s: [] for s in self.kv_src},
+              "ik": {s: [] for s in self.kv_src}, "slots": {s: [] for s in self.kv_src},
+              "slotrec": {s: {} for s in self.kv_src}}
+        if mtp:
+            assert self.has_mtp and self.n_mtp, "the checkpoint carries no DSpark stages"
+            st["dsk"] = [[] for _ in range(self.n_mtp)]
+        return st
+
+    def truncate(self, state, n):
+        """Roll the state back to positions 0 .. n-1: every position-indexed entry
+        past them is dropped, the compressor's open group rebuilt from the record."""
+        del state["tokens"][n:]
+        for rows in state["win"]:
+            del rows[n:]
+        for s in self.kv_src:
+            r = self.ratio[s]
+            del state["ckv"][s][n // r:]
+            del state["ik"][s][n // r:]
+            rec = state["slotrec"][s]
+            for p in [p for p in rec if p >= n]:
+                del rec[p]
+            state["slots"][s] = [rec[p] for p in range(n - n % r, n)] if r > 1 else []
+        for rows in state.get("dsk", ()):
+            del rows[n:]
+
+    # -- hyper-connections ------------------------------------------------------------
+    def hc_mixes(self, x, L, which):
+        """x: [hc, dim] BF16-valued.  Returns pre [hc], post [hc], comb [hc, hc]."""
+        fn, scale, base = (self.lw(L, f"hc_{which}_{s}") for s in ("fn", "scale", "base"))
+        flat = x.reshape(-1)
+        assert np.array_equal(to_bf16(flat), flat)          # the residual is BF16: x rounding is exact
+        r = rsqrt(add(div(split_sum(mul(flat, flat), HC_SS_SPLIT), F(flat.size)), self.eps))
+        mixes = mul(matvec_c(fn, flat, HC_SPLIT, cls="he"), r)
+        h = self.hc
+        pre = add(sigmoid(add(mul(mixes[:h], scale[0]), base[:h])), self.hc_eps)
+        post = mul(sigmoid(add(mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
+        comb = add(mul(mixes[2 * h:], scale[2]), base[2 * h:]).reshape(h, h)
+        # row softmax + eps, then column normalisation, then (iters-1) x (row, column)
+        m = np.max(comb, axis=1, keepdims=True)
+        e = exp(add(comb, neg(m)))
+        rs = seqsum([e[:, k] for k in range(h)])
+        comb = add(div(e, rs[:, None]), self.hc_eps)
+
+        def cols(cm):
+            cs = seqsum([cm[j, :] for j in range(h)])
+            return div(cm, add(cs, self.hc_eps)[None, :])
+
+        def rows(cm):
+            rs = seqsum([cm[:, k] for k in range(h)])
+            return div(cm, add(rs, self.hc_eps)[:, None])
+
+        comb = cols(comb)
+        for _ in range(self.sinkhorn_iters - 1):
+            comb = cols(rows(comb))
+        return pre, post, comb
+
+    def hc_pre(self, x, pre):
+        return to_bf16(seqsum([mul(pre[j], x[j]) for j in range(self.hc)]))
+
+    def hc_post(self, y, res, post, comb):
+        mix = [seqsum([mul(comb[j, k], res[j]) for j in range(self.hc)]) for k in range(self.hc)]
+        return to_bf16(np.stack([add(mul(post[k], y), mix[k]) for k in range(self.hc)]))
+
+    # -- Engram -------------------------------------------------------------------------
+    def engram_layer(self, h, L, history):
+        """history: the raw token ids of positions 0 .. this one (oldest first)."""
+        li = self.engram.layer_ids.index(L)
+        ids = self.engram.hashes(history, li)
+        codes, sc = self.emb_codes[L]
+        rows = decode_engram_rows(codes, sc, ids).reshape(-1)
+        kv = linear_q(self.lw(L, "engram.wkv.weight"), rows)
+        key = kv[:self.hc * self.dim].reshape(self.hc, self.dim)
+        value = kv[self.hc * self.dim:]
+        wgt = mul(self.lw(L, "engram.q_weight"), self.lw(L, "engram.k_weight"))
+        out = []
+        for j in range(self.hc):
+            hj, kj = h[j], key[j]
+            n = F(self.dim)
+            rstd = mul(rsqrt(add(div(reduce_sum_c(mul(hj, hj)), n), self.eps)),
+                       rsqrt(add(div(reduce_sum_c(mul(kj, kj)), n), self.eps)))
+            dot = mul(mul(reduce_sum_c(mul(mul(hj, wgt[j]), kj)), rstd), self.engram_scale)
+            mag = sqrt(np.maximum(np.abs(dot), F(1e-6)).astype(F))
+            gate = sigmoid(np.where(dot < 0, neg(mag), mag).astype(F))
+            out.append(add(hj, mul(gate, value)))
+        return to_bf16(np.stack(out))
+
+    # -- attention ------------------------------------------------------------------------
+    def indexer(self, L, x, qr, pos, state, trace, ctx):
+        """Positions of the source's compressed KV this query attends to (ascending)."""
+        r, src = self.ratio[L], self.kv_of[L]
+        n = (pos + 1) // r
+        if n == 0:
+            return []
+        q = linear_q(self.lw(L, "attn.indexer.wq_b.weight"), qr).reshape(self.ih, self.ihd)
+        q = rope_tail(q, rope_cs(self.freqs_yarn, pos))
+        q = np.stack([qdq_fp4_e8m0(q[h]) for h in range(self.ih)])
+        wts = to_bf16(mul(linear_bf16(self.lw(L, "attn.indexer.weights_proj.weight"), x), self.index_w_scale))
+        keys = np.stack(state["ik"][src][:n])                                     # [n, ihd]
+        score = to_bf16(dots_q4(q, keys))                                        # [ih, n] BF16 einsum
+        terms = to_bf16(mul(np.maximum(score, F(0)), wts[:, None]))
+        s = to_bf16(reduce_rows(terms.T, cls="idx"))
+        s = s.astype(np.float64)
+        if L == self.cand_src:
+            ctx["cand"] = self.candidate_blocks(s, n)
+        elif 0 <= self.cand_src < L:
+            s = np.where(ctx["cand"][:n], s, -np.inf)
+        sel = sorted(int(i) for i in topk_lowest_index(s, min(self.topk, n)))
+        if trace is not None:
+            trace[f"L{L}.index_select"], trace[f"L{L}.index_scores"] = sel, s
+        return sel
+
+    def candidate_blocks(self, s, n):
+        """Level one: score each block of candidate_block_size positions by its best
+        position, pin the block holding the newest position, keep the top blocks."""
+        b = self.cand_b
+        nb = -(-n // b)
+        padded = np.concatenate([s, np.full(nb * b - n, -np.inf)])
+        bs = padded.reshape(nb, b).max(axis=1)
+        bs[(n - 1) // b] = np.inf
+        keep = np.zeros(nb, dtype=bool)
+        for i in topk_lowest_index(bs, min(self.cand_k, nb)):
+            keep[i] = bs[i] > -np.inf
+        return np.repeat(keep, b)[:n]
+
+    def vendor_blocks(self, pos, n_comp, width=64):
+        """VALIDATION ONLY: the row groups in which the release's decode kernel streams
+        one query's KV.  Its index list is the window ring oldest slot first (window
+        entries, empty slots included) followed by the compressed selections; it walks
+        the list in `width`-entry blocks with a running maximum, rescaling the partial
+        sums by exp(m_old - m_new).  Returns, per block holding a valid entry, the
+        indices into this model's row list (window rows oldest first, then selections)."""
+        win = min(pos + 1, self.window)
+        list_idx = np.concatenate([np.arange(win) + (self.window - win),     # window position -> ring list slot
+                                   self.window + np.arange(n_comp)])
+        out = []
+        for b in range(0, self.window + n_comp, width):
+            sel = np.nonzero((list_idx >= b) & (list_idx < b + width))[0]
+            if len(sel):
+                out.append(sel)
+        return out
+
+    def compressor(self, L, x, pos, state):
+        """The KV source's compressed latent for the group ending at pos (pre-RoPE, BF16),
+        or None while the group is filling."""
+        r = self.ratio[L]
+        if r == 1:
+            return rmsnorm_bf16(linear_bf16(self.lw(L, "attn.compressor.wkv.weight"), x),
+                                self.lw(L, "attn.compressor.norm.weight"), self.eps)
+        wkv = np.concatenate([self.lw(L, "attn.compressor.wkv.weight"), self.lw(L, "attn.compressor.wgate.weight")])
+        kv, sc = np.split(mv(wkv, x), 2)                                  # one engine op, FP32 out
+        slots = state["slots"][L]
+        slots.append((kv, sc))
+        state["slotrec"][L][pos] = (kv, sc)
+        if (pos + 1) % r:
+            return None
+        state["slots"][L] = []
+        kvs, scs = np.stack([a for a, _ in slots]), np.stack([b for _, b in slots])   # [r, hd]
+        m = np.max(scs, axis=0)
+        e = exp(add(scs, neg(m)))
+        p = div(e, seqsum(list(e))[None, :])
+        pooled = seqsum([mul(kvs[i], p[i]) for i in range(r)])
+        return rmsnorm_bf16(to_bf16(pooled), self.lw(L, "attn.compressor.norm.weight"), self.eps)
+
+    def attention(self, L, x, pos, state, trace, ctx):
+        """Main-model attention of the position at `pos`.  ctx holds the
+        position's own transients (the index selection its source layer made,
+        the candidate blocks), so positions can run layer-major."""
+        yarn = self.ratio[L] > 0
+        cs = rope_cs(self.freqs_yarn if yarn else self.freqs_plain, pos)
+        qr = rmsnorm_fold(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"), self.eps)
+        q = rope_tail(linear_q(self.lw(L, "attn.wq_b.weight"), qr).reshape(self.heads, self.hd), cs)
+        kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), x), self.lw(L, "attn.kv_norm.weight"), self.eps)
+        kv = qdq_fp8(rope_tail(kv, cs))
+        state["win"][L].append(kv)
+        rows = state["win"][L][-self.window:]                     # oldest first
+        if yarn:
+            src = self.kv_of[L]
+            if L == src:
+                latent = self.compressor(L, x, pos, state)
+                if latent is not None:
+                    r = self.ratio[L]
+                    gcs = rope_cs(self.freqs_yarn, pos + 1 - r)    # a group sits at its first token
+                    k = rmsnorm_bf16(linear_bf16(self.lw(L, "attn.indexer.wk.weight"), latent),
+                                     self.lw(L, "attn.indexer.k_norm.weight"), self.eps)
+                    state["ik"][L].append(qdq_fp4_e8m0(rope_tail(k, gcs)))
+                    state["ckv"][L].append(qdq_fp4_e4m3(rope_tail(latent, gcs), 16))
+            if L == self.idx_of[L]:
+                ctx["sel"] = self.indexer(L, x, qr, pos, state, trace, ctx)
+            rows = rows + [state["ckv"][src][i] for i in ctx["sel"]]
+        kvm = np.stack(rows)                                      # [T, hd]: keys and values alike
+        blocks = self.vendor_blocks(pos, len(rows) - len(state["win"][L][-self.window:])) \
+            if ("osm" in FUSE or (self.vendor_decode_from is not None and pos >= self.vendor_decode_from)) \
+            else [np.arange(len(rows))]
+        return self.attend(L, q, kvm, cs, blocks)
+
+    def attend(self, L, q, kvm, cs, blocks=None):
+        """One query's sparse attention over the rows kvm (keys and values alike),
+        the sink, the inverse RoPE, the grouped wo_a and wo_b: q [heads, hd]
+        post-RoPE, cs the query position's RoPE."""
+        sink = self.lw(L, "attn.attn_sink")
+        if blocks is None:
+            blocks = [np.arange(len(kvm))]
+        # every head at once; per head the order is: scores sequential over head_dim,
+        # max, exp, P (as BF16) x V sequential over positions, reduce_sum of P
+        s = mul(dots(q, kvm), self.attn_scale)                    # [heads, T]
+        m = acc = den = None
+        for blk in blocks:                                        # one block: the two-pass softmax
+            sb = s[:, blk]
+            mb = np.max(sb, axis=1) if m is None else np.maximum(m, np.max(sb, axis=1))
+            e = exp(add(sb, neg(mb)[:, None]))
+            pv = dots(to_bf16(e), kvm[blk].T)                     # probabilities enter the PV product as BF16
+            es = reduce_rows(e)
+            if m is None:
+                den, acc = es, pv
+            else:
+                r = exp(add(m, neg(mb)))
+                den, acc = add(mul(den, r), es), add(mul(acc, r[:, None]), pv)
+            m = mb
+        den = add(den, exp(add(sink, neg(m))))
+        o = to_bf16(div(acc, den[:, None]))
+        o = rope_tail(o, cs, inverse=True)
+        og = o.reshape(self.groups, -1)
+        wa = self.lw(L, "attn.wo_a.weight").reshape(self.groups, self.o_rank, -1)
+        # grouped wo_a: each group's K in WO_A_SPLIT chunks (o is BF16: x rounding is exact)
+        z = np.stack([matvec_c(wa[g], og[g], WO_A_SPLIT) for g in range(self.groups)])
+        z = to_bf16(z.reshape(-1))
+        return linear_q(self.lw(L, "attn.wo_b.weight"), z)
+
+    # -- mixture of experts --------------------------------------------------------------
+    def expert(self, prefix, x, weight=None):
+        g = linear_q(self.w[prefix + "w1.weight"], x)
+        u = linear_q(self.w[prefix + "w3.weight"], x)
+        u = np.clip(u, -self.limit, self.limit).astype(F)
+        g = np.minimum(g, self.limit).astype(F)
+        a = mul(silu(g), u)
+        if weight is not None:
+            a = mul(weight, a)
+        return linear_q(self.w[prefix + "w2.weight"], to_bf16(a))
+
+    def moe(self, L, x, trace):
+        k_exp = self.k_exp if L < self.L else self.dspark_k_exp
+        scores = sqrt(softplus(mv(self.lw(L, "ffn.gate.weight"), x)))
+        chosen = topk_lowest_index(add(scores, self.lw(L, "ffn.gate.bias")), k_exp)
+        ids = sorted(int(i) for i in chosen)                     # experts run and sum in id order
+        total = seqsum([scores[i] for i in ids])
+        den = add(total, F(1e-20))
+        y = np.zeros(self.dim, dtype=F)
+        for i in ids:
+            wgt = mul(div(scores[i], den), self.route_scale)
+            y = add(y, self.expert(f"{self.P(L)}ffn.experts.{i}.", x, wgt))
+        y = add(y, self.expert(f"{self.P(L)}ffn.shared_experts.", x))
+        if trace is not None:
+            trace[f"L{L}.experts"], trace[f"L{L}.router"] = ids, add(scores, self.lw(L, "ffn.gate.bias"))
+        return to_bf16(y)
+
+    # -- positions ----------------------------------------------------------------------------
+    def layer(self, L, ctx, state, trace=None):
+        """Backbone layer L for one position (ctx: its residual `h`, the mix
+        `pre` its attention collapses with, `pos`, `hist` its token history, and
+        its per-position transients)."""
+        h, pos = ctx["h"], ctx["pos"]
+        if L in self.engram.layer_ids:
+            h = self.engram_layer(h, L, ctx["hist"])
+            if trace is not None:
+                trace[f"L{L}.engram"] = h
+        if L in self.dspark_targets and "mh" in ctx:
+            ctx["mh"].append(self.main_hidden_part(h))      # the DSpark head reads the layer's INPUT
+        res = h
+        a_pre, a_post, a_comb = self.hc_mixes(h, L, "attn")
+        x = rmsnorm_fold(self.hc_pre(h, ctx["pre"]), self.lw(L, "attn_norm.weight"), self.eps)
+        y = self.attention(L, x, pos, state, trace, ctx)
+        h = self.hc_post(y, res, a_post, a_comb)
+        if trace is not None:
+            trace[f"L{L}.attn_norm"], trace[f"L{L}.attn"] = x, y
+        res = h
+        f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
+        x = rmsnorm_fold(self.hc_pre(h, a_pre), self.lw(L, "ffn_norm.weight"), self.eps)
+        y = self.moe(L, x, trace)
+        h = self.hc_post(y, res, f_post, f_comb)
+        ctx["h"], ctx["pre"] = h, f_pre
+        if trace is not None:
+            trace[f"L{L}.ffn_norm"], trace[f"L{L}.ffn"], trace[f"block{L}"], trace[f"pre{L}"] = x, y, h, f_pre
+
+    def forward_positions(self, tokens, pos0, state, traces=None, force=None):
+        """Consecutive positions pos0 .. pos0+len(tokens)-1 in ONE pass, LAYER-MAJOR:
+        every position through layer L before any through layer L+1 -- the order
+        of the core's multi-position (verify) pass, where one weight read serves
+        every position.  A position's arithmetic is exactly a one-position step's:
+        its layer-L attention reads the window rows, compressed rows and index
+        keys its predecessors (in this pass or before) wrote at layer L, and its
+        per-position transients (index selection, candidate blocks) live in its
+        own context.  Returns the FP32 logits of every position.  With a DSpark
+        state (new_state(mtp=True)) each position also writes its DSpark window
+        rows from its main hidden state (dspark_seed).
+
+        `force(L)`, if given (one position only), returns (h, pre_mix) to replace
+        layer L's input (teacher forcing against a reference), or None."""
+        n0 = len(state["tokens"])
+        state["tokens"].extend(int(t) for t in tokens)
+        mtp = "dsk" in state
+        ctxs = [{"pos": pos0 + j, "hist": state["tokens"][:n0 + j + 1],
+                 "h": np.repeat(self.w["embed.weight"][t][None, :], self.hc, axis=0).astype(F),
+                 "pre": np.array([1, 0, 0, 0], dtype=F)[:self.hc], **({"mh": []} if mtp else {})}
+                for j, t in enumerate(tokens)]
+        traces = traces or [None] * len(ctxs)
+        assert force is None or len(ctxs) == 1
+        for L in range(self.L):
+            for ctx, trace in zip(ctxs, traces):
+                if force is not None:
+                    forced = force(L)
+                    if forced is not None:
+                        ctx["h"], ctx["pre"] = forced
+                self.layer(L, ctx, state, trace)
+        out = []
+        for ctx, trace in zip(ctxs, traces):
+            xf = rmsnorm_fold(self.hc_pre(ctx["h"], ctx["pre"]), self.w["norm.weight"], self.eps)
+            logits = mv(self.w["head.weight"], xf)
+            if trace is not None:
+                trace["final_norm"], trace["logits"] = xf, logits
+            if mtp:
+                self.dspark_seed(np.concatenate(ctx["mh"]), ctx["pos"], state, trace)
+            out.append(logits)
+        return out
+
+    def decode_token(self, token, pos, state, trace=None, force=None):
+        """One decode step at `pos` (a one-position pass)."""
+        return self.forward_positions([token], pos, state, [trace], force)[0]
+
+    def generate(self, prompt, n, mtp_state=False):
+        """Prefill one position at a time, then greedy decode.  Returns (tokens, logits)."""
+        state = self.new_state(mtp=mtp_state)
+        for p, t in enumerate(prompt[:-1]):
+            self.decode_token(t, p, state)
+        logits = self.decode_token(prompt[-1], len(prompt) - 1, state)
+        out, rows = [], []
+        for i in range(n):
+            tok = int(np.argmax(logits))                   # lowest id on ties
+            out.append(tok)
+            rows.append(logits)
+            if i + 1 < n:
+                logits = self.decode_token(tok, len(prompt) + i, state)
+        self.last_state = state
+        return out, rows
+
+    # -- DSpark: V4.1's multi-token prediction (inference/model.py DSparkBlock) -------------------
+    #
+    # Three stages (mtp.0 .. mtp.2) stacked like backbone blocks (hyper-connections, window
+    # attention, a 4-expert top-3 MoE) over a BLOCK of dspark_block_size positions: the next
+    # token y followed by noise tokens.  Their attention reads a window cache of main_kv rows, one
+    # per committed position, made from the main model's hidden state there (the mean of the four
+    # residual copies at the input of layers 37, 38, 39, projected by main_proj and normed by
+    # main_norm, then each stage's wkv / kv_norm / RoPE / FP8), plus the block's own rows (no
+    # causal mask inside the block).  The last stage's hc_pre, norm and the shared lm_head give
+    # one logit row per block position; row i adds the Markov head's bias for the token sampled
+    # at i-1 (y for i = 0) before its argmax: d_{i+1} = argmax(logits_i + markov(d_i)).
+    # The confidence head only reports; greedy drafting does not read it.
+
+    def main_hidden_part(self, h):
+        """h.mean(dim=2) of the BF16 residual copies: sequential sum, times 1/hc
+        (exact: a power of two), stored BF16."""
+        return to_bf16(mul(seqsum([h[j] for j in range(self.hc)]), F(1.0 / self.hc)))
+
+    def dspark_row(self, L, main_x, pos):
+        """DSpark stage L's window row of position pos: kv_norm(wkv(main_x)), RoPE
+        at pos (window-only stage: the plain RoPE), FP8 quantise-dequantise."""
+        kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), main_x), self.lw(L, "attn.kv_norm.weight"),
+                          self.eps)
+        return qdq_fp8(rope_tail(kv, rope_cs(self.freqs_plain, pos)))
+
+    def dspark_seed(self, mh, pos, state, trace=None):
+        """Write position pos's row into every DSpark stage's window cache.  mh:
+        the concatenated main hidden parts (dim x targets, BF16)."""
+        main_x = rmsnorm_bf16(linear_q(self.w["mtp.0.main_proj.weight"], mh), self.w["mtp.0.main_norm.weight"],
+                              self.eps)
+        for st in range(self.n_mtp):
+            rows = state["dsk"][st]
+            assert len(rows) == pos, (st, len(rows), pos)
+            rows.append(self.dspark_row(self.L + st, main_x, pos))
+        if trace is not None:
+            trace["main_hidden"], trace["main_x"] = mh, main_x
+
+    def dspark_window(self, st, anchor, state):
+        """Stage st's window rows as the release's ring holds them at start_pos
+        = anchor: positions anchor-W+1 .. anchor in ring-slot (p mod W) order."""
+        W = self.window
+        ps = sorted(range(max(0, anchor + 1 - W), anchor + 1), key=lambda p: p % W)
+        return [state["dsk"][st][p] for p in ps]
+
+    def dspark_attention(self, L, xs, anchor, state):
+        """DSparkAttention.forward for the block (start_pos = anchor): block row i
+        sits at position anchor+1+i; every row attends to the window cache and to
+        all block rows."""
+        qs, kvs, css = [], [], []
+        for i, x in enumerate(xs):
+            cs = rope_cs(self.freqs_plain, anchor + 1 + i)
+            qr = rmsnorm_bf16(linear_q(self.lw(L, "attn.wq_a.weight"), x), self.lw(L, "attn.q_norm.weight"),
+                              self.eps)
+            qs.append(rope_tail(linear_q(self.lw(L, "attn.wq_b.weight"), qr).reshape(self.heads, self.hd), cs))
+            kv = rmsnorm_bf16(linear_q(self.lw(L, "attn.wkv.weight"), x), self.lw(L, "attn.kv_norm.weight"),
+                              self.eps)
+            kvs.append(qdq_fp8(rope_tail(kv, cs)))
+            css.append(cs)
+        kvm = np.stack(self.dspark_window(L - self.L, anchor, state) + kvs)
+        return [self.attend(L, q, kvm, cs) for q, cs in zip(qs, css)]
+
+    def dspark_stage(self, L, hs, pres, anchor, state):
+        """One DSpark stage (a Block over the block rows)."""
+        mixes = [self.hc_mixes(h, L, "attn") for h in hs]
+        xs = [rmsnorm_bf16(self.hc_pre(h, p), self.lw(L, "attn_norm.weight"), self.eps) for h, p in zip(hs, pres)]
+        ys = self.dspark_attention(L, xs, anchor, state)
+        hs = [self.hc_post(y, h, mx[1], mx[2]) for y, h, mx in zip(ys, hs, mixes)]
+        out_h, out_pre = [], []
+        for h, mx in zip(hs, mixes):
+            f_pre, f_post, f_comb = self.hc_mixes(h, L, "ffn")
+            x = rmsnorm_bf16(self.hc_pre(h, mx[0]), self.lw(L, "ffn_norm.weight"), self.eps)
+            out_h.append(self.hc_post(self.moe(L, x, None), h, f_post, f_comb))
+            out_pre.append(f_pre)
+        return out_h, out_pre
+
+    def draft(self, y, anchor, state, trace=None):
+        """forward_spec(y, main_hidden(anchor), start_pos=anchor): the block's
+        dspark_block_size draft tokens d_1 .. d_B (d_i proposes the token at
+        position anchor+1+i) and their logit rows.  The window caches must hold
+        positions 0 .. anchor."""
+        B = self.dspark_block
+        assert len(state["dsk"][0]) == anchor + 1, (len(state["dsk"][0]), anchor)
+        ids = [int(y)] + [self.noise_id] * (B - 1)
+        hs = [np.repeat(self.w["embed.weight"][t][None, :], self.hc, axis=0).astype(F) for t in ids]
+        pres = [np.array([1, 0, 0, 0], dtype=F)[:self.hc] for _ in ids]
+        for st in range(self.n_mtp):
+            hs, pres = self.dspark_stage(self.L + st, hs, pres, anchor, state)
+        Lf = self.L + self.n_mtp - 1
+        xh = [to_bf16(self.hc_pre(h, p)) for h, p in zip(hs, pres)]
+        logits = [mv(self.w["head.weight"], rmsnorm_bf16(x, self.lw(Lf, "norm.weight"), self.eps)) for x in xh]
+        out, membeds = [int(y)], []
+        emb, mhead = self.lw(Lf, "markov_head.embed.weight"), self.lw(Lf, "markov_head.head.weight")
+        for i in range(B):
+            e = emb[out[i]]
+            logits[i] = add(logits[i], mv(mhead, e))
+            membeds.append(e)
+            out.append(int(np.argmax(logits[i])))
+        if trace is not None:
+            proj = self.lw(Lf, "confidence_head.proj.weight")
+            trace["confidence"] = [float(mv(proj, np.concatenate([x, e]))[0]) for x, e in zip(xh, membeds)]
+            trace["draft_logits"] = logits
+        return out[1:], logits
+
+    def generate_spec(self, prompt, n, gamma=None, drafter=None):
+        """Greedy speculative decoding with the DSpark drafter.
+
+        Prefill one position at a time (each position also seeds the DSpark
+        window caches), then repeat: draft gamma tokens from the pending token y
+        at anchor q (the last committed position); run y, d_1 .. d_gamma at
+        positions q+1 .. q+1+gamma in ONE layer-major pass of the main model
+        (forward_positions); t_j = argmax of position q+1+j; accept the longest
+        prefix with d_i == t_{i-1}, a tokens, emit t_0 .. t_a (d_1 .. d_a and
+        the bonus t_a); keep the state of positions 0 .. q+1+a and drop the
+        rest (truncate: window rows, compressed rows, index keys, compressor
+        slots, token history, DSpark rows); q += a+1, y = t_a.
+
+        `drafter(y, q, state)`, if given, replaces DSpark (it returns the draft
+        tokens).  Returns (tokens, per-token logits, per-pass records): tokens and
+        logits must equal generate()'s bit for bit."""
+        gamma = self.dspark_block if gamma is None else gamma
+        assert 1 <= gamma <= self.dspark_block
+        max_pos = int(self.c["max_seq_len"])
+        state = self.new_state(mtp=True)
+        for p, t in enumerate(prompt):
+            logits = self.decode_token(t, p, state)
+        q, y = len(prompt) - 1, int(np.argmax(logits))
+        out, rows, passes = [y], [logits], []
+        while len(out) < n:
+            g = min(gamma, max_pos - 2 - q)                 # positions stay below max_seq_len
+            if g > 0:
+                drafts = [int(d) for d in (drafter(y, q, state) if drafter else self.draft(y, q, state)[0])][:g]
+            else:
+                drafts = []
+            lgs = self.forward_positions([y] + drafts, q + 1, state)
+            tg = [int(np.argmax(lg)) for lg in lgs]
+            a = 0
+            while a < len(drafts) and drafts[a] == tg[a]:
+                a += 1
+            self.truncate(state, q + 2 + a)                 # commit positions .. q+1+a
+            passes.append({"anchor": q, "drafts": drafts, "targets": tg, "accepted": a})
+            out += tg[:a + 1]
+            rows += lgs[:a + 1]
+            q, y = q + 1 + a, tg[a]
+        self.last_state = state
+        return out[:n], rows[:n], passes
+
+
+def state_digest(state):
+    """sha256 of every position-indexed entry of a decode state (for comparing a
+    speculative run's committed state with an autoregressive run's)."""
+    import hashlib
+    h = hashlib.sha256()
+    h.update(np.asarray(state["tokens"], dtype=np.int64).tobytes())
+    for key in ("win", "dsk"):
+        for rows in state.get(key, ()):
+            for r in rows:
+                h.update(bits(np.asarray(r, dtype=F)).tobytes())
+    for key in ("ckv", "ik"):
+        for s in sorted(state[key]):
+            for r in state[key][s]:
+                h.update(bits(np.asarray(r, dtype=F)).tobytes())
+    for s in sorted(state["slots"]):
+        for kv, sc in state["slots"][s]:
+            h.update(bits(kv).tobytes() + bits(sc).tobytes())
+    return h.hexdigest()
+
+
+def margin(logits):
+    top = np.argsort(-logits.astype(np.float64), kind="stable")[:2]
+    return float(logits[top[0]] - logits[top[1]])
+
+
+def prompt_and_expected():
+    run = json.loads(ORACLE.read_text())["results"][WORKLOAD]
+    return run["prompt_token_ids"], run["generated_token_ids"]
+
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--tokens", type=int, default=4)
+    ap.add_argument("--vendor-decode-order", action="store_true",
+                    help="stream decode-step attention in the release kernel's blocks (validation only)")
+    a = ap.parse_args()
+    prompt, expected = prompt_and_expected()
+    model = Model(vendor_decode_from=len(prompt) if a.vendor_decode_order else None)
+    got, rows = model.generate(prompt, a.tokens)
+    for i, (t, lg) in enumerate(zip(got, rows)):
+        print(f"step {i}: golden {t} oracle {expected[i]} match {t == expected[i]} margin {margin(lg):.4f} "
+              f"oracle-token logit gap {float(lg[t] - lg[expected[i]]):.4f}")
+
+
+if __name__ == "__main__":
+    main()

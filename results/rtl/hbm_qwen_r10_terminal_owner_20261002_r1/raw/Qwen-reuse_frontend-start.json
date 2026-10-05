@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "tools/hbm_qwen_frontend_reuse_r10.py",
+    "--destination",
+    "/tmp/hbm-qwen-cold-cxx-parent-20261002-r10-r1/Qwen/obj",
+    "--proposal",
+    "/tmp/hbm-qwen-cold-cxx-parent-20261002-r10-r1/proposal.json",
+    "--go",
+    "/tmp/hbm-qwen-cold-cxx-parent-20261002-r10-r1/GO.json",
+    "--go-commit",
+    "d5b14d05a5b6eb4fcb23ee3fb0760c98e9136abc"
+  ],
+  "name": "reuse_frontend",
+  "target": "Qwen",
+  "wall_limit_s": 300
+}

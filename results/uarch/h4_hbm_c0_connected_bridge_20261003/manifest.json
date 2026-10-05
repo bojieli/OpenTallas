@@ -1,0 +1,98 @@
+[
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/HANDOFF.txt",
+    "sha256": "3d8c6eb93c2fd826ae39a1aec12b6679a9862cbe53bdda56723fd43657a28a2c"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/cold-replay.json",
+    "sha256": "695e8bd21b9211e2fcaa62f63ecf0b379a7b8711e6b49758218baa752419c9b8"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/development-selection.json",
+    "sha256": "d7914b0651e1b74cc439f64aff9cd1cfabf61cbf38c4136b644dc7455c7f7945"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/Ampere_adapter.py",
+    "sha256": "e342a4ffdc2cdd88653f34296edc8790e7ddec423bcb8e4a4425626476c4357d"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/Ampere_model.json",
+    "sha256": "a89a1bbb377e7df43645fc53c63386a6eaa0f6f5bd2f768b493c2f44a43391ed"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/Qwen_tiled.json.gz",
+    "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/W2_22ec_model.json",
+    "sha256": "6c1c69ccb772087c1502bfa907b4ebc7a3523f9cede465f9fc065ee8c277cc24"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/W2_b846_model.json",
+    "sha256": "e4febb4a75dd8c57ad310ce950736d488e9243283bf36244e3352e0bc1c2caf1"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_fadd.sv",
+    "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_service.sv",
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_rf_visibility_fence_w6.sv",
+    "sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv",
+    "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_fastfp.sv",
+    "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_fp32_add_lat.sv",
+    "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_hdc_prefix.sv",
+    "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/uarch_model.py",
+    "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs.json",
+    "sha256": "2b5344d2097eb860d465581595bdc88687fb22a29425efdb1c4b8bcda9650410"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/model-tests.log",
+    "sha256": "ba294299fcebc881eccceb9e31afc6d47d8df55055249ff3e3cf04630ea6b58c"
+  },
+  {
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/model.json",
+    "sha256": "6025c6780f57074f5e9cb70d912cdc58c12e242a02704e36f5166c8ff21be17e"
+  },
+  {
+    "path": "rtl/experimental/hbm_c0_connected_20261003/ot_gpu_c0_connected_bridge.sv",
+    "sha256": "6e58cedb394a968ead2414d8e82575b890c8fbe43cfb15afcfed2df7632e82a1"
+  },
+  {
+    "path": "rtl/experimental/hbm_c0_connected_20261003/ot_gpu_c0_fmax_leaf.sv",
+    "sha256": "5728d99770877fe86f9dcf5f506f5ec75ddbd65ea39bb11c219ec114b4e4bef4"
+  },
+  {
+    "path": "rtl/test/hbm_c0_connected_20261003/tb.sv",
+    "sha256": "46d394c9b6cb7eda4ca3240f59a43f9591c8cfa154461c44a6b29fcb97c0e504"
+  },
+  {
+    "path": "tests/test_h4_hbm_c0_connected_bridge_model.py",
+    "sha256": "390ad91d6434a8088b3bc4795cd734479f1a145c79a82db20975fce3b14b6b5c"
+  },
+  {
+    "path": "tools/h4_hbm_c0_connected_bridge_model.py",
+    "sha256": "dcdc8b475536de23f630a3dcc29f167d6932e6ba14fe7f5e6014d74187d1b4c6"
+  }
+]

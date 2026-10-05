@@ -1,0 +1,109 @@
+{
+  "changes": [
+    {
+      "after": "// NEW opt-in validation copy only. Protected original stays unchanged.\n#if !defined(W17_FUTURE_DRIVER_VALIDATION_OPT_IN) || W17_FUTURE_DRIVER_VALIDATION_OPT_IN != 1\n#error \"Future driver requires parent review and explicit opt-in; no source-list adoption\"\n#endif\n#include \"../../../tools/runtime/w17_future_driver_validation.hpp\"\n#include \"Vdie0.h\"",
+      "before": "#include \"Vdie0.h\"",
+      "name": "opt-in guard/header",
+      "offset": 2075
+    },
+    {
+      "after": "f->skip_on = w17_future::boolean(e,\"RT_SKIP\");",
+      "before": "f->skip_on = atoi(e) != 0;",
+      "name": "strict skip",
+      "offset": 19244
+    },
+    {
+      "after": "    virtual uint32_t issue() = 0;\n    virtual uint32_t fault_sources() = 0; // optional existing wrapper port binding",
+      "before": "    virtual uint32_t issue() = 0;",
+      "name": "future interface getter",
+      "offset": 17085
+    },
+    {
+      "after": "    uint32_t issue() override { return d->issue_unit; }\n    uint32_t fault_sources() override {\n#ifdef W17_FUTURE_BIND_DBG_FS\n        // Requires future generated classes from pinned wrapper with dbg_fs port.\n        return d->dbg_fs;\n#else\n        return 0; // Packed sticky sources in dstate remain sampled independently.\n#endif\n    }",
+      "before": "    uint32_t issue() override { return d->issue_unit; }",
+      "name": "optional generated-class getter",
+      "offset": 22478
+    },
+    {
+      "after": "int future_main(int argc, char** argv) {",
+      "before": "int main(int argc, char** argv) {",
+      "name": "catchable entry point",
+      "offset": 26437
+    },
+    {
+      "after": "    long maxc = 2000000;\n    bool wrong = false, have_maxc = false;\n    for (int i=3;i<argc;i++) {\n        if (!strcmp(argv[i],\"--wrong-edge\")) wrong=true;\n        else if (!have_maxc) { maxc=w17_future::cycles(argv[i],\"max_cycles\"); have_maxc=true; }\n        else throw std::invalid_argument(\"unexpected argument\");\n    }\n    int threads=16, LAT_U=48, LAT_X=177;\n    long WD=5000; // unchanged PC-dwell diagnostic value, NOT a service deadline\n    bool continue_fault=false;\n    if (const char* t=getenv(\"RT_THREADS\")) threads=w17_future::positive_int(t,\"RT_THREADS\");\n    if (const char* t=getenv(\"RT_LAT_U\")) LAT_U=w17_future::latency(t,\"RT_LAT_U\");\n    if (const char* t=getenv(\"RT_LAT_X\")) LAT_X=w17_future::latency(t,\"RT_LAT_X\");\n    if (const char* t=getenv(\"RT_WATCHDOG\")) WD=w17_future::cycles(t,\"RT_WATCHDOG\");\n    if (const char* t=getenv(\"RT_CONTINUE_ON_FAULT\")) continue_fault=w17_future::boolean(t,\"RT_CONTINUE_ON_FAULT\");\n    if (const char* t=getenv(\"RT_SKIP\")) (void)w17_future::boolean(t,\"RT_SKIP\");",
+      "before": "    long maxc = (argc > 3 && argv[3][0] != '-') ? atol(argv[3]) : 2000000;\n    bool wrong = false;\n    for (int i = 3; i < argc; i++) if (!strcmp(argv[i], \"--wrong-edge\")) wrong = true;\n    int threads = 16;\n    if (const char* t = getenv(\"RT_THREADS\")) threads = atoi(t);",
+      "name": "all runtime control parsing before construction",
+      "offset": 26628
+    },
+    {
+      "after": "",
+      "before": "    int LAT_U = 48, LAT_X = 177;\n    if (const char* s = getenv(\"RT_LAT_U\")) LAT_U = atoi(s);\n    if (const char* s = getenv(\"RT_LAT_X\")) LAT_X = atoi(s);\n",
+      "name": "move link controls before construction",
+      "offset": 29585
+    },
+    {
+      "after": "rx[peer].u.q.push_back({w17_future::due_at(cyc,LAT_U),",
+      "before": "rx[peer].u.q.push_back({cyc + LAT_U,",
+      "name": "checked UCIe due timestamp",
+      "offset": 30583
+    },
+    {
+      "after": "rx[dst].x[s % 2].q.push_back({w17_future::due_at(cyc,LAT_X),",
+      "before": "rx[dst].x[s % 2].q.push_back({cyc + LAT_X,",
+      "name": "checked T1 due timestamp",
+      "offset": 31041
+    },
+    {
+      "after": "long t = w17_future::due_at(cyc,pkg ? CKV_LAT_U : CKV_LAT_X);",
+      "before": "long t = cyc + (pkg ? CKV_LAT_U : CKV_LAT_X);",
+      "name": "checked existing CKV timestamp",
+      "offset": 32768
+    },
+    {
+      "after": "        cyc=w17_future::next_cycle(cyc);",
+      "before": "        cyc++;",
+      "name": "checked cycle increment",
+      "offset": 35758
+    },
+    {
+      "after": "    // PC silence is per-rank diagnostic only. No causal service bound exists.\n    w17_future::Monitor monitor(4,cyc,maxc,WD);\n    w17_future::Verdict validation;\n    printf(\"FUTURE_VALIDATION service=BOUND_MISSING maxc=%ld pc_diag=%ld\\n\",maxc,WD);\n    while (cyc < maxc) {\n        tick();\n        std::vector<w17_future::Snapshot> samples;\n        for(int d=0;d<4;d++) samples.push_back({dies[d]->pc(),dies[d]->busy(),dies[d]->issue(),\n            dies[d]->fault(),dies[d]->dwords(),dies[d]->fault_sources(),dies[d]->dstate(),dies[d]->done()});\n        validation=monitor.sample(cyc,samples); // latches fault BEFORE any DONE/watchdog decision\n        if(validation.fault) {\n            for(int d=0;d<4;d++) if(monitor.ranks()[d].sticky_fault)\n                printf(\"FAULT die=%d cyc=%ld sticky=%08x pc=%u state=%016lx words=%08x\\n\",d,cyc,\n                    monitor.ranks()[d].sticky_fault,samples[d].pc,(unsigned long)samples[d].state,samples[d].words);\n            fflush(stdout);\n            if(!continue_fault) break; // continued diagnostics can NEVER clear failed verdict\n        }\n        for(int d=0;d<4;d++) if(done_at[d]<0 && samples[d].done) {\n            done_at[d]=cyc;\n            printf(\"DONE die=%d cyc=%ld core_cycles=%u fault=%02x\\n\",d,cyc,dies[d]->cycles(),samples[d].fault);\n        }\n        for(size_t d:validation.pc_silent)\n            printf(\"PC_DIAGNOSTIC die=%zu cyc=%ld dwell=%ld service=BOUND_MISSING pc=%u busy=%02x state=%016lx words=%08x\\n\",\n                d,cyc,cyc-monitor.ranks()[d].last_pc,samples[d].pc,samples[d].busy,(unsigned long)samples[d].state,samples[d].words);\n        // Queue age is diagnostic: use real stored due timestamps and fixed latency.\n        // Tick already called link_step once. No queue, credit or scheduling mutation.\n        if(cyc%200==0 || !validation.pc_silent.empty()) {\n            for(int d=0;d<4;d++) for(int lane=0;lane<3;lane++) {\n                auto& line=(lane==0)?rx[d].u:rx[d].x[lane-1];\n                if(!line.q.empty()) {\n                    auto age=w17_future::link_age(cyc,line.q.front().first,line.lat,line.q.size());\n                    printf(\"LINK_DIAGNOSTIC dst=%d lane=%d enqueued=%ld due=%ld age=%ld overdue=%ld queued=%zu\\n\",\n                        d,lane,age.enqueued,age.due,age.age,age.overdue,age.queued);\n                }\n            }\n        }\n        if(validation.all_done) break; // final status remains failed if sticky fault\n        if(validation.maxc) { printf(\"MAXC cyc=%ld cap=%ld service=BOUND_MISSING\\n\",cyc,maxc); break; }\n",
+      "before": "    // no-progress watchdog: if no die's PC changes for WD cycles, dump every die's state and stop\n    long WD = 5000; if (const char* e = getenv(\"RT_WATCHDOG\")) WD = atol(e);\n    std::vector<uint32_t> lastpc(4, ~0u); long last_move = cyc;\n    while (cyc < maxc) {\n        tick();\n        for (int d = 0; d < 4; d++) if (done_at[d] < 0 && dies[d]->done()) {\n            done_at[d] = cyc;\n            printf(\"DONE die=%d cyc=%ld core_cycles=%u fault=%02x\\n\", d, cyc, dies[d]->cycles(), dies[d]->fault()); fflush(stdout);\n        }\n        bool all = true; for (long x : done_at) all &= x >= 0;\n        if (all) break;\n        for (int d = 0; d < 4; d++) if (dies[d]->pc() != lastpc[d]) { lastpc[d] = dies[d]->pc(); last_move = cyc; }\n        if (cyc - last_move > WD) {\n            printf(\"WATCHDOG no PC change for %ld cycles at cyc %ld\\n\", WD, cyc);\n            for (int d = 0; d < 4; d++)\n                printf(\"  die %d pc %u unit_busy %02x issue_unit %u fault %02x done %d state %08lx words %08x\\n\", d,\n                       dies[d]->pc(), dies[d]->busy(), dies[d]->issue(), dies[d]->fault(), int(dies[d]->done()),\n                       (unsigned long)dies[d]->dstate(), dies[d]->dwords());\n            printf(\"  links: ucie tx %ld rx %ld  bl tx %ld rx %ld\\n\", n_utx, n_urx, n_btx, n_brx);\n            fflush(stdout);\n            break;\n        }\n        bool anyf = false;\n        for (int d = 0; d < 4; d++) if (dies[d]->fault()) {\n            anyf = true;\n            printf(\"FAULT die=%d cyc=%ld code=%02x pc %u state %016lx words %08x\\n\", d, cyc, dies[d]->fault(), dies[d]->pc(),\n                   (unsigned long)dies[d]->dstate(), dies[d]->dwords());\n            fflush(stdout);\n        }\n        if (anyf && !getenv(\"RT_CONTINUE_ON_FAULT\")) break;\n",
+      "name": "per-rank diagnostic loop with sticky fault precedence",
+      "offset": 37071
+    },
+    {
+      "after": "    bool all = validation.success;\n    const char* terminal=all?\"END\":(validation.fault?\"FAULT\":(cyc>=maxc?\"MAXC\":\"INCOMPLETE\"));\n    printf(\"%s cycles=%ld",
+      "before": "    bool all = true; for (long x : done_at) all &= x >= 0;\n    printf(\"%s cycles=%ld",
+      "name": "sticky final result",
+      "offset": 40419
+    },
+    {
+      "after": "terminal, cyc, run_s,",
+      "before": "all ? \"END\" : \"TIMEOUT\", cyc, run_s,",
+      "name": "explicit MAXC vs diagnostic terminal",
+      "offset": 40632
+    },
+    {
+      "after": "\nint main(int argc,char** argv) {\n    try { return future_main(argc,argv); }\n    catch(const std::exception& e) { fprintf(stderr,\"FUTURE_VALIDATION_ERROR %s\\n\",e.what()); return 2; }\n}\n",
+      "before": "",
+      "name": "entry exception catch",
+      "offset": 40727
+    }
+  ],
+  "copy_path": "rtl/test/v41_runtime/w17_future_validated_fastpp_die_rt.cpp",
+  "copy_sha256": "194b6cf5550445dfc8cd389bfc888636c32fa182ca6d791bdf24064464484aca",
+  "dbg_fs": "optional macro getter requires future generated class port binding; no live getter attach",
+  "inverse_verified": true,
+  "limitations": [
+    "fake harness only; generated model binding/linking and actual driver integration uncompiled",
+    "no binary selection, payload reads, source-list change, live run/restart, hardware/timing/adoption claim"
+  ],
+  "original_path": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+  "original_sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04",
+  "selection_gate": "parent review required before any future binary selection; no source-list change",
+  "semantics": "PC watchdog value retained as diagnostic; MAXC retained as explicit execution ceiling, not causal service deadline. No busy/state/traffic deadline reset.",
+  "service_bounds": "BOUND_MISSING; no causal service instrumentation or new bound",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "status": "PREPARED_OPT_IN_COPY_NOT_FULL_DIE_COMPILED"
+}

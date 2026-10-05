@@ -1,0 +1,776 @@
+{
+  "basis": "pinned Yosys plus pinned ABC mapped to the ASAP7 TT liberty, then pinned OpenSTA on the mapped netlist; each point is one top module synthesised alone with registered inputs and outputs",
+  "carry_save_multiply": {
+    "module": "rtl/lib/ot_wide_mul_seq.sv",
+    "operands": "163 by 161, low 160 product bits OR-reduced",
+    "peak": {
+      "bits_per_step": 4,
+      "fmax_mhz": 303.5
+    },
+    "points": [
+      {
+        "bits_per_step": 2,
+        "cell_area_um2": 741.729,
+        "cell_count": 4862,
+        "critical_path_ns": 4.515446170446124,
+        "fmax_mhz": 221.5,
+        "parameters": {
+          "BITS_PER_STEP": 2,
+          "LOW_BITS": 160,
+          "WA": 163,
+          "WB": 161
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/mul_bits2.json",
+        "sequential_cell_count": 832,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_mul_seq.sv",
+            "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+            "size_bytes": 9667
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_mul_seq"
+      },
+      {
+        "bits_per_step": 4,
+        "cell_area_um2": 991.717,
+        "cell_count": 7030,
+        "critical_path_ns": 3.2945681002566087,
+        "fmax_mhz": 303.5,
+        "parameters": {
+          "BITS_PER_STEP": 4,
+          "LOW_BITS": 160,
+          "WA": 163,
+          "WB": 161
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/mul_bits4.json",
+        "sequential_cell_count": 828,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_mul_seq.sv",
+            "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+            "size_bytes": 9667
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_mul_seq"
+      },
+      {
+        "bits_per_step": 8,
+        "cell_area_um2": 1348.225,
+        "cell_count": 10011,
+        "critical_path_ns": 4.713153577238346,
+        "fmax_mhz": 212.2,
+        "parameters": {
+          "BITS_PER_STEP": 8,
+          "LOW_BITS": 160,
+          "WA": 163,
+          "WB": 161
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/mul_bits8.json",
+        "sequential_cell_count": 826,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_mul_seq.sv",
+            "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+            "size_bytes": 9667
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_mul_seq"
+      },
+      {
+        "bits_per_step": 16,
+        "cell_area_um2": 2093.779,
+        "cell_count": 16510,
+        "critical_path_ns": 3.39353449129017,
+        "fmax_mhz": 294.7,
+        "parameters": {
+          "BITS_PER_STEP": 16,
+          "LOW_BITS": 160,
+          "WA": 163,
+          "WB": 161
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/mul_bits16.json",
+        "sequential_cell_count": 824,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_mul_seq.sv",
+            "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+            "size_bytes": 9667
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_mul_seq"
+      },
+      {
+        "bits_per_step": 32,
+        "cell_area_um2": 3705.959,
+        "cell_count": 30448,
+        "critical_path_ns": 4.952258092159788,
+        "fmax_mhz": 201.9,
+        "parameters": {
+          "BITS_PER_STEP": 32,
+          "LOW_BITS": 160,
+          "WA": 163,
+          "WB": 161
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/mul_bits32.json",
+        "sequential_cell_count": 822,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_mul_seq.sv",
+            "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+            "size_bytes": 9667
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_mul_seq"
+      }
+    ]
+  },
+  "not_a_claim": [
+    "pre-layout timing runs BEFORE repair_design, so a high-fanout net is unbuffered and its delay is pessimistic; this repository has a routed block at 317 MHz whose pre-layout figure was 8.18 MHz",
+    "these numbers rank structures at equal widths and choose a knob; closure is a routed record and nothing here is one",
+    "the walk is not monotonic in bits per step, because ABC maps each point independently and picks a different adder structure; the peak is the measurement, not a fitted law"
+  ],
+  "other_wide_primitives": {
+    "ceiling": {
+      "fmax_mhz": 279.6,
+      "meaning": "no amount of sequencing the products and divisions lifts the block above this, because this operation is what the arithmetic IS rather than how it is scheduled",
+      "primitive": "fixed_to_fp32_scaled, power variable"
+    },
+    "points": [
+      {
+        "cell_area_um2": 293.901,
+        "cell_count": 1441,
+        "critical_path_ns": 3.3386461749564043,
+        "fmax_mhz": 299.5,
+        "mode": 0,
+        "parameters": {
+          "MODE": 0
+        },
+        "primitive": "163-bit add",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode0.json",
+        "sequential_cell_count": 489,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 170.034,
+        "cell_count": 813,
+        "critical_path_ns": 2.6607099095645284,
+        "fmax_mhz": 375.8,
+        "mode": 1,
+        "parameters": {
+          "MODE": 1
+        },
+        "primitive": "163-bit increment",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode1.json",
+        "sequential_cell_count": 326,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 313.004,
+        "cell_count": 1646,
+        "critical_path_ns": 3.3722039982774197,
+        "fmax_mhz": 296.5,
+        "mode": 2,
+        "parameters": {
+          "MODE": 2
+        },
+        "primitive": "170-bit subtract",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode2.json",
+        "sequential_cell_count": 510,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 186.111,
+        "cell_count": 964,
+        "critical_path_ns": 0.4425539084837953,
+        "fmax_mhz": 2259.6,
+        "mode": 3,
+        "parameters": {
+          "MODE": 3
+        },
+        "primitive": "170-bit compare, less-than",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode3.json",
+        "sequential_cell_count": 341,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 96.346,
+        "cell_count": 552,
+        "critical_path_ns": 1.5233743459550368,
+        "fmax_mhz": 656.4,
+        "mode": 4,
+        "parameters": {
+          "MODE": 4
+        },
+        "primitive": "163-bit top-set-bit, linear scan",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode4.json",
+        "sequential_cell_count": 170,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 95.994,
+        "cell_count": 479,
+        "critical_path_ns": 0.7749668403269433,
+        "fmax_mhz": 1290.4,
+        "mode": 5,
+        "parameters": {
+          "MODE": 5
+        },
+        "primitive": "163-bit top-set-bit, two-level group then bit",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode5.json",
+        "sequential_cell_count": 170,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 95.442,
+        "cell_count": 466,
+        "critical_path_ns": 0.3922182837253013,
+        "fmax_mhz": 2549.6,
+        "mode": 6,
+        "parameters": {
+          "MODE": 6
+        },
+        "primitive": "163-bit sticky OR, chained loop",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode6.json",
+        "sequential_cell_count": 173,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 98.972,
+        "cell_count": 508,
+        "critical_path_ns": 0.5049925740824506,
+        "fmax_mhz": 1980.2,
+        "mode": 7,
+        "parameters": {
+          "MODE": 7
+        },
+        "primitive": "163-bit sticky OR, masked reduction",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode7.json",
+        "sequential_cell_count": 172,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 591.775,
+        "cell_count": 4483,
+        "critical_path_ns": 1.8722654855512713,
+        "fmax_mhz": 534.1,
+        "mode": 8,
+        "parameters": {
+          "MODE": 8
+        },
+        "primitive": "161-by-16 constant product",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode8.json",
+        "sequential_cell_count": 176,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 338.199,
+        "cell_count": 2460,
+        "critical_path_ns": 1.840911121876034,
+        "fmax_mhz": 543.2,
+        "mode": 9,
+        "parameters": {
+          "MODE": 9
+        },
+        "primitive": "163-bit barrel shift",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode9.json",
+        "sequential_cell_count": 334,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 75.51,
+        "cell_count": 293,
+        "critical_path_ns": 0.3686641250076437,
+        "fmax_mhz": 2712.5,
+        "mode": 10,
+        "parameters": {
+          "MODE": 10
+        },
+        "primitive": "170-bit compare against the ln2 constant",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode10.json",
+        "sequential_cell_count": 170,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "b0ed47b1f0b433548399b3e9a28d86957abbacc29d889a97a88eb3f3b458cb5b",
+            "size_bytes": 5387
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 319.507,
+        "cell_count": 2778,
+        "critical_path_ns": 2.958732739392925,
+        "fmax_mhz": 338.0,
+        "mode": 13,
+        "parameters": {
+          "MODE": 13
+        },
+        "primitive": "fixed_to_fp32_scaled, power zero",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode13.json",
+        "sequential_cell_count": 194,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "84f7dc1da865891e687a6442220a1a5a0b23e0fe5c3180a06a22efb2fe94a59b",
+            "size_bytes": 9496
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      },
+      {
+        "cell_area_um2": 338.986,
+        "cell_count": 2918,
+        "critical_path_ns": 3.576116219534461,
+        "fmax_mhz": 279.6,
+        "mode": 14,
+        "parameters": {
+          "MODE": 14
+        },
+        "primitive": "fixed_to_fp32_scaled, power variable",
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/primitive_mode14.json",
+        "sequential_cell_count": 204,
+        "sources": [
+          {
+            "path": "rtl/test/ot_wide_carry_probe.sv",
+            "sha256": "84f7dc1da865891e687a6442220a1a5a0b23e0fe5c3180a06a22efb2fe94a59b",
+            "size_bytes": 9496
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_carry_probe"
+      }
+    ],
+    "vehicle": "rtl/test/ot_wide_carry_probe.sv"
+  },
+  "producer": {
+    "git": {
+      "commit": "ab2c416a224ed6db1ee4b7522024b3679dd8547a"
+    },
+    "tool": "tools/summarise_wide_datapath_knobs.py"
+  },
+  "restoring_divide_small_divisor": {
+    "divisor_bits": 9,
+    "module": "rtl/lib/ot_wide_div_small_seq.sv",
+    "peak": {
+      "bits_per_step": 10,
+      "fmax_mhz": 286.2
+    },
+    "points": [
+      {
+        "bits_per_step": 1,
+        "cell_area_um2": 302.216,
+        "cell_count": 1612,
+        "critical_path_ns": 5.208027720881256,
+        "fmax_mhz": 192.0,
+        "parameters": {
+          "BITS_PER_STEP": 1,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits1.json",
+        "sequential_cell_count": 508,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 2,
+        "cell_area_um2": 308.103,
+        "cell_count": 1659,
+        "critical_path_ns": 5.589655784890819,
+        "fmax_mhz": 178.9,
+        "parameters": {
+          "BITS_PER_STEP": 2,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits2.json",
+        "sequential_cell_count": 507,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 3,
+        "cell_area_um2": 311.284,
+        "cell_count": 1708,
+        "critical_path_ns": 3.7994973118291226,
+        "fmax_mhz": 263.2,
+        "parameters": {
+          "BITS_PER_STEP": 3,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits3.json",
+        "sequential_cell_count": 506,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 4,
+        "cell_area_um2": 320.994,
+        "cell_count": 1814,
+        "critical_path_ns": 4.671925889143363,
+        "fmax_mhz": 214.0,
+        "parameters": {
+          "BITS_PER_STEP": 4,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits4.json",
+        "sequential_cell_count": 504,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 5,
+        "cell_area_um2": 324.551,
+        "cell_count": 1837,
+        "critical_path_ns": 3.607654547165614,
+        "fmax_mhz": 277.2,
+        "parameters": {
+          "BITS_PER_STEP": 5,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits5.json",
+        "sequential_cell_count": 504,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 6,
+        "cell_area_um2": 331.358,
+        "cell_count": 1890,
+        "critical_path_ns": 3.743339788528534,
+        "fmax_mhz": 267.1,
+        "parameters": {
+          "BITS_PER_STEP": 6,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits6.json",
+        "sequential_cell_count": 505,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 8,
+        "cell_area_um2": 343.595,
+        "cell_count": 2005,
+        "critical_path_ns": 3.5590540899792398,
+        "fmax_mhz": 281.0,
+        "parameters": {
+          "BITS_PER_STEP": 8,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits8.json",
+        "sequential_cell_count": 503,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 10,
+        "cell_area_um2": 356.171,
+        "cell_count": 2114,
+        "critical_path_ns": 3.4935240638673144,
+        "fmax_mhz": 286.2,
+        "parameters": {
+          "BITS_PER_STEP": 10,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits10.json",
+        "sequential_cell_count": 503,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 12,
+        "cell_area_um2": 368.496,
+        "cell_count": 2246,
+        "critical_path_ns": 3.551132204577675,
+        "fmax_mhz": 281.6,
+        "parameters": {
+          "BITS_PER_STEP": 12,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits12.json",
+        "sequential_cell_count": 498,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 16,
+        "cell_area_um2": 402.524,
+        "cell_count": 2516,
+        "critical_path_ns": 4.679240260503425,
+        "fmax_mhz": 213.7,
+        "parameters": {
+          "BITS_PER_STEP": 16,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits16.json",
+        "sequential_cell_count": 502,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 20,
+        "cell_area_um2": 434.631,
+        "cell_count": 2808,
+        "critical_path_ns": 5.657513060516262,
+        "fmax_mhz": 176.8,
+        "parameters": {
+          "BITS_PER_STEP": 20,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits20.json",
+        "sequential_cell_count": 502,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 24,
+        "cell_area_um2": 438.859,
+        "cell_count": 2874,
+        "critical_path_ns": 7.115341590906232,
+        "fmax_mhz": 140.5,
+        "parameters": {
+          "BITS_PER_STEP": 24,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits24.json",
+        "sequential_cell_count": 485,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 32,
+        "cell_area_um2": 502.384,
+        "cell_count": 3391,
+        "critical_path_ns": 9.466789969655348,
+        "fmax_mhz": 105.6,
+        "parameters": {
+          "BITS_PER_STEP": 32,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits32.json",
+        "sequential_cell_count": 501,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      },
+      {
+        "bits_per_step": 163,
+        "cell_area_um2": 1274.234,
+        "cell_count": 10431,
+        "critical_path_ns": 48.72016756388011,
+        "fmax_mhz": 20.5,
+        "parameters": {
+          "BITS_PER_STEP": 163,
+          "DIVISOR_BITS": 9,
+          "WIDTH": 163
+        },
+        "record": "results/physical_abi3/asap7/wide_datapath_knobs/div_bits163.json",
+        "sequential_cell_count": 339,
+        "sources": [
+          {
+            "path": "rtl/lib/ot_wide_div_small_seq.sv",
+            "sha256": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+            "size_bytes": 6039
+          }
+        ],
+        "target_clock_period_ns": 1.0,
+        "top": "ot_wide_div_small_seq"
+      }
+    ],
+    "width": 163
+  },
+  "schema": "opentallas.physical.asap7_wide_datapath_knobs.v1",
+  "stages": "synth,sta",
+  "view": "asap7"
+}

@@ -1,0 +1,94 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+BEGIN_SET_LAYER_RC_BODY
+
+  sta::parse_key_args "set_layer_rc" args  keys {-layer -via -capacitance -resistance -corner}  flags {}
+
+  if { [info exists keys(-layer)] && [info exists keys(-via)] } {
+    utl::error "EST" 201 "Use -layer or -via but not both."
+  }
+
+  set corners [sta::parse_scene_or_null keys]
+  set tech [est::get_db_tech_checked]
+  if { [info exists keys(-layer)] } {
+    set layer_name $keys(-layer)
+    set layer [$tech findLayer $layer_name]
+    if { $layer == "NULL" } {
+      utl::error "EST" 202 "layer $layer_name not found."
+    }
+
+    if { [$layer getRoutingLevel] == 0 } {
+      utl::error "EST" 203 "$layer_name is not a routing layer."
+    }
+
+    if { ![info exists keys(-capacitance)] && ![info exists keys(-resistance)] } {
+      utl::error "EST" 204 "missing -capacitance or -resistance argument."
+    }
+
+    set cap 0.0
+    if { [info exists keys(-capacitance)] } {
+      set cap $keys(-capacitance)
+      sta::check_positive_float "-capacitance" $cap
+      # F/m
+      set cap [expr [sta::capacitance_ui_sta $cap] / [sta::distance_ui_sta 1.0]]
+    }
+
+    set res 0.0
+    if { [info exists keys(-resistance)] } {
+      set res $keys(-resistance)
+      sta::check_positive_float "-resistance" $res
+      # ohm/m
+      set res [expr [sta::resistance_ui_sta $res] / [sta::distance_ui_sta 1.0]]
+    }
+
+    if { $corners == "NULL" } {
+      set corners [sta::scenes]
+      # Only update the db layers if -corner not specified.
+      est::set_dblayer_wire_rc $layer $res $cap
+    }
+
+    foreach corner $corners {
+      est::set_layer_rc_cmd $layer $corner $res $cap
+    }
+  } elseif { [info exists keys(-via)] } {
+    set layer_name $keys(-via)
+    set layer [$tech findLayer $layer_name]
+    if { $layer == "NULL" } {
+      utl::error "EST" 205 "via $layer_name not found."
+    }
+
+    if { [info exists keys(-capacitance)] } {
+      utl::warn "EST" 206 "-capacitance not supported for vias."
+    }
+
+    if { [info exists keys(-resistance)] } {
+      set res $keys(-resistance)
+      sta::check_positive_float "-resistance" $res
+      set res [sta::resistance_ui_sta $res]
+
+      if { $corners == "NULL" } {
+        set corners [sta::scenes]
+        # Only update the db layers if -corner not specified.
+        est::set_dbvia_wire_r $layer $res
+      }
+
+      foreach corner $corners {
+        est::set_layer_rc_cmd $layer $corner $res 0.0
+      }
+    } else {
+      utl::error "EST" 208 "no -resistance specified for via."
+    }
+  } else {
+    utl::error "EST" 209 "missing -layer or -via argument."
+  }
+
+END_SET_LAYER_RC_BODY

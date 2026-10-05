@@ -1,0 +1,35 @@
+{
+  "SS_FF_qualified": false,
+  "adoption": false,
+  "cycle_accounting": {
+    "added_cycles_per_block": 0,
+    "added_cycles_per_scan": 0,
+    "added_token_ns_if_parent_uses_same_schedule": 0,
+    "measured_scan_count": 28,
+    "measured_total_clocks": 5677,
+    "stream_clock_target_ns": 0.8333333333333334
+  },
+  "parent_pool_integration_executed": false,
+  "runs": {
+    "last_block_mutant": {
+      "mutant_detected": true,
+      "pass": false,
+      "returncode": 1
+    },
+    "positive": {
+      "mutant_detected": false,
+      "pass": true,
+      "returncode": 0
+    }
+  },
+  "schema": "dsrom.kctl_drain_gate.v1",
+  "scope": "real kstream plus unchanged ROB/key datapath, baseline/enabled/off outputs every edge under legal backpressure; transport payload equivalence, not model inference/golden token",
+  "sources": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring_drain.sv": "257b9cae2dab5d2dbef3dad357c0006efcc06ecedb24c0a7d5bc6518fa5fba4f",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt_drain.sv": "17726c8c4960ccb4d5f1abf7b497164d3aec6715ffa97fcc3ac51fd12e84ece6",
+    "rtl/test/tb_dsrom_kctl_drain.sv": "03fec11335a3835b0d73cafb41799df51442f7dd383c20f3310c30c074063cf2",
+    "tools/dsrom_kctl_drain_gate.py": "6344dfcbfcd240737655e98fc8de1d3e22fe9fa6873a895af94f0a06eafcbc4f"
+  }
+}

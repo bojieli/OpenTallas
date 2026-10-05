@@ -1,0 +1,17 @@
+{
+  "affinity_thread_checks": 1,
+  "argv": [
+    "/usr/bin/python3",
+    "tools/check_hbm_rf_connected_trace.py",
+    "/tmp/hbm-qwen-connected-runtime-parent-20261002-r11-r1/Qwen/actual_sim.log",
+    "--out",
+    "/tmp/hbm-qwen-connected-runtime-parent-20261002-r11-r1/Qwen/trace_verdict.json"
+  ],
+  "exit_code": 0,
+  "name": "trace",
+  "pid": 682277,
+  "target": "Qwen",
+  "termination_reason": null,
+  "wall_limit_s": 30,
+  "wall_s": 1.00523622892797
+}

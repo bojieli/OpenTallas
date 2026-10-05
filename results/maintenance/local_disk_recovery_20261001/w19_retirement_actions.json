@@ -1,0 +1,38 @@
+[
+  {
+    "path": "/tmp/claude-1000/wt/w19c",
+    "owner_retirement": "W19 owner handoff",
+    "timestamp": 1790844391.0139902,
+    "live_pids": [],
+    "manifest_references": [],
+    "head": "b6780b4f9d017229d644d2e6ed5d0cdc10832e85",
+    "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "",
+    "preserved_head_ref": "refs/maintenance/disk-recovery-20261001/w19c",
+    "allocated_bytes_before": 4334403584,
+    "free_before": 211345833984,
+    "returncode": 0,
+    "stderr": "",
+    "free_after": 215681609728,
+    "path_exists": false,
+    "filesystem_free_delta": 4335775744
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w19-runtime-fetch",
+    "owner_retirement": "W19 owner handoff",
+    "timestamp": 1790844391.4432158,
+    "live_pids": [],
+    "manifest_references": [],
+    "head": "3b15b18e997ad0a05cc7acf474a7329847e38845",
+    "status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "",
+    "preserved_head_ref": "refs/maintenance/disk-recovery-20261001/w19-runtime-fetch",
+    "allocated_bytes_before": 4333912064,
+    "free_before": 215681589248,
+    "returncode": 0,
+    "stderr": "",
+    "free_after": 220016742400,
+    "path_exists": false,
+    "filesystem_free_delta": 4335153152
+  }
+]

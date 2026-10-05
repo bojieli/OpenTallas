@@ -1,0 +1,1246 @@
+{
+  "RTL_written": false,
+  "actual_timestamps": null,
+  "actual_token_rate": null,
+  "authority_cost": {
+    "acceptance_only_if_OR_difference_zero": true,
+    "comparisons": 24,
+    "metadata_requested_full_warp_slot_bytes": 6272,
+    "metadata_words_read": 48,
+    "physical_owner_context_read_and_lease_service_cycles": null,
+    "shared_warp_issues_local2": 49,
+    "source_of_expected_words": "independent protected owner/scheduler context, NEVER supplied cache metadata"
+  },
+  "authority_masks": "difference initialized all32; descriptor/context loads+compares only2 owned key lanes; SHFL/OR all32; STORE lane0",
+  "authority_program": [
+    {
+      "dst": "difference",
+      "op": "MOV",
+      "src": [
+        0
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor0"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor0"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor1"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor1"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor2"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor2"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor3"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor3"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor4"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor4"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor5"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor5"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor6"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor6"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "descriptor7"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_descriptor7"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease0"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease0"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease1"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease1"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease2"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease2"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease3"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease3"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease4"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease4"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease5"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease5"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease6"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease6"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease7"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease7"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease8"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease8"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease9"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease9"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease10"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease10"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease11"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease11"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease12"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease12"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease13"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease13"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease14"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease14"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "actual",
+      "op": "LOAD",
+      "src": [
+        "external_lease15"
+      ]
+    },
+    {
+      "dst": "expected",
+      "op": "LOAD",
+      "src": [
+        "protected_expected_external_lease15"
+      ]
+    },
+    {
+      "dst": "mismatch",
+      "op": "XOR",
+      "src": [
+        "actual",
+        "expected"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "mismatch"
+      ]
+    },
+    {
+      "dst": "other",
+      "offset": 16,
+      "op": "SHFL",
+      "src": [
+        "difference"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "other"
+      ]
+    },
+    {
+      "dst": "other",
+      "offset": 8,
+      "op": "SHFL",
+      "src": [
+        "difference"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "other"
+      ]
+    },
+    {
+      "dst": "other",
+      "offset": 4,
+      "op": "SHFL",
+      "src": [
+        "difference"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "other"
+      ]
+    },
+    {
+      "dst": "other",
+      "offset": 2,
+      "op": "SHFL",
+      "src": [
+        "difference"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "other"
+      ]
+    },
+    {
+      "dst": "other",
+      "offset": 1,
+      "op": "SHFL",
+      "src": [
+        "difference"
+      ]
+    },
+    {
+      "dst": "difference",
+      "op": "OR",
+      "src": [
+        "difference",
+        "other"
+      ]
+    },
+    {
+      "dst": "authority_difference",
+      "op": "STORE",
+      "predicate_stride": 32,
+      "src": [
+        "difference"
+      ]
+    }
+  ],
+  "capacity_fits_64KiB_only": true,
+  "composed_nonalias_extent_bytes": 61952,
+  "does_NOT_price_all_provider_RF_opII_or_authority_routes": true,
+  "external_record_NOT_wire_extension": [
+    "producer_graphop_result_id",
+    "source_program_SHA256",
+    "owner_rank",
+    "global_key_id",
+    "physical_base_stack_PC",
+    "generation_epoch",
+    "actual_decoded_class_flags",
+    "payload_WRvisible",
+    "descriptor_WRvisible",
+    "ACKcaptured_reverseCDC",
+    "consumer_leases",
+    "phase_firstwrite_lastread",
+    "consumer_done",
+    "creditreturn"
+  ],
+  "external_record_word_layout_and_protected_owner_provider_pins": null,
+  "fallback_arena_bytes": 41984,
+  "fallback_full64_eager_extent_bytes": 171264,
+  "fallback_full64_eager_live_bytes": 128896,
+  "fallback_local2_nonalias_regions": {
+    "acc_ping": {
+      "base": 40192,
+      "bytes": 256,
+      "end": 40448
+    },
+    "acc_pong": {
+      "base": 40448,
+      "bytes": 256,
+      "end": 40704
+    },
+    "chosen_blocks": {
+      "base": 39168,
+      "bytes": 1024,
+      "end": 40192
+    },
+    "descriptors": {
+      "base": 18176,
+      "bytes": 64,
+      "end": 18240
+    },
+    "exception_state": {
+      "base": 38912,
+      "bytes": 256,
+      "end": 39168
+    },
+    "finite_block": {
+      "base": 38656,
+      "bytes": 256,
+      "end": 38912
+    },
+    "head_reduction": {
+      "base": 41216,
+      "bytes": 256,
+      "end": 41472
+    },
+    "joint_payload_descriptor_buffers": {
+      "base": 18432,
+      "bytes": 2176,
+      "end": 20608
+    },
+    "k_exp": {
+      "base": 38400,
+      "bytes": 128,
+      "end": 38528
+    },
+    "k_sanitized": {
+      "base": 25088,
+      "bytes": 4224,
+      "end": 29312
+    },
+    "k_units": {
+      "base": 33792,
+      "bytes": 4224,
+      "end": 38016
+    },
+    "keys": {
+      "base": 16896,
+      "bytes": 1024,
+      "end": 17920
+    },
+    "output": {
+      "base": 41472,
+      "bytes": 16,
+      "end": 41488
+    },
+    "positive": {
+      "base": 40704,
+      "bytes": 256,
+      "end": 40960
+    },
+    "q_exp": {
+      "base": 38144,
+      "bytes": 128,
+      "end": 38272
+    },
+    "q_sanitized": {
+      "base": 20736,
+      "bytes": 4224,
+      "end": 24960
+    },
+    "q_units": {
+      "base": 29440,
+      "bytes": 4224,
+      "end": 33664
+    },
+    "query": {
+      "base": 0,
+      "bytes": 16896,
+      "end": 16896
+    },
+    "terms": {
+      "base": 40960,
+      "bytes": 256,
+      "end": 41216
+    },
+    "weights": {
+      "base": 17920,
+      "bytes": 128,
+      "end": 18048
+    },
+    "zero_constant": {
+      "base": 41728,
+      "bytes": 4,
+      "end": 41732
+    }
+  },
+  "fixture_revision": "diverse-r2",
+  "hardware_admitted": false,
+  "lifetimes": [
+    {
+      "id": "producer_result",
+      "requires": [
+        "actual_source_program_op_and_result_id"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "payload",
+        "decoded_class_flags"
+      ]
+    },
+    {
+      "id": "payload_WRcommit",
+      "requires": [
+        "producer_result",
+        "controller_actual_WRACK"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "protected_payload_visible"
+      ]
+    },
+    {
+      "id": "IKD1_WRcommit",
+      "requires": [
+        "payload_WRcommit",
+        "controller_actual_descriptor_WRACK"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "published_epoch"
+      ]
+    },
+    {
+      "id": "ACK_reverse_CDC",
+      "requires": [
+        "IKD1_WRcommit",
+        "captured_ACK",
+        "common36_bothdie_drain"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "owner_lease_ready"
+      ]
+    },
+    {
+      "id": "lease_acquire",
+      "requires": [
+        "owner_lease_ready",
+        "immutable_provider_record",
+        "independent_expected_owner_context"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "consumer_read_lease"
+      ]
+    },
+    {
+      "id": "authority_compare",
+      "requires": [
+        "lease_acquire",
+        "metadata_return_visible"
+      ],
+      "service_cycles": null,
+      "shared_warp_issues_local2": 49,
+      "writes": [
+        "authority_difference"
+      ]
+    },
+    {
+      "id": "decoded_query_key_guard",
+      "requires": [
+        "authority_compare_zero",
+        "decoded_bytes_visible"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "actual_finite_route"
+      ]
+    },
+    {
+      "id": "query_prepare",
+      "requires": [
+        "actual_query_version",
+        "query_guard"
+      ],
+      "service_cycles": null,
+      "shared_issues_per_SM_per_call": 913,
+      "writes": [
+        "cached_fullquery_units",
+        "cached_fullquery_scales"
+      ]
+    },
+    {
+      "id": "finite_path",
+      "reads": [
+        "cached_fullquery_units",
+        "cached_fullquery_scales",
+        "keys",
+        "key_units",
+        "key_exponents",
+        "weights"
+      ],
+      "requires": [
+        "actual_finite_route",
+        "query_prepare",
+        "key_decoder_visible"
+      ],
+      "service_cycles": null,
+      "shared_issues_known_local2": 945
+    },
+    {
+      "id": "exceptional_path",
+      "kernel_count": 36,
+      "reads": [
+        "query",
+        "keys",
+        "weights"
+      ],
+      "requires": [
+        "actual_nonfinite_route",
+        "current_query_raw_visible",
+        "key_raw_visible"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "query",
+        "keys",
+        "weights",
+        "descriptors",
+        "joint_payload_descriptor_buffers",
+        "q_sanitized",
+        "k_sanitized",
+        "q_units",
+        "k_units",
+        "q_exp",
+        "k_exp",
+        "finite_block",
+        "exception_state",
+        "chosen_blocks",
+        "acc_ping",
+        "acc_pong",
+        "positive",
+        "terms",
+        "head_reduction",
+        "output",
+        "zero_constant"
+      ]
+    },
+    {
+      "id": "ABI_and_output_commit",
+      "requires": [
+        "selected_path_head_ready",
+        "ordinary_ABI_writeback",
+        "actual_output_WRACK"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "F64_storage_ABI_scores"
+      ]
+    },
+    {
+      "id": "consumer_done",
+      "requires": [
+        "every_phase_last_read",
+        "every_phase_write_visible",
+        "ABI_and_output_commit"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "last_consumer_done"
+      ]
+    },
+    {
+      "id": "credit_return_and_reuse",
+      "requires": [
+        "consumer_done",
+        "reverse_CDC_credit",
+        "common36_bothdie_drain"
+      ],
+      "service_cycles": null,
+      "writes": [
+        "next_epoch_may_publish"
+      ]
+    }
+  ],
+  "mapping_timing_qualified": false,
+  "no_optional_alias_or_timer_release": true,
+  "packed_key_reuse_model_only": {
+    "adopted": false,
+    "bounded_implementation_authorized_by_this_model": false,
+    "candidate_key_codes": "twiceE2M1 u(code); source UE8 exponent byte-127. No altered BF16/zero/Inf/NaN rounding",
+    "consumer_shared_issues_local2_candidate_excluding_authority_provider": 315,
+    "guard_rule": "actual producer decodedbit classification, held by same immutable epoch/readlease; tag1 is NOT finite",
+    "hoisted_key_payload_word_LOADs_per_key": 17,
+    "initial_KV_fixture_packed_provenance_coverage": null,
+    "integer_opcode_RF_shift_branch_ports_cycles": null,
+    "known_ABI_handoff_shared_issues_local2": 11,
+    "ordinary_mapping_cost_per_term": "SHR/AND to extract nibble, AND magnitude, signed BLT mag4; else AND+IADD+SHR+ISUB+SHL; sign AND/SHR plus conditional ISUB. No native table.",
+    "producer_classflag_handoff_and_route_shared_issues_local2_candidate": 2,
+    "producer_quantize_pack_decode_and_flag_stores_charged_once_per_key": null,
+    "producer_scope": "finite raw input can produce decoded Inf253; raw nonfinite needs preserved format2 actual decodedbits",
+    "query_unit_and_scale_LOADs_per_key": 132,
+    "result_STOREs_per_key": 1,
+    "shader_shared_issues_local2_candidate": 302,
+    "source": "actual same-invocation quantize_pack output; not inversepacking and no fabricated initialState provenance",
+    "weight_LOADs_per_key": 1,
+    "wholeprogram_all_keys_packed_claim": false
+  },
+  "retained_query_authority_extra_regions": [
+    {
+      "base": 41984,
+      "bytes": 16896,
+      "name": "cached_fullquery_units"
+    },
+    {
+      "base": 58880,
+      "bytes": 512,
+      "name": "cached_fullquery_scales"
+    },
+    {
+      "base": 59392,
+      "bytes": 512,
+      "name": "query_guard_flags"
+    },
+    {
+      "base": 59904,
+      "bytes": 128,
+      "name": "query_guard_pingpong"
+    },
+    {
+      "base": 60160,
+      "bytes": 32,
+      "name": "key_guard_flags"
+    },
+    {
+      "base": 60416,
+      "bytes": 128,
+      "name": "key_guard_pingpong"
+    },
+    {
+      "base": 60672,
+      "bytes": 384,
+      "name": "authority_record_and_expected"
+    },
+    {
+      "base": 61184,
+      "bytes": 128,
+      "name": "authority_result"
+    },
+    {
+      "base": 61440,
+      "bytes": 128,
+      "name": "ABI_input"
+    },
+    {
+      "base": 61696,
+      "bytes": 256,
+      "name": "ABI_output"
+    }
+  ],
+  "schema": "w19 source-composed index service proposal r1",
+  "shared_issues_known_SM0_with_49_metadata_issues_each_invocation": 1114018,
+  "source_commit": "14bc5283e9cf499996f14200e5d01c9c45e59823",
+  "source_pins": {
+    "tools/deepseek_hbm_complete_index.py": "00ecb0c00d8219c5ec6aa2790ea027df2016592b0f8353fad7969f806c4e14a7",
+    "tools/deepseek_hbm_complete_index_blas.py": "9816eb9a56ba0b4e9b1bf54c6a6cee45b2e3db083060836a8f29a2d2b3a0cebc",
+    "tools/deepseek_hbm_complete_index_blas_model.py": "3ff99eadd4cc93a0f12320d57729784ca57c919a97224916896e97ac07931d67",
+    "tools/deepseek_hbm_complete_index_codec.py": "efe595fb9f075d24b5ecce1ec8636c0f6fcdc628b189e1d098a7b4e274e4ed1a",
+    "tools/deepseek_hbm_complete_index_consumer.py": "95b1332bb104f03ecf81bff90a72632aa4aa0f09304e242c58deb2a37cb1e021",
+    "tools/deepseek_hbm_complete_index_exceptional.py": "840799e07e2bb1c6529d620b4296ad08a30cb49c8e663745ad90b6801680fd2a",
+    "tools/deepseek_hbm_complete_index_fused.py": "ed7e916328d8f57a5ea4d249133f6c2433bac90fe1bc4bf8b54153e998328755",
+    "tools/deepseek_hbm_complete_index_fused_model.py": "10961f2241b2256da587b8a9285e5851ec75d979198df71217ad7b9bfa14e211",
+    "tools/deepseek_hbm_complete_index_service_plan.py": "1b91797e433d0d0505e7443a7d77e32ed575575cda7aa4a6dd6bd4b5040d50a8",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w19_gpu_compare_lowering.py": "bdd8fbb87a132bdd0c81e8b7f917e0f8abb86197fb12b4ae61386c86ef69a986",
+    "tools/w19_index32_integer_kernel.py": "8775ae6ff271dee79a5304bfb1653c3875e4d6c1e059f8d823fabbf3e8ba9fa4"
+  },
+  "wholejoin_owner": "Boyle",
+  "wire": "IKD1 unchanged <4sBBHQ magic/format/flags0/lengthLE16/epochLE64 +16zero pad; fmt1/68B orfmt2/512B"
+}

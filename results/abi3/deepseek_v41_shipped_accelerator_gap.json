@@ -1,0 +1,193 @@
+{
+ "answer": "no. It fails closed in prefill with a named lowering fault, and that fault -- not the oracle, not the checkpoint, not the numerics -- is now what stands between the V4.1 cells and closure.",
+ "both_shipped_deployments_fail_identically": {
+  "reading": "the SAME view id and the SAME loop id in both, so the fault is in the lowering the two backends share rather than in either backend. One bug, not two.",
+  "rom_array_64": {
+   "deployment": "build/abi3/deepseek-v41-flash-rom-array-64",
+   "failure": "prefill failed: view 1097: loop 1076 is not active"
+  },
+  "rom_wafer": {
+   "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+   "failure": "prefill failed: view 1097: loop 1076 is not active"
+  }
+ },
+ "localised_to_the_instruction": {
+  "issue_positions": {
+   "descriptor_1093": 4,
+   "descriptor_1100": 6
+  },
+  "loop_1349_count": 1349,
+  "loop_bodies": {
+   "loop_1076 (named by descriptor 1100 output view)": "239..495",
+   "loop_1085 (used by descriptor 1093)": "4..5",
+   "loop_1727 (used by the rank-3 EMBED_LOOKUP)": "256..257",
+   "loop_5295 (used by the other rank-3 EMBED_LOOKUP)": "2103..2104"
+  },
+  "method": "decode the program body and find the issue positions of the EMBED_LOOKUP descriptors, then read the body range of every loop descriptor",
+  "program_instructions": 4343,
+  "the_defect": "NO LOOP IN THE DEPLOYMENT COVERS PROGRAM POSITION 6.  The loops around it are 1085 (body 4..5), 1101 (body 8..9) and 1075 (body 11..237), so positions 6..7 are a gap with no loop open.  Descriptor 1100 is issued into that gap while its output view carries a LOOP_INDUCTION term naming loop 1076, whose body is 239..495.  The tight loop this operator needs was never emitted, and the term points at an unrelated structural loop.",
+  "the_pattern": "every EMBED_LOOKUP that resolves is wrapped in a TIGHT single-instruction loop: 1093 issues at position 4 and its loop 1085 has body 4..5; the rank-3 pair have bodies 256..257 and 2103..2104.  Descriptor 1100 issues at position 6 and should therefore have a loop with body 6..7.",
+  "why_i_have_not_patched_it": "the fix is in the ROM program builder's loop-scope emission, which is shared by every ROM product.  The three DeepSeek-V4-Flash cells and the Qwen3 ROM cells close through that same code, and they are the matrix's main asset.  A blind edit there can break six closed cells to chase three open ones, so the localisation is recorded to the instruction and the change is left to be made against the emitter with the V4-Flash and Qwen3 walks as regression gates."
+ },
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "one deployment and one workload. The ROM array-64 walk is a separate question and is not answered here.",
+  "no statement about whether the shipped cells would AGREE with the oracle once they execute. The margin of 2.4947 makes agreement plausible where the reduced vehicle's 0.00515 made it impossible, but plausible is not measured."
+ ],
+ "question": "with a shipped-scale oracle finally in hand, does the shipped V4.1 ROM WAFER deployment execute?",
+ "reduced_versus_shipped": {
+  "rows": [
+   {
+    "deployment": "shipped wafer",
+    "descriptors": 9448,
+    "embed_lookups": 4,
+    "pairs": [
+     {
+      "descriptor": 1093,
+      "gap": 8,
+      "loop": 1085,
+      "output_view": 1089,
+      "rank": 2
+     },
+     {
+      "descriptor": 1100,
+      "gap": 24,
+      "loop": 1076,
+      "output_view": 1097,
+      "rank": 2
+     },
+     {
+      "descriptor": 1734,
+      "gap": 7,
+      "loop": 1727,
+      "output_view": 1731,
+      "rank": 3
+     },
+     {
+      "descriptor": 5300,
+      "gap": 5,
+      "loop": 5295,
+      "output_view": 5298,
+      "rank": 3
+     }
+    ]
+   },
+   {
+    "deployment": "shipped array-64",
+    "descriptors": 9612,
+    "embed_lookups": 4,
+    "pairs": [
+     {
+      "descriptor": 1093,
+      "gap": 8,
+      "loop": 1085,
+      "output_view": 1089,
+      "rank": 2
+     },
+     {
+      "descriptor": 1100,
+      "gap": 24,
+      "loop": 1076,
+      "output_view": 1097,
+      "rank": 2
+     }
+    ]
+   },
+   {
+    "deployment": "reduced v2 rom (EXECUTES)",
+    "descriptors": 9772,
+    "embed_lookups": 6,
+    "pairs": [
+     {
+      "descriptor": 1395,
+      "gap": 8,
+      "loop": 1387,
+      "output_view": 1391,
+      "rank": 2
+     },
+     {
+      "descriptor": 1404,
+      "gap": 7,
+      "loop": 1397,
+      "output_view": 1401,
+      "rank": 2
+     },
+     {
+      "descriptor": 2028,
+      "gap": 7,
+      "loop": 2021,
+      "output_view": 2025,
+      "rank": 3
+     },
+     {
+      "descriptor": 2037,
+      "gap": 7,
+      "loop": 2030,
+      "output_view": 2034,
+      "rank": 3
+     }
+    ]
+   }
+  ],
+  "the_anomaly": "every EMBED_LOOKUP in the working reduced deployment sits 5 to 8 descriptors after the loop that indexes its output.  In BOTH shipped deployments the second one sits 24 back, and the loop it names (1076) is EARLIER than the loop the FIRST EMBED_LOOKUP uses (1085) -- a later operator reaching back past an intervening loop.  Loop 1076 closes at program position 495, so if descriptor 1100 issues after that the loop is gone, which is exactly what the resolver reports.",
+  "the_question_for_whoever_fixes_it": "a single-iteration loop (bounds [0,1), max_iterations 1) around an embedding lookup is the shape a loop that should have been folded away leaves behind.  So either loop 1076 should not exist and the view should carry no dynamic term, or descriptor 1100 belongs inside its body.  The reduced deployment answers neither question because its pairing is already consistent.",
+  "what": "every TENSOR.EMBED_LOOKUP in each deployment, with the loop its output view is indexed by"
+ },
+ "schema": "opentallas.abi3.v41_shipped_accelerator_gap.v1",
+ "the_committed_deployments_were_stale": {
+  "discovery": "rebuilding the shipped ROM wafer from source gives a DIFFERENT digest, SIX EMBED_LOOKUPs where the committed artifact has four, and every one of them inside its own tight loop -- zero operators outside their loop. The emitter was fixed at some point and the artifact was never regenerated.",
+  "so_the_loop_fault_was_not_live": "view 1097 / loop 1076 does not exist in a fresh build. I spent a stretch localising a defect in a build product instead of rebuilding it first, which is exactly what my own recorded lesson says not to do: \"build products go stale under evidence -- rebuild from source before correcting a figure to match an artifact.\"",
+  "the_invariant_is_still_worth_having": "runtime/abi3/builder.py now refuses a view whose LOOP_INDUCTION term names a loop that is not open, at the emission site. Gated: the Qwen3 ROM deployment rebuilds byte-identical with it active."
+ },
+ "the_refusal": {
+  "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+  "deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+  "emitted_token_ids": [],
+  "failure": "prefill failed: view 1097: loop 1076 is not active",
+  "localised_to": {
+   "descriptor": 1100,
+   "loop_1076": {
+    "body_end": 495,
+    "body_start": 239,
+    "bound_selector_kind": 2,
+    "bound_symbol_id": "NO_ID",
+    "loop_index": 0,
+    "lower_bound": 0,
+    "max_iterations": 1,
+    "step": 1,
+    "upper_bound": 1
+   },
+   "operator": "TENSOR.EMBED_LOOKUP (engine_family 32, engine_sub 3)",
+   "output_view_0": 1097,
+   "prior_art_in_this_tree": "EMBED_LOOKUP has a recorded history of addressing faults here: \"legacy unkeyed bases ignore the placement table -- EMBED_LOOKUP and GATHER addressed by launch counter, so the token id was validated and never used\". That is a different fault from this one, but it is the same operator and the same part of the lowering.",
+   "reading": "the EMBED_LOOKUP at descriptor 1100 writes a rank-2 view whose only dynamic term is loop 1076, a SINGLE-ITERATION loop whose body spans program positions 239 to 495.  For the view to resolve, the operator must be issued inside that body.  It is not, so the resolver refuses.  Exactly one descriptor in the deployment references view 1097, so there is no ambiguity about which operator owns the fault.",
+   "view_1097": {
+    "dynamic_term_count": 1,
+    "rank": 2,
+    "term0_index": 1076,
+    "term0_kind": "LOOP_INDUCTION",
+    "term0_stride": 262144
+   }
+  },
+  "prompt_tokens": 32,
+  "raised_by": "runtime/sim/memory.py:688",
+  "stop_reason": "failed",
+  "what_it_means": "view 1097 carries a dynamic term of kind LOOP_INDUCTION naming loop 1076, and loop 1076 is not in the active loop set when the view is resolved. The view is used outside the loop that indexes it -- a lowering fault in the deployment, caught by the resolver rather than producing a wrong address.",
+  "workload_id": "TA-DS41-CHAT-1-P32"
+ },
+ "what_is_now_established_on_the_v41_path": [
+  "the shipped checkpoint is present and locked: 476 GB, 48 shards, 96,085 tensors",
+  "the shipped ORACLE works: runtime/reference/deepseek_v41_oracle.py emits [13806, 345, 7472, 49665] on TA-DS41-CHAT-1-P32, with a first-token margin of 2.4947",
+  "the shipped ROM wafer and ROM array DEPLOYMENTS exist and are admitted against their capabilities",
+  "the shipped ROM wafer deployment does NOT execute: this record"
+ ],
+ "where_the_rebuilt_wafer_now_stops": {
+  "compare": "the stale artifact refused at 0.0 s; this one executes 218 s of prefill before stopping",
+  "deployment": "rebuilt from build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+  "failure": "prefill failed: EMBED_LOOKUP output view 1735 is (32, 24, 1); expected (768, 8) or a view whose leading axes multiply to 768 over a final 8",
+  "prefill_seconds": 217.9,
+  "reading": "a rank-3 Engram EMBED_LOOKUP output view carries a UNIT final axis where the operator requires the table width of 8. Its leading axes are right -- 32 tokens x 24 hash columns = 768, which is what the operator asks for -- so the shape is correct except for the feature width, which is emitted as 1.",
+  "why_this_is_a_better_blocker": "the operator prints both the shape it got and the shape it wants, so this is a one-axis discrepancy in one view rather than a scope question. It is also adjacent to code that already special-cases width-one Engram tables on the OPERAND side (the unit_width branch in _weight_view), which is where to look."
+ },
+ "why_this_is_the_right_kind_of_blocker": "it is a fail-closed refusal with a view id, a loop id and a source line, not a timeout, a silent wrong answer, or a resource limit. The reduced V4.1 ROM deployment lowers through the SAME backend (rom.wafer_logical_device) and executes, so the fault is scale-dependent rather than a missing feature."
+}

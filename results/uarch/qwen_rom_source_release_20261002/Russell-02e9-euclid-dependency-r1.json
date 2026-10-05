@@ -1,0 +1,65 @@
+{
+  "model": "model-r7.json",
+  "model_sha256": "b47d505ce39511508e815652a5ef5c69c8806dcffda9eb84a36450e356708c05",
+  "source_parent": "6bb3ac9e7b05185e3e87ca0cdbe2dd8df1909359",
+  "status": "BLOCKING_SOURCE_CONTRACT_NOT_ADOPTION",
+  "owner": "Euclid",
+  "dimensioning": {
+    "target_s": 0.0003333333333333333,
+    "preserved_order_overhead_s": 1.193663333333337e-05,
+    "minimum_fill_integer_under_preserved_overhead": 7,
+    "minimum_fill_integer_with_mandatory_cold_lease_pipeline_and_suffix": 7,
+    "mandatory_first_payload_ps": 139333.33333333334,
+    "mandatory_layer_visibility_start_ps": 140166.66666666666,
+    "source_cold_lease_six_fill_lower_s": 0.00033727996666666664,
+    "lower_bound_scope": "Proposed cold-per-layer service-lease calendar: nextprefetch starts after previousservice drains; requestlink/REQ/coldRAMcapture+foureligibility/read25/raw3/owner12/response39/fourassemblyselectors/visible fence retained. No assumed earlycrosslayer producer/descriptor ownership. Euclid actualearlyrelease may change this policy and require rederivation; not universal architectural6lane impossibility.",
+    "necessary_return_groups_with_nonlayer_cost": 8,
+    "per_PC_II5_stack_payload_ceiling_Bps": 204800000000.0,
+    "service_increase_mathematically_necessary_from_counts": false,
+    "successor_fill_counts_per_layer": [
+      9380,
+      9378,
+      9346,
+      9326,
+      9326,
+      9326,
+      9326
+    ],
+    "seven_fill_port_lower_s": 0.0002814,
+    "six_universal_infeasibility_proven": false,
+    "six_ideal_composition_s": 0.00033255396666666666,
+    "reason": "ceil(total_fill_beats/(streamHz*(budget-retained_FIFO_overhead)))=7. This preserves6 predecessor known overhead; not universal proof6cannotfit with another legal ordering.",
+    "aggregate_command_integer_lower_including_this_maintenance": 4,
+    "instruction": "One8/4/7 evaluated, no sweep. Maintenance demands/count bound and actual finite reservations reported; no adopted PHY bandwidth."
+  },
+  "calendar_summary": {
+    "full36_sequential": true,
+    "all1536_destinations": true,
+    "composed_conditional_s": 0.0004129013,
+    "meets_3k_in_conditional_reservation": false,
+    "margin_to_3k_s": -7.95679666666667e-05,
+    "extra_nonlayer_compute_s": 2.636666666666661e-06,
+    "current_V_requires_actual_prefix": true,
+    "source_policy": {
+      "offchip_read_B_per_rank_token": 150690816,
+      "closing_write_B_per_rank_token": 156672,
+      "existing_KV_read_debit_replaced_once": true,
+      "incremental_full_layer_refill_B": 0,
+      "source_policy": "Conditional existing two K-tail parity tiles/currentVforward. No new compulsory refill or synthetic state. Actual producer and selected demand journal independent.",
+      "user_home": 0,
+      "user_home_capacity_bounded": true
+    },
+    "persistent_state_erased": false,
+    "actual_demand_journal_bound": false,
+    "proved_overlap_s": 0,
+    "adopted_rate": null,
+    "scope": "ONE address-only fourcommand/sourcebank-deadline/eightreturn/sevenfill reservation incl maintenance and ready selection among at most128cohorts in56x80 group/lane pools. Original FIFO draft failures retained; no dimension sweep. State/payload, actualcache/revalidation phases, protection, sourceCDC/readiness and PHY sustain unqualified."
+  },
+  "requirements": [
+    "Supply observed actual acceptedproducer/descriptor/cache release, fullOwner/generation, accepted379bit instruction/per-tile128x, publishedprefix/maskedmacrovisible/attentionread/drain/reversegrant/retirement journal; source-ownedexports rather than fixture ready values.",
+    "Bind whether nextlayer prefetch descriptor/lookahead may exist before prior service drains. Proposed coldlease bound charges139.333ns firstpayload plusvisibility perlayer; sixfill lower337.279967us includesmandatorypipeline and suffix. Sevennecessary is scoped to that policy, not universal if observedearlyrelease permits differentcausaloverlap.",
+    "Actual8192context/8191position twoKtail/currentVforward residence remains conditional. Preserve150690816reads+156672closingwrites/rank/token, replaceexistingKVdebitonce, no addedcompulsorywholelayerrefill.",
+    "Readyselectionamong atmost128cohorts retains16/group and64combinedpending/raw/held perPC. Full36sequential calendar412.9013us FAIL; all1536 desttile%7 and56x80 pools. CurrentVlastquarter must follow actualQKVproducer; localwindowreuse waitsactualreaders/reversegrants.",
+    "No newnumerical position. Existingactualprovider maybindonlypublishedmatchingprefix/TP/owner. Never reconstructmissing8Kstate or transfer cold correctness calendar into production latency."
+  ]
+}

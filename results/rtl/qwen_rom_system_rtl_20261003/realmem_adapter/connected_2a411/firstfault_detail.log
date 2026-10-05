@@ -1,0 +1,10 @@
+BAD_RETURN_BEFORE_EDGE hclk=146 arb_fault=0 bad_return=1 sel_k=2 req_valid=2 k_v=1 k_we=0 k_tag=122 k_addr=220 k_rsp_v=0 k_rsp_ready=0 comb_id=100 comb_beat=0 comb_len=1 locks=00000000:00000000:00000303
+rowfault0=0 rowfault1=0 rowfault2=0 rowfault3=0 comb_owner=00000000:00000000:00042d00 comb_tag=500
+owner[256]=00000080:00000000:0085d080
+rsp s=1 pc=20 wr=1 tag=500 beat=0
+
+FIRST_FAULT hclk=146 arb_fault=1 bad_return=1 sel_k=2 req_valid=0 k_v=1 k_we=0 k_tag=123 k_addr=230 k_rsp_v=0 k_rsp_ready=0 comb_id=100 comb_beat=0 comb_len=1 locks=00000000:00000000:00000303
+rowfault0=0 rowfault1=0 rowfault2=0 rowfault3=0 comb_owner=00000000:00000000:00042d00 comb_tag=500
+owner[256]=00000080:00000000:0085d080
+rsp s=1 pc=20 wr=1 tag=500 beat=0
+

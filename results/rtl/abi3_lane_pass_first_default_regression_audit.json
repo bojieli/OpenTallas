@@ -1,0 +1,121 @@
+{
+  "status": "pass",
+  "scope": "Current-source binding, including explicit repository mapping for three canonicalized quick manifests",
+  "bindings": [
+    {
+      "recorded": "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L1.json",
+      "verified": "testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L1.json",
+      "sha256": "aa7ca6ac27aff43f553d58fc29f42f35036478860d30d96eef2a41f00c40208d"
+    },
+    {
+      "recorded": "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L2.json",
+      "verified": "testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L2.json",
+      "sha256": "ff00f3d5889ae506e1f0f3addef12717b39df1510513145daa547e35cba97c6f"
+    },
+    {
+      "recorded": "<BUILD>/testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L3.json",
+      "verified": "testdata/rtl/abi3_lane_pipelined/d1/manifest_quick_L3.json",
+      "sha256": "4c2abb3e633da3d194b6dfff34fb7faaa456b168f0ab4bc8ff03ec9435e83931"
+    },
+    {
+      "recorded": "docs/CHIP_ARCHITECTURE_DESIGN.md",
+      "verified": "docs/CHIP_ARCHITECTURE_DESIGN.md",
+      "sha256": "ae879ac5177e24833c03a1148a07c7769b00382f2ff7bd5da99d846778299933"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "verified": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_format_pkg.sv",
+      "verified": "rtl/abi3/ot_a3_format_pkg.sv",
+      "sha256": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "verified": "rtl/abi3/ot_a3_lane_pipelined.sv",
+      "sha256": "46abe872a88d16e15aefc75055a90a6bcd0df6f153606c4a1f6f132ec802386b"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_lane_pkg.sv",
+      "verified": "rtl/abi3/ot_a3_lane_pkg.sv",
+      "sha256": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_mac_lane.sv",
+      "verified": "rtl/abi3/ot_a3_mac_lane.sv",
+      "sha256": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989"
+    },
+    {
+      "recorded": "rtl/ot_fp32_rne_pkg.sv",
+      "verified": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+    },
+    {
+      "recorded": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "verified": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "recorded": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "verified": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    {
+      "recorded": "rtl/test/a3_lane_pipelined_harness.cpp",
+      "verified": "rtl/test/a3_lane_pipelined_harness.cpp",
+      "sha256": "326c7a0c64500bcc5b6346cd97f7e122d654aae1549f181c7c173cf82c3d4019"
+    },
+    {
+      "recorded": "rtl/test/a3_lane_pipelined_top.sv",
+      "verified": "rtl/test/a3_lane_pipelined_top.sv",
+      "sha256": "f5fb43467583f1e9d47ac0e38bd35ef5a40d00a2ce30454e6deca7fd020c1f09"
+    },
+    {
+      "recorded": "rtl/test/tb_a3_lane_pipelined.sv",
+      "verified": "rtl/test/tb_a3_lane_pipelined.sv",
+      "sha256": "9a952882f62f36d9df670f6616ecb3022df9b3ab6d2e69d0252e3a59779db056"
+    },
+    {
+      "recorded": "runtime/abi3/constants.py",
+      "verified": "runtime/abi3/constants.py",
+      "sha256": "be903bd5fe7899621015467c919d2f6f0e030834e0aca7b736063cc776e3f5ab"
+    },
+    {
+      "recorded": "runtime/reference/formats.py",
+      "verified": "runtime/reference/formats.py",
+      "sha256": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2"
+    },
+    {
+      "recorded": "runtime/sim/backend.py",
+      "verified": "runtime/sim/backend.py",
+      "sha256": "9b94b1ee28792cb28dcdaa94b6e8e27ff734bb0fe4782509c513939827ccdc17"
+    },
+    {
+      "recorded": "runtime/sim/engines/tensor.py",
+      "verified": "runtime/sim/engines/tensor.py",
+      "sha256": "84133ca80f502c287f111c9a1ee1b47030c9680805ff0f185a23e16c3691dc9b"
+    },
+    {
+      "recorded": "runtime/sim/formats.py",
+      "verified": "runtime/sim/formats.py",
+      "sha256": "4511da5577b963434d24686f070e9082cec903c46362ab7c5919631a7b6f905b"
+    },
+    {
+      "recorded": "tools/am_e1_lane_reference.py",
+      "verified": "tools/am_e1_lane_reference.py",
+      "sha256": "31f7d12c54f263743a33712ea69ab14ee00430b418d884331c54e43468eb8fc8"
+    },
+    {
+      "recorded": "tools/build_abi3_lane_vectors.py",
+      "verified": "tools/build_abi3_lane_vectors.py",
+      "sha256": "26d77228b539a38d03561216637a60e1c76f7b3b480a7d9b534071128d0fac7b"
+    },
+    {
+      "recorded": "tools/rtl_abi3_lane_campaign.py",
+      "verified": "tools/rtl_abi3_lane_campaign.py",
+      "sha256": "b9ac9fb4a083abbc31af39da703f1fd152f97aad786c047c5fca2f5b796400f4"
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.ds-pc10-reference-endpoints-parent-review.v1",
+  "status": "PASS_INDEPENDENT_REFERENCE_AND_ORIGINAL_ENDPOINT_MAPPING_CURRENT_PROVIDER_JOIN_REFUSED",
+  "source_commits": [
+    "bea7111c5",
+    "27d7e2db4",
+    "fe4e3e5f5"
+  ],
+  "focused_tests": 18,
+  "artifact_pins_verified": {
+    "golden": 9,
+    "endpoints": 32,
+    "live_endpoint_implementation": 2
+  },
+  "independent_reference_check": {
+    "algorithm": "explicit NumPy FP32 pairwise tree then integer BF16 RNE; no native executor imports",
+    "upstream_PC9_parts": 64,
+    "output_words": 8192,
+    "expected_rank_outputs": 96,
+    "payload_sha256": "a6c53f51ac4d1e776bce6d160f7ad8ff6048071837fd6e09c876b63c82aa1947",
+    "byte_exact": true
+  },
+  "endpoint_replay": "PASS_SELECTED_W19_SOURCE_MAPPING; finite production composition remains FAIL",
+  "actual_provider_directory_check": {
+    "original_home_records": 286114,
+    "R41_bound_home_records": 290730,
+    "original_prefix_unchanged": true,
+    "actual_constructor": "REFUSED",
+    "reason": "complete actual production home directory required",
+    "next_action": "additive exact lineage join of unchanged physical homes and source-regenerated produced-state extension; referenced PC9/PC10 RF records remain exact"
+  },
+  "physical_candidate": {
+    "rank_to_die": "rank r -> die r",
+    "SMs_per_die": 32,
+    "mapping_records": 3072,
+    "source_span_refs": 49152,
+    "output_tile_refs": 6144,
+    "L2_transient_reservation_per_die_bytes": 16384,
+    "reservation_installed": false,
+    "cache_miss_latency_delta": null,
+    "finite_waits_bound": false,
+    "production_calls": 0
+  },
+  "remaining": [
+    "actual PC9 source bytes and all96 output comparisons",
+    "cache/directory exclusion for selected L2 reservation",
+    "finite hardware contention/ACK/hold/visibility/consumer/reverse bounds",
+    "contextual SS/FF and full token composition"
+  ],
+  "full_token_qualified": false,
+  "hardware_qualified": false
+}

@@ -1,0 +1,74 @@
+{
+  "schema": "opentallas.prose_figure_triage_policy.v1",
+  "rules": [
+    {
+      "id": "abi-wire-a18-shape-notation",
+      "disposition": "normative_or_example",
+      "rationale": "The matched tokens are tuple dimensions in ABI shape notation, not measured quantities.",
+      "expected_matches": 2,
+      "match": {
+        "path": "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md",
+        "heading_contains": "What could not be expressed",
+        "literal": "2, W"
+      }
+    },
+    {
+      "id": "abi-wire-a25-algebraic-range",
+      "disposition": "normative_or_example",
+      "rationale": "3W is a symbolic test-domain bound over the normative ring width W, not an empirical multiplier.",
+      "expected_matches": 1,
+      "match": {
+        "path": "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md",
+        "heading_contains": "Amendment A25",
+        "literal": "3W",
+        "line_contains": "from 1 to `3W + 1`"
+      }
+    },
+    {
+      "id": "abi-operator-a18-shape-notation",
+      "disposition": "normative_or_example",
+      "rationale": "The matched token is a tuple dimension in an operator-convention shape, not a measured quantity.",
+      "expected_matches": 1,
+      "match": {
+        "path": "docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md",
+        "heading_contains": "Amendment A18",
+        "literal": "2, W",
+        "line_contains": "[B, S, 2, W]"
+      }
+    },
+    {
+      "id": "execution-plan-q-projection-shape-separators",
+      "disposition": "normative_or_example",
+      "rationale": "The two x tokens are dimension separators in a tensor shape, not multiplication results or performance ratios.",
+      "expected_matches": 2,
+      "match": {
+        "path": "docs/TENSOR_ACCELERATOR_EXECUTION_PLAN.md",
+        "heading_contains": "First authentic Q-projection DMA/MATMUL tile pair",
+        "unit": "x",
+        "line_contains": "shape `1 x 64 x 256`"
+      }
+    },
+    {
+      "id": "asap7-liberty-unit-conversion-example",
+      "disposition": "normative_or_example",
+      "rationale": "The factor illustrates the exact ps-to-ns unit-conversion hazard checked by the environment test; it is not a characterized speedup.",
+      "expected_matches": 1,
+      "match": {
+        "path": "docs/ABI3_PHYSICAL_VIEWS.md",
+        "heading_contains": "ASAP7 local liberty",
+        "literal": "1000x"
+      }
+    },
+    {
+      "id": "deepseek-plan-rejected-legacy-bandwidth-proxy",
+      "disposition": "normative_or_example",
+      "rationale": "This is an explicitly rejected legacy proxy named to constrain the new compiler, not a bandwidth claim for the current design.",
+      "expected_matches": 1,
+      "match": {
+        "path": "docs/DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md",
+        "heading_contains": "Wafer topology and communication contract",
+        "literal": "100-TB/s"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+test_Qwen_leaf_source_order (__main__.ControlTests) ... ok
+test_Qwen_lowering_matches_all1737_PC_native_command_counts (__main__.ControlTests) ... ok
+test_RF_source_geometry_and_identity_no_alias (__main__.ControlTests) ... ok
+test_complete_PC_and_family_decode (__main__.ControlTests) ... ok
+test_completion_mirror_ACK_backpressure_and_stale_owner (__main__.ControlTests) ... ok
+test_default_off_and_hardware_closed (__main__.ControlTests) ... ok
+test_dependency_gate_and_invisible_output (__main__.ControlTests) ... ok
+test_existing_CPU_primitive_adapter_only (__main__.ControlTests) ... ok
+test_scratch64B_single_owner_and_matching_lease (__main__.ControlTests) ... ok
+test_source_consumer_and_reverse_release (__main__.ControlTests) ... ok
+test_source_rank_template_and_buffer_decode (__main__.ControlTests) ... ok
+test_unlowered_shape_and_unsupported_opcode_rejected (__main__.ControlTests) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 7.312s
+
+OK

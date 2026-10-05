@@ -1,0 +1,78 @@
+{
+  "defect": {
+    "now": "width read from the scale table's own trailing extent (scale_spec.shape[1], else 1)",
+    "shipped_symptom": "ROM wafer refused: EMBED_LOOKUP output view is (32, 24, 1); expected (768, 8)",
+    "site": "compiler/frontends/v3/deepseek_v41.py, Engram row_lookup lowering",
+    "was": "row_scales declared (span, ENGRAM_COLUMNS, 1); iteration_domain width 1",
+    "why_it_hid": "The reduced regression vehicle has head_dim 32 over a 32-element quantisation block, so its table scale really is [rows, 1] and the literal was correct there.  The shipped release has head_dim 256 over the same block and so carries 8 scales per row.  A constant that is right on the only vehicle under test is invisible."
+  },
+  "gate_the_reduced_vehicle_is_unmoved": {
+    "byte_identical": true,
+    "checkpoint_lock_id": "2ea2d142370015c5c3aaa38bcd33f79ca3db3cd4aeb463c54d771c704bfc8548",
+    "checkpoint_lock_reproduced": true,
+    "claim": "The fix derives the width instead of asserting it, so on a vehicle whose table scale is [rows, 1] it computes the same 1 and the artifact cannot move.  Proved by rebuild, not by construction alone.",
+    "committed_sha256": "3aff74007eda741c6d964e8c171e13d5cb1cd745916212fc5994966fb029b13c",
+    "rebuild_command": "PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash-reduced-v2 --context-tokens 128 --maximum-new-tokens 128",
+    "rebuilt_sha256": "3aff74007eda741c6d964e8c171e13d5cb1cd745916212fc5994966fb029b13c"
+  },
+  "git_head_before_fix": "bd4325423b6dbed79c0b15fa31b4018866c90089",
+  "models_structurally_out_of_reach": "Qwen3 and DeepSeek-V4-Flash do not enter this front end -- the edited function is export_deepseek_v41_kernel_graph -- so no shipped digest of theirs is reachable from this change, independently of any rebuild.",
+  "purpose": "Show what the Engram row-scale width fix moves and what it cannot move.  The front end declared a hardcoded scale width of 1 for EMBED_LOOKUP's gathered row-scale plane, with a comment asserting the table scale is [table_rows, 1].  That holds only when an Engram row is one block wide.",
+  "row_scale_widths": {
+    "reduced_v2_committed": {
+      "main.layer01.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        1
+      ],
+      "main.layer14.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        1
+      ]
+    },
+    "shipped_committed_stale": {
+      "main.layer01.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        1
+      ],
+      "main.layer14.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        1
+      ]
+    },
+    "shipped_rebuilt_with_fix": {
+      "main.layer01.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        8
+      ],
+      "main.layer14.engram.row_lookup.row_scales": [
+        {
+          "multiplier": 1,
+          "symbol": "span_tokens"
+        },
+        24,
+        8
+      ]
+    }
+  },
+  "schema": "opentallas.result.v41_engram_scale_width.v1"
+}

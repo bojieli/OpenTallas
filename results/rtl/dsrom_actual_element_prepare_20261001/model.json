@@ -1,0 +1,396 @@
+{
+  "authority_commits": [
+    "388e80dc6379c74e38e160cc70eb9a00ff662736",
+    "237283498a907285259d75b681502983c4570ead",
+    "0917adb00edfeb82afd3ae5c360c98b4004ad22e",
+    "7afe887b3f2df9d47547d17f329607237c648744",
+    "67ca5443f1f1ffa835350bff2ccda3dc263e0877",
+    "9696a5b920013eaa176f8ffe9995bef54da5d50f",
+    "167069aaedf978d4436b81f980c65c9b6ef91829"
+  ],
+  "authority_records": [
+    {
+      "commit": "237283498a907285259d75b681502983c4570ead",
+      "path": "results/rtl/dsrom_common_prefix_sat_4e38326d_20261001/r1/parent_review.json",
+      "sha256": "fd78afcb26872cf38960e2e2fec67353565cf29b839ade5d7f067aa186536d21"
+    },
+    {
+      "commit": "0917adb00edfeb82afd3ae5c360c98b4004ad22e",
+      "path": "results/rtl/w11_field_prefix_sequential_gate_20261001/parent_review.json",
+      "sha256": "7e51c6e8235c525598d6dbcc827525dabffa4d6c07814b2aaddb93d9b5603199"
+    },
+    {
+      "commit": "67ca5443f1f1ffa835350bff2ccda3dc263e0877",
+      "path": "results/rtl/field_common_wrapper_prepare_4e383_20261001/parent_review.json",
+      "sha256": "ee2ff2a2e3748df78731e2cbd195bcb0fb8a8cce57dd58eed71e66912524bedf"
+    },
+    {
+      "commit": "167069aaedf978d4436b81f980c65c9b6ef91829",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/parent_review.json",
+      "sha256": "7d220b74098a1cc113d135d3d4057f633f819089865697eee8f16a6b735df944"
+    }
+  ],
+  "base_commit": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "cases": {
+    "bfcolumn": {
+      "BF16": 1,
+      "XF": 8
+    },
+    "q": {
+      "BF16": 0,
+      "XF": 4
+    }
+  },
+  "claims": {
+    "adoption": false,
+    "exhaustive": false,
+    "fullfield": false,
+    "golden": false,
+    "rate": false,
+    "simulation_pass": false,
+    "timing": false
+  },
+  "compile_plan_proposed_only": {
+    "bfcolumn": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "--build",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "-DV41_RT",
+      "--top-module",
+      "tb_bfcolumn",
+      "--Mdir",
+      "obj_bfcolumn",
+      "tb_dsrom_actual_element_gate.sv",
+      "ref_ot_prefix.sv",
+      "ref_ot_hdc_cg.sv",
+      "ref_ot_hdc_delay.sv",
+      "ref_ot_hdc_fp32_mul_pipe.sv",
+      "ref_ot_hdc_fpu.sv",
+      "ref_ot_fp32_add_rne_pipe.sv",
+      "ref_ot_rom_4096x274_m8_rt.sv",
+      "ref_ot_rom_8192x274_m8_rt.sv",
+      "ref_ot_v41_pair_w17w10.sv",
+      "ref_ot_v41_bf16_lanes.sv",
+      "ref_ot_v41_bf16_lanes2.sv",
+      "ref_ot_v41_bmul2.sv",
+      "ref_ot_v41_bterm.sv",
+      "ref_ot_v41_bterm2_w10.sv",
+      "ref_ot_v41_chain.sv",
+      "ref_ot_v41_chain2.sv",
+      "ref_ot_v41_fadd.sv",
+      "ref_ot_v41_rom_elem_w10.sv",
+      "ref_ot_v41_segtree.sv",
+      "ref_ot_v41_segtree2.sv",
+      "cand_ot_prefix.sv",
+      "cand_ot_hdc_cg.sv",
+      "cand_ot_hdc_delay.sv",
+      "cand_ot_hdc_fp32_mul_pipe.sv",
+      "cand_ot_hdc_fpu.sv",
+      "cand_ot_fp32_add_rne_pipe.sv",
+      "cand_ot_rom_4096x274_m8_rt.sv",
+      "cand_ot_rom_8192x274_m8_rt.sv",
+      "cand_ot_v41_pair_w17w10.sv",
+      "cand_ot_v41_bf16_lanes.sv",
+      "cand_ot_v41_bf16_lanes2.sv",
+      "cand_ot_v41_bmul2.sv",
+      "cand_ot_v41_bterm.sv",
+      "cand_ot_v41_bterm2_w10.sv",
+      "cand_ot_v41_chain.sv",
+      "cand_ot_v41_chain2.sv",
+      "cand_ot_v41_fadd.sv",
+      "cand_ot_v41_rom_elem_w10.sv",
+      "cand_ot_v41_segtree.sv",
+      "cand_ot_v41_segtree2.sv",
+      "/ABS/FRESH/dsrom_actual_element_rom.cpp"
+    ],
+    "q": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "--build",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "-DV41_RT",
+      "--top-module",
+      "tb_q",
+      "--Mdir",
+      "obj_q",
+      "tb_dsrom_actual_element_gate.sv",
+      "ref_ot_prefix.sv",
+      "ref_ot_hdc_cg.sv",
+      "ref_ot_hdc_delay.sv",
+      "ref_ot_hdc_fp32_mul_pipe.sv",
+      "ref_ot_hdc_fpu.sv",
+      "ref_ot_fp32_add_rne_pipe.sv",
+      "ref_ot_rom_4096x274_m8_rt.sv",
+      "ref_ot_rom_8192x274_m8_rt.sv",
+      "ref_ot_v41_pair_w17w10.sv",
+      "ref_ot_v41_bf16_lanes.sv",
+      "ref_ot_v41_bf16_lanes2.sv",
+      "ref_ot_v41_bmul2.sv",
+      "ref_ot_v41_bterm.sv",
+      "ref_ot_v41_bterm2_w10.sv",
+      "ref_ot_v41_chain.sv",
+      "ref_ot_v41_chain2.sv",
+      "ref_ot_v41_fadd.sv",
+      "ref_ot_v41_rom_elem_w10.sv",
+      "ref_ot_v41_segtree.sv",
+      "ref_ot_v41_segtree2.sv",
+      "cand_ot_prefix.sv",
+      "cand_ot_hdc_cg.sv",
+      "cand_ot_hdc_delay.sv",
+      "cand_ot_hdc_fp32_mul_pipe.sv",
+      "cand_ot_hdc_fpu.sv",
+      "cand_ot_fp32_add_rne_pipe.sv",
+      "cand_ot_rom_4096x274_m8_rt.sv",
+      "cand_ot_rom_8192x274_m8_rt.sv",
+      "cand_ot_v41_pair_w17w10.sv",
+      "cand_ot_v41_bf16_lanes.sv",
+      "cand_ot_v41_bf16_lanes2.sv",
+      "cand_ot_v41_bmul2.sv",
+      "cand_ot_v41_bterm.sv",
+      "cand_ot_v41_bterm2_w10.sv",
+      "cand_ot_v41_chain.sv",
+      "cand_ot_v41_chain2.sv",
+      "cand_ot_v41_fadd.sv",
+      "cand_ot_v41_rom_elem_w10.sv",
+      "cand_ot_v41_segtree.sv",
+      "cand_ot_v41_segtree2.sv",
+      "/ABS/FRESH/dsrom_actual_element_rom.cpp"
+    ]
+  },
+  "coverage_limitations": [
+    "Prepared bench not compiled/elaborated/simulated; parent must review source/geometry before GO",
+    "Two-state simulator-default payload initialization on both sides; unreset data compared at every sample but no four-state reset-defined claim",
+    "Fault pins compared always including resets; prepared legal traffic does not guarantee nonzero sticky fault; no malformed overflow coverage claimed",
+    "Deterministic paced traffic covers configured active slots and MTP positions; no all-input or maximal FIFO pressure equivalence claim",
+    "Unchanged pinned clockgate used directly, no alternate clockgate model",
+    "Parent bounded validation still required before any behavioral helper substitution in fullfield simulation"
+  ],
+  "execution_gate": "Parent geometry/source-plan review and explicit GO required before any compiler, elaborator or simulator",
+  "geometry": {
+    "BP": 0,
+    "CG": 1,
+    "CUT": 379,
+    "DRAIN": 127,
+    "EARLY": 1,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8,
+    "LV": 5,
+    "MTP": 1,
+    "NB": 2,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1
+  },
+  "immutable_synthetic_rom": {
+    "banks": {
+      "bf": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "d160a56668baf245366e35ba6ee09df5ff82239fc79c4ca5464d6690d40be19f"
+      },
+      "bfb": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "1f32447c67d10a66c27732e0fe20c06e3d97f8d9a81f6e314e95bdeeae2a0beb"
+      },
+      "q": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "f79e849d2d60e1c13e0a09663ecd0ad38aa3a551274093867f11742bfd18044a"
+      },
+      "qb": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "b2d69e24c298917b3a7969b0e9f252ac637058e399a58038c87abfb39460dc49"
+      }
+    },
+    "payload": "deterministic synthetic weights only; no activation/golden/checkpoint files; cfg word formula in pinned new C++ host",
+    "port_behavior": "Pinned V41_RT adapters unchanged: one rising gated edge with ce reads logical 2*addr+parity; disabled holds; live element PP capture remains unchanged"
+  },
+  "model_binding": {
+    "delta_hardware_area_um2": 0,
+    "delta_latency_cycles": 0,
+    "delta_rate_credit": 0,
+    "executed": false,
+    "function": "w10_baseline_model",
+    "path": "tools/uarch_model.py",
+    "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274"
+  },
+  "new_artifact_pins": {
+    "rtl/test/dsrom_actual_element_rom.cpp": "7ae2d6c4445c418a42cdbeb4d534d5374fc55f0293f5f30832e72031a3a1f1e8",
+    "rtl/test/tb_dsrom_actual_element_gate.sv": "11a9edc5cebb855b1ae824e86036b04344cafa6b0f0465e2a36567d0ce5d10b1",
+    "tests/test_prepare_dsrom_actual_element_gate.py": "37e72a355c38dde4170654b9901f0dc11d8f9e47d561084eeea584ad241f59e3",
+    "tools/prepare_dsrom_actual_element_gate.py": "3e5b6cc9f5ceeb0860c3d9295c9e894c321e848d976a95a1bfb73a8be6734237"
+  },
+  "prerequisites": {
+    "actual_tag_widths": {
+      "BF_TRW": 7,
+      "bterm_TW": 17,
+      "chain_TW": 8,
+      "segment_tree_id": 4
+    },
+    "all_input_or_connected_element_coverage": false,
+    "basis": "NCH16 chain16; NT16 LV5 EARLY1 QD8 tree16; NCHB8 BF16 physical lanes16 TRW7 equals actual TG7. BF16 names lane count, not slot count.",
+    "widening_required": false,
+    "wrapper_bench_sha256": "67dab3b4ce647750cdd714bce8169db43a4e8687f64f738b75b6be35397d26ea"
+  },
+  "protocol": {
+    "bf_payload_bits": 1024,
+    "bf_pipeline_cycles": 46,
+    "bterm_cycles": 11,
+    "channel_area_slot_fit": "Inherited exact pinned w10_baseline_model geometry; no new routing or floorplan qualification",
+    "config_bytes": 9600,
+    "config_depth": 1600,
+    "config_words": 25,
+    "issue_capture_cycles": 3,
+    "macs_per_pair_cycle": {
+      "bf16": 32,
+      "fp4": 128,
+      "fp8": 64
+    },
+    "minimum_chunk_round_cycles": 64,
+    "partial_metadata_bits": 60,
+    "partial_payload_bits": 64,
+    "per_port_read_bytes": 34.25,
+    "physical_read_ports": 4,
+    "pp_mux_bits": 548,
+    "pp_select_fanout": 274,
+    "quantized_payload_bits": 512,
+    "replicas_in_bench_per_case": 2,
+    "rom_bits_per_pair_cycle": 548,
+    "rom_bytes_per_pair_cycle": 68.5,
+    "single_user_latency_contribution": "unchanged LAT8 audit only; no measured full token or rate credit"
+  },
+  "resources": {
+    "aggregate_memory_bytes": 4294967296,
+    "automatic_retries": 0,
+    "basis": "per macro: 2 bterms + 2 chains + pair adder + one shared LV5 segment-tree adder. BF adds 16 multipliers,16 chains,15 reduction adders per macro. Q fadd=2*(2+1+1)=8; BF fadd=8+2*(16+15)=70.",
+    "build_seconds": 600,
+    "confidence": "Unmeasured actual element compilation; budget failure must stop without reducing geometry or retrying.",
+    "cpu_max": 2,
+    "estimate_not_measured": true,
+    "expected_peak_GiB": [
+      1,
+      4
+    ],
+    "run_cases_serially": true,
+    "simulation_seconds": 60,
+    "static_per_side_per_pair": {
+      "bmul2_bfcolumn": 32,
+      "bterm2": 4,
+      "chain2_bfcolumn": 36,
+      "chain2_q": 4,
+      "fadd_bfcolumn": 70,
+      "fadd_q": 8,
+      "rom4096": 4
+    },
+    "swap_bytes": 0
+  },
+  "runner_contract": "Proposed argv only; run within one parent-approved fresh pinned worktree cgroup with two CPU affinity/CPUQuota200%, MemoryMax4GiB/Swap0. Shared deadline for sum of both builds600s and sum of both simulations60s; whole-cgroup hard kill on exhaustion, no fallback, auto retry, shape reduction, fullfield/die build, watcher or live restart.",
+  "schema": "opentallas.actual_element_prepare.v1",
+  "simulate_plan_proposed_only": {
+    "bfcolumn": [
+      "./obj_bfcolumn/Vtb_bfcolumn"
+    ],
+    "q": [
+      "./obj_q/Vtb_q"
+    ]
+  },
+  "source_case_driver": {
+    "case": "pq BF0 XF4 / pb BF1 XF8; FAST1 PP1 BP0 PHW6; pair fixes FRONT_PAR0",
+    "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "path": "tools/w17_current_fastpp_die_rt.py",
+    "sha256": "0673907bef97ea383144e7aadb10b4c79b7807cf4453867aa074a7d965c27d70"
+  },
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins": {
+    "rtl/common/ot_prefix.sv": {
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    }
+  },
+  "status": "PREPARED_NOT_BUILT"
+}

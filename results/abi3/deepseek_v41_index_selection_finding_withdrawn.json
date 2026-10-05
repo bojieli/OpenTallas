@@ -1,0 +1,30 @@
+{
+  "CORRECTION": "results/abi3/deepseek_v41_index_selection_agreement.json and results/abi3/deepseek_v41_layer2_index_score_row_extent.json read the device's layer-2 index selection as [1, 512] -- one query row where the vendor has ten -- and concluded that nine query rows were lost to a frozen view extent. THAT CONCLUSION IS WITHDRAWN. The operator is issued ONE HUNDRED AND SIXTY times, not once, and the probe that produced the reading deduplicated by descriptor id and therefore recorded only the first issue. A view of one query row issued many times computes the rows a view of ten rows computes once; the first occurrence alone cannot tell those apart, and I read it as though it could.",
+  "not_a_claim": [
+    "this does not say the device's selections are correct: it says the evidence offered for their being wrong was a biased sample of one issue in ten"
+  ],
+  "producer": {
+    "git": {
+      "commit": "b5064974ff17875cb41df3136876faf0bd9e928a"
+    },
+    "tool": "tools/probe_deepseek_v41_device_index_selection.py"
+  },
+  "schema": "opentallas.result.v41_index_selection_finding_withdrawn.v1",
+  "the_instrument_fault_and_the_fix": "a probe that deduplicates by descriptor id cannot see a loop-issued operator, and every earlier V4.1 device probe in this repository deduplicates that way. The probe now counts issues per operator and records every one of them, and a complete sample of all 160 is running.",
+  "what_still_stands": [
+    "the bracket itself: results/abi3/deepseek_v41_divergence_enters_layer2_attention.json compared FULL rows at four prompt positions, not deduplicated first occurrences -- layer 2's attention-norm input agrees to a few BF16 ulps, its FFN-norm input collapses to cosine 0.895 at position 7, and there is no step at all at position 0",
+    "the compressor is correct: five completed groups from a ten-token span at ratio 2, which is what the vendor computes",
+    "a discrete selection remains the most plausible amplifier, because nothing else in that sublayer turns a few ulps into 44.8x -- but it is a hypothesis again rather than a measurement"
+  ],
+  "what_the_measurement_actually_shows": {
+    "declared_view": "view 3312, the index score's output, is rank 3 with declared dims [1, 1, 256] and an A18 extent on AXIS 2 at unit 2 -- so the candidates axis is the symbol-bound one and resolves to CONTEXT_LENGTH/2 = 5, which is correct. The query-row axis is a literal 1 because the rows are walked by the loop induction term the view also carries (term0, stride 256), not because an extent was clamped.",
+    "issues_per_operator": {
+      "10817": 32,
+      "3322 (layer 2 selection)": 160,
+      "7083 (layer 8 selection)": 80,
+      "8421": 8,
+      "8434": 8
+    },
+    "the_empty_selections_are_a_biased_sample": "all sixteen recorded issues selected nothing, and sixteen of one hundred and sixty is the EARLIEST rows. The causal mask is compressed_group_completed_before_position: a group must have COMPLETED before a position for that position to attend to it, so query rows 0 and 1 have nothing to select and an empty selection there is correct. The sample says nothing about rows 2 through 9."
+  }
+}

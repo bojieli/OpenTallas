@@ -1,0 +1,22 @@
+{
+  "inputs": [
+    {
+      "archive": "inputs/constructor.json.gz",
+      "bytes": 1602525,
+      "origin": "results/uarch/h4_hbm_gateway_constructive_20261002/constructor_r10/model.json.gz",
+      "sha256": "f62cc27b88d740e2ad3133d14a9008e55a5012b33d065d866b5aa379d437f74b"
+    },
+    {
+      "archive": "inputs/tech.lef",
+      "bytes": 20141,
+      "origin": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lef/asap7_tech_1x_201209.lef",
+      "sha256": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    },
+    {
+      "archive": "inputs/pdn.tcl",
+      "bytes": 2369,
+      "origin": "tools/chip_assembly/tcl/pdn_sm.tcl",
+      "sha256": "2d2c33d3082c1c4c20c3aa7b84e2b91de492ce489425b8dcdce6e99723e959dc"
+    }
+  ]
+}

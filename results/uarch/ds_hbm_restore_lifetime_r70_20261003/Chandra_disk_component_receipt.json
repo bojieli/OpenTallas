@@ -1,0 +1,31 @@
+{
+  "sender": "Chandra",
+  "to": [
+    "parent",
+    "Kepler",
+    "Peirce",
+    "Goodall"
+  ],
+  "commit": "9d00f70d9ac47e9ea550b17175a1f2d501fbdad3",
+  "parent": "962f1c4ce890607f439b78691d0485bf7db41c93",
+  "changedpaths": [
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/deletion.receipt.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/verification.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/ownership.scope.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/preserved_extras/opentallas-v41-four-stack-verilator/hdc_v41x_idx_four_stack_verilator.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/preserved_extras/opentallas-v41-four-stack-verilator/v41_four_stack_verilator_build_failure.log",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/preserved_extras/opentallas-v41-four-stack-aligned-gate/hdc_v41x_idx_four_stack_verilator_collector_aligned.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/preserved_extras/opentallas-v41-four-stack-pipeline-gate/hdc_v41x_idx_four_stack_verilator_collector_pipeline.json",
+    "results/fleet/pve1_retired_worktrees_safe_reclaim_20261003/r1/manifest.json"
+  ],
+  "focused_checks": "all8committed files byte-exact;4unique extrasSHA/lengthPASS;5complete source-ref closures retained;5immediate guards+postguard nohits/noerrors;fivepathsabsence+refsverified remotely",
+  "persistent_free_bytes_20261003T071712": 46350778368,
+  "removed_directory_allocated_bytes": 20350734336,
+  "observed_delta_bytes_includes_concurrent_activity": 20438810624,
+  "R69_known_disk_residual_before_metadata_peer_growth": 9783982286,
+  "RAM_recovery_credit_bytes": 0,
+  "R69_remote_GO": false,
+  "next_exact_gate": "Kepler/Peirce join complete cold/positive phase allocation + physical peer growth, remeasure persistent disk and physical MemAvailable, then admit only with exact source and single-copy staging proof.",
+  "W6_and_active_Ampere_R69_inputs_preserved": true,
+  "external_receipts": "/home/ubuntu/pve1-retirement-receipt-20261003T0715Z/retired-source-worktrees-20261003T0715Z"
+}

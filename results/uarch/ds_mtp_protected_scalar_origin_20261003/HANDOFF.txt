@@ -1,0 +1,100 @@
+DS MTP fullK512/NW21 protected scalar/native-origin model R1
+Base main 6c67ab4f7afc106dc21ca5dd4447097d4f4d8adc. Additive model/tests only.
+No original RTL changed, no component compile/run, no P&R, no whole-MTP stream.
+Reuse integrated guarded accept and source holders; do not duplicate accept jobs.
+
+SOURCE BINDING
+10 necessary originals archived and SHA256 pinned in input_manifest.json;
+model.source_pins verifies BOTH actual source and archive. Input source covers
+ROM/HBM common runtime core/compiler, scalar, XU, ME and source mutable codec.
+source leaf .lease exports guarded-header key. Native connection is not installed.
+The current fullshape source TOPK512/NW21 nevertheless uses scalar IW16 and
+xu_sel_first16. BF16 dynamic selector IW20 is not the static FP32 draft branch.
+Builder.draft_body emits static vocab count129280, runtime k1, CTL_TOKX(slot=i+1).
+Builder.mx_batchable excludes me_amax. Actual MP/NSLOT overrides and actual
+S58/PAR2 core homes still need selected source enrollment. Do not assume eight
+AMAX lanes, parallel heads, or TP/rank routing from standalone NSLOT8 leaf.
+
+ONE CONSTRUCTIVE BLOCK / FINITE STATE
+Full K512/VW32/IW21/ORDER1 preserved. Source scalar raw69226 versus old61536.
+1564 K64/N72 independent codewords /112608 protected FF bits /69636 raw bits.
+1555 source words include 2-word r0; multiword records update atomically.
+Additional9 words: 2x2-word native VM return reservations, 2-word VM descriptor,
+one54b accepted origin perkind, one43b cohort/mask/stop/fault record. Controller
+has two additional stickyfault/admissionstop raw bits within existing word.
+Do not pack independently updated neighboring insertion/emission cells together.
+Two VM reads must reserve capacity BEFORE source issue; accepted native VM
+returns cannot be stalled. Missing real fixed-latency VM timing/adapter remains
+explicit. All banks/waves/controller freeze together on held scalar output;
+original unready source emitter and pulse VM writes cannot be connected unchanged.
+No source descriptor protection outside this prospective block is silently free.
+
+NATIVE COMMAND -> ORIGINAL LEASE -> TERMINAL -> HOLDER
+Capture original header pos21/gen4 plus actual accepted destination slot3 after
+accepted start (not sameedge start). Native go and holder-begin occur only at
+joint native readiness + holder reservation acceptance. Kind0 FP32 OP_SEL is
+TOKX only for active runtimek1/nonzero-vocab; compiler off/n0 descriptors
+must not allocate a child. Dest c_dslot+1 bounds checked. Kind1 accepted actual weight EAM/i_amax is
+AMAX. Actual source EAM=(X_ME!=0)?1:0 and whole engine ready/idle predicates are
+retained. One source command/kind remains exclusive until matching held finish.
+Observe active/nonidle first, then drained idle; old idle accepting edge is not
+terminal. ME ov is intermediate t_ov, not final. Final AMAX must carry am_any;
+TOKX retains the first full21 scalar index and waits source drain. Source fault
+or reset with accepted debt quarantines it. Never relabel a return current lease.
+Emit matching original lease25+slot3+token21+v/r+begin_finish=52 signals/kind to
+existing coded holders. 16-bit published mask prohibits repeated samekind/slot
+within cohort, even after local holder handshakes. Reuse/wrap requires previous
+matching cohort positive allcopies, sourceprovider idle and holderempty receipts;
+reverseCDC drain is an external proof obligation, NOT supplied by local empty.
+Model tests use truthful fences; they do not prove installed provider CDC drain.
+Generation4 retained. No onebit proposal, no silent continuous-stream cap.
+Local delivery/holder take is NOT KV rollback, writevisibility or tag retirement.
+
+PRICE / CUTS / LATENCY
+model.cost has exact section cell counts with source pinned cell prices.
+Gross at50% 1.30217966172mm2, net/matched existing scalar debit UNKNOWN. Full FF
+bank codeword write/read concurrency is priced; no free SRAM ports substituted.
+Per-word decode/encode/padding/jointfault + K512 insertion and K511 sort compare,
+selectors/reservation/origin/cohort/fence, hold storage, fanout included as an
+unmapped conservative construction. Clock minimum levels [14076,1760,220,28,4,1];
+reset minimum [16087,2011,252,32,4,1], seven FF reset pins per leaf <=5.76fF.
+These are pin minima, not actual buffer placements/routes/wire RC or closure.
+Score stream64payload/66signals (32value+21idx+last+10k, valid/ready).
+Index23payload/25signals (21idx+last+ninf, valid/ready). VM read request31,
+return32, write63 signals; separate2x52 producer cuts, header lease30 and fence33.
+No assigned legalchannel tracks, CDC, clock slot, replicas or net replacement.
+One logical feedback edge currently proposes decode->source compare->encode.
+SS60ps/FF25ps unchanged, prospective .9GHz NOT measured. If this needs another
+stage, reprice protected intermediate data/ownership/registers/feedback II and
+whole segment schedule BEFORE RTL. No bypass of current decoded state checks.
+After-last source latency1026edges. Bank emits512cycles even runtimek1, hence
+511 additional edges after first output. For native vocab129280, accepted input
+scores + firstoutput + tail =130817edges =>145352.222ns at prospective.9GHz,
+excluding VM issue/capture, source terminal, holder waits and actual clock.
+Do not charge just first output, infer entire MTP iteration count, or call this
+a predicted product rate. Existing native source descriptor/ME producer protection
+and all-copy receipts remain outside proven coverage.
+
+ADMISSION / NEXT CONCRETE OWNER ACTIONS
+PASS source inventory, finite behavioral origin contract and codec model tests.
+FAIL RTL admission currently: loaded feedback/check/fanout cut not enrolled;
+Arch/Maxwell selected physical core slot/tree/ports/clock absent; native VM
+reservation/issue timing not installed; upstream command/descriptor mutable
+protection and complete provider drain unknown. WholeMTP qualification FALSE.
+Arch: use model.cost.cell_counts_by_section + named model.ports cuts; return
+loaded codec/comparison/check stages at .9GHz SS60/FF25 and corrected reset tree,
+actual S58/PAR2 slot/home count. Do not reuse width-only 7690FF allowance.
+DSpark integrators: expose accepted real native descriptor, actual EAM am_any/
+idle/fault and XU firstindex/idle with joint holder-ready; wire original guarded
+header .lease and positive allcopy fences; enroll selected MP/NSLOT.
+Russell: after positive cut/ports/state/clock model, implement distinct defaultoff
+K512 scalar + native adapter; gate against literal unchanged scalar with IW21
+parameter and full high-index/tie/signed-zero/infinity/backpressure/fault cases.
+No additional accept gate, acceptance experiments, whole drafter or P&R here.
+
+EXACT REPLAY (no HDL builds)
+python3 tools/ds_mtp_protected_scalar_origin_model.py --verify
+python3 -m pytest -o addopts='' -q tests/test_ds_mtp_protected_scalar_origin_model.py
+python3 tools/ds_mtp_protected_scalar_origin_model.py --out /tmp/ds-mtp-protected-scalar-independent-r1.json
+cmp results/uarch/ds_mtp_protected_scalar_origin_20261003/model.json /tmp/ds-mtp-protected-scalar-independent-r1.json
+(cd results/uarch/ds_mtp_protected_scalar_origin_20261003 && sha256sum -c manifest.sha256)

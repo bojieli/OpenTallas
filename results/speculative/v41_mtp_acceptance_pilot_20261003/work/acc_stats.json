@@ -1,0 +1,1094 @@
+{
+ "committed": {
+  "prompts": 20,
+  "cycles": 260,
+  "generated_tokens": 1286,
+  "tau_pooled": 4.654,
+  "tau_pooled_ci95": [
+   4.458,
+   4.884
+  ],
+  "tau_median_of_prompts": 4.684,
+  "tau_median_of_prompts_ci95": [
+   3.875,
+   5.121
+  ],
+  "tau_equal_tokens_per_workload": 4.482,
+  "tau_equal_tokens_per_workload_ci95": [
+   4.252,
+   4.714
+  ],
+  "per_cycle_committed_median": 6.0,
+  "conditional_acceptance_by_position": [
+   0.9154,
+   0.916,
+   0.8716,
+   0.8474,
+   0.8882
+  ],
+  "alpha_equivalent_geometric": 0.8972,
+  "alpha_equivalent_geometric_median": 0.8999,
+  "per_workload": {
+   "agentic_bfcl": {
+    "prompts": 4,
+    "cycles": 59,
+    "tau_pooled": 5.339,
+    "tau_median": 5.44
+   },
+   "agentic_json_mode": {
+    "prompts": 4,
+    "cycles": 53,
+    "tau_pooled": 5.755,
+    "tau_median": 5.889
+   },
+   "agentic_mind2web": {
+    "prompts": 4,
+    "cycles": 42,
+    "tau_pooled": 3.762,
+    "tau_median": 3.557
+   },
+   "agentic_swe_agent": {
+    "prompts": 4,
+    "cycles": 43,
+    "tau_pooled": 4.209,
+    "tau_median": 4.025
+   },
+   "agentic_tau_bench": {
+    "prompts": 4,
+    "cycles": 63,
+    "tau_pooled": 3.984,
+    "tau_median": 3.806
+   }
+  },
+  "per_prompt": [
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_219",
+    "n_prompt": 355,
+    "n_generated": 76,
+    "cycles": 15,
+    "committed": 74,
+    "tau_walk": 4.933333333333334
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_199",
+    "n_prompt": 342,
+    "n_generated": 76,
+    "cycles": 13,
+    "committed": 73,
+    "tau_walk": 5.615384615384615
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_168",
+    "n_prompt": 423,
+    "n_generated": 114,
+    "cycles": 21,
+    "committed": 113,
+    "tau_walk": 5.380952380952381
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_149",
+    "n_prompt": 309,
+    "n_generated": 57,
+    "cycles": 10,
+    "committed": 55,
+    "tau_walk": 5.5
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task95-trial2-turn8",
+    "n_prompt": 4392,
+    "n_generated": 57,
+    "cycles": 10,
+    "committed": 51,
+    "tau_walk": 5.1
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task83-trial3-turn6",
+    "n_prompt": 4275,
+    "n_generated": 32,
+    "cycles": 8,
+    "committed": 27,
+    "tau_walk": 3.375
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task42-trial2-turn6",
+    "n_prompt": 4229,
+    "n_generated": 71,
+    "cycles": 18,
+    "committed": 65,
+    "tau_walk": 3.611111111111111
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task10-trial1-turn8",
+    "n_prompt": 4438,
+    "n_generated": 112,
+    "cycles": 27,
+    "committed": 108,
+    "tau_walk": 4.0
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "aio-libs__aioftp-97-swe-agent-llama-70b-step10",
+    "n_prompt": 2917,
+    "n_generated": 46,
+    "cycles": 10,
+    "committed": 43,
+    "tau_walk": 4.3
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "johnsyweb__python_sparse_list-17-swe-agent-llama-70b-step2",
+    "n_prompt": 1891,
+    "n_generated": 21,
+    "cycles": 4,
+    "committed": 15,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "RDFLib__rdflib-1130-swe-agent-llama-70b-step2",
+    "n_prompt": 1933,
+    "n_generated": 24,
+    "cycles": 6,
+    "committed": 21,
+    "tau_walk": 3.5
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "geomet__geomet-101-swe-agent-llama-8b-step4",
+    "n_prompt": 2418,
+    "n_generated": 108,
+    "cycles": 23,
+    "committed": 102,
+    "tau_walk": 4.434782608695652
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+    "n_prompt": 2758,
+    "n_generated": 50,
+    "cycles": 12,
+    "committed": 45,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step4",
+    "n_prompt": 2319,
+    "n_generated": 45,
+    "cycles": 12,
+    "committed": 40,
+    "tau_walk": 3.3333333333333335
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step2",
+    "n_prompt": 1837,
+    "n_generated": 41,
+    "cycles": 7,
+    "committed": 36,
+    "tau_walk": 5.142857142857143
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step9",
+    "n_prompt": 2801,
+    "n_generated": 40,
+    "cycles": 11,
+    "committed": 37,
+    "tau_walk": 3.3636363636363638
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-29",
+    "n_prompt": 424,
+    "n_generated": 105,
+    "cycles": 17,
+    "committed": 102,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-83",
+    "n_prompt": 236,
+    "n_generated": 46,
+    "cycles": 7,
+    "committed": 42,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-51",
+    "n_prompt": 214,
+    "n_generated": 53,
+    "cycles": 9,
+    "committed": 52,
+    "tau_walk": 5.777777777777778
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-33",
+    "n_prompt": 273,
+    "n_generated": 112,
+    "cycles": 20,
+    "committed": 109,
+    "tau_walk": 5.45
+   }
+  ]
+ },
+ "pilot": {
+  "prompts": 30,
+  "cycles": 551,
+  "generated_tokens": 2614,
+  "tau_pooled": 4.555,
+  "tau_pooled_ci95": [
+   4.291,
+   4.872
+  ],
+  "tau_median_of_prompts": 4.692,
+  "tau_median_of_prompts_ci95": [
+   4.335,
+   5.312
+  ],
+  "tau_equal_tokens_per_workload": 4.513,
+  "tau_equal_tokens_per_workload_ci95": [
+   4.307,
+   4.763
+  ],
+  "per_cycle_committed_median": 6,
+  "conditional_acceptance_by_position": [
+   0.9129,
+   0.8847,
+   0.8764,
+   0.8462,
+   0.8818
+  ],
+  "alpha_equivalent_geometric": 0.8884,
+  "alpha_equivalent_geometric_median": 0.9005,
+  "per_workload": {
+   "agentic_bfcl": {
+    "prompts": 6,
+    "cycles": 96,
+    "tau_pooled": 5.323,
+    "tau_median": 5.414
+   },
+   "agentic_json_mode": {
+    "prompts": 6,
+    "cycles": 95,
+    "tau_pooled": 5.8,
+    "tau_median": 5.944
+   },
+   "agentic_mind2web": {
+    "prompts": 6,
+    "cycles": 61,
+    "tau_pooled": 4.016,
+    "tau_median": 4.017
+   },
+   "agentic_swe_agent": {
+    "prompts": 6,
+    "cycles": 142,
+    "tau_pooled": 3.873,
+    "tau_median": 4.183
+   },
+   "agentic_tau_bench": {
+    "prompts": 6,
+    "cycles": 157,
+    "tau_pooled": 4.159,
+    "tau_median": 4.431
+   }
+  },
+  "per_prompt": [
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_175",
+    "n_prompt": 332,
+    "n_generated": 68,
+    "cycles": 12,
+    "committed": 66,
+    "tau_walk": 5.5
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_46",
+    "n_prompt": 462,
+    "n_generated": 101,
+    "cycles": 17,
+    "committed": 96,
+    "tau_walk": 5.647058823529412
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_118",
+    "n_prompt": 742,
+    "n_generated": 80,
+    "cycles": 15,
+    "committed": 79,
+    "tau_walk": 5.266666666666667
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_25",
+    "n_prompt": 635,
+    "n_generated": 103,
+    "cycles": 21,
+    "committed": 102,
+    "tau_walk": 4.857142857142857
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_188",
+    "n_prompt": 755,
+    "n_generated": 98,
+    "cycles": 17,
+    "committed": 93,
+    "tau_walk": 5.470588235294118
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_177",
+    "n_prompt": 625,
+    "n_generated": 81,
+    "cycles": 14,
+    "committed": 75,
+    "tau_walk": 5.357142857142857
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task41-trial2-turn28",
+    "n_prompt": 8073,
+    "n_generated": 70,
+    "cycles": 13,
+    "committed": 66,
+    "tau_walk": 5.076923076923077
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task96-trial1-turn14",
+    "n_prompt": 5693,
+    "n_generated": 44,
+    "cycles": 7,
+    "committed": 40,
+    "tau_walk": 5.714285714285714
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task59-trial3-turn16",
+    "n_prompt": 5262,
+    "n_generated": 160,
+    "cycles": 42,
+    "committed": 159,
+    "tau_walk": 3.7857142857142856
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task87-trial0-turn12",
+    "n_prompt": 4934,
+    "n_generated": 146,
+    "cycles": 25,
+    "committed": 142,
+    "tau_walk": 5.68
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task108-trial2-turn24",
+    "n_prompt": 7296,
+    "n_generated": 160,
+    "cycles": 42,
+    "committed": 156,
+    "tau_walk": 3.7142857142857144
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task7-trial0-turn12",
+    "n_prompt": 4509,
+    "n_generated": 94,
+    "cycles": 28,
+    "committed": 90,
+    "tau_walk": 3.2142857142857144
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "matchms__matchms-493-swe-agent-llama-70b-step16",
+    "n_prompt": 4674,
+    "n_generated": 53,
+    "cycles": 12,
+    "committed": 50,
+    "tau_walk": 4.166666666666667
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "pydantic__pydantic-4399-swe-agent-llama-70b-step22",
+    "n_prompt": 6738,
+    "n_generated": 158,
+    "cycles": 34,
+    "committed": 152,
+    "tau_walk": 4.470588235294118
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "Erotemic__ubelt-64-swe-agent-llama-70b-step12",
+    "n_prompt": 6133,
+    "n_generated": 89,
+    "cycles": 19,
+    "committed": 86,
+    "tau_walk": 4.526315789473684
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "ttu__ruuvitag-sensor-41-swe-agent-llama-70b-step12",
+    "n_prompt": 5933,
+    "n_generated": 90,
+    "cycles": 27,
+    "committed": 85,
+    "tau_walk": 3.1481481481481484
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "asottile__pyupgrade-347-swe-agent-llama-70b-step16",
+    "n_prompt": 5547,
+    "n_generated": 160,
+    "cycles": 45,
+    "committed": 156,
+    "tau_walk": 3.466666666666667
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "pydantic__pydantic-3975-swe-agent-llama-405b-step6",
+    "n_prompt": 6292,
+    "n_generated": 24,
+    "cycles": 5,
+    "committed": 21,
+    "tau_walk": 4.2
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step1",
+    "n_prompt": 1723,
+    "n_generated": 45,
+    "cycles": 11,
+    "committed": 40,
+    "tau_walk": 3.6363636363636362
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step7",
+    "n_prompt": 2658,
+    "n_generated": 45,
+    "cycles": 10,
+    "committed": 42,
+    "tau_walk": 4.2
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step6",
+    "n_prompt": 2993,
+    "n_generated": 42,
+    "cycles": 9,
+    "committed": 40,
+    "tau_walk": 4.444444444444445
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step5",
+    "n_prompt": 1520,
+    "n_generated": 38,
+    "cycles": 8,
+    "committed": 36,
+    "tau_walk": 4.5
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step6",
+    "n_prompt": 2523,
+    "n_generated": 46,
+    "cycles": 11,
+    "committed": 41,
+    "tau_walk": 3.727272727272727
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step1",
+    "n_prompt": 3163,
+    "n_generated": 49,
+    "cycles": 12,
+    "committed": 46,
+    "tau_walk": 3.8333333333333335
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-55",
+    "n_prompt": 299,
+    "n_generated": 54,
+    "cycles": 9,
+    "committed": 53,
+    "tau_walk": 5.888888888888889
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-27",
+    "n_prompt": 453,
+    "n_generated": 160,
+    "cycles": 28,
+    "committed": 156,
+    "tau_walk": 5.571428571428571
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-4",
+    "n_prompt": 243,
+    "n_generated": 124,
+    "cycles": 21,
+    "committed": 120,
+    "tau_walk": 5.714285714285714
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-93",
+    "n_prompt": 305,
+    "n_generated": 71,
+    "cycles": 11,
+    "committed": 66,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-26",
+    "n_prompt": 311,
+    "n_generated": 82,
+    "cycles": 13,
+    "committed": 78,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-84",
+    "n_prompt": 332,
+    "n_generated": 79,
+    "cycles": 13,
+    "committed": 78,
+    "tau_walk": 6.0
+   }
+  ]
+ },
+ "combined": {
+  "prompts": 50,
+  "cycles": 811,
+  "generated_tokens": 3900,
+  "tau_pooled": 4.587,
+  "tau_pooled_ci95": [
+   4.382,
+   4.816
+  ],
+  "tau_median_of_prompts": 4.692,
+  "tau_median_of_prompts_ci95": [
+   4.372,
+   5.121
+  ],
+  "tau_equal_tokens_per_workload": 4.494,
+  "tau_equal_tokens_per_workload_ci95": [
+   4.322,
+   4.69
+  ],
+  "per_cycle_committed_median": 6,
+  "conditional_acceptance_by_position": [
+   0.9137,
+   0.8947,
+   0.8748,
+   0.8466,
+   0.8839
+  ],
+  "alpha_equivalent_geometric": 0.8913,
+  "alpha_equivalent_geometric_median": 0.9005,
+  "per_workload": {
+   "agentic_bfcl": {
+    "prompts": 10,
+    "cycles": 155,
+    "tau_pooled": 5.329,
+    "tau_median": 5.426
+   },
+   "agentic_json_mode": {
+    "prompts": 10,
+    "cycles": 148,
+    "tau_pooled": 5.784,
+    "tau_median": 5.944
+   },
+   "agentic_mind2web": {
+    "prompts": 10,
+    "cycles": 103,
+    "tau_pooled": 3.913,
+    "tau_median": 3.792
+   },
+   "agentic_swe_agent": {
+    "prompts": 10,
+    "cycles": 185,
+    "tau_pooled": 3.951,
+    "tau_median": 4.183
+   },
+   "agentic_tau_bench": {
+    "prompts": 10,
+    "cycles": 220,
+    "tau_pooled": 4.109,
+    "tau_median": 3.893
+   }
+  },
+  "per_prompt": [
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_219",
+    "n_prompt": 355,
+    "n_generated": 76,
+    "cycles": 15,
+    "committed": 74,
+    "tau_walk": 4.933333333333334
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_199",
+    "n_prompt": 342,
+    "n_generated": 76,
+    "cycles": 13,
+    "committed": 73,
+    "tau_walk": 5.615384615384615
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_168",
+    "n_prompt": 423,
+    "n_generated": 114,
+    "cycles": 21,
+    "committed": 113,
+    "tau_walk": 5.380952380952381
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_149",
+    "n_prompt": 309,
+    "n_generated": 57,
+    "cycles": 10,
+    "committed": 55,
+    "tau_walk": 5.5
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task95-trial2-turn8",
+    "n_prompt": 4392,
+    "n_generated": 57,
+    "cycles": 10,
+    "committed": 51,
+    "tau_walk": 5.1
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task83-trial3-turn6",
+    "n_prompt": 4275,
+    "n_generated": 32,
+    "cycles": 8,
+    "committed": 27,
+    "tau_walk": 3.375
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task42-trial2-turn6",
+    "n_prompt": 4229,
+    "n_generated": 71,
+    "cycles": 18,
+    "committed": 65,
+    "tau_walk": 3.611111111111111
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "airline-task10-trial1-turn8",
+    "n_prompt": 4438,
+    "n_generated": 112,
+    "cycles": 27,
+    "committed": 108,
+    "tau_walk": 4.0
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "aio-libs__aioftp-97-swe-agent-llama-70b-step10",
+    "n_prompt": 2917,
+    "n_generated": 46,
+    "cycles": 10,
+    "committed": 43,
+    "tau_walk": 4.3
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "johnsyweb__python_sparse_list-17-swe-agent-llama-70b-step2",
+    "n_prompt": 1891,
+    "n_generated": 21,
+    "cycles": 4,
+    "committed": 15,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "RDFLib__rdflib-1130-swe-agent-llama-70b-step2",
+    "n_prompt": 1933,
+    "n_generated": 24,
+    "cycles": 6,
+    "committed": 21,
+    "tau_walk": 3.5
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "geomet__geomet-101-swe-agent-llama-8b-step4",
+    "n_prompt": 2418,
+    "n_generated": 108,
+    "cycles": 23,
+    "committed": 102,
+    "tau_walk": 4.434782608695652
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+    "n_prompt": 2758,
+    "n_generated": 50,
+    "cycles": 12,
+    "committed": 45,
+    "tau_walk": 3.75
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step4",
+    "n_prompt": 2319,
+    "n_generated": 45,
+    "cycles": 12,
+    "committed": 40,
+    "tau_walk": 3.3333333333333335
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step2",
+    "n_prompt": 1837,
+    "n_generated": 41,
+    "cycles": 7,
+    "committed": 36,
+    "tau_walk": 5.142857142857143
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step9",
+    "n_prompt": 2801,
+    "n_generated": 40,
+    "cycles": 11,
+    "committed": 37,
+    "tau_walk": 3.3636363636363638
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-29",
+    "n_prompt": 424,
+    "n_generated": 105,
+    "cycles": 17,
+    "committed": 102,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-83",
+    "n_prompt": 236,
+    "n_generated": 46,
+    "cycles": 7,
+    "committed": 42,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-51",
+    "n_prompt": 214,
+    "n_generated": 53,
+    "cycles": 9,
+    "committed": 52,
+    "tau_walk": 5.777777777777778
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-33",
+    "n_prompt": 273,
+    "n_generated": 112,
+    "cycles": 20,
+    "committed": 109,
+    "tau_walk": 5.45
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_175",
+    "n_prompt": 332,
+    "n_generated": 68,
+    "cycles": 12,
+    "committed": 66,
+    "tau_walk": 5.5
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "simple_46",
+    "n_prompt": 462,
+    "n_generated": 101,
+    "cycles": 17,
+    "committed": 96,
+    "tau_walk": 5.647058823529412
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_118",
+    "n_prompt": 742,
+    "n_generated": 80,
+    "cycles": 15,
+    "committed": 79,
+    "tau_walk": 5.266666666666667
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_25",
+    "n_prompt": 635,
+    "n_generated": 103,
+    "cycles": 21,
+    "committed": 102,
+    "tau_walk": 4.857142857142857
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_188",
+    "n_prompt": 755,
+    "n_generated": 98,
+    "cycles": 17,
+    "committed": 93,
+    "tau_walk": 5.470588235294118
+   },
+   {
+    "workload": "agentic_bfcl",
+    "prompt_id": "multiple_177",
+    "n_prompt": 625,
+    "n_generated": 81,
+    "cycles": 14,
+    "committed": 75,
+    "tau_walk": 5.357142857142857
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task41-trial2-turn28",
+    "n_prompt": 8073,
+    "n_generated": 70,
+    "cycles": 13,
+    "committed": 66,
+    "tau_walk": 5.076923076923077
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task96-trial1-turn14",
+    "n_prompt": 5693,
+    "n_generated": 44,
+    "cycles": 7,
+    "committed": 40,
+    "tau_walk": 5.714285714285714
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task59-trial3-turn16",
+    "n_prompt": 5262,
+    "n_generated": 160,
+    "cycles": 42,
+    "committed": 159,
+    "tau_walk": 3.7857142857142856
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task87-trial0-turn12",
+    "n_prompt": 4934,
+    "n_generated": 146,
+    "cycles": 25,
+    "committed": 142,
+    "tau_walk": 5.68
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task108-trial2-turn24",
+    "n_prompt": 7296,
+    "n_generated": 160,
+    "cycles": 42,
+    "committed": 156,
+    "tau_walk": 3.7142857142857144
+   },
+   {
+    "workload": "agentic_tau_bench",
+    "prompt_id": "retail-task7-trial0-turn12",
+    "n_prompt": 4509,
+    "n_generated": 94,
+    "cycles": 28,
+    "committed": 90,
+    "tau_walk": 3.2142857142857144
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "matchms__matchms-493-swe-agent-llama-70b-step16",
+    "n_prompt": 4674,
+    "n_generated": 53,
+    "cycles": 12,
+    "committed": 50,
+    "tau_walk": 4.166666666666667
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "pydantic__pydantic-4399-swe-agent-llama-70b-step22",
+    "n_prompt": 6738,
+    "n_generated": 158,
+    "cycles": 34,
+    "committed": 152,
+    "tau_walk": 4.470588235294118
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "Erotemic__ubelt-64-swe-agent-llama-70b-step12",
+    "n_prompt": 6133,
+    "n_generated": 89,
+    "cycles": 19,
+    "committed": 86,
+    "tau_walk": 4.526315789473684
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "ttu__ruuvitag-sensor-41-swe-agent-llama-70b-step12",
+    "n_prompt": 5933,
+    "n_generated": 90,
+    "cycles": 27,
+    "committed": 85,
+    "tau_walk": 3.1481481481481484
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "asottile__pyupgrade-347-swe-agent-llama-70b-step16",
+    "n_prompt": 5547,
+    "n_generated": 160,
+    "cycles": 45,
+    "committed": 156,
+    "tau_walk": 3.466666666666667
+   },
+   {
+    "workload": "agentic_swe_agent",
+    "prompt_id": "pydantic__pydantic-3975-swe-agent-llama-405b-step6",
+    "n_prompt": 6292,
+    "n_generated": 24,
+    "cycles": 5,
+    "committed": 21,
+    "tau_walk": 4.2
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step1",
+    "n_prompt": 1723,
+    "n_generated": 45,
+    "cycles": 11,
+    "committed": 40,
+    "tau_walk": 3.6363636363636362
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step7",
+    "n_prompt": 2658,
+    "n_generated": 45,
+    "cycles": 10,
+    "committed": 42,
+    "tau_walk": 4.2
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step6",
+    "n_prompt": 2993,
+    "n_generated": 42,
+    "cycles": 9,
+    "committed": 40,
+    "tau_walk": 4.444444444444445
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step5",
+    "n_prompt": 1520,
+    "n_generated": 38,
+    "cycles": 8,
+    "committed": 36,
+    "tau_walk": 4.5
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step6",
+    "n_prompt": 2523,
+    "n_generated": 46,
+    "cycles": 11,
+    "committed": 41,
+    "tau_walk": 3.727272727272727
+   },
+   {
+    "workload": "agentic_mind2web",
+    "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step1",
+    "n_prompt": 3163,
+    "n_generated": 49,
+    "cycles": 12,
+    "committed": 46,
+    "tau_walk": 3.8333333333333335
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-55",
+    "n_prompt": 299,
+    "n_generated": 54,
+    "cycles": 9,
+    "committed": 53,
+    "tau_walk": 5.888888888888889
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-27",
+    "n_prompt": 453,
+    "n_generated": 160,
+    "cycles": 28,
+    "committed": 156,
+    "tau_walk": 5.571428571428571
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-4",
+    "n_prompt": 243,
+    "n_generated": 124,
+    "cycles": 21,
+    "committed": 120,
+    "tau_walk": 5.714285714285714
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-93",
+    "n_prompt": 305,
+    "n_generated": 71,
+    "cycles": 11,
+    "committed": 66,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-26",
+    "n_prompt": 311,
+    "n_generated": 82,
+    "cycles": 13,
+    "committed": 78,
+    "tau_walk": 6.0
+   },
+   {
+    "workload": "agentic_json_mode",
+    "prompt_id": "json-mode-eval-84",
+    "n_prompt": 332,
+    "n_generated": 79,
+    "cycles": 13,
+    "committed": 78,
+    "tau_walk": 6.0
+   }
+  ]
+ }
+}

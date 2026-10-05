@@ -1,0 +1,6 @@
+=== tp8 fp8 allreduce-fusion in=128 out=1
+Avg latency: 0.0056496114001674865 seconds
+=== tp8 fp8 allreduce-fusion in=128 out=513
+Avg latency: 1.6882024909999926 seconds
+=== profile tp8 fp8 decode
+VB6DONE

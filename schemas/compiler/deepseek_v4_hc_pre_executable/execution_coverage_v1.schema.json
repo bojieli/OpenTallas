@@ -1,0 +1,42 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/execution_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "execution_evidence": { "const": "none" },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "parameter_coverage": { "const": "all_three_verified_f32_resources" },
+    "program_execution_authority": { "const": "complete" },
+    "program_scope": { "const": "exact_hc_pre_plus_complete_for_one_layer_0_attention_site" },
+    "request_schema": { "const": "opentallas.deepseek_v4_hc_pre_execution_request.v1" },
+    "result_schema": { "const": "opentallas.deepseek_v4_hc_pre_execution_result.v1" },
+    "schedule_coverage": { "const": "exact_two_slot_logical_schedule_with_independent_certificate" },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_executable_coverage.v1" },
+    "site": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "const": "attention" },
+        "layer": { "const": 0 },
+        "scope": { "const": "main" }
+      },
+      "required": ["branch", "layer", "scope"],
+      "type": "object"
+    },
+    "status": { "const": "program_authority_complete_execution_evidence_none" }
+  },
+  "required": [
+    "execution_evidence",
+    "model_id",
+    "parameter_coverage",
+    "program_execution_authority",
+    "program_scope",
+    "request_schema",
+    "result_schema",
+    "schedule_coverage",
+    "schema",
+    "site",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE executable coverage v1",
+  "type": "object"
+}

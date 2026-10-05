@@ -1,0 +1,20 @@
+lowered 3387 descriptors; graph fa785d3fd7e3af81
+prompt 32 tokens
+  HYPER_CONNECT_HEAD main.hc_head                 n=131072 uniq=4713 min=-9216 max=6240 argmax=3999
+  RMS_NORM           main.final_norm              n=131072 uniq=3189 min=-12.375 max=6.53125 argmax=119960
+  LAST_TOKEN_SELECT  main.lm_head.select          n=4096 uniq=1426 min=-9.75 max=4.9375 argmax=1176
+  VOCAB_PROJECT      main.lm_head.project         n=129280 uniq=129160 min=-43.0537 max=32.4416 argmax=13806
+  SCALE              main.sample.temperature      n=129280 uniq=129160 min=-43.0537 max=32.4416 argmax=13806
+  ARGMAX             main.sample.select           n=1 uniq=1 min=13806 max=13806 argmax=0
+  TOKEN_APPEND       main.sample.append           n=1 uniq=1 min=13806 max=13806 argmax=0
+tokens [13806] in 4353.4s failure=None stop=max_new_tokens
+  instructions.fetched = 48139
+  instructions.issued = 21937
+  instructions.predicated_off = 262
+  instructions.retired = 47877
+  selection.tie_multiplicity = 1
+  selection.tokens_appended = 1
+  selection.tokens_selected = 1
+  selection.vocabulary_elements = 129280
+gold[:8] [5718, 442, 85, 807, 3132, 513, 3132, 339] got [13806]
+match False

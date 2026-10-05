@@ -1,0 +1,94 @@
+{
+  "RTL_elaborated": false,
+  "RTL_executed": false,
+  "WR_visible_provider_status": "Still absent in pinned source; immediate backing assignment is not a CWL/burst-delayed held-visible completion. No WRdone pulse introduced.",
+  "WRdone_generated": false,
+  "aggregate_memory_peak_bytes": 15257600,
+  "before_next_controller_RTL": [
+    "Model-compose conventional legal command scheduler plus finite service and current-time refresh with real source clocks.",
+    "Model-compose full AW34 backing/residence and pre-pop finite WR reservation with CWL/burst-delayed visibility.",
+    "Model-compose immutable held completion, ACK arbitration, CDC, RMW/lease consumers and drain.",
+    "Price actual queue ports/replicas/fanout/return arbitration and macro/slot costs, including frozen serialized scan18..35 and head-prefetch bubbles.",
+    "Compose dependency latency by max of prerequisite availability and shared-resource reservations; no serial sum of overlapping floors or free weight service."
+  ],
+  "binary_available": false,
+  "caps_verified_before_compile": true,
+  "cases": [
+    {
+      "case": 0,
+      "cycles": null,
+      "journal": null,
+      "status": "NOT_RUN_COMPILATION_FAILED"
+    },
+    {
+      "case": 1,
+      "cycles": null,
+      "journal": null,
+      "status": "NOT_RUN_COMPILATION_FAILED"
+    },
+    {
+      "case": 2,
+      "cycles": null,
+      "journal": null,
+      "status": "NOT_RUN_COMPILATION_FAILED"
+    }
+  ],
+  "checkpoint_payload": false,
+  "compile_attempts": 1,
+  "compiler_elapsed_seconds": 0.06708862818777561,
+  "compiler_exit_code": 1,
+  "compiler_version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+  "exact_blocker": "Approved --binary option rejected by installed Verilator 4.038 before source elaboration. No compiler fallback, retry, or source/command change allowed by this GO.",
+  "expected_baseline_deficiencies": [
+    {
+      "rule": "noncausal_ACT_and_demand_driven_refresh",
+      "status": "PRESERVED_SOURCE_AUDIT_NOT_NEW_RUN_WITNESS"
+    },
+    {
+      "rule": "early_WR_backing_before_CWL_plus_burst",
+      "status": "PRESERVED_SOURCE_AUDIT_NOT_NEW_RUN_WITNESS"
+    },
+    {
+      "rule": "fullAW34_modulo_backing_alias",
+      "status": "PRESERVED_SOURCE_AUDIT_NOT_NEW_RUN_WITNESS"
+    }
+  ],
+  "full_program_simulation": false,
+  "hardware_build_ready": false,
+  "hardware_qualification": false,
+  "hardware_rate_credit": 0,
+  "journals_available": false,
+  "loaded_bank_calendar_provider_status": "Actual finite-client observation remains unmeasured: no actual acceptance/bank/column/read-completion timestamps were produced.",
+  "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+  "no_fallback": true,
+  "no_retries": true,
+  "no_source_changes": true,
+  "parent_GO_commit": "eb8efc3eff38487b27bddce1f508c48cedb08e52",
+  "parent_GO_path": "results/rtl/parent_qwen_provider_preparation_GO_20261002.json",
+  "preparation_commit": "6c388a357a884168eb5dcff75f185df509bc0d33",
+  "previous_failure_record": "results/uarch/qwen_hbm_provider_prep_20261002/fixture_failure_r3.json@6c388a357a884168eb5dcff75f185df509bc0d33",
+  "schema": "Qwen_actual_source_provider_observation_r4",
+  "source_pin": "4535be1001d69bc43669e0fdf0401896be4034a6:rtl/hdc/kv/ot_hdc_hbm_model.sv",
+  "status": "FAIL_COMPILER_OPTION_SINGLE_ATTEMPT_NO_RETRY",
+  "toolchain_files": [
+    {
+      "bytes": 218595,
+      "path": "/usr/bin/verilator",
+      "resolved": "/usr/bin/verilator",
+      "sha256": "ebe0a4ad8d1995ffcf1f9972f2e2614998ffc73f3fc94003ec7b689d5432f463"
+    },
+    {
+      "bytes": 7892640,
+      "path": "/usr/bin/verilator_bin",
+      "resolved": "/usr/bin/verilator_bin",
+      "sha256": "3ee693fd5cad46bd7b4fd51aa7ba9a8def53f3c9e6a3f703716cdc52e026f8aa"
+    },
+    {
+      "bytes": 932680,
+      "path": "/usr/bin/g++",
+      "resolved": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    }
+  ],
+  "whole_elapsed_seconds": 0.15758427418768406
+}

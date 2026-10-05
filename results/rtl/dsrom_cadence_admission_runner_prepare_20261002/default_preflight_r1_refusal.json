@@ -1,0 +1,5 @@
+{
+  "status": "READ_ONLY_ENVIRONMENT_REFUSAL_NO_SERVICE_NO_HDL",
+  "exception": "ValueError: tool environment changed OMP_NUM_THREADS",
+  "correction": "Invoke with reviewed OMP_NUM_THREADS=1 and OPENBLAS_NUM_THREADS=1; keep environment pin enforcement"
+}

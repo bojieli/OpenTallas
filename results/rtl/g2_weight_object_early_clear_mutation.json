@@ -1,0 +1,24 @@
+{
+  "status": "expected_failure",
+  "scope": "Loaded object-byte transport cancellation ownership regression",
+  "original_cluster_sha256": "987fd929ea55108cac286eda558465fef9a3d0f42c09a60b3e9ccd3ebda3dca6",
+  "mutated_cluster_sha256": "2a644b63484cda478df7738dd69b385064c93f025c9ba7fdb4e3aab2120d3e15",
+  "mutation": {
+    "from": ".clear(!input_layout_valid || (lifetime_clear && runtime_transport_ack))",
+    "to": ".clear(lifetime_clear)"
+  },
+  "command": [
+    "python3",
+    "tools/check_g2_runtime_program.py",
+    "--output-backpressure",
+    "--auxiliary-windows",
+    "--cols",
+    "53",
+    "--activation-miss-aligned",
+    "--object-writes",
+    "--strided-output",
+    "--weight-object-reads"
+  ],
+  "returncode": 1,
+  "output": "Traceback (most recent call last):\n  File \"/home/ubuntu/OpenTallas/tools/check_g2_runtime_program.py\", line 282, in <module>\n    assert r.returncode == 0, r.stdout + r.stderr\nAssertionError: program phase=1 complete=1 trap=0 cycles=10919\n[115975000] %Fatal: tb_a3_g2_runtime_program.sv:265: Assertion failed in tb_a3_g2_runtime_program.check_read_ownership: weight read ownership cleared before cancellation acknowledgement\n%Error: /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:265: Verilog $stop\nAborting...\n\n"
+}

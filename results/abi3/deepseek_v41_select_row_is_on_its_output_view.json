@@ -1,0 +1,169 @@
+{
+  "also_measured": {
+    "EngineContext.loops": "varies per issue for every streamed operator and is constant for every non-streamed one, so it carries the same quantity; the output view is preferred because it is the operator's own operand rather than ambient program state, and because it says WHICH loop walks the rows"
+  },
+  "answer": "IT IS ON THE OUTPUT VIEW, and no wire-format change is needed. The select writes ONE row per launch into an index array, so unlike the score plane its destination cannot be the same row every time. Over all 288 issues of the shipped V4.1 HBM cell at a 10-token prompt, each STREAMED select's output view carries EXACTLY ONE loop term whose stride equals the output's own row stride, and that term's iteration takes exactly the values 0..9 -- SPAN_TOKENS is 10. Every NON-streamed select, which already presents all ten rows, carries ZERO such terms. So the rule is self-guarding: a view that presents its rows has no term walking them.",
+  "measured_operators": [
+    {
+      "descriptor": 3322,
+      "issues_recorded": 160,
+      "iteration_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "output_dims": [
+        1,
+        512
+      ],
+      "output_strides": [
+        640,
+        1
+      ],
+      "output_terms_matching_row_stride": 1,
+      "presented_rows": 1,
+      "score_view_dims": [
+        1,
+        256
+      ],
+      "score_view_loop_terms": [],
+      "streamed": true
+    },
+    {
+      "descriptor": 7083,
+      "issues_recorded": 80,
+      "iteration_values": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "output_dims": [
+        1,
+        512
+      ],
+      "output_strides": [
+        640,
+        1
+      ],
+      "output_terms_matching_row_stride": 1,
+      "presented_rows": 1,
+      "score_view_dims": [
+        1,
+        256
+      ],
+      "score_view_loop_terms": [],
+      "streamed": true
+    },
+    {
+      "descriptor": 8421,
+      "issues_recorded": 8,
+      "iteration_values": [],
+      "output_dims": [
+        10,
+        2048
+      ],
+      "output_strides": [
+        2048,
+        1
+      ],
+      "output_terms_matching_row_stride": 0,
+      "presented_rows": 10,
+      "score_view_dims": [
+        10,
+        64
+      ],
+      "score_view_loop_terms": [
+        [
+          32768,
+          0
+        ]
+      ],
+      "streamed": false
+    },
+    {
+      "descriptor": 8434,
+      "issues_recorded": 8,
+      "iteration_values": [],
+      "output_dims": [
+        10,
+        512
+      ],
+      "output_strides": [
+        640,
+        1
+      ],
+      "output_terms_matching_row_stride": 0,
+      "presented_rows": 10,
+      "score_view_dims": [
+        10,
+        512
+      ],
+      "score_view_loop_terms": [
+        [
+          262144,
+          0
+        ]
+      ],
+      "streamed": false
+    },
+    {
+      "descriptor": 10817,
+      "issues_recorded": 32,
+      "iteration_values": [],
+      "output_dims": [
+        10,
+        512
+      ],
+      "output_strides": [
+        640,
+        1
+      ],
+      "output_terms_matching_row_stride": 0,
+      "presented_rows": 10,
+      "score_view_dims": [
+        10,
+        512
+      ],
+      "score_view_loop_terms": [
+        [
+          262144,
+          0
+        ]
+      ],
+      "streamed": false
+    }
+  ],
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "it records that the row is RECOVERABLE and how; whether the selection then matches the vendor's Indexer is a separate measurement",
+    "one prompt length (10) and one cell (HBM comparator, 8 nodes)"
+  ],
+  "producer": {
+    "git": {
+      "commit": "8816a78ada14cc30a320e21be3211f638c10047f"
+    },
+    "tool": "tools/probe_deepseek_v41_select_row_identity.py"
+  },
+  "question": "the streamed ROUTE.INDEX_TOPK computes query position zero on every issue and therefore an empty causal horizon. Its score view carries no dynamic term, which is measured and recorded. Is the row identity anywhere ELSE in what the runtime already has, or does closing this need an A18 amendment?",
+  "schema": "opentallas.result.v41_select_row_is_on_its_output_view.v1",
+  "the_rule": {
+    "decode_excluded_because": "SPAN_TOKENS is 1 there, its joined window entries are circular-buffer slots that may wrap, and the explicit position symbol remains the time coordinate",
+    "row": "the iteration of the unique output loop term whose stride equals strides[-2]; if there is not exactly one such term, nothing is derived",
+    "streamed_when": "output view presents one row while SPAN_TOKENS exceeds one"
+  },
+  "why_the_earlier_derivations_missed_it": "both read the SCORE view. results/abi3/deepseek_v41_select_row_is_not_in_its_operands.json records that its resolved layout has dims (1, 256), strides (256, 1), element offset 0 and NO dynamic terms at all -- so matching a term against the resolved width, and then against the row stride, could only find nothing. The consumer's OUTPUT was never examined, nor was EngineContext.loops."
+}

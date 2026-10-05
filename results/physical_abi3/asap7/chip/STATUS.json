@@ -1,0 +1,18 @@
+{
+  "status": "archived_historical",
+  "date": "2026-09-26",
+  "archive_date": "2026-09-28",
+  "core": "pre-redesign (as-built ot_hdc_core / ot_hdc_core_v41)",
+  "reason": "these records characterize earlier physical wrappers and do not establish timing or area for the adopted Qwen or V41x hierarchies",
+  "records": {
+    "blocks/": "budgeted block routes of the pre-redesign core; none closed against its budget",
+    "abstracts/": "LEF + timing-model abstracts of those routes",
+    "boundary/": "boundary characterisation of the pre-redesign blocks (V4.1 HE, SU41 and collectives nodes predate later RTL edits)",
+    "budgets/tile_qwen_rom.json": "the Qwen tile budget table at the halt (3 violations)"
+  },
+  "current_designs": {
+    "qwen": "rtl/hdc/ot_hdc_core.sv and rtl/chip/ot_chip_hdc_tile.sv",
+    "deepseek": "rtl/hdc/v41x/ot_hdc_core_v41x.sv; adopted die integration pending"
+  },
+  "reusable": "tools/chip_assembly methodology and historical source-pinned measurement records"
+}

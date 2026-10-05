@@ -1,0 +1,37 @@
+{
+  "owner_commits": [
+    "d747fb5398972560b9975870a4a737ac280411a1",
+    "38b1e58724635d8687a5cfcccc316acf110bbd59"
+  ],
+  "independent_source_graph_json_replay_equal": true,
+  "source_pins_verified": true,
+  "focused_tests_passed": 3,
+  "source_graph_nodes": {
+    "decode32": 814,
+    "integer_score32": 169,
+    "reduce32": 28
+  },
+  "ordinary_decode_entry_nonfinite_rejections": [
+    {
+      "input_bits": "0x7f800000",
+      "rejection": "finite alreadyBF16 QDQ blocks required"
+    },
+    {
+      "input_bits": "0xff800000",
+      "rejection": "finite alreadyBF16 QDQ blocks required"
+    },
+    {
+      "input_bits": "0x7fc00000",
+      "rejection": "finite alreadyBF16 QDQ blocks required"
+    }
+  ],
+  "decode_function_source_sha256": "00ecb0c00d8219c5ec6aa2790ea027df2016592b0f8353fad7969f806c4e14a7",
+  "decode_scope": "Exact pinned source entry function, source-domain check only; not actual DUT execution.",
+  "scatter_unique_words": 8192,
+  "shared_peak_bytes": 57472,
+  "unknown_opcode_costs_remain_unbound": true,
+  "branch_alternatives_not_runtime_sum": true,
+  "actual_RF_shared_callbacks_and_score_liveness_qualified": false,
+  "rate_credit": 0,
+  "hardware_admission": false
+}

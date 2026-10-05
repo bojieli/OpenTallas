@@ -1,0 +1,429 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_kv_proj_vectors_v1.schema.json",
+  "title": "Complete Qwen K/V projection RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "blocks",
+    "build_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "commands",
+    "composition",
+    "expected_accumulator_tiles",
+    "expected_final_accumulator_codes",
+    "expected_output_codes",
+    "graph_id",
+    "hbm_shard",
+    "input_codes",
+    "kernel_ir_id",
+    "numeric_contract",
+    "physical_plan_id",
+    "q_projection_vector_set_id",
+    "rmsnorm_source_vector_id",
+    "schema",
+    "source_execution",
+    "tiles",
+    "vector_set_id"
+  ],
+  "properties": {
+    "blocks": {
+      "type": "array",
+      "minItems": 32,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "build_id": {
+      "const": "3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f"
+    },
+    "claim_boundary": {
+      "const": {
+        "architectural_simulator_output_correlated": true,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_k_projection_graph_operation": true,
+        "complete_layer_execution": false,
+        "complete_qkv_preparation": false,
+        "complete_v_projection_graph_operation": true,
+        "graph_valid_qwen_command_slice": true,
+        "independent_reference_all_operations_exact": true,
+        "preloaded_attention_norm_row": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "raw_weight_payload_retained": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "command_vector_set_id": {
+      "const": "420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2"
+    },
+    "commands": {
+      "type": "array",
+      "minItems": 1024,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/command"}
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_address",
+        "accumulator_payload_sha256",
+        "all_accumulator_tiles_sha256",
+        "auxiliary_saturation_count",
+        "auxiliary_write_count",
+        "combined_output_payload_sha256",
+        "combined_weight_payload_sha256",
+        "dma_destination_address",
+        "graph_command_count",
+        "graph_command_end",
+        "graph_command_start",
+        "graph_operation_ids",
+        "input_address",
+        "input_element_count",
+        "input_payload_sha256",
+        "k_tile_count_per_output_block",
+        "matmul_add_count",
+        "matmul_multiply_count",
+        "output_block_count",
+        "output_element_count",
+        "projections",
+        "submitted_command_count",
+        "weight_element_count",
+        "weight_tile_count"
+      ],
+      "properties": {
+        "accumulator_address": {"const": 5242880},
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "all_accumulator_tiles_sha256": {"$ref": "#/$defs/sha256"},
+        "auxiliary_saturation_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2048
+        },
+        "auxiliary_write_count": {"const": 2048},
+        "combined_output_payload_sha256": {
+          "const": "f0fb1cc114e3c44f3cc897859f3349ccc7f9baa564fda3431d11524e8c136fe3"
+        },
+        "combined_weight_payload_sha256": {
+          "const": "a7d864dfda7e9659bcf297728eed39ce59aa85b09d40c1f63e638dc45fc8a10c"
+        },
+        "dma_destination_address": {"const": 4194304},
+        "graph_command_count": {"const": 1024},
+        "graph_command_end": {"const": 3074},
+        "graph_command_start": {"const": 2051},
+        "graph_operation_ids": {"const": ["node.0003", "node.0004"]},
+        "input_address": {"const": 3145728},
+        "input_element_count": {"const": 4096},
+        "input_payload_sha256": {
+          "const": "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"
+        },
+        "k_tile_count_per_output_block": {"const": 16},
+        "matmul_add_count": {"const": 8388608},
+        "matmul_multiply_count": {"const": 8388608},
+        "output_block_count": {"const": 32},
+        "output_element_count": {"const": 2048},
+        "projections": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "prefixItems": [
+            {"$ref": "#/$defs/k_projection"},
+            {"$ref": "#/$defs/v_projection"}
+          ],
+          "items": false
+        },
+        "submitted_command_count": {"const": 1024},
+        "weight_element_count": {"const": 8388608},
+        "weight_tile_count": {"const": 512}
+      }
+    },
+    "expected_accumulator_tiles": {
+      "type": "array",
+      "minItems": 512,
+      "maxItems": 512,
+      "items": {"$ref": "#/$defs/accumulator_codes"}
+    },
+    "expected_final_accumulator_codes": {
+      "type": "array",
+      "minItems": 2048,
+      "maxItems": 2048,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "expected_output_codes": {
+      "type": "array",
+      "minItems": 2048,
+      "maxItems": 2048,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
+    "graph_id": {
+      "const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"
+    },
+    "hbm_shard": {
+      "const": {
+        "logical_base_address": 1073741824,
+        "path": "memory/hbm/hbm.00001.656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37.bin",
+        "sha256": "656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37",
+        "size_bytes": 1073741824,
+        "slice_offset_bytes": 204505088,
+        "slice_size_bytes": 16777216
+      }
+    },
+    "input_codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
+    "kernel_ir_id": {
+      "const": "270b7609f2ea101593b3870a498bda3320336c94b27862dca7f991352727e050"
+    },
+    "numeric_contract": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+    "physical_plan_id": {
+      "const": "ba1d95462450d2cd059e6b55271c73ea90895515c9a4129bba1b51df265109c3"
+    },
+    "q_projection_vector_set_id": {
+      "const": "32dbdaa446fc4192f31a0a26394e04094e74c6459858d8a6b0135c11fc9e324b"
+    },
+    "rmsnorm_source_vector_id": {
+      "const": "ce2a725cc574f334273dbfdc93e6fab7fc4da48df8d2d4087f22307635212d81"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_kv_proj_vectors.v1"
+    },
+    "source_execution": {
+      "const": {
+        "execution_report_id": "77b849e49608cacf9522eb16fad289385523c39618425e1e1c5f30126e504746",
+        "execution_report_sha256": "4ddc5212edb5942f2b0d43a630da30fc7912309029cd917ce692bb6e663299f0",
+        "independent_reference_id": "9033bc2ca0d078ff1bf85a624c952f207d2d8042eb0a1bc8bd1830d9b28007fb",
+        "independent_reference_sha256": "5ed2ab5c12998e63627ffcda33a631b98ea48d811da1d23c6e7035ce375cad80",
+        "node_0003_output_sha256": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403",
+        "node_0004_output_sha256": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5"
+      }
+    },
+    "tiles": {
+      "type": "array",
+      "minItems": 512,
+      "maxItems": 512,
+      "items": {"$ref": "#/$defs/tile"}
+    },
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "accumulator_codes": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "auxiliary", "destination", "engine", "flags", "index",
+        "kernel_index", "opcode", "size0", "size1", "size2", "size3",
+        "source0", "source1"
+      ],
+      "properties": {
+        "auxiliary": {"type": "integer", "minimum": 0},
+        "destination": {"type": "integer", "minimum": 0},
+        "engine": {"enum": [1, 2]},
+        "flags": {"enum": [0, 1, 2]},
+        "index": {"type": "integer", "minimum": 2051, "maximum": 3074},
+        "kernel_index": {"enum": [3, 4]},
+        "opcode": {"enum": [1, 16]},
+        "size0": {"type": "integer", "minimum": 1},
+        "size1": {"type": "integer", "minimum": 0},
+        "size2": {"type": "integer", "minimum": 0},
+        "size3": {"const": 0},
+        "source0": {"type": "integer", "minimum": 0},
+        "source1": {"type": "integer", "minimum": 0}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major", "abi_minor", "expected_error", "expected_fields",
+        "expected_index", "last", "name", "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {"$ref": "#/$defs/fields"},
+        "expected_index": {
+          "type": "integer", "minimum": 2051, "maximum": 3074
+        },
+        "last": {"type": "boolean"},
+        "name": {
+          "type": "string",
+          "pattern": "^(dma|matmul)_(k|v)_proj_n(0[0-9]|1[0-5])_k(0[0-9]|1[0-5])$"
+        },
+        "record_hex": {"type": "string", "pattern": "^[0-9a-f]{128}$"}
+      }
+    },
+    "projection_common": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_payload_sha256", "all_accumulator_tiles_sha256",
+        "auxiliary_address", "command_count", "command_end", "command_start",
+        "deployed_weight_payload_sha256", "kernel_index", "operation_id",
+        "output_block_count", "output_element_count", "output_payload_sha256",
+        "output_saturation_count", "projection", "source_weight_payload_sha256",
+        "tile_evidence_start", "weight_address", "weight_tile_count"
+      ],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "all_accumulator_tiles_sha256": {"$ref": "#/$defs/sha256"},
+        "auxiliary_address": {"type": "integer"},
+        "command_count": {"const": 512},
+        "command_end": {"type": "integer"},
+        "command_start": {"type": "integer"},
+        "deployed_weight_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "kernel_index": {"enum": [3, 4]},
+        "operation_id": {"enum": ["node.0003", "node.0004"]},
+        "output_block_count": {"const": 16},
+        "output_element_count": {"const": 1024},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "output_saturation_count": {
+          "type": "integer", "minimum": 0, "maximum": 1024
+        },
+        "projection": {"enum": ["k_proj", "v_proj"]},
+        "source_weight_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "tile_evidence_start": {"enum": [0, 256]},
+        "weight_address": {"type": "integer"},
+        "weight_tile_count": {"const": 256}
+      }
+    },
+    "k_projection": {
+      "allOf": [
+        {"$ref": "#/$defs/projection_common"},
+        {
+          "type": "object",
+          "properties": {
+            "auxiliary_address": {"const": 7340032},
+            "command_end": {"const": 2562},
+            "command_start": {"const": 2051},
+            "deployed_weight_payload_sha256": {
+              "const": "0460b9a479fbccdcebf61c86d0dc6eb068be781c51f7b247ed191774db2c28e8"
+            },
+            "kernel_index": {"const": 3},
+            "operation_id": {"const": "node.0003"},
+            "output_payload_sha256": {
+              "const": "dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403"
+            },
+            "projection": {"const": "k_proj"},
+            "source_weight_payload_sha256": {
+              "const": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0"
+            },
+            "tile_evidence_start": {"const": 0},
+            "weight_address": {"const": 1278246912}
+          }
+        }
+      ]
+    },
+    "v_projection": {
+      "allOf": [
+        {"$ref": "#/$defs/projection_common"},
+        {
+          "type": "object",
+          "properties": {
+            "auxiliary_address": {"const": 8388608},
+            "command_end": {"const": 3074},
+            "command_start": {"const": 2563},
+            "deployed_weight_payload_sha256": {
+              "const": "2b82652e5d6446530230f86a685ef547ba9e94f613c2d2d42ab3388dd7271b1c"
+            },
+            "kernel_index": {"const": 4},
+            "operation_id": {"const": "node.0004"},
+            "output_payload_sha256": {
+              "const": "b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5"
+            },
+            "projection": {"const": "v_proj"},
+            "source_weight_payload_sha256": {
+              "const": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee"
+            },
+            "tile_evidence_start": {"const": 256},
+            "weight_address": {"const": 1286635520}
+          }
+        }
+      ]
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_payload_sha256", "auxiliary_address", "command_end",
+        "command_start", "global_output_block_index", "kernel_index",
+        "output_block_index", "output_payload_sha256", "output_saturation_count",
+        "projection", "tile_evidence_start", "weight_payload_sha256"
+      ],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "auxiliary_address": {
+          "type": "integer", "minimum": 7340032, "maximum": 8390528
+        },
+        "command_end": {"type": "integer", "minimum": 2082, "maximum": 3074},
+        "command_start": {"type": "integer", "minimum": 2051, "maximum": 3043},
+        "global_output_block_index": {
+          "type": "integer", "minimum": 0, "maximum": 31
+        },
+        "kernel_index": {"enum": [3, 4]},
+        "output_block_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "output_saturation_count": {
+          "type": "integer", "minimum": 0, "maximum": 64
+        },
+        "projection": {"enum": ["k_proj", "v_proj"]},
+        "tile_evidence_start": {
+          "type": "integer", "minimum": 0, "maximum": 496
+        },
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "tile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_payload_sha256", "dma_command_index", "dma_source_address",
+        "flags", "global_output_block_index", "input_address", "k_tile_index",
+        "kernel_index", "matmul_command_index", "output_block_index", "projection",
+        "weight_payload_sha256"
+      ],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "dma_command_index": {
+          "type": "integer", "minimum": 2051, "maximum": 3073
+        },
+        "dma_source_address": {
+          "type": "integer", "minimum": 1278246912, "maximum": 1294991360
+        },
+        "flags": {"enum": [0, 1, 2]},
+        "global_output_block_index": {
+          "type": "integer", "minimum": 0, "maximum": 31
+        },
+        "input_address": {
+          "type": "integer", "minimum": 3145728, "maximum": 3153408
+        },
+        "k_tile_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "kernel_index": {"enum": [3, 4]},
+        "matmul_command_index": {
+          "type": "integer", "minimum": 2052, "maximum": 3074
+        },
+        "output_block_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "projection": {"enum": ["k_proj", "v_proj"]},
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

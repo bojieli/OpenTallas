@@ -1,0 +1,24 @@
+{
+  "pid": 137459,
+  "source_commit": "796508cad2877dd42238050e3b66afbd81002879",
+  "GO_commit": "88c7435959ad8c7f058458ec3e93ea5f0dcd8695",
+  "cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/hbm-qwen-kv-operator-campaign-vm-20261002-r1.service\n",
+  "time": 1790984765.7268813,
+  "wall_limit": null,
+  "FSIZE": "unlimited",
+  "AS": "unlimited",
+  "memory_limit": null,
+  "swap_limit": null,
+  "memory_reservation_bytes": 34359738368,
+  "native_decode": false
+}

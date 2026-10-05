@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.dsrom.system_unit_bench.v1",
+ "bench": "idx_scorer_loc_bench",
+ "simulator": "Icarus Verilog version 11.0 (stable) ()",
+ "command": [
+  "iverilog",
+  "-g2012",
+  "-o",
+  "/tmp/tmp9c6ohkj9/x_base",
+  "rtl/dsrom_sys/ot_dsrom_idx_scorer_loc.sv",
+  "rtl/test/dsrom_sys/tb_dsrom_idx_scorer_loc.sv"
+ ],
+ "verdict": "PASS",
+ "cases": [
+  {
+   "line": "CASE random_interleaved n=200 k=16 want=16 hub=16 stack=16 hub_cycles=461 stack_cycles=100 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE random_block n=300 k=16 want=16 hub=16 stack=16 hub_cycles=657 stack_cycles=126 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE ties_interleaved n=250 k=16 want=16 hub=16 stack=16 hub_cycles=563 stack_cycles=121 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE ties_block n=400 k=16 want=16 hub=16 stack=16 hub_cycles=855 stack_cycles=158 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE zeros_negzero_neginf n=180 k=16 want=16 hub=16 stack=16 hub_cycles=425 stack_cycles=99 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE fewer_than_k n=11 k=16 want=11 hub=11 stack=11 hub_cycles=65 stack_cycles=43 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE exactly_k n=16 k=16 want=16 hub=16 stack=16 hub_cycles=91 stack_cycles=50 fault=0/0 PASS"
+  },
+  {
+   "line": "CASE empty_shards n=3 k=16 want=3 hub=3 stack=3 hub_cycles=19 stack_cycles=16 fault=0/0 PASS"
+  }
+ ],
+ "source_sha256": {
+  "rtl/dsrom_sys/ot_dsrom_idx_scorer_loc.sv": "6b39b27df25a529d173834aa82cfab4d8c0fbdd7770053237a2bf63ff9d197cf",
+  "rtl/test/dsrom_sys/tb_dsrom_idx_scorer_loc.sv": "985194e2833a891d6ad6c8d5697552986c24aadf5eb9aaf10689a154722aefb3"
+ },
+ "mutants": {
+  "DSROM_IDX_MUTANT_TIE": {
+   "what": "ties broken to the HIGHER position (golden: lower)",
+   "command": [
+    "iverilog",
+    "-g2012",
+    "-DDSROM_IDX_MUTANT_TIE",
+    "-o",
+    "/tmp/tmp9c6ohkj9/x_DSROM_IDX_MUTANT_TIE",
+    "rtl/dsrom_sys/ot_dsrom_idx_scorer_loc.sv",
+    "rtl/test/dsrom_sys/tb_dsrom_idx_scorer_loc.sv"
+   ],
+   "verdict": "FAIL",
+   "must_fail": true,
+   "ok": true,
+   "lines": [
+    "CASE random_interleaved n=200 k=16 want=16 hub=16 stack=16 hub_cycles=461 stack_cycles=100 fault=0/0 PASS",
+    "CASE random_block n=300 k=16 want=16 hub=16 stack=16 hub_cycles=657 stack_cycles=126 fault=0/0 PASS",
+    "CASE ties_interleaved n=250 k=16 want=16 hub=16 stack=51 hub_cycles=563 stack_cycles=185 fault=0/0 FAIL",
+    "CASE ties_block n=400 k=16 want=16 hub=16 stack=53 hub_cycles=855 stack_cycles=218 fault=0/0 FAIL",
+    "CASE zeros_negzero_neginf n=180 k=16 want=16 hub=16 stack=24 hub_cycles=425 stack_cycles=111 fault=0/0 FAIL",
+    "CASE fewer_than_k n=11 k=16 want=11 hub=11 stack=11 hub_cycles=65 stack_cycles=43 fault=0/0 PASS",
+    "CASE exactly_k n=16 k=16 want=16 hub=16 stack=12 hub_cycles=91 stack_cycles=45 fault=0/0 FAIL",
+    "CASE empty_shards n=3 k=16 want=3 hub=3 stack=3 hub_cycles=19 stack_cycles=16 fault=0/0 PASS",
+    "IDXLOC FAIL fails=4"
+   ]
+  },
+  "DSROM_IDX_MUTANT_QID": {
+   "what": "one stack carries a wrong query id",
+   "command": [
+    "iverilog",
+    "-g2012",
+    "-DDSROM_IDX_MUTANT_QID",
+    "-o",
+    "/tmp/tmp9c6ohkj9/x_DSROM_IDX_MUTANT_QID",
+    "rtl/dsrom_sys/ot_dsrom_idx_scorer_loc.sv",
+    "rtl/test/dsrom_sys/tb_dsrom_idx_scorer_loc.sv"
+   ],
+   "verdict": "FAIL",
+   "must_fail": true,
+   "ok": true,
+   "lines": [
+    "CASE random_interleaved n=200 k=16 want=16 hub=16 stack=16 hub_cycles=461 stack_cycles=100 fault=0/1 FAIL",
+    "CASE random_block n=300 k=16 want=16 hub=16 stack=16 hub_cycles=657 stack_cycles=126 fault=0/1 FAIL",
+    "CASE ties_interleaved n=250 k=16 want=16 hub=16 stack=16 hub_cycles=563 stack_cycles=121 fault=0/1 FAIL",
+    "CASE ties_block n=400 k=16 want=16 hub=16 stack=16 hub_cycles=855 stack_cycles=158 fault=0/1 FAIL",
+    "CASE zeros_negzero_neginf n=180 k=16 want=16 hub=16 stack=16 hub_cycles=425 stack_cycles=99 fault=0/1 FAIL",
+    "CASE fewer_than_k n=11 k=16 want=11 hub=11 stack=11 hub_cycles=65 stack_cycles=43 fault=0/1 FAIL",
+    "CASE exactly_k n=16 k=16 want=16 hub=16 stack=16 hub_cycles=91 stack_cycles=50 fault=0/1 FAIL",
+    "CASE empty_shards n=3 k=16 want=3 hub=3 stack=3 hub_cycles=19 stack_cycles=16 fault=0/1 FAIL",
+    "IDXLOC FAIL fails=8"
+   ]
+  }
+ },
+ "pass": true
+}

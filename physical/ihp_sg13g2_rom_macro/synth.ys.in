@@ -1,0 +1,17 @@
+# Synthesis of the ROM macro periphery against the installed IHP SG13G2 cells.
+read_liberty -lib @STDCELL_LIB@
+read_liberty -lib @MACRO_LIB@
+read_verilog -sv @ARRAY_BLACKBOX@
+read_verilog -sv @PERIPHERY_RTL@
+read_verilog -sv @WRAPPER_RTL@
+blackbox ihp_rom_bitarray
+hierarchy -check -top ot_rom_macro
+synth -top ot_rom_macro -flatten -noalumacc
+dfflibmap -liberty @STDCELL_LIB@
+opt
+abc -liberty @STDCELL_LIB@ -D 10000
+setundef -zero
+splitnets
+opt_clean -purge
+stat -liberty @STDCELL_LIB@
+write_verilog -noattr -noexpr -nohex -nodec @NETLIST@

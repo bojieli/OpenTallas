@@ -1,0 +1,197 @@
+{
+  "status": "pass",
+  "cases": [
+    {
+      "enable": 0,
+      "reset_generation": 0,
+      "flags": [],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2046,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 59871
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=59815 last=59846 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2046 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=59871\nRETENTION_COMPOSE_PASS retain=0 sectors=4352 beats=64 vm_ops=7 first_refill=15537 second_refill=15530\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 2176,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 1534,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 44344
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=44286 last=44317 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=2176 accepted=64 descriptors=2 max_outstanding=1 req_stalls=1534 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=44344\nRETENTION_COMPOSE_PASS retain=1 sectors=2176 beats=64 vm_ops=7 first_refill=15536 second_refill=0\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [
+        "+SINK_PERIOD=11"
+      ],
+      "metrics": {
+        "sink_period": 11,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 2176,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 1534,
+        "producer_wait": 26621,
+        "sink_stalls": 629,
+        "stream_cycles": 703,
+        "total_cycles": 44973
+      },
+      "log": "REPLAY job=0 first=44220 last=44561 min_gap=11 max_gap=11\nREPLAY job=1 first=44605 last=44946 min_gap=11 max_gap=11\nEDGE_CONTRACT sink_period=11 latency=2 writes=4096 reads=2176 accepted=64 descriptors=2 max_outstanding=1 req_stalls=1534 producer_wait=26621 sink_stalls=629 stream_cycles=703 total_cycles=44973\nRETENTION_COMPOSE_PASS retain=1 sectors=2176 beats=64 vm_ops=7 first_refill=15536 second_refill=0\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [
+        "+INVALIDATE"
+      ],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2046,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 59881
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=59823 last=59854 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2046 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=59881\nRETENTION_COMPOSE_PASS retain=1 sectors=4352 beats=64 vm_ops=7 first_refill=15536 second_refill=15535\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [
+        "+PRIME"
+      ],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2045,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 59881
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=59823 last=59854 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2045 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=59881\nRETENTION_COMPOSE_PASS retain=1 sectors=4352 beats=64 vm_ops=7 first_refill=15536 second_refill=15534\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [
+        "+WRITE"
+      ],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4128,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2051,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 60097
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=60039 last=60070 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4128 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2051 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=60097\nRETENTION_COMPOSE_PASS retain=1 sectors=4352 beats=64 vm_ops=7 first_refill=15536 second_refill=15536\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 0,
+      "flags": [
+        "+CONFIG"
+      ],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2046,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 59881
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=59823 last=59854 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2046 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=59881\nRETENTION_COMPOSE_PASS retain=1 sectors=4352 beats=64 vm_ops=7 first_refill=15536 second_refill=15535\n"
+    },
+    {
+      "enable": 1,
+      "reset_generation": 65534,
+      "flags": [],
+      "metrics": {
+        "sink_period": 1,
+        "latency": 2,
+        "writes": 4096,
+        "reads": 4352,
+        "accepted": 64,
+        "descriptors": 2,
+        "max_outstanding": 1,
+        "req_stalls": 2046,
+        "producer_wait": 26621,
+        "sink_stalls": 0,
+        "stream_cycles": 74,
+        "total_cycles": 59873
+      },
+      "log": "REPLAY job=0 first=44219 last=44250 min_gap=1 max_gap=1\nREPLAY job=1 first=59815 last=59846 min_gap=1 max_gap=1\nEDGE_CONTRACT sink_period=1 latency=2 writes=4096 reads=4352 accepted=64 descriptors=2 max_outstanding=1 req_stalls=2046 producer_wait=26621 sink_stalls=0 stream_cycles=74 total_cycles=59873\nRETENTION_COMPOSE_PASS retain=1 sectors=4352 beats=64 vm_ops=7 first_refill=15536 second_refill=15529\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/chip/ot_chip_v41x_window_stream.sv": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89",
+    "rtl/chip/ot_chip_v41x_window_retention.sv": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee",
+    "rtl/test/tb_ds_layer_retention_compose.sv": "ffebdc5e4319893c4f575d7572d9a99fe186a3923e826cd44616c3963b8a04a7",
+    "tools/rtl_v41_window_retention_gate.py": "0e0257e50d1c3abba0c9595bf61e737df305ad2fc02ecc0bf0199bba416bec55",
+    "rtl/chip/ot_chip_v41x_die.sv": "e45c4ff3d64e3e3c879c05daba46ef043dc699ddd03eb2f7cf56b801eea861cb"
+  },
+  "saved_fixture_cycles": 15527,
+  "saved_sectors": 2176,
+  "scope": "Same synthetic block producer and real delayed-completion HBM, actual distinct QK/PV descriptors and lifecycle, seven VM-only elapsed slots (not executed numeric SU instructions); no numeric attention or full-layer speed claim",
+  "pending": [
+    "numeric QK/SU/PV integration",
+    "die-level retained option exact replay",
+    "external HBM writer coherency or exclusion"
+  ]
+}

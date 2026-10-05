@@ -1,0 +1,19 @@
+test_bad_aperture_or_oversize_write_refused_not_truncated (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_bad_aperture_or_oversize_write_refused_not_truncated) ... FAIL
+test_real_multisector_root_masks_and_parent_retirement_under_drain (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_real_multisector_root_masks_and_parent_retirement_under_drain) ... ok
+test_reset_holds_parent_child_and_return_until_source_resumes (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_reset_holds_parent_child_and_return_until_source_resumes) ... ok
+test_ungranted_or_wrong_source_mapping_cannot_launch (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_ungranted_or_wrong_source_mapping_cannot_launch) ... ok
+test_wrong_child_owner_retains_whole_RPC_debt (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_wrong_child_owner_retains_whole_RPC_debt) ... ok
+
+======================================================================
+FAIL: test_bad_aperture_or_oversize_write_refused_not_truncated (test_canonical_qwen_state_rpc_join.StateRPCJoinTests.test_bad_aperture_or_oversize_write_refused_not_truncated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/dewey-state-rpc-join-new-check-20261003/tests/test_canonical_qwen_state_rpc_join.py", line 130, in test_bad_aperture_or_oversize_write_refused_not_truncated
+    self.assertEqual(model()['raw_bits'],624)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 524 != 624
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.138s
+
+FAILED (failures=1)

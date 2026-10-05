@@ -1,0 +1,8 @@
+{
+  "decision": "rejected; restored shared-shift implementation",
+  "reason": "Matched pre-layout worst setup slack worsens from -1.7225 ns to -1.7994 ns at 1 ns; area changes only 251.898 to 251.867 um2. No demonstrated benefit justifies replacing the current implementation.",
+  "functional": "354 arguments x six step widths pass in Icarus and Verilator.",
+  "candidate_source_sha256": "0bb5b6b6739c43b039df6fe9d6848ca87042dac43b26ad483454b26a4dc33173",
+  "physical_record": "results/physical_abi3/asap7/small_divider/borrow_shared_shift_synth_sta_1ns.json",
+  "qualification": "Synthesis and pre-layout timing only; no routed frequency claim."
+}

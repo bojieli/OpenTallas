@@ -1,0 +1,372 @@
+{
+  "status": "PHASE_SEMANTIC_RECEIPTS_CLOSED",
+  "job": {
+    "label": "issue_ACK_as_visibility",
+    "compile_command": [
+      "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "--binary",
+      "--timing",
+      "--assert",
+      "--top-module",
+      "tb",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "--Mdir",
+      "{run}/issue_ACK_as_visibility/obj",
+      "{run}/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv",
+      "{run}/issue_ACK_as_visibility/sources/kv_reqmux_recovery.sv",
+      "{run}/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv",
+      "{run}/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv",
+      "{run}/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv",
+      "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+      "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_stage4.sv",
+      "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+      "{run}/issue_ACK_as_visibility/sources/tb.sv"
+    ],
+    "compile_seconds": 30,
+    "mutation": {
+      "file": "idx_hbm_recovery.sv",
+      "case": "WS_VISIBLE",
+      "expected_failure": "observer premature closed/visible fence",
+      "patch_sha256": "79595ee81e98358ea8a12349593b478baeb524471ea8f0629609dedb9cf48159"
+    },
+    "cases": [
+      {
+        "args": [
+          "+CASE=WS_VISIBLE",
+          "+CONTROL=issue_ACK_as_visibility"
+        ],
+        "seconds": 4,
+        "expected": "FAIL",
+        "marker": "observer premature closed/visible fence",
+        "fatal_receipt": {
+          "basename": "tb.sv",
+          "line": 633,
+          "top": "tb",
+          "bench_sha256": "80a1cf6e50ff2c0023472b067f1a5190c6a21d9384e597564a8f6fcc4ebd7950",
+          "returncode": 1
+        }
+      }
+    ]
+  },
+  "steps": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources/tb.sv"
+      ],
+      "returncode": 0,
+      "wall_seconds": 15.991604994051158,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/compile.log",
+      "log_sha256": "9bda8e8a7a67a3d2afb6d6045b0963ca9aa6dcb4b63b7b6a2f6c636bc79d1b4d"
+    },
+    {
+      "command": [
+        "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/obj/Vtb",
+        "+CASE=WS_VISIBLE",
+        "+CONTROL=issue_ACK_as_visibility"
+      ],
+      "returncode": 1,
+      "wall_seconds": 0.10397307015955448,
+      "log": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/case0.log",
+      "log_sha256": "1132e2d16dbe4769190103bfd398f58f500b9b2570b5f327e6be529bab3a02c1",
+      "cap_events": {
+        "low": 0,
+        "high": 0,
+        "max": 0,
+        "oom": 0,
+        "oom_kill": 0,
+        "oom_group_kill": 0
+      },
+      "runtime_source_directory": "/tmp/window-recovery-fatal-single-run-20261002-r1/issue_ACK_as_visibility/sources"
+    }
+  ],
+  "plan_sha256": "ea163e263e427c5c2a50a8e0cdb2e4e57af1ed7b7f9a4d52a2f5627b4c43ec1c",
+  "GO_commit": "7f51aa993c956e0e28abb49c0e3039ebc5d01bfa",
+  "binary": {
+    "sha256": "e1c1e1a2524052f3518c8f3e6f94285a27ec484fa90d02a466c8e3647bba6437",
+    "bytes": 624728
+  },
+  "generated_files": {
+    "Vtb": {
+      "bytes": 624728,
+      "sha256": "e1c1e1a2524052f3518c8f3e6f94285a27ec484fa90d02a466c8e3647bba6437"
+    },
+    "Vtb.cpp": {
+      "bytes": 2936,
+      "sha256": "87ae8efbd74607889a27cb1bd50b171c6b992670fb746d2ffa35d4aff79fde08"
+    },
+    "Vtb.d": {
+      "bytes": 26,
+      "sha256": "1c9475c192ff7728d7482f5b8ea1a6e0a3967a6a89bb33d6851df618f965b396"
+    },
+    "Vtb.h": {
+      "bytes": 3387,
+      "sha256": "46fd0d820ea888bc90c3c6408ee7cd89dbb59a9bcf9cd321795c3edb7ff9bdb8"
+    },
+    "Vtb.mk": {
+      "bytes": 1915,
+      "sha256": "5f4d1383607fe86c327633cb35931ce80c1012b0625850ca7bf568dfda0a2302"
+    },
+    "Vtb.o": {
+      "bytes": 8568,
+      "sha256": "f135ee47bd4f632ca76b94dd4243853e9fa31b204d42a80e7ce457ecc84b475d"
+    },
+    "Vtb__ALL.a": {
+      "bytes": 638624,
+      "sha256": "034f6386efe28b75e2526dd6f3e2bf17dbee5e0336772a31ad7f4049fec3f4e8"
+    },
+    "Vtb__ConstPool__0__Slow.cpp": {
+      "bytes": 828,
+      "sha256": "80f5eab4983f9633d49e0d07f825d1a1ced5a349edaa1b5a94e1a1ebaaccd702"
+    },
+    "Vtb__ConstPool__0__Slow.d": {
+      "bytes": 147,
+      "sha256": "9ff9fec79b0c11e853dde8040a6e5362aaa38787646cb0cdef3e15de535872e1"
+    },
+    "Vtb__ConstPool__0__Slow.o": {
+      "bytes": 1504,
+      "sha256": "7e530b5acb29b7b1789f04906ed129779c642ad562d8e0091ade5329ea48f202"
+    },
+    "Vtb__Syms.h": {
+      "bytes": 911,
+      "sha256": "79a932681bb329dda09b15cf0eaf4e39b50e938519b84eca69005b614fc891fc"
+    },
+    "Vtb__Syms__Slow.cpp": {
+      "bytes": 847,
+      "sha256": "6ff94def36676b716c754d94a213db70d4b89f7c94690ff93c8773a7f5b52bdf"
+    },
+    "Vtb__Syms__Slow.d": {
+      "bytes": 50,
+      "sha256": "c37bf65d7c50d58b8a2ac43a2c7d1f1dc7e2afa02fa1017270c1ad26c20a3d21"
+    },
+    "Vtb__Syms__Slow.o": {
+      "bytes": 24328,
+      "sha256": "0e38a4d253e9243932e057104efd55439797f5ec3e217f2753a817a39a68ad04"
+    },
+    "Vtb___024root.h": {
+      "bytes": 21559,
+      "sha256": "827e5e0266ea20a1fe344983ac1fc1eaef95e81ec29db9f55c6b6800fa2cb976"
+    },
+    "Vtb___024root__0.cpp": {
+      "bytes": 495403,
+      "sha256": "90f48429be2d5e66bd811e7da01e99ab146aafc69838efdad9b96bd692ddb267"
+    },
+    "Vtb___024root__0.d": {
+      "bytes": 52,
+      "sha256": "97519bffd2f73d3d5762984daf5ab2421f704376477b5cd1231f180bb34bba0c"
+    },
+    "Vtb___024root__0.o": {
+      "bytes": 85480,
+      "sha256": "38ff375aedc6fbdc53fba7d500ac40ae6cc8391d4dee7c6b59b5f95bf1d13f33"
+    },
+    "Vtb___024root__0__Slow.cpp": {
+      "bytes": 447339,
+      "sha256": "7321ab51c100e8c1afd5e5cf202c949a25f5546ae5d860e0e8814017b8e8561d"
+    },
+    "Vtb___024root__0__Slow.d": {
+      "bytes": 64,
+      "sha256": "d310c1eeb5e6b1325dd58769776ab1584152caa59356a774563d300349b668d8"
+    },
+    "Vtb___024root__0__Slow.o": {
+      "bytes": 171928,
+      "sha256": "77120163e0c0c3812cc8fdd672bbefd26aca7293cb18db2c062abe2e6bf6af73"
+    },
+    "Vtb___024root__1.cpp": {
+      "bytes": 5067669,
+      "sha256": "f440829f4bb612fa8fab6117cd8e8297f5c68292b359f01ad0644aaf2d38387b"
+    },
+    "Vtb___024root__1.d": {
+      "bytes": 52,
+      "sha256": "d0cf22dd172f76b2ad6ffde123d7e418ca6932b4cc3e394b69d28f3205c2b09b"
+    },
+    "Vtb___024root__1.o": {
+      "bytes": 237552,
+      "sha256": "496528f3d07f7606dfa314be347c5459b9e3a6629cf8155c4f13cb098127f887"
+    },
+    "Vtb___024root__2.cpp": {
+      "bytes": 494005,
+      "sha256": "fecbd20e544575a35796d9ec049da070c1edda1674ccf5d3abea907155153e10"
+    },
+    "Vtb___024root__2.d": {
+      "bytes": 52,
+      "sha256": "0816e15a85863878e39cb3538309f664b17d5bf0b2fe66bcf8fc344ae3bd2412"
+    },
+    "Vtb___024root__2.o": {
+      "bytes": 40992,
+      "sha256": "fa03ac76f1c954c3ab7b96bee43cba4385afff06a226117a7bcf7bbadda6177f"
+    },
+    "Vtb___024root__3.cpp": {
+      "bytes": 6059,
+      "sha256": "10716c163e05345289aa6f1bd9037cccf71099c86a1eff38cb9b195be0039add"
+    },
+    "Vtb___024root__3.d": {
+      "bytes": 52,
+      "sha256": "e2815fd5c863f466bc8e2f3fe8381bdf375e9f5eff4547a75d159c6758469314"
+    },
+    "Vtb___024root__3.o": {
+      "bytes": 2464,
+      "sha256": "82adc63757460095f6dbb7e936aff0f4b106a399eafe1eb6784b8b12ad122799"
+    },
+    "Vtb___024root__Slow.cpp": {
+      "bytes": 663,
+      "sha256": "20a75d607f8697cd41785a2afff718f8ce7730159e33a83a8bb607ef8c54ba36"
+    },
+    "Vtb___024root__Slow.d": {
+      "bytes": 58,
+      "sha256": "42a69f2a7680f7e6fdf653524e046f866fd78ad2bee0eca82a83d245af850ee1"
+    },
+    "Vtb___024root__Slow.o": {
+      "bytes": 43256,
+      "sha256": "fd4f5499ea60c33232f1a023867798f64d3fb7561909712e0eeb98c18a192ef5"
+    },
+    "Vtb__main.cpp": {
+      "bytes": 1101,
+      "sha256": "012330e660c5d37b46b5fe124a67962d26e1a1fe2285e00e1c7b9dc4d880b301"
+    },
+    "Vtb__main.d": {
+      "bytes": 128,
+      "sha256": "8c77d46eac31f20e934492b71b75905e535881779667312b20a8683d22ee2bca"
+    },
+    "Vtb__main.o": {
+      "bytes": 4816,
+      "sha256": "1527eb33648012e374500a7ddf38edf44cf87e3a87746c8485773bfc082b73ec"
+    },
+    "Vtb__pch.h": {
+      "bytes": 740,
+      "sha256": "0b2bfeba3b968f14b74b2e61496b7f5cf0de91f515fce0e19e2a94266bd0db48"
+    },
+    "Vtb__pch.h.fast.d": {
+      "bytes": 741,
+      "sha256": "061dd455a24d482dfd2d83e97bd962935938bd477f5280f1b16437d37df1caea"
+    },
+    "Vtb__pch.h.fast.gch": {
+      "bytes": 73848857,
+      "sha256": "6f0f88ee2d6bc196abe3003aa993947f5944b4ec31fe3c3bacd000bc1a440377"
+    },
+    "Vtb__pch.h.slow.d": {
+      "bytes": 741,
+      "sha256": "4c68a2931996c65e42f503c1183bd03082e1719c76a4da7ec3ea8bc6482c5165"
+    },
+    "Vtb__pch.h.slow.gch": {
+      "bytes": 72640313,
+      "sha256": "c9dd297c03c74be7b1a1614466e549533d4943ec6208373cdf609f6ca61c7b13"
+    },
+    "Vtb__ver.d": {
+      "bytes": 2926,
+      "sha256": "620cdeda97852a739640bb76c29db670294f7d9bae317c68d95f4c35cdaca499"
+    },
+    "Vtb__verFiles.dat": {
+      "bytes": 6995,
+      "sha256": "81d2b820e2d0e1305dcab848b0284dcb6d9f3020abbb4364fbcb7a463f6f55d4"
+    },
+    "Vtb_classes.mk": {
+      "bytes": 1779,
+      "sha256": "81060a6f4df1ee346503740ddc04770572353b352632087dd44759f0680e4d0c"
+    },
+    "verilated.d": {
+      "bytes": 1177,
+      "sha256": "22847bd077c0eb293aa1e871ceafe053037479645bfc18ec6354afc638b67e5a"
+    },
+    "verilated.o": {
+      "bytes": 283176,
+      "sha256": "e1bfbea77f32f1488af066a40da7d11f452ef4522c55a7c7246eec1a71a5d254"
+    },
+    "verilated_threads.d": {
+      "bytes": 704,
+      "sha256": "59d0aa0b830bfad4bd336191fb195e99c04e6399033e36c143e2aabaa57cea84"
+    },
+    "verilated_threads.o": {
+      "bytes": 60240,
+      "sha256": "20e39a91341e70ea7416b7b001c43c5e96c868db98048de8be855b03bd1282c4"
+    },
+    "verilated_timing.d": {
+      "bytes": 701,
+      "sha256": "748002c51e1364120e32107d264c8cfe01c57db3f0e1bb1c224d7918ef773d24"
+    },
+    "verilated_timing.o": {
+      "bytes": 18192,
+      "sha256": "24cdf5d8a25bca5f58a3e40ea57db0c1eda8d058e62c6c096fd47e797a7efd74"
+    }
+  },
+  "source_files": {
+    "hbm_karb_recovery.sv": {
+      "bytes": 27807,
+      "sha256": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8"
+    },
+    "idx_hbm_recovery.sv": {
+      "bytes": 72648,
+      "sha256": "10439d2f88d97076b35b78019f6650ab28bfd087dbde4a270d41c5e90d1b76c4"
+    },
+    "kv_reqmux_recovery.sv": {
+      "bytes": 13272,
+      "sha256": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35"
+    },
+    "kv_rope_reqmux_recovery.sv": {
+      "bytes": 21628,
+      "sha256": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd"
+    },
+    "pinned_ot_chip_v41x_hbm_rsp_pipe.sv": {
+      "bytes": 3883,
+      "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+    },
+    "pinned_ot_chip_v41x_window_row_codec.sv": {
+      "bytes": 4184,
+      "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+    },
+    "pinned_ot_chip_v41x_window_stage4.sv": {
+      "bytes": 5239,
+      "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+    },
+    "tb.sv": {
+      "bytes": 20830,
+      "sha256": "80a1cf6e50ff2c0023472b067f1a5190c6a21d9384e597564a8f6fcc4ebd7950"
+    },
+    "window_prefetch_recovery.sv": {
+      "bytes": 56601,
+      "sha256": "cb4d37b0a722b4cc4226779eaa5cdf9dd83d4bf104f74947ae3ad0b240538ea9"
+    }
+  },
+  "retained_evidence_files": {
+    "binary_receipt.json": {
+      "bytes": 102,
+      "sha256": "0b850891ef7c8db451ec8366354121264cc7cc1935edad481cc3ce30d22c5b25"
+    },
+    "case0.log": {
+      "bytes": 218,
+      "sha256": "1132e2d16dbe4769190103bfd398f58f500b9b2570b5f327e6be529bab3a02c1"
+    },
+    "compile.log": {
+      "bytes": 57147,
+      "sha256": "9bda8e8a7a67a3d2afb6d6045b0963ca9aa6dcb4b63b7b6a2f6c636bc79d1b4d"
+    },
+    "snapshot_sha256.json": {
+      "bytes": 897,
+      "sha256": "b92fa554a46af1373b1cec3404d8604e69f82a7bae87db1a7b9e939b35308798"
+    }
+  },
+  "generated_inventory_sha256": "4f78a8efe107686096f25f49c513b7e12cb23bb3c1a4feb14d00fe43fe06ccae",
+  "generated_bytes": 155296825,
+  "live_output_bytes_before_closure": 156489822,
+  "sampled_output_peak_bytes": 156489822,
+  "no_source_or_expectation_change": true
+}

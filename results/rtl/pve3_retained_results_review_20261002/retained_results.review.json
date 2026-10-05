@@ -1,0 +1,202 @@
+{
+  "schema": "opentallas.PVE3.retained-results-review.v1",
+  "host": "ot-pve3",
+  "UTC": "2026-10-02T19:06:45.390952+00:00",
+  "reviewer": "Codex independent DS recovery/Qwen terminal evidence collector",
+  "evidence_sha256": "ffa5fb2b5e5ad55dd27c1d658b92bbd23272565c50f92d4566a779759d63bdee",
+  "pending_chains_held_verified": true,
+  "results_retained_verified": true,
+  "engineering_terminal_results_collected": true,
+  "all_baseline_jobs_accounted": true,
+  "status": "REVIEW_COMPLETE_FAILURE_AND_EXPLICIT_INCOMPLETE_EVIDENCE",
+  "terminal_records": [
+    {
+      "baseline_job": {
+        "name": "W11 ring K-port n3",
+        "pid": 1761139,
+        "start_ticks": 40084367,
+        "completion": "PENDING_ENTIRE_JOB_AND_ARTIFACT_COLLECTION"
+      },
+      "retained_result_path": "/tmp/claude-1000/w11s/hard/kc_portn3/physical.json",
+      "retained_result_sha256": "7149409b00fff7ad15029f5777b821552d25f46ee8b98b2ca095eb065e1ae5fb",
+      "actual_record_status": "error",
+      "actual_terminal_outcome": "ERROR_INCOMPLETE_TIMEOUT",
+      "flow_completed": false,
+      "stages_completed": [
+        "synth"
+      ],
+      "source_commit": "4a7183a066dc41c6b68e2933837a6acfdbba00e2",
+      "source_worktree_dirty": false,
+      "engineering_PASS": false,
+      "process_exit_code": null,
+      "process_exit_code_note": "physical record supplies engineering status; exact supervisor exit not recorded in this snapshot",
+      "error": "TimeoutExpired: Command '['docker', 'run', '--rm', '-v', '/home/ubuntu/w11kc-wt2:/src:ro', '-v', '/home/ubuntu/w11tmp/abi3-physical-pggl5fgw/orfs:/work', '-w', '/OpenROAD-flow-scripts/flow', 'openroad/orfs:latest', 'bash', '-lc', \"trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish metadata-generate\"]' timed out after 86400 seconds",
+      "acceptance": null,
+      "corner": "TT",
+      "baseline_process_identities_accounted": [
+        {
+          "pid": 1761036,
+          "ppid": 1761035,
+          "start_ticks": 40083992,
+          "comm": "docker",
+          "labels": [
+            "otjob-dea7d958df",
+            "/tmp/claude-1000/w11s/jobs/harden_wc.sh"
+          ]
+        },
+        {
+          "pid": 1761139,
+          "ppid": 1761116,
+          "start_ticks": 40084367,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 3988136,
+          "ppid": 3988135,
+          "start_ticks": 45686566,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_w11_ring_port_nphys_asap7_w11kc_portn3/base/5_1_grt.json"
+          ]
+        }
+      ]
+    },
+    {
+      "baseline_job": {
+        "name": "W11 CKV merge m5b",
+        "pid": 3992571,
+        "start_ticks": 45838054,
+        "completion": "PENDING_ENTIRE_JOB_AND_ARTIFACT_COLLECTION"
+      },
+      "retained_result_path": "/home/ubuntu/w11ckv_phys/merge_m5b/physical.json",
+      "retained_result_sha256": "d60c1fc7611ec27475144231d14735ed805902551a3fa4e5c92177006c38383e",
+      "actual_record_status": "not_met",
+      "actual_terminal_outcome": "NOT_MET",
+      "flow_completed": true,
+      "stages_completed": [
+        "pnr"
+      ],
+      "source_commit": "d982a59053b4adda2ea2ce7fbd44ba22794685ab",
+      "source_worktree_dirty": true,
+      "engineering_PASS": false,
+      "process_exit_code": null,
+      "process_exit_code_note": "physical record supplies engineering status; exact supervisor exit not recorded in this snapshot",
+      "error": null,
+      "acceptance": {
+        "checks": [
+          {
+            "antenna_violating_nets": 0.0,
+            "antenna_violating_pins": 0.0,
+            "drc_errors": 0.0,
+            "hold_violations": 653.0,
+            "hold_wns_ns": -0.0110874,
+            "max_cap_violations": 0.0,
+            "max_fanout_violations": 0.0,
+            "max_slew_violations": 17.0,
+            "met": false,
+            "physically_clean": false,
+            "scope": "post-route, extracted parasitics",
+            "setup_violations": 4414.0,
+            "setup_wns_ns": -0.848883,
+            "signal_integrity_clean": false,
+            "stage": "place_and_route",
+            "timing_met": false
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: place_and_route",
+        "status": "not_met"
+      },
+      "corner": "TT",
+      "baseline_process_identities_accounted": [
+        {
+          "pid": 3992571,
+          "ppid": 3992569,
+          "start_ticks": 45838054,
+          "comm": "python3",
+          "labels": [
+            "tools/run_abi3_physical.py"
+          ]
+        },
+        {
+          "pid": 4005428,
+          "ppid": 4005427,
+          "start_ticks": 46682591,
+          "comm": "openroad",
+          "labels": [
+            "/work/logs/asap7/opentallas_ot_v41_ckv_merge_phys_asap7_w11ckv_merge_m5b/base/5_1_grt.json"
+          ]
+        }
+      ]
+    },
+    {
+      "baseline_job": {
+        "name": "W11 attention current7/6/6",
+        "pid": 4000495,
+        "start_ticks": 46297591,
+        "completion": "PENDING_ENTIRE_JOB_AND_ARTIFACT_COLLECTION"
+      },
+      "retained_result_path": "/tmp/claude-1000/w11st/attn_d8/results.txt",
+      "retained_result_sha256": "3673f440ca7991729cca95037f0597ea57f0fee6d01ca39998302f4a6d62349c",
+      "actual_terminal_outcome": "INCOMPLETE_UNQUALIFIED_NUMERICAL_RESULT_NOT_RECORDED",
+      "observed_compilation_outcome": "kernel OOM killed cc1plus PID4017916 in exact baseline attention container cgroup; retained variant contains no Vtb simulator",
+      "kernel_journal_path": "kernel_oom_journal.txt",
+      "kernel_journal_sha256": "30d4532d09f62bd3c310e7e5eff551849562f73c076d3aa50d432998df6c3810",
+      "container_cgroup": "docker-5772ca3bd3df5eb04aa23a16fe031045c0361c8423656d3fda170aa2ebddff2f.scope",
+      "current_variant": "7/6/6",
+      "outer_shell_returncode": 0,
+      "variant_compile_exit_code": null,
+      "variant_simulator_exit_code": null,
+      "numerical_verdict": null,
+      "engineering_PASS": false,
+      "pending_7_6_8": "HELD_USER_DRAIN; not an outcome for current7/6/6",
+      "retained_checkpoint_root": "/tmp/claude-1000/w11st/attn_d8/e76b6/obj_9e5b203220c3",
+      "retained_variant_files": 5366,
+      "retained_variant_bytes": 4076726530,
+      "retained_objects": 876,
+      "explanation": "st_sim.sh pipes each variant through tail -n1 and tee without pipefail. Three blank lines plus next-variant hold and outerrc0 do not preserve inner failure code or numerical verdict. Explicit incomplete outcome; no PASS, exact exit code or bit-exact failure invented.",
+      "baseline_process_identities_accounted": [
+        {
+          "pid": 3564900,
+          "ppid": 3564885,
+          "start_ticks": 42889330,
+          "comm": "docker",
+          "labels": [
+            "otjob-0a78a977fb",
+            "/tmp/claude-1000/w11s/jobs/st_sim.sh"
+          ]
+        },
+        {
+          "pid": 4000495,
+          "ppid": 3565148,
+          "start_ticks": 46297591,
+          "comm": "python3",
+          "labels": [
+            "/tmp/claude-1000/w11st/attn_d8/at_eng3.py"
+          ]
+        },
+        {
+          "pid": 4000528,
+          "ppid": 4000525,
+          "start_ticks": 46297692,
+          "comm": "verilator_bin",
+          "labels": []
+        }
+      ]
+    }
+  ],
+  "verification_path": "results/rtl/pve3_retained_results_review_20261002/verification.json",
+  "verification_sha256": "cd4431a5472f300cc4ed2b8350de9e8f71e831d51b5f78e342a5bc7d4f3d442b",
+  "engineering_terminal_results_collected_meaning": "All three drained baseline jobs accounted as recorded not_met, recorded timeout/error, and explicit incomplete/unqualified attention outcome with actual owned-cgroup compiler OOM evidence. Attention inner returncode and numerical verdict remain unavailable; no completed numerical terminal is claimed.",
+  "all_engineering_PASS": false,
+  "user_holds_remain_disabled": true,
+  "requested_review_does_not_authorize_new_jobs_or_deletion": true,
+  "signals_sent": 0,
+  "deletions": 0,
+  "new_experiments": 0,
+  "Qwen_existing_job_untouched": true
+}

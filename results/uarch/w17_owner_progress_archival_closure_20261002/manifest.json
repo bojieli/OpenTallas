@@ -1,0 +1,1440 @@
+{
+  "scope": "ARCHIVAL_SOURCE_ONLY_INPUT_CLOSURE_NO_GENERATED_BINARY_OR_PAYLOAD",
+  "files": {
+    "/home/ubuntu/w17-window-epoch-candidate/tools/w17_window_epoch9_timing_model.py": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/tools/w17_window_epoch9_timing_model.py",
+      "bytes": 11805,
+      "sha256": "061d685634e33b3601a41b11f366091a8dc879feb8f6e69f42791c77b4b208dd"
+    },
+    "/home/ubuntu/w17-window-epoch-candidate/tools/w17_window_epoch9_producer_prediction.py": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/tools/w17_window_epoch9_producer_prediction.py",
+      "bytes": 16869,
+      "sha256": "73a7903e02b5cb9648a78f7d3cbc98a24219b5c260f46b847edd782d2ac6bb39"
+    },
+    "/home/ubuntu/w17-window-epoch-candidate/results/uarch/w17_window_epoch9_reproducible_prediction_20261001/run1/prediction.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/results/uarch/w17_window_epoch9_reproducible_prediction_20261001/run1/prediction.json",
+      "bytes": 28814,
+      "sha256": "ca680492c0c1628a2e81b277919ddff2162b3663047cd7228918c18a512dca1e"
+    },
+    "/home/ubuntu/w17-window-epoch-candidate/results/uarch/w17_window_epoch9_reproducible_prediction_20261001/run1/credit1_events.jsonl": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/results/uarch/w17_window_epoch9_reproducible_prediction_20261001/run1/credit1_events.jsonl",
+      "bytes": 433175,
+      "sha256": "415805db80b8fb0b67c6506bcce4a293a4eaea2fb1fd558fc3c451889cd78ae7"
+    },
+    "/home/ubuntu/w17-window-epoch-candidate/results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/prediction.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/prediction.json",
+      "bytes": 28842,
+      "sha256": "6bde2e30fd4d32ff58646b4ccdbb54b84db99891c61d6ea17d1c468911f431d7"
+    },
+    "/home/ubuntu/w17-window-epoch-candidate/results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/L0_no_retain_events.jsonl": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/owner/results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/L0_no_retain_events.jsonl",
+      "bytes": 1331859,
+      "sha256": "a39b24ff9fd986fb5b22296ab545153898c70779887468736cd19af5554f6d0b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/frontend_profile.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile/frontend_profile.json",
+      "bytes": 181791,
+      "sha256": "cfb10953f9e57762f35faac1234a380e5161db0687b50d8ef7752d480aefdcd8"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/baseline/binary_transfer.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/baseline/binary_transfer.json",
+      "bytes": 227903,
+      "sha256": "fbcb9ccef972b64c98bedeb4ac352eed2e39485cc53e405757ab9833f97fbff1"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "bytes": 6668,
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+      "bytes": 7078,
+      "sha256": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_attn_row_merge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+      "bytes": 10989,
+      "sha256": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_coll_transpose.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_coll_transpose.sv",
+      "bytes": 10447,
+      "sha256": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm3e_phy.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "bytes": 6517,
+      "sha256": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_karb.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_hbm_karb.sv",
+      "bytes": 9669,
+      "sha256": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_karb_local.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+      "bytes": 7714,
+      "sha256": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+      "bytes": 3883,
+      "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_q2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_q2.sv",
+      "bytes": 1470,
+      "sha256": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_qn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_qn.sv",
+      "bytes": 1464,
+      "sha256": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_region.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_region.sv",
+      "bytes": 5401,
+      "sha256": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_region_kq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+      "bytes": 4776,
+      "sha256": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_slice.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_slice.sv",
+      "bytes": 5195,
+      "sha256": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_karb_stack_ep.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+      "bytes": 6172,
+      "sha256": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_prefetch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_kv_prefetch.sv",
+      "bytes": 22004,
+      "sha256": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_reqmux.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+      "bytes": 3750,
+      "sha256": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+      "bytes": 7323,
+      "sha256": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+      "bytes": 6623,
+      "sha256": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_region_guard.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_rope_region_guard.sv",
+      "bytes": 1484,
+      "sha256": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_rope_su_word.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_rope_su_word.sv",
+      "bytes": 1083,
+      "sha256": "5a3c4176cefdc05f9f837c1f093ff31a12d903b527bf6097caafd3f10b34c12c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_attn_source.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_attn_source.sv",
+      "bytes": 11871,
+      "sha256": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_block_guard.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_block_guard.sv",
+      "bytes": 1380,
+      "sha256": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv",
+      "bytes": 21711,
+      "sha256": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+      "bytes": 3949,
+      "sha256": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_retention.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_retention.sv",
+      "bytes": 2433,
+      "sha256": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_row_codec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_row_codec.sv",
+      "bytes": 4184,
+      "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_stage4.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_stage4.sv",
+      "bytes": 5239,
+      "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_chip_v41x_window_stream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_chip_v41x_window_stream.sv",
+      "bytes": 2600,
+      "sha256": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_coll_topk_merge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_coll_topk_merge.sv",
+      "bytes": 16678,
+      "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/chip/ot_w15_coll_dma.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/chip/ot_w15_coll_dma.sv",
+      "bytes": 11631,
+      "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/common/ot_prefix.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/common/ot_prefix.sv",
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/hbm/ot_hdc_qstream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/hbm/ot_hdc_qstream.sv",
+      "bytes": 20410,
+      "sha256": "e222d06c2fabfb86197852ccb63873bb65f5cd73b281971fa743fb3bf183d3ee"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/kv/ot_hdc_hbm_model.sv",
+      "bytes": 20850,
+      "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_accept.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_accept.sv",
+      "bytes": 4406,
+      "sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_cg.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_cg.sv",
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_delay.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_delay.sv",
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fastfp.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fastfp.sv",
+      "bytes": 19069,
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fastfp_lat.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "bytes": 5423,
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "bytes": 12112,
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_fpu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_fpu.sv",
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_reduce.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_reduce.sv",
+      "bytes": 6467,
+      "sha256": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/ot_hdc_sfu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/ot_hdc_sfu.sv",
+      "bytes": 7751,
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_actquant.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_actquant.sv",
+      "bytes": 10817,
+      "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_blockdot.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "bytes": 16915,
+      "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_chunk8_stack.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+      "bytes": 6282,
+      "sha256": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_engram_hash.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+      "bytes": 8232,
+      "sha256": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+      "bytes": 47493,
+      "sha256": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fdiv.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "bytes": 6738,
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fp4qdq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+      "bytes": 10647,
+      "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_fsqrt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "bytes": 7078,
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_select.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_select.sv",
+      "bytes": 11185,
+      "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "bytes": 12758,
+      "sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+      "bytes": 2286,
+      "sha256": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+      "bytes": 6549,
+      "sha256": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sk_arith.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "bytes": 18860,
+      "sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "bytes": 59271,
+      "sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_softplus.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_softplus.sv",
+      "bytes": 5238,
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_hcproj.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+      "bytes": 9373,
+      "sha256": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_matvec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+      "bytes": 25391,
+      "sha256": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_qe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+      "bytes": 15078,
+      "sha256": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_stream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+      "bytes": 47138,
+      "sha256": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41/ot_hdc_v41_xu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "bytes": 11532,
+      "sha256": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "bytes": 51491,
+      "sha256": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+      "bytes": 2341,
+      "sha256": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+      "bytes": 19654,
+      "sha256": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_egather.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+      "bytes": 16373,
+      "sha256": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "bytes": 28243,
+      "sha256": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+      "bytes": 9069,
+      "sha256": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+      "bytes": 20161,
+      "sha256": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+      "bytes": 19938,
+      "sha256": "2372df2af1c5176c5275461c3a2944f4c2365c613f0b9f626b7cbf784bef81b5"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "bytes": 14330,
+      "sha256": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "bytes": 28370,
+      "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+      "bytes": 8654,
+      "sha256": "9d0638579b17a9f2323cf623d7f9e6330fd13a5ba8bdd358080cacebb3c2d676"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+      "bytes": 26517,
+      "sha256": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+      "bytes": 3278,
+      "sha256": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+      "bytes": 17674,
+      "sha256": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+      "bytes": 6369,
+      "sha256": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+      "bytes": 3114,
+      "sha256": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
+      "bytes": 5091,
+      "sha256": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+      "bytes": 6230,
+      "sha256": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+      "bytes": 3935,
+      "sha256": "6025df0bda8d70e63a7675816382399c24075edb61258c9145e52b23e56e0cba"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+      "bytes": 2158,
+      "sha256": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+      "bytes": 5908,
+      "sha256": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+      "bytes": 19237,
+      "sha256": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
+      "bytes": 3986,
+      "sha256": "fce7c6df29e1be29ee2103f529c17debd7ba35f282dfb002e5cbaa009cb4fb67"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+      "bytes": 4167,
+      "sha256": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv",
+      "bytes": 1137,
+      "sha256": "6068c69a7a201eb8efcd5378fd5f1d402983314f121cd26caafca3a8702597d2"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "bytes": 17736,
+      "sha256": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "bytes": 22578,
+      "sha256": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "bytes": 25681,
+      "sha256": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "bytes": 42441,
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+      "bytes": 11822,
+      "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "bytes": 51032,
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "bytes": 38837,
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+      "bytes": 16157,
+      "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "bytes": 4522,
+      "sha256": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+      "bytes": 13249,
+      "sha256": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+      "bytes": 9785,
+      "sha256": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+      "bytes": 13985,
+      "sha256": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+      "bytes": 22397,
+      "sha256": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+      "bytes": 5405,
+      "sha256": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "bytes": 27869,
+      "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/proto/ot_fp32_mul_rne_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "bytes": 10843,
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_rom_fabric_router.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/rom/ot_rom_fabric_router.sv",
+      "bytes": 10236,
+      "sha256": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_rom_pkg_ctrl_x.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/rom/ot_rom_pkg_ctrl_x.sv",
+      "bytes": 27642,
+      "sha256": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/rom/ot_w15_rom_oneshot_px.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/rom/ot_w15_rom_oneshot_px.sv",
+      "bytes": 21175,
+      "sha256": "988a50f900c011c2912f66166bcf01d46117c47a6e930c6186c202b5bbd03794"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/v41_runtime/ot_v41_rt_die.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/v41_runtime/ot_v41_rt_die.sv",
+      "bytes": 15293,
+      "sha256": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41die/ot_v41_pair_w17w10.sv",
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41die/ot_v41_retn_w17w10.sv",
+      "bytes": 2053,
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_rom_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41die/ot_v41_rom_adapt.sv",
+      "bytes": 6435,
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41die/ot_v41_spine_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41die/ot_v41_spine_w17w10.sv",
+      "bytes": 16677,
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bmul2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bmul2.sv",
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bterm.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bterm.sv",
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_chain.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_chain.sv",
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_chain2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_chain2.sv",
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_fadd.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_fadd.sv",
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_ret.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_ret.sv",
+      "bytes": 9658,
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_segtree.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_segtree.sv",
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/v41rom/ot_v41_segtree2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/v41rom/ot_v41_segtree2.sv",
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/chip/ot_chip_v41x_die.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/w17_runtime/chip/ot_chip_v41x_die.sv",
+      "bytes": 64322,
+      "sha256": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/w17_runtime/chip/ot_chip_v41x_tile.sv",
+      "bytes": 36031,
+      "sha256": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+      "bytes": 28265,
+      "sha256": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_core_cancel_join_r8/actual_fastpp_core_selected_cone.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_core_cancel_join_r8/actual_fastpp_core_selected_cone.sv",
+      "bytes": 169504,
+      "sha256": "abc0b4c9f3cd249067bf404b6fb5fde99fc2876c896742c59b83cc3c69ea3893"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_actual_producer_cancel_declaration_repaired/ot_hdc_v41x_window_kv_blocks_cancel.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_actual_producer_cancel_declaration_repaired/ot_hdc_v41x_window_kv_blocks_cancel.sv",
+      "bytes": 15361,
+      "sha256": "c9c7bbec16601faf19723768bd1d159a4319c2291348ef77a05f5cf5c5252f5e"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/window_prefetch_recovery.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/window_prefetch_recovery.sv",
+      "bytes": 56601,
+      "sha256": "cb4d37b0a722b4cc4226779eaa5cdf9dd83d4bf104f74947ae3ad0b240538ea9"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/kv_reqmux_recovery.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/kv_reqmux_recovery.sv",
+      "bytes": 13272,
+      "sha256": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/kv_rope_reqmux_recovery.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/kv_rope_reqmux_recovery.sv",
+      "bytes": 21628,
+      "sha256": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/hbm_karb_recovery.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/hbm_karb_recovery.sv",
+      "bytes": 27807,
+      "sha256": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/idx_hbm_recovery.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/idx_hbm_recovery.sv",
+      "bytes": 72624,
+      "sha256": "0ca7752f23094788eb7ef6e161ce18662dc4e324c290413a4908ba38cfc8ec3c"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_row_codec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_row_codec.sv",
+      "bytes": 4184,
+      "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_stage4.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_stage4.sv",
+      "bytes": 5239,
+      "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_hbm_rsp_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+      "bytes": 3883,
+      "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+    },
+    "/tmp/opentallas-core-retained-binary-full27-campaign-20261002-r2/physical_QE_gate/sources/tb.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/profile_sources/tb.sv",
+      "bytes": 45968,
+      "sha256": "f60856cec47c3ce6eb514ba8ebcf5ebc18c4aafad1becb350ffc525156197ec6"
+    },
+    "git:4e38326d6f361bc85e660f48c59c355e2bb95274:rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/original4e383/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "bytes": 28370,
+      "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+    },
+    "git:4e38326d6f361bc85e660f48c59c355e2bb95274:rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/original4e383/rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+      "bytes": 38502,
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/results/rtl/w17_owner_progress_watchdog_20261002/attempt2_resource_FAIL/active_stage.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/results/rtl/w17_owner_progress_watchdog_20261002/attempt2_resource_FAIL/active_stage.json",
+      "bytes": 18683,
+      "sha256": "0ca89449e2c79a83008fa74e9017828a0fd0c6ac07af4a9ea734727489c91e65"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/results/uarch/w17_PC24_terminal_admission_20261002/record.json": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/results/uarch/w17_PC24_terminal_admission_20261002/record.json",
+      "bytes": 3339,
+      "sha256": "0bd582cc14b654f16d01cb5ee2eb9d7392ff708c6d81513009bfd2039664250a"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "bytes": 6668,
+      "sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv",
+      "bytes": 7078,
+      "sha256": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_attn_row_merge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_attn_row_merge.sv",
+      "bytes": 10989,
+      "sha256": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_coll_transpose.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_coll_transpose.sv",
+      "bytes": 10447,
+      "sha256": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm3e_phy.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm3e_phy.sv",
+      "bytes": 6517,
+      "sha256": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_karb.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_karb.sv",
+      "bytes": 9669,
+      "sha256": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_karb_local.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+      "bytes": 7714,
+      "sha256": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_hbm_rsp_pipe.sv",
+      "bytes": 3883,
+      "sha256": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_q2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_q2.sv",
+      "bytes": 1470,
+      "sha256": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_qn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_qn.sv",
+      "bytes": 1464,
+      "sha256": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_region.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_region.sv",
+      "bytes": 5401,
+      "sha256": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_region_kq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+      "bytes": 4776,
+      "sha256": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_slice.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_slice.sv",
+      "bytes": 5195,
+      "sha256": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_stack_ep.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+      "bytes": 6172,
+      "sha256": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_prefetch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_prefetch.sv",
+      "bytes": 22004,
+      "sha256": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_reqmux.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_reqmux.sv",
+      "bytes": 3750,
+      "sha256": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv",
+      "bytes": 7323,
+      "sha256": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+      "bytes": 6623,
+      "sha256": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_region_guard.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_region_guard.sv",
+      "bytes": 1484,
+      "sha256": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_su_word.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_rope_su_word.sv",
+      "bytes": 1083,
+      "sha256": "5a3c4176cefdc05f9f837c1f093ff31a12d903b527bf6097caafd3f10b34c12c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_attn_source.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_attn_source.sv",
+      "bytes": 11871,
+      "sha256": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_block_guard.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_block_guard.sv",
+      "bytes": 1380,
+      "sha256": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_kv_prefetch.sv",
+      "bytes": 21711,
+      "sha256": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_refill_schedule.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_refill_schedule.sv",
+      "bytes": 3949,
+      "sha256": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_retention.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_retention.sv",
+      "bytes": 2433,
+      "sha256": "9c6b58ccbab8de37346fbf6e5b4353e115489f2f37af8e4533ec0d48f0336dee"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_row_codec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_row_codec.sv",
+      "bytes": 4184,
+      "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_stage4.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_stage4.sv",
+      "bytes": 5239,
+      "sha256": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_stream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_chip_v41x_window_stream.sv",
+      "bytes": 2600,
+      "sha256": "4fd641d75c1c49dac14e27b22138e4b31be0ec20f2046c4e63d9069114c7da89"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_coll_topk_merge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_coll_topk_merge.sv",
+      "bytes": 16678,
+      "sha256": "e56fefef4d92d0de6faa7a583f9e419bcb9178290a1ef74df34c38aee0b509c6"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_w15_coll_dma.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/chip/ot_w15_coll_dma.sv",
+      "bytes": 11631,
+      "sha256": "0d77baaf7f85a2c4ac7542c39be51d0a360d665496df392738e59d01756ef3ab"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/common/ot_prefix.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/common/ot_prefix.sv",
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/hbm/ot_hdc_qstream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/hbm/ot_hdc_qstream.sv",
+      "bytes": 20410,
+      "sha256": "e222d06c2fabfb86197852ccb63873bb65f5cd73b281971fa743fb3bf183d3ee"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/kv/ot_hdc_hbm_model.sv",
+      "bytes": 20850,
+      "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_accept.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_accept.sv",
+      "bytes": 4406,
+      "sha256": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_cg.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_cg.sv",
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_delay.sv",
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+      "bytes": 19069,
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "bytes": 5423,
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "bytes": 12112,
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_fpu.sv",
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_reduce.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_reduce.sv",
+      "bytes": 6467,
+      "sha256": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_sfu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/ot_hdc_sfu.sv",
+      "bytes": 7751,
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_actquant.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_actquant.sv",
+      "bytes": 10817,
+      "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_blockdot.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "bytes": 16915,
+      "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_chunk8_stack.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+      "bytes": 6282,
+      "sha256": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_engram_hash.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+      "bytes": 8232,
+      "sha256": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+      "bytes": 47493,
+      "sha256": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fdiv.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "bytes": 6738,
+      "sha256": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fp4qdq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+      "bytes": 10647,
+      "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fsqrt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "bytes": 7078,
+      "sha256": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_select.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_select.sv",
+      "bytes": 11185,
+      "sha256": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+      "bytes": 12758,
+      "sha256": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+      "bytes": 2286,
+      "sha256": "60c7ffdd8638d2b14f4c0dd3771d7666937426f7abbdbc7a81dbc9be3fb7b282"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+      "bytes": 6549,
+      "sha256": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+      "bytes": 18860,
+      "sha256": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+      "bytes": 59271,
+      "sha256": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_softplus.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_softplus.sv",
+      "bytes": 5238,
+      "sha256": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_hcproj.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+      "bytes": 9373,
+      "sha256": "c3f6ef57f8d2025dd2d4170462ec55fa427f90bd5b0d04b0540bbbf4098f13f0"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_matvec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+      "bytes": 25391,
+      "sha256": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_qe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+      "bytes": 15078,
+      "sha256": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_stream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+      "bytes": 47138,
+      "sha256": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_xu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+      "bytes": 11532,
+      "sha256": "c16b1124cb3e653cc08921b39e3494b6bbc4070df2b34ec7cb82e476e2fa0566"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "bytes": 51491,
+      "sha256": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+      "bytes": 2341,
+      "sha256": "f971f0962b7be354860f65e06a4467ffe52946ad6a494ca9a24f3d10cb4244dd"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+      "bytes": 19654,
+      "sha256": "101359cfadf05f356c6e4e38b6571322475bfd6ac52f4438fb86da385338ffe7"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_egather.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+      "bytes": 16373,
+      "sha256": "d1ac9dc69dadfe10e7093ea99aa027f3420885d6a8bd7d35132cf3d22ed2db21"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+      "bytes": 28243,
+      "sha256": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+      "bytes": 9069,
+      "sha256": "bc10ccf4b4376db6f107b1f4733549db92957d8e34d1e3e4e031e1bff9639d1c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+      "bytes": 20161,
+      "sha256": "a7efc680c563abca19a59f4b83c8f1f6a6d5c33390b46cdac4f354b7a9c44630"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+      "bytes": 19938,
+      "sha256": "2372df2af1c5176c5275461c3a2944f4c2365c613f0b9f626b7cbf784bef81b5"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+      "bytes": 14330,
+      "sha256": "54bfaf33b25845f763b43d198e348647b7e53c460af05f8fc1024a7726eb139f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "bytes": 28370,
+      "sha256": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+      "bytes": 8654,
+      "sha256": "9d0638579b17a9f2323cf623d7f9e6330fd13a5ba8bdd358080cacebb3c2d676"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+      "bytes": 26517,
+      "sha256": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+      "bytes": 3278,
+      "sha256": "a2c4e44ff1d581b6d2e5cfe8e221e2c4553e4cbedd750e20819d6d7b29f30136"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+      "bytes": 17674,
+      "sha256": "6aa64b41e15f270e2e266d0a1938f09234606fc0d1ba392612d51bf2b610ae12"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+      "bytes": 6369,
+      "sha256": "156c67e8101b2d10ebf69a771b6599b8f7c3a707688d14d110121652bf15f5c2"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+      "bytes": 3114,
+      "sha256": "c3c4b2f36875e44daf75818b5355aad5ad3cb4803acd6b1c1d5fccf49070c37c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv",
+      "bytes": 5091,
+      "sha256": "6276f5d61ca73969b85636f10021100bc3afbe993e64b1a8e374c9d2b7e29b00"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+      "bytes": 6230,
+      "sha256": "74fd4a4e2618a02163e331bc4c318a1f3d2743691492a17a1ac4158c2478b27e"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+      "bytes": 3935,
+      "sha256": "6025df0bda8d70e63a7675816382399c24075edb61258c9145e52b23e56e0cba"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv",
+      "bytes": 2158,
+      "sha256": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_reader.sv",
+      "bytes": 5908,
+      "sha256": "bd4c590c30acb6d1b113853e3a1b4faca2d9f7f6b78ef7c2cd2c80df65dc6420"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+      "bytes": 19237,
+      "sha256": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_xbank.sv",
+      "bytes": 3986,
+      "sha256": "fce7c6df29e1be29ee2103f529c17debd7ba35f282dfb002e5cbaa009cb4fb67"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+      "bytes": 4167,
+      "sha256": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv",
+      "bytes": 1137,
+      "sha256": "6068c69a7a201eb8efcd5378fd5f1d402983314f121cd26caafca3a8702597d2"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "bytes": 17736,
+      "sha256": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "bytes": 22578,
+      "sha256": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "bytes": 25681,
+      "sha256": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "bytes": 42441,
+      "sha256": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+      "bytes": 11822,
+      "sha256": "420723862866ec2e7687dfdaf30ee35fd2631409a466163ee46b03831b412a62"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "bytes": 51032,
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "bytes": 38837,
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+      "bytes": 16157,
+      "sha256": "928bca5da13c0aa9679e337cd60fd556b84e9bcb5ab55d1ddbaa3efbbf4e1e69"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+      "bytes": 4522,
+      "sha256": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+      "bytes": 13249,
+      "sha256": "c23915f72aea5f98d191308b9c595a884a5fc3bae2e37a5749a950a3d75a43ee"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+      "bytes": 9785,
+      "sha256": "abff2c90e376ffc6f0c605c79c4e038e1bc894d36b071f3f64a4553947940efb"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+      "bytes": 13985,
+      "sha256": "816f380020ba7c5888c5a64db84c38290738c9d916710aaa272fc18822f85e4d"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+      "bytes": 22397,
+      "sha256": "8834d0e8405f4077a082b01525d9fff774468bc84a71558fa523ca22c9547de4"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+      "bytes": 5405,
+      "sha256": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+      "bytes": 27869,
+      "sha256": "9f184be0990a2d9e8162e87f85585b79c6638b1f708690b4e8f91c625c0a23a0"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_mul_rne_pipe.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "bytes": 10843,
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_rom_fabric_router.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_rom_fabric_router.sv",
+      "bytes": 10236,
+      "sha256": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_rom_pkg_ctrl_x.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_rom_pkg_ctrl_x.sv",
+      "bytes": 27642,
+      "sha256": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_w15_rom_oneshot_px.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/rom/ot_w15_rom_oneshot_px.sv",
+      "bytes": 21175,
+      "sha256": "988a50f900c011c2912f66166bcf01d46117c47a6e930c6186c202b5bbd03794"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_pair_w17w10.sv",
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_retn_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_retn_w17w10.sv",
+      "bytes": 2053,
+      "sha256": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_rom_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_rom_adapt.sv",
+      "bytes": 6435,
+      "sha256": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_spine_w17w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41die/ot_v41_spine_w17w10.sv",
+      "bytes": 16677,
+      "sha256": "49186a55bdabb511b7d207890b7fe90984fb0640e3a27d0381feb489587aa2cd"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bmul2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bmul2.sv",
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm.sv",
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain.sv",
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_chain2.sv",
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_fadd.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_fadd.sv",
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_ret.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_ret.sv",
+      "bytes": 9658,
+      "sha256": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree.sv",
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree2.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/pinned/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/pinned/rtl/w17_runtime/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+      "bytes": 28265,
+      "sha256": "be2cd15b4977825dec71fe890a36f5eabe0345bdcf1ff2718af669f16ebab27a"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/owner_progress_exports.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/owner_progress_exports.sv",
+      "bytes": 849,
+      "sha256": "0b3500ed6b4898710aee34e34284cdaa96e29ccf176a0484c593a90057ccd745"
+    },
+    "/home/ubuntu/w17-pc24-static-diagnosis/rtl/test/w17_owner_progress_watchdog/tb.sv": {
+      "archival_path": "results/uarch/w17_owner_progress_archival_closure_20261002/failed_root/rtl/test/w17_owner_progress_watchdog/tb.sv",
+      "bytes": 13995,
+      "sha256": "4a0060942c6938e6927f7894caa0bab5214a21158436ca4db449447551c3762c"
+    }
+  },
+  "source_snapshot_count": 141,
+  "input_bytes": 6126659,
+  "minimal_prerequisite_chain": [
+    "4fe9e984c6a573cb82e1f97da96bc544abe01c66",
+    "e1bf59c24216c1cbc9df8f3588592518d90a70aa",
+    "323193c2c794bbeb48da9b06d03a5304f6109568",
+    "a13e7aeaf5b82c48fbbc2f70987e7a63c8ad7820"
+  ],
+  "then_requested_commits": [
+    "f69cd549c59ee35f56d6c71282f62c98398bd33f",
+    "8f9bf400ecb8122b1bb613bcf6448e877480cf14"
+  ],
+  "unchanged_historical_tools": true,
+  "standalone_closure": {
+    "failed_compile_arguments": 1,
+    "failed_cone_source_files": 129,
+    "terminal_input": 1,
+    "historical_prerequisite_commits_required_for_adapter": false,
+    "intake_order": [
+      "f69cd549c59ee35f56d6c71282f62c98398bd33f",
+      "8f9bf400ecb8122b1bb613bcf6448e877480cf14",
+      "ca8e33cd8a0572018ae86fc5931ff6acecf59951",
+      "additive_standalone_closure_commit"
+    ]
+  }
+}

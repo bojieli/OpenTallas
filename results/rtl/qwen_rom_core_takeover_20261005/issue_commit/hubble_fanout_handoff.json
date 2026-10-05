@@ -1,0 +1,84 @@
+{
+  "schema": "qwen.rom.issue_commit.hubble_fanout_handoff.v1",
+  "source_git": "b50b7c4f45f6c1e6d753e46bb87de0362a8997e7",
+  "lightweight_ref": "codex/qwen-rom-issue-commit-fanout-20261005",
+  "source_semantics_owner": "Beauvoir/Codex",
+  "launch_owner": "Hubble/Nash",
+  "directive": "/tmp/claude-review-20261003/CODEX_DIRECTIVE_20261005_parallel_fanout.md",
+  "source_worktree": "/home/ubuntu/qwen-rom-core-decode-source-intake-20261005",
+  "immutable_measured_source_root": "/srv/opentallas-scratch/codex/qwen-rom-issue-commit-component3-20261005/src",
+  "measured_source_git": "41d572584",
+  "source_sha256": {
+    "tools/qwen_rom_core_dec_commit_emit_w12.py": "2ebd94a4c1dc0474fb3d2c050c0e2a6c30b7e7c5b8f4f8490511880743d8d16a",
+    "tools/qwen_rom_core_takeover_component.py": "9e2c9e0b28cfb4ce7046c9b8d3b7885614c91b3494d5ab2f8c13147e1a68f188",
+    "tools/qwen_rom_core_takeover_context.py": "daa241e836c1fd40dc73846b773903f7ee40b2338676455c0ecf1bdad70a673d",
+    "tools/qwen_rom_core_dec_counter_emit_w12.py": "2721fa5cfcd61c6c1321132e15d990f24e18edae9520262fd28846ebf700213a",
+    "tools/qwen_rom_core_dec_chaseq_emit_w12.py": "fee396b3c01b93a3a0c67234c2ed95859fb96149f7874806906842cf0d209e37",
+    "tools/qwen_rom_core_dec_bound_emit_w12.py": "f7ad21802ee12fdd70c64d165821d9839e99d44100511d31c1bd0f64788ddc9f",
+    "tools/qwen_rom_core_dec_emit_w12.py": "8c634b5bcf5169d9c7588d3d332bd12e6e20b2b8edb58ad1ab5c34c96afe429c",
+    "rtl/test/tb_qwen_rom_dec_commit.sv": "581f032bcf1351ab6301d2976bba5ea69ac76ee69536beaf472600d2d6e30041",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f"
+  },
+  "emit_command": "python3 tools/qwen_rom_core_dec_commit_emit_w12.py --out CORE.sv",
+  "selector_command": "python3 tools/qwen_rom_core_takeover_context.py --am-commit --retained RETAINED_SOURCE --out UNIQUE_PREPARATION_DIRECTORY",
+  "component_record": "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/component/result.json",
+  "model_record": "results/rtl/qwen_rom_core_takeover_20261005/issue_commit/prebuild.json",
+  "candidate_flags": {
+    "DEC_LA": 1,
+    "DEC_LA_BOUND": 1,
+    "DEC_LA_CHASE_Q": 1,
+    "DEC_LA_COUNT_LA": 1,
+    "DEC_LA_AM_COMMIT": 1
+  },
+  "default_off": true,
+  "source_params": "Retained ROM AR: G6144,W16,SW64,NW18,VPOS0,ME_STALL1,ME_IDLE_GATE1,SU_VEC1; complete exact params retained_screen/synth.ys",
+  "scope": "ROM core descriptor-held argmax issue commit. Not the HBM qcore715628473 admission variant: no source/latency/clock evidence transfers without interface comparison.",
+  "selected_token_cost": {
+    "P8191_plain_AR_affected_per_rank": 4,
+    "decoder_affected": 0,
+    "head_PC": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "added_cycles": 4,
+    "delta_ns_at833ps": 3.332,
+    "full_token_measured": false
+  },
+  "additional_state_bits_per_core": 52,
+  "body_logic_proxy_um2": 82.26548,
+  "gross_proxy_at30pct_um2": 274.2182666667,
+  "clock_pin_nominal_uW": 14.50856778,
+  "physical_requirements": [
+    "Keep833ps/SS60ps/FF25ps and exact existing serial/service relationships",
+    "Include actual generated ME spine u_top instruction capture, op_split, range_fault, BD-IREG go delay; gated me_clk relationship and real sinkloads/geometry",
+    "Include generated ot_hdc_vstream_rt go&&ready active/cls and descriptor FFs on real parent clk",
+    "Known controller-only cut1237in1438out retains allcontroller graph but removes consumers; virtual output u_me.go does NOT qualify receiver",
+    "No falsepath/async-group/ideal receiver or unpriced added output stage",
+    "Two floorplans derived by Hubble from retained actual slot20671.2um2 and real consumer geometry; no invented die",
+    "If registered boundary ports add further edge/state, price every affected actual instruction before source change"
+  ],
+  "fleet_policy": "Hubble registers each unique variant, reuses already-live samevariant, admit.sh,NUM_CORES16-24/make<=16, unlimitedwall/AS/files/RAM, measuredheadroom remoteEPYC1/2; no heavylocalhost/PVE2/3",
+  "existing_live": [
+    {
+      "name": "qcd-rom-dec-la-ar-context3",
+      "host": "ot-epyc2",
+      "PID": 1742436,
+      "source": "a8b4ecbd8f5d5623e720e0321b41419f76d8f875",
+      "action": "PRESERVE_UNCHANGED"
+    },
+    {
+      "name": "qc-core-admission-tp2-r1",
+      "owner": "Hubble",
+      "source": "715628473",
+      "registry_reported_driver": 989627,
+      "action": "Reuse if SAME actual candidate, do not duplicate; source-specific difference noted above"
+    }
+  ],
+  "new_jobs_launched_by_source_owner": 0,
+  "DS_field_spine_PQ_item10": "HOLD until Claude redesignedhandoff; no S81 work",
+  "cleanup": "Retain source refs/WIP, Hubble donor roots, needed failed route ODB/SPEF and context3 source; retire only after consumers/live jobs release dependencies",
+  "adoption": false,
+  "core_clock_closed": false
+}

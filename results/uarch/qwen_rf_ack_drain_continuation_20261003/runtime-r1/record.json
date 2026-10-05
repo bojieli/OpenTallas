@@ -1,0 +1,40 @@
+{
+  "PID": 102521,
+  "SSFF": false,
+  "actual_W4_W6_or_fullSM_runtime": false,
+  "bench_clock_period_ps": 10000,
+  "bench_positive_edges": 56,
+  "binary_sha256": "66932d4b8a7ae569b1d8392a3c292bd2a666f135e03030cf092aa2840444191d",
+  "checks": [
+    "PASS_OLD_SIMD_CONTINUATION_STALL_DRAIN",
+    "PASS_RESET_RETAINS_OLD_CONTEXT",
+    "PASS_FAULT_RETAINS_OLD_CONTEXT",
+    "PASS_W6_OLD_ONE_WRITE_AND_REVERSE_RETIRE",
+    "PASS_DIRECTED_STALL_DRAIN_RESET_FAULT"
+  ],
+  "compile_RC": 0,
+  "compiler": "Icarus Verilog12.0",
+  "host": "ot-agidock128",
+  "output": "/home/ubuntu/popper-rf-ack-continuation-58497063e-r1",
+  "runtime_RC": 0,
+  "scope": "coded observer component receipt stimuli; not physical provider or actual native payload qualification",
+  "source_commit": "58497063e0285ad3ebd8cadffefecc805097cd43",
+  "source_pins": [
+    {
+      "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/inputs/ot_gpu_w6_secded_pkg.sv",
+      "sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39"
+    },
+    {
+      "path": "rtl/model/qwen_rf_ack_drain_20261003/r2/ot_gpu_qwen_rf_ack_drain_r2.sv",
+      "sha256": "4d485a2870f467f872530c48113fae04e59b8a7a729d6378f423582caf48e6e6"
+    },
+    {
+      "path": "rtl/test/qwen_rf_ack_drain_continuation_20261003/tb.sv",
+      "sha256": "d760ec400c553714903b19009f6bc288ea3f10b4e6d9c5a281d07d2aa14d9d9c"
+    }
+  ],
+  "source_ref": "codex/qwen-rf-ack-drain-continuation-input-20261003",
+  "terminal_sim_ps": 557000,
+  "verdict": "PASS_DIRECTED_CONTINUATION_COMPONENT",
+  "whole_token": false
+}

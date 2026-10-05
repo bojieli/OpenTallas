@@ -1,0 +1,10 @@
+test_credit_blocked_group_cannot_block_other_heads (test_qwen_rom_kv_credit_allocator.CreditAllocatorTests) ... ok
+test_exact_all36_source_extents_once_and_per_group_order (test_qwen_rom_kv_credit_allocator.CreditAllocatorTests) ... ok
+test_finite_calendar_reverse_credits_and_exact_bytes (test_qwen_rom_kv_credit_allocator.CreditAllocatorTests) ... ok
+test_invalid_partition_is_refused (test_qwen_rom_kv_credit_allocator.CreditAllocatorTests) ... ok
+test_rotating_fairness_all_eligible_within_eight_accepts (test_qwen_rom_kv_credit_allocator.CreditAllocatorTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 4.653s
+
+OK

@@ -1,0 +1,580 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/equivalence_mapped_gold_transition_normalize.ys' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/ot_reduction_tree.sv
+Parsing SystemVerilog input from `/src/rtl/ot_reduction_tree.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reduction_tree'.
+Generating RTLIL representation for module `\ot_reduction_endpoint'.
+Warning: Replacing memory \data_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:142
+Warning: Replacing memory \last_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:116
+Warning: Replacing memory \poison_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:115
+Warning: Replacing memory \expected with list of registers. See /src/rtl/ot_reduction_tree.sv:114
+Warning: Replacing memory \seen with list of registers. See /src/rtl/ot_reduction_tree.sv:113
+Warning: Replacing memory \group_tag with list of registers. See /src/rtl/ot_reduction_tree.sv:112
+Warning: Replacing memory \group_valid with list of registers. See /src/rtl/ot_reduction_tree.sv:111
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \SOURCES = 8
+Parameter \DATA_W = 32
+Parameter \GROUPS = 2
+Parameter \TAG_W = 16
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_reduction_endpoint'.
+Parameter \SOURCES = 8
+Parameter \DATA_W = 32
+Parameter \GROUPS = 2
+Parameter \TAG_W = 16
+Generating RTLIL representation for module `$paramod$29075db5b4ee5fc610e005d9b77207f83efe3b45\ot_reduction_endpoint'.
+Warning: Replacing memory \data_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:142
+Warning: Replacing memory \last_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:116
+Warning: Replacing memory \poison_mem with list of registers. See /src/rtl/ot_reduction_tree.sv:115
+Warning: Replacing memory \expected with list of registers. See /src/rtl/ot_reduction_tree.sv:114
+Warning: Replacing memory \seen with list of registers. See /src/rtl/ot_reduction_tree.sv:113
+Warning: Replacing memory \group_tag with list of registers. See /src/rtl/ot_reduction_tree.sv:112
+Warning: Replacing memory \group_valid with list of registers. See /src/rtl/ot_reduction_tree.sv:111
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_reduction_endpoint
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_reduction_endpoint
+Removing unused module `$paramod$29075db5b4ee5fc610e005d9b77207f83efe3b45\ot_reduction_endpoint'.
+Removing unused module `\ot_reduction_tree'.
+Removed 2 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 5 switch rules as full_case in process $proc$/src/rtl/ot_reduction_tree.sv:83$352 in module ot_reduction_endpoint.
+Removed 4 dead cases from process $proc$/src/rtl/ot_reduction_tree.sv:102$370 in module ot_reduction_endpoint.
+Marked 42 switch rules as full_case in process $proc$/src/rtl/ot_reduction_tree.sv:102$370 in module ot_reduction_endpoint.
+Removed a total of 4 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 43 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~48 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+     1/11: $5\select_found[0:0]
+     2/11: $5\selected_group[31:0]
+     3/11: $4\select_found[0:0]
+     4/11: $4\selected_group[31:0]
+     5/11: $1\g[31:0]
+     6/11: $3\select_found[0:0]
+     7/11: $3\selected_group[31:0]
+     8/11: $2\select_found[0:0]
+     9/11: $2\selected_group[31:0]
+    10/11: $1\select_found[0:0]
+    11/11: $1\selected_group[31:0]
+Creating decoders for process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+     1/247: $20\reduce_work[34:0]
+     2/247: $19\reduce_work[34:0]
+     3/247: $18\reduce_work[34:0]
+     4/247: $17\reduce_work[34:0]
+     5/247: $16\reduce_work[34:0]
+     6/247: $15\reduce_work[34:0]
+     7/247: $14\reduce_work[34:0]
+     8/247: $13\reduce_work[34:0]
+     9/247: $4\output_found[0:0]
+    10/247: $4\s[31:0]
+    11/247: $12\reduce_work[34:0]
+    12/247: $11\reduce_work[34:0]
+    13/247: $10\reduce_work[34:0]
+    14/247: $9\reduce_work[34:0]
+    15/247: $8\reduce_work[34:0]
+    16/247: $7\reduce_work[34:0]
+    17/247: $6\reduce_work[34:0]
+    18/247: $5\reduce_work[34:0]
+    19/247: $4\reduce_work[34:0]
+    20/247: $3\output_found[0:0]
+    21/247: $3\s[31:0]
+    22/247: $3\reduce_work[34:0]
+    23/247: $5\g[31:0]
+    24/247: $2\reduce_work[34:0]
+    25/247: $2\output_found[0:0]
+    26/247: $2\s[31:0]
+    27/247: $2\all_seen[0:0]
+    28/247: $2\expected_mask[7:0]
+    29/247: $6$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$610
+    30/247: $6$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$611
+    31/247: $6$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$608
+    32/247: $6$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$609
+    33/247: $8$lookahead\seen[0]$368[7:0]$590
+    34/247: $7$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$588
+    35/247: $8$lookahead\seen[1]$369[7:0]$591
+    36/247: $7$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$589
+    37/247: $6$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$578
+    38/247: $6$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$579
+    39/247: $7$lookahead\seen[1]$369[7:0]$587
+    40/247: $7$lookahead\seen[0]$368[7:0]$586
+    41/247: $6$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$585
+    42/247: $6$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$584
+    43/247: $6$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$583
+    44/247: $6$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$582
+    45/247: $6$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$581
+    46/247: $6$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$580
+    47/247: $6$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$576
+    48/247: $6$lookahead\seen[0]$368[7:0]$572
+    49/247: $6$lookahead\seen[1]$369[7:0]$573
+    50/247: $5$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR[0:0]$554
+    51/247: $5$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA[0:0]$555
+    52/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR[0:0]$552
+    53/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA[0:0]$553
+    54/247: $5$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR[3:0]$550
+    55/247: $5$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA[31:0]$551
+    56/247: $5$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR[0:0]$548
+    57/247: $5$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA[7:0]$549
+    58/247: $5$lookahead\seen[1]$369[7:0]$571
+    59/247: $5$lookahead\seen[0]$368[7:0]$570
+    60/247: $5$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR[0:0]$546
+    61/247: $5$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA[7:0]$547
+    62/247: $5$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR[0:0]$544
+    63/247: $5$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA[15:0]$545
+    64/247: $5$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR[0:0]$542
+    65/247: $5$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA[0:0]$543
+    66/247: $5$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$569
+    67/247: $5$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$568
+    68/247: $5$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$567
+    69/247: $5$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$566
+    70/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$565
+    71/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$564
+    72/247: $5$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$563
+    73/247: $5$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$562
+    74/247: $5$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$561
+    75/247: $5$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$560
+    76/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$559
+    77/247: $5$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$558
+    78/247: $5$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$557
+    79/247: $5$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR[0:0]$556
+    80/247: $5$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA[0:0]$540
+    81/247: $4$lookahead\seen[1]$369[7:0]$539
+    82/247: $4$lookahead\seen[0]$368[7:0]$538
+    83/247: $4$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$537
+    84/247: $4$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$536
+    85/247: $4$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$535
+    86/247: $4$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$534
+    87/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$533
+    88/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$532
+    89/247: $4$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$531
+    90/247: $4$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$530
+    91/247: $4$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$529
+    92/247: $4$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$528
+    93/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$527
+    94/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$526
+    95/247: $4$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$525
+    96/247: $4$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR[0:0]$524
+    97/247: $4$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA[0:0]$523
+    98/247: $4$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR[0:0]$522
+    99/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA[0:0]$521
+   100/247: $4$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR[0:0]$520
+   101/247: $4$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA[31:0]$519
+   102/247: $4$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR[3:0]$518
+   103/247: $4$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA[7:0]$517
+   104/247: $4$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR[0:0]$516
+   105/247: $4$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA[7:0]$515
+   106/247: $4$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR[0:0]$514
+   107/247: $4$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA[15:0]$513
+   108/247: $4$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR[0:0]$512
+   109/247: $4$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA[0:0]$511
+   110/247: $4$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR[0:0]$510
+   111/247: $4$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA[0:0]$509
+   112/247: $4$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_ADDR[0:0]$508
+   113/247: $3$lookahead\seen[1]$369[7:0]$506
+   114/247: $3$lookahead\seen[0]$368[7:0]$505
+   115/247: $3$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$504
+   116/247: $3$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$503
+   117/247: $3$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$502
+   118/247: $3$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$501
+   119/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$500
+   120/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$499
+   121/247: $3$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$498
+   122/247: $3$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$497
+   123/247: $3$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$496
+   124/247: $3$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$495
+   125/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$494
+   126/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$493
+   127/247: $3$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$492
+   128/247: $3$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR[0:0]$491
+   129/247: $3$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA[0:0]$490
+   130/247: $3$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR[0:0]$489
+   131/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA[0:0]$488
+   132/247: $3$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR[0:0]$487
+   133/247: $3$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA[31:0]$486
+   134/247: $3$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR[3:0]$485
+   135/247: $3$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA[7:0]$484
+   136/247: $3$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR[0:0]$483
+   137/247: $3$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA[7:0]$482
+   138/247: $3$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR[0:0]$481
+   139/247: $3$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA[15:0]$480
+   140/247: $3$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR[0:0]$479
+   141/247: $3$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA[0:0]$478
+   142/247: $3$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR[0:0]$477
+   143/247: $3$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA[0:0]$476
+   144/247: $3$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_ADDR[0:0]$475
+   145/247: $2$lookahead\seen[1]$369[7:0]$473
+   146/247: $2$lookahead\seen[0]$368[7:0]$472
+   147/247: $2$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$471
+   148/247: $2$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$470
+   149/247: $2$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$469
+   150/247: $2$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$468
+   151/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$467
+   152/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$466
+   153/247: $2$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$465
+   154/247: $2$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$464
+   155/247: $2$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$463
+   156/247: $2$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$462
+   157/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$461
+   158/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$460
+   159/247: $2$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$459
+   160/247: $2$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR[0:0]$458
+   161/247: $2$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA[0:0]$457
+   162/247: $2$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR[0:0]$456
+   163/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA[0:0]$455
+   164/247: $2$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR[0:0]$454
+   165/247: $2$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA[31:0]$453
+   166/247: $2$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR[3:0]$452
+   167/247: $2$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA[7:0]$451
+   168/247: $2$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR[0:0]$450
+   169/247: $2$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA[7:0]$449
+   170/247: $2$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR[0:0]$448
+   171/247: $2$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA[15:0]$447
+   172/247: $2$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR[0:0]$446
+   173/247: $2$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA[0:0]$445
+   174/247: $2$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR[0:0]$444
+   175/247: $2$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA[0:0]$443
+   176/247: $2$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_ADDR[0:0]$442
+   177/247: $4\g[31:0]
+   178/247: $1\expected_mask[7:0]
+   179/247: $1\reduce_work[34:0]
+   180/247: $1\all_seen[0:0]
+   181/247: $1\output_found[0:0]
+   182/247: $1\s[31:0]
+   183/247: $3\g[31:0]
+   184/247: $1$lookahead\seen[1]$369[7:0]$435
+   185/247: $1$lookahead\seen[0]$368[7:0]$434
+   186/247: $1$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350[2:0]$433
+   187/247: $1$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349[2:0]$432
+   188/247: $1$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA[0:0]$431
+   189/247: $1$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR[0:0]$430
+   190/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA[0:0]$429
+   191/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR[0:0]$428
+   192/247: $1$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA[31:0]$427
+   193/247: $1$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR[3:0]$426
+   194/247: $1$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA[7:0]$425
+   195/247: $1$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR[0:0]$424
+   196/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA[0:0]$423
+   197/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR[0:0]$422
+   198/247: $1$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA[7:0]$421
+   199/247: $1$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR[0:0]$420
+   200/247: $1$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA[0:0]$419
+   201/247: $1$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR[0:0]$418
+   202/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA[0:0]$417
+   203/247: $1$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR[0:0]$416
+   204/247: $1$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA[31:0]$415
+   205/247: $1$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR[3:0]$414
+   206/247: $1$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA[7:0]$413
+   207/247: $1$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR[0:0]$412
+   208/247: $1$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA[7:0]$411
+   209/247: $1$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR[0:0]$410
+   210/247: $1$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA[15:0]$409
+   211/247: $1$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR[0:0]$408
+   212/247: $1$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA[0:0]$407
+   213/247: $1$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR[0:0]$406
+   214/247: $1$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA[0:0]$405
+   215/247: $1$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_ADDR[0:0]$404
+   216/247: $0\data_mem[15][31:0]
+   217/247: $0\data_mem[14][31:0]
+   218/247: $0\data_mem[13][31:0]
+   219/247: $0\data_mem[12][31:0]
+   220/247: $0\data_mem[11][31:0]
+   221/247: $0\data_mem[10][31:0]
+   222/247: $0\data_mem[9][31:0]
+   223/247: $0\data_mem[8][31:0]
+   224/247: $0\data_mem[7][31:0]
+   225/247: $0\data_mem[6][31:0]
+   226/247: $0\data_mem[5][31:0]
+   227/247: $0\data_mem[4][31:0]
+   228/247: $0\data_mem[3][31:0]
+   229/247: $0\data_mem[2][31:0]
+   230/247: $0\data_mem[1][31:0]
+   231/247: $0\data_mem[0][31:0]
+   232/247: $0\last_mem[1][0:0]
+   233/247: $0\last_mem[0][0:0]
+   234/247: $0\poison_mem[1][0:0]
+   235/247: $0\poison_mem[0][0:0]
+   236/247: $0\expected[1][7:0]
+   237/247: $0\expected[0][7:0]
+   238/247: $0\group_tag[1][15:0]
+   239/247: $0\group_tag[0][15:0]
+   240/247: $0\group_valid[1][0:0]
+   241/247: $0\group_valid[0][0:0]
+   242/247: $0\unexpected_error[0:0]
+   243/247: $0\duplicate_error[0:0]
+   244/247: $0\out_poison[0:0]
+   245/247: $0\out_data[31:0]
+   246/247: $0\out_tag[15:0]
+   247/247: $0\out_valid[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_reduction_endpoint.\g' from process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+No latch inferred for signal `\ot_reduction_endpoint.\selected_group' from process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+No latch inferred for signal `\ot_reduction_endpoint.\select_found' from process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_reduction_endpoint.\out_valid' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2970' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\out_tag' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2975' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\out_data' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2980' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\out_poison' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2985' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\duplicate_error' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2990' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\unexpected_error' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$2995' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\g' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3002' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\s' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3009' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\output_found' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3016' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\all_seen' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3023' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\reduce_work' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3030' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\expected_mask' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3037' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\group_valid[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3042' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\group_valid[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3047' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\group_tag[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3052' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\group_tag[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3057' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\seen[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3062' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\seen[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3067' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\expected[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3072' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\expected[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3077' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\poison_mem[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3082' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\poison_mem[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3087' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\last_mem[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3092' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\last_mem[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3097' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[0]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3104' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[1]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3111' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[2]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3118' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[3]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3125' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[4]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3132' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[5]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3139' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[6]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3146' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[7]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3153' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[8]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3160' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[9]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3167' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[10]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3174' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[11]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3181' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[12]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3188' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[13]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3195' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[14]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3202' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.\data_mem[15]' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $dff cell `$procdff$3209' with positive edge clock.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3214' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_rd$\group_valid$/src/rtl/ot_reduction_tree.sv:132$335_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3219' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3224' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\group_valid$/src/rtl/ot_reduction_tree.sv:133$336_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3229' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3234' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\group_tag$/src/rtl/ot_reduction_tree.sv:134$337_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3239' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3244' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:140$338_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3249' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3254' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\expected$/src/rtl/ot_reduction_tree.sv:141$339_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3259' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3264' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:142$340_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3269' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3274' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:143$341_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3279' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3284' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:144$342_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3289' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3294' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_rd$\seen$/src/rtl/ot_reduction_tree.sv:146$343_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3299' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3304' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:148$344_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3309' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3314' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\seen$/src/rtl/ot_reduction_tree.sv:150$345_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3319' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3324' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\data_mem$/src/rtl/ot_reduction_tree.sv:151$346_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3329' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3334' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\poison_mem$/src/rtl/ot_reduction_tree.sv:154$347_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3339' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_ADDR' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3344' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$mem2reg_wr$\last_mem$/src/rtl/ot_reduction_tree.sv:156$348_DATA' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3349' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$349' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3354' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$bitselwrite$pos$/src/rtl/ot_reduction_tree.sv:150$350' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3359' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$lookahead\seen[0]$368' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3364' with positive edge clock and positive level reset.
+Creating register for signal `\ot_reduction_endpoint.$lookahead\seen[1]$369' using process `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+  created $adff cell `$procdff$3369' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 5 empty switches in `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+Removing empty process `ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:83$352'.
+Found and cleaned up 43 empty switches in `\ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+Removing empty process `ot_reduction_endpoint.$proc$/src/rtl/ot_reduction_tree.sv:102$370'.
+Cleaned up 48 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_reduction_endpoint.
+<suppressed ~374 debug messages>
+
+5. Executing MEMORY pass.
+
+5.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+Removed 508 unused cells and 1555 unused wires.
+<suppressed ~514 debug messages>
+
+5.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+
+5.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6. Executing FLATTEN pass (flatten design).
+
+7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+
+8. Executing JSON backend.
+
+9. Executing ASYNC2SYNC pass.
+Replacing ot_reduction_endpoint.$procdff$2970 ($adff): ARST=\rst_n, D=$0\out_valid[0:0], Q=\out_valid
+Replacing ot_reduction_endpoint.$procdff$2975 ($adff): ARST=\rst_n, D=$0\out_tag[15:0], Q=\out_tag
+Replacing ot_reduction_endpoint.$procdff$2980 ($adff): ARST=\rst_n, D=$0\out_data[31:0], Q=\out_data
+Replacing ot_reduction_endpoint.$procdff$2985 ($adff): ARST=\rst_n, D=$0\out_poison[0:0], Q=\out_poison
+Replacing ot_reduction_endpoint.$procdff$2990 ($adff): ARST=\rst_n, D=$0\duplicate_error[0:0], Q=\duplicate_error
+Replacing ot_reduction_endpoint.$procdff$2995 ($adff): ARST=\rst_n, D=$0\unexpected_error[0:0], Q=\unexpected_error
+Replacing ot_reduction_endpoint.$procdff$3042 ($adff): ARST=\rst_n, D=$0\group_valid[0][0:0], Q=\group_valid[0]
+Replacing ot_reduction_endpoint.$procdff$3047 ($adff): ARST=\rst_n, D=$0\group_valid[1][0:0], Q=\group_valid[1]
+Replacing ot_reduction_endpoint.$procdff$3052 ($adff): ARST=\rst_n, D=$0\group_tag[0][15:0], Q=\group_tag[0]
+Replacing ot_reduction_endpoint.$procdff$3057 ($adff): ARST=\rst_n, D=$0\group_tag[1][15:0], Q=\group_tag[1]
+Replacing ot_reduction_endpoint.$procdff$3062 ($adff): ARST=\rst_n, D=$0$lookahead\seen[0]$368[7:0]$401, Q=\seen[0]
+Replacing ot_reduction_endpoint.$procdff$3067 ($adff): ARST=\rst_n, D=$0$lookahead\seen[1]$369[7:0]$402, Q=\seen[1]
+Replacing ot_reduction_endpoint.$procdff$3072 ($adff): ARST=\rst_n, D=$0\expected[0][7:0], Q=\expected[0]
+Replacing ot_reduction_endpoint.$procdff$3077 ($adff): ARST=\rst_n, D=$0\expected[1][7:0], Q=\expected[1]
+Replacing ot_reduction_endpoint.$procdff$3082 ($adff): ARST=\rst_n, D=$0\poison_mem[0][0:0], Q=\poison_mem[0]
+Replacing ot_reduction_endpoint.$procdff$3087 ($adff): ARST=\rst_n, D=$0\poison_mem[1][0:0], Q=\poison_mem[1]
+Replacing ot_reduction_endpoint.$procdff$3092 ($adff): ARST=\rst_n, D=$0\last_mem[0][0:0], Q=\last_mem[0]
+Replacing ot_reduction_endpoint.$procdff$3097 ($adff): ARST=\rst_n, D=$0\last_mem[1][0:0], Q=\last_mem[1]
+
+10. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+11. Executing SPLITNETS pass (splitting up multi-bit signals).
+
+12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_reduction_endpoint..
+
+13. Executing CHECK pass (checking for obvious problems).
+Checking module ot_reduction_endpoint...
+Found and reported 0 problems.
+
+14. Executing RTLIL backend.
+Output filename: /work/equivalence_mapped_gold_transition_normalized.il
+
+15. Executing JSON backend.
+
+Warnings: 7 unique messages, 14 total
+End of script. Logfile hash: 8273b43f17, time: 0.12s, user: 0.12s, system: 0.01s, MEM: 34.19 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 15% 4x opt_clean (0 sec), 12% 2x read_verilog (0 sec), ...

@@ -1,0 +1,220 @@
+{
+  "schema": "opentallas.qrom-source-owned-launch-readiness.v1",
+  "status": "BLOCKED_ACTUAL_READY_PRODUCER_AND_CONTEXTUAL_ACCEPTANCE",
+  "parent": "874c6fa05315d56e87088bc459724564141df080",
+  "source_sha256": {
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf"
+  },
+  "source_anchor_lines": {
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": [
+      5,
+      14,
+      32
+    ],
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r3_retained.sv": [
+      111
+    ],
+    "rtl/hdc/ot_qwen_w12_matvec.sv": [
+      352
+    ],
+    "rtl/hdc/ot_qwen_me_array_w12.sv": [
+      358
+    ],
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": [
+      250
+    ],
+    "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": [
+      131
+    ],
+    "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": [
+      81
+    ],
+    "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": [
+      29
+    ],
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": [
+      94
+    ],
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv": [
+      11
+    ],
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": [
+      15
+    ],
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": [
+      151
+    ]
+  },
+  "euclid_commit": "b6adee5098803bcf6d4d1ff7c910322e440a393a",
+  "euclid_receipt_sha256": "7d6ad812678237ccd8dcba508690a680b6ec983a9085dafc4d58425afd880a6f",
+  "euclid_conditional_gate": {
+    "status": "PASS_CONDITIONAL_BINARY_METADATA_ONLY",
+    "cycles": 237,
+    "retained_FFs": 85,
+    "early_select_FFs": 5,
+    "source_pruned_q2_bits": 5,
+    "source_metadata_compared": 95,
+    "physical_metadata_not_changed": 90,
+    "scope": "actual source fragments and actual primitive polarity with zero-delay test models; control-only issuer, no MAC engine",
+    "negative_semantic_gates": [
+      "missing mask reset -> unqualified payload observation",
+      "accepted instruction Z -> accepted instruction not binary"
+    ]
+  },
+  "instruction": {
+    "width": 379,
+    "fields_MSB_first": [
+      [
+        "nout",
+        18
+      ],
+      [
+        "tiles",
+        18
+      ],
+      [
+        "k",
+        18
+      ],
+      [
+        "wsrc",
+        1
+      ],
+      [
+        "wbase",
+        24
+      ],
+      [
+        "ts",
+        24
+      ],
+      [
+        "ks",
+        24
+      ],
+      [
+        "js",
+        24
+      ],
+      [
+        "xbase",
+        24
+      ],
+      [
+        "xks",
+        24
+      ],
+      [
+        "xjs",
+        24
+      ],
+      [
+        "xcs",
+        24
+      ],
+      [
+        "jsh",
+        3
+      ],
+      [
+        "split",
+        4
+      ],
+      [
+        "wcs",
+        24
+      ],
+      [
+        "round",
+        1
+      ],
+      [
+        "obase",
+        24
+      ],
+      [
+        "ots",
+        24
+      ],
+      [
+        "ojs",
+        24
+      ],
+      [
+        "mmode",
+        1
+      ],
+      [
+        "oen",
+        1
+      ],
+      [
+        "amax",
+        1
+      ],
+      [
+        "rmax",
+        1
+      ],
+      [
+        "mbase",
+        24
+      ]
+    ],
+    "IREG": 1,
+    "hold": "Parent owner/PC, all379 instruction bits and tile128bit x held from request through local IREG consumer acceptance.",
+    "acceptance": "Boundary launch at edgeN captures ib_q/xl_q/go_q. Source FAST issuer consumes preedge go_q atN+1 only when active=0 and pend=0.",
+    "go_wires": "request_go is provider ib_go; receipt ib_go is actual tile input and must equal provider launch_enable. Tile itself does not gate go_q with readiness.",
+    "upstream": "Array delays go&&ready and all379 fields byBD-IREG. No tile ready output; global safe broadcast and BD consistency need actual source induction."
+  },
+  "readiness": {
+    "kind": "Software predicate/journal checker, not physical producer RTL",
+    "producer_API": "StartupBarrier.sample(stream_edge, acknowledged_source_snapshot, CausalJoin, FinitePrefetchReplay); AcceptedInstruction.offer(owner,issued_pc,all24fields,x128); edge(actual_preedge_tile_snapshot)",
+    "startup": "Register stream-domain join of acknowledged same-epoch stream/serial/service release, source FIFOs/route and prior-owner debt drain, actual tail-state binding.",
+    "per_instruction": "Do not repeat global startup drain. KV ME issue also requires actual descriptor-bound kv_ok&&!kvd_v and current writes drained; safe visible stream window/cadence must join actual demanded state.",
+    "constant_is_not_receipt": true,
+    "actual_connected_producer": null,
+    "exact_source_kv_ok": "kvs_ok && kv_write_drained && !boot_any_v && !boot_busy && !desc_pending && !kvd_v",
+    "bridge": "Each FIFO local two-edge release plus crossed won/ron and coherent Gray-pointer acknowledgments. Shared rst_n source does not prove separate domain release or empty route."
+  },
+  "dependencies": {
+    "Euclid": [
+      "Actual accepted owner/issued-PC and complete379bit DYN-adjusted instruction, ib/ib_q/go_q plus active/pend for all1536tiles or proven source induction;128bit tile x qualification.",
+      "Retain85controls and90physical metadata endpoints;237cycle fixture is conditional only."
+    ],
+    "Ampere": [
+      "Source-local service/serial/stream release and acknowledged snapshot CDC inventory, local clock phase and reset min/max/pulse/recovery/removal at exact endpoints.",
+      "Two streaming provider FFs cannot release service or serial. Price all readiness register/synchronizer/drivers and their slot/CTS/PG/cut tracks, SS60ps/FF25ps.",
+      "Retain existing service384 and tail128 macro clocks/rank once; include owner/control/assembly readiness sinks."
+    ],
+    "Kepler": [
+      "Export all32PC qcount/rcount perstack plus ingress/wr_live/backed/mapped/grant, ownerstate/held/live_tags and actual bridge/route snapshots; disabled service zero counts cannot qualify.",
+      "Actual allocation/owned404bit reverseACK/grant/readerdrain receipts feed CausalJoin; no inferred producer payload."
+    ],
+    "Russell": [
+      "Join actual producer/tail state, CausalJoin and finite resource journals to readiness epoch and exact demand window; no synthetic final qualification."
+    ]
+  },
+  "service_slot_model": "results/uarch/qwen_rom_kv_rate_risk_20261002/model_r3.json",
+  "readiness_logic_area": null,
+  "readiness_CDC_latency": null,
+  "complete_slot_fit": null,
+  "added_startup_latency": "Streaming provider2edges once plus actual source local-domain release/snapshot acknowledgment and registered join latency, currently unbound. Never per-layer, never doublechargeKV reads.",
+  "actual_production_calendar": false,
+  "source_owned_launch_PASS": false,
+  "hardware_admitted": false,
+  "new_decode": false,
+  "new_PnR": false,
+  "peer_delivery": "Committed for parent relay; no peer message transport exposed"
+}

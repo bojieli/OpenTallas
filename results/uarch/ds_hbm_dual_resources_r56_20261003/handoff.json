@@ -1,0 +1,37 @@
+{
+  "RAM_refinement": "cached byte atom identity tested on exact CPython; all list pointer slots, full atom table perport, dictionary/key allocations and old+cold arrays charged",
+  "checkpoint_refinement": "all source-addressed birth<=9 RF homes incl replicas, all initial-state extents, all retired bytes retained; untouched apertures not serialized; old metadata/array overcharges retained",
+  "hardware_qualified": false,
+  "headroom": {
+    "OS_resource_caps": false,
+    "RAM_MemAvailable_bytes": 142974124032,
+    "RAM_headroom_bytes": 23510995316,
+    "RAM_required_bytes": 119463128716,
+    "disk_free_bytes": 806734651392,
+    "disk_headroom_bytes": 281165246304,
+    "disk_required_new_bytes": 525569405088,
+    "sample_ns": 1790988815004125157
+  },
+  "host_only_refinement": "source-selected PC10 RF sector counts replaces generic complete-parts overcharge; BOTH mirror writes/readback and all physical RF costs/capacity retained",
+  "minimal_delta": [
+    "new source-addressed disk/RAM composition tool",
+    "preflight-only wrapper invoking unchanged R55 main and literal provider/helper constructors"
+  ],
+  "model": "model.json",
+  "next": "pinned clean dual constructors; preserve any refusal; parent aggregate review required before numerical execution",
+  "numerical_GO": false,
+  "plan": "preflight_plan.json",
+  "preflight_argv": [
+    "python",
+    "tools/ds_hbm_dual_constructor_r56.py",
+    "--plan",
+    "results/uarch/ds_hbm_dual_resources_r56_20261003/preflight_plan.json",
+    "--out",
+    "/tmp/kepler-ds-r56-dual-constructor-preflight-20261003",
+    "--preflight-only"
+  ],
+  "preserved_predecessor": "a71c37d4f1c323f28562e8ba3c219cc9cb9e60bb",
+  "source_pins": 33,
+  "status": "SOURCE_MODEL_AND_TESTS_READY_COLD_DUAL_PREFLIGHT_PENDING",
+  "test_count": 10
+}

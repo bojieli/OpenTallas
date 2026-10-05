@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL_QWEN_PARENT_GRID_HAS_NO_SHALLOW_RF_MASTER",
+  "error": "KeyError ot_sram_1r1w_128x256_m1_r2c2",
+  "source_sha256": "522664485416e2a130ce2dad3d779fe478aab615c670bd3844835a5d0adfdc92",
+  "action": "Use explicitly source-pinned DS shallow1R1W abstract as candidate same-process provider; retain Qwen physical abstract admission blocker"
+}

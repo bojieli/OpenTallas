@@ -1,0 +1,137 @@
+{
+  "checkpoint": {
+    "repository": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "shards": {
+      "model-00001-of-00048.safetensors": {
+        "bytes": 1059061856,
+        "full_hash_verified": true,
+        "sha256": "f3668ba4cccf1ca6a7eb84e888fb92c1cdc7204d472ba9db771e6fd3abf6b874"
+      },
+      "model-00002-of-00048.safetensors": {
+        "bytes": 3566321192,
+        "full_hash_verified": true,
+        "sha256": "77b26c939a0e25b3113c8d6bb04e1901a748bd4a7d2589e3bfdaabdf1e9bba14"
+      }
+    },
+    "snapshot_leaf": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "tensors": {
+      "embed.weight": {
+        "absolute_offset": 96,
+        "bytes": 1059061760,
+        "dtype": "BF16",
+        "hc_expand": "replicate one [4096] row over four streams in stream-major order",
+        "header_sha256": "7bdd252c75d1e8975a69b8399b226f0129ce119b23da7bd68deac4ba4b1a4a40",
+        "selected_row": 18042,
+        "selected_row_bytes": 8192,
+        "selected_row_offset": 147800160,
+        "selected_row_sha256": "f91a7a1b42cf9951ca55ac28f76d55cd6f4c4bfd1a5dbab1ac5bcdb5eb55072c",
+        "sha256": "b356e08eaa9457627bbd343805d25374d3ebed7921c1d9ea851ffb8419a9aea3",
+        "shape": [
+          129280,
+          4096
+        ],
+        "shard": "model-00001-of-00048.safetensors"
+      },
+      "layers.0.hc_attn_base": {
+        "absolute_offset": 6377936,
+        "bytes": 96,
+        "dtype": "F32",
+        "header_sha256": "adbe0338649aec4a8099bd12e7f99b18b3497f73b38345f84ecb1c46eca9d992",
+        "sha256": "edaa695cf5de59f919415f6e71dcb35be5ad817a06fa7222ee3021d9f388adda",
+        "shape": [
+          24
+        ],
+        "shard": "model-00002-of-00048.safetensors"
+      },
+      "layers.0.hc_attn_fn": {
+        "absolute_offset": 6378032,
+        "bytes": 1572864,
+        "dtype": "F32",
+        "header_sha256": "adbe0338649aec4a8099bd12e7f99b18b3497f73b38345f84ecb1c46eca9d992",
+        "sha256": "f5c1ffdfb92df2c04ac17e9a31e38701f2b7a5cac0cd427a2df2aa3e239987fc",
+        "shape": [
+          24,
+          16384
+        ],
+        "shard": "model-00002-of-00048.safetensors"
+      },
+      "layers.0.hc_attn_scale": {
+        "absolute_offset": 7950896,
+        "bytes": 12,
+        "dtype": "F32",
+        "header_sha256": "adbe0338649aec4a8099bd12e7f99b18b3497f73b38345f84ecb1c46eca9d992",
+        "sha256": "0b0e327d2f4d1a104c53d6e0a9172cf532028383e82cdf6d70537cb83092c63f",
+        "shape": [
+          3
+        ],
+        "shard": "model-00002-of-00048.safetensors"
+      }
+    }
+  },
+  "claim_boundary": {
+    "architectural_timing": false,
+    "authenticated_checkpoint_input": true,
+    "eos": false,
+    "hc_pre_arithmetic": false,
+    "model_token_generation": false,
+    "rtl_execution": false,
+    "tpot": false
+  },
+  "files": {
+    "base.hex": {
+      "bytes": 216,
+      "sha256": "a8d9a1f9a1b714499a3f43b2b9ed48445370a418bf1219960562a9ef3203063b",
+      "word_bits": 32,
+      "words": 24
+    },
+    "hidden.hex": {
+      "bytes": 81920,
+      "sha256": "b6c73f0f29f553cd5d88b169989accac6d3554a35becbe66b6411db8690c53dd",
+      "word_bits": 16,
+      "words": 16384
+    },
+    "projection.hex": {
+      "bytes": 3538944,
+      "sha256": "33c16205fa650f82e1118a54289422bd59775ee569fcd84e790ca67693a199fb",
+      "word_bits": 32,
+      "words": 393216
+    },
+    "scale.hex": {
+      "bytes": 27,
+      "sha256": "5ef82263570509b9bf53f08a0288724f9717b7e0724c23c4047ea7a6303b45b5",
+      "word_bits": 32,
+      "words": 3
+    }
+  },
+  "geometry": {
+    "base": [
+      24
+    ],
+    "flattened_hidden": 16384,
+    "hidden": [
+      1,
+      4,
+      4096
+    ],
+    "projection": [
+      24,
+      16384
+    ],
+    "scale": [
+      3
+    ]
+  },
+  "manifest_id": "0bbec1c05d2b40d87bf2ffa14ddd4d4f151138f15fe42258018e284e79c3310d",
+  "schema": "opentallas.rtl.a3_hc_pre_t1_checkpoint.v1",
+  "source": {
+    "path": "tools/extract_a3_hc_pre_t1_checkpoint.py",
+    "sha256": "70b754d9d94473a63ab414852977f45761b9126a85f50423e76803c0da08b035"
+  },
+  "workload_binding": {
+    "position": 0,
+    "prompt_token_count": 200000,
+    "token_id": 18042,
+    "workload_id": "TA-DS-CTX-200K-1"
+  }
+}

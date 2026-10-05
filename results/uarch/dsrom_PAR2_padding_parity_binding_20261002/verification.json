@@ -1,0 +1,21 @@
+{
+  "cold_byte_identical_outputs": {
+    "model.json": "06ad57655d8720f3518a2d449eaf1bdf7a4529d6096e65f556c6866ef314418c",
+    "parity_pin_to_consumer_incidence.json": "87a76d5f6d63a335ddf1e35e3e2e1af3d5dfcaacf4304201fb1f8dd1085a0382",
+    "parity_reply_cut_screen.json": "c08b7806ff95d495949376d2910c560f2efb478cd52d6e67a88921dad33cdfef",
+    "reused_macro_OBS.json.gz": "835711e8a81300d7532ae859ce10bdb2e6d414bab0fea34e4ecf8dd758cb1730",
+    "reused_macro_roles.json.gz": "ebb3929b065457262e57342d6fa83425df0b8bb81f8483347251cb8881930dd4"
+  },
+  "command": "python3 -m unittest discover -s tests -p 'test_dsrom_PAR2*py' -v",
+  "explicit_prerequisite_commit": "d2c64fd92aa4812abff51e73f84615a40d3c9534",
+  "historical_negative_and_prior_replica_records_unchanged": true,
+  "incremental_macro_instances": 0,
+  "live_handles": [],
+  "new_RTL_compile_PR_jobs": 0,
+  "original_shard0_providers_preserved": true,
+  "physical_GO": false,
+  "source_API_word_boundary_checks": 8448,
+  "source_mirror_stage_count": 58,
+  "tests": 27,
+  "tests_log_sha256": "7ff96bc65f48c51be18da8b2aada4617d0c08a7ca4239686e4979b6b02066463"
+}

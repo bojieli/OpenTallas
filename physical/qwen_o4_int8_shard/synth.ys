@@ -1,0 +1,13 @@
+read_liberty -lib /tmp/opentallas-qwen-o4-physical-lane/physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib
+read_verilog -sv /tmp/opentallas-qwen-o4-physical-lane/rtl/hdc/ot_hdc_delay.sv
+read_verilog -sv /tmp/opentallas-qwen-o4-physical-lane/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+read_verilog -sv /tmp/opentallas-qwen-o4-physical-lane/rtl/hdc/ot_hdc_fpu.sv
+read_verilog -sv /tmp/opentallas-qwen-o4-physical-lane/rtl/hdc/ot_hdc_qwen_int8_arith.sv
+read_verilog -sv /tmp/opentallas-qwen-o4-physical-lane/physical/qwen_o4_int8_shard/ot_qwen_o4_int8_shard.sv
+hierarchy -check -top ot_qwen_o4_int8_shard
+synth -top ot_qwen_o4_int8_shard -flatten
+dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+abc -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib -D 920
+clean
+rename -unescape
+write_verilog -noattr -noexpr /tmp/qwen-o4-shard-route/mapped.v

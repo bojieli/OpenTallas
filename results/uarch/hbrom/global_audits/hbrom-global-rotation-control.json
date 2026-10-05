@@ -1,0 +1,127 @@
+{
+  "schema": "hbrom.global_rotation_control.v1",
+  "architecture_only": true,
+  "qualified": false,
+  "source_pins": {
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/tools/hbrom_global_screen.py": "3e683837b48aca732ac513a6423505e93ecfca39441b1020a501e4b52090e5f4",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+    "/home/ubuntu/OpenTallas-hbrom-cluster-20261005/rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "/tmp/hbrom-global-compact-layout-align1.json": "cc6b07ac6d51f15c25a0c9e2fdbfa8d4fb3ece20b99bf841eb801d2a6156ade8"
+  },
+  "target": {
+    "ranks": 96,
+    "SM_per_rank": 32,
+    "pool_pairs_per_SM": 356,
+    "matrix_ops_per_token": 1103,
+    "issue_groups_supplied_by_parent": 343,
+    "group_count_status": "343 supplied by parent; operation count1103 independently counted from pinned program",
+    "max_rank_rows_per_op": 1347,
+    "max_SM_rows_per_op": 43,
+    "sum_max_rank_output_rows": 95392,
+    "sum_output_32lane_drain_cycles": 3329
+  },
+  "mapping": {
+    "rotation": "s=uint32(SHA256(re.sub(r\"\\.w[123]\\.weight$\", \"\", tensor_name)).hex[:8]) mod32; compile offline, store5bits; no runtime SHA",
+    "virtual_lane": "v=(physical_SM-s)&31",
+    "partition": "n=rank_end-rank_start; q=n//32; rem=n%32; rows(v)=q+(v<rem); base(v)=rank_start+v*q+min(v,rem)",
+    "output_identity": "globalrow=base(v)+SM.rrow, with immutable operation/expert/epoch identity latched until every output and read retires",
+    "proof": "Cyclic rotation permutes ownership only, not rows or arithmetic. Each virtual lane retains contiguous local rows. Full K and existing group-slot/tree execution unchanged. Same (layer,expert) rotation for w1/w3/w2; gate/up shapes equal so elementwise fusion stays local. Down input distribution remains existing96rank collective, never inferred local from rotation.",
+    "rank_collectives": "Keep pinned W19 rank row boundaries, oreduce tree, packet order and barriers. Restore canonical virtual-lane ownership before existing collective publisher consumes data; no rank remapping.",
+    "expert_order": "Selected experts execute/retire in existing program order, ascending selected global expert ID then shared; store output in per-expert slot and do not sum by arrival order."
+  },
+  "descriptor": {
+    "warning": "46460x64B=2973440B is not a complete arbitrary packed32SM base table:32x20bit bases alone require80B. Compression not proved.",
+    "proposed_bytes": 128,
+    "layout": {
+      "per_SM_pool_record_base_bytes": 96,
+      "per_SM_pool_record_base_count": 32,
+      "per_base_bits": 24,
+      "common_control_bytes": 32
+    },
+    "common_fields": "global matrix ID, native K/group format and rounding mode, compact records/row, rank row start/count,5bit rotation, engine mode, bounds/flags. Runtime epoch/expert ordinal/operand handles are additional live context.",
+    "table_entries": 46460,
+    "table_bytes_per_rank": 5946880,
+    "ROM_4096x274_macro_count": 43,
+    "bare_ROM_mm2_per_rank": 0.33889868640000004,
+    "table_port_bytes_per_cycle_assumed": 16,
+    "fetch_cycles": 8,
+    "read_capture_extra_cycles": 2,
+    "per_token_config_payload_B": 141184,
+    "per_token_config_port_cycles": 8824,
+    "initial_external_preload_B": 0,
+    "note": "Descriptors are immutable ROM, not free preloaded SRAM. Cold fetch occurs each dispatch. Physical selection/read port and capture priced separately. Separate validity/bounds and mutable epoch protection remain required.",
+    "shared_group_limit": "343 group charging requires all per-op/perSM bases resident beforehand in priced shadow context/queue; without proof use1103 cold fetches.",
+    "address_walker": "Use24bit record index,13bit within8192-record pool address and pool quotient; before a new row skip to next pool if row will cross8192. Native issue line\u2192(row,group,t,slot)\u2192compact atom interval mapping belongs to separately priced compact decoder. Latch perSM base at admission; cannot live-update current operation."
+  },
+  "dispatch": {
+    "policy": "One common op/rotation at a time per rank;32 SM starts admitted together after perSM descriptor/activation/output reservations, even inactive lanes acknowledge zero rows. Existing seven-expert phase scheduling not changed.",
+    "finite_slots": 2,
+    "slot_live_bytes_assumed": 256,
+    "slot_storage_bytes": 512,
+    "control_cycles_per_op": {
+      "descriptor_capture": 2,
+      "descriptor_16B_beats": 8,
+      "decode_partition": 2,
+      "broadcast_pipeline": 5,
+      "reserve_admit": 2,
+      "output_restore_pipeline_tail": 5
+    },
+    "base_cold_cycles_per_op": 24,
+    "issue_slot_alignment_upper_cycles": 7,
+    "admission_rule": "Before start reserve43 result seats per SM for maximum shape (or actual op_rows). SM rv lacks ready: full-op reservation required, not a short elastic FIFO claimed to tolerate arbitrary downstream stall. Do not overwrite SM mapbase/shift until its no-backpressure output pipeline drains."
+  },
+  "result_restore": {
+    "structure": "5stage32lane cyclic barrel permuter maps physicalSM lane to canonical virtualSM lane; perlane64bit word carries32bit FP32 result,12bit localrow,16bit opsequence,4flags. Epoch kept in protected phase context; requires nonoverlap and no sequence reuse while live.",
+    "ports": "32 independent64bit write ports/cycle into32 virtual-lane banks, each bank one write/one read capability;128B/cycle arithmetic payload,256B/cycle includingtags. This is not32 arbitrary writes to oneSRAM.",
+    "mux2_bits": 10240,
+    "pipeline_DFF_bits": 10240,
+    "latency_cycles_assumed": 5,
+    "full_crossbar_alternative_mux2_bits": 63488,
+    "buffer": "Two contexts x32banks x64seats x64bits=32768B;43seats minimum fullhead rows. Private compute RF remains separate and fully retained.",
+    "buffer_useful_bytes": 32768,
+    "buffer_protection_capacity_factor_assumed": 1.125,
+    "buffer_protected_bytes": 36864,
+    "canonical_order_warning": "The barrel restores virtual-lane ownership, NOT a32wide ascending global-row stream. Virtual lanes hold contiguous blocks. A central rowmod32 bankscatter can conflict severely (e.g.q=32 all lane starts samebank). Preserve existing gather read schedule, or separately price a transpose/crossbar. Do not assume arbitrary32row/cycle canonical retirement.",
+    "backpressure": "Each admitted SM finishes into reserved private output seats regardless of publisher stall. Next phase waits until free shadow context and output seats available; barrier release requires accepted publication and all old inflight responses drained.",
+    "GU_fusion": "Can retain gate/up values in physicalSM privateRF across paired ops because rotations identical. Charge restore only where existing program publishes/collects; counting everyop is conservative upper schedule."
+  },
+  "area_assumptions": {
+    "DFF_um2": 0.2916,
+    "mux2_um2": 0.2,
+    "placement_utilization": 0.5,
+    "result_barrel_logic_mm2": 0.010067968,
+    "output_buffer_macro_area_density_mm2_per_B_assumed": 1.04306640625e-06,
+    "output_buffer_area_mm2_assumed": 0.0384516,
+    "dispatch_live_state_bits_assumed": 4096,
+    "dispatch_live_state_area_mm2": 0.0023887872000000004,
+    "control_address_decode_wire_allowance_mm2": 0.1,
+    "scope": "Pure matrix weightpool/decoder and fullprivateRF excluded because parent prices separately. Add descriptor43macro table, its selection/capture and routing, protected perSM output banks and barrel, state+control. SRAM lineararea estimate is lowerbound until32bank physicalgeometry chosen.",
+    "descriptor_read_mux2_bits_lower_bound": 11508,
+    "descriptor_capture_DFF_bits_lower_bound": 11782,
+    "descriptor_mux_capture_area_mm2_lower_bound": 0.0114744624,
+    "subtotal_mm2_lower_bound_with_allowance": 0.501281504
+  },
+  "latency": {
+    "cycles_per_cold_op_upper_service": 31,
+    "extra_us_1103_ops_cold_plus_full_output_drain": 31.268333333333334,
+    "extra_us_343_groups_cold_plus_full_output_drain": 11.635,
+    "config_only_us_1103ops": 7.3533333333333335,
+    "scope": "Extra analytical control+restore service excluding existing matrix70us, compactdecoder/miss stalls, pool network, collectives, SU,index/KV/attention, descriptorwire delay and global topology.24cycles includes5restore tail;3329 adds conservatively full32lane capture/drain volume.343group price is conditional on explicit shadow prefetch, not selected bound.",
+    "nonoverlap_output_drain_cycles": 3329,
+    "overlap": "Use1103 serialdispatch upper service absent concrete overlap. Control and output can overlap matrix only after proving port availability and future ID readiness.",
+    "725us_gate": "LetTother include existing70us matrix and every remaining priced component. Cold-operation screen passes725us only ifTother<725-(31*1103+3329)/1200=693.7317us; final gate must compose dependency/resource schedule. No achievedTPOT claim.",
+    "upper_bound_qualification": "31cycles is a configured control service assumption, not physical timing or arbitrary-backpressure bound. Output receiver must meet specified32 independent writes/cycle; publisher drain is retained from existing schedule and must not be omitted.",
+    "fallback_new_single_row_publisher_extra_us": 107.9875,
+    "fallback_note": "If inherited publisher cannot consume restored banks and replacement serializes1row/cycle, charge whole95392 rows as conservative additional service instead of3329:107.9875us totalcontrol+serialization. Do not add if that identical serialization is already in inherited schedule."
+  },
+  "unknowns": [
+    "Actual shared publisher/gather port order and rate; virtual-bank restore preserves logical layout but has not been bound to hardware publisher.",
+    "32way restore route spans, descriptor fanout and contextual SS/FF.5stagebarrel is a candidate, not closure.",
+    "Control combinational area and mutable SRAM ECC enc/dec latency beyondcapacity allowance.",
+    "Wholeop43seat reservation works only for currentRMAX workload; reject largerop ortile explicitly.",
+    "Consecutive7expert opcode groups need enough distinct scratch/output ownership; no freeoverlap inferred from343groups.",
+    "32private output SRAM banks physicalminimumarea may exceedlinear bytearea.",
+    "Actual compact row base manifest needed;128B descriptor is budgeted architecture, not executabletable."
+  ]
+}

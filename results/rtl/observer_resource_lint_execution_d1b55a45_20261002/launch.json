@@ -1,0 +1,23 @@
+{
+  "owner_commit": "332b7e32d9fc4e3fbf8f509bbf14106742c79ed1",
+  "go_commit": "d1b55a45f7b1d3996a6c1e0924845e5b8b7f5bc9",
+  "go_sha256": "a436de69744a9bddbe64ccda54b1bb919d0d91194ee695811e661cbc5e1f4244",
+  "plan_sha256": "4c20d338733d806ac5085daa4cba25c71843e834f834dee882bf2a67238ffa64",
+  "runner_pid": 2843345,
+  "start_ticks": "310995926",
+  "argv": [
+    "/home/ubuntu/bin/python",
+    "tools/run_observer_resource_priced_lint.py",
+    "--repo",
+    "/tmp/opentallas-observer-frontend-resource-model",
+    "--plan",
+    "/tmp/opentallas-observer-frontend-resource-model/results/rtl/observer_frontend_resource_model_4e383_20261002/plan.json",
+    "--go",
+    "/tmp/opentallas-observer-resource-go-d1b55a45-r1/GO.json",
+    "--scratch",
+    "/tmp/opentallas-observer-resource-execution-d1b55a45-r1",
+    "--execute"
+  ],
+  "output": "/tmp/opentallas-observer-resource-go-d1b55a45-r1/runner.log",
+  "scratch": "/tmp/opentallas-observer-resource-execution-d1b55a45-r1"
+}

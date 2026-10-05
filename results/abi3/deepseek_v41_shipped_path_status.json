@@ -1,0 +1,45 @@
+{
+ "schema": "opentallas.abi3.v41_shipped_path_status.v1",
+ "question": "the reduced V4.1 vehicle cannot produce a matching token because its router is near-tied. The shipped checkpoint would not be. Why has it not been used?",
+ "answer": "because the shipped ORACLE has never been able to run. Two named prerequisites are missing, both implementable. The checkpoint itself is present and locked.",
+ "correction": {
+  "what_i_said": "the V4.1 cells cannot be closed by engineering, and need 'a checkpoint whose routing is not near-tied'",
+  "what_is_true": "that checkpoint IS on disk -- 476 GB across 48 safetensors shards, bound by a checkpoint lock of 96,085 tensors and 510,286,023,000 bytes at ~/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json. The shipped ROM wafer and ROM array DEPLOYMENTS are built. What is missing is the oracle to compare against, and that is engineering, not mathematics.",
+  "why_it_matters": "'cannot be closed by engineering' was the wrong summary. The reduced VEHICLE cannot be closed; the shipped path can, and has a blocker with a name and a template."
+ },
+ "what_is_already_present": {
+  "shipped_checkpoint": "476 GB, 48 shards, lock 3035f90f54bdb461, 96,085 tensors, 510,286,023,000 bytes",
+  "shipped_rom_wafer_deployment": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+  "shipped_rom_array_deployment": "build/abi3/deepseek-v41-flash-rom-array-64",
+  "shipped_capabilities": ["configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json", "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"],
+  "shipped_irs": ["build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json", "build/ir-v3/deepseek-v4.1-flash-c8192/kernel_ir.v3.json"],
+  "tokenizer": "compiler/frontend/deepseek_v41_tokenizer.py, asserting 99,092 compressed ids",
+  "workloads": "build/workloads/deepseek-v4.1-flash/index.json and its documents",
+  "gpu": "NVIDIA RTX PRO 6000 Blackwell, 97,887 MiB, entirely free",
+  "oracle_tool": "tools/run_deepseek_v41_reference_oracle.py, with a --stage tokens that refuses rather than pretending"
+ },
+ "the_two_blockers": [
+  {
+   "id": "streaming_engine",
+   "path": "runtime/reference/deepseek_v41_oracle.py",
+   "present": false,
+   "requirement": "a V4.1 layer-streaming engine, the analogue of runtime/reference/deepseek_v4_oracle.py::StreamingDeepSeekV4, that materialises one block and one routed expert at a time from the 48 released shards",
+   "template": "runtime/reference/deepseek_v4_oracle.py, 1,337 lines, with a WeightStore that holds lazy safetensors handles and materialises host/device tensors on demand. The V4.1 analogue additionally has to cover hyper-connections, the compressor, the indexer and Engram.",
+   "why_it_is_needed": "510 GB of weights against 188 GB of host RAM and 98 GB of device memory. The V4-Flash oracle read 201 GB with a PEAK DEVICE FOOTPRINT OF 361 MB by streaming, which is the proof the approach works at this scale."
+  },
+  {
+   "id": "engram_table_residency",
+   "present": false,
+   "requirement": "a residency policy for the two Engram tables (202.76 GB) that ParallelEngramEmbedding.forward's F.embedding over the whole table can be served from",
+   "note": "F.embedding only reads the rows it indexes, so a row-gather against memory-mapped shards is the shape of the answer rather than a full materialisation. Not yet written."
+  }
+ ],
+ "what_this_does_not_change": [
+  "the reduced vehicle's divergence is still fully explained and still not closable: 0.82% at layer 0 moves the token, the MoE's discontinuity supplies that amplification from sub-ulp inputs, and neither fp32 split is more accurate than the other",
+  "the three reduced V4.1 cells still execute end to end under the real control plane, and the wafer and array still agree exactly on token 1126"
+ ],
+ "not_a_claim": [
+  "that the shipped cells WILL close once the oracle runs. A trained router has decisive margins, which is why the V4-Flash cells close, but that is an expectation and not a measurement until the oracle exists",
+  "that the streaming engine is a small job: the V4 template is 1,337 lines and V4.1 has four subsystems V4 does not"
+ ]
+}

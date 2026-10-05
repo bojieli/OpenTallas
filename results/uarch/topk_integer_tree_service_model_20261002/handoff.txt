@@ -1,0 +1,42 @@
+Full compiled top-k service model / G0 milestone
+
+Original baseline and16f checkpoint byte-identical. No RTL, compile or P&R.
+ROM source actual N4/NMAX2048/P64/PF64/DIG8/LDW4; runtime512 and2048 both
+retain524288candidate FF bits. Load2048bits/edge, public2048bits/edge.
+Nine calls: layers2,8,14,20(index then candidate),24,28,32,36. Blocking core
+COLL waits until DMA tk_done clears busy, following synchronous VM4 writes.
+No independent cycle deadline/ACK port invented; transport gaps are unknown.
+HBM retained Dewey native calendar PCs/dependencies/source_ops joined exactly
+for eight512 merges and one2048 candidate merge. Head argmax remains separate.
+Full2048 hardware provider/slot/RF-transport ACK leases remain unbound.
+
+Three-way uninterrupted source select cycle envelopes (not measured):
+N4 runtime512: DIG8_balanced_comb 197, DIG8_staged 313, DIG4_existing 353
+N4 runtime2048: DIG8_balanced_comb 677, DIG8_staged 793, DIG4_existing 1217
+N96 runtime512: DIG8_balanced_comb 421, DIG8_staged 553, DIG4_existing 641
+N96 runtime2048: DIG8_balanced_comb 1573, DIG8_staged 1705, DIG4_existing 2369
+
+ROM per-position residence increments at policy1.2GHz: staged1044cycles/870ns;
+DIG4 1788cycles/1490ns; balancedcomb0cycles, delay unqualified. HBM conditional
+same-provider increments1188/990ns and2556/2130ns; six serial verify positions
+5940ns and12780ns. No full-token/rate/physical credit.
+
+Source shared cones priced explicitly: candidate FF write holds, independent
+hist/filter RF read muxes, key barrels/bin decode, histogram accumulators,
+filter compare/ID add, serial quota/prefix, triangular compaction(2080/32896
+lane-slot pairs), staging shift and fanout4 buffer construction. These are
+unoptimized master-area constructions with exclusions; not synthesis area.
+Actual suffix-only repair leaves64/256 serial filter prefix/quota chains.
+
+G0 REFUSE_CURRENT_RESERVED_SLOT_AND_UNCLOSED_FILTER. Retained source hierarchy
+prices524288candidate bits only at50pct:0.305765mm2, rounded rectangle0.307594.
+Complete FF state at same50pct requires0.333132balancedDIG8 /0.369366stagedDIG8 /
+0.319273DIG4 mm2, before any logic/clock/route.35pct is historical comparison
+only, not the actual reservation policy. No hidden embedded/alias/adjacent-slot
+credit. Next: complete selector reservation once, explicitly displace adjacent
+controller/corridors, and model balanced filter along with the integer repair.
+No suffix-only RTL launch admitted.
+
+Validation:11 new source/port/storage/calendar/slot/refusal/mutant tests PASS;
+10 retained integer/radix/stableties/mutant/replay tests PASS. Source SHA pins
+and added artifact manifest included. No new PVE2/PVE3 work; old route untouched.

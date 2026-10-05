@@ -1,0 +1,35 @@
+{
+  "verdict": "PASS_BOUNDED_TARGET_SHAPE_ELEMENT_NUMERICAL_WAKE_DIFFERENTIAL",
+  "parent_GO": "edf3d3d35a84ff36e00c6b72ec5dd1980b8f7717",
+  "runner_commit": "edf3d3d35a84ff36e00c6b72ec5dd1980b8f7717",
+  "q_public_rows": 344,
+  "bf_public_rows": 456,
+  "value_assertions": 1600,
+  "configuration_assertions": 800,
+  "wake_assertions": 3434912,
+  "peak_memory_bytes": 2776899584,
+  "build_seconds": 265.0648988140747,
+  "simulate_seconds": 3.3552870149724185,
+  "source_package": "all48 generatedhashes reverified during execution",
+  "tree_movement": "Unrelated additive HBM r13 model/tests were intaken after packagegeneration. Runner recorded originalGOrevision; allreviewed runner/model/package bytes reverified unchanged. No live HDL/script mutation. Future executions use separate executionworktree.",
+  "claims": {
+    "field_return": false,
+    "SS_FF": false,
+    "full_token": false,
+    "adoption": false
+  },
+  "files_sha256": {
+    "positive_q_build.log": "22bd69793f1c0c545c3df738354ca694ac7f491cbceb28d91ce6a1d84805f2b3",
+    "positive_bfcolumn_build_receipt.json": "cbfc799edaf49f61ccb80501947a56b97acae3d5aaaf77cd3fa885257982b815",
+    "positive_q_simulate_receipt.json": "121fc3443b938b113ccaa1df75f1b2e0eec0c50b790c94010d983e9f4f8665bc",
+    "positive_q_build_receipt.json": "f31a1980b071d28167d92885f7e36aae5d7ab136b69fb918cc67a00124a06d42",
+    "positive_bfcolumn_build.log": "03419debc974674eabc14a29219883e76c5ebd23436af5aeecf06dbae39167fd",
+    "positive_bfcolumn_simulate_receipt.json": "2d46ff549a13d1dfb834732f492027c33f469e09f46fd5f30d74385225f8a539",
+    "positive_q_simulate.log": "d4c188cafab8aa42a0e1378d02c7e7ec069a7d3dd357e821076ff6f78c75ed3e",
+    "record.json": "190b0a49083d5bb8c23440ebf8bf843e0f74ec4c9b8e00541d2a93157ca2bf1a",
+    "positive_bfcolumn_simulate.log": "6963b1676e1459e8917d47005da36c30d695cf6dc8159119f50bb0b83c0ffc51",
+    "launcher.json": "40494afc11c8fe5baf196e7ea71d3c301ffeb63131e406ada97e6c6889d5ffc5",
+    "tool_preflight.json": "a76e5e553586afb95c30a3da89f9479c9eb0fcaba6f3f3bcf3e74913feb2faf4",
+    "launcher.log": "c8fa9ef1ef3df1de96f4724c88c6f41eb480e0ed2ae5c33894531a7e284c3a1a"
+  }
+}

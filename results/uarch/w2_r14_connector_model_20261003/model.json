@@ -1,0 +1,313 @@
+{
+  "actual_W2_NC6": {
+    "NC": 6,
+    "gross128PC50pct_slot_mm2_ASSUMED": 6.62582757888,
+    "gross_protected_body_mm2_per_PC_ASSUMED": 0.02588213898,
+    "gross_raw_cell_body_mm2_per_PC": 0.01295873316,
+    "implemented39_table_bits": 3744,
+    "minimum38_row_bits": 3648,
+    "perclient16way_held_tag_gen_mux": true,
+    "physical_admission": false,
+    "protected_state_bits_all128PC": 1170432,
+    "protected_state_bits_per_PC": 9144,
+    "protected_state_by_section": {
+      "read_delivery": 360,
+      "read_query": 360,
+      "registered_request_holder": 432,
+      "retained_counters_RR_fault": 576,
+      "table": 6912,
+      "write_query": 72,
+      "write_selection": 432
+    },
+    "protection_768NAND_equivalent_per_word_ASSUMED": 768,
+    "raw_state_bits_all128PC": 611712,
+    "raw_state_bits_per_PC": 4779,
+    "raw_state_by_section": {
+      "read_delivery": 300,
+      "read_query": 296,
+      "registered_request_holder": 335,
+      "retained_counters_RR_fault": 34,
+      "table": 3744,
+      "write_query": 40,
+      "write_selection": 30
+    },
+    "slot4_client_implicit_only_at_actual_bank": true,
+    "table_rows": 96,
+    "three36bit_key_lookups": true
+  },
+  "allocation": {
+    "R14_BEAT": 0,
+    "R14_LEN": 1,
+    "RF_frame_children": 16,
+    "backend_generation_bits": 4,
+    "independent_generations": true,
+    "meta92_same_context_index": true,
+    "new_directory_client": false,
+    "one_W2_sector_bytes": 32,
+    "producer_client_parent_allocator_bound": false,
+    "second_CAM": false,
+    "simultaneous_children_proven": false,
+    "source_generation_bits": 4,
+    "source_legacy192_preserved": true,
+    "source_owner46_die_scoped": true
+  },
+  "boundary_signal_bits": {
+    "W10_prior_389_353_raw_packets_include_LEN_and_SM_slot_parentref_not_W2_control_wires": true,
+    "W2_signal_counts_are_not_W10_packet_widths": true,
+    "aggregated_read": 304,
+    "aggregated_request": 339,
+    "aggregated_write": 48,
+    "channel_capacity": null,
+    "routes": null,
+    "scoped_read": 297,
+    "scoped_request": 332,
+    "scoped_write": 41
+  },
+  "build_allowed": false,
+  "component_G0": {
+    "AW34_is_lossless_R14_sector_carrier_not_change_to_original": true,
+    "compare_fanout_per_client_bank": 16,
+    "compare_load_SS_fF_per_bit_per_bank": 14.798384,
+    "compare_ports": {
+      "read_return": 1,
+      "request_nonreuse": 1,
+      "write_return": 1
+    },
+    "component_can_proceed_independently_of_native_caller": true,
+    "full_wrapper_port_address_default": 32,
+    "global_match_rows": 96,
+    "loaded_setup_hold_budget_ps": null,
+    "lookup_storage": "FF entries with explicit update priority; no claimed multiported SRAM",
+    "mutable_protection_latency_mapped": false,
+    "per_client_tag_gen_mux_depth": 4,
+    "priced_stage_variant": "L1 only; prospective minima, not SS proof",
+    "proposed_defaultoff_namespace": "New same-interface completion successor; originals byteidentical",
+    "proposed_validation": [
+      "NC6/MAX16 actual full-width request/read/ready-held write ports",
+      "old-state lookups and validation-before-any-release, no same-edge returned-credit reuse",
+      "frozen request under backend stall; held read/write under independent client refusal",
+      "live duplicate/wrong direction/wrong gen/wrong original32/reset-stale refusal",
+      "valid-code identity mutation not merely protection syndrome mutation",
+      "no reset-erasure of accepted debt; positive allcopy rearm",
+      "boundary request/return/multi-release collision and stickyfault no grants or releases"
+    ],
+    "remaining_component_decisions": [
+      "Source clock/reset and loaded SS/FF timing budget",
+      "Stage enrollment including protection lookup/hold path; reprice if L1 insufficient",
+      "Concrete reset/rearm debt-fence interface, state/control debit and oldstate request arbiter"
+    ],
+    "request_arbiter_sequential_reference_prepared": false,
+    "requester_hold_bits": 335,
+    "requester_hold_capacity": 1,
+    "reset_rearm_control_ports_selected": false,
+    "reset_rearm_extra_state_price": null,
+    "selected_geometry": {
+      "AW": 34,
+      "CTAG": 32,
+      "GEN": 4,
+      "MAX_OUT": 16,
+      "NC": 6,
+      "PTAG": 39
+    },
+    "selected_lookup_stages": null,
+    "service_clock_period_ps": null,
+    "source_clock_reset_domain_bound": false,
+    "source_input_signal_bits": {
+      "backend_read_return": 297,
+      "backend_request": 332,
+      "backend_write_completion": 41,
+      "client_read_total": 1764,
+      "client_request_total": 1974,
+      "client_write_completion_total": 228
+    },
+    "update_ports": {
+      "allocate": 1,
+      "read_state_or_retire": 1,
+      "write_match": 1,
+      "write_retire_clients": 6
+    }
+  },
+  "latency": {
+    "CDC_and_crossclock_conversion": null,
+    "L1_backend_read_capture_to_client_min_edges": 2,
+    "L1_backend_write_event_to_client_min_edges": 3,
+    "L1_no_bypass_read_II": 2,
+    "L1_no_bypass_request_II": 2,
+    "L1_request_selection_to_backend_min_edges": 1,
+    "L2_L3_sensitivity": [
+      {
+        "checked_lookup_stages": 1,
+        "earliest_read_client_accept_after_backend_capture_edges": 2,
+        "earliest_request_backend_admission_edges": 1,
+        "earliest_write_client_accept_after_backend_capture_edges": 3,
+        "extra_registers_if_L_gt_1_NOT_priced": false,
+        "no_bypass_read_II_edges": 2,
+        "no_bypass_request_II_edges": 2,
+        "provisional_1GHz_added_read_ns": 2,
+        "provisional_1GHz_added_write_ns": 3,
+        "qualified_clock": false
+      },
+      {
+        "checked_lookup_stages": 2,
+        "earliest_read_client_accept_after_backend_capture_edges": 3,
+        "earliest_request_backend_admission_edges": 2,
+        "earliest_write_client_accept_after_backend_capture_edges": 4,
+        "extra_registers_if_L_gt_1_NOT_priced": true,
+        "no_bypass_read_II_edges": 3,
+        "no_bypass_request_II_edges": 3,
+        "provisional_1GHz_added_read_ns": 3,
+        "provisional_1GHz_added_write_ns": 4,
+        "qualified_clock": false
+      },
+      {
+        "checked_lookup_stages": 3,
+        "earliest_read_client_accept_after_backend_capture_edges": 4,
+        "earliest_request_backend_admission_edges": 3,
+        "earliest_write_client_accept_after_backend_capture_edges": 5,
+        "extra_registers_if_L_gt_1_NOT_priced": true,
+        "no_bypass_read_II_edges": 4,
+        "no_bypass_request_II_edges": 4,
+        "provisional_1GHz_added_read_ns": 4,
+        "provisional_1GHz_added_write_ns": 5,
+        "qualified_clock": false
+      }
+    ],
+    "R14_lookup12_CORE_edges_retained": true,
+    "R14_return_arb7_CORE_edges_retained": true,
+    "source_clock_period": null,
+    "whole_token_bound": null,
+    "write_query_II": 1
+  },
+  "next_gate": [
+    "Popper accepted native caller/client/parent-child directory binding and receipt on actual R14 route",
+    "Full16 command/backing/return echo, NC6 translated-PC and held WRready ports",
+    "Replace R14 early ore retirement with saved-identity reverse quarantine; actual all-copy wrap/reset predicates",
+    "Exact16-sector RF frame or source-valid partial join/codec and stable pre-bound parent55",
+    "Joined port/update schedule, source clocks/CDC, named physical costs, once-only debit and finite continuous calendar"
+  ],
+  "once_only": {
+    "macro_area": null,
+    "matched_old_W2_debit": null,
+    "net_area": null,
+    "routes_clock_SShold": null,
+    "rule": "F0_old_total - exact_matched_old_W2_debit + bound_gross_NC6_W2; preserve unrelated private parent/provider/transport costs",
+    "sidecar_assembly_transport_overlap_credit": 0
+  },
+  "pins": {
+    "composition_commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "connector_commit": "1bfbbda5afeafde216ab5c6d79dd3b72efaa2800",
+    "inputs": [
+      {
+        "origin": "PORTBOOK.md",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/PORTBOOK.md",
+        "sha256": "9b0190be53f872e2015b8ecd57eba6f0a0583005029e840a72157181ba33c870"
+      },
+      {
+        "origin": "cost-inputs.json",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/cost-inputs.json",
+        "sha256": "826d16f5004c6d6a35e04880a14b2e0cb811eaa48cbd04ecdf38301a76af1f95"
+      },
+      {
+        "origin": "input_manifest.json",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/input_manifest.json",
+        "sha256": "a9ecd0d881b96811d9eda1e816b64f0165263133dcaa7af6f0fda3b4ec8982a9"
+      },
+      {
+        "origin": "r2/HANDOFF.txt",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/r2/HANDOFF.txt",
+        "sha256": "fa41cb56e09a65fed3b16b6f2c450e1571b650cd38e95547e89829d4d92581e0"
+      },
+      {
+        "origin": "r2/composition.json",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/r2/composition.json",
+        "sha256": "cf6c5c70ead99ced96012f5a7d667e2ebe2c7f9861476fa2d050ca2443f6c97f"
+      },
+      {
+        "origin": "inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv",
+        "sha256": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98"
+      },
+      {
+        "origin": "inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv",
+        "sha256": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a"
+      },
+      {
+        "origin": "inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/inputs/main/rtl/model_ready_hbm_r14/ot_hbm_r14_pc.sv",
+        "sha256": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025"
+      },
+      {
+        "origin": "inputs/main/rtl/test/model_ready_hbm_r14/ot_hbm_r14_backing_fixture.sv",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/inputs/main/rtl/test/model_ready_hbm_r14/ot_hbm_r14_backing_fixture.sv",
+        "sha256": "d21888753aea5957bc135ac2e78ee076267a26f095c4a4a8856a5aec245841a6"
+      },
+      {
+        "origin": "inputs/main/tools/qwen_hbm_provider_bindings_r17.py",
+        "path": "results/uarch/w2_r14_connector_model_20261003/inputs/inputs/main/tools/qwen_hbm_provider_bindings_r17.py",
+        "sha256": "df61c383a1eeb7666f5b62b2829b8c9d6ef35086265ba3ac387fc8eb3b6745c4"
+      },
+      {
+        "origin": "owner67ab",
+        "path": "tools/w2_pc_exact_completion_model.py",
+        "sha256": "c2d29154aafa7f0673c34f19151b9280294b7310760e0cf60f1995bad723d2b9"
+      },
+      {
+        "origin": "owner67ab",
+        "path": "results/uarch/w2_pc_exact_completion_20261003/model.json",
+        "sha256": "2d6ee341f43c3537ffbf23d1465350379eab801b11769339bf4394eea4fcc655"
+      }
+    ],
+    "owner_commit": "67ab2420e2ad8cb273be74d884f84f6bc260c261"
+  },
+  "retirement": {
+    "current_R14_ore_early_retirement_compatible": false,
+    "implementation": "Replace early ore tag/context free with validated reverse all-copy retirement; exact provider ports/control update pending",
+    "maximum_quarantine_occupancy": null,
+    "new_control_bits": null,
+    "required_release_receipts": [
+      "w2_local_accepted",
+      "rf_common_ack",
+      "visible",
+      "reader_ack",
+      "child_reverse_validated",
+      "parent_released",
+      "forward_cdc_drained",
+      "reverse_cdc_drained"
+    ],
+    "required_wrap_reset_receipts": [
+      "debts_retired",
+      "admission_frozen",
+      "provider_old_copies_absent",
+      "reset_endpoints_fenced"
+    ],
+    "w2_local_release_not_physical_tag_release": true,
+    "wrap_wait_edges": null
+  },
+  "scope": "Additive connector-bound W2 model; no RTL/runtime/physical admission",
+  "state_cost_inputs": {
+    "RF_assembly_data_candidate_bits": 131072,
+    "RF_assembly_mask_candidate_bits": 512,
+    "W10_protected_pipeline_increment_bits": 1575936,
+    "sidecar_logical_bits": 1572864,
+    "sidecar_macro_capacity_bits": 4194304,
+    "sidecar_macros": 128
+  },
+  "verdict": "FAIL_CONNECTED_SOURCE_MODEL_ADMISSION",
+  "widths": {
+    "W10_request": 389,
+    "W10_return": 353,
+    "command": 343,
+    "meta": 92,
+    "owned": 561,
+    "request": 547,
+    "sidecar": 96
+  },
+  "write_contract": {
+    "backend_visible_receipt_required": true,
+    "legacy_adapter_bits_latency": null,
+    "legacy_adapter_selected": false,
+    "p_wr_done_ready_required": true,
+    "supersedes_pulse_only_1bfbb": true
+  }
+}

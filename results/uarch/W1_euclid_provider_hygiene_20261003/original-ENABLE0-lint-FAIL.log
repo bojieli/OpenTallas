@@ -1,0 +1,6 @@
+%Error-IMPLICIT: rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:20:70: Signal definition not found, creating implicitly: 'commit_ready'
+                                                                                : ... Suggested alternative: 'commit_r'
+   20 |    assign req_r=0;assign cmd_v=0;assign cmd='0;assign rsp_r=0;assign commit_ready=0;
+      |                                                                      ^~~~~~~~~~~~
+                 ... For error description see https://verilator.org/warn/IMPLICIT?v=5.050
+%Error: Exiting due to 1 error(s)

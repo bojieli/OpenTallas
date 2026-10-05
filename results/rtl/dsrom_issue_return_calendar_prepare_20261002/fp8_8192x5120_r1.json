@@ -1,0 +1,85 @@
+{
+  "XFIFO_overflow_pairs": [],
+  "declared_NP": 8192,
+  "max_leaf_minus_last_walk_busy": 79,
+  "metadata": {
+    "excluded_payload_loop_sha256": "ba79af192bd7eeba95269c4e64506ffa5baff455aa05362b03d1c42dfde6a068",
+    "metadata_only": true,
+    "source_sha256": "9e87fface413f0483ba7d26b79c614a6adc36bd0f021849098350a87114e02c8"
+  },
+  "observed_case_DRAIN127_sufficient": true,
+  "peak_XFIFO": 3,
+  "peak_segment_Q": 3,
+  "phase": {
+    "K": 5120,
+    "bf": false,
+    "fmt_fp32": [
+      false,
+      false
+    ],
+    "index": 0,
+    "matrices": [
+      {
+        "cols": [
+          0,
+          5120
+        ],
+        "fmt": "fp8",
+        "name": "immutable_metadata_fp8",
+        "off": 0,
+        "rows": [
+          0,
+          8192
+        ],
+        "segment_elems": [
+          4096,
+          1024
+        ],
+        "split": 2
+      }
+    ],
+    "nbeat": 128,
+    "nrows": 8192,
+    "rsplit": 0,
+    "sbase": 0,
+    "segments_per_pair_max": 1,
+    "t_phase_model": 128,
+    "t_read": 128
+  },
+  "populated_pairs": 8192,
+  "retire_tag_exact": true,
+  "return": {
+    "calendar_terminal": 353,
+    "last_leaf": 216,
+    "last_root_retire": 352,
+    "node_faults": [],
+    "nodes": 16256,
+    "peak_node_queues_by_level": [
+      1,
+      2,
+      3,
+      5,
+      10,
+      19,
+      24
+    ],
+    "peak_root_Q": 6,
+    "peak_root_buffer": 8,
+    "retired_rows": 8192,
+    "root_faults": [],
+    "root_held_end": 0,
+    "roots": 128
+  },
+  "scope": "Static source control/event transcription fullgeometry, immutablemetadata only, allactivationbeats available tospine(noavailabilitystalls). NotactualHDL/arithmetic/clock/fulltokenqualification; arbitraryspine stalls/alllegalconfig universalbound stillrequiresproof.",
+  "segment_fault_pairs": [],
+  "sourcecase": {
+    "K": 5120,
+    "NBF": 1024,
+    "NP": 8192,
+    "R": 128,
+    "active": 8192,
+    "fmt": "fp8",
+    "positions": 1,
+    "rows": 8192
+  }
+}

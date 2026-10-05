@@ -1,0 +1,48 @@
+{
+  "record": "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns.json",
+  "record_sha256": "8697451a79f8d4cdf368b618624d77b18801b09498547d3664ea74dc4b246d7c",
+  "sources": [
+    {
+      "launch_path": "rtl/lib/ot_wide_div_seq.sv",
+      "matching_source": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a"
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/1_2_yosys.v": "a155c306eeeadd7f53e67d64ce32da724dd25e501679cc8077f248a4252f4666",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/6_final.v": "efb693b4f71752c2a31dc52933825e4e7fc5367352f1758f317a16e22c660b8b",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/6_finish.rpt": "589cea1612356d8934d5f207914d15c14c3a568b0ab109870b81036cb3d575e9",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/config.mk": "e4cb0f4900bac7fdd79b456559161ec852eb2ed715505cc532aab11cb5d3b777",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_artifacts/metadata.json": "8d0b011506e00f1ee167751cedf7b892265c2e3c330142a72769f949ec270e8a"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0412938,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 1.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": false,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.048414900000000004,
+        "signal_integrity_clean": false,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 827.809,
+  "scope": "Final extracted ASAP7 TT at tested 1 ns; source-bound standalone block result, not containing-engine closure."
+}

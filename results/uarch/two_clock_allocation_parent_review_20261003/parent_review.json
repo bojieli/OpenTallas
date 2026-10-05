@@ -1,0 +1,61 @@
+{
+  "RAM_recovery_credit": 0,
+  "all_restore_table_missing_increment_bytes": 257100544,
+  "complete_runtime_peak_proven": false,
+  "corrected_retained_base_bytes": 44156609226,
+  "fleet_manifest_hashes_verified": 7,
+  "fleet_reclaim_source": "9d00f70d9",
+  "full_pricing_replay_byte_equal": true,
+  "full_pricing_replay_complete": true,
+  "full_pricing_replay_session": 84856,
+  "full_pricing_replay_sha256": "c212d98c9c803fb2aa71420d80f7b6ca98af60a2d7808d605c74a4c98f4d73db",
+  "full_token_rate_adopted": false,
+  "full_width_loaded_parent_SSFF": false,
+  "latency_throughput_independent_replay_exact": true,
+  "legacy_failure": "Missing ot_hdc_cg before simulation",
+  "legacy_field_archive_hashes_pass": 55,
+  "legacy_field_negative_rejections": 7,
+  "legacy_field_source_snapshots_pass": 39,
+  "parent_owner_quarantine_required": true,
+  "ratio_FIFO_state_protected": false,
+  "removed_directory_allocation_bytes": 20350734336,
+  "reset_discards_pending_words": true,
+  "selected_runtime_regression_proven": false,
+  "source_pin_reviews": [
+    {
+      "current_source_pins_verified": 4,
+      "new_runtime_run": false,
+      "path": "results/rtl/two_clock_crossing_20261003/bench_campaign.json",
+      "verdict": "PASS"
+    },
+    {
+      "current_source_pins_verified": 28,
+      "new_runtime_run": false,
+      "path": "results/rtl/two_clock_crossing_20261003/qwen_core_gate.json",
+      "verdict": "PASS"
+    }
+  ],
+  "standalone_corners": [
+    {
+      "hold_FF_ps": 5.31,
+      "instance": "f2s_w512_d4",
+      "setup_SS_ps": 32.36,
+      "standalone_only": true
+    },
+    {
+      "hold_FF_ps": 9.76,
+      "instance": "f2s_w64_d4",
+      "setup_SS_ps": 41.46,
+      "standalone_only": true
+    },
+    {
+      "hold_FF_ps": 7.78,
+      "instance": "s2f_w64_d4",
+      "setup_SS_ps": 33.62,
+      "standalone_only": true
+    }
+  ],
+  "two_clock_source": "27d86cfe4",
+  "typed_allocation_tests_pass": 32,
+  "uarch_pricing_source_unchanged": true
+}

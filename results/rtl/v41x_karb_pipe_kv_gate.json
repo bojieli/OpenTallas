@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.rtl.v41x_karb_pipe_kv_gate.v1",
+  "source_commit": "2b59a7c960371e35e57806b082b7c09e711bbf02",
+  "source_sha256": {
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "9d5772dbaa92edd2c9f88a4607a26a5b155c497e98ab23df85e3c17e3d13e238",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+    "rtl/test/tb_chip_v41x_kv_prefetch.sv": "d35ec8347b77d2c43c56d214ef5fba45b54dd5b82ba7b8b4a45ab43496204155",
+    "tools/rtl_chip_v41x_die_smoke.py": "f60b39f6a588f63d6547bc1c1fd80ed59b7e1134e3976d5af241d49c1951691c"
+  },
+  "tool_version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad",
+  "claim_boundary": "Reduced four-stack, NPC32 per-stack concurrent KV/index HBM simulation; PIPE_OUT is an optional arbiter mode. This is neither full-shape token simulation nor physical timing.",
+  "direct": {
+    "pass": true,
+    "karb_pipe_out": false,
+    "log_sha256": "67466a59fb144494dcad0e8d6b535b45eeb5c36b1c952ec8bc9fcc1928f0a0b9",
+    "log_tail": "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096\nKVPF_WRAP done=1 writes=6 hits=10 mismatches=0\nKVPF ops=38 words_read=4383 bad=0 held_min=166 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=2 hbm_kv_mismatch=0 fault=0 code=00000\nKEYS reads=608012 bad=0 writes=593 wr_done=593 contended=1385 kv_grants=5925\nREGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1\nPASS\n- /tmp/opentallas-v41-die-physical-next/rtl/test/tb_chip_v41x_kv_prefetch.sv:399: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 48us; walltime 2.257 s; speed 21.240 us/s\n- Verilator: cpu 0.931 s on 1 threads; allocated 81 MB\n",
+    "kv": {
+      "ops": 38,
+      "words_read": 4383,
+      "word_mismatches": 0,
+      "min_hold_cycles": 166,
+      "held_ops": 38,
+      "raw_checks": 16,
+      "refetches": 22,
+      "sectors_written": 155,
+      "write_queue_high": 2,
+      "hbm_kv_mismatches": 0,
+      "fault": 0,
+      "fault_code": "00000"
+    },
+    "cases": {
+      "max_descriptor_ops": 2,
+      "max_descriptor_words": 640,
+      "user_slice_ops": 3,
+      "slice_base_word": 4096
+    },
+    "generation_wrap": {
+      "done": 1,
+      "row_writes": 6,
+      "write_hits": 10,
+      "mismatches": 0,
+      "negative_control": "with the drain condition removed from the restart (sout == 0), the same bench does not pass: the stale responses are taken and the op never completes (TIMEOUT)"
+    },
+    "indexer_traffic": {
+      "key_reads": 608012,
+      "key_mismatches": 0,
+      "key_writes": 593,
+      "key_wr_done": 593,
+      "contended_cycles": 1385,
+      "kv_grants": 5925
+    },
+    "region": {
+      "key_sectors": 262144,
+      "kv_sbase": 262144,
+      "kv_end": 266240,
+      "k_mem": 524288,
+      "disjoint": 1,
+      "inside": 1
+    }
+  },
+  "registered_per_pc_output": {
+    "pass": true,
+    "karb_pipe_out": true,
+    "log_sha256": "bfab7c1ee7aaceb726bf574c8604e0cebeb7ec182f731ca10b59bdc7fd597a34",
+    "log_tail": "KVPF_CASES max_descriptor_ops=2 max_words=640 user_slice_ops=3 slice_base=4096\nKVPF_WRAP done=1 writes=6 hits=10 mismatches=0\nKVPF ops=38 words_read=4318 bad=0 held_min=211 held_ops=38 raw_checks=16 refetches=22 sectors_written=155 wq_high=3 hbm_kv_mismatch=0 fault=0 code=00000\nKEYS reads=615583 bad=0 writes=618 wr_done=616 contended=1138 kv_grants=5760\nREGION key=[0,262144) kv=[262144,266240) mem=524288 disjoint=1 inside=1\nPASS\n- /tmp/opentallas-v41-die-physical-next/rtl/test/tb_chip_v41x_kv_prefetch.sv:399: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 49us; walltime 1.057 s; speed 45.922 us/s\n- Verilator: cpu 0.797 s on 1 threads; allocated 81 MB\n",
+    "kv": {
+      "ops": 38,
+      "words_read": 4318,
+      "word_mismatches": 0,
+      "min_hold_cycles": 211,
+      "held_ops": 38,
+      "raw_checks": 16,
+      "refetches": 22,
+      "sectors_written": 155,
+      "write_queue_high": 3,
+      "hbm_kv_mismatches": 0,
+      "fault": 0,
+      "fault_code": "00000"
+    },
+    "cases": {
+      "max_descriptor_ops": 2,
+      "max_descriptor_words": 640,
+      "user_slice_ops": 3,
+      "slice_base_word": 4096
+    },
+    "generation_wrap": {
+      "done": 1,
+      "row_writes": 6,
+      "write_hits": 10,
+      "mismatches": 0,
+      "negative_control": "with the drain condition removed from the restart (sout == 0), the same bench does not pass: the stale responses are taken and the op never completes (TIMEOUT)"
+    },
+    "indexer_traffic": {
+      "key_reads": 615583,
+      "key_mismatches": 0,
+      "key_writes": 618,
+      "key_wr_done": 616,
+      "contended_cycles": 1138,
+      "kv_grants": 5760
+    },
+    "region": {
+      "key_sectors": 262144,
+      "kv_sbase": 262144,
+      "kv_end": 266240,
+      "k_mem": 524288,
+      "disjoint": 1,
+      "inside": 1
+    }
+  },
+  "pass": true
+}

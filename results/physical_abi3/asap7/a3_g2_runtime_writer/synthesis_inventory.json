@@ -1,0 +1,208 @@
+{
+  "status": "pass",
+  "issues": [],
+  "scope": "Intermediate flattened synthesis inventory only; not final placed macros, routed area, timing or deployment coverage.",
+  "parameters": {
+    "ACC_SLOTS": 8,
+    "ADDER_STAGES": 3,
+    "CRC_CACHE": 0,
+    "CRC_PERIOD": 0,
+    "FAST_FRONT_END": 0,
+    "FAST_SCAN": 0,
+    "FAST_WALK": 0,
+    "LANES": 8,
+    "OUTPUT_DEPTH": 4,
+    "RUNTIME_AUXILIARY_DEPTH": 3,
+    "RUNTIME_OBJECT_WRITES": 1,
+    "RUNTIME_OPERANDS": 1,
+    "RUNTIME_REGISTER_AUXILIARY_REQUESTS": 0,
+    "RUNTIME_WEIGHT_ROW_REUSE": 1,
+    "STATE_COMPAT": 0,
+    "WRITE_OUTSTANDING": 4
+  },
+  "macro_instances": [
+    {
+      "instance": "descriptor_store.desc_ram0",
+      "type": "fakeram_2048x128"
+    },
+    {
+      "instance": "descriptor_store.desc_ram1",
+      "type": "fakeram_2048x128"
+    },
+    {
+      "instance": "issue_record_ram.irs_ram0",
+      "type": "fakeram_256x128"
+    },
+    {
+      "instance": "issue_record_ram.irs_ram1",
+      "type": "fakeram_256x128"
+    },
+    {
+      "instance": "issue_record_ram.irs_ram2",
+      "type": "fakeram_256x128"
+    },
+    {
+      "instance": "issue_record_ram.irs_ram3",
+      "type": "fakeram_256x128"
+    },
+    {
+      "instance": "program_store.prog_ram",
+      "type": "fakeram_256x128"
+    },
+    {
+      "instance": "runtime_operands.service.prefetch.banks.bank[0].memory",
+      "type": "fakeram_512x128"
+    },
+    {
+      "instance": "runtime_operands.service.prefetch.banks.bank[1].memory",
+      "type": "fakeram_512x128"
+    }
+  ],
+  "macro_counts": {
+    "fakeram_2048x128": 2,
+    "fakeram_256x128": 5,
+    "fakeram_512x128": 2
+  },
+  "expected_macro_bits": 819200,
+  "inferred_memories": [
+    {
+      "instance": "$flatten\\array.\\gen_lane[0].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[1].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[2].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[3].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[4].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[5].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[6].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\array.\\gen_lane[7].u_lane.$auto$proc_rom.cc:155:do_switch$20758",
+      "WIDTH": 3,
+      "SIZE": 16,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[0].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[1].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[2].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[3].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[4].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    },
+    {
+      "instance": "$flatten\\sequencer.\\bank.\\g_lane[5].lane.$auto$proc_rom.cc:155:do_switch$20754",
+      "WIDTH": 5,
+      "SIZE": 64,
+      "RD_PORTS": 1,
+      "WR_PORTS": 0
+    }
+  ],
+  "inferred_rom_bits": 2304,
+  "unresolved_types": {},
+  "cell_types": {
+    "$not": 1451,
+    "$xor": 3608,
+    "$macc_v2": 148,
+    "$alu": 4006,
+    "$reduce_or": 485,
+    "$or": 2074,
+    "$reduce_and": 1499,
+    "$adffe": 1506,
+    "$dffe": 92,
+    "$sdffe": 13,
+    "$sdffce": 13,
+    "$sdff": 40,
+    "$dff": 21,
+    "$adff": 856,
+    "$and": 602,
+    "$eq": 2590,
+    "$logic_not": 1173,
+    "$reduce_bool": 578,
+    "$ne": 718,
+    "$bmux": 21,
+    "$mux": 21866,
+    "$shl": 74,
+    "$logic_and": 2309,
+    "$pmux": 852,
+    "$mem_v2": 14,
+    "$logic_or": 617,
+    "$shiftx": 104,
+    "$shr": 156,
+    "$shift": 27,
+    "$scopeinfo": 40,
+    "fakeram_2048x128": 2,
+    "fakeram_256x128": 5,
+    "fakeram_512x128": 2
+  },
+  "inputs": {
+    "build/physical_g2_runtime_writer_ordered_1ns/orfs/results/asap7/opentallas_ot_a3_g2_cluster_asap7/base/mem.json": "6fbf765ec5bf2690f4eff42de06177e26d6c10bb2e3bcdd999ef77b01fb167e2",
+    "configs/hardware/g2_runtime_writer_physical.json": "2b6e4b246e3774b77db51702c2e4b54c785c9ad3ee5bc473d75c7aebb97a9907"
+  }
+}

@@ -1,0 +1,89 @@
+{
+ "note": "TP4 runs whose driver result write failed only on a missing oracle.json in the golden dir (layer stages need none); X compared here",
+ "checks": {
+  "b_L0_itr/L0_die0_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L00_die0_x.hex"
+  },
+  "b_L0_itr/L0_die1_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L00_die1_x.hex"
+  },
+  "b_L0_itr/L0_die2_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L00_die2_x.hex"
+  },
+  "b_L0_itr/L0_die3_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected_sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L00_die3_x.hex"
+  },
+  "b_L2h_itr/L2_die0_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die0_x.hex"
+  },
+  "b_L2h_itr/L2_die1_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die1_x.hex"
+  },
+  "b_L2h_itr/L2_die2_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die2_x.hex"
+  },
+  "b_L2h_itr/L2_die3_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die3_x.hex"
+  },
+  "b_L2_spread/L2_die0_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die0_x.hex"
+  },
+  "b_L2_spread/L2_die1_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die1_x.hex"
+  },
+  "b_L2_spread/L2_die2_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die2_x.hex"
+  },
+  "b_L2_spread/L2_die3_x": {
+   "words": 4096,
+   "mismatches": 0,
+   "actual_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected_sha256": "032a46a58930d8dd37f0afa14b7d7a0cb1373d9f97021020c5946947136ecf31",
+   "expected": "/srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191/L02_die3_x.hex"
+  }
+ }
+}

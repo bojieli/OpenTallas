@@ -1,0 +1,25 @@
+{
+  "affinity_thread_checks": 5,
+  "argv": [
+    "/usr/bin/python3",
+    "tools/hbm_ds_frontend_reuse.py",
+    "--copy",
+    "--manifest",
+    "results/uarch/hbm_rf_connected_reuse_r5_20261002/DS_frontend_inventory.json",
+    "--destination",
+    "/tmp/hbm-native-connected-reuse-parent-20261002-r1/DS/obj",
+    "--proposal",
+    "/tmp/hbm-native-connected-reuse-parent-20261002-r1/proposal.json",
+    "--go",
+    "/tmp/hbm-native-connected-reuse-parent-20261002-r1/GO.json",
+    "--go-commit",
+    "6d0cff62972fe3b5ddeaf6e9a1bfd49080617966"
+  ],
+  "exit_code": 0,
+  "name": "reuse_frontend",
+  "pid": 3850657,
+  "target": "DS",
+  "termination_reason": null,
+  "wall_limit_s": 300,
+  "wall_s": 5.425185037776828
+}

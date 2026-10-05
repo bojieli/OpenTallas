@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.parent.qdq4-scale-static-screen.v1",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "scope": "Integer transcription of retained S3 against actual pinned golden scale for every nonnegative finite BF16 amax; not RTL execution or proof for all FP32 inputs",
+  "finite_BF16_amax_encodings": 32640,
+  "retained_scale_mismatches": 14929,
+  "first_mismatch_BF16_bits": "0x452f",
+  "first_mismatch_amax": 2800.0,
+  "retained_scale_first": 480.0,
+  "golden_scale_first": 448.0,
+  "static_min448_scale_mismatches": 0,
+  "interpretation": "Apply existing golden saturation before thresholds/codes/dequant and raw sideband. Independently execute full pipeline boundaries/nonfinite before admission.",
+  "checkpoint_reads": false,
+  "RTL_executed": false,
+  "hardware_admission": false
+}

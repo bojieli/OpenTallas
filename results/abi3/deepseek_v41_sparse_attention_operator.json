@@ -1,0 +1,621 @@
+{
+  "captured_call": {
+    "index_shape": [
+      1,
+      8,
+      8
+    ],
+    "kv_shape": [
+      1,
+      8,
+      32
+    ],
+    "positions_compared": [
+      7
+    ],
+    "query_shape": [
+      1,
+      8,
+      64,
+      32
+    ],
+    "sink_shape": [
+      64
+    ],
+    "softmax_scale": 0.1767766952966369,
+    "softmax_scale_binary32": 1043662067,
+    "which": "the first sparse_attn call of the forward pass (layer 0)"
+  },
+  "not_a_claim": [
+    "exact equality is not expected: the vendor sums a 64-row block in a GPU gemm's order and the reference sums in ascending order",
+    "this is the reference operator, not the RTL and not the simulator's engine; they share this reference's contract"
+  ],
+  "operands": {
+    "comparisons": [
+      {
+        "comparable": true,
+        "cosine": 1.0,
+        "device_elements": 2048,
+        "identical": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0,
+        "operand": "query_after_rotation",
+        "vendor_elements": 2048
+      },
+      {
+        "comparable": true,
+        "cosine": 1.0,
+        "device_elements": 256,
+        "identical": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0,
+        "operand": "fused_kv_window",
+        "vendor_elements": 256
+      },
+      {
+        "comparable": true,
+        "cosine": 1.0,
+        "device_elements": 8,
+        "identical": true,
+        "max_abs_diff": 0.0,
+        "mean_abs_diff": 0.0,
+        "operand": "selected_indices",
+        "vendor_elements": 8
+      },
+      {
+        "all_padding_index": true,
+        "distinct": [
+          -1
+        ],
+        "operand": "index_padding_beyond_the_live_extent",
+        "slots": 120
+      },
+      {
+        "all_zero": true,
+        "operand": "kv_rows_beyond_the_live_extent",
+        "rows": 120
+      }
+    ],
+    "device_view_shapes": {
+      "slot0": [
+        8,
+        64,
+        32
+      ],
+      "slot1": [
+        128,
+        32
+      ],
+      "slot2": [
+        8,
+        128
+      ]
+    },
+    "first_disagreeing_operand": null,
+    "what_this_settles": "the operator agrees on the vendor's operands, so the wrong operand is the fault; these are the device's own three views against the vendor's own three arguments"
+  },
+  "per_head": [
+    {
+      "cosine": 1.0,
+      "head": 0,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.81216234,
+      "theirs_norm": 1.81216234
+    },
+    {
+      "cosine": 1.0,
+      "head": 1,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86005949,
+      "theirs_norm": 1.86005949
+    },
+    {
+      "cosine": 1.0,
+      "head": 2,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85413534,
+      "theirs_norm": 1.85413534
+    },
+    {
+      "cosine": 1.0,
+      "head": 3,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85264729,
+      "theirs_norm": 1.85264729
+    },
+    {
+      "cosine": 1.0,
+      "head": 4,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87943499,
+      "theirs_norm": 1.87943499
+    },
+    {
+      "cosine": 1.0,
+      "head": 5,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88781888,
+      "theirs_norm": 1.88781888
+    },
+    {
+      "cosine": 1.0,
+      "head": 6,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.91008569,
+      "theirs_norm": 1.91008569
+    },
+    {
+      "cosine": 1.0,
+      "head": 7,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86867903,
+      "theirs_norm": 1.86867903
+    },
+    {
+      "cosine": 1.0,
+      "head": 8,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88990202,
+      "theirs_norm": 1.88990202
+    },
+    {
+      "cosine": 1.0,
+      "head": 9,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86348891,
+      "theirs_norm": 1.86348891
+    },
+    {
+      "cosine": 1.0,
+      "head": 10,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.81702574,
+      "theirs_norm": 1.81702574
+    },
+    {
+      "cosine": 1.0,
+      "head": 11,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.81995971,
+      "theirs_norm": 1.81995971
+    },
+    {
+      "cosine": 1.0,
+      "head": 12,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8507301,
+      "theirs_norm": 1.8507301
+    },
+    {
+      "cosine": 1.0,
+      "head": 13,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85783204,
+      "theirs_norm": 1.85783204
+    },
+    {
+      "cosine": 1.0,
+      "head": 14,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86984182,
+      "theirs_norm": 1.86984182
+    },
+    {
+      "cosine": 1.0,
+      "head": 15,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85974343,
+      "theirs_norm": 1.85974343
+    },
+    {
+      "cosine": 1.0,
+      "head": 16,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87230045,
+      "theirs_norm": 1.87230045
+    },
+    {
+      "cosine": 1.0,
+      "head": 17,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84569363,
+      "theirs_norm": 1.84569363
+    },
+    {
+      "cosine": 1.0,
+      "head": 18,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.89881543,
+      "theirs_norm": 1.89881543
+    },
+    {
+      "cosine": 1.0,
+      "head": 19,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86111664,
+      "theirs_norm": 1.86111664
+    },
+    {
+      "cosine": 1.0,
+      "head": 20,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8455164,
+      "theirs_norm": 1.8455164
+    },
+    {
+      "cosine": 1.0,
+      "head": 21,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85585533,
+      "theirs_norm": 1.85585533
+    },
+    {
+      "cosine": 1.0,
+      "head": 22,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88589403,
+      "theirs_norm": 1.88589403
+    },
+    {
+      "cosine": 1.0,
+      "head": 23,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.83732126,
+      "theirs_norm": 1.83732126
+    },
+    {
+      "cosine": 1.0,
+      "head": 24,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.83313547,
+      "theirs_norm": 1.83313547
+    },
+    {
+      "cosine": 1.0,
+      "head": 25,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82770519,
+      "theirs_norm": 1.82770519
+    },
+    {
+      "cosine": 1.0,
+      "head": 26,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8184958,
+      "theirs_norm": 1.8184958
+    },
+    {
+      "cosine": 1.0,
+      "head": 27,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84030983,
+      "theirs_norm": 1.84030983
+    },
+    {
+      "cosine": 1.0,
+      "head": 28,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84172999,
+      "theirs_norm": 1.84172999
+    },
+    {
+      "cosine": 1.0,
+      "head": 29,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88316918,
+      "theirs_norm": 1.88316918
+    },
+    {
+      "cosine": 1.0,
+      "head": 30,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84133319,
+      "theirs_norm": 1.84133319
+    },
+    {
+      "cosine": 1.0,
+      "head": 31,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87012159,
+      "theirs_norm": 1.87012159
+    },
+    {
+      "cosine": 1.0,
+      "head": 32,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86663475,
+      "theirs_norm": 1.86663475
+    },
+    {
+      "cosine": 1.0,
+      "head": 33,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87474559,
+      "theirs_norm": 1.87474559
+    },
+    {
+      "cosine": 1.0,
+      "head": 34,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.91552111,
+      "theirs_norm": 1.91552111
+    },
+    {
+      "cosine": 1.0,
+      "head": 35,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.83050255,
+      "theirs_norm": 1.83050255
+    },
+    {
+      "cosine": 1.0,
+      "head": 36,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8220849,
+      "theirs_norm": 1.8220849
+    },
+    {
+      "cosine": 1.0,
+      "head": 37,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8492356,
+      "theirs_norm": 1.8492356
+    },
+    {
+      "cosine": 1.0,
+      "head": 38,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8977805,
+      "theirs_norm": 1.8977805
+    },
+    {
+      "cosine": 1.0,
+      "head": 39,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87502,
+      "theirs_norm": 1.87502
+    },
+    {
+      "cosine": 1.0,
+      "head": 40,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85361998,
+      "theirs_norm": 1.85361998
+    },
+    {
+      "cosine": 1.0,
+      "head": 41,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86774601,
+      "theirs_norm": 1.86774601
+    },
+    {
+      "cosine": 1.0,
+      "head": 42,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87108001,
+      "theirs_norm": 1.87108001
+    },
+    {
+      "cosine": 1.0,
+      "head": 43,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82406549,
+      "theirs_norm": 1.82406549
+    },
+    {
+      "cosine": 1.0,
+      "head": 44,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85804571,
+      "theirs_norm": 1.85804571
+    },
+    {
+      "cosine": 1.0,
+      "head": 45,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82532731,
+      "theirs_norm": 1.82532731
+    },
+    {
+      "cosine": 1.0,
+      "head": 46,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86476233,
+      "theirs_norm": 1.86476233
+    },
+    {
+      "cosine": 1.0,
+      "head": 47,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84440852,
+      "theirs_norm": 1.84440852
+    },
+    {
+      "cosine": 1.0,
+      "head": 48,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.83611706,
+      "theirs_norm": 1.83611706
+    },
+    {
+      "cosine": 1.0,
+      "head": 49,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.83152459,
+      "theirs_norm": 1.83152459
+    },
+    {
+      "cosine": 1.0,
+      "head": 50,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.8401361,
+      "theirs_norm": 1.8401361
+    },
+    {
+      "cosine": 1.0,
+      "head": 51,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82062777,
+      "theirs_norm": 1.82062777
+    },
+    {
+      "cosine": 1.0,
+      "head": 52,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82243186,
+      "theirs_norm": 1.82243186
+    },
+    {
+      "cosine": 1.0,
+      "head": 53,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82912104,
+      "theirs_norm": 1.82912104
+    },
+    {
+      "cosine": 1.0,
+      "head": 54,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.84222826,
+      "theirs_norm": 1.84222826
+    },
+    {
+      "cosine": 1.0,
+      "head": 55,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86757295,
+      "theirs_norm": 1.86757295
+    },
+    {
+      "cosine": 1.0,
+      "head": 56,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88504613,
+      "theirs_norm": 1.88504613
+    },
+    {
+      "cosine": 1.0,
+      "head": 57,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.80393412,
+      "theirs_norm": 1.80393412
+    },
+    {
+      "cosine": 1.0,
+      "head": 58,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88289874,
+      "theirs_norm": 1.88289874
+    },
+    {
+      "cosine": 1.0,
+      "head": 59,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87528934,
+      "theirs_norm": 1.87528934
+    },
+    {
+      "cosine": 1.0,
+      "head": 60,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.80972584,
+      "theirs_norm": 1.80972584
+    },
+    {
+      "cosine": 1.0,
+      "head": 61,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.82666696,
+      "theirs_norm": 1.82666696
+    },
+    {
+      "cosine": 1.0,
+      "head": 62,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85517861,
+      "theirs_norm": 1.85517861
+    },
+    {
+      "cosine": 1.0,
+      "head": 63,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85724622,
+      "theirs_norm": 1.85724622
+    }
+  ],
+  "producer": {
+    "git": {
+      "commit": "c0ee43d98a7c9557b58ce924777dc9fc42898b2f"
+    },
+    "tool": "tools/compare_v41_sparse_attention_operator.py"
+  },
+  "question": "given the vendor kernel's OWN operands, does our sparse-attention operator produce the vendor's output?",
+  "reading": "our operator reproduces the vendor kernel on its own operands, so the fault is upstream: the window KV, the index selection, or the query rotation",
+  "schema": "opentallas.abi3.v41_sparse_attention_operator.v1",
+  "verdict": "OPERATOR_AGREES",
+  "whole_tensor": {
+    "cosine": 1.0,
+    "elements": 2048,
+    "max_abs_diff": 0.0,
+    "mean_abs_diff": 0.0
+  },
+  "worst_heads": [
+    {
+      "cosine": 1.0,
+      "head": 0,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.81216234,
+      "theirs_norm": 1.81216234
+    },
+    {
+      "cosine": 1.0,
+      "head": 1,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86005949,
+      "theirs_norm": 1.86005949
+    },
+    {
+      "cosine": 1.0,
+      "head": 2,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85413534,
+      "theirs_norm": 1.85413534
+    },
+    {
+      "cosine": 1.0,
+      "head": 3,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.85264729,
+      "theirs_norm": 1.85264729
+    },
+    {
+      "cosine": 1.0,
+      "head": 4,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.87943499,
+      "theirs_norm": 1.87943499
+    },
+    {
+      "cosine": 1.0,
+      "head": 5,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.88781888,
+      "theirs_norm": 1.88781888
+    },
+    {
+      "cosine": 1.0,
+      "head": 6,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.91008569,
+      "theirs_norm": 1.91008569
+    },
+    {
+      "cosine": 1.0,
+      "head": 7,
+      "max_abs_diff": 0.0,
+      "ours_norm": 1.86867903,
+      "theirs_norm": 1.86867903
+    }
+  ]
+}

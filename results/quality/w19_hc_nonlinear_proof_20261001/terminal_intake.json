@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.w19.hc-nonlinear.terminal-intake.v1",
+  "time": "2026-10-01T12:11:15.754955+00:00",
+  "source_commit": "0724b1b35da60dbd453288333fc1b121f5568526",
+  "observed_exit_code": 0,
+  "CPU_tests_passed": 11,
+  "replay": [
+    {
+      "fixture": 0,
+      "dot_replay": "PASS",
+      "golden_method_replay": "PASS",
+      "all375_boundary_hashes": "PASS"
+    },
+    {
+      "fixture": 1,
+      "dot_replay": "PASS",
+      "golden_method_replay": "PASS",
+      "all375_boundary_hashes": "PASS"
+    },
+    {
+      "fixture": 2,
+      "dot_replay": "PASS",
+      "golden_method_replay": "PASS",
+      "all375_boundary_hashes": "PASS"
+    },
+    {
+      "fixture": 3,
+      "dot_replay": "PASS",
+      "golden_method_replay": "PASS",
+      "all375_boundary_hashes": "PASS"
+    }
+  ],
+  "checked_parent_main": "e78bdc0227cfc7d77fbb5096715820dd48b4feb9",
+  "golden_and_dot_sourcepins_match_main": true,
+  "normative_shape": [
+    24,
+    20480
+  ],
+  "backend": "CPU only; no torch/CUDA/Triton invocation",
+  "model_gate_sha256": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+  "GPU_campaign_launched": false,
+  "GPU_eligibility": "REFUSED_PENDING_GPU_LOWERING_AND_RESOURCES; Turing acknowledgement/pricing not observed",
+  "instruction_counts_scope": "rounding boundaries and F32 element counts, not hardware issue/latency/port claims",
+  "remaining": [
+    "Turing composed norm/dot/SFU/Sinkhorn schedule and RF/shared/load/barrier/DMA pricing",
+    "GPU campaign forbidden until priced",
+    "hc_pre/hc_post residual application outside witness scope"
+  ],
+  "QC_NAM": "unchanged complete original-rule FAIL/adopt=false",
+  "rate": null,
+  "adoption": false,
+  "artifacts": {
+    "Turing_coordination.json": "3ab0cb51480bf5d16b45960e2e0018c5bd80d10f9dcba121a9d07286a1b7fccb",
+    "boundaries_0.json": "c985befc642be2a018c8a72f6e35720733f8ba00e301e008f936c2f2fb6f7349",
+    "boundaries_1.json": "196b04eb12b1be661f7f24cab2b7b20ceb48a4a8e6b7abc87929cd3bb8a15cf9",
+    "boundaries_2.json": "ab650d6b79d0688cf8e4a4ae2928c4bd8cc0b9fddaa177dd13c20db10f99d79b",
+    "boundaries_3.json": "fc0c3c67bdfdfefa66f43b9a72f2d4ab7058c7f5b3f0feb84fcf41053cb7d003",
+    "fixture_0.npz": "b30d47d1ba7fdf7f5a4c0756c5d711fd33befd00c4149424177e0ee62e0ffda6",
+    "fixture_1.npz": "6e80f960a1893da3047db807236170501e7c4af0c687f4db4864a8dfd1eeaff1",
+    "fixture_2.npz": "4c44eb567cc50fe53627e2a544e46a2ff8ac4ecc85aa156a9fd1af8e098c3ac4",
+    "fixture_3.npz": "1b367fc28a28ca03a50f95f6812931a4237568776f435d812033b342dd79bc59",
+    "initial_intake_error.json": "429f4045edb339cd6427630df41cfa7018d38a1d0bf3d26ec1921b4fb54420fb",
+    "model_eligibility.json": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+    "proof.json": "15b40bd6cbf5856e7c4c5ba75391d3ba377ac7957d31aac02f2bd6019e2c58cf"
+  }
+}

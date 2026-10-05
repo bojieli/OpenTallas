@@ -1,0 +1,65 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/rmsnorm_deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {"minLength": 1, "type": "string"},
+          "role": {"enum": ["hardware_capability", "independent_check", "execution_expectations", "tensor_kernel_ir", "hbm_image", "physical_plan", "command_program", "command_disassembly", "known_request", "source_lock", "checkpoint_lock", "model_graph", "qualification_report"]},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "size_bytes": {"minimum": 1, "type": "integer"}
+        },
+        "required": ["path", "role", "sha256", "size_bytes"],
+        "type": "object"
+      },
+      "minItems": 13,
+      "maxItems": 13,
+      "type": "array"
+    },
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {"items": {"minLength": 1, "type": "string"}, "minItems": 4, "maxItems": 4, "type": "array"},
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {"major": {"const": 2}, "minor": {"const": 1}},
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "deterministic": {"const": true},
+        "name": {"const": "OpenTallas tensor-accelerator RMSNorm compiler"},
+        "version": {"const": "tensor-accelerator-production-rmsnorm-0.1.0"}
+      },
+      "required": ["deterministic", "name", "version"],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {"const": "capability.json"},
+        "command_program": {"const": "program/commands.bin"},
+        "hbm_image": {"const": "memory/hbm_embedding_rmsnorm.bin"},
+        "physical_plan": {"const": "physical/physical_plan.json"},
+        "request": {"const": "request/execution_request.json"}
+      },
+      "required": ["capability", "command_program", "hbm_image", "physical_plan", "request"],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "independent_check_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.rmsnorm_deployment.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": ["artifacts", "build_id", "capability_id", "claim_boundary", "command_abi", "compiler", "entrypoint", "graph_id", "independent_check_id", "kernel_ir_id", "physical_plan_id", "qualification_report_id", "schema", "source_lock_id"],
+  "title": "Embedding-to-RMSNorm deployment manifest v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

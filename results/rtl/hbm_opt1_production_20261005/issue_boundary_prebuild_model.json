@@ -1,0 +1,74 @@
+{
+  "scope": "Single production issue plus literal SM control/address receiving boundary; physical characterization only, no wholeSM clock qualification",
+  "basis": "d309ce914",
+  "selected": {
+    "ENABLE": 1,
+    "PQ_ENABLE": 1,
+    "IL": 8,
+    "RMAX": 4096,
+    "XDEPTH": 128,
+    "NOUT": 4,
+    "HAZ": 1,
+    "SUB": 4,
+    "DS": 3,
+    "PIO": 2
+  },
+  "preRTL_model": "Reuse production preedit_model.json once, do not charge characterization receivers as new design hardware",
+  "inherited_receivers": {
+    "s1_address_tag_and_control_FF": 26,
+    "fmt_FF": 2,
+    "PIO_status_FF": 6,
+    "four_DS_control_and_x_bundle_FF": 360,
+    "total": 394,
+    "body_floor_um2": 114.89040000000001,
+    "counts_are": "Source-declared before optimization; mapped survival/count/load must be measured, no source-count=mapped-count assumption"
+  },
+  "new_design_FF": 0,
+  "new_design_cycles": 0,
+  "MACs_per_cycle_delta": 0,
+  "inherited_issue_payload": {
+    "row_bits": 13,
+    "slot_bits": 3,
+    "absolute_address_bits": 7,
+    "tag_bits": 16
+  },
+  "boundary_output_bits": 125,
+  "replicas": 1,
+  "SM_downstream_loads": {
+    "l1_control_and_x_bundle_per_bit": 2,
+    "source": "SM g_l2s/g_h two registered half copies per sub, NH2"
+  },
+  "output_load_ff_envelope": 3.898,
+  "wire_capacity_slot": "Unknown; local routed screen establishes this subset only; no fullSM macro/core replication credit",
+  "constraints": {
+    "period_ps": 833.333333,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "input_max_ps": 473,
+    "output_max_ps": 323,
+    "hold_IO_min_ps": 166.666667,
+    "origin": "existing SM die-budget SDC; conservative envelope on cut ports, not installed internal arrivals",
+    "false_path_data_IO": false
+  },
+  "cut_inputs_uninstalled": {
+    "rdone": "actual SV stack output path and clock insertion required from Goodall",
+    "w_valid": "bulk-copy s_valid arrival required",
+    "h_start/op_fields": "actual 47bit op queue output arrivals and launch/pop return load required",
+    "release_in": "PIO chain source clock insertion required"
+  },
+  "G1_select_unqualified": {
+    "source": "production leaf G1 gy/gt bov-selected",
+    "required_macro_outputs": [
+      "TC ov/y/otag/fault",
+      "BD ov/y/otag/fault"
+    ],
+    "required_context": [
+      "actual SS/FF per-output arc at mapped G1 fanout/load",
+      "macro clock-tree insertion relative G1 clock",
+      "DG first-register wire/load and reset distribution"
+    ],
+    "owner": "Goodall fullSM physical context; requested direct"
+  },
+  "token_latency": "No new latency; actual12sequence outcome pending; Maxwell sole composed pricing",
+  "adopted": false
+}

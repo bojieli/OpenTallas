@@ -1,0 +1,128 @@
+{
+  "authorization": "Implement missing full-product compiler binding; fewer COMPLETE fixed4096 weight+adjacent-compute elements/die with more dies; fixed TP4/golden order; no sweeps or RTL/P&R before one actual map priced.",
+  "base_commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+  "calendar_policy": "per descriptor/action/provider finite acceptance, completion and II; stream 1.2GHz / serial0.9GHz analytical periods only. ISA waits, END and per-scope consumer done mandatory; causal inter-rank dependencies priced. No default service latency.",
+  "candidate_selected": false,
+  "capacity_policy": "26x33mm only. Unique service/routing_clock_PG/return debits once; reduced return declaration needs allocator compiled topology binding. Native occupancy discount needs native provider receipt. Ordered grain packing is a fixed-order calculation, not new count selection.",
+  "claims": {
+    "ISA_numerical": false,
+    "SSFF": false,
+    "connected_RTL": false,
+    "full_token_rate": false,
+    "hardware_fit": false,
+    "jobs_launched": 0,
+    "main_modified": false,
+    "new_count_selected": false
+  },
+  "compiled4096_conditional_return_from_existing_source_case": [
+    {
+      "NBF": 1024,
+      "R": 128,
+      "aggregate_pair_capacity_reference": 917504,
+      "aggregate_return_declared_bits_reference": 15628705792,
+      "compiled_NP": 4096,
+      "conservative_FF_50pct_mm2": 52.897587425279994,
+      "declared_lower_bits": 69771008,
+      "distributed_node_read_bytes_per_cycle": 131040.0,
+      "distributed_node_write_bytes_per_cycle": 131040.0,
+      "fixed_root_bits": 2146304,
+      "logical_macro_leaves": 8192,
+      "node_RST_bits": 532224,
+      "node_queue_bits": 67092480,
+      "physical_PP4096_banks": 16384,
+      "physical_or_calendar_qualified": false,
+      "preexisting_capacity_reference_layer_dies": 224,
+      "region_tree_levels": 6,
+      "return_nodes": 8064,
+      "root_public_bits_per_cycle": 8832,
+      "root_public_port_count": 128,
+      "sibling_noqueue_source_cycles": 36,
+      "source_array_discount_admitted": false
+    }
+  ],
+  "corrected_S58_capacity": {
+    "deficit_mm2": 2.4233123538459154,
+    "preserved_receipt": "results/uarch/dsrom_current4096_field_receipts_20261002/receipt-r4.json",
+    "verdict": "FAIL"
+  },
+  "current_declared_return": {
+    "NBF": 1024,
+    "R": 128,
+    "compiled_NP": 8192,
+    "conservative_FF_50pct_mm2": 104.9817480192,
+    "declared_lower_bits": 138469120,
+    "distributed_node_read_bytes_per_cycle": 264160.0,
+    "distributed_node_write_bytes_per_cycle": 264160.0,
+    "fixed_root_bits": 2146304,
+    "logical_macro_leaves": 16384,
+    "node_RST_bits": 1072896,
+    "node_queue_bits": 135249920,
+    "physical_PP4096_banks": 32768,
+    "physical_or_calendar_qualified": false,
+    "region_tree_levels": 7,
+    "return_nodes": 16256,
+    "root_public_bits_per_cycle": 8832,
+    "root_public_port_count": 128,
+    "sibling_noqueue_source_cycles": 42,
+    "source_array_discount_admitted": false
+  },
+  "current_demand": "demand-r3.json.gz",
+  "descriptor_census": {
+    "argmax_service": 1,
+    "consumer_done_fence": 41,
+    "embedding_service": 1,
+    "instruction": 4778,
+    "runtime_action": 66
+  },
+  "historical_demand_drafts": [
+    "demand.json.gz",
+    "demand-r2.json.gz"
+  ],
+  "next_exact_binding_task": {
+    "input_contract": "demand-r3.json.gz allocator_contract",
+    "owner": "Nash with service/geometry owners",
+    "required_outputs": [
+      "all-source tensor/constant/format coverage verification receipts",
+      "ordered indivisible owner atoms with q/BF pairs and mandatory RNE/WAKE-inclusive area per rank",
+      "compiled NP/R/NBF site/padding assignment compatible with actual provider masks",
+      "source-bound native ISA/field adapter contracts and bank/address patches for each descriptor",
+      "finite per-node accept/complete/II costs with actual action/producer/collective/write-visible/consumer dependencies",
+      "corrected service/corridor/clockPG/return ledger and per-group replicated service overhead"
+    ]
+  },
+  "no_active_mask_discount": true,
+  "padding_policy": "Every compiled NP pair charged; 4physical4096 leaves/pair. Unused q and BF sites retain catalogue frame reservation. Native BF site mapping and full allocator ownership must bind before changing NP. Field frames include compute/control/wire/margin reservations; no pure measured compute claim.",
+  "program_canonical_sha256": "e923be14667cdaa6b7f0a5bc1589f16193556293b3a195b635267863bc0eb033",
+  "rank_event_binding_count": 19548,
+  "return_source": {
+    "commit": "3995d7208916ba4f0edef6f269b9f5d04598b669",
+    "path": "results/uarch/dsrom_return_scaling_source_audit_20261002/model.json",
+    "sha256": "7ff6988499658d022f2bdbe85ef62657937f52a0331f0c8321dadad50c860f56",
+    "source_pins": {
+      "3a89958cacaa742eaa0fbf716180d35530fc8d28:rtl/v41die/ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+      "3a89958cacaa742eaa0fbf716180d35530fc8d28:rtl/v41die/ot_v41_pair_w17w10.sv": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+      "3a89958cacaa742eaa0fbf716180d35530fc8d28:rtl/v41die/ot_v41_retn_w17w10.sv": "3a5a01b3ffc0f3e779ddfe01a1eac2a59911aaeadc40824256c024f4d47b0c2f",
+      "3a89958cacaa742eaa0fbf716180d35530fc8d28:rtl/v41rom/ot_v41_ret.sv": "ef5263c7c3c54b0ff6726833215febd977e7bb043c36017ac0f893c9800091e3",
+      "93efabc2d9fd6f3402a6f586798b45fd97adbabc:results/rtl/dsrom_return_lifetime_audit_20261002/model.json": "9b01034e5282a97d14689b0a3ea0171c6b7f70191312fdcd67daa1040bec6d92",
+      "ecc0b0d4a14cd9d97d2ffb6e73f063c19baafe2c:results/uarch/dsrom_return_partition_template_20261002/model.json": "315c3f509eb7fa8e7e544146cbaeb7a70bf69f504d0d0d2a90df7c0c96a4e474"
+    },
+    "status": "DECLARED_STATE_SCALES_WITH_COMPILED_TOPOLOGY_NOT_ACTIVE_WORKLOAD_CREDIT"
+  },
+  "schema": "opentallas.dsrom.full-product-binding-progress.v1",
+  "shared_review_candidate": "DS4096-TP4-S58-PAIR1",
+  "tests": {
+    "PASS": 38,
+    "command": "python3 -m pytest -q tests/test_dsrom_full_product_binding.py tests/test_dsrom_current4096_field_receipts.py tests/test_dsrom_S58_latency_attribution.py",
+    "full_product_fixture": "all4778 descriptors x4 ranks compile/schedule using explicitly synthetic costs; no numerical/product latency credit",
+    "independent_fresh_regeneration": "demand-r3.json.gz byte-identical cmp exit0",
+    "new": 25,
+    "retained_development_failure": "tests_failure_return_expectation_r1.log: test expectation typed69771776 instead of source69771008; corrected expectation, source formula unchanged",
+    "retained_receipt_and_latency": 13
+  },
+  "work_split": {
+    "Archimedes": "packed macro envelopes/halo/OBS/native corridors and actual stage placement",
+    "Kepler": "source service/return/ports replication floor",
+    "Maxwell": "actual full emitter demand, allocator binding consumer, ordered ownership/stage calendar/2048bit ISA join, return/padding/capacity composition",
+    "Nash": "full-model shape/format/tensor bank allocator all40 layers/all384 experts, constants and exact conversion roles"
+  }
+}

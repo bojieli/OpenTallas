@@ -1,0 +1,16 @@
+test_actual_PC_and_sector_are_checked_not_repaired (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_aligned_bursts_follow_actual_XOR_PC_group (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_all1536_disjoint_destinations_and_real_fill_lane_skew (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_duplicate_inflight_and_actual_matching_grant_before_reuse (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_finite_return_RAM_and_group_credits (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_joint_minimum_model_retains_concrete_source_and_slot_deficits (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_layer_homes_do_not_alias_and_total_debit_matches (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_missing_actual_context_callback_not_qualified (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_output_backpressure_has32_pre_reserved_slots (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_same_bank_early_capture_preserves12edge_output (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+test_shared_namespace_atomic_eight_retire_plus_allocation (test_qwen_rom_kv_bank_groups.GroupsTests) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 2.860s
+
+OK

@@ -1,0 +1,25 @@
+{
+  "conservative_live_array_proxy_bytes": 2684354560,
+  "context": 1048576,
+  "expected_state_sha256": "b59a99c8294625778d28306924067d5bbf706979068579280d6ee40cb24e6782",
+  "historical_payload_bytes": 6710876160,
+  "local_cpu_allowed": "0-31",
+  "local_disk_available_bytes_proxy": 1209462790553,
+  "local_load_1m": 5.71,
+  "local_mem_available_bytes_proxy": 182536110080,
+  "no_full_program_or_RTL_build": true,
+  "output_scope": "four global immutable source CKV/index files; rank homes/physical address translation separate; no32MiB scratch relabel",
+  "protective_arbitrary_timeout_or_AS_FSIZE_cap": false,
+  "proxy_scope": "80B per component scalar covers simultaneously materialized source quantizer/gained intermediates; not measured peak",
+  "requested_affinity_CPU": 26,
+  "software_initialization_only": true,
+  "source_chunk_rows": 65536,
+  "source_rows": {
+    "2": 524287,
+    "8": 524287,
+    "14": 524287,
+    "20": 1048575
+  },
+  "threads": 1,
+  "window_payload_bytes": 10403840
+}

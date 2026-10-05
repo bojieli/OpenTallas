@@ -1,0 +1,18 @@
+{
+ "deployment": "build/abi3/deepseek-v41-flash-rom-array-64",
+ "capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+ "workload_id": "TA-DS41-CHAT-1-P32",
+ "emitted_token_ids": [],
+ "stop_reason": "failed",
+ "failure": "prefill failed: view 1097: loop 1076 is not active",
+ "prefill_tokens": 32,
+ "decode_steps": 0,
+ "wall_seconds": 0.0,
+ "oracle_token_ids": [
+  13806,
+  345,
+  7472,
+  49665
+ ],
+ "agrees_with_oracle": false
+}

@@ -1,0 +1,736 @@
+{
+  "RTL_map_PR_allowed": false,
+  "base": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+  "constraints": {
+    "address_min_arrival_plus_distribution_minus_skew_required_ps": 42.422199,
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833.3333333333334,
+    "reset_min_arrival_plus_distribution_minus_skew_required_ps": 50.049297,
+    "setup_uncertainty_ps": 60,
+    "unknown_arrivals_may_not_be_zero_filled": true
+  },
+  "current_once_calendar": {
+    "C0_control_recharged": false,
+    "RF_highword_RMW_recharged": false,
+    "actual_receipt": null,
+    "admitted": false,
+    "no_new_numerical_run": true,
+    "owner": "Dewey",
+    "required_receipt_fields": {
+      "C0_control_recharged": false,
+      "RF_highword_RMW_recharged": false,
+      "actual_scalar_count_delta": {
+        "LOAD": -1966080
+      },
+      "catalog_sha256": "cb40b52b8c77bdcf9d59295a2c7eca3a2bf908b08ab15dc2037fb1e0d3464e3c",
+      "dispatch_sha256": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+      "native_sha256": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00",
+      "reprice_count": 1
+    },
+    "required_schema": "H4_R33_DEWEY_ONCE_REPRICE_V1"
+  },
+  "default_on": false,
+  "macros": [
+    {
+      "abstract_includes_PG_and_OBS": true,
+      "clock_cap_fF": {
+        "ff": 10.3732,
+        "ss": 8.6838
+      },
+      "clock_total_cap_fF": {
+        "ff": 103.732,
+        "ss": 86.838
+      },
+      "current_slot_PG_OBS_join": null,
+      "height_um": 62.91,
+      "name": "ot_rom_4096x266_m8",
+      "obstruction_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "replicas": 10,
+      "reset_pins": 0,
+      "signal_pin_layers": [
+        "M4"
+      ],
+      "total_area_um2": 76639.47839999999,
+      "width_um": 121.824
+    },
+    {
+      "abstract_includes_PG_and_OBS": true,
+      "clock_cap_fF": {
+        "ff": 10.3732,
+        "ss": 8.6838
+      },
+      "clock_total_cap_fF": {
+        "ff": 20.7464,
+        "ss": 17.3676
+      },
+      "current_slot_PG_OBS_join": null,
+      "height_um": 41.04,
+      "name": "ot_sram_1r1w_128x256_m1_r2c2",
+      "obstruction_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "replicas": 2,
+      "reset_pins": 0,
+      "signal_pin_layers": [
+        "M4"
+      ],
+      "total_area_um2": 7783.15392,
+      "width_um": 94.824
+    }
+  ],
+  "mapped_sinks": {
+    "complete_current_tile": {
+      "census_transfer_to_current_wrapper_allowed": false,
+      "clock_bits_preopt": null,
+      "current_wrapper_SMIN": 6,
+      "mapped_sinks": null,
+      "preopt_widths_are_not_pin_counts": true,
+      "preserved_census_SMIN": 7,
+      "preserved_source_clock_bits_preopt": 134610,
+      "preserved_source_reset_bits_preopt": 58919,
+      "reset_bits_preopt": null
+    },
+    "current_loaded_capture": {
+      "classes": [
+        {
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.503152,
+              "total_cap_fF": 43.271072000000004
+            },
+            "ss": {
+              "pin_cap_fF": 0.433982,
+              "total_cap_fF": 37.322452
+            }
+          },
+          "count": 86,
+          "net": "2",
+          "pin": "CLK"
+        },
+        {
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.802909,
+              "total_cap_fF": 69.050174
+            },
+            "ss": {
+              "pin_cap_fF": 0.704025,
+              "total_cap_fF": 60.546150000000004
+            }
+          },
+          "count": 86,
+          "net": "3",
+          "pin": "RESETN"
+        },
+        {
+          "cell": "DFFHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.52201,
+              "total_cap_fF": 1603.61472
+            },
+            "ss": {
+              "pin_cap_fF": 0.446638,
+              "total_cap_fF": 1372.0719359999998
+            }
+          },
+          "count": 3072,
+          "net": "2",
+          "pin": "CLK"
+        },
+        {
+          "cell": "ot_rom_4096x266_m8",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 10.3732,
+              "total_cap_fF": 103.732
+            },
+            "ss": {
+              "pin_cap_fF": 8.6838,
+              "total_cap_fF": 86.838
+            }
+          },
+          "count": 10,
+          "net": "2",
+          "pin": "clk"
+        }
+      ],
+      "clock_sinks": 3168,
+      "clock_tree_area_um2": null,
+      "complete_tile": false,
+      "contextual_closure": false,
+      "physical_producer_CLKQ_observed": false,
+      "pin_only": true,
+      "producer_ports_external": [
+        "wrom_addr",
+        "wrom_re"
+      ],
+      "reset_distribution_area_um2": null,
+      "reset_sinks": 86,
+      "total_pin_cap_fF": {
+        "ff": {
+          "CLK": 1750.617792,
+          "RESETN": 69.050174
+        },
+        "ss": {
+          "CLK": 1496.2323879999997,
+          "RESETN": 60.546150000000004
+        }
+      },
+      "wire_cap_fF": null
+    },
+    "historical_complete_logic": {
+      "classes": [
+        {
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.503152,
+              "total_cap_fF": 14167.754016
+            },
+            "ss": {
+              "pin_cap_fF": 0.433982,
+              "total_cap_fF": 12220.065155999999
+            }
+          },
+          "count": 28158,
+          "net": "clk",
+          "pin": "CLK"
+        },
+        {
+          "cell": "DFFASRHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.802909,
+              "total_cap_fF": 22608.311622
+            },
+            "ss": {
+              "pin_cap_fF": 0.704025,
+              "total_cap_fF": 19823.93595
+            }
+          },
+          "count": 28158,
+          "net": "rst_n",
+          "pin": "RESETN"
+        },
+        {
+          "cell": "DFFHQNx1_ASAP7_75t_R",
+          "corners": {
+            "ff": {
+              "pin_cap_fF": 0.52201,
+              "total_cap_fF": 18005.69093
+            },
+            "ss": {
+              "pin_cap_fF": 0.446638,
+              "total_cap_fF": 15405.884533999999
+            }
+          },
+          "count": 34493,
+          "net": "clk",
+          "pin": "CLK"
+        }
+      ],
+      "clock_domain": "historical single clk; not physical 0.9GHz serial readiness",
+      "clock_sinks": 62651,
+      "clock_tree_area_um2": null,
+      "contextual_closure": false,
+      "current_source_qualified": false,
+      "pin_only": true,
+      "reason": "old ot_qwen_rom_tile_logic namespace/default arithmetic; no source-qualified current W12 mapping",
+      "reset_distribution_area_um2": null,
+      "reset_sinks": 28158,
+      "total_pin_cap_fF": {
+        "ff": {
+          "CLK": 32173.444946000003,
+          "RESETN": 22608.311622
+        },
+        "ss": {
+          "CLK": 27625.949689999998,
+          "RESETN": 19823.93595
+        }
+      },
+      "wire_cap_fF": null
+    },
+    "planned_cone_with_four_bank5_FFs_and_two_root_FFs": {
+      "clock_sinks": 3174,
+      "incremental_pin_cap_fF": {
+        "ff": {
+          "CLK": 3.0189120000000003,
+          "RESETN": 4.817454
+        },
+        "ss": {
+          "CLK": 2.603892,
+          "RESETN": 4.22415
+        }
+      },
+      "measured": false,
+      "reset_sinks": 92,
+      "total_pin_cap_fF": {
+        "ff": {
+          "CLK": 1753.636704,
+          "RESETN": 73.867628
+        },
+        "ss": {
+          "CLK": 1498.8362799999998,
+          "RESETN": 64.7703
+        }
+      }
+    }
+  },
+  "ordered_movement": {
+    "Qwen_source": {
+      "PCs": 1737,
+      "families": 21,
+      "source_unchanged": true
+    },
+    "actual_address_and_reverse_credit_receipts": null,
+    "checkpoint": {
+      "actual_writeback_origins": 2,
+      "address_and_reverse_receipts_missing": true,
+      "all_actual_address_receipts_null": true,
+      "all_validated_reverse_grants_null": true,
+      "full_parent_program_execution": false,
+      "hardware_admission": false,
+      "matched_source_readbacks": 1,
+      "observed_leaves": 11,
+      "parent": "a100243c45f7f4b5254e253d5ad776bb3a982046",
+      "parent_protocol_control_tests": 2,
+      "protocol_controls_are_full_program_evidence": false,
+      "provider_calls": 6,
+      "schema": "H4_C0_ACTUAL_FUNCTIONAL_LEAF_PROVIDER_MAPPING_CHECKPOINT_V1",
+      "streaming_reads": 3,
+      "test_total": 17
+    },
+    "full_program_qualified": false,
+    "lowered_r33_scope": "DeepSeek40PC source join; Qwen1737PC source unchanged"
+  },
+  "peer_source_joins": {
+    "Euclid_fulltile": {
+      "Ampere_commit": "b0fe38886f9b14375780f83f18d07eb40800894c",
+      "Ampere_complete_wrapper_inventory": {
+        "macro_clock_pins": 12,
+        "mapped_clock_and_reset_loads": null,
+        "metadata_reset_bits": 90,
+        "other_async_reset_bits": 58829,
+        "proposed_root_clock_pins": 2,
+        "source_TP4_parameter_rebind_required": true,
+        "source_async_reset_bits": 58919,
+        "source_clock_bits": 134610
+      },
+      "Ampere_snapshot": "results/uarch/qwen_rom_bank5_control_20261002/Ampere_snapshot_r1/origin.json",
+      "KV_boundary": {
+        "K_rows": 22,
+        "V_rows": 32,
+        "active_rows": 54,
+        "capacity_bytes": 8192,
+        "drain_and_owner_generation_bound": false,
+        "fill_address_bits": 7,
+        "fill_bits": 512,
+        "fill_capture_then_write_edges": 2,
+        "fill_mask_bits": 512,
+        "physical_provider_and_owner_visibility_bound": false,
+        "physical_rows": 128,
+        "reader_and_writer_same_word_groups": 4
+      },
+      "KV_owner": "Russell01a0fd4d-36ca-7780-9515-f0094cf8cae2",
+      "Russell_snapshot": "results/uarch/qwen_rom_bank5_control_20261002/Russell_snapshot_r1/origin.json",
+      "actual_macro_inventory": {
+        "ot_rom_4096x266_m8": 10,
+        "ot_sram_1r1w_128x256_m1_r2c2": 2
+      },
+      "census_requirement": "Bind full TP4 wrapper KV_NH2/KV_VB131072 to Ampere source inventory; inspect model/census parameters before transferring totals. 134610/58919 are source inventory, not mapped physical pin loads. Add 12 actual macro clock loads and proposed two root FFs only in their own priced scopes.",
+      "child_source": "rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv",
+      "child_source_sha256": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0",
+      "contextual_constraints": {
+        "FF_hold_uncertainty_ps": 25,
+        "SS_period_ps": 833.3333333333334,
+        "SS_setup_uncertainty_ps": 60,
+        "serial_parent_clock_Hz": 900000000,
+        "serial_parent_reset_release_CDC_scope": "Outside streamingtile wrapper; bind at realparent, not pretendtile2FF coversserialdomain."
+      },
+      "current_r33_loweredwindow_integration_gap_retained": true,
+      "explicit_current_target": {
+        "ACC_LAT": 7,
+        "AW": 24,
+        "CODE_BANKS": 5,
+        "FAST_ISSUE": 1,
+        "GT": 6144,
+        "KV_AW": 7,
+        "KV_NH": 2,
+        "KV_PREP": 3,
+        "KV_VB": 131072,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "NW": 18,
+        "TG": 4,
+        "TREE_LAT": 7,
+        "W": 16,
+        "arithmetic_extra": 55
+      },
+      "hardware_adoption": false,
+      "mapping_job_launched": false,
+      "new_token_run": false,
+      "next_sequence": [
+        "Ampere refresh completewrapper census + priceroot/tree/clock/sourceprotocol and publishconditionaladmission",
+        "Euclid implement admittedreset/start/launchbindings; rerun necessary literal/connections gate",
+        "One leased complete-element mapping,10ROM/2KV +actualproviders/fullclockresetload, bothSS/FF; reject measuredfailedsuccessor",
+        "Onlyafter fullcontextproof andslot/pinOBS/PG review considerP&R; macro11psidealnotclosure"
+      ],
+      "optin_parameter": {
+        "CONTROL_CONTEXT_CANDIDATE": 0,
+        "characterization_value_after_admission": 1
+      },
+      "parent_observed": "68a05aca9",
+      "pricing_owner": "Ampere01a0fd69-551c-7521-bb30-67c4bd8c3c6b",
+      "reader_drain_requirement": "u_me ready()/idle() are currently unconnected in candidate; do not claim true tile reader drain or silently add a queue/port. Coordinate actual last-read/pipeline retirement handshake with Russell and price exposure route.",
+      "reset_requirement": "Externalreset_stream_n remains unbound. Ampere must commit rootproducer/protocol and fulltree price before rootRTL or mapping. No freezero-delay or async recovery/removal waiver.",
+      "schema": "opentallas.qwen-rom-fulltile-context-preflight.v1",
+      "second_position": false,
+      "source": "rtl/physical/ot_qwen_rom_fulltile_tp4_context_top.sv",
+      "source_base": "51218664b",
+      "source_sha256": "6f1f5118f97afe4b02494c60b5b1f9aec6ca227dd2e539d9bc6e7d60730f5a22",
+      "status": "COMPLETE_SOURCE_ASSEMBLY_READY_G0_CONTEXT_ADMISSION_OPEN",
+      "tile_PR": false,
+      "top": "ot_qwen_rom_fulltile_tp4_context_top"
+    },
+    "Russell_production": {
+      "actual_tail_physical_context": {
+        "SS_macro_clk_to_q_ps": 524.1,
+        "SS_macro_min_period_ps": 480.3,
+        "admission": "Full service/calendar model and measured SS/FF closure required before hardware.",
+        "aggregate_write_bytes_per_cycle_max": 64,
+        "area_slot_fit": null,
+        "banks_per_rank": 128,
+        "capture_budget_ps_before_cell_setup_route_mux": 249.23333333333335,
+        "channel_tracks": null,
+        "excluded_from_macro_area": "Owner directory, lane conversion, masks, SRAM protection, read/write muxes, serial/stream CDC, capture, CTS, routes.",
+        "flush_read_bytes_per_cycle_candidate": 32,
+        "macro": "ot_sram_1r1w_512x128_m4_r2c2",
+        "macro_area_mm2_TP4": 2.647373312,
+        "macro_area_mm2_per_rank": 0.661843328,
+        "macro_capacity_bytes_per_rank": 1048576,
+        "mutable_state_bytes_per_rank": 294912,
+        "owner_rows_per_bank": 144,
+        "per_user_latency": null,
+        "port_arbitration": "Consumer reads and closed-tail flush share each 1R port; source tail_collision must reject simultaneous bank use. No overlap credited without accepted port calendar.",
+        "ports_per_bank": {
+          "read_bytes_per_stream_cycle": 16,
+          "write_bytes_per_stream_cycle": 16
+        },
+        "required_LOG_TW": 9,
+        "row_equation": "layer*4 + head*2 + dim//64; bank=(tile%2)*64 + dim%64",
+        "row_mask_bits_per_bank": 16,
+        "setup_uncertainty_ps": 60,
+        "source_SW": 64,
+        "source_prototype_LOG_TW_default": 2,
+        "state": "analytical_candidate_not_admitted",
+        "stream_period_ps": 833.3333333333334
+      },
+      "boundary": {
+        "closed_k_sectors": 128,
+        "domains_hz": {
+          "serial": 900000000,
+          "service_candidate": 1000000000,
+          "stream": 1200000000
+        },
+        "k_full_tail_average_sectors_per_row": 8,
+        "k_tail_bytes_144_owners": 589824,
+        "k_tail_bytes_per_owner": 4096,
+        "packed_payload_bytes_per_beat": 64,
+        "producer_bits_per_64lane_beat": 3648,
+        "raw_row_bytes": 512,
+        "v_sector_splits": 2,
+        "v_sectors_per_row": 8
+      },
+      "policy_selected": false,
+      "pricing": "Production demand reads replace existing uarch KV/HBM read bytes and cycles once, never add them again. Writes/CDC/tail access/split/visibility/drain costs remain explicit. No overlap credit absent source-timed proof.",
+      "receipt_schema": {
+        "allocate": [
+          "sectors(count1..32)",
+          "write",
+          "payload_hex(required_for_write)"
+        ],
+        "clock": "service_cycle is provider clk cycle; accepted WR to backing minimum8 source cycles",
+        "common": [
+          "event",
+          "service_cycle",
+          "endpoint",
+          "stack",
+          "physical_tag",
+          "identity(hex192)",
+          "owner(user,rank,layer,epoch)",
+          "producer_pc"
+        ],
+        "data": "backing requires exact allocated32B beat; read return requires actual32B payload",
+        "events": [
+          "allocate",
+          "write_command",
+          "backing",
+          "return",
+          "acquire",
+          "drain",
+          "credit",
+          "grant_consumed",
+          "retire"
+        ],
+        "per_beat": [
+          "beat",
+          "sector(base+beat)"
+        ],
+        "readers": "acquire/drain require reader10; 1024 concurrent assembly readers per stack max"
+      },
+      "remaining": "Production input traces, initial actual state, safe source receipt exporter, finite read-reader bound, tail ports/area, full calendar and slot composition.",
+      "source_sha256": {
+        "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+        "rtl/hdc/kv/ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+        "rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv": "44aea25c27b18063f4ec1af1500571952735700fc2a91175f387f1c8af5cdde9",
+        "rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv": "a876c739314e4b26edf81bcd86944b769e6027256f798a1ce0680db3d84ab056",
+        "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+        "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+        "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+        "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+        "rtl/model_ready_hbm_r14/ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+        "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+        "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+        "tools/hdc_isa.py": "2009bf4312e43f405971f39e3fca747450d5467850e5a7f081781a2c0e3e6542",
+        "tools/hdc_program.py": "b2059fab985be69b51b58ee3f2b6c30b3a1cc381120cff7ecdb8a0f1fc44ae09",
+        "tools/hdc_qwen_fullshape_isa_w12.py": "add181198a349f401629e39393e47aa20b969df38ec42afbdb8347921ea18707",
+        "tools/hdc_qwen_fullshape_program_w12.py": "ded3b10503c7d8cc1cbe57f67bc603950f2974c80f6a08e18705e15ea4e76b82",
+        "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea"
+      }
+    },
+    "actual_KV_capture": {
+      "KV_state_files": [],
+      "actual_rank_state_files": 144,
+      "capture_path": "/home/ubuntu/OpenTallas/results/rtl/qwen_rom_TP4_terminal_20261002/capture.json",
+      "capture_sha256": "d71d6d8a6d724b8f48c77ec90dd9027935d5d8f90d50b54be3a941b680f9beab",
+      "disposition": "Retained exact token remains valid at captured scope; missing KV producer payload/accepted issue receipts cannot be reconstructed as production evidence.",
+      "file_count": 328,
+      "original_runtime_path": "/home/ubuntu/w12/rt_tp4d",
+      "original_runtime_path_exists": false,
+      "program_images": []
+    },
+    "current_wrapper_census_join": "SMIN6 vs preservedSMIN7; KV_NH2/KV_VB131072 vs census defaults4/262144. No new elaboration; totals held at original scope.",
+    "origins": {
+      "euclid_fulltile_context_packet_r1.json": {
+        "commit": "d4992138c871afc8e856b473e0881443a519d8af",
+        "path": "results/uarch/qwen_rom_bank5_control_20261002/fulltile_context_packet_r1.json",
+        "sha256": "515b8b50652726e4abcf5e16647b36dc02e6012f1ac818216de89b25e1e39c74"
+      },
+      "euclid_fulltile_context_preflight_r1.json": {
+        "commit": "d4992138c871afc8e856b473e0881443a519d8af",
+        "path": "results/uarch/qwen_rom_bank5_control_20261002/fulltile_context_preflight_r1.json",
+        "sha256": "3c1e114f295b6ad7403edd7a5eff6e726496a4ea8db5e9b6b854d3412f467eef"
+      },
+      "euclid_ot_qwen_rom_fulltile_tp4_context_top.sv": {
+        "commit": "d4992138c871afc8e856b473e0881443a519d8af",
+        "path": "rtl/physical/ot_qwen_rom_fulltile_tp4_context_top.sv",
+        "sha256": "6f1f5118f97afe4b02494c60b5b1f9aec6ca227dd2e539d9bc6e7d60730f5a22"
+      },
+      "russell_actual_capture_inventory_r1.json": {
+        "commit": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+        "path": "results/uarch/qwen_rom_kv_production_join_20261002/actual_capture_inventory_r1.json",
+        "sha256": "c937592ad727f0141992905ef31e45cd6d9fe0c9e564e07fe43ddff2ec65b00d"
+      },
+      "russell_ampere_dependency_r2.json": {
+        "commit": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+        "path": "results/uarch/qwen_rom_kv_production_join_20261002/ampere_dependency_r2.json",
+        "sha256": "df8e97eeef36dbf67179112788eb07e428b50c3cbda20ef7202eaf3bbe6fd434"
+      },
+      "russell_contract_r3.json": {
+        "commit": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+        "path": "results/uarch/qwen_rom_kv_production_join_20261002/contract_r3.json",
+        "sha256": "e6757abba4b5ae79b97d9b69bc871002aaa71666fd07763a54dde1edcd9ab9ad"
+      },
+      "russell_source_binding_r1.json": {
+        "commit": "22ec26bd2db8446546f4848cc8c2dd79e8cf5209",
+        "path": "results/uarch/qwen_rom_kv_production_join_20261002/source_binding_r1.json",
+        "sha256": "5708aee11f537f530fb174c1988545f023b3bc0fe5cb75044a9f3fb660c696a7"
+      }
+    }
+  },
+  "persistent_KV": {
+    "actual_service_macros_per_stack": 96,
+    "assembly_slots_per_stack": 1024,
+    "cold_calendar_role": "reference only, not selected production",
+    "current_slot_fit": null,
+    "domains_Hz": {
+      "serial": 900000000,
+      "service": 1000000000,
+      "stream": 1200000000
+    },
+    "inherited_slot_is_current_fit": false,
+    "latency": {
+      "admitted_latency_or_rate": false,
+      "conservative_composition": {
+        "compute_cycles": 134086,
+        "delta_from_old_max": 387403068,
+        "existing_kv_bound_cycles": 50331.647999999994,
+        "existing_kv_bound_replaced": true,
+        "finite_delivery_cycles": 387403068,
+        "incremental_read_bytes": 0,
+        "proven_overlap_cycles": 0,
+        "token_cycles": 387537154
+      },
+      "conservative_seconds": 0.32294762833333335,
+      "existing_read_bytes_charged_once": 150994944,
+      "incremental_full_reload_bytes": 0,
+      "qualification": "Legal conservative calendar under disclosed guards. No measured r14 stall bound, selected prefetch overlap, actual8K ROM state, runtime or physical transfer credit.",
+      "reset_startup_addition": "Two streaming startup edges only once, conditional on joined domain readiness; never repeat per layer or per token, never add another KV read charge.",
+      "selected_production_policy": false
+    },
+    "macro_area_mm2_per_stack": 0.976969184,
+    "physical_contract_blockers": [
+      "existing TP2 raw-state provider now translated by global head identity; actual ROM TP4 producer/stage owner state still unconnected",
+      "r14 tag freed on owned acceptance before reverse credit and lacks caller-visible allocation receipt; provider successor must retain identity/quarantine and expose allocation tag",
+      "r14 read reverse credit validation missing; no inherited runtime PASS",
+      "calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved",
+      "complete service area, finite port arbitration, hub routing-layer capacity and current slot placement unresolved",
+      "contextual SS60ps/FF25ps at source-matched1GHz service and1.2GHz fill unresolved"
+    ],
+    "source_commit": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe"
+  },
+  "producer_arrival_contract": {
+    "actual_FF_CLKQ_min_ps": null,
+    "actual_SS_CLKQ_max_ps": null,
+    "external_zero_delay_is_internal_failure": false,
+    "registered_source": "u_me.g_issue_fast: registered wrom_re, wrom_addr<=cur; address has no reset assignment and is qualified only by accepted CE.",
+    "required_address_hold_equation": "registered_address_CLKQ_min + two_BUF_min + wire_min - macro_CLK_skew_max >= 42.422199ps",
+    "required_reset_equations": {
+      "tile_recovery": "Tstream - root_stage2_CLKQ_max - INV_max - reset_distribution_max - skew_max >= SS recovery +60ps",
+      "tile_removal": "root_stage2_CLKQ_min + INV_min + reset_distribution_min - downstream_CLK_skew_max >= FF removal +25ps"
+    },
+    "source_qualified_complete_sink_map_required": true
+  },
+  "protocol": {
+    "acceptance": "Release after edge 2; first downstream acceptance edge 3. IREG captures ib/x/go then; engine accepts at edge 4; first ROM producer re/address after edge 5; macro accepts edge 6; MEM_EXTRA capture edge 7.",
+    "assertion": "Asynchronous low assertion, no ROM ECC added; reset valid/control, not ROM payload.",
+    "bench": "rt_rst_n NBA at cyc5. Synchronizer stages sample at cyc6/7; downstream reset available at cyc8. Bench start NBA at cyc7 is first sampled at cyc8. This is a source schedule, not a physical inputdelay.",
+    "per_layer_added_cycles": 0,
+    "per_token_added_cycles": 0,
+    "queue": "Tile ready()/idle() are unconnected. No ready handshake or request queue exists at ib_go. Parent must hold/schedule ib_go and ib/x through first acceptance; never silently add a queue.",
+    "release": "Two same-streaming-clock DFFASR/QN plus two INV. External RESETN on both; SETN tied high. No arbitrary-phase recovery/removal waiver.",
+    "scope": "Per-tile producer resets complete tile control. Die/core remain a distinct upstream reset branch. A global owner must coordinate starts and streaming/serial readiness.",
+    "startup_trace": [
+      {
+        "edge": 1,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 0
+      },
+      {
+        "edge": 2,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 0
+      },
+      {
+        "edge": 3,
+        "engine_go": 0,
+        "ib_go": 1,
+        "producer_read_after": 0,
+        "reset_before": 1
+      },
+      {
+        "edge": 4,
+        "engine_go": 1,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 1
+      },
+      {
+        "edge": 5,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 6,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 7,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 8,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      }
+    ]
+  },
+  "ranked_dependencies": [
+    "1 Actual upstream root provider phase/pulse/slew at both root RESETN pins, hashed instantiated source; hold ib_go/input through first downstream accept",
+    "2 Bind explicit Euclid SMIN6/KV_NH2/KV_VB131072 source before transferring SMIN7/defaultKV census; current complete tile/die/core/serial/service sink map and SS/FF producer CLKQ plus reset/address distribution min/max/skew",
+    "3 Complete root/CTS/reset distribution/CDC/control area plus current slot/PGOBS and real corridor capacity",
+    "4 Russell finite KV assembly/retirement/reverse credit and domain readiness; cold calendar stays reference",
+    "5 Kepler actual addressed owner/version/generation/payload and consumer/reverse grant; Dewey once-only r33 calendar receipt"
+  ],
+  "re_elaboration": false,
+  "root_cost": {
+    "complete_clock_reset_distribution_slot_cost_um2": null,
+    "excludes_die_core_and_other_domains": true,
+    "nominal_cell_area_um2": 0.84564,
+    "proposed_external_root_RESETN_pin_cap_fF_per_die": {
+      "ff": 2466.536448,
+      "ss": 2162.7648
+    },
+    "tiles_per_die": 1536,
+    "upstream_root_RESETN_sinks_per_die": 3072
+  },
+  "root_provider": {
+    "actual_receipt": null,
+    "bench_is_physical_receipt": false,
+    "conditional_pin_window": {
+      "characterized_clock_and_reset_slew_ps": [
+        5,
+        320
+      ],
+      "deassert_max_ps_after_previous_root_posedge": 791.5025333333334,
+      "deassert_min_ps_after_previous_root_posedge": 92.5064,
+      "reset_low_pulse_min_ps": 321.045,
+      "scope": "Conservative external-root pin requirement across Liberty grids, before wire/skew. Both root FFs must meet it. This is not an observed provider phase, internal closure, or recovery/removal waiver."
+    },
+    "owner": "Euclid/root physical provider; upstream die/core and serial release join remains parent-owned",
+    "required_schema": "QWEN_ROOT_PROVIDER_PIN_INTERVALS_V1",
+    "source": "die CXX bench rt_rst_n NBA cyc5; stages cyc6/7; downstream start cyc8"
+  },
+  "routing": {
+    "actual_KV_fill_tracks": 1048,
+    "clock_reset_tracks_additional": null,
+    "corridor_um": 60.0,
+    "current_routed_capacity": null,
+    "minimum_policy_width_um": 74.52444444444444,
+    "note": "Conditional lower bound for this boundary/layer policy; not a production channel receipt",
+    "policy_capacity_tracks": 843.75,
+    "policy_fit": false,
+    "policy_layers": [
+      "M6",
+      "M8"
+    ],
+    "policy_signal_share": 0.5
+  },
+  "schema": "QWEN_PHYSICAL_CONTEXT_CURRENT_V1",
+  "status": "PARENT_PHYSICAL_DEPENDENCIES_OPEN"
+}

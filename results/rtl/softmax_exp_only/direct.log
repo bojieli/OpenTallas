@@ -1,0 +1,6 @@
+TRANS_SUMMARY cases=4200 exp=2100 sigmoid=2100 accepted=2065 refused=2135 stalls=1534 max_cycles=2880 reset_cycles=23
+PASS a3_hc_transcendental checks=3136052
+- results/rtl/softmax_exp_only/tb_exp_only.sv:250: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 31ms; walltime 23.623 s; speed 1.323 ms/s
+- Verilator: cpu 23.597 s on 1 threads; allocated 7 MB

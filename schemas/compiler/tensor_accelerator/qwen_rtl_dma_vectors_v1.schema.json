@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_dma_vectors_v1.schema.json",
+  "title": "Qwen authentic HBM-to-SRAM DMA RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "command",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "hbm",
+    "operation",
+    "physical_plan_id",
+    "schema",
+    "sram",
+    "vector_set_id"
+  ],
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "const": {
+        "complete_dma_command": true,
+        "complete_layer_execution": false,
+        "external_hbm_response_boundary": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command": {"$ref": "#/$defs/command"},
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "command_vector_set_id": {"$ref": "#/$defs/sha256"},
+    "hbm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "address",
+        "burst_bytes",
+        "burst_count",
+        "payload_hex",
+        "payload_sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "address": {"const": 1244659712},
+        "burst_bytes": {"const": 64},
+        "burst_count": {"const": 128},
+        "payload_hex": {"pattern": "^[0-9a-f]{16384}$", "type": "string"},
+        "payload_sha256": {
+          "const": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530"
+        },
+        "size_bytes": {"const": 8192}
+      }
+    },
+    "operation": {
+      "const": {
+        "command_count": 2,
+        "command_start": 1,
+        "kernel_index": 1,
+        "operation_id": "node.0001",
+        "selected_command_index": 1,
+        "tensor_id": "model.layers.0.input_layernorm.weight"
+      }
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_rtl_dma_vectors.v1"},
+    "sram": {
+      "const": {"address": 2097152, "word_bytes": 16, "write_count": 512}
+    },
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major",
+        "abi_minor",
+        "expected_error",
+        "expected_fields",
+        "expected_index",
+        "name",
+        "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {
+          "const": {
+            "auxiliary": 0,
+            "destination": 2097152,
+            "engine": 1,
+            "flags": 0,
+            "index": 1,
+            "kernel_index": 1,
+            "opcode": 1,
+            "size0": 8192,
+            "size1": 0,
+            "size2": 0,
+            "size3": 0,
+            "source0": 1244659712,
+            "source1": 0
+          }
+        },
+        "expected_index": {"const": 1},
+        "name": {"const": "dma_hbm_to_sram"},
+        "record_hex": {"pattern": "^[0-9a-f]{128}$", "type": "string"}
+      }
+    }
+  }
+}

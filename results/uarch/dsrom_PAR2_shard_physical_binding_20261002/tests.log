@@ -1,0 +1,23 @@
+test_64_conflicting_rows_take64_service_rounds (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_all_source_phases_and_price_retained (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_coalescing_requires_same_row (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_finite_seats_fail_closed (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_no_free_throughput_or_latency (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_real_OBS_and_disjoint_geometry (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_real_storage_only_and_no_source_deletion (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_source_API_address_boundaries (test_dsrom_PAR2_local_parity_model.ParityService) ... ok
+test_SS_macro_cq_priced_before_routing (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_boundary_width_not_perfect_service (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_clearance_cost_never_free (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_exact_compiled_capacity_not_active_only (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_local_pin_escape_only (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_no_free_PG_vias_clock_or_service_capacity (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_one_successor_no_serial_hops (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_ordered_regions_not_split (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_second_shard_bijection_and_distinct_padding (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+test_unique_macro_instances_and_exact_OBS (test_dsrom_PAR2_shard_physical_binding.ShardPhysicalBinding) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 3.566s
+
+OK

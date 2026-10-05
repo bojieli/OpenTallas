@@ -1,0 +1,78 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qkv_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "graph_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "position": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "u32"
+        },
+        "position_id": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "position_id"
+      ],
+      "type": "object"
+    },
+    "request_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qkv_request.v1"
+    },
+    "source_operation_ids": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "token": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "u32"
+        },
+        "token_id": {
+          "maximum": 4294967295,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "token_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "graph_id",
+    "position",
+    "request_id",
+    "schema",
+    "source_operation_ids",
+    "token"
+  ],
+  "title": "Q/K/V execution request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

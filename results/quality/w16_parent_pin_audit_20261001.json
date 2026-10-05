@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.w16.parent-pin-audit.v1",
+  "parent_pin": "e7b389fa2693137c4f8d882616b5d0090bc182d8",
+  "prior_generator_commit": "3ce6b8298",
+  "model_source_changed": false,
+  "headline_changed": false,
+  "proof": "Current AST minus the newly added uncalled gpu_payload_transport_model function equals the previous generator AST exactly, including all computational functions/constants.",
+  "pin_only_refresh": [
+    {
+      "path": "results/arch/v41_stage_owner_product.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/consolidation.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/economics.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/economics_levers.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/v41_dedicated_units.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    },
+    {
+      "path": "results/uarch/v41_vm_waterfall.json",
+      "old_generator_sha256": "f1c01de3bce32312105ba4aa0d106f783170d29b13dddb6d667ca965e9ac1574",
+      "new_generator_sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "all_other_fields_identical": true
+    }
+  ],
+  "historical_records_not_refreshed": [
+    "results/uarch/fusion_audit.json",
+    "results/uarch/hbm_feasibility_audit.json",
+    "results/uarch/v41_rom_ksplit_bankmap.json",
+    "results/uarch/v41_rom_striped_bankmap.json"
+  ],
+  "historical_limit": "Their older generator pins predate more than the isolated additive W19 function; ksplit also has a changed v41_rom input. Preserve historical pins/verdicts; no unsupported current-source refresh.",
+  "figure_dependencies": {
+    "initial_prose_check": "163 unresolved references from sparse omissions; failure retained in parent /tmp/w16-parent-prose-check initial tool output",
+    "recheck": "PASS, zero missing paths after concurrent parent sparse materialization",
+    "coverage": "PASS current census",
+    "headline": "PASS 204/204 bound,409/409 occurrences agree; no new stale pin",
+    "final_readiness": "Expected blocked full-shape RTL and full-die route gates; no promotion",
+    "make_check_figures": {
+      "result": "PASS exit0 on parent integration e7b389fa2",
+      "log_path": "/tmp/w16-parent-check-figures-final.log",
+      "log_sha256": "08177081ad4da572904456833518cfbda004bfd02b8b9b19bf6c43965b7f9fb3",
+      "source_or_doc_edits": false
+    }
+  },
+  "qc": "Existing live lanes and pinned readiness watcher unchanged; no evaluation launch."
+}

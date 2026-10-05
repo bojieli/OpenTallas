@@ -1,0 +1,455 @@
+
+-- Running command `read_verilog -sv rtl/gpu/ot_gpu_payload_assemble.sv; chparam -set ENABLE 1 ot_gpu_payload_assemble; hierarchy -top ot_gpu_payload_assemble; proc; check -assert' --
+
+1. Executing Verilog-2005 frontend: rtl/gpu/ot_gpu_payload_assemble.sv
+Parsing SystemVerilog input from `rtl/gpu/ot_gpu_payload_assemble.sv' to AST representation.
+Generating RTLIL representation for module `\ot_gpu_payload_assemble'.
+Generating RTLIL representation for module `\ot_gpu_payload_line_bridge'.
+Successfully finished Verilog frontend.
+
+2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_payload_assemble'.
+Parameter \ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_gpu_payload_assemble\ENABLE=1'.
+Warning: Replacing memory \g_on.tags with list of registers. See rtl/gpu/ot_gpu_payload_assemble.sv:111
+Warning: Replacing memory \g_on.words with list of registers. See rtl/gpu/ot_gpu_payload_assemble.sv:105
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_gpu_payload_assemble
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_gpu_payload_assemble
+Removing unused module `\ot_gpu_payload_line_bridge'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed 5 dead cases from process $proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68 in module ot_gpu_payload_assemble.
+Marked 48 switch rules as full_case in process $proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68 in module ot_gpu_payload_assemble.
+Marked 18 switch rules as full_case in process $proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279 in module ot_gpu_payload_assemble.
+Removed 1 dead cases from process $proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412 in module ot_gpu_payload_assemble.
+Marked 1 switch rules as full_case in process $proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412 in module ot_gpu_payload_assemble.
+Removed a total of 6 dead cases.
+
+4.3. Executing PROC_INIT pass (extract init attributes).
+
+4.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+
+4.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+     1/87: $1$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$61_DATA[255:0]$249
+     2/87: $5\g_on.complete[0:0]
+     3/87: $1$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$60_DATA[255:0]$242
+     4/87: $4\g_on.complete[0:0]
+     5/87: $1$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$59_DATA[255:0]$235
+     6/87: $3\g_on.complete[0:0]
+     7/87: $1$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$58_DATA[255:0]$228
+     8/87: $2\g_on.complete[0:0]
+     9/87: $1$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$57_DATA[255:0]$221
+    10/87: $1\g_on.complete[0:0]
+    11/87: $16\g_on.duplicate_tag[0:0]
+    12/87: $15\g_on.duplicate_tag[0:0]
+    13/87: $14\g_on.duplicate_tag[0:0]
+    14/87: $13\g_on.duplicate_tag[0:0]
+    15/87: $12\g_on.duplicate_tag[0:0]
+    16/87: $11\g_on.duplicate_tag[0:0]
+    17/87: $10\g_on.duplicate_tag[0:0]
+    18/87: $9\g_on.duplicate_tag[0:0]
+    19/87: $8\g_on.duplicate_tag[0:0]
+    20/87: $7\g_on.duplicate_tag[0:0]
+    21/87: $6\g_on.duplicate_tag[0:0]
+    22/87: $5\g_on.duplicate_tag[0:0]
+    23/87: $4\g_on.duplicate_tag[0:0]
+    24/87: $3\g_on.duplicate_tag[0:0]
+    25/87: $2\g_on.duplicate_tag[0:0]
+    26/87: $1\g_on.duplicate_tag[0:0]
+    27/87: $18\g_on.invalid_sector[0:0]
+    28/87: $17\g_on.invalid_sector[0:0]
+    29/87: $16\g_on.invalid_sector[0:0]
+    30/87: $15\g_on.invalid_sector[0:0]
+    31/87: $8\g_on.j[31:0]
+    32/87: $14\g_on.invalid_sector[0:0]
+    33/87: $8\g_on.ready[3:3]
+    34/87: $7\g_on.j[31:0]
+    35/87: $13\g_on.invalid_sector[0:0]
+    36/87: $7\g_on.ready[3:3]
+    37/87: $12\g_on.invalid_sector[0:0]
+    38/87: $11\g_on.invalid_sector[0:0]
+    39/87: $10\g_on.invalid_sector[0:0]
+    40/87: $6\g_on.j[31:0]
+    41/87: $9\g_on.invalid_sector[0:0]
+    42/87: $6\g_on.ready[2:2]
+    43/87: $5\g_on.j[31:0]
+    44/87: $8\g_on.invalid_sector[0:0]
+    45/87: $5\g_on.ready[2:2]
+    46/87: $7\g_on.invalid_sector[0:0]
+    47/87: $6\g_on.invalid_sector[0:0]
+    48/87: $4\g_on.j[31:0]
+    49/87: $5\g_on.invalid_sector[0:0]
+    50/87: $4\g_on.ready[1:1]
+    51/87: $3\g_on.j[31:0]
+    52/87: $4\g_on.invalid_sector[0:0]
+    53/87: $3\g_on.ready[1:1]
+    54/87: $3\g_on.invalid_sector[0:0]
+    55/87: $2\g_on.j[31:0]
+    56/87: $2\g_on.invalid_sector[0:0]
+    57/87: $2\g_on.ready[0:0]
+    58/87: $1\g_on.j[31:0]
+    59/87: $1\g_on.invalid_sector[0:0]
+    60/87: $1\g_on.ready[0:0]
+    61/87: $0\g_on.i[31:0]
+    62/87: $0\g_on.gathered[1279:0] [1279:1024]
+    63/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$61_DATA[255:0]$78
+    64/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$61_ADDR[3:0]$77
+    65/87: $0\g_on.complete[0:0]
+    66/87: $0\g_on.gathered[1279:0] [1023:768]
+    67/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$60_DATA[255:0]$76
+    68/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$60_ADDR[3:0]$75
+    69/87: $0\g_on.gathered[1279:0] [767:512]
+    70/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$59_DATA[255:0]$74
+    71/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$59_ADDR[3:0]$73
+    72/87: $0\g_on.gathered[1279:0] [511:256]
+    73/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$58_DATA[255:0]$72
+    74/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$58_ADDR[3:0]$71
+    75/87: $0\g_on.gathered[1279:0] [255:0]
+    76/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$57_DATA[255:0]$70
+    77/87: $0$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$57_ADDR[3:0]$69
+    78/87: $0\g_on.duplicate_tag[0:0]
+    79/87: $0\g_on.j[31:0]
+    80/87: $0\g_on.invalid_sector[0:0]
+    81/87: $0\g_on.ready[3:0] [3]
+    82/87: $0\g_on.slot[31:0]
+    83/87: $0\g_on.delta[31:0]
+    84/87: $0\g_on.idx[31:0]
+    85/87: $0\g_on.ready[3:0] [2]
+    86/87: $0\g_on.ready[3:0] [1]
+    87/87: $0\g_on.ready[3:0] [0]
+Creating decoders for process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+     1/159: $0\g_on.present[15:0] [15]
+     2/159: $5\g_on.advance[31:0]
+     3/159: $0\g_on.live[15:0] [15]
+     4/159: $0\g_on.live[15:0] [14]
+     5/159: $0\g_on.live[15:0] [13]
+     6/159: $0\g_on.live[15:0] [12]
+     7/159: $0\g_on.live[15:0] [11]
+     8/159: $0\g_on.live[15:0] [10]
+     9/159: $0\g_on.live[15:0] [9]
+    10/159: $0\g_on.live[15:0] [8]
+    11/159: $0\g_on.live[15:0] [7]
+    12/159: $0\g_on.live[15:0] [6]
+    13/159: $0\g_on.live[15:0] [5]
+    14/159: $0\g_on.live[15:0] [4]
+    15/159: $0\g_on.live[15:0] [3]
+    16/159: $0\g_on.live[15:0] [2]
+    17/159: $0\g_on.live[15:0] [1]
+    18/159: $0\g_on.live[15:0] [0]
+    19/159: $5$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$368
+    20/159: $8\g_on.landings[31:0]
+    21/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$361
+    22/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$362
+    23/159: $7\g_on.landings[31:0]
+    24/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$356
+    25/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$357
+    26/159: $6\g_on.landings[31:0]
+    27/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$351
+    28/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$352
+    29/159: $0\g_on.present[15:0] [14]
+    30/159: $0\g_on.present[15:0] [13]
+    31/159: $0\g_on.present[15:0] [12]
+    32/159: $0\g_on.present[15:0] [11]
+    33/159: $0\g_on.present[15:0] [10]
+    34/159: $0\g_on.present[15:0] [9]
+    35/159: $0\g_on.present[15:0] [8]
+    36/159: $0\g_on.present[15:0] [7]
+    37/159: $0\g_on.present[15:0] [6]
+    38/159: $0\g_on.present[15:0] [5]
+    39/159: $0\g_on.present[15:0] [4]
+    40/159: $0\g_on.present[15:0] [3]
+    41/159: $0\g_on.present[15:0] [2]
+    42/159: $0\g_on.present[15:0] [1]
+    43/159: $0\g_on.present[15:0] [0]
+    44/159: $6\g_on.i[31:0]
+    45/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$346
+    46/159: $5$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$347
+    47/159: $4$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$345
+    48/159: $4$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$344
+    49/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$343
+    50/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$342
+    51/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$341
+    52/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$340
+    53/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$339
+    54/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$338
+    55/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$337
+    56/159: $4$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$336
+    57/159: $4\g_on.landings[31:0]
+    58/159: $4\g_on.advance[31:0]
+    59/159: $5\g_on.i[31:0]
+    60/159: $3$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$328
+    61/159: $3$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$327
+    62/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$326
+    63/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$325
+    64/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$324
+    65/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$323
+    66/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$322
+    67/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$321
+    68/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$320
+    69/159: $3$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$319
+    70/159: $3\g_on.landings[31:0]
+    71/159: $3\g_on.advance[31:0]
+    72/159: $4\g_on.i[31:0]
+    73/159: $2$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$311
+    74/159: $2$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$310
+    75/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$309
+    76/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$308
+    77/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$307
+    78/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$306
+    79/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$305
+    80/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$304
+    81/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$303
+    82/159: $2$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$302
+    83/159: $2\g_on.landings[31:0]
+    84/159: $2\g_on.advance[31:0]
+    85/159: $3\g_on.i[31:0]
+    86/159: $1$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$300
+    87/159: $1$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$299
+    88/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$298
+    89/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$297
+    90/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$296
+    91/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$295
+    92/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$294
+    93/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$293
+    94/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$292
+    95/159: $1$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$291
+    96/159: $1\g_on.landings[31:0]
+    97/159: $1\g_on.advance[31:0]
+    98/159: $2\g_on.i[31:0]
+    99/159: $0$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA[9:0]$289
+   100/159: $0$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$288
+   101/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA[255:0]$287
+   102/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR[3:0]$286
+   103/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA[255:0]$285
+   104/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR[3:0]$284
+   105/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA[255:0]$283
+   106/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR[3:0]$282
+   107/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA[255:0]$281
+   108/159: $0$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR[3:0]$280
+   109/159: $0\g_on.landings[31:0]
+   110/159: $0\g_on.advance[31:0]
+   111/159: $1\g_on.i[31:0]
+   112/159: $0\g_on.tags[15][9:0]
+   113/159: $0\g_on.tags[14][9:0]
+   114/159: $0\g_on.tags[13][9:0]
+   115/159: $0\g_on.tags[12][9:0]
+   116/159: $0\g_on.tags[11][9:0]
+   117/159: $0\g_on.tags[10][9:0]
+   118/159: $0\g_on.tags[9][9:0]
+   119/159: $0\g_on.tags[8][9:0]
+   120/159: $0\g_on.tags[7][9:0]
+   121/159: $0\g_on.tags[6][9:0]
+   122/159: $0\g_on.tags[5][9:0]
+   123/159: $0\g_on.tags[4][9:0]
+   124/159: $0\g_on.tags[3][9:0]
+   125/159: $0\g_on.tags[2][9:0]
+   126/159: $0\g_on.tags[1][9:0]
+   127/159: $0\g_on.tags[0][9:0]
+   128/159: $0\g_on.words[15][255:0]
+   129/159: $0\g_on.words[14][255:0]
+   130/159: $0\g_on.words[13][255:0]
+   131/159: $0\g_on.words[12][255:0]
+   132/159: $0\g_on.words[11][255:0]
+   133/159: $0\g_on.words[10][255:0]
+   134/159: $0\g_on.words[9][255:0]
+   135/159: $0\g_on.words[8][255:0]
+   136/159: $0\g_on.words[7][255:0]
+   137/159: $0\g_on.words[6][255:0]
+   138/159: $0\g_on.words[5][255:0]
+   139/159: $0\g_on.words[4][255:0]
+   140/159: $0\g_on.words[3][255:0]
+   141/159: $0\g_on.words[2][255:0]
+   142/159: $0\g_on.words[1][255:0]
+   143/159: $0\g_on.words[0][255:0]
+   144/159: $0\g_on.qcount[4:0]
+   145/159: $0\g_on.rp[3:0]
+   146/159: $0\g_on.wp[3:0]
+   147/159: $5$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR[3:0]$367
+   148/159: $5\g_on.landings[31:0]
+   149/159: $0\g_on.phase[1:0]
+   150/159: $0\g_on.epoch[15:0]
+   151/159: $0\g_on.requested[23:0]
+   152/159: $0\g_on.error[0:0]
+   153/159: $0\g_on.sectors[23:0]
+   154/159: $0\g_on.payloads[23:0]
+   155/159: $0\g_on.active[0:0]
+   156/159: $0\g_on.base[31:0]
+   157/159: $0\g_on.head[23:0]
+   158/159: $0\g_on.delivered[23:0]
+   159/159: $0\g_on.received[23:0]
+Creating decoders for process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412'.
+     1/2: $1$mem2reg_rd$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:78$62_DATA[9:0]$414
+     2/2: $0$mem2reg_rd$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:78$62_DATA[9:0]$413
+
+4.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.ready' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.invalid_sector' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.duplicate_tag' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.complete' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.gathered' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.i' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.idx' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.delta' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.\g_on.slot' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$57_ADDR' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$57_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$58_ADDR' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$58_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$59_ADDR' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$59_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$60_ADDR' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$60_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$61_ADDR' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:70$61_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+Latch inferred for signal `\ot_gpu_payload_assemble.\g_on.j' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68': $auto$proc_dlatch.cc:409:proc_dlatch$5346
+No latch inferred for signal `\ot_gpu_payload_assemble.$mem2reg_rd$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:78$62_DATA' from process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412'.
+
+4.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.received' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5347' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.delivered' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5348' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.head' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5349' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.base' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5350' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.active' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5351' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.payloads' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5352' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.sectors' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5353' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.error' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5354' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.requested' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5355' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.epoch' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5356' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.phase' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5357' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.present' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5358' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.live' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5359' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.wp' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5360' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.rp' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5361' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.qcount' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5362' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.i' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5363' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.advance' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5364' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.landings' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5365' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[0]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5366' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[1]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5367' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[2]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5368' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[3]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5369' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[4]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5370' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[5]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5371' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[6]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5372' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[7]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5373' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[8]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5374' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[9]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5375' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[10]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5376' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[11]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5377' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[12]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5378' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[13]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5379' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[14]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5380' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.words[15]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5381' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[0]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5382' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[1]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5383' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[2]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5384' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[3]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5385' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[4]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5386' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[5]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5387' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[6]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5388' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[7]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5389' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[8]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5390' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[9]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5391' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[10]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5392' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[11]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5393' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[12]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5394' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[13]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5395' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[14]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5396' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.\g_on.tags[15]' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $dff cell `$procdff$5397' with positive edge clock.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_ADDR' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5398' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$63_DATA' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5399' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_ADDR' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5400' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$64_DATA' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5401' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_ADDR' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5402' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$65_DATA' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5403' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_ADDR' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5404' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.words$rtl/gpu/ot_gpu_payload_assemble.sv:105$66_DATA' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5405' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_ADDR' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5406' with positive edge clock and negative level reset.
+Creating register for signal `\ot_gpu_payload_assemble.$mem2reg_wr$\g_on.tags$rtl/gpu/ot_gpu_payload_assemble.sv:111$67_DATA' using process `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+  created $adff cell `$procdff$5407' with positive edge clock and negative level reset.
+
+4.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 48 empty switches in `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+Removing empty process `ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:47$68'.
+Found and cleaned up 32 empty switches in `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+Removing empty process `ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:85$279'.
+Found and cleaned up 1 empty switch in `\ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412'.
+Removing empty process `ot_gpu_payload_assemble.$proc$rtl/gpu/ot_gpu_payload_assemble.sv:10$412'.
+Cleaned up 81 empty switches.
+
+5. Executing CHECK pass (checking for obvious problems).
+checking module ot_gpu_payload_assemble..
+found and reported 0 problems.

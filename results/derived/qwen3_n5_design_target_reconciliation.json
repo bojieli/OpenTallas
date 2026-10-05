@@ -1,0 +1,284 @@
+{
+  "anchor": {
+    "batch_size": 1,
+    "context_tokens": 8192,
+    "hbm_design": "Qwen3-8B/b200_sxm-x3-tensor",
+    "model": "Qwen3-8B",
+    "rom_design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x5-romfill"
+  },
+  "combination_rule": "analytical step = max(memory_time, compute_time) / efficiencies.stage_balance x token_slots + link_latency + layer_fixed_latency, where memory_time = weight + kv for a shared memory path and max(weight, kv) for separate arrays.  The five component times do NOT sum to the step; the derived machines collapse each design point to one logical device, so token_slots and stage_balance are both inert on the cycle side.",
+  "headline": {
+    "analytical_ratio": 5.04830632979099,
+    "analytical_ratio_with_link_removed_from_both": 4.290555324658991,
+    "cycle_ratio": 0.17858621677968042,
+    "cycle_ratio_with_analytical_link_added_to_both": 0.2084017944361913,
+    "note": "Four numbers because the link term is expressible in one model and not the other, and it is 2% of the analytical ROM step and 17% of the analytical GPU step.  Compare cycle_ratio against analytical_ratio_with_link_removed_from_both -- those two are the like-for-like pair -- and read the other two as the effect of the term the cycle model cannot express."
+  },
+  "runs": {
+    "hbm": {
+      "capability_digest": "a1ededd0d4a44cd904c540d85dd0cc9e31059debc3a57af1e82e2bab85f13204",
+      "capability_technology_view": "n5_design_target",
+      "cost_table": "configs/hardware/abi3_cost_n5_design_target_hbm_v1.json",
+      "cost_table_sha256": "efbd4fdbf29e9becaec56538834ca9e9fa9bed75904677ffd1008c146445e204",
+      "deployment_digest": "2dc82188779b0ad5292eac18a2f4ac5f2215e9e3f466102a2df70950ccd2a74d",
+      "provenance_class": "assumed",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 8001,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 256,
+        "PHASE": 1,
+        "POSITION_END": 8001,
+        "POSITION_START": 8000,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      }
+    },
+    "rom": {
+      "capability_digest": "644582d84ade923043cbc67de1c8306a10b12a4dde174dc3d757204c94f89ad4",
+      "capability_technology_view": "n5_design_target",
+      "cost_table": "configs/hardware/abi3_cost_n5_design_target_rom_v1.json",
+      "cost_table_sha256": "c3f7d07720c78e54788196e873129e4f9bbb26551569c61d53faf9cb962ad2bc",
+      "deployment_digest": "7807c43838551c34504cac436553815f1eccbe09ede2e475cfd50d449dd1c687",
+      "provenance_class": "assumed",
+      "request_symbols": {
+        "BATCH": 1,
+        "CONTEXT_LENGTH": 8001,
+        "GENERATION_INDEX": 1,
+        "MAX_NEW_TOKENS": 256,
+        "PHASE": 1,
+        "POSITION_END": 8001,
+        "POSITION_START": 8000,
+        "SPAN_LAST_INDEX": 0,
+        "SPAN_TOKENS": 1
+      }
+    }
+  },
+  "schema": "opentallas.derived_cycle_machine.reconciliation.v1",
+  "targets": {
+    "hbm": {
+      "analytical": {
+        "binding_constraint": "weight_read",
+        "component_times_s": {
+          "compute": 4.077255490370369e-06,
+          "kv_read": 5.593088e-05,
+          "layer_fixed_latency": 6.818801530875491e-06,
+          "link_latency": 0.00017411071999999997,
+          "weight_read": 0.0007007782874074074
+        },
+        "per_user_tokens_s": 978.7441385422231,
+        "step_time_s": 0.0010217174853168838
+      },
+      "binding_regime": {
+        "analytical_over_all_five_terms": "weight_read",
+        "analytical_over_expressible_terms": "weight_read",
+        "cycle": "weight_read",
+        "cycle_over_tensor_only_compute": "weight_read",
+        "kv_placement": {
+          "bytes_read_from_declared_store": 18906360252,
+          "declared_kv_store": "hbm",
+          "exercised": true,
+          "kv_bytes_read_by_attention": 1179795456,
+          "refused_because": null,
+          "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+          "stores": {
+            "hbm": {
+              "busy_cycles": 181364998,
+              "bytes_read": 18906360252,
+              "bytes_written": 1223320580
+            },
+            "host": {
+              "busy_cycles": 75970,
+              "bytes_read": 303876,
+              "bytes_written": 303876
+            },
+            "rom": {
+              "busy_cycles": 0,
+              "bytes_read": 0,
+              "bytes_written": 0
+            },
+            "sram": {
+              "busy_cycles": 0,
+              "bytes_read": 0,
+              "bytes_written": 0
+            }
+          }
+        },
+        "margin": {
+          "commensurable_margin_fraction": 3.730050500117593,
+          "commensurable_margin_is_inside_the_residual": false,
+          "commensurable_runner_up": "compute",
+          "commensurable_winner": "weight_read",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 2.2143456572182867,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "compute",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "weight_read"
+        },
+        "refused_because": null,
+        "regimes_agree": true,
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
+        "same_regime": true
+      },
+      "cycle": {
+        "binding_constraint": "weight_read",
+        "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
+        "clock_frequency_hz": 1000000000.0,
+        "per_user_tokens_s": 964.4754748353881,
+        "step_time_s": 0.001036833,
+        "total_cycles": 1036833
+      },
+      "step_ratio_cycle_over_analytical": 1.0147942213971488,
+      "terms": {
+        "compute": {
+          "analytical_s": 4.077255490370369e-06,
+          "cycle_s": 0.000254995,
+          "cycle_tensor_only_s": 0.000173284,
+          "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
+          "ratio_cycle_over_analytical": 62.54084410512052
+        },
+        "kv_read": {
+          "analytical_s": 5.593088e-05,
+          "cycle_s": 0.00012496729372095635,
+          "kv_store": "hbm",
+          "note": "The deployment moves 17661708732 read + 1223320580 written bytes through HBM and 0 read + 0 written through SRAM, against the analytical kv_transfer_bytes_per_step 1208107008.  The term is the whole occupancy of the store this point names (HBM); that store also carries the activation working set, so the term is an UPPER bound on the KV time and the over-attribution runs against the side whose store it is.  The attention engine read 1179795456 KV bytes.",
+          "ratio_cycle_over_analytical": 2.2343166015080818
+        },
+        "layer_fixed_latency": {
+          "analytical_s": 6.818801530875491e-06,
+          "cycle_s": null,
+          "note": "NOT SEPARATELY REPORTED.  engine.<family>.fixed_latency_cycles is charged per engine instruction after the unit is freed, so it reaches the step only through WAIT dependencies and the model attributes no counter to it.  The machine carries 36 cycles per instruction against 2104 instructions retired.",
+          "ratio_cycle_over_analytical": null
+        },
+        "link_latency": {
+          "analytical_s": 0.00017411071999999997,
+          "cycle_s": 0.0,
+          "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
+          "ratio_cycle_over_analytical": 0.0
+        },
+        "weight_read": {
+          "analytical_s": 0.0007007782874074074,
+          "cycle_s": 0.000819642070862377,
+          "note": "weights and KV share the HBM pool, so its 944.609 us of occupancy is split by the architectural byte count: 16386630404 weight bytes of 18885029312 total.",
+          "ratio_cycle_over_analytical": 1.1696168183159854
+        }
+      }
+    },
+    "rom": {
+      "analytical": {
+        "binding_constraint": "weight_read",
+        "component_times_s": {
+          "compute": 0.00015861700976394524,
+          "kv_read": 4.6373329869023086e-05,
+          "layer_fixed_latency": 6.818801530875491e-06,
+          "link_latency": 4.836408888888888e-06,
+          "weight_read": 0.00017165966462610557
+        },
+        "per_user_tokens_s": 4941.000229848535,
+        "step_time_s": 0.00020238817111543724
+      },
+      "binding_regime": {
+        "analytical_over_all_five_terms": "weight_read",
+        "analytical_over_expressible_terms": "weight_read",
+        "cycle": "compute",
+        "cycle_over_tensor_only_compute": "compute",
+        "kv_placement": {
+          "bytes_read_from_declared_store": 2438643716,
+          "declared_kv_store": "sram",
+          "exercised": true,
+          "kv_bytes_read_by_attention": 1179795456,
+          "refused_because": null,
+          "rule": "the design point's kv_store names the store its KV lives in; the run exercises that placement only when the store delivered at least the KV bytes the attention engine read, and a run that read no KV exercises no placement at all",
+          "stores": {
+            "hbm": {
+              "busy_cycles": 2638029,
+              "bytes_read": 74121216,
+              "bytes_written": 5316608
+            },
+            "host": {
+              "busy_cycles": 75970,
+              "bytes_read": 303876,
+              "bytes_written": 303876
+            },
+            "rom": {
+              "busy_cycles": 2748518,
+              "bytes_read": 16389925304,
+              "bytes_written": 0
+            },
+            "sram": {
+              "busy_cycles": 18209129,
+              "bytes_read": 2438643716,
+              "bytes_written": 1218003972
+            }
+          }
+        },
+        "margin": {
+          "commensurable_margin_fraction": 0.008741438113194056,
+          "commensurable_margin_is_inside_the_residual": true,
+          "commensurable_runner_up": "weight_read",
+          "commensurable_winner": "compute",
+          "margin_basis": "over terms.compute.cycle_s, which is every engine family; the commensurable fields above use terms.compute.cycle_tensor_only_s",
+          "margin_fraction": 0.4844072332798983,
+          "margin_is_inside_the_residual": false,
+          "not_acted_on": "no term is renamed and no tolerance is widened by this field",
+          "runner_up": "weight_read",
+          "same_winner_under_the_commensurable_compute_term": true,
+          "tensor_tile_quantisation_residual_fraction": 0.092222,
+          "why_that_matters": "the cycle model charges ceil(tile_depth * work_scale / work_per_lane_cycle) per tensor tile; at the shipped ROM table that is ceil(2.746695) = 3, so the compute term carries a 9.22% upward rounding artefact.  A margin smaller than that does not establish which term binds",
+          "winner": "compute"
+        },
+        "refused_because": null,
+        "regimes_agree": false,
+        "rule": "The cycle model builds no fabric on SINGLE_CHIP and attributes no counter to fixed latency, so the two binding constraints are only comparable over the terms both models express: compute, weight_read and kv_read.  same_regime additionally requires that the run exercised the KV placement its own design point names; regimes_agree is the comparison alone.",
+        "same_regime": false
+      },
+      "cycle": {
+        "binding_constraint": "compute",
+        "binding_constraint_rule": "argmax over the measured terms; the cycle model reports no binding constraint of its own",
+        "clock_frequency_hz": 1000000000.0,
+        "per_user_tokens_s": 172.24202622763784,
+        "step_time_s": 0.005805784,
+        "total_cycles": 5805784
+      },
+      "step_ratio_cycle_over_analytical": 28.686380078450945,
+      "terms": {
+        "compute": {
+          "analytical_s": 0.00015861700976394524,
+          "cycle_s": 0.000254995,
+          "cycle_tensor_only_s": 0.000173284,
+          "note": "The tensor engine alone is the analytical term's counterpart; the analytical operation count has NO attention arithmetic and no other engine family.  cycle_s is every family, cycle_tensor_only_s is the comparable one.",
+          "ratio_cycle_over_analytical": 1.6076144694663268
+        },
+        "kv_read": {
+          "analytical_s": 4.6373329869023086e-05,
+          "cycle_s": 0.0001422588203125,
+          "kv_store": "sram",
+          "note": "The deployment moves 74121216 read + 5316608 written bytes through HBM and 2438643716 read + 1218003972 written through SRAM, against the analytical kv_transfer_bytes_per_step 1208107008.  The term is the whole occupancy of the store this point names (SRAM); that store also carries the activation working set, so the term is an UPPER bound on the KV time and the over-attribution runs against the side whose store it is.  The attention engine read 1179795456 KV bytes.",
+          "ratio_cycle_over_analytical": 3.067686118600844
+        },
+        "layer_fixed_latency": {
+          "analytical_s": 6.818801530875491e-06,
+          "cycle_s": null,
+          "note": "NOT SEPARATELY REPORTED.  engine.<family>.fixed_latency_cycles is charged per engine instruction after the unit is freed, so it reaches the step only through WAIT dependencies and the model attributes no counter to it.  The machine carries 36 cycles per instruction against 2104 instructions retired.",
+          "ratio_cycle_over_analytical": null
+        },
+        "link_latency": {
+          "analytical_s": 4.836408888888888e-06,
+          "cycle_s": 0.0,
+          "note": "STRUCTURALLY ZERO.  build_fabric returns None for TopologyClass.SINGLE_CHIP, so no cost-table value can put a single-chip run in this regime.  The derived machines are the design points collapsed to one logical device, which is the transformation that removes the fabric.",
+          "ratio_cycle_over_analytical": 0.0
+        },
+        "weight_read": {
+          "analytical_s": 0.00017165966462610557,
+          "cycle_s": 0.000171782375,
+          "note": "weights are in ROM and KV in SRAM (points[ROM].kv_store is 'sram'): two physically separate unit pools, so their occupancies are read off directly and overlap exactly as the analytical overlap_rule says.",
+          "ratio_cycle_over_analytical": 1.0007148468695994
+        }
+      }
+    }
+  }
+}

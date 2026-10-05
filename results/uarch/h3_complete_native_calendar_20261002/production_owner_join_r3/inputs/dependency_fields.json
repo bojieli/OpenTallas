@@ -1,0 +1,1128 @@
+{
+ "schema": "HBM_BRIDGE_DEPENDENCY_AND_FIELDS_R1",
+ "main": "7baca4be1dd86295bd8ccb3b5a6e935e6dbd8865",
+ "read_only": true,
+ "input": "/tmp/claude-review-20261003/hbm_owner_ack_gaps.json (written at b1397a050; rtl/hdc/hbm, rtl/gpu, rtl/model_ready_hbm_r14, tools/h3_*, tools/h4_* unchanged to 7baca4be1)",
+ "dependency_graph": {
+  "nodes": {
+   "F0": "Field-width specification (this record, section field_sizing); not RTL",
+   "W1": "r14 provider default-off commit_r tie-off",
+   "W2": "Exact tag/gen completion + write-completion ready (Qwen PC service)",
+   "W3": "Generation on r14 credits + read-credit match + KV adapter tag+gen",
+   "W4": "Identity-bearing common RF ACK",
+   "W5": "Installed owner gate",
+   "W6": "Consumer/reverse handshakes on RF fence",
+   "W7": "RTL endpoint traces into CausalGrantLedger",
+   "W8": "KV write sector owner RTL",
+   "W9": "Generic L2 word endpoint + bank fence",
+   "W10": "CDC HBM-service <-> SM",
+   "W11": "Bounded backend and credit-return terms",
+   "W12": "Starvation freedom under emitted DAG",
+   "W13": "Reconcile zero-cost placeholders"
+  },
+  "edges": [
+   {
+    "prerequisite": "F0",
+    "dependent": "W2",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W3",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W4",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W5",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W6",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W8",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W9",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "F0",
+    "dependent": "W10",
+    "kind": "strict",
+    "consumes": "port/field widths (tag, gen, slot, ACK id) fixed before any successor RTL"
+   },
+   {
+    "prerequisite": "W1",
+    "dependent": "W3",
+    "kind": "strict",
+    "consumes": "same successor file ot_hbm_causal_command_provider.sv (W3 edits the W1-fixed successor, original pinned by installed_r2 sha a8516d20)"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W3",
+    "kind": "strict",
+    "consumes": "KV adapter part of W3 compares {tag,gen} on pc_wr_done_tag, a field only W2 emits (ot_hdc_qwen_kv_pc_adapter.sv:56-59)"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W5",
+    "kind": "strict",
+    "consumes": "owner gate CAPTURE->MIRRORS transition consumes exact read completion {slot,gen} and write-completion handshake"
+   },
+   {
+    "prerequisite": "W4",
+    "dependent": "W5",
+    "kind": "strict",
+    "consumes": "owner gate MIRRORS->VISIBLE consumes the identity-bearing combined ACK (rf_service.sv:46 today carries no id)"
+   },
+   {
+    "prerequisite": "W6",
+    "dependent": "W5",
+    "kind": "strict",
+    "consumes": "owner gate holds lease through CONSUMER and REVERSE; those handshakes are the W6 fence ports"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W7",
+    "kind": "strict",
+    "consumes": "capture events with tag/gen exist only after W2"
+   },
+   {
+    "prerequisite": "W4",
+    "dependent": "W7",
+    "kind": "strict",
+    "consumes": "common-ACK event with id"
+   },
+   {
+    "prerequisite": "W6",
+    "dependent": "W7",
+    "kind": "strict",
+    "consumes": "fence/consumer/reverse events"
+   },
+   {
+    "prerequisite": "W5",
+    "dependent": "W7",
+    "kind": "strict",
+    "consumes": "lease/owner events; full chain requires the composed gate"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W8",
+    "kind": "strict",
+    "consumes": "sector write uses exact write completion + ready"
+   },
+   {
+    "prerequisite": "W3",
+    "dependent": "W8",
+    "kind": "strict",
+    "consumes": "reuses KV adapter single-outstanding pattern with tag+gen compare"
+   },
+   {
+    "prerequisite": "W5",
+    "dependent": "W8",
+    "kind": "strict",
+    "consumes": "sector owner sits behind the owner gate"
+   },
+   {
+    "prerequisite": "W6",
+    "dependent": "W8",
+    "kind": "strict",
+    "consumes": "consumer/reverse after write"
+   },
+   {
+    "prerequisite": "W5",
+    "dependent": "W9",
+    "kind": "strict",
+    "consumes": "16-bit seat tag tied to the gate generation"
+   },
+   {
+    "prerequisite": "W6",
+    "dependent": "W9",
+    "kind": "strict",
+    "consumes": "bank fence = W6 visibility/consumer/reverse protocol at L2 bank"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W10",
+    "kind": "strict",
+    "consumes": "write-completion channel needs a ready to be crossable by a FIFO (no ready = cannot backpressure an async FIFO)"
+   },
+   {
+    "prerequisite": "W6",
+    "dependent": "W10",
+    "kind": "strict",
+    "consumes": "reverse channel to cross exists only after W6"
+   },
+   {
+    "prerequisite": "W2",
+    "dependent": "W11",
+    "kind": "strict",
+    "consumes": "backend acceptance gap measured in the W2 bench"
+   },
+   {
+    "prerequisite": "W10",
+    "dependent": "W11",
+    "kind": "strict",
+    "consumes": "credit-return upper bound includes CDC residence"
+   },
+   {
+    "prerequisite": "W1",
+    "dependent": "W12",
+    "kind": "strict",
+    "consumes": "r14 write-visibility priority lives in the provider successor (provider.sv:86-91)"
+   },
+   {
+    "prerequisite": "W7",
+    "dependent": "W13",
+    "kind": "strict",
+    "consumes": "receipts tying a placeholder to an existing interval id come from endpoint traces"
+   },
+   {
+    "prerequisite": "W10",
+    "dependent": "W13",
+    "kind": "strict",
+    "consumes": "structural_frontier retire needs the native reverse/CDC term"
+   },
+   {
+    "prerequisite": "W11",
+    "dependent": "W13",
+    "kind": "strict",
+    "consumes": "stalls=0 / stall_bound=1 replaced by W11 bound terms"
+   },
+   {
+    "prerequisite": "W3",
+    "dependent": "W12",
+    "kind": "benefit",
+    "consumes": "serialize edits to the same provider successor"
+   },
+   {
+    "prerequisite": "W12",
+    "dependent": "W5",
+    "kind": "benefit",
+    "consumes": "proved/aging arbiter policy reused for the gate rotating cursor"
+   },
+   {
+    "prerequisite": "W11",
+    "dependent": "W12",
+    "kind": "benefit",
+    "consumes": "arbitration_wait=(contenders-1)*(hold+1) needs a finite hold (h4_hbm_production_owner.py:176)"
+   },
+   {
+    "prerequisite": "W10",
+    "dependent": "W7",
+    "kind": "benefit",
+    "consumes": "CDC both-domain edge ordinals enrich the trace"
+   },
+   {
+    "prerequisite": "W7",
+    "dependent": "W10",
+    "kind": "benefit",
+    "consumes": "paired-receipt lifting of H1-only refusal is ledger work"
+   },
+   {
+    "prerequisite": "W8",
+    "dependent": "W9",
+    "kind": "benefit",
+    "consumes": "held old-sector capture pattern"
+   },
+   {
+    "prerequisite": "W1",
+    "dependent": "W2",
+    "kind": "benefit",
+    "consumes": "default-off lint discipline template"
+   }
+  ],
+  "layers": {
+   "0": [
+    "F0",
+    "W1"
+   ],
+   "1": [
+    "W12",
+    "W2",
+    "W4",
+    "W6"
+   ],
+   "2": [
+    "W10",
+    "W3",
+    "W5"
+   ],
+   "3": [
+    "W11",
+    "W7",
+    "W8",
+    "W9"
+   ],
+   "4": [
+    "W13"
+   ]
+  },
+  "independent_at_start": [
+   "F0",
+   "W1"
+  ],
+  "critical_chains": [
+   [
+    "F0",
+    "W6",
+    "W10",
+    "W11",
+    "W13"
+   ],
+   [
+    "F0",
+    "W2",
+    "W10",
+    "W11",
+    "W13"
+   ],
+   [
+    "F0",
+    "W4",
+    "W5",
+    "W7",
+    "W13"
+   ],
+   [
+    "F0",
+    "W6",
+    "W5",
+    "W7",
+    "W13"
+   ],
+   [
+    "F0",
+    "W2",
+    "W5",
+    "W7",
+    "W13"
+   ]
+  ],
+  "critical_length_layers": 5,
+  "cycle_broken": "W5<->W6 resolved by F0 fixing the fence port/tag spec first: W6 fence ports are standalone; instantiation behind the gate is part of W5"
+ },
+ "minimal_configuration": {
+  "consumer_class": "C0 HBM read -> both RF copies -> SIMD consumer (same chain serves KV_read)",
+  "required": [
+   "F0",
+   "W2 (read half mandatory; write ready rides in the same successor)",
+   "W4",
+   "W6",
+   "W5 (per-SM entries only, single contender class)",
+   "W10 (request, return, reverse channels)",
+   "W7 (replay of the one emitted program)",
+   "W11 subset (read backend gap, credit return, CDC)",
+   "W13 subset (flags on this path: two-ACK model mismatch, structural_frontier retire, grants_r1 cost_addition=0, owner_lock stall defaults)"
+  ],
+  "chain": [
+   {
+    "step": "owner identity + lease",
+    "W": "W5",
+    "gpu": "warp scoreboard entry for the destination register + LSU/TMA request id (Hopper: mbarrier expect_tx)"
+   },
+   {
+    "step": "issue with requester-allocated tag",
+    "W": "F0/W2",
+    "gpu": "L1 MSHR / crossbar packet id (AXI-ID / CHI TxnID style, requester allocates, completer echoes)"
+   },
+   {
+    "step": "exact completion match",
+    "W": "W2",
+    "gpu": "L2/partition return matched to MSHR index; slot freed only on fill so no wide generation"
+   },
+   {
+    "step": "SRAM acceptance of both RF copies + common ACK",
+    "W": "W4",
+    "gpu": "register-file writeback of a load return (single writeback event for all banks); Blackwell TMEM: tcgen05.commit"
+   },
+   {
+    "step": "visibility",
+    "W": "W6",
+    "gpu": "scoreboard release / mbarrier complete_tx arrive"
+   },
+   {
+    "step": "consumption",
+    "W": "W6",
+    "gpu": "dependent instruction issues after scoreboard clears / mbarrier try_wait succeeds"
+   },
+   {
+    "step": "reverse retirement",
+    "W": "W6+W5",
+    "gpu": "CUTLASS pipeline consumer_release (empty-barrier arrive) returning the stage/slot to the producer"
+   },
+   {
+    "step": "CDC",
+    "W": "W10",
+    "gpu": "async FIFOs between GPC (SM) clock and XBAR/L2/FBP memory clock domains"
+   }
+  ],
+  "deferred": [
+   {
+    "W": "W1",
+    "why": "r14 provider is the ROM persistent-KV vehicle, not the comparator PC service; trivial and independent, do it anyway"
+   },
+   {
+    "W": "W3",
+    "why": "r14 credits and KV adapter; not on the C0 read path"
+   },
+   {
+    "W": "W8",
+    "why": "write class; the read-only C0 chain never issues an HBM write. Safe because W2 faults any unexpected wr_done"
+   },
+   {
+    "W": "W9",
+    "why": "L2/GU class; C0 read path does not touch L2 bank owners. Safe because the gate has no bank entries enabled (ENABLE=0) and L2 grants stay external-0"
+   },
+   {
+    "W": "W12",
+    "why": "one contender class per SM entry -> no inter-class priority; PC service already round-robin (ot_hdc_qwen_pc_service.sv:60-67, :94); r14 priorities not instantiated"
+   },
+   {
+    "W": "W13 remainder",
+    "why": "flags on write/L2/KV paths stay flagged; they do not enter this configuration's calendar"
+   }
+  ],
+  "safety": "Every deferred item is ENABLE=0 or not instantiated, so its placeholder cannot be consumed by this configuration; the ledger must refuse any event from a deferred class."
+ },
+ "field_sizing": {
+  "counts": {
+   "PCs_per_die": {
+    "value": 128,
+    "cite": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv:8-9,14 (STACKS=4, PCS_PER_STACK=32, NPC=128); PC = addr[6:0], :53-54"
+   },
+   "PCs_per_stack_r14": {
+    "value": 32,
+    "cite": "rtl/model_ready_hbm_r14/ot_hbm_causal_command_provider.sv:2,49"
+   },
+   "clients_per_PC": {
+    "value": 6,
+    "cite": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv:10 (NC=6); SIDW=$clog2(NC) ot_hdc_qwen_pc_service.sv:13"
+   },
+   "outstanding_per_client_per_PC": {
+    "value": 16,
+    "cite": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv:13 (MAX_OUT=16); counter ot_hdc_qwen_pc_service.sv:47,101-104"
+   },
+   "current_client_tag_bits": {
+    "value": 32,
+    "cite": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv:12 (CTAGW=32 = lane7 + KV tag25), KV_TAGW=1+8+13+3 :44"
+   },
+   "r14_request_entries_per_PC": {
+    "value": 64,
+    "cite": "ot_hbm_causal_command_provider.sv:2; ot_hbm_r14_pc.sv:50 (n<64)"
+   },
+   "r14_return_entries_per_PC": {
+    "value": 32,
+    "cite": "ot_hbm_causal_command_provider.sv:2; ot_hbm_r14_pc.sv:152 (rn<32)"
+   },
+   "r14_write_residence_slots": {
+    "value": 4,
+    "cite": "ot_hbm_causal_command_provider.sv:3,31 (wr_live[3:0])"
+   },
+   "r14_physical_tags_per_stack": {
+    "value": 4096,
+    "cite": "ot_hbm_r14_tag_owner.sv:2,14 (live[4095:0]); 12-bit tag"
+   },
+   "r14_wire_tag_bits": {
+    "value": 16,
+    "cite": "ot_hbm_causal_command_provider.sv:4; ot_hbm_r14_pc.sv:12 (ptag[15:0]); upper 4 bits zero ot_hbm_r14_tag_owner.sv:3"
+   },
+   "r14_context_word_used_bits": {
+    "value": 232,
+    "cite": "ot_hbm_r14_tag_owner.sv:42 (wd[231:0] of a 256-bit 128x256 macro word) -> 24 spare bits"
+   },
+   "r14_beat_len": {
+    "value": "LEN6/BEAT5, LENMAX 32",
+    "cite": "ot_hbm_causal_command_provider.sv:4; ot_hbm_r14_pkg.sv:10,34-35"
+   },
+   "sectors_per_stack": {
+    "value": 703125000,
+    "cite": "ot_hbm_r14_pkg.sv:23 (CAPACITY_SECTORS) -> 30 bits local; die1+stack2 :5"
+   },
+   "qwen_address_bits": {
+    "value": 32,
+    "cite": "ot_hdc_qwen_hbm_service.sv:11 (AW=32), low 7 = PC"
+   },
+   "SMs_per_die": {
+    "value": 32,
+    "cite": "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv:10,29; tools/uarch_model.py:1596"
+   },
+   "RF_vectors": {
+    "value": 512,
+    "cite": "rtl/gpu/ot_gpu_rf_service.sv:2,9 (9-bit address)"
+   },
+   "RF_copies_banks": {
+    "value": "2 copies x 4 pages x 16 banks, one write_go",
+    "cite": "rtl/gpu/ot_gpu_rf_service.sv:26-35"
+   },
+   "RF_writes_outstanding": {
+    "value": 1,
+    "cite": "rtl/gpu/ot_gpu_rf_service.sv:18 (idle requires !ack_valid), :46-47 one combined ACK"
+   },
+   "fence_outstanding": {
+    "value": "1 op, 1 write; 8-bit epoch",
+    "cite": "rtl/gpu/ot_gpu_rf_visibility_fence.sv:5,9"
+   },
+   "L2_bank_owners_per_die": {
+    "value": 32,
+    "cite": "tools/h4_hbm_production_owner.py:371,376 (4 slices x 8 banks)"
+   },
+   "owner_gate_entries_per_die": {
+    "value": 64,
+    "cite": "tools/h4_hbm_production_owner.py:376 (32 local + 32 bank)"
+   },
+   "owner_states": {
+    "value": 7,
+    "cite": "tools/h4_hbm_production_owner.py:399 DRAIN..REVERSE"
+   },
+   "contender_classes": {
+    "value": 5,
+    "cite": "W5 item (C0/SIMD/matrix-result/KV/L2); production_owner.py:403 lists C0/GU/KV/DS frame"
+   },
+   "L2_words_per_command": {
+    "value": "1,2,4",
+    "cite": "tools/h4_hbm_production_owner.py:158"
+   },
+   "GU_columns": {
+    "value": 16,
+    "cite": "tools/h4_hbm_atomic_source_g0.py:76,97 (column 4 bits, id 4 bits)"
+   },
+   "L2_home_bytes": {
+    "value": 262144,
+    "cite": "tools/h4_hbm_atomic_source_g0.py:200 -> 18-bit byte offset, 13-bit 32B word"
+   },
+   "coalescer_clients": {
+    "value": 36,
+    "cite": "tools/uarch_qwen_hbm_ingress.py:16,62"
+   },
+   "coalescer_batch_slots": {
+    "value": 64,
+    "cite": "tools/uarch_qwen_hbm_ingress.py:63 (batch_slots_per_client=64, 512 line credits)"
+   },
+   "coalescer_global_tag": {
+    "value": "{client6,batch_slot6,generation4}=16",
+    "cite": "tools/uarch_qwen_hbm_ingress.py:65"
+   },
+   "bulk_copy_staging_ring": {
+    "value": 1024,
+    "cite": "rtl/gpu/ot_gpu_bulk_copy.sv:21,38 (req_tag = staging slot)"
+   },
+   "outstanding_lines_per_SM": {
+    "value": 512,
+    "cite": "results/uarch/w19_payload_current_preflight_20261001.json design.bulk_copy (Little 440 -> 512)"
+   },
+   "CDC_fifo2_depth": {
+    "value": 2,
+    "cite": "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv:7"
+   },
+   "CDC_bridge": {
+    "value": "fifo2 + 38-FAST-edge held route + fifo2 (<=5 messages in flight)",
+    "cite": "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv:9-13"
+   },
+   "ingress_CDC": {
+    "value": "32 pairs x depth 16 x 320 b, 3 serial:4 fast",
+    "cite": "results/uarch/qwen_hbm_connected_20261001/HBM_ingress_before_RTL_r2.json CDC; tools/uarch_qwen_hbm_ingress.py:51,112-114"
+   },
+   "service_ceiling_Bpc_die": {
+    "value": 2763.046,
+    "cite": "results/uarch/qwen_hbm_connected_20261001/HBM_ingress_before_RTL_r2.json performance.selected_service_ceiling_Bpc"
+   },
+   "loaded_round_trip_cycles": {
+    "value": 704,
+    "cite": "same record, performance.loaded_round_trip_cycles (+55 jitter)"
+   },
+   "SM_ingest_Bpc": {
+    "value": 128,
+    "cite": "tools/uarch_model.py:1599 (3,482 B/clk / 128 B/clk -> 32 SMs)"
+   },
+   "commands_per_stack_per_cycle": {
+    "value": 1,
+    "cite": "tools/uarch_qwen_hbm_ingress.py:56"
+   },
+   "dies_ranks": {
+    "value": 96,
+    "cite": "tools/h4_hbm_production_owner.py:387,399-402 (ranks=96; explicit finite tuple up to 96 dies)"
+   },
+   "FP8_KV_write_sectors_per_token_die": {
+    "value": 1152,
+    "cite": "HBM_ingress_before_RTL_r2.json performance.FP8_KV_write_sector_commands"
+   },
+   "RMW_merge_edges": {
+    "value": 27,
+    "cite": "rtl/model_ready_hbm_r14/ot_hbm_r14_finite_client.sv:4,68"
+   },
+   "DFF_um2": {
+    "value": 0.2916,
+    "cite": "tools/uarch_model.py:48"
+   },
+   "logic_util": {
+    "value": 0.5,
+    "cite": "tools/uarch_model.py:1303"
+   }
+  },
+  "software_key": {
+   "source": "tools/h3_complete_native_calendar_installed_r2.py:164-165 (also installed_services_r2/model.json entry_bits=324)",
+   "bits": 324,
+   "rows": [
+    {
+     "field": "generation",
+     "software_bits": 64,
+     "hardware_bits": 1,
+     "software_only_bits": 63,
+     "basis": "lease held through reverse -> 1 live use per entry; gen=ceil(log2(1/1))+1"
+    },
+    {
+     "field": "PC",
+     "software_bits": 12,
+     "hardware_bits": 0,
+     "software_only_bits": 12,
+     "basis": "derived from address low 7 bits (hbm_service.sv:53-54) or pc_of() hash (r14_pkg.sv:24-26); never stored"
+    },
+    {
+     "field": "sequence",
+     "software_bits": 40,
+     "hardware_bits": 0,
+     "software_only_bits": 40,
+     "basis": "software global order; hardware order is FIFO/ring position"
+    },
+    {
+     "field": "rank",
+     "software_bits": 7,
+     "hardware_bits": 0,
+     "software_only_bits": 7,
+     "basis": "die-local gate; rank/die is implicit in which die holds the entry; link packets carry their own die id"
+    },
+    {
+     "field": "SM",
+     "software_bits": 5,
+     "hardware_bits": 5,
+     "software_only_bits": 0,
+     "basis": "32 SMs; 0 if the entry is indexed by SM (per-SM entries)"
+    },
+    {
+     "field": "lease",
+     "software_bits": 64,
+     "hardware_bits": 0,
+     "software_only_bits": 64,
+     "basis": "lease == gate entry index (64 entries -> 6 b), implicit by position"
+    },
+    {
+     "field": "provider_reference",
+     "software_bits": 32,
+     "hardware_bits": 0,
+     "software_only_bits": 32,
+     "basis": "journal pointer; software witness only"
+    },
+    {
+     "field": "client",
+     "software_bits": 3,
+     "hardware_bits": 3,
+     "software_only_bits": 0,
+     "basis": "6 clients per PC"
+    },
+    {
+     "field": "client_tag",
+     "software_bits": 32,
+     "hardware_bits": 6,
+     "software_only_bits": 26,
+     "basis": "requester-allocated slot: 64 coalescer batch slots (or 4 for a 16-deep client)"
+    },
+    {
+     "field": "address_sector",
+     "software_bits": 29,
+     "hardware_bits": 0,
+     "software_only_bits": 29,
+     "basis": "carried in the request, not stored in the owner entry (30 b only in W8 alias check)"
+    },
+    {
+     "field": "phase",
+     "software_bits": 3,
+     "hardware_bits": 3,
+     "software_only_bits": 0,
+     "basis": "7 states"
+    },
+    {
+     "field": "write",
+     "software_bits": 1,
+     "hardware_bits": 1,
+     "software_only_bits": 0,
+     "basis": "direction"
+    },
+    {
+     "field": "SRAM_bank_ACK_mask",
+     "software_bits": 32,
+     "hardware_bits": 1,
+     "software_only_bits": 31,
+     "basis": "RF returns ONE combined ACK for 2 copies x 16 banks (rf_service.sv:46); 1 pending bit"
+    }
+   ],
+   "hardware_bits": 20,
+   "software_only_bits": 304
+  },
+  "r14_identity_t": {
+   "source": "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv:4-9",
+   "bits": 192,
+   "software_witness_fields": {
+    "producer": 64,
+    "transport": 32,
+    "irs_serial": 32,
+    "irs_slot": 5,
+    "caller": 16
+   },
+   "software_witness_bits": 149,
+   "note": "producer/transport/irs_* are journal witnesses carried in owned_t (465 b) and queued_t/returned_t (472/471 b, incl. 64-b arrived/due stamps); keep out of comparator hardware"
+  },
+  "generation": [
+   {
+    "site": "PC service per-client slot (W2)",
+    "outstanding": 16,
+    "ring": 16,
+    "bits": 1,
+    "cite": "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv:13 (MAX_OUT=16); counter ot_hdc_qwen_pc_service.sv:47,101-104",
+    "note": "slot freed only on exact completion -> no older live use; 1 bit detects duplicate/stale completion of the previous use"
+   },
+   {
+    "site": "Coalescer global tag",
+    "outstanding": 64,
+    "ring": 64,
+    "bits": 1,
+    "source_chosen_bits": 4,
+    "cite": "tools/uarch_qwen_hbm_ingress.py:65",
+    "note": "source chose 4 (margin); both fit the 16 wire bits"
+   },
+   {
+    "site": "Owner-gate lease held through reverse (W5/W6)",
+    "outstanding": 1,
+    "ring": 1,
+    "bits": 1,
+    "cite": "tools/h4_hbm_production_owner.py:376 (32 local + 32 bank)"
+   },
+   {
+    "site": "Owner-gate lease if released at reverse SEND (credit races CDC)",
+    "outstanding": 5,
+    "ring": 1,
+    "bits": 4,
+    "cite": "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv:9-13",
+    "note": "rejected: costs 3 extra bits per message for no latency gain unless reverse CDC is on the critical path"
+   },
+   {
+    "site": "r14 physical tag (W3)",
+    "outstanding": 3072,
+    "ring": 4096,
+    "bits": 1,
+    "cite": "ot_hbm_r14_tag_owner.sv:2,14 (live[4095:0]); 12-bit tag; ot_hbm_causal_command_provider.sv:2; ot_hbm_r14_pc.sv:50 (n<64)",
+    "note": "fits the 4 zero upper wire bits; store in the 24 spare context-word bits"
+   },
+   {
+    "site": "RF common ACK (W4)",
+    "outstanding": 1,
+    "ring": 1,
+    "bits": 1,
+    "cite": "rtl/gpu/ot_gpu_rf_service.sv:18 (idle requires !ack_valid), :46-47 one combined ACK"
+   }
+  ],
+  "boundaries": [
+   {
+    "boundary": "SM/coalescer -> PC service request (read)",
+    "current_bits": {
+     "v": 1,
+     "we": 1,
+     "addr": 32,
+     "tag": 35,
+     "rdy": 1
+    },
+    "minimal_bits": {
+     "v": 1,
+     "we": 1,
+     "addr": 32,
+     "tag": 16,
+     "rdy": 1
+    },
+    "fields_minimal": "tag {client3 appended by service, SM5, slot4, gen1}=13 <=16; addr includes PC",
+    "cite": "ot_hdc_qwen_pc_service.sv:29-34 (PTAGW=SIDW+CTAGW=35)"
+   },
+   {
+    "boundary": "PC service request write data",
+    "current_bits": {
+     "data": 256
+    },
+    "minimal_bits": {
+     "data": 256
+    },
+    "fields_minimal": "32-byte sector",
+    "cite": "ot_hdc_qwen_pc_service.sv:22,34"
+   },
+   {
+    "boundary": "PC service -> SM read return",
+    "current_bits": {
+     "v": 1,
+     "tag": 35,
+     "data": 256,
+     "rdy": 1
+    },
+    "minimal_bits": {
+     "v": 1,
+     "tag": 16,
+     "data": 256,
+     "rdy": 1
+    },
+    "fields_minimal": "one 32B sector per request in the Qwen service (no LEN); +5 beat if LEN>1 (r14)",
+    "cite": "ot_hdc_qwen_pc_service.sv:35-38"
+   },
+   {
+    "boundary": "PC service -> client write completion",
+    "current_bits": {
+     "v": 1,
+     "tag": 35,
+     "rdy": 0
+    },
+    "minimal_bits": {
+     "v": 1,
+     "tag": 16,
+     "rdy": 1
+    },
+    "fields_minimal": "adds the missing ready (W2)",
+    "cite": "ot_hdc_qwen_pc_service.sv:27-28,39-40"
+   },
+   {
+    "boundary": "RF write + common ACK (per SM)",
+    "current_bits": {
+     "wr_v": 1,
+     "dst": 9,
+     "data": 4096,
+     "wr_rdy": 1,
+     "ack_v": 1,
+     "ack_rdy": 1,
+     "ack_id": 0
+    },
+    "minimal_bits": {
+     "wr_v": 1,
+     "dst": 9,
+     "data": 4096,
+     "wr_rdy": 1,
+     "ack_v": 1,
+     "ack_rdy": 1,
+     "ack_id": 1
+    },
+    "fields_minimal": "ack_id = 1 gen bit (one outstanding write, implicit SM and slot); optional 9-bit dst echo for trace only",
+    "cite": "ot_gpu_rf_service.sv:12-14,46"
+   },
+   {
+    "boundary": "Fence -> consumer visibility",
+    "current_bits": {
+     "fence_v": 1,
+     "fence_rdy": 1,
+     "epoch": 8
+    },
+    "minimal_bits": {
+     "fence_v": 1,
+     "consumer_accept": 1,
+     "gen": 1
+    },
+    "fields_minimal": "existing 8-bit epoch already >= 1 gen bit: W6 need NOT widen it to an owner-gate tag",
+    "cite": "ot_gpu_rf_visibility_fence.sv:19"
+   },
+   {
+    "boundary": "Consumer -> owner gate reverse (SM-local)",
+    "current_bits": {},
+    "minimal_bits": {
+     "v": 1,
+     "rdy": 1,
+     "gen": 1
+    },
+    "fields_minimal": "entry implicit per SM",
+    "cite": "W6/W5"
+   },
+   {
+    "boundary": "Reverse credit -> PC service (crosses CDC)",
+    "current_bits": {},
+    "minimal_bits": {
+     "v": 1,
+     "rdy": 1,
+     "tag": 16
+    },
+    "fields_minimal": "frees the requester slot",
+    "cite": "W10"
+   }
+  ],
+  "CDC_payload_bits": {
+   "request_read": 55,
+   "request_write": 311,
+   "return_beat": 277,
+   "write_done": 16,
+   "reverse": 16,
+   "note": "payload only; valid/ready are FIFO pointers. current fifo2 default WIDTH=471 (returned_t with 64-b due + 64-b producer + 32-b transport = 160 software/timestamp bits)",
+   "cite": "ot_hbm_r14_fifo2.sv:1-3 (WIDTH=471); ot_hbm_r14_pkg.sv:15-17"
+  },
+  "per_cycle_at_service_rate": {
+   "sector_beats_per_fast_cycle_die": 86.35,
+   "per_SM": 2.698,
+   "per_PC": 0.675,
+   "data_bits_per_cycle_die": 22104,
+   "tag_bits_per_cycle_die": {
+    "current_PTAGW35": 3022,
+    "minimal16": 1382,
+    "if_324bit_key_on_wire": 27976
+   },
+   "observation": "carrying the 324-bit software key per beat would exceed the 256-bit payload (126%); minimal 16-bit tag is 6.25%",
+   "SM_boundary_CDC": {
+    "required_data_bits_per_fast_cycle_per_SM": 691,
+    "required_at_0p9GHz_serial_side_per_SM": 921,
+    "priced_ingress_CDC_entry_bits": 320,
+    "priced_entries_per_cycle": 1,
+    "priced_die_ceiling_Bpc": 1024,
+    "finding": "ingress CDC (32 pairs x 320 b, one entry/cycle) carries 32 B/cycle/SM = 1,024 B/cycle/die = 37% of the 2,763 B/cycle ceiling and 25% of the 128 B/clk SM ingest (uarch_model.py:1599). Minimal width per SM return FIFO = 4 lanes x 277 b = 1,108 b/entry at 0.9 GHz (4 x 32 B = 128 B/clk). Re-price CDC storage before W10 RTL.",
+    "minimal_return_FIFO_bits_per_SM": 1108
+   }
+  },
+  "l2_endpoint_tracks": {
+   "formula": "demand=2368+8*(header_req+256+header_rev+256)",
+   "formula_cite": "tools/h4_hbm_gateway_constructive.py:19-23,217-218",
+   "available_tracks": 12919,
+   "available_cite": "results/uarch/h4_hbm_gateway_constructive_20261002/final_handoff_r10.json models.*.L2_endpoint_available_tracks",
+   "current": {
+    "header_req": 322,
+    "header_rev": 254,
+    "demand": 11072,
+    "margin": 1847
+   },
+   "minimal": {
+    "header_req": 67,
+    "header_rev": 30,
+    "demand": 7240,
+    "margin": 5679
+   },
+   "minimal_field_basis": {
+    "owner_lease_provider_epoch": "replaced by the 16-bit wire tag {SM5,slot,gen}",
+    "length": "words in {1,2,4} -> 2 b",
+    "receipt_mask": "endpoint state, not request payload",
+    "byte_offset": "262,144-B home / 32-B word -> 13 b (word-aligned)",
+    "canonical_row_column_entry": "kept: real GU fields (atomic_source_g0.py:97); C0-only config needs none of them"
+   },
+   "other_cuts": {
+    "Qwen_row0_side0": {
+     "demand": 5440,
+     "capacity": 6399,
+     "margin": 959
+    },
+    "DeepSeek_row0": {
+     "demand": 5184,
+     "capacity": 8100,
+     "margin": 2916
+    },
+    "cite": "results/uarch/h4_hbm_gateway_constructive_20261002/inputs/6.json models.*.corridor_cuts (reservation upper, composition not decomposed here)"
+   }
+  },
+  "storage": {
+   "W2_table_bits_die": 36864,
+   "W2_held_wrdone_bits_die": 13056,
+   "W2_as_proposed_bits_die": 417792,
+   "installed_r2_324bit_envelope_bits": 3981312,
+   "W5_SM_entry_bits": 30,
+   "W5_bank_entry_bits": 58,
+   "W5_total_bits_die": 2816
+  }
+ },
+ "model_inputs_per_W": [
+  {
+   "id": "W1",
+   "latency_cycles": 0,
+   "storage_bits": 0,
+   "area_um2": 0,
+   "area_source": "tie-off",
+   "model_inputs_required_before_RTL": "none (hygiene; lint only)",
+   "notes": ""
+  },
+  {
+   "id": "W2",
+   "latency_cycles": "0 added on match (slot-indexed read of a 16x3-b table, no CAM); write completion: +0 when c_wr_done_rdy=1, + bounded stall otherwise",
+   "storage_bits": {
+    "table": 36864,
+    "held_capture": 13056,
+    "as_proposed_in_gap_review": 417792
+   },
+   "area_um2": 29113.3,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized",
+   "model_inputs_required_before_RTL": [
+    "tag format (16 b, requester-allocated)",
+    "held-capture depth (1) and its backend stall bound",
+    "768 new wr_done_rdy wires (6x128)",
+    "fault-to-grant gating edge count"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W3",
+   "latency_cycles": "0 added: gen compare folds into the existing 12-edge lookup (tag_owner.sv:75)",
+   "storage_bits": {
+    "gen_bits_per_stack": 4100
+   },
+   "area_um2": 0,
+   "area_source": "gen fits the 24 spare bits of the existing 256-b context word and the 4 zero wire-tag bits: no new FF or wires",
+   "model_inputs_required_before_RTL": [
+    "confirm spare context bits are free",
+    "KV adapter compare width TAGW+gen"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W4",
+   "latency_cycles": "0 added: id registered on the same write_go edge as ack_valid (rf_service.sv:46)",
+   "storage_bits": {
+    "per_SM": 1,
+    "die": 32,
+    "with_dst_echo_die": 320
+   },
+   "area_um2": 186.6,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized",
+   "model_inputs_required_before_RTL": [
+    "1 gen bit (or echo of fence epoch)",
+    "model must use ONE combined ACK edge (fix h4_c0_v1_owner_lock_addressed.py:175-183)"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W5",
+   "latency_cycles": "arbitration 1 edge (h4_hbm_production_owner.py:174); hold = drain + words*service + ACK + visibility + consumer + reverse; wait=(contenders-1)*(hold+1) (:171-177)",
+   "storage_bits": {
+    "SM_entry": 30,
+    "bank_entry": 58,
+    "die": 2816,
+    "versus_installed_r2_envelope": 3981312
+   },
+   "area_um2": 1642.3,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized; plus 572 gate equivalents x 0.3 um2 per production_owner.py:355",
+   "model_inputs_required_before_RTL": [
+    "every hold term as source-pinned positive edges",
+    "contender inventory per entry (5 classes)",
+    "entry count 64/die",
+    "placement inside existing connector reservation (production_owner.py:373-375)"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W6",
+   "latency_cycles": ">=1 edge visibility->consumer accept, >=1 edge consumer->reverse; replaces 0-duration structural_frontier (grants_r1.py:486)",
+   "storage_bits": {
+    "per_SM": 3,
+    "die": 96
+   },
+   "area_um2": 56.0,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized",
+   "model_inputs_required_before_RTL": [
+    "consumer hold upper bound per consumer class",
+    "keep 8-bit epoch (no widening)"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W7",
+   "latency_cycles": 0,
+   "storage_bits": 0,
+   "area_um2": 0,
+   "area_source": "bench-only trace export",
+   "model_inputs_required_before_RTL": "event ordinals per endpoint; ledger replay of one emitted program",
+   "notes": ""
+  },
+  {
+   "id": "W8",
+   "latency_cycles": "per sector: read RTT 704+55 + merge 27 (finite_client.sv:68) + write + completion; single-outstanding => 1,152 sectors x ~790 = ~0.91 M cycles/token/die (0.76 ms at 1.2 GHz)",
+   "storage_bits": {
+    "per_writer": 338
+   },
+   "area_um2": 197.1,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized",
+   "model_inputs_required_before_RTL": [
+    "outstanding depth needed so KV write is off the token critical path",
+    "whether full 128-B head rows (36,864 B = 1,152 full sectors/token/die) avoid RMW entirely (GPU L2 full-sector write)"
+   ],
+   "notes": "FP8 KV per token per die is 36 layers x 2 x 4 x 128 B: whole-sector writes if emitted per head row; RMW only for 16-B logical sectors (kv_pc_adapter.sv:5)"
+  },
+  {
+   "id": "W9",
+   "latency_cycles": "L2_read128=12, L2_write128=8 source leaf edges (production_owner.py: source_leaf_edges) + arbitration + fence",
+   "storage_bits": {
+    "bank_entries_counted_in_W5": 1856
+   },
+   "area_um2": 0,
+   "area_source": "counted in W5",
+   "model_inputs_required_before_RTL": [
+    "L2 track demand with minimal headers (see l2_endpoint_tracks)",
+    "GU commit join edges"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W10",
+   "latency_cycles": "2-flop sync each way; r14 bridge = fifo2 + 38 FAST edges + fifo2 (clock_bridge.sv:11); ingress allowance 8 fast cycles round trip",
+   "storage_bits": {
+    "return_FIFO_per_SM_depth16": 17728,
+    "request_FIFO_per_SM_depth16": 4976,
+    "wrdone_reverse_per_SM": 512,
+    "die": 742912,
+    "priced_today": 327680
+   },
+   "area_um2": 433266.3,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized (FF FIFO; SRAM FIFO would be smaller)",
+   "model_inputs_required_before_RTL": [
+    "SM clock ratio 3:4 and FIFO depth from sync round trip",
+    "width per SM to carry 128 B/clk (finding: priced 320-b entry is 4x short)",
+    "reverse CDC latency term for structural_frontier"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W11",
+   "latency_cycles": "704 loaded round trip + 55 jitter (ingress r2) as provisional; must be replaced by directed worst-case bench terms",
+   "storage_bits": 0,
+   "area_um2": 0,
+   "area_source": "none",
+   "model_inputs_required_before_RTL": [
+    "backend acceptance gap upper",
+    "credit-return upper incl. CDC",
+    "per-PC write-completion stall upper"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W12",
+   "latency_cycles": "arbitration wait (contenders-1)*(hold+1); MAXSKIP16 bounded-oldest (ingress model) gives a skip bound of 16",
+   "storage_bits": {
+    "aging_counter_per_contender": 5
+   },
+   "area_um2": 14.6,
+   "area_source": "DFF 0.2916 um2/bit / 0.5 utilization (tools/uarch_model.py:48,1303); FF estimate, not synthesized",
+   "model_inputs_required_before_RTL": [
+    "contender pairs not provably finite in the emitted DAG"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "W13",
+   "latency_cycles": 0,
+   "storage_bits": 0,
+   "area_um2": 0,
+   "area_source": "no hardware",
+   "model_inputs_required_before_RTL": "for each zero_cost flag: interval id with receipt, or positive term from W7/W10/W11",
+   "notes": ""
+  }
+ ]
+}

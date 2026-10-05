@@ -1,0 +1,95 @@
+{
+  "status": "SOURCE_BOUND_TAG_PAYLOAD_BUDGET_REPAIR_MODEL_BEFORE_RTL_OR_BUILD",
+  "source_commit": "f06c71a87fc02ff3fb0a7ea9412eac3c0bdc85c0",
+  "audit_commit": "b98b0522243835062c0700b60a462fe8c0acaf89",
+  "geometry": {
+    "POS_W": 21,
+    "USER_W": 10,
+    "TAGW": 16,
+    "HAW": 30,
+    "WINDOW_SLOTS": 128,
+    "BANKED_STAGE": 1,
+    "REFILL_CREDITS": 8,
+    "stacks": 4,
+    "sector_count_per_row": 17,
+    "sector_bits": 256
+  },
+  "fields": {
+    "original_epoch_bits": 11,
+    "sector_bits": 5,
+    "outer_owner_bits": 2,
+    "inner_TAGW": 15,
+    "inner_owner_bit": 14,
+    "wire_owner_codes": {
+      "window": "00",
+      "CKV": "01",
+      "rope": "10",
+      "invalid": "11"
+    },
+    "client_payload_bits": 14,
+    "safe_epoch_bits": 9,
+    "first_original_bad_epoch": 512,
+    "first_original_bad_tag": "4000",
+    "original_bad_effect": "WINDOW admission denied and sticky bad_tag, not measured response misdelivery"
+  },
+  "incremental": {
+    "repair_epoch_FF_delta_per_instance": -2,
+    "additional_ports": 0,
+    "additional_payload_bits": 0,
+    "additional_stages": 0,
+    "additional_cycles_per_refill": 0,
+    "MACs_per_cycle": 0,
+    "FF_area_delta_um2": -0.75816,
+    "comparator_inputs_delta": -2,
+    "routing_tracks_delta": 0,
+    "replicas": "one retained window service per installed die; no changes to count",
+    "slot": "fits inside existing same control slot; mapped pin/clock/PG proof still required, not a placement claim",
+    "bytes_per_read_port_cycle": 32,
+    "read_requests_per_cycle": 1,
+    "read_responses_per_cycle": 1,
+    "HBM_forward_tag_width_unchanged": 16,
+    "HBM_reverse_tag_width_unchanged": 16,
+    "clock": "unchanged .833ns SS60/FF25; functional gate clock has no timing credit",
+    "token_latency_delta": "zero additional control cycles; refill service latency and lever rate remain unqualified"
+  },
+  "lifetime": {
+    "modulus": 512,
+    "full_lifetime": "reuse modulo512 after complete old-row drain; no epoch cap or reset every511 rows",
+    "source_fence": "sector16 cannot issue until received[15:0]==ffff; publication requires issued17 unique received17 and pending transitions1->0 on final scale response",
+    "backend_obligation": "one response per actual accepted request, lossless tag echo, no outstanding/completion after drained row; retained idx_hbm provider, not an R14 substitution",
+    "reset": "no reset while transactions/endpoints outstanding; clearing epoch is not quarantine",
+    "fault": "duplicate/stale/wrong sector within an active lease refuses publication and disables credits; unbounded delayed duplicate after tag reuse cannot be disambiguated by finite tags and is an invalid-provider contract, not silently qualified",
+    "pipeline_reuse": "client epoch width must exclude reserved owner bits even when generic TAGW widens"
+  },
+  "negative_gate": {
+    "actual_modules": [
+      "window_kv_prefetch",
+      "window_stage4",
+      "window_row_codec",
+      "kv_rope_reqmux",
+      "kv_reqmux"
+    ],
+    "natural_refills": 512,
+    "completed_before_failure": 511,
+    "no_hierarchical_state_force": true,
+    "synthetic_image": "128 immutable finite FP8 rows and E8M0 scales, ordinary prime interface only",
+    "scope": "full128 window service plus both actual arbitration muxes; no attention numeric/fulltoken/physical qualification"
+  },
+  "successor": {
+    "default_off_parameter": "REFILL_OWNER_SAFE=0",
+    "enabled_epoch_bits": "TAGW-7, require TAGW>=8 for credits>1 in owner-safe mode",
+    "planned_wrap_gate_rows": 1536,
+    "engine_source_generation_authorized": true,
+    "physical_admission": false
+  },
+  "execution": {
+    "user_authorization": "urgent actual RTL negative gate and additive model-priced repair; no new physical jobs",
+    "launch_after_source_pin": true,
+    "concurrency": 1,
+    "large_job": false,
+    "FSIZE": "unlimited",
+    "CPU_time": "unlimited",
+    "build_wall": "none",
+    "resource_admission": "fresh measured local RAM/disk/tool receipt; Icarus single process; preserve each initial failure and no automatic retries"
+  }
+}

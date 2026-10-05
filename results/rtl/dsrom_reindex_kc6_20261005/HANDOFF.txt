@@ -1,0 +1,50 @@
+Actual component milestone; physical route is live and unqualified.
+
+Implementation commit 2e7a50c11; merged main 230d83aa2.
+Arendt confirmed the first-release cpart/adm_q/cmp source masking argument.
+OPT_KC6 defaults 0. Original main and kc5 sources remain unchanged.
+Unified block model: tools/uarch_model.py dsrom_reindex_kc6_model(), attached
+to DEDICATED.idx_reader.reindex_control_closure_successor.
+
+The ORIGINAL component gather gate passed all 20 cases: eight real rank/placement
+cases and twelve existing functional cases, every key/pattern/order/17-sector
+count checked. Actual source2e7a50c11, EPYC2 runner2072480, runtime provider2072673,
+all terminal rc0. Worst real case real_rank1_p2 738 cycles, 9197 sectors,
+294304 bytes. Raw output and source-pinned gather.json are adjacent.
+Time-v max RSS491984KiB is one-process maximum, not aggregate build RSS.
+The older kc5 gather 758 cycles is NOT a same-HBM-source comparison: current
+HBM source d667af4d... contains the REFpb successor. No kc6 rate gain claimed.
+Current HBM load efficiency is retained in each case; this PASS does not assert
+90% sustained HBM use, whole-token exactness, physical admission or adoption.
+The 738-cycle result does not replace scoreboard token compositions.
+
+Replay (only on a new admitted remote output; no passing gate rerun needed):
+source ~/.opentallas-env
+cd /srv/opentallas/repos/russell-dsrom-reindex-kc6-20261005
+/srv/opentallas-scratch/admit.sh 8 -- python3 tools/dsrom_reindex_kc6_gate.py \
+  --out /srv/opentallas-scratch/codex/russell-dsrom-reindex-kc6-20261005/gate_REPLAY_NEW \
+  --gold /mnt/epyc1-scratch/claude/dsrom-reindex/gold
+
+ONE actual source-specific route now EPYC2 runner2092999/provider2093025.
+Pinned worktree /srv/opentallas/repos/russell-dsrom-reindex-kc6-route-20261005
+at230d83aa2, unchanged shared unlimited tool, explicit unlimited flags and env,
+j16/admit40GB (baseline detailed-route max RSS30.48GiB), no process/time caps.
+Logs /srv/opentallas-scratch/codex/russell-dsrom-reindex-kc6-20261005/route_r1/.
+Actual run script ../run_route.sh preserves exact command and return receipts.
+Original die 0,0..310.164,310.164um; core 2.052,2.160..308.124,308.070um
+derived from kc5 final DEF ROW/DIEAREA, no enlarged context footprint.
+Clock833ps/SS60ps/FF25ps/hold-margin8ps/boundary166.6ps unchanged.
+
+Physical acceptance, ALL needed before closure:
+- extracted SS setup >=0 / FF hold >=0, zero failing endpoints;
+- all original SS boundary groups >=166.6ps;
+- zero DRC/antenna/slew/cap/fanout violations;
+- mapped standard cells INCLUDING repair and CTS <=37452.2um2 in retained core;
+- no unpriced registered edge, mutable state or boundary-width increase.
+Gross construction allowance1016.16768um2 (all3 head muxes conservatively priced),
+FF0/edges0. Remaining buffer/mapping budget1997.23232um2. Actual fit/timing unknown.
+Old kc5 extracted SS-5.27ps/FF+2.91ps/boundary misses and 409 slew violations
+archived in kc5_failed unchanged. No blind GS16/repeat route.
+
+Parent/Claude item3 milestones are self-merged; ops Kepler owns scoreboard refresh.
+Do not retire either remote worktree until route/source consumers release it.

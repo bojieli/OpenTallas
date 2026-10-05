@@ -1,0 +1,236 @@
+{
+  "alignment_v2": {
+    "builder": "tools/mem_compiler/build_aligned_v2.py",
+    "change": "W from the 0.432 joint grid to 0.024 mod 0.048",
+    "delta": {
+      "area_pct": 0.0003,
+      "area_um2": 28.2528,
+      "height_nm": 0,
+      "width_nm": 24
+    },
+    "edge_mm": 8.5,
+    "k_aw": 30,
+    "kind": "hbm_phy_abstract",
+    "origin_rule": "x = 0 and y = 0 mod 0.048 um (on the site / row grid) in R0, MX, MY and R180",
+    "row_grid_alternative": {
+      "area_um2_delta": 9208.313,
+      "height_um": 1178.28,
+      "note": "H on the 0.270 row grid AND 0.024 mod 0.048 (k = 4 mod 8 rows); not emitted, priced only"
+    },
+    "v1": {
+      "area_um2": 10006237.67,
+      "height_um": 1177.2,
+      "views": {
+        "ot_hbm3e_phy_v41x_aw30_e8p5.lef": "f38a056344291b7fa949291563be9ba1bb3a19a2aa8f468f9ff1118f173bce14",
+        "ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
+        "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "7402e4489915fd8a8220626b4235f82f4826d163cc88784213e368f2ff087706",
+        "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "180cee9f3c62dc72970f89e589bdfb70eed8aea0c70cd8e15ba62ca1903daf1e",
+        "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "08316f92e3a1e1413c169f02162fa53fa50e46960aae2c9b312a462716b0083a"
+      },
+      "width_um": 8500.032
+    },
+    "v2": {
+      "area_um2": 10006265.923,
+      "height_um": 1177.2,
+      "width_um": 8500.056
+    },
+    "verification": {
+      "allowed_orientations": [
+        "R0",
+        "MX",
+        "MY",
+        "R180"
+      ],
+      "layers": {
+        "M5": {
+          "orientation_invariant": true,
+          "origin_0_legal_all_orientations": true,
+          "rule_mod_track_nm": {
+            "MX": [
+              0
+            ],
+            "MY": [
+              0
+            ],
+            "R0": [
+              0
+            ],
+            "R180": [
+              0
+            ]
+          }
+        }
+      },
+      "m5_crossing_at_origin_0": {},
+      "pass": true,
+      "signal_pins": 22238,
+      "size_um": [
+        8500.056,
+        1177.2
+      ],
+      "symmetry": [
+        "X",
+        "Y"
+      ]
+    },
+    "version": "aligned-v2"
+  },
+  "claim_boundary": "a placement and connection abstract for licensed IP; footprint and boundary timing are assumed, the port list is the adopted RTL's",
+  "footprint": {
+    "area_basis": {
+      "grade": "assumed",
+      "note": "as hbm2e",
+      "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack",
+      "value_mm2": 10.0
+    },
+    "area_mm2": 10.0062659232,
+    "depth": "area / edge, snapped up to 2.16 um",
+    "edge_basis": {
+      "grade": "assumed",
+      "source": "NVIDIA GH100 (814 mm^2) places six HBM3 sites, three along each long edge of the die (NVIDIA H100 Tensor Core GPU Architecture whitepaper, 2022, die shot and 'up to 6 HBM3/HBM2e stacks'); with a ~33 mm long edge that leaves <= 11 mm of shoreline per stack including the keep-out between PHYs, so the PHY itself is taken as 8-9 mm (8.5 mm default, a parameter).  The technology table's 12.0 mm is the 11 mm HBM3E package edge plus keep-out, i.e. the package pitch on the interposer, not the die-side PHY",
+      "value_mm": 8.5
+    },
+    "height_um": 1177.2,
+    "width_um": 8500.056
+  },
+  "generator": "tools/mem_compiler/hbm_phy_gen.py --variant v41x_legal --edge-mm 8.5 v2.0",
+  "interface": {
+    "controller_clock_mhz": {
+      "grade": "assumed",
+      "note": "the die clock; min_period 900 ps",
+      "value": 1087.0
+    },
+    "parameters": {
+      "KTAGW": 17,
+      "K_AW": 30,
+      "LWIN": 10,
+      "NPC": 32,
+      "NPC_W": 8
+    },
+    "port_list": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv (as v1)"
+  },
+  "kind": "hbm_phy_abstract",
+  "name": "ot_hbm3e_phy_v41x_aw30_e8p5",
+  "pins": {
+    "k_pins_in_window_um": [
+      0.96,
+      120.384
+    ],
+    "matches": "rtl/chip/ot_chip_v41x_hbm3e_phy.sv ports at KTAGW = 17, NPC_W = 8, LWIN = 10",
+    "on_track_orientations": [
+      "R0",
+      "MX",
+      "MY",
+      "R180"
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_phases_mod_48nm": [
+      0
+    ],
+    "pin_pitch_um": 0.192,
+    "pins_off_m5_track": 0,
+    "placement": "pseudo-channel p's K request/response bits in [p*window + K span]; W pseudo-channel c's bits (c < 8) in [c*window + W span], the shared W request in window 0's W span; clk, rst_n and status in window 16's W span",
+    "power": {
+      "layer": "M4",
+      "obstructed_layers": [
+        "M1",
+        "M2",
+        "M3",
+        "M4"
+      ],
+      "reach": "the parent's M5 stripes over the macro, M4-M5 vias (catalog-macro ElementGrid)",
+      "strap_step_um": 1.2,
+      "strap_width_um": 0.288,
+      "straps": {
+        "VDD": 490,
+        "VSS": 489
+      }
+    },
+    "pseudo_channel_window_um": 265.584,
+    "signal_pins": 22238,
+    "w_pins_in_window_um": [
+      121.344,
+      182.016
+    ]
+  },
+  "schema": "opentallas.hbm-phy-abstract.v2",
+  "supersedes": {
+    "defects_fixed": [
+      "22,237 signal pins off the M5 track (24 pin phases)",
+      "M4 power under the macro's own M5 OBS (pdngen PDN-0006)"
+    ],
+    "v1_views_kept": "unchanged, as the historical abstract W1's records measured",
+    "views": "ot_hbm3e_phy_v41x_aw30 (v1)"
+  },
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 900.0,
+      "min_pulse_ps": 360.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+  "views": {
+    "ot_hbm3e_phy_v41x_aw30_e8p5.lef": "b119fdcec16ea432709ffa7fc97c9fbb801c7a703410512008f4b74133254878",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_bb.v": "2b3a1d2d452bef84ac4e732012f9df5a40cfc216bee2fabeb344fcbd65812631",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ff.lib": "a64a3ad7a6b937d06cec3d954298c00c2cbaff6684b9cc9a5f27f4d7ab789b6b",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_ss.lib": "3ecd753f44e273aa36156e6506b45c2ca86d52715207da14e9bdd87f65aeb676",
+    "ot_hbm3e_phy_v41x_aw30_e8p5_tt.lib": "565bbbe8eeb184c82349b3e14437bd00333801c81ac9d2c75df1ce4b6c4b25aa"
+  }
+}

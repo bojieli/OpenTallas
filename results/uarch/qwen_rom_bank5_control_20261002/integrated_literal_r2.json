@@ -1,0 +1,52 @@
+{
+  "actual_issue_producer_instantiated_in_full_source": true,
+  "added_semantic_cycles": 0,
+  "adoption": false,
+  "buffer_counts": {
+    "bank_hold_select_output_buffers": 10,
+    "bank_strobe_output_buffers": 15,
+    "low_address_root_leaf_buffers": 36,
+    "reset_root_mid_leaf_buffers": 15
+  },
+  "buffers_connected_to_source_logic_and_macro_address": true,
+  "contextual_STA_admitted": false,
+  "metadata_FF_mapped_survival_proven": false,
+  "metadata_FF_modeled": 90,
+  "model_commit": "cdcbe60a34389a5671f9e303c4f5023e83b23710",
+  "passing_scope": "Actual defaultoff new fulltile namespace contains source producer,10ROM,2KV and76BUF bindings. Literal control/capture/address cone proof and functional BUF4state only; complete-tile elaboration/mapping and physical launch/reset/wire/clock proof pending.",
+  "reset_release_root_still_external": true,
+  "schema": "opentallas.qwen-rom-integrated-control-source-gate.v1",
+  "source_sha256": {
+    "rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0",
+    "rtl/hdc/ot_qwen_rom_tile_hold_capture_candidate.sv": "7d266efbf0a074b1d92c374bcd58fc32707ef573e767d5262d5a64ff2c9c7151",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/physical/ot_qwen_rom_bank5_control_distribution.sv": "7b1f5eacaec02856ab44d30df9b02ea2496594df75602e990ff433054ecbaa73",
+    "rtl/test/qwen_rom_capture/tb_qwen_rom_hold_capture_equivalence.sv": "7e4ac158072c9c8a20c689409a86889231a4cea736eac6a83e1ef7ad6c1ade45",
+    "tools/qwen_rom_control_context_gate.py": "28353492bcdaf0a93b81ccc4bd9cc5461448458241ba18a17db8c7a5b198bc62"
+  },
+  "source_stable": true,
+  "status": "PASS_INTEGRATED_BANK5_76BUF_LITERAL_AND_FOURSTATE",
+  "steps": [
+    {
+      "case": "positive",
+      "output_tail": "rt$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:20$166_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:20$164_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:20$162_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:20$160_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: 1'1 when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: 1'1 when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: 1'1 when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: 1'1 when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:18$150_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:18$148_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: 1'1 when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\nImport proof for assert: $eq$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$144_Y when $assert$/tmp/qrom-integrated-context-gate-r2/miter.sv:17$143_EN.\n\n[induction step 1] Solving problem with 251533 variables and 618572 clauses..\nInduction step proven: SUCCESS!\n\n                  /$$$$$$      /$$$$$$$$     /$$$$$$$    \n                 /$$__  $$    | $$_____/    | $$__  $$   \n                | $$  \\ $$    | $$          | $$  \\ $$   \n                | $$  | $$    | $$$$$       | $$  | $$   \n                | $$  | $$    | $$__/       | $$  | $$   \n                | $$/$$ $$    | $$          | $$  | $$   \n                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$\n                 \\____ $$$|__/|________/|__/|_______/|__/\n                       \\__/                              \n\nEnd of script. Logfile hash: 5dac76c566, time: 23.37s, user: 23.19s, system: 0.15s, MEM: 480.32 MB peak\nYosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)\nTime spent: 98% 1x sat (22 sec), 0% 7x opt_clean (0 sec), ...\n",
+      "returncode": 0
+    },
+    {
+      "case": "wrong_address_owner",
+      "output_tail": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000\n\nERROR: Called with -verify and proof did fail!\n",
+      "returncode": 1
+    },
+    {
+      "case": "fourstate_build",
+      "output_tail": "",
+      "returncode": 0
+    },
+    {
+      "case": "fourstate_run",
+      "output_tail": "PASS QWEN_ROM_HOLD_CAPTURE_LITERAL_FOURSTATE checks=77 unknown_selected=7\n",
+      "returncode": 0
+    }
+  ],
+  "tile_PR": false
+}

@@ -1,0 +1,27 @@
+{
+  "status": "COMPLETE_CURRENT_MAIN_SUCCESSOR_SOURCE_ONLY",
+  "main_base": "c590940e4d8b362e846f154a2c68baa0d3499841",
+  "frozen_original": "40c21d66ece16fcbb72068bf6b15ea5659dfadcd",
+  "frozen_files_byte_identical": 22,
+  "parent_reported_negative": {
+    "worker_pass": 41,
+    "main_pass": 35,
+    "main_fail": 6,
+    "preserved": true
+  },
+  "independent_pre_fix_negative": {
+    "failures": 6,
+    "log": "incomplete_intake_negative.log"
+  },
+  "post_fix": {
+    "tests_pass": 63,
+    "plan_replay": "PASS_UNCHANGED_PLAN",
+    "archival_models": "ALL_FIELDS_IDENTICAL",
+    "private_ROOT_reads": false,
+    "compiler_invocations": 0,
+    "simulations": 0
+  },
+  "plan_sha256": "e14517ada980e4c4d19a762117b62e4215b75ba3d7c288c35a8ca3a88a9fcdcb",
+  "fresh_GO_required": true,
+  "service_status": "BOUND_MISSING"
+}

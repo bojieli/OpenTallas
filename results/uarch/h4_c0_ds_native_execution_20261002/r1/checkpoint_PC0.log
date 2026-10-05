@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/tmp/opentallas-C0-production-execution-20261002/tools/h4_c0_ds_checkpoint_first_producer.py", line 36, in execute
+    token=json.loads(history)['token_history'][-1];embedding,dtype=ck.tensor('embed.weight',rows=[token,token+1])
+  File "/tmp/opentallas-C0-production-execution-20261002/tools/h3_ds_checkpoint_provider_r30.py", line 32, in tensor
+    raw=np.memmap('/proc/self/fd/'+str(fd),mode='r',dtype=np.uint8,offset=base+start,shape=(end-start,))
+  File "/home/ubuntu/.local/lib/python3.10/site-packages/numpy/_core/memmap.py", line 289, in __new__
+    mm = mmap.mmap(fid.fileno(), bytes, access=acc, offset=start)
+OSError: [Errno 12] Cannot allocate memory

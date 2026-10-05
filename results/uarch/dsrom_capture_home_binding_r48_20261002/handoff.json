@@ -1,0 +1,28 @@
+{
+  "status": "SOURCE_GEOMETRY_CENSUS_PASS_ACTUAL_HOME_BINDING_BLOCKED",
+  "tests_passed": 4,
+  "fresh_model_exact": true,
+  "source_snapshots": 5,
+  "source_snapshot_main": "80d49f95d193e6be1806f792bd4d61500591beca",
+  "field_pair_count": 2048,
+  "root_count": 64,
+  "pairs_per_root": 32,
+  "capture_seats": 576,
+  "raw_record_bits": 69,
+  "actual_capture_sink_selector_feedback_home_provider": null,
+  "actual_consumer_deadline": null,
+  "clock_CDC_provider": null,
+  "cuts_selected": false,
+  "RTL_or_build": false,
+  "feedback_arithmetic_note": "82454 * sourceBUFx4 area0.10206 =8415.25524um2; parent reported8415.25324 retained separately; +0.002um2 difference, no fit consequence claimed",
+  "private_causal_owner_cone_source_hash": null,
+  "rootcapture_implementation_owner_disjoint": true,
+  "Kepler_scope": "provider visibility lease reverse-credit/API join; no rootcapture register positions or implementation",
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 tools/dsrom_capture_home_binding_r48.py",
+    "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools python3 -m pytest -q tests/test_dsrom_capture_home_binding_r48.py"
+  ],
+  "R46_default_admission": "FAIL preserved; compact journal/checkpoint complete sizing awaits Dewey/Peirce source interface",
+  "checkpoint_join_proposal": "results/uarch/ds_hbm_checkpoint_runner_join_r47_20261002/interface_proposal.json",
+  "R45_original_source_outputs_journal_preserved": true
+}

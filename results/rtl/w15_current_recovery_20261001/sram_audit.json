@@ -1,0 +1,19 @@
+{
+  "schema": "w15_current_sram_recovery_v1",
+  "verdict": "PASS_COMMITTED_BINDING",
+  "source_commit": "f449a0d9ac9a4b6f227bab636cd8d6156fbd8f0d",
+  "evidence_commit": "d98e2396c3dcf710c36faded989febdf18d6cbc8",
+  "checks": [
+    "33 source pins match source commit and recovery checkout",
+    "v41ss_lm_w32: parameters, binary source manifest, fixture manifest, 40 raw logs, exact deterministic gate verified",
+    "v41ss_lm_w32_sweep: parameters, binary source manifest, fixture manifest, 40 raw logs, exact deterministic gate verified",
+    "Retained .39 binary and manifest plus all 80 remote VM/log digests match committed binding; sweep shares exact same binary"
+  ],
+  "claim_boundary": "Supersedes provenance-blocked V4.1 SRAM draft only for the two recorded exact simulation configs. No new simulation, physical closure, or model adoption claimed. Original BLOCKED_PROVENANCE evidence preserved.",
+  "artifacts": {
+    "campaign.json": "d2fbbb112e35753727bb389af393916a803f4207154bbfb4011c78dc698a92ed",
+    "binding.json": "d7f311aef1e04c92fe4d0574f49e661dfb798737a4fdadd23c252d26b837506b",
+    "validation.json": "79849b0b69a59ad29dcc3283323090e75ea67eb73d5e32f8d652f986ba32855a"
+  },
+  "remote_binding": "results/rtl/w15_current_recovery_20261001/remote_sram_binding.json"
+}

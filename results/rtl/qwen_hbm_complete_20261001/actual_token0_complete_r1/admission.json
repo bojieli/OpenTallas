@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-01T15:35:41.708751+00:00",
+  "host": "local",
+  "source_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "cwd": "/home/ubuntu/qwen-hbm-complete-20261001",
+  "MemAvailable_bytes": 159675928576,
+  "disk_available_bytes": 205009133568,
+  "load": [
+    14.68701171875,
+    13.62548828125,
+    12.58349609375
+  ],
+  "cpu_count": 32,
+  "cpu_budget": 4,
+  "RSS_limit_bytes": 12884901888,
+  "MemAvailable_runtime_floor_bytes": 85899345920,
+  "source_sha256": {
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8",
+    "tools/qwen_hbm_complete_checkpoint.py": "d59615948a326fc28d26d629ba2a5c77c029c8da580a1dfd630081267783a97d",
+    "tools/qwen_hbm_complete_launch.py": "01caaf71d440515879c1e6b8564aeab72c46874ab3498d21c778e53033b0f3f2",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607"
+  },
+  "existing_manifest": "/tmp/claude-1000/queue/W12b.manifest",
+  "AGI_dispatch": false,
+  "PVE_dispatch": false,
+  "checkpoint_readonly": true,
+  "images_written": false,
+  "cpu_affinity": [
+    28,
+    29,
+    30,
+    31
+  ],
+  "runtime_guard_sample_seconds": 2
+}

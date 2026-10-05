@@ -1,0 +1,46 @@
+{
+  "schema": "w2.nc6.split_corrector_handoff.v1",
+  "predecessor_commit": "c0a826787a694e4db19d5fce8bac869b8408dbd2",
+  "module": "ot_w2_nc6_correction_control",
+  "entry": "rtl/experimental/w2_nc6_correction_control_split_20261003/ot_w2_nc6_correction_control.sv",
+  "source_sha256": "e8fb2b6e770e0f4fc53e7d69d118f8078c41ee4f3c9c8266a8357a0eeff80c45",
+  "interface": "All18 port names and widths unchanged from c0a helper/Nash frozen portbook; include exactly one helper definition, select this new path instead of predecessor",
+  "independent_cone": "First always @* computes CURRENT validation, error/busy/offers and base progress/reservation. No readiness read.",
+  "retirement_cone": "Second always @* consumes validated offers/readiness and base plan; only external context_next/context_we outputs, never writes validation outputs. No raw control state.",
+  "preack_peer_validation": "same restored legality/currentclean checks as predecessor before offers; no error introduced upon ready",
+  "equivalence_reasoning": [
+    "Existing trusted valid contexts own reservations from old input before any retirement. Allocation predicate uses old trusted&&!valid, not next state.",
+    "Every ack clears a trusted valid FIX3 engine; that engine cannot allocate on same edge.",
+    "Every restored peer has a CE contextword and is untrusted; neither progression nor allocation can write that peer.",
+    "Two scrub targets in one context would violate required other2 CURRENTclean and fail closed before any offers; repeated target reservation also fails closed.",
+    "Therefore moving actual ack updates after independent base allocation/progression preserves write order/value; ack target sets do not conflict with allocation.",
+    "Error conditions formerly repeated inside ack already validated before offers; removing repeated checks leaves error independent of readiness."
+  ],
+  "enabled_calendar": {
+    "reservation": 0,
+    "CAP_edges": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "FIX_edges": [
+      5,
+      6,
+      7,
+      8
+    ],
+    "actual_accept_earliest": 8,
+    "next_reservation_earliest": 9,
+    "per_engine_recurring_II": 9,
+    "stalled_retirement": "additional actual held duration, not bounded without service guarantee"
+  },
+  "storage": {
+    "new_FF": 0,
+    "new_CW": 0,
+    "total_CW": 219
+  },
+  "scope": "Helper control isolation and explicit II9 only. No whole219 rerun, codec runtime, fullSM/token/physical/rate credit. Parent primary II19 remains separately priced by Nash.",
+  "protected_predecessor": "Original helper/tool/tests/model/failure logs/manifest remain byteidentical; new paths only.",
+  "fresh_feedback_lint": "feedback_gate_r2/record.json: predecessor UNOPTFLAT/fatal EXIT1; successor EXIT0 without waiver"
+}

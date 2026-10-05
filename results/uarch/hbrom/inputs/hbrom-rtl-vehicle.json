@@ -1,0 +1,843 @@
+{
+  "schema": "opentallas.hbrom.rtl_vehicle.v1",
+  "utc": "2026-10-05T04:09:19.870396+00:00",
+  "status": "READ_ONLY_PREPARATION_NO_BUILD",
+  "top": "ot_hbm_accel_sm_v",
+  "suggested_parameters": {
+    "ENABLE": 1,
+    "NC": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "IL": 8,
+    "RMAX": 4096,
+    "LEV": 4,
+    "XD": 128,
+    "MAX_OUT": 512,
+    "DS": 2,
+    "DW": 4,
+    "DG": 3,
+    "PIO": 2,
+    "STK": 1,
+    "TCK": 1
+  },
+  "exact_port_declarations": "\n    input  wire                    clk,\n    input  wire                    rst_n,\n    input  wire                    start,\n    input  wire [$clog2(RMAX):0]   op_rows,\n    input  wire [15:0]             op_c,\n    input  wire [7:0]              op_g,\n    input  wire                    op_gs,\n    input  wire [1:0]              op_fmt,\n    output wire                    busy,\n    input  wire                    d_valid,\n    output wire                    d_ready,\n    input  wire [31:0]             d_base,\n    input  wire [23:0]             d_lines,\n    output wire                    req_v,\n    input  wire                    req_ready,\n    output wire [31:0]             req_addr,\n    output wire [9:0]              req_tag,\n    input  wire                    rsp_v,\n    input  wire [9:0]              rsp_tag,\n    input  wire [1087:0]           rsp_data,\n    input  wire                    xw_en,\n    input  wire [$clog2(XD)-1:0]   xw_addr,\n    input  wire [6:0]              xw_grp,\n    input  wire [8*256-1:0]        xw_data,\n    output wire                    rv,\n    output wire [$clog2(RMAX)-1:0] rrow,\n    output wire [NC*32-1:0]        rdata,\n    output wire                    fault,\n    output wire                    arrive,\n    input  wire                    release_in,\n    output wire                    released",
+  "sources": [
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "bytes": 2803
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm.sv",
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+      "bytes": 11773
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bterm2.sv",
+      "sha256": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+      "bytes": 10596
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_fadd.sv",
+      "sha256": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+      "bytes": 1459
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "bytes": 12112
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "bytes": 11377
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "bytes": 19069
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tree.sv",
+      "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+      "bytes": 2607
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_issue.sv",
+      "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+      "bytes": 7358
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_stack.sv",
+      "sha256": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+      "bytes": 6310
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tc_col.sv",
+      "sha256": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+      "bytes": 5975
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_bd_col.sv",
+      "sha256": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+      "bytes": 5602
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_blockdot.sv",
+      "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+      "bytes": 16915
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_bulk_copy.sv",
+      "sha256": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+      "bytes": 6787
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_sm_v.sv",
+      "sha256": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+      "bytes": 11348
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "bytes": 5251
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "bytes": 10519
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "bytes": 11904
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "bytes": 7751
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "bytes": 1395
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+      "bytes": 6673
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+      "bytes": 6668
+    },
+    {
+      "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "sha256": "f63863a56f7c8929bf862750c095c2951ba340d4bc3bbb1763e27ec1b8f72427",
+      "bytes": 13293
+    },
+    {
+      "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "sha256": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+      "bytes": 21613
+    },
+    {
+      "path": "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+      "sha256": "ba2cbf7634c3951ff68505f012b1d28cf415e161181a89ab620b28d5172a3598",
+      "bytes": 6668
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+      "sha256": "826bf8382bded8b2d84531d9f5690f4fe17046e7cedebcdff26b21a14c0ae0e7",
+      "bytes": 9003
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "sha256": "02d3f6bbaa7bf63203b7fedcf4675e5b5f9f3534a5514d37c3c077f22b403f00",
+      "bytes": 7217
+    },
+    {
+      "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "sha256": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
+      "bytes": 29269
+    },
+    {
+      "path": "rtl/test/tb_hbm_accel_sm_v.sv",
+      "sha256": "1f44f9ae8865bf5c7f63de70854431f8d788b0ca9f26a01d055b3c7a61309a1b",
+      "bytes": 5756
+    }
+  ],
+  "golden_driver": "tools/w19_sm_real_ops.py:smv_real",
+  "existing_rtl_real_evidence": "results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json",
+  "existing_cases": [
+    {
+      "tag": "LM head",
+      "fmt": "v41_bf16",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        43
+      ],
+      "exact": true,
+      "cycles": 3671
+    },
+    {
+      "tag": "wo_b",
+      "fmt": "v41_fp8",
+      "K": 8192,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 308
+    },
+    {
+      "tag": "router gate",
+      "fmt": "v41_bf16",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 323
+    },
+    {
+      "tag": "wq_a",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 0 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 0 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 1 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 1 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 2 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 2 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "wkv",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 3 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 3 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 4 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 4 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 5 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 5 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 6 w1",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 6 w3",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 0 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 1 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 2 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 3 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 4 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 5 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 6 w2",
+      "fmt": "v41_fp8",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 235
+    },
+    {
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "fmt": "v41_fp8",
+      "K": 1280,
+      "sm_rows": [
+        0,
+        16
+      ],
+      "exact": true,
+      "cycles": 430
+    },
+    {
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "fmt": "v41_bf16",
+      "K": 512,
+      "sm_rows": [
+        0,
+        32
+      ],
+      "exact": true,
+      "cycles": 437
+    },
+    {
+      "tag": "indexer.wq_b",
+      "fmt": "v41_fp8",
+      "K": 1280,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "wo_a K-split: the die's head against its o-group's 1,024 rows",
+      "fmt": "v41_bf16",
+      "K": 512,
+      "sm_rows": [
+        0,
+        32
+      ],
+      "exact": true,
+      "cycles": 437
+    },
+    {
+      "tag": "wq_a",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "wo_b",
+      "fmt": "v41_fp8",
+      "K": 8192,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 308
+    },
+    {
+      "tag": "router gate",
+      "fmt": "v41_bf16",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 323
+    },
+    {
+      "tag": "wkv",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 0 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 0 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 1 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 1 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 2 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 2 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "compressor.wkv|wgate",
+      "fmt": "v41_bf16",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 323
+    },
+    {
+      "tag": "expert slot 3 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 3 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 4 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 4 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 5 w1",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 5 w3",
+      "fmt": "v41_fp4",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 232
+    },
+    {
+      "tag": "expert slot 6 w1",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 6 w3",
+      "fmt": "v41_fp8",
+      "K": 5120,
+      "sm_rows": [
+        0,
+        1
+      ],
+      "exact": true,
+      "cycles": 241
+    },
+    {
+      "tag": "expert slot 0 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 1 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 2 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 3 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 4 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 5 w2",
+      "fmt": "v41_fp4",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 226
+    },
+    {
+      "tag": "expert slot 6 w2",
+      "fmt": "v41_fp8",
+      "K": 2304,
+      "sm_rows": [
+        0,
+        2
+      ],
+      "exact": true,
+      "cycles": 235
+    },
+    {
+      "tag": "wq_b (head-aligned: head h on die h)",
+      "fmt": "v41_fp8",
+      "K": 1280,
+      "sm_rows": [
+        0,
+        16
+      ],
+      "exact": true,
+      "cycles": 430
+    }
+  ],
+  "coverage_limits": [
+    "Existing cases use TP96 busiest SM row shard, not new HBROM shard; selected new full row shard must replace old assumptions.",
+    "Legacy compile_tb Icarus SMV_SRC omits ot_hdc_prefix.sv; candidate SRC includes it.",
+    "No checkpoint operand dump currently verified present; record points to old /tmp path.",
+    "No RTL candidate timing/resource claims inferred from baseline PASS.",
+    "FullK BF165120 requires80 x fragments; FP8K8192 requires64; FP4K5120 padded24; all fitXD128.",
+    "Required RMAX and stack LEV must be checked against largest chosen op_rows/fullK group tree."
+  ],
+  "new_gate_requirements": [
+    "Connect physically timed 4096-row ROM macro service, finite arbitration, bounded response credits; no ideal replay masquerading as ROM.",
+    "Cover fullK and every row owned by one selected shared-compute cluster for FP4 expert, FP8 dense, BF16 head/grouped output.",
+    "Two matrices/experts located in different bank groups must execute on same arithmetic instance.",
+    "Compare every FP32 accumulator and required BF16 output bit against golden; assert request/response identities and count, output uniqueness, drains and backpressure.",
+    "Exercise shared-bank conflicts and finite response/result staging.",
+    "Preserve baseline and failed records; default-off opt-in.",
+    "Protect SRAM/control state; ROM no ECC; result port lacks ready so provision reservation."
+  ],
+  "verilator_command_template": [
+    "verilator",
+    "--binary",
+    "--timing",
+    "-Wno-fatal",
+    "--top-module",
+    "tb_hbrom_compute",
+    "--Mdir",
+    "PINNED_REMOTE_BUILD",
+    "-j",
+    "ADMISSION_APPROVED_WORKERS",
+    "-GNC=1",
+    "SOURCE_LIST_PLUS_NEW_SERVICE_AND_BENCH"
+  ],
+  "build_inventory": {
+    "source_count": 29,
+    "source_bytes": 275071,
+    "generated_cpp_inventory": "unknown until admitted Verilator elaboration; do not guess limits",
+    "compile_resources": "not measured; no new compile launched",
+    "actual_preflight_local_mem_available_bytes": 171894763520,
+    "actual_preflight_local_disk_available_bytes": 1069485260800,
+    "preflight_note": "Single observed snapshot, not reservation/admission. Bulk jobs go remote via root/fleet guard."
+  }
+}

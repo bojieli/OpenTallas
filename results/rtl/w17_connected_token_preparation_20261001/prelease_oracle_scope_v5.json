@@ -1,0 +1,12 @@
+{
+  "authoritative_receipt": "prelease_reserved_return_rtl_edge_oracle_v5.json",
+  "supersedes_for_intake": "prelease_reserved_return_rtl_edge_final.json",
+  "history_preserved": true,
+  "changes": [
+    "negative oracle requires sole finite-drain FATAL, exit1, exact requested/received/beats/out/ov and bound timestamp",
+    "32-bit payload words pack magic4/channel5/tag16/beat4/word3; expected payload independently reconstructed at ROB check",
+    "one-bit payload corruption rejected by actual ROB checker"
+  ],
+  "hardware_admission": false,
+  "scope": "unchanged index-ring landing only; no arithmetic, full prelease service, CKV persistence, physical or full-token qualification"
+}

@@ -1,0 +1,202 @@
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        727.00  727.00 ^ input external delay
+     1    4.12    0.00    0.00  727.00 ^ rst_n (in)
+     3   17.80   32.44   23.23  750.23 ^ input991/Y (BUFx12f_ASAP7_75t_R)
+     3   35.98   21.75   53.53  803.76 ^ place47481/Y (BUFx16f_ASAP7_75t_R)
+     2    6.54   45.15  107.48  911.24 v _222969_/Y (INVx11_ASAP7_75t_R)
+     2    4.71   12.84   39.08  950.32 v place47472/Y (BUFx12f_ASAP7_75t_R)
+     1   43.00  119.35  121.81 1072.13 v _279999_/Y (OR3x4_ASAP7_75t_R)
+                389.72  116.67 1188.80 v u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                               1188.80   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -107.99  751.71   library setup time
+                                751.71   data required time
+-----------------------------------------------------------------------------
+                                751.71   data required time
+                               -1188.80   data arrival time
+-----------------------------------------------------------------------------
+                               -437.09   slack (VIOLATED)
+
+
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        727.00  727.00 v input external delay
+     1    4.12    0.00    0.00  727.00 v rst_n (in)
+     3   17.80   27.32   25.36  752.36 v input991/Y (BUFx12f_ASAP7_75t_R)
+     3   35.98   18.63   56.16  808.52 v place47481/Y (BUFx16f_ASAP7_75t_R)
+     2    6.54   50.79  107.46  915.98 ^ _222969_/Y (INVx11_ASAP7_75t_R)
+     2    4.70   13.99   37.22  953.20 ^ place47472/Y (BUFx12f_ASAP7_75t_R)
+     1   43.00  143.20   74.72 1027.92 ^ _279999_/Y (OR3x4_ASAP7_75t_R)
+                401.98  118.76 1146.68 ^ u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                               1146.68   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -106.06  753.63   library setup time
+                                753.63   data required time
+-----------------------------------------------------------------------------
+                                753.63   data required time
+                               -1146.68   data arrival time
+-----------------------------------------------------------------------------
+                               -393.05   slack (VIOLATED)
+
+
+Startpoint: go (input port clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        727.00  727.00 v input external delay
+     1   19.60    0.00    0.00  727.00 v go (in)
+     2   11.17   70.14   92.30  819.30 v input990/Y (BUFx2_ASAP7_75t_R)
+     1   43.00  119.35  141.67  960.97 v _279999_/Y (OR3x4_ASAP7_75t_R)
+                389.72  116.67 1077.64 v u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                               1077.64   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -107.99  751.71   library setup time
+                                751.71   data required time
+-----------------------------------------------------------------------------
+                                751.71   data required time
+                               -1077.64   data arrival time
+-----------------------------------------------------------------------------
+                               -325.93   slack (VIOLATED)
+
+
+Startpoint: go (input port clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock network delay (propagated)
+                        727.00  727.00 ^ input external delay
+     1   19.61    0.00    0.00  727.00 ^ go (in)
+     2   11.16   92.12   94.68  821.68 ^ input990/Y (BUFx2_ASAP7_75t_R)
+     1   43.00  143.20  106.61  928.29 ^ _279999_/Y (OR3x4_ASAP7_75t_R)
+                401.98  118.76 1047.05 ^ u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                               1047.05   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -106.06  753.63   library setup time
+                                753.63   data required time
+-----------------------------------------------------------------------------
+                                753.63   data required time
+                               -1047.05   data arrival time
+-----------------------------------------------------------------------------
+                               -293.42   slack (VIOLATED)
+
+
+Startpoint: u_e.g_qt_cg.en_r$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                        599.49  599.49   clock network delay (propagated)
+                 22.77    0.00  599.49 ^ u_e.g_qt_cg.en_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.73   29.33   82.01  681.50 ^ u_e.g_qt_cg.en_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.87   16.40   16.50  698.00 v _279998_/Y (INVx1_ASAP7_75t_R)
+     1   43.00  119.35  117.80  815.79 v _279999_/Y (OR3x4_ASAP7_75t_R)
+                389.72  116.67  932.46 v u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                                932.46   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -107.99  751.71   library setup time
+                                751.71   data required time
+-----------------------------------------------------------------------------
+                                751.71   data required time
+                               -932.46   data arrival time
+-----------------------------------------------------------------------------
+                               -180.76   slack (VIOLATED)
+
+
+Startpoint: u_e.g_qt_cg.en_r$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_e.g_cg.u_cg.u_icg
+          (rising clock gating-check end-point clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                        599.49  599.49   clock network delay (propagated)
+                 22.77    0.00  599.49 ^ u_e.g_qt_cg.en_r$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.73   34.33   86.91  686.40 v u_e.g_qt_cg.en_r$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.88   22.95   20.14  706.54 ^ _279998_/Y (INVx1_ASAP7_75t_R)
+     1   43.00  143.20   74.95  781.49 ^ _279999_/Y (OR3x4_ASAP7_75t_R)
+                401.98  118.76  900.25 ^ u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R)
+                                900.25   data arrival time
+
+                        833.00  833.00   clock core_clk (rise edge)
+                         86.69  919.69   clock network delay (propagated)
+                        -60.00  859.69   clock uncertainty
+                          0.00  859.69   clock reconvergence pessimism
+                                859.69 ^ u_e.g_cg.u_cg.u_icg/CLK (ICGx1_ASAP7_75t_R)
+                       -106.06  753.63   library setup time
+                                753.63   data required time
+-----------------------------------------------------------------------------
+                                753.63   data required time
+                               -900.25   data arrival time
+-----------------------------------------------------------------------------
+                               -146.61   slack (VIOLATED)
+
+
+Startpoint                           Endpoint                               Slack
+--------------------------------------------------------------------------------
+go (input)                           u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R) -325.93
+
+Startpoint                           Endpoint                               Slack
+--------------------------------------------------------------------------------
+rst_n (input)                        u_e.g_cg.u_cg.u_icg/ENA (ICGx1_ASAP7_75t_R) -437.09
+

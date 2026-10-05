@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.ha2.measured_composition.v2",
+ "supersedes_row_of": "results/rtl/hbm_accel_ha2_20261003/measured_composition.json (kept unchanged)",
+ "rows": [
+  {
+   "rung": "HA2 snapshot candidate (Codex 045cc7411)",
+   "verdict": "REJECT_SNAPSHOT_CANDIDATE",
+   "measured_ar_ns": null,
+   "note": "unchanged history"
+  },
+  {
+   "rung": "HA2 direct-link cut-through o-group all-reduce (DS, 40 a token)",
+   "source_commit": "987cf8d9d",
+   "modelled_ar_ns": 763.9,
+   "measured_ar_ns": 625.323,
+   "baseline_ar_ns": 1046.1,
+   "modelled_saving_us": 11.29,
+   "measured_saving_us": 16.83,
+   "measured_per_user_gain_pct": 3.82,
+   "rate_tok_s": {
+    "honest_ablation": 2188.2,
+    "with_measured_ha2_ar": 2271.9
+   },
+   "gates": {
+    "G-exact": "PASS (DS 10 seeds x 96 dies, Qwen 10 seeds; stress fixture)",
+    "G-latency": "PASS: DS per-layer AR 625.3 ns measured in the 96-die system with wire stages, CDC, credits and PHY latency (baseline 1046.1, model 763.9); not yet inside the W19 token program",
+    "G-area": "PASS (ledger ESTIMATE): 40 lanes = 16.0-17.1 mm2 <= 18 mm2 fabric-SerDes reservation; 29.1 W (25.1-33.6) vs 33 W budget; endpoint 1.1 mm2 at 70% (flop-FIFO upper bound) on a 660 mm2 core",
+    "G-route": "NOT RUN (no routed element; corridor estimate only)",
+    "G-timing": "NOT RUN (only the LAT-7 adder is SS-closed standalone at 1.2 GHz)",
+    "G-gain": "PASS for DS: +3.82% per user on the honest ablation (2,188.2 -> 2,271.9 tok/s, 1M AR), +5.16% inside the firm model composition; Qwen: 0 (AR hidden under the weight stream, and the ablation already uses the same direct in-package UCIe pair) -> REJECT for Qwen"
+   },
+   "verdict": "MEASURED_EXACT_GAIN_PASS; not adopted until G-route/G-timing",
+   "adopted": false
+  },
+  {
+   "rung": "HA2 TP-2 all-reduce (Qwen3-8B)",
+   "measured_ar_ns": 115.092,
+   "measured_per_user_gain_pct": 0.0,
+   "verdict": "REJECT_GAIN_BELOW_ONE_PERCENT",
+   "adopted": false
+  }
+ ],
+ "excluded": [
+  "HA2 gather-like collectives (225 a token): modelled only; gather sensitivity measured 422.4 ns at 128 B/rank (fixed ~315 ns) vs model 436 ns fixed",
+  "HA2 all-reduce: G-route, G-timing pending"
+ ],
+ "published_accelerator_rate": null
+}

@@ -1,0 +1,203 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/differential_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "claim_boundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "comparisons": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "element_count": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "expected_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "observed_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "output": {
+            "enum": [
+              "embedding_bf16_codes",
+              "expert_ids",
+              "hc_hidden_bf16_codes"
+            ]
+          },
+          "shape": {
+            "items": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "minItems": 3,
+            "type": "array"
+          },
+          "status": {
+            "const": "exact"
+          }
+        },
+        "required": [
+          "element_count",
+          "expected_sha256",
+          "observed_sha256",
+          "output",
+          "shape",
+          "status"
+        ],
+        "type": "object"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "bf16_codes_copied": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "completion_events": {
+          "const": 1
+        },
+        "logical_activation_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_activation_bytes_written": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_input_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_rom_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "micro_ops_executed": {
+          "const": 4
+        },
+        "rom_lookup_rows": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "semantic_operations_executed": {
+          "const": 3
+        }
+      },
+      "required": [
+        "bf16_codes_copied",
+        "completion_events",
+        "logical_activation_bytes_read",
+        "logical_activation_bytes_written",
+        "logical_input_bytes_read",
+        "logical_rom_bytes_read",
+        "micro_ops_executed",
+        "rom_lookup_rows",
+        "semantic_operations_executed"
+      ],
+      "type": "object"
+    },
+    "differential_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "request_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_differential.v1"
+    },
+    "source_tensors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "dtype": {
+            "enum": [
+              "BF16",
+              "I64"
+            ]
+          },
+          "name": {
+            "enum": [
+              "embed.weight",
+              "layers.0.ffn.gate.tid2eid"
+            ]
+          },
+          "payload_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "shape": {
+            "items": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "maxItems": 2,
+            "minItems": 2,
+            "type": "array"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "dtype",
+          "name",
+          "payload_sha256",
+          "shape",
+          "size_bytes"
+        ],
+        "type": "object"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "status": {
+      "const": "exact_locked_checkpoint_differential"
+    },
+    "token_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "token_ids_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "comparisons",
+    "counters",
+    "differential_id",
+    "model_id",
+    "request_sha256",
+    "schema",
+    "source_tensors",
+    "status",
+    "token_count",
+    "token_ids_sha256"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup checkpoint differential v1",
+  "type": "object",
+  "$defs": {
+    "nonnegative": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

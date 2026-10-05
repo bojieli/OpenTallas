@@ -1,0 +1,13 @@
+{
+  "all_native_PC_actor_combinations": 111168,
+  "compiler_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "compiler_version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "full_factory_ready": false,
+  "lint_ENABLED0_exit": 0,
+  "lint_ENABLED1_exit": 0,
+  "pytest_cases": 4,
+  "pytest_command": "python3 -m pytest -q tests/test_canonical_qwen_immutable_bank_profile.py",
+  "scope": "software immutable mapping + syntax; no new runtime fixture or physical qualification",
+  "source_byteidentical_ROM_from_prior_proven_owner": true,
+  "verdict": "PASS"
+}

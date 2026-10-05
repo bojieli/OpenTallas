@@ -1,0 +1,31 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/full_operator_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "implemented_operator_kind": {
+      "const": "FP8_LINEAR"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_fp8_linear_full_coverage.v1"
+    },
+    "status": {
+      "const": "complete_operator_arithmetic_only"
+    },
+    "underlying_graph_operator_kind": {
+      "const": "FP8_LINEAR"
+    }
+  },
+  "required": [
+    "implemented_operator_kind",
+    "model_id",
+    "schema",
+    "status",
+    "underlying_graph_operator_kind"
+  ],
+  "title": "OpenTallas DeepSeek V4 complete-output FP8 operator coverage v1",
+  "type": "object"
+}

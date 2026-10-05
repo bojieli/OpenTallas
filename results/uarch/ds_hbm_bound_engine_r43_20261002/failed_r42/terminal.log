@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/tmp/kepler-ds-r42-provenance-pinned-20261002/tools/ds_hbm_source_prefix_r42.py", line 118, in <module>
+    if __name__=='__main__':main()
+  File "/tmp/kepler-ds-r42-provenance-pinned-20261002/tools/ds_hbm_source_prefix_r42.py", line 111, in main
+    engine=driver_class()(native,dispatch,observed,manifest['checkpoint_revision'],manifest['generation'],homes,native_artifact_path=nativepath,dispatch_artifact_path=dispatchpath)
+  File "/tmp/kepler-ds-r42-provenance-pinned-20261002/results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source", line 32, in __init__
+    self.groups=TiledContinuation(provider,native_artifact_path=native_artifact_path)
+  File "/tmp/kepler-ds-r42-provenance-pinned-20261002/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_tiled_continuation.py", line 50, in __init__
+    raise ValueError('complete provider native differs from pinned artifact')
+ValueError: complete provider native differs from pinned artifact

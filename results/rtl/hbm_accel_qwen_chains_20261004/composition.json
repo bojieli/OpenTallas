@@ -1,0 +1,269 @@
+{
+ "schema": "opentallas.hbm-accel-qwen-p8191-chain-composition.v1",
+ "clock_hz": 1200000000.0,
+ "terms": {
+  "a_L0_sram": {
+   "cycles": 6392,
+   "source": "runs/a_L0_itr",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 L0 SRAM-resident (HA8 placement), P8191"
+  },
+  "a_L1_partial": {
+   "cycles": 27112,
+   "source": "results/rtl/qwen_hbmacc_p8191_20261004/measured_composition.json (a w224 L1)",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 L1, 106 of 992 code words SRAM, w224, preroll 5000"
+  },
+  "a_L_hbm": {
+   "cycles": 33051,
+   "source": "runs/a_L2_itr",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 HBM layer w224 (= sibling 33,051)"
+  },
+  "a_head_p1": {
+   "cycles": 4634,
+   "source": "results/rtl/qwen_hbmacc_p8191_20261004 (a head at P8191, token 18 exact)",
+   "exact": true,
+   "measured": true
+  },
+  "a_L_spread": {
+   "cycles": 32090,
+   "source": "runs/a_L2_spread",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 HBM layer, 31 leading code words SRAM (spread)"
+  },
+  "b_L0_sram": {
+   "cycles": 5885,
+   "source": "runs/b_L0_itr",
+   "exact": true,
+   "measured": true,
+   "note": "TP4 L0 SRAM-resident, P8191"
+  },
+  "b_L5_partial": {
+   "cycles": 11611,
+   "source": "results/rtl/qwen_hbmacc_p8191_20261004 (b w224 L5)",
+   "exact": true,
+   "measured": true
+  },
+  "b_L6_first_hbm": {
+   "cycles": 13105,
+   "source": "results/rtl/qwen_hbmacc_p8191_20261004 (b w224 L6; = runs/b_L6eq 13,105)",
+   "exact": true,
+   "measured": true
+  },
+  "b_L_hbm": {
+   "cycles": 17237,
+   "source": "runs/b_L2h_itr",
+   "exact": true,
+   "measured": true,
+   "note": "TP4 HBM layer, preroll 1000"
+  },
+  "b_head_p1": {
+   "cycles": 2999,
+   "source": "results/rtl/qwen_hbmacc_p8191_20261004 (b head at P8191, token 18 exact)",
+   "exact": true,
+   "measured": true
+  },
+  "b_L_spread": {
+   "cycles": 14932,
+   "source": "runs/b_L2_spread",
+   "exact": true,
+   "measured": true,
+   "note": "TP4 HBM layer, 75 leading code words SRAM (spread)"
+  },
+  "a_verify_layer": {
+   "cycles": 33580,
+   "source": "runs/v2_hw_w1024_tail",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 verify p=4 block 8187..8190, w1024, spread, synthesizable release, preroll = verify tail"
+  },
+  "a_verify_head_p4": {
+   "cycles": 18533,
+   "source": "runs/v2_head",
+   "exact": true,
+   "measured": true,
+   "note": "TP2 verify head p=4 (positions 0..3; lm_head is position-independent)"
+  },
+  "a_drafter_layer": {
+   "cycles": 47915,
+   "source": "UNVALIDATED: no TP2 drafter images; proxy = a_verify_layer x (b_drafter_layer / b_verify_layer)",
+   "exact": false,
+   "measured": false
+  },
+  "a_ingest_markov": {
+   "cycles": 7875,
+   "source": "results/rtl/qwen_dspark_system_20261004 (priced ROM TP4 terms, not RTL)",
+   "exact": false,
+   "measured": false
+  },
+  "b_verify_layer": {
+   "cycles": 16044,
+   "source": "runs/v4_hw_w320_tail",
+   "exact": true,
+   "measured": true,
+   "note": "TP4 verify p=4 block 8187..8190, w320, spread, synthesizable release, preroll = verify tail"
+  },
+  "b_verify_head_p4": {
+   "cycles": 11993,
+   "source": "results/rtl/qwen_dspark_system_20261004/ctx8k/c_H1.json (ROM VPRM, identical W12 TP4 datapath and head images; HA8 TP4 p1 head == ROM c_H0 2,999)",
+   "exact": true,
+   "measured": true
+  },
+  "b_drafter_layer": {
+   "cycles": 22893,
+   "source": "runs/d4_hw_tail",
+   "exact": true,
+   "measured": true,
+   "note": "TP4 DSpark drafter layer D0, S=3 at 8188, real-magnitude window, weights+KV streamed, synthesizable release"
+  },
+  "b_ingest_markov": {
+   "cycles": 7875,
+   "source": "results/rtl/qwen_dspark_system_20261004 (priced, not RTL)",
+   "exact": false,
+   "measured": false
+  },
+  "commit": {
+   "cycles": 65,
+   "source": "results/rtl/qwen_dspark_system_20261004 (accept unit within 64 edges + 1)",
+   "exact": true,
+   "measured": true
+  }
+ },
+ "rows": {
+  "a_AR_baseline": {
+   "composition": [
+    [
+     1,
+     "a_L0_sram",
+     6392
+    ],
+    [
+     1,
+     "a_L1_partial",
+     27112
+    ],
+    [
+     34,
+     "a_L_hbm",
+     33051
+    ],
+    [
+     1,
+     "a_head_p1",
+     4634
+    ]
+   ],
+   "cycles": 1161915,
+   "us": 968.26,
+   "tok_s": 1032.8,
+   "terms_measured": true,
+   "terms_exact": true
+  },
+  "a_AR_spread": {
+   "composition": [
+    [
+     36,
+     "a_L_spread",
+     32090
+    ],
+    [
+     1,
+     "a_head_p1",
+     4634
+    ]
+   ],
+   "cycles": 1159917,
+   "us": 966.6,
+   "tok_s": 1034.6,
+   "terms_measured": true,
+   "terms_exact": true
+  },
+  "b_AR_baseline": {
+   "composition": [
+    [
+     5,
+     "b_L0_sram",
+     5885
+    ],
+    [
+     1,
+     "b_L5_partial",
+     11611
+    ],
+    [
+     1,
+     "b_L6_first_hbm",
+     13105
+    ],
+    [
+     29,
+     "b_L_hbm",
+     17237
+    ],
+    [
+     1,
+     "b_head_p1",
+     2999
+    ]
+   ],
+   "cycles": 557056,
+   "us": 464.21,
+   "tok_s": 2154.2,
+   "terms_measured": true,
+   "terms_exact": true
+  },
+  "b_AR_spread": {
+   "composition": [
+    [
+     36,
+     "b_L_spread",
+     14932
+    ],
+    [
+     1,
+     "b_head_p1",
+     2999
+    ]
+   ],
+   "cycles": 540594,
+   "us": 450.49,
+   "tok_s": 2219.8,
+   "terms_measured": true,
+   "terms_exact": true
+  },
+  "a_spread_gain_pct": 0.172,
+  "b_spread_gain_pct": 3.045,
+  "a_DSpark": {
+   "verify": 1227456,
+   "draft": 261350,
+   "draft_head_3slots": 13900,
+   "commit": 65,
+   "step": 1488871,
+   "tau": 3.0375,
+   "tok_s": 2448.2,
+   "vs_AR": 2.366,
+   "unvalidated_terms": [
+    "a_drafter_layer",
+    "a_ingest_markov"
+   ]
+  },
+  "b_DSpark": {
+   "verify": 589620,
+   "draft": 131335,
+   "draft_head_3slots": 8995,
+   "commit": 65,
+   "step": 721020,
+   "tau": 3.0375,
+   "tok_s": 5055.3,
+   "vs_AR": 2.277,
+   "unvalidated_terms": [
+    "b_ingest_markov"
+   ]
+  }
+ }
+}

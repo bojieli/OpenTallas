@@ -1,0 +1,42 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "original_driver": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+  "original_driver_sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04",
+  "copy": "rtl/test/v41_runtime/w17_existing_port_trace_die_rt.cpp",
+  "copy_sha256": "a9141b71687872211ad87f96d5b930e258fd9f249b08d3bb21f103ffe71fec8d",
+  "inverse_to_original": true,
+  "engine_RTL_edits": 0,
+  "clock_eval_link_order_edits": 0,
+  "watchdog_or_MAXC_edits": 0,
+  "payload_or_program_changes": 0,
+  "debug_bitmapping": {
+    "core_st": "27:24",
+    "decoded_unit": "23:21",
+    "idles": "20:16",
+    "waited": "14"
+  },
+  "unit_codes": {
+    "ME": 1,
+    "SU": 2,
+    "QE": 3,
+    "XU": 4,
+    "HE": 5
+  },
+  "core_states": {
+    "S_DEC": 5,
+    "S_ISSUE": 6,
+    "S_GO": 7
+  },
+  "source_PC24_path": "S_DEC waits win_admit/win_idle; descriptor schedules128rows,17sectors each; S_ISSUE waits units/ready/kv_ok/!kvd_v/win_idle before ME issue. Static inspected PC24 path has no identified circular prefetch/ME-go dependency; not a no-deadlock proof.",
+  "current_public_ports": [
+    "dbg_pc",
+    "unit_busy",
+    "issue_unit",
+    "dbg_state",
+    "dbg_words",
+    "fault",
+    "done"
+  ],
+  "exact_command": "Decoded unit can be read from existing dbg_state; issue_unit names LAST issued unit. Raw instruction/class/address/count require source-pinned programme metadata and real observer. Neither a busy bit nor last issue identifies current active provider operation.",
+  "owned_observer_mapping": "1020-bit new wrapper exposes generation/user/row/sector/tag/address/accept/reply/publish; counts after accepted, qualified packet events. Not present in original compiled live classes; cannot retroactively observe live process."
+}

@@ -1,0 +1,5 @@
+ACTUAL_CORE_CANCEL_PASS cut=PREFIX prefix=16 qe=1 terminal=16 vm=16 capture=16 blocks=0 acceptedWR=0 faultcycle=41 localACKcycle=50 suppressed=0 sinkWords=512 frozenFrames=0
+- /tmp/DS-recovery-negative-successor-execution-20261002-r1/baseline/sources/tb.sv:1386: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 53ns; walltime 2.011 s; speed 26.106 ns/s
+- Verilator: cpu 2.011 s on 1 threads; allocated 173 MB

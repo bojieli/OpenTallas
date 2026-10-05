@@ -1,0 +1,56 @@
+{
+  "schema": "fec_fairness_Maxwell_model_owner_handoff_v1",
+  "base_commit": "dae694a56f3dce0caa18ef446f10b605d7aa72d4",
+  "branch": "codex/fec-class-fairness-20261004",
+  "owner_coordination": {
+    "owner": "Maxwell model owner",
+    "method": "isolated additive helper + caller patch and shared handoff; no writes to owner checkout",
+    "peer_acknowledged": false,
+    "merge_paths": [
+      "tools/fec_class_fairness.py",
+      "tools/arch_hbm_switched_v41.py",
+      "tools/uarch_model.py"
+    ]
+  },
+  "policy": {
+    "same_FEC_required": true,
+    "selected": "light_fec_switch_0p9_nvls",
+    "ROM_board_light_ns": 130,
+    "HBM_light_switch_ns": 510,
+    "matched_KP4_ROM_board_ns": 209,
+    "matched_KP4_HBM_switch_ns": 668,
+    "NVLink_class_switch_retained": true,
+    "direct_mesh": "OWNER_REJECTED",
+    "light_switch_reach_qualified": false
+  },
+  "historical_preservation": {
+    "existing_result_files_modified": false,
+    "legacy_KP4_configs_retained": true,
+    "legacy_frozen_HA_ladder_not_changed": true,
+    "legacy_125p9us_fabric_lump_not_repriced": true,
+    "new_switch_output": "results/arch/v41_hbm_switched_same_fec_model_20261004.json"
+  },
+  "qualification": "MODEL_ONLY; no measured rates, rate adoption, PHY/FEC reach qualification or analog guarantee",
+  "checks": {
+    "same_class_rows_and_two_leg_arithmetic": "PASS",
+    "actual_SwitchFabric_class_isolated_with_source_technology_hops": "PASS",
+    "caller_syntax": "PASS",
+    "full_DAG_execution": "NOT_RUN",
+    "hardware_jobs": 0,
+    "HA_jobs": 0
+  },
+  "failed_import_attempts_preserved": {
+    "attempt_1": "sparse checkout lacked src/opentallas",
+    "attempt_2": "sparse checkout lacked results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json; stopped full imports instead of launching/replaying physical work"
+  },
+  "commands": {
+    "independent_helper": "python3 tools/fec_class_fairness.py",
+    "full_context_policy_caller": "python3 tools/uarch_model.py --fec-fairness",
+    "full_switch_model": "not run; owning model may evaluate new named row before rate publication"
+  },
+  "source_sha256": {
+    "tools/fec_class_fairness.py": "318715c319dbfb0d9b3bbb73f8c41130c307905fa8a2c4300e6d2b3f86584c9f",
+    "tools/arch_hbm_switched_v41.py": "31f4007c19c4f0d50a5059230ac830dd1e827a5f7a0a07d301ef0d875b7144b5",
+    "tools/uarch_model.py": "b1481be822f8a9d832a6a2d8b6a0f513e0fd03f100171a8105bd9c04a8625df8"
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-28T12:33:42.093827+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hdc_v41x_me_xbank_macro",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+        "sha256": "f5064de72493a39023c97bb1152d4ae54659091e25769e8c4323a5c0c382628b",
+        "size_bytes": 4167
+      }
+    ],
+    "top": "ot_hdc_v41x_me_xbank_macro"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n |    8706 |            0 |    +1.0% | -266.070 | -178743.719 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2570 |       0 |    8710 |            0 |    +1.0% | -266.070 | -178652.750 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2580 |       0 |    8710 |            0 |    +1.0% | -266.070 | -178652.750 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2590 |       0 |    8712 |            0 |    +1.0% | -266.070 | -178618.203 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2600 |       0 |    8712 |            0 |    +1.0% | -266.070 | -178618.203 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2610 |       0 |    8716 |            0 |    +1.0% | -266.070 | -178544.562 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2620 |       0 |    8717 |            0 |    +1.0% | -266.070 | -178529.203 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2630 |       0 |    8723 |            0 |    +1.0% | -266.070 | -178382.797 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2640 |       0 |    8724 |            0 |    +1.0% | -266.070 | -178382.797 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2650 |       0 |    8730 |            0 |    +1.0% | -266.070 | -178276.859 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2660 |       0 |    8730 |            0 |    +1.0% | -266.070 | -178276.859 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2670 |       0 |    8742 |            0 |    +1.0% | -266.070 | -178137.750 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2680 |       0 |    8743 |            0 |    +1.0% | -266.070 | -178128.031 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2690 |       0 |    8748 |            0 |    +1.0% | -266.070 | -178097.922 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2700 |       0 |    8748 |            0 |    +1.0% | -266.070 | -178097.922 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2710 |       0 |    8752 |            0 |    +1.0% | -266.070 | -178026.000 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2720 |       0 |    8753 |            0 |    +1.0% | -266.070 | -178019.656 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2730 |       0 |    8765 |            0 |    +1.0% | -266.070 | -177799.859 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2740 |       0 |    8774 |            0 |    +1.0% | -266.070 | -177676.266 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2740 |       0 |    8774 |            0 |    +1.0% | -266.070 | -177676.266 | g_pos[0].g_c[1].u_mem/wd_in[91]\n     2750 |       0 |    8859 |            0 |    +1.0% | -256.621 | -173940.453 | g_pos[0].g_c[1].u_mem/wd_in[99]\n     2760 |       0 |    8954 |            0 |    +1.0% | -253.839 | -171953.000 | g_pos[0].g_c[5].u_mem/wd_in[88]\n     2770 |       0 |    9049 |            0 |    +1.0% | -250.321 | -170099.203 | g_pos[0].g_c[1].u_mem/wd_in[51]\n    final |       0 |    9129 |            0 |    +1.0% | -248.936 | -167071.188 | g_pos[0].g_c[1].u_mem/wd_in[95]\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0066] Unable to repair all hold violations.\n[INFO RSZ-0032] Inserted 9129 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:02.08[h:]min:sec. CPU time: user 1.95 sys 0.11 (98%). Peak memory: 252360KB.\nElapsed time: 0:04.38[h:]min:sec. CPU time: user 4.32 sys 0.21 (103%). Peak memory: 307736KB.\nElapsed time: 1:14.11[h:]min:sec. CPU time: user 74.85 sys 22.86 (131%). Peak memory: 597340KB.\nElapsed time: 0:02.29[h:]min:sec. CPU time: user 1.98 sys 0.10 (90%). Peak memory: 240628KB.\nElapsed time: 0:05.05[h:]min:sec. CPU time: user 4.78 sys 0.15 (97%). Peak memory: 334628KB.\nElapsed time: 8:08.87[h:]min:sec. CPU time: user 1157.28 sys 0.97 (236%). Peak memory: 574120KB.\nElapsed time: 0:02.50[h:]min:sec. CPU time: user 2.21 sys 0.15 (94%). Peak memory: 295724KB.\nElapsed time: 33:34.82[h:]min:sec. CPU time: user 6697.18 sys 9.35 (332%). Peak memory: 1698604KB.\nElapsed time: 0:18.61[h:]min:sec. CPU time: user 18.53 sys 0.59 (102%). Peak memory: 375428KB.\nElapsed time: 0:26.73[h:]min:sec. CPU time: user 26.46 sys 0.77 (101%). Peak memory: 1103336KB.\nElapsed time: 0:59.43[h:]min:sec. CPU time: user 53.29 sys 2.18 (93%). Peak memory: 1123148KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_hdc_v41x_me_xbank_macro_asap7/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-28T11:48:16.500107+00:00",
+  "git": {
+    "commit": "09c2b5357e5b34e26199fe543be3ecffc3a1105d",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      " M rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hdc_v41x_me_xbank_macro",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro.sv",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--die-area",
+      "0",
+      "0",
+      "500",
+      "500",
+      "--core-area",
+      "20",
+      "20",
+      "480",
+      "480",
+      "--clock-period-ns",
+      "0.92",
+      "--stages",
+      "pnr",
+      "--purpose",
+      "characterization",
+      "--output",
+      "results/physical_abi3/asap7/hdc/v41x/ot_hdc_v41x_me_xbank_macro/physical.json",
+      "--keep-workdir",
+      "/tmp/v41_me_xbank_macro_writeopt_route"
+    ],
+    "driver": {
+      "commit": "09c2b5357e5b34e26199fe543be3ecffc3a1105d",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/opentallas-v41-me-xbank-writeopt/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "937999677650feeb6c0084d71afd8b341aa7d0a5a701525b9e9852b572e3ea84",
+      "tree": "/tmp/opentallas-v41-me-xbank-writeopt"
+    },
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/opentallas-v41-me-xbank-writeopt"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

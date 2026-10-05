@@ -1,0 +1,15 @@
+[
+  "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "--binary",
+  "--timing",
+  "-Wno-fatal",
+  "--top-module",
+  "tb",
+  "--Mdir",
+  "/home/ubuntu/nash-manifest-owner-50a1cbbf5-runtime/obj",
+  "-j",
+  "2",
+  "/home/ubuntu/nash-manifest-owner-50a1cbbf5-source/rtl/experimental/canonical_qwen_manifest_range_owner_20261003/ot_gpu_qwen_manifest_range_owner.sv",
+  "/home/ubuntu/nash-manifest-owner-50a1cbbf5-source/rtl/test/canonical_qwen_manifest_range_owner_20261003/tb.sv",
+  "/home/ubuntu/nash-manifest-owner-50a1cbbf5-source/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv"
+]

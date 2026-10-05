@@ -1,0 +1,19 @@
+{
+ "schema":"dsrom.s81.emitted_phase.capture_profile.v1",
+ "source":"Popper StageProgramJoin row phase/key association and _validate_plans superrow%128=physical root; native phrom[2*i_ph][61:46] rows",
+ "selected_NP":2417,"selected_BF":519,"roots":128,"immutable_ROM_added_bits":0,"mutable_FF_added_bits":0,
+ "per_root_count":"2*floor(phase_rows/256)+(phase_rows%256>2*root)+(phase_rows%256>2*root+1)",
+ "quota":"per_root_count*(accepted_np+1)",
+ "quota_max":4096,"quota_port_bits":2432,
+ "input_bits":19,"output_bits":2432,"replicas":128,
+ "MACs_per_cycle":0,"memory_bytes_per_cycle_added":0,
+ "logical_cost":"128 constant8bit comparisons twice, two10bit sums per root, 128 unsigned10x4bit products; constant/logic sharing permitted but no area credit inferred",
+ "fanout":"phase_rows16/np3 to128 logical root quota computations; selected loaded route/clock fit unknown",
+ "new_state_or_codec":false,"returntree_changed":false,
+ "prospective_added_pipeline_edges":0,"loaded_SSFF_latency":null,
+ "target_clock_MHz":1200,"SS_setup_uncertainty_ps":60,"FF_hold_uncertainty_ps":25,
+ "combinational_area_mm2":null,"tracks_fit":null,"physical_admission":false,
+ "enclosing_spine_retirement_added_edges":2,
+ "runtime_or_proof_campaign":false,
+ "admission_condition":"Only enable after the exact installed phase/key/matrix has passed Popper canonical plan binding and source hash matches; compute from actual accepted i_ph PHROM, never host grant"
+}

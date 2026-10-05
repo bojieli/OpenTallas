@@ -1,0 +1,137 @@
+--- captured-runtime
+
++++ rtl/hdc/ot_qwen_me_array.sv
+
+@@ -43,7 +43,6 @@
+
+     parameter integer NWS = 0,
+     parameter integer TWS = 0,
+     parameter integer ORD = 0,
+-    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
+     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_hdc_matvec_part SCALE_LOCAL)
+     parameter integer CODE_BANKS = 2,
+     parameter integer KV_LOCAL = 0        // 1: tiles hold KV slices (ot_qwen_rom_tile); 0: global KV port
+@@ -100,7 +99,7 @@
+
+     localparam integer LT  = $clog2(TG);
+     localparam integer NXC = 1 << SMAX;
+     localparam integer NXL = NXC / TG;
+-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
++    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS;
+     localparam integer NPT = GT >> TCUT;                  // tree words into the top
+     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
+     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
+@@ -112,13 +111,8 @@
+
+     wire [NXC*32-1:0] xl_d;
+     wire [NPT*W*32-1:0] t_lvl;
+     wire              fab_fault;
+-    localparam integer NPG = GT >> SMIN;
+-    wire [NPG-1:0]      sp_scale_gre, sp_o_we;
+-    wire [NPG*AW-1:0]   sp_scale_addr, sp_o_addr;
+-    wire [NPG*W-1:0]    sp_o_mask;
+-    wire [NPG*W*32-1:0] sp_o_data;
+     ot_qwen_me_spine #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
+-        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_spine (
++        .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_spine (
+         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
+@@ -126,25 +120,14 @@
+
+         .i_jsh(i_jsh), .i_split(i_split), .i_wcs(i_wcs), .i_round(i_round),
+         .i_obase(i_obase), .i_ots(i_ots), .i_ojs(i_ojs),
+         .i_mmode(i_mmode), .i_oen(i_oen), .i_amax(i_amax), .i_rmax(i_rmax), .i_mbase(i_mbase),
+-        .scale_re(scale_re), .scale_gre(sp_scale_gre), .scale_addr(sp_scale_addr), .scale_q(scale_q[NPG*W*16-1:0]),
++        .scale_re(scale_re), .scale_gre(scale_gre), .scale_addr(scale_addr), .scale_q(scale_q),
+         .x_re(x_re), .x_addr(x_addr), .x_q(x_q),
+         .wrom_re(), .wrom_addr(), .kv_re(),
+         .tgo(tgo), .tb(tb), .xl_d(xl_d), .t_lvl(t_lvl), .fab_fault(fab_fault),
+-        .ov(ov), .o_we(sp_o_we), .o_addr(sp_o_addr), .o_mask(sp_o_mask), .o_data(sp_o_data),
++        .ov(ov), .o_we(o_we), .o_addr(o_addr), .o_mask(o_mask), .o_data(o_data),
+         .am_idx(am_idx), .am_val(am_val), .am_any(am_any),
+         .mx_we(mx_we), .mx_addr(mx_addr), .mx_mask(mx_mask), .mx_data(mx_data),
+         .progress(progress), .fault(fault));
+-    generate if (NPG < GT) begin : g_zx
+-        assign scale_gre = {{(GT - NPG){1'b0}}, sp_scale_gre};
+-        assign scale_addr = {{((GT - NPG) * AW){1'b0}}, sp_scale_addr};
+-        assign o_we = {{(GT - NPG){1'b0}}, sp_o_we};
+-        assign o_addr = {{((GT - NPG) * AW){1'b0}}, sp_o_addr};
+-        assign o_mask = {{((GT - NPG) * W){1'b0}}, sp_o_mask};
+-        assign o_data = {{((GT - NPG) * W * 32){1'b0}}, sp_o_data};
+-    end else begin : g_full
+-        assign scale_gre = sp_scale_gre; assign scale_addr = sp_scale_addr;
+-        assign o_we = sp_o_we; assign o_addr = sp_o_addr; assign o_mask = sp_o_mask; assign o_data = sp_o_data;
+-    end endgenerate
+ 
+     // -- tiles and the tree above them -------------------------------------------------
+     // Level LT position p is tile p's t_out.  The node of level lv > LT,
+@@ -188,7 +171,7 @@
+
+             end
+             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
+             ot_qwen_rom_tile_logic #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
+-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA)) u_t (
++                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL)) u_t (
+                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
+                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
+                 .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
+@@ -221,7 +204,6 @@
+
+     parameter integer NWS = 0,
+     parameter integer TWS = 0,
+     parameter integer ORD = 0,
+-    parameter integer MEM_EXTRA = 0,      // tile memory capture stage (ot_qwen_rom_tile_logic)
+     parameter integer SCALE_LOCAL = 0
+ ) (
+     input  wire              clk,
+@@ -242,9 +224,9 @@
+
+     input  wire [AW-1:0]     i_mbase,
+     // result-port scale ROM (spine)
+     output wire              scale_re,
+-    output wire [(GT >> SMIN)-1:0]     scale_gre,
+-    output wire [(GT >> SMIN)*AW-1:0]  scale_addr,
+-    input  wire [(GT >> SMIN)*W*16-1:0] scale_q,
++    output wire [GT-1:0]     scale_gre,
++    output wire [GT*AW-1:0]  scale_addr,
++    input  wire [GT*W*16-1:0] scale_q,
+     // vector-memory x read port: one element per chunk
+     output wire [(1<<SMAX)-1:0]    x_re,
+     output wire [(1<<SMAX)*AW-1:0] x_addr,
+@@ -261,10 +243,10 @@
+
+     input  wire              fab_fault,
+     // results (port groups only)
+     output wire              ov,
+-    output wire [(GT >> SMIN)-1:0]     o_we,
+-    output wire [(GT >> SMIN)*AW-1:0]  o_addr,
+-    output wire [(GT >> SMIN)*W-1:0]   o_mask,
+-    output wire [(GT >> SMIN)*W*32-1:0] o_data,
++    output wire [GT-1:0]     o_we,
++    output wire [GT*AW-1:0]  o_addr,
++    output wire [GT*W-1:0]   o_mask,
++    output wire [GT*W*32-1:0] o_data,
+     output wire [NW-1:0]     am_idx,
+     output wire [31:0]       am_val,
+     output wire              am_any,
+@@ -279,7 +261,7 @@
+
+     localparam integer LT  = $clog2(TG);
+     localparam integer NXC = 1 << SMAX;
+     localparam integer NXL = NXC / TG;
+-    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA;
++    localparam integer XD  = BD + (TCUT - LT) * NWS + TWS;
+     localparam integer NPT = GT >> TCUT;                  // tree words into the top
+     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
+     localparam integer IREG = (BD > XVM && BD > 0) ? 1 : 0;   // the tile's own input stage is one of BD
+@@ -295,7 +277,7 @@
+
+     reg                 range_fault;
+     ot_hdc_matvec_part #(.W(W), .G(GT), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1),
+         .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .PART(2), .GT(GT), .SMIN(SMIN), .TCUT(TCUT),
+-        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN)) u_top (
++        .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL)) u_top (
+         .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
+         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),

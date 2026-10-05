@@ -1,0 +1,6 @@
+read_json /tmp/claude-1000/w11s/controller_recovery/identity_before.json
+setattr -set keep 1 c:*g_t[* t:*dff* %i
+setattr -set keep 1 c:*g_tr[* t:*dff* %i
+setattr -set keep 1 c:*g_m[* t:*dff* %i
+setattr -set keep 1 c:*u_stage* t:*dff* %i
+write_json /tmp/claude-1000/w11s/controller_recovery/identity_attributes_after.json

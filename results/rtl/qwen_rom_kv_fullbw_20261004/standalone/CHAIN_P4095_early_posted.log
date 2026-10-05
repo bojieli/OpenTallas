@@ -1,0 +1,4 @@
+STATS CHAIN_P4095_early_posted hbm_act=4368 rd=131072 wr=272 refpb=3908 violations=0 max_landing=12 rsp_tile_stall=16049 fill_sectors=131072 wr_sectors=272 wr_lat_max=65
+PASS CHAIN_P4095_early_posted "P":4095,"early_go":1,"posted_wb":1,"attn_cycles":600,"mlp_cycles":3000,"A_fill_cycles":715,"A_kv_ok_after_start":725,"B_fill_cycles":675,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0 : A and B slices, both token write-backs exact
+KV_SERVICE4_STANDALONE PASS
+{"cases":[{"name":"CHAIN_P4095_early_posted","pass":true,"P":4095,"early_go":1,"posted_wb":1,"attn_cycles":600,"mlp_cycles":3000,"A_fill_cycles":715,"A_kv_ok_after_start":725,"B_fill_cycles":675,"B_fill_exposed_after_start":0,"B_kv_ok_after_start":65,"su_drain_wait":0,"violations":0,"detail":"A and B slices, both token write-backs exact"}],"status":"pass"}

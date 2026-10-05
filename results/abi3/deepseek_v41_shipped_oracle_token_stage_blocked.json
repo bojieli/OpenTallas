@@ -1,0 +1,199 @@
+{
+  "argv": [
+    "--stage",
+    "tokens",
+    "--output",
+    "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41_shipped_oracle_tokens.json"
+  ],
+  "checkpoint_lock": {
+    "lock_id": "3035f90f54bdb46150c7c45a0fa8224c459583d0849c51d2c24fdb055e627a53",
+    "path": "/home/ubuntu/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json",
+    "payload_bytes": 510286023000,
+    "present": true,
+    "schema": "opentallas.checkpoint_lock.v1",
+    "shard_count": 48,
+    "tensor_content_sha256": "312df8e2f3f7abf5868da7403cfb0e9c54c3f58736c35fb3d4ade344efcd53e6",
+    "tensor_count": 96085
+  },
+  "elapsed_seconds": 3.033,
+  "environment": {
+    "compute_capability": [
+      12,
+      0
+    ],
+    "cuda_available": true,
+    "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "device_allocation_verified": true,
+    "device_total_memory_bytes": 101973491712,
+    "nvcc_on_path": {
+      "path": "/usr/bin/nvcc",
+      "release": "Cuda compilation tools, release 11.5, V11.5.119"
+    },
+    "nvml": "available",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "torch": "2.10.0+cu128",
+    "torch_cuda": "12.8"
+  },
+  "evidence_class": {
+    "executed": [],
+    "not_run": [
+      "tokens"
+    ],
+    "statement": "nothing in this report is a TPOT, a throughput or a token. The widths and the comparisons are executed measurements of the vendor's own pinned code; the token ladder did not run"
+  },
+  "generated_at": "2026-09-18T12:31:39Z",
+  "instrumentation": {
+    "required_symbols": [
+      "Engram.forward",
+      "Indexer.forward"
+    ],
+    "verification": {
+      "all_installed": true,
+      "checks": {
+        "Attention.forward": {
+          "current_qualname": "install_counters.<locals>.counted_attention",
+          "installed_is_current": true
+        },
+        "Engram.forward": {
+          "current_qualname": "install_counters.<locals>.counted_engram",
+          "installed_is_current": true
+        },
+        "Indexer.forward": {
+          "current_qualname": "install_counters.<locals>.counted_indexer",
+          "installed_is_current": true
+        }
+      }
+    },
+    "wrapped_before_first_run": true,
+    "wrapped_symbols": [
+      "Attention.forward",
+      "Engram.forward",
+      "Indexer.forward"
+    ]
+  },
+  "model_id": "deepseek-v4.1-flash",
+  "notes": [
+    "vendor sources verified: config.json=8be45ce04760, inference/engram.py=11f35ecbead8, inference/model.py=4e9ae23620ed",
+    "checkpoint lock 3035f90f54bdb461: 96,085 tensors, 510,286,023,000 bytes",
+    "wrapped BEFORE the first run and verified by identity: Attention.forward, Engram.forward, Indexer.forward",
+    "token stage BLOCKED, missing: streaming_engine, engram_table_residency"
+  ],
+  "producer": {
+    "source_map": {
+      "runtime/reference/candidate_pool.py": "81bb066ac912ead7ca2845e17670e5aa51d6b22f6d459f5c396e0a29959787ae",
+      "runtime/reference/engram.py": "248f40843af5ea9d6f60fe34ba8ea66f9310f794d091474a5850c5e732d9aae0",
+      "runtime/reference/fp4_kv.py": "7b1e216e89a7df717a23ebc2d0f358b44de314ca9898a226c1e487465220ed4a",
+      "tools/run_deepseek_v41_reference_oracle.py": "8339288c26c144255938baa54dafdace4fa6c7cf2432e89dffed0112c978c5b7"
+    },
+    "source_map_sha256": "4fe2c57211411c26070f5a589dccd4585e682bef0a59a6e9c1b8024aa1f21f72",
+    "tool": "tools/run_deepseek_v41_reference_oracle.py",
+    "tool_source_sha256": "8339288c26c144255938baa54dafdace4fa6c7cf2432e89dffed0112c978c5b7"
+  },
+  "released_geometry": {
+    "candidate_block_size": 8,
+    "candidate_source_layer": 20,
+    "candidate_topk_blocks": 2048,
+    "dim": 5120,
+    "engram_layer_ids": [
+      1,
+      14
+    ],
+    "engram_num_embeddings": [
+      384006168,
+      384016682
+    ],
+    "head_dim": 512,
+    "index_head_dim": 128,
+    "index_source_layers": [
+      2,
+      8,
+      14,
+      20,
+      24,
+      28,
+      32,
+      36
+    ],
+    "index_topk": 512,
+    "kv_source_layers": [
+      2,
+      8,
+      14,
+      20
+    ],
+    "n_layers": 40,
+    "note": "read at run time; nothing above is transcribed in this tool",
+    "source": "config.json:text_config at the pinned revision",
+    "window_size": 128
+  },
+  "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "role": "external_reference_oracle",
+  "role_note": "an external comparator over the vendor's own pinned code. It never produces accelerator tokens and never supplies an activation (ADR-003 section 18)",
+  "schema": "opentallas.abi3.reference_oracle.v1",
+  "stages_requested": [
+    "tokens"
+  ],
+  "status": "completed",
+  "tokens": {
+    "artifacts_not_produced": {
+      "context_ladder": "results/abi3/deepseek_v41_reference_oracle_context_ladder.json",
+      "prefix": "results/abi3/deepseek_v41_reference_oracle_prefix.json"
+    },
+    "blocked": true,
+    "command_that_would_run_it": "PATH=/usr/local/cuda/bin:$PATH tools/run_deepseek_v41_reference_oracle.py --stage tokens --snapshot /home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277 --lock /home/ubuntu/.cache/opentallas/deepseek-v4.1-flash/checkpoint.lock.json --only TA-DS41-CHAT-1-P32 --max-new-tokens 32 --output results/abi3/deepseek_v41_reference_oracle_prefix.json",
+    "grade": "not_run",
+    "missing_prerequisites": [
+      "streaming_engine",
+      "engram_table_residency"
+    ],
+    "note": "no number in this record is a token, a TPOT or a measurement of the model's output. Planned behaviour is not implemented evidence",
+    "prerequisites": [
+      {
+        "id": "streaming_engine",
+        "path": "runtime/reference/deepseek_v41_oracle.py",
+        "present": false,
+        "requirement": "a V4.1 layer-streaming engine, the analogue of runtime/reference/deepseek_v4_oracle.py::StreamingDeepSeekV4, that materialises one block and one routed expert at a time from the 48 released shards",
+        "why_needed": "the released checkpoint is 510,286,023,000 bytes of weights against 101.97 GB of device memory, so no run holds the model"
+      },
+      {
+        "id": "engram_table_residency",
+        "path": null,
+        "present": false,
+        "requirement": "a residency policy for the two Engram tables (202.76 GB) that ParallelEngramEmbedding.forward's F.embedding over the whole table can be served from",
+        "why_needed": "plan section 3.4 decides where the tables live; a host-gather adaptation would have to be declared and is not written"
+      },
+      {
+        "id": "tokenizer_for_compressed_map",
+        "path": "compiler/frontend/deepseek_v41_tokenizer.py",
+        "present": true,
+        "requirement": "a tokenizer NgramHashState.__init__ can build the compressed token map from, asserting 99,092 compressed ids",
+        "why_needed": "every Engram hash multiplier derives from the compressed vocab size, so a mismatch rehashes the whole table"
+      },
+      {
+        "id": "workload_documents",
+        "path": "build/workloads/deepseek-v4.1-flash/index.json",
+        "present": true,
+        "requirement": "the pinned V4.1 workload documents and index",
+        "why_needed": "the prompts the ladder decodes"
+      }
+    ],
+    "selection_rule_that_would_be_used": "greedy_lowest_token_id_argmax",
+    "tokens_produced": 0
+  },
+  "vendor_sources": {
+    "all_match": true,
+    "observed_sha256": {
+      "config.json": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+      "inference/engram.py": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+      "inference/model.py": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+    },
+    "pinned_sha256": {
+      "config.json": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+      "inference/engram.py": "11f35ecbead8150c35aa002b3d180ef290b05a25afe883a11884f94d476d3897",
+      "inference/model.py": "4e9ae23620edc8028ccc5d5fef552ab7fdc7dcd6f79608754fe9f67644056f65"
+    },
+    "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277"
+  }
+}

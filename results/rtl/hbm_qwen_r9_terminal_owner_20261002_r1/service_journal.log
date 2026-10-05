@@ -1,0 +1,5 @@
+2026-10-02T08:47:05+0000 ubuntu systemd[1537]: Started /usr/bin/taskset --cpu-list 8-23 /usr/bin/python3 -B /home/ubuntu/OpenTallas-hbm-qwen-r9/tools/run_hbm_qwen_frontend_r9.py --proposal /home/ubuntu/OpenTallas-hbm-qwen-r9/results/uarch/hbm_qwen_frontend_r9_20261002/prepared_gate.json --go /home/ubuntu/OpenTallas/results/rtl/hbm_qwen_frontend_calibration_parent_20261002_r9_r1/GO.json --go-commit 12a58eaaa --out /tmp/hbm-qwen-frontend-calibration-parent-20261002-r9-r1.
+2026-10-02T09:14:42+0000 ubuntu taskset[102589]: Qwen/CXX failed: OUTPUT_CAP
+2026-10-02T09:14:42+0000 ubuntu systemd[1537]: hbm-qwen-frontend-calibration-parent-20261002-r9-r1.service: Main process exited, code=exited, status=1/FAILURE
+2026-10-02T09:14:42+0000 ubuntu systemd[1537]: hbm-qwen-frontend-calibration-parent-20261002-r9-r1.service: Failed with result 'exit-code'.
+2026-10-02T09:14:42+0000 ubuntu systemd[1537]: hbm-qwen-frontend-calibration-parent-20261002-r9-r1.service: Consumed 4h 52.733s CPU time.

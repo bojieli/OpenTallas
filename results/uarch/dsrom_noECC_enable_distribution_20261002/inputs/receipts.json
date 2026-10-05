@@ -1,0 +1,53 @@
+[
+  {
+    "captured_while_uncommitted": true,
+    "committed_source_pin": "b32857642896e6f15333682feafaf9c0b3011061",
+    "copy": "Maxwell_selected_caller_r5_WIP.json",
+    "no_physical_qualification_transfer": true,
+    "origin": "/home/ubuntu/dsrom-current4096-field-receipts-20261002/results/uarch/dsrom_selected_parent_caller_20261002/r5/model.json",
+    "sha256": "00c1344ccd37e1aad4366086111e789d597374db473d6bd72fe73d431cb851f8",
+    "uncommitted_WIP_no_adoption": false
+  },
+  {
+    "captured_while_uncommitted": true,
+    "committed_source_pin": "b32857642896e6f15333682feafaf9c0b3011061",
+    "copy": "field_prepare.sv",
+    "no_physical_qualification_transfer": true,
+    "origin": "/home/ubuntu/dsrom-current4096-field-receipts-20261002/rtl/v41die/ot_v41_field_w17w10_rne_wake_prepare.sv",
+    "sha256": "eb7128516bb0bda1f3225e7683c569559d3c0a08a9502a1ed027c3adbc1015a0",
+    "uncommitted_WIP_no_adoption": false
+  },
+  {
+    "captured_while_uncommitted": true,
+    "committed_source_pin": "b32857642896e6f15333682feafaf9c0b3011061",
+    "copy": "fieldtop_prepare.sv",
+    "no_physical_qualification_transfer": true,
+    "origin": "/home/ubuntu/dsrom-current4096-field-receipts-20261002/rtl/v41die/ot_v41_fieldtop_w17w10_rne_wake_prepare.sv",
+    "sha256": "f97ef56d59cb378e6fbfc3b34c7e7b8a09f833ce55972c0b7c0ce7ccb3a7ca60",
+    "uncommitted_WIP_no_adoption": false
+  },
+  {
+    "already_committed_source": true,
+    "copy": "cells.lef.gz",
+    "origin": "results/uarch/dsrom_noECC_production_context_20261002/inputs/cells.lef.gz",
+    "sha256": "06c31275c8197e4078e5336e0e893f6daf6ca3002b02e8c53a14ca170471b9d0"
+  },
+  {
+    "already_committed_source": true,
+    "copy": "setRC.tcl",
+    "origin": "results/uarch/dsrom_noECC_production_context_20261002/inputs/setRC.tcl",
+    "sha256": "ce6e29fe23b648839009c53035901066653d5850f9419ba85169c715b2cebd14"
+  },
+  {
+    "already_committed_source": true,
+    "copy": "macro.lef",
+    "origin": "results/uarch/dsrom_noECC_physical_transition_20261002/inputs/macro.lef",
+    "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+  },
+  {
+    "already_committed_source": true,
+    "copy": "make_tracks.tcl",
+    "origin": "results/uarch/dsrom_noECC_production_context_20261002/inputs/make_tracks.tcl",
+    "sha256": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632"
+  }
+]

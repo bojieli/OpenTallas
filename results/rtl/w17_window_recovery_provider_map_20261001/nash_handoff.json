@@ -1,0 +1,9 @@
+{
+  "timer_decision": "DEFER: no timer implementation authorized before healthy causal read-safety composition.",
+  "healthy_dependency": "Nash must bind final WC/WS issue/ACK order to each actual subsequent same-PC read schedule and its WR-to-RD constraint, including sector PC mapping, scale-last ordering, injection allocation and interference. Logical row publication need not itself mean physical drain if every consuming read is safely delayed.",
+  "recovery_dependency": "Even if healthy read safety passes, recovery must obtain WRITE_VISIBLE plus delivery fence; restart/reset cannot rely on a subsequent RD enforcing turnaround.",
+  "requested_owner_response": "Return source-pinned causal ordering proof or counterexample and exact required publication condition before selecting any healthy timer.",
+  "coordination_status": "Durable handoff only; no direct agent-message capability and no Nash acknowledgement asserted.",
+  "healthy_timer_cost_if_needed": "Prior 7-cycle/4-bit proposal remains conditional at CLK_PS1000, not implemented or selected.",
+  "liveness": "Finite bounds must cover accept fairness, backend service incl refresh/other clients, downstream ready, physical completion and fence. MAXSKIP16 and lowest-PC selection alone do not supply this contract. Unbounded holding/starvation implies no finite completion bound; timeout preserves ownership."
+}

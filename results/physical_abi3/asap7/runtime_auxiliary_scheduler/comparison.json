@@ -1,0 +1,20 @@
+{
+  "status": "prelayout_improved_target_not_met",
+  "scope": "Matched ASAP7 TT 1 ns synthesis/STA. No added refill planning stage. Routed optimized result pending.",
+  "baseline": "prelayout_1ns.json",
+  "optimized": "prelayout_optimized_1ns.json",
+  "area_um2": {
+    "baseline": 412.863,
+    "optimized": 356.758
+  },
+  "area_reduction_percent": 13.589253578063431,
+  "setup_wns_ns": {
+    "baseline": -0.5575837591718084,
+    "optimized": -0.4084826937480132
+  },
+  "limitations": [
+    "Neither prelayout result meets 1 ns",
+    "Feed-forward switching energy unmeasured",
+    "Standalone control block, not integrated G2 closure"
+  ]
+}

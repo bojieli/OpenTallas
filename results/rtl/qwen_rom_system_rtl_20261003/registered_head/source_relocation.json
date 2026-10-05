@@ -1,0 +1,21 @@
+{
+  "measured_source_commit": "6c7ebb52a",
+  "successor_namespace_base": "8af0fabc1",
+  "byte_identical_source_relocation": {
+    "rtl/qwen_sys/ot_qwen_rom_sys_top.sv": "rtl/qwen_sys/async/headreg/ot_qwen_rom_sys_top.sv",
+    "rtl/qwen_sys/ot_qwen_sys_die.sv": "rtl/qwen_sys/async/headreg/ot_qwen_sys_die.sv",
+    "rtl/test/qwen_sys/tb_qwen_rom_sys.sv": "rtl/test/qwen_sys/async/headreg/tb_qwen_rom_sys.sv",
+    "rtl/rom/ot_rom_oneshot_headreg.sv": "rtl/rom/ot_rom_oneshot_headreg.sv"
+  },
+  "runner_change": "Source selection only: parent async campaign imports additive headreg wrappers; measured raw result remains unchanged. No HDL rerun.",
+  "system_verdict": "PASS4/4; source/images stable; no step/KV/VM mismatches",
+  "latency_added_cycles": {
+    "c0p0ah_u1": 3,
+    "c1p1ah_u1": 126,
+    "c1p1ah_u2_flip97": 1989,
+    "c1p1ah_u1_fphase1": 126
+  },
+  "adoption": false,
+  "physical": "SS/FF and routing in context unmeasured. 490MHz baseline defect remains unqualified until physical owner measures successor.",
+  "model_owner": "Peirce; feed measured +126 split-clock single-user cycles instead of sizing estimate72, plus +1989 two-user flip97; no unified model edits."
+}

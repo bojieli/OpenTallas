@@ -1,0 +1,79 @@
+{
+  "fixture_commit": "9e9ab6824f01585548f3a5d8d01e0460d3c6c42f",
+  "source_pins": {
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv": "0104529b091432015923bab400a532adbbaae0272d333aa341691a5a50159df1",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv": "d5ea2b62cdc8399a9fe1b60cda98a40d93779f6cafbd88f8676979ada19c9a71",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv": "ed25c049e7304713a8863db102b729785a7517019625225d031f0471ae5861f9",
+    "/home/ubuntu/OpenTallas-w2-fullnc6-fixture/rtl/test/w2_fullnc6_functional_20261003/tb.sv": "6f034d9669ff2607db8d2b29a63f751bf415c056ccebb79386bd3e674e018a3d"
+  },
+  "pid": 3841889,
+  "utc_start": "2026-10-03T08:43:20Z",
+  "capacity": {
+    "MemAvailable_kB": "MemAvailable:   38056448 kB",
+    "disk_free_bytes": 256183107584,
+    "affinity": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31
+    ],
+    "load": [
+      131.23583984375,
+      147.171875,
+      148.9375
+    ]
+  },
+  "scope": "fullNC6 functional directed handshake gate, no SM/physical/fulltoken",
+  "compile_command": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_w2_fullnc6",
+    "-o",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/gate.bin",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/inputs/ot_w2_nc6_protected_completion.sv",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/inputs/ot_w2_nc6_coded_secondary.sv",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/inputs/ot_w2_sealed_secded72.sv",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/inputs/ot_w2_nc6_correction_control.sv",
+    "/home/ubuntu/w2-fullnc6-functional-9e9ab6824-r1/inputs/tb.sv"
+  ],
+  "compile_rc": 38,
+  "compile_seconds": 0.32369187707081437,
+  "source_pins_post": {
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv": "0104529b091432015923bab400a532adbbaae0272d333aa341691a5a50159df1",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv": "d5ea2b62cdc8399a9fe1b60cda98a40d93779f6cafbd88f8676979ada19c9a71",
+    "/home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv": "7bcbb4f38bdf4d75c054dbc266a09344f4f0de4c115cbb05240ef6430d5f941a",
+    "/tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv": "ed25c049e7304713a8863db102b729785a7517019625225d031f0471ae5861f9",
+    "/home/ubuntu/OpenTallas-w2-fullnc6-fixture/rtl/test/w2_fullnc6_functional_20261003/tb.sv": "6f034d9669ff2607db8d2b29a63f751bf415c056ccebb79386bd3e674e018a3d"
+  },
+  "status": "FAIL_COMPILE"
+}

@@ -1,0 +1,731 @@
+{
+  "claims": {
+    "physical": false,
+    "runtime": false,
+    "system_reset_safe": false
+  },
+  "conservation": "external accepted receipts = local table/journal debts UNION identity-qualified reset-orphans, disjoint; only actual clientconsume or authoritative providerretirement removesreceipt",
+  "control_price": {
+    "added_FF": 0,
+    "area": "22 quiet-tree cells +2 qualifier cells conservative NAND/INV mapping; exact mapped area/load and reset polarity context required",
+    "cell_prices_sha256": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "conservative_twoinput_mapping": {
+      "INV": 16,
+      "NAND2": 8
+    },
+    "loaded_SS_FF": "unmeasured, no oneedge frequency qualification; prospective rearmedge is logical protocol not loaded delay",
+    "max_added_gate_depth_bound": 9,
+    "prospective_body_mm2_128PC": 0.00017915904,
+    "prospective_body_um2_perPC": 1.39968,
+    "quiet_tree": "eightinput OR tree7 OR2 + inverter; qualify existing idle by AND2",
+    "reset_polarity_byPC": {
+      "0": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "1": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 6
+      },
+      "10": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "100": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "101": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "102": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "103": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "104": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "105": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "106": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "107": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "108": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "109": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "11": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "110": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "111": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 16,
+        "old_setn_bits": 14
+      },
+      "112": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "113": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "114": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "115": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "116": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "117": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "118": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "119": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 16,
+        "old_setn_bits": 14
+      },
+      "12": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "120": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "121": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "122": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "123": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 16,
+        "old_setn_bits": 14
+      },
+      "124": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 10
+      },
+      "125": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 16
+      },
+      "126": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 16,
+        "old_setn_bits": 12
+      },
+      "127": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 14
+      },
+      "13": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "14": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "15": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "16": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "17": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "18": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "19": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "2": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "20": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "21": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "22": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "23": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "24": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "25": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "26": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "27": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 14
+      },
+      "28": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "29": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "3": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "30": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "31": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "32": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 6,
+        "old_setn_bits": 6
+      },
+      "33": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "34": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "35": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "36": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "37": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "38": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 6
+      },
+      "39": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 12
+      },
+      "4": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 6
+      },
+      "40": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "41": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "42": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "43": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "44": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "45": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "46": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "47": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "48": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "49": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "5": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 12
+      },
+      "50": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "51": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "52": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "53": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "54": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "55": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "56": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 6
+      },
+      "57": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 12
+      },
+      "58": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 10
+      },
+      "59": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 12
+      },
+      "6": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "60": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "61": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "62": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "63": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 12
+      },
+      "64": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 4
+      },
+      "65": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "66": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "67": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "68": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "69": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "7": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "70": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "71": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "72": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "73": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "74": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "75": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "76": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "77": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "78": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "79": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "8": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "80": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 10,
+        "old_setn_bits": 10
+      },
+      "81": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 8
+      },
+      "82": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "83": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "84": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "85": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "86": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "87": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "88": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 8,
+        "old_setn_bits": 8
+      },
+      "89": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "9": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "90": {
+        "delta_reset_cap_fF": 0.0,
+        "new_setn_bits": 12,
+        "old_setn_bits": 12
+      },
+      "91": {
+        "delta_reset_cap_fF": 0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 10
+      },
+      "92": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 14,
+        "old_setn_bits": 10
+      },
+      "93": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 10,
+        "old_setn_bits": 12
+      },
+      "94": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "95": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 14
+      },
+      "96": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "97": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 8,
+        "old_setn_bits": 10
+      },
+      "98": {
+        "delta_reset_cap_fF": 1.2895400000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 8
+      },
+      "99": {
+        "delta_reset_cap_fF": -0.6447700000000001,
+        "new_setn_bits": 12,
+        "old_setn_bits": 14
+      }
+    }
+  },
+  "latency": {
+    "fence_wait": "actual provider retirement bound external; no timer/run cap",
+    "healthy_different_client_prospective_II": 10,
+    "healthy_request_II_same_client": 19,
+    "repair_II": 9,
+    "reset_rearm_edges": 1
+  },
+  "negative": [
+    "localclean alone cannotrearm",
+    "each missingfence blocks",
+    "held stale ingress blocks even allfencebits asserted",
+    "stale return cannotconsume orphan",
+    "drop orphan failsconservation",
+    "samekey ABA admission blocked beforeallcopies retirement"
+  ],
+  "old_failure": "r6 request1483 localreset1484 stale-backend-capture1485; externalreceipt1/localprojection0; invariant FAIL preserved",
+  "owner_storage": "reset-orphan ledger is provider-side ownership/reference, not new W2storage; full integration must bind actual providerledger and allcopies fences, no inventedfree seat",
+  "ports": {
+    "fanout": "six clientvalid+backendreadvalid+backendWRvalid feed rearm qualification only; existing fault fanout gates normal outputs",
+    "new_external_bits": 0,
+    "new_internal_bits": 0,
+    "quiet_ingress_inputs": 8
+  },
+  "positive": "boot/syntheticcold positivefencedrearm before normal requests; runtime localreset outstanding receipts remainquarantined untilproviderfence",
+  "rearm": {
+    "causal": "upstream owner supplies authoritative fences after external debits and reverse copies retire; localclean/idle is insufficient",
+    "edges": 1,
+    "post_edge": "next CURRENT fault0 permits first admission; normal coldrequestcalendar unchanged from this origin",
+    "required": [
+      "admission_stop",
+      "provider_fenced",
+      "reverse_fenced",
+      "reset_fenced",
+      "local_idle",
+      "CURRENT allcodewords clean",
+      "no p_rsp_v",
+      "no p_wr_done_v",
+      "no c_req_v"
+    ]
+  },
+  "reset": {
+    "changed_physical_bits": [
+      0,
+      1,
+      2,
+      71
+    ],
+    "faultword_new_reset": "sealed payload1; reset clears local tables but cannot retire provider debt",
+    "holds": "p_req_v,c_req_rdy,p_rsp_rdy,p_wr_done_ready,c_rsp_v,c_wr_done_v remain0 until fenced rearm; no normal accepted debt/publication during reset quarantine",
+    "opt_in": "OPT_RESET_QUARANTINE=1; default0",
+    "reset_cell_effect": "four of existing72 faultword bits invert SETN/RESETN use; no addedFF; sourcePC seal determines exact direction"
+  },
+  "schema": "w2.reset-quarantine.v1",
+  "source_sha256": {
+    "rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_coded_secondary_acyclic.sv": "4494d366764445997b3698754c9a4b9cc7fac1f735d94aeee828f279ef625534",
+    "rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv": "406400f32366213d2e5679ff38dac6c7dc54f2d69132fd188d42043ae641b84b"
+  },
+  "storage": {
+    "added_bits": 0,
+    "added_words": 0,
+    "coded_bits": 15768,
+    "codewords": 219,
+    "payload_bits": 1,
+    "reset_payload": 1,
+    "secondary_local": 36,
+    "sticky_fault_global": 132
+  }
+}

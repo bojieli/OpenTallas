@@ -1,0 +1,13 @@
+{
+  "PCs_verified": 2213,
+  "distinct_referenced_templates": 1127,
+  "home_references_verified": 693775,
+  "input_sha256": {
+    "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f",
+    "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+    "results/uarch/h3_distributed_norm_endpoint_20261002/DeepSeek.json.gz": "e4751c4164368e98295f78d4270bf65992a8a7ee273a04ceffa528072f855424"
+  },
+  "native_commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+  "no_RTL_or_job_execution": true,
+  "status": "PASS_INDEPENDENT_HOME_IDENTITY_CHECK"
+}

@@ -1,0 +1,31 @@
+{
+  "Kepler_source_successor_and_Chandra_physical_requests_relayed": true,
+  "R67_source_commit": "e606f6ef34dd67e72f97904f75b9714b8889329b",
+  "artifacts": {
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/PC01_model.json": "b6e5166011ac7460170b5d59e9944a8f01d0b74b1bc72f6ec89b3bf0b98dee48",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/ds_hbm_per_pc_r67.py": "80199f8f7956b8d7d90156929c13e22657bcc0ccd44f55f395f9a7361c0a9c55",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/ds_hbm_remote_controller_r67.py": "ec38000bcde175305da4ee0c0f1eb9ff7109ef5fc8a97b89f60dbcd5f5f34b5f",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/ds_hbm_remote_price_r67.py": "243de97dde6528cae139d4637887753940e4137536922ed6817242f330694c4a",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/fresh_guest_metadata.json": "92b7b6e49cab3cb4d49da30ec90cfc421eb53f8a43fe535f11b69aa59c574218",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/input_sha256.json": "2b8c0e1c0e60411c343547e5fac539b92ff37a9f8be35bc973b34883e6a6ab6a",
+    "results/uarch/ds_r67_physical_phase_review_20261003/inputs/physical_backing.json": "ea9b10dc40ec25158346f1ae63df27131ae41a35205463ffda644d2d1da9726e",
+    "results/uarch/ds_r67_physical_phase_review_20261003/model.json": "94d1f71fcae45c7066a8ebdaee6edfc5f3bf3ff5351e713bbcb17a02186d2e5e",
+    "results/uarch/ds_r67_physical_phase_review_20261003/preparation_note.json": "16fcf685180d31619236e528d10deb9b00465fec907f8699d39ccc6731b94a6f",
+    "results/uarch/ds_r67_physical_phase_review_20261003/pytest.log": "bec712397b4090bd5e4595af6f0b35075beaa31d1f71239a0990dd75c977eb1f",
+    "tests/test_ds_r67_physical_phase_review.py": "13adde28ffe40571d5a4fd19e87d421f6c02c7e2660c9c5546a3b19834ab6235",
+    "tools/ds_r67_physical_phase_review.py": "30a2c4619ca021e5ccd09701b1cea867a8c02a912f9896d85d8e6bc8aa79583a"
+  },
+  "commands": [
+    "python3 -m pytest -q tests/test_ds_r67_physical_phase_review.py",
+    "python3 tools/ds_r67_physical_phase_review.py --verify results/uarch/ds_r67_physical_phase_review_20261003/model.json"
+  ],
+  "complete_source_helper_replay_requires_external_data": false,
+  "constructor_or_numeric_jobs": 0,
+  "exhaustive_two_page_two_phase_backing_access_combinations": 2304,
+  "model": "model.json",
+  "no_original_helper_or_runner_edits": true,
+  "old_R64_guards_unchanged": true,
+  "resource_admission": false,
+  "schema": "DS_R67_PHYSICAL_PHASE_HANDOFF_V1",
+  "tests": 16
+}

@@ -1,0 +1,57 @@
+{
+  "scope": "Scheduling measurement on same retained full-region candidate; no hardware/physical/adoption claim",
+  "geometry": {
+    "NP": 32,
+    "R": 1,
+    "NBF": 5,
+    "PHW": 3,
+    "VAW": 17,
+    "KMAX": 6144,
+    "FAST": 1,
+    "PP": 1,
+    "BP": 0,
+    "VRD": 64,
+    "return_levels": 6
+  },
+  "modes": [
+    "serial offer only at actual idle",
+    "overlap offer at actual ready"
+  ],
+  "clocks": {
+    "stream_hz": 1200000000,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "added_engine_state_bits": 0,
+  "added_engine_ports": 0,
+  "added_engine_cycles": 0,
+  "ports": {
+    "input_bytes_per_read": 256,
+    "input_bits_per_read": 2048,
+    "output_bytes_per_write": 4,
+    "output_bits_per_write": 32
+  },
+  "exactness": "Independent unchanged chunk8 golden assertions for W, commit intent VMW and actual stored VMS; no output injected into VM",
+  "calibration": "Original retained NODE/A/G/E must match overlap run exactly; VMW/VMS exactly W+1 edge; idle cannot precede stored visibility",
+  "execution": {
+    "host": "ot-epyc2",
+    "jobs": 8,
+    "frontend_regeneration": false,
+    "archive_compile": false,
+    "observer_links": 1,
+    "expected_peak_GiB_admission_estimate": 16,
+    "actual_peak_not_yet_measured": true,
+    "incremental_files_bytes_estimate": 200000000,
+    "disk_outputs_estimate_GiB": 4,
+    "arbitrary_wall_FSIZE_AS_caps": false
+  },
+  "coverage": "L20 wo_a, experts_gu, down: five die-node groups x128 regions x2 admission modes, full input K and return shape; not whole token",
+  "phase_credit": "Same phase counts in both modes. R93 BF519-to520 placement and phase elimination separate from exposed overlap cycles.",
+  "physical_status": "SCREEN_ONLY; inherited register-ROM/stub/false-IO KMAX256 vehicle not KMAX6144 integrated closure",
+  "source_sha256": {
+    "rtl/test/dsrom_sys/tb_dsrom_field_phase_matched.cpp": "b2d84e05b36001c3c8b5b4913b547a8be9a3a445cd5e16f127ca8a2ee424f53e",
+    "tools/dsrom_field_phase_matched.py": "421072b26c521cb50b5dd06795bcfcc6c41cc4d07f9937324a9b57151c6e3455",
+    "tools/dsrom_recovery_field.py": "4532e4e86bb9b02449b08f4ad499744fda983f0476dfefed17f73e3c00cf9db7",
+    "rtl/v41die/ot_v41_spine_pq_w17w10.sv": "0595a27f197dc81df0cd9bb4d1dbbeb40c3437219e73698b414c819618cfe3e6"
+  }
+}

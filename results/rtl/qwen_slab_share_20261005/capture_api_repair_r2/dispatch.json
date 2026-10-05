@@ -1,0 +1,35 @@
+[
+  {
+    "name": "qss_fanout_capture_456_l7",
+    "supervisor_pid": 3055374,
+    "host": "ot-epyc1tb",
+    "resumed_epoch": 1791190294.1514947,
+    "resume_source_commit": "cc88ecfeda173d792758634419bbffc3b4b57c02",
+    "engine_source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "same_attempt": true,
+    "peak_GB": 24,
+    "num_cores": 16
+  },
+  {
+    "name": "qss_fanout_capture_570_l7",
+    "supervisor_pid": 3055375,
+    "host": "ot-epyc1tb",
+    "resumed_epoch": 1791190294.152072,
+    "resume_source_commit": "cc88ecfeda173d792758634419bbffc3b4b57c02",
+    "engine_source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "same_attempt": true,
+    "peak_GB": 24,
+    "num_cores": 16
+  },
+  {
+    "name": "qss_fanout_capture_685_l7",
+    "supervisor_pid": 3055376,
+    "host": "ot-epyc1tb",
+    "resumed_epoch": 1791190294.152576,
+    "resume_source_commit": "cc88ecfeda173d792758634419bbffc3b4b57c02",
+    "engine_source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+    "same_attempt": true,
+    "peak_GB": 24,
+    "num_cores": 16
+  }
+]

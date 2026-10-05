@@ -1,0 +1,60 @@
+{
+  "bit_identical": true,
+  "cycles": {
+    "chained_total": 284,
+    "first_chained_pass": 142,
+    "one_deep_pass": 270,
+    "overhead_cycles": 14,
+    "reading": "the split costs one extra walk setup and one extra drain against two walks half as long; the factor is what a K=256 product pays to be served from a 128-deep bank",
+    "second_chained_pass": 142,
+    "throughput_factor_of_the_split": 0.950704
+  },
+  "method": "two units in one bench, no reference model: the comparison is between the structures. K_MAX=256 walks 256 columns in one pass; K_MAX=128 walks 0..127, is refilled, and walks 128..255 with acc_continue. Every lane's 40-bit accumulator is compared bit for bit",
+  "moved_window_is_refused": true,
+  "not_a_claim": [
+    "not a timing measurement: cycle counts are the unit's own cycles, and what one cycle costs in seconds is the place-and-route record's",
+    "16 lanes, one tile: this proves the accumulator chain, not an array"
+  ],
+  "producer": {
+    "git": {
+      "commit": "b39bc2766fe5aa4b896133210155074b5d004859"
+    },
+    "iverilog": "Icarus Verilog version 11.0 (stable) ()",
+    "tool": "tools/run_compute_unit_acc_chain.py"
+  },
+  "question": "is a deep contraction split across two half-depth weight tiles bit-identical to the same contraction in one deep tile, and what does the split cost in cycles?",
+  "schema": "opentallas.rtl.compute_unit_acc_chain.v1",
+  "sources": [
+    {
+      "bytes": 4997,
+      "path": "rtl/proto/ot_mac_lane.sv",
+      "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283"
+    },
+    {
+      "bytes": 8993,
+      "path": "rtl/proto/ot_mac_tile.sv",
+      "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724"
+    },
+    {
+      "bytes": 30177,
+      "path": "rtl/proto/ot_compute_unit.sv",
+      "sha256": "1bba2fd4c6f2d8a942aadad1c48ea7d3f0ba6825570b1395881081565f8493d8"
+    },
+    {
+      "bytes": 8528,
+      "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+      "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53"
+    },
+    {
+      "bytes": 10289,
+      "path": "rtl/test/tb_compute_unit_acc_chain.sv",
+      "sha256": "766f74c473e11f17acfd3e6e0c4b59bc6c295ec92bff7f81885ea86190474662"
+    }
+  ],
+  "top": "tb_compute_unit_acc_chain",
+  "transcript": [
+    "CYCLES: one 256-deep pass 270; two chained 128-deep passes 142 + 142 = 284 (overhead 14)",
+    "PASS: 16 lanes -- two chained 128-deep tiles are bit-identical to one 256-deep pass, and a moved window is refused"
+  ],
+  "verdict": "PASS"
+}

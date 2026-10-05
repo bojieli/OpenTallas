@@ -1,0 +1,94 @@
+{
+  "checks": 6637132,
+  "counts": {
+    "accepted": 4155,
+    "exp": 2100,
+    "refused": 45,
+    "sigmoid": 2100
+  },
+  "log_sha256": {
+    "iverilog": "1e2129db0151e1169384b800bbb3017a1850eb0d553ded1d1e3efaef84ec8b4e",
+    "verilator": "3fc49e9d174301e37b73adb7ceca187d5f5bbd02a948366c8921c464e6e39b73",
+    "verilator_compile": "bd7a8a4a4f16cefcb41d5ad9bd460b54d3fd814a8425dee664bdfe0ce89b03af",
+    "yosys": "4ae0756c83b0fd3f0a959eca72ea137336dcf35ab2ba7fd22df65b04d3bd5537"
+  },
+  "normalized_summary": {
+    "accepted": 4155,
+    "cases": 4200,
+    "exp": 2100,
+    "max_cycles": 3212,
+    "refused": 45,
+    "reset_cycles": 23,
+    "sigmoid": 2100,
+    "stalls": 1534
+  },
+  "schema": "opentallas.rtl.a3_hc_transcendental_campaign.v1",
+  "scope": {
+    "architectural_timing": false,
+    "certifying_fixed_point_interval": true,
+    "checkpoint_reachable_domain_complete": false,
+    "complete_binary32_exhaustion": false,
+    "correctly_rounded_direct_sigmoid_tested": true,
+    "correctly_rounded_nonpositive_exp_tested": true,
+    "dual_simulator": true,
+    "eos": false,
+    "full_hc_pre": false,
+    "host_floating_point_oracle": false,
+    "independent_exact_rational_oracle": true,
+    "input_or_output_indexed_lookup_table": false,
+    "model_token_generation": false,
+    "pc14_integration": false,
+    "synthesizable_elaboration": true,
+    "technology_mapping_or_timing": false,
+    "tpot": false
+  },
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv": "058e767b96f9d6da4550de1cec14d66bfd05247dd2ad11732210f1467663b4e6",
+    "rtl/lib/ot_wide_div_seq.sv": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+    "rtl/lib/ot_wide_div_small_seq.sv": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+    "rtl/lib/ot_wide_mul_seq.sv": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+    "rtl/test/tb_a3_hc_transcendental.sv": "5a073c6cf80839cf31fc9bdf39231b0af8e1aa84358bb4dc309cf5c4646fe99c",
+    "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+    "tools/build_a3_hc_transcendental_vectors.py": "78b4c2a97ec7c5cd5cee7497fe4698c7df403a2fa4f16f7607ebfc6b1195cf5c",
+    "tools/run_a3_hc_transcendental_rtl_campaign.py": "921126e7b573256eda0d2825b7f1462a6edc921e912673f94b055dd8a992bd7f"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "note": "generic RTLIL elaboration only; no library mapping, PPA, frequency, latency, or TPOT claim",
+    "top": "ot_a3_fp32_transcendental_cr_rne"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "vector_sha256": {
+    "cases.hex": "201c790f7e503840d4e78ba7a302a28de11e5cd340c6fc86914301eb64d110be",
+    "index.json": "fb76c2157c3732e74ad3b4ce2b3795286e00502853604164355773e66700f1e4"
+  },
+  "verification_wall_seconds": {
+    "iverilog_compile": 0.021638520061969757,
+    "iverilog_simulation": 1265.6765682999976,
+    "verilator_compile": 18.21091280411929,
+    "verilator_simulation": 34.19569051801227,
+    "yosys_elaboration": 1.7273568301461637
+  }
+}

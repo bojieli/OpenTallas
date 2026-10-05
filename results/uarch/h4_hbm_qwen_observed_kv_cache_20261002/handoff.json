@@ -1,0 +1,67 @@
+{
+  "HBM_command_count": null,
+  "directory": "results/uarch/h4_hbm_qwen_observed_kv_cache_20261002/directory.json.gz",
+  "engine_build_ready": false,
+  "entrypoints": [
+    "compile_directory()",
+    "coordinate(address)",
+    "KVEndpoint(directory,banks=actual_owner.banks)",
+    "model(directory)"
+  ],
+  "focused_tests": "13PASS",
+  "full_token_lifecycle": "UNKNOWN_NOT_CAPTURED",
+  "hardware_admitted": false,
+  "highest_risk": "Preserve30 old K bytes/sector without unproven physical initialization/refill; fence metadata partial RMW and reverse must be installed and bounded in complete service.",
+  "model": "results/uarch/h4_hbm_qwen_observed_kv_cache_20261002/model.json",
+  "observed_archive": "f9212629928a027742c12bfcfb4a7423b2f0dfd7",
+  "observed_counts": {
+    "committed_U8_bytes": 73728,
+    "groups": 72,
+    "payload_read_address_sectors32": 19584,
+    "payload_write_address_sectors32": 19584,
+    "read_U8_bytes": 73728,
+    "source_lifecycle_events": 432
+  },
+  "physical_cycles": null,
+  "proposed_cost_counts": {
+    "KV_PV_consumer": 72,
+    "KV_SCORES_consumer": 72,
+    "KV_parent_reverse": 72,
+    "KV_sector_consumer": 39168,
+    "KV_sector_old_capture": 18432,
+    "KV_sector_read_capture": 19584,
+    "KV_sector_reverse": 39168,
+    "KV_sector_write_visible": 19584,
+    "KV_state_record_bitmap_fence": 72
+  },
+  "remaining": [
+    "partial K old-sector validity/init and refill receipts",
+    "physical write visibility and reverse receipt backend",
+    "installed L2 reservation/bypass and actual bank eligibility",
+    "actual record/bitmap RMW fence ports",
+    "production SCORES/PV consumer DAG and RF mirror ACKs",
+    "finite physical contender intervals, clock/PG/cuts and service area"
+  ],
+  "replay": "python3 tools/h4_hbm_qwen_observed_kv_cache.py --verify",
+  "resource_contract": [
+    "2 ranks/dies, retain32SM per die; source trace gives no issuing SM, do not infer one.",
+    "Actual r17 HBM stack/local-sector/PC/bank/row retained; cache policy34bit tags, 4 slices x8banks, final512B/bank excluded; observed payload addresses do not hit exclusion.",
+    "One parent and sector child/rank, 32B merge buffer/rank, 512 data bits minimum; reuse existing cache buffer only with admitted lifetimes.",
+    "Bank table is the same object as retained owner controller. Actual busy bank refuses KV grant; no eligibility/fairness hardware inferred."
+  ],
+  "schema": "QWEN_OBSERVED_KV_CONNECTED_ENDPOINT_HANDOFF_R1",
+  "source_base": "0e81c4d750d4c3adff28a8800bb956e3b331c895",
+  "source_provider_join": "Exact r17 source_RF_control_version_homes and operation dependencies/inputs/outputs. Two physical RF mirror ACK requirements retained; observed ACKs unavailable.",
+  "tests": "tests/test_h4_hbm_qwen_observed_kv_cache.py",
+  "tests_replay": "python3 -m unittest discover -s tests -p test_h4_hbm_qwen_observed_kv_cache.py -v",
+  "to_Dewey": [
+    "Use source_events[].sequence/pc/reads/writes and exact sector provider_ref/version/mask; no omitted PC synthesis.",
+    "Bind finite old-sector capture, write visibility, child consumer/reverse, record-before-bitmap fence, read capture and parent reverse intervals. Counts are proposed handshake obligations; existing service costs once-only.",
+    "Actual operation SCORES/PV completion is harness driven; no production whole-token claim. Need actual producer RF mirrored ACK and dependency/contender DAG before physical composition."
+  ],
+  "to_Goodall": [
+    "Consumed exact raw files byte-identical f921 archive and proposal-pinned native/verifier. No live campaign rerun.",
+    "Needed physical old-sector initialization/refill/PHY-visible receipts and production consumer/retirement journal remain absent. No inferred zero tails or HBM command counts."
+  ],
+  "tool": "tools/h4_hbm_qwen_observed_kv_cache.py"
+}

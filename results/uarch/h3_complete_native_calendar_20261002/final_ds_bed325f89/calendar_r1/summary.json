@@ -1,0 +1,2279 @@
+{
+  "PC_count": 2213,
+  "constrained_extent_successors": [
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        0
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        1
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        2
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        3
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        4
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        5
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        6
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        7
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        8
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        9
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        10
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        11
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        12
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        13
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        14
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        15
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        16
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        17
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        18
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        19
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        20
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        21
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        22
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        23
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        24
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        25
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        26
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        27
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        28
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        29
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        30
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        31
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        32
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        33
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        34
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        35
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        36
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        37
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        38
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        39
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        40
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        41
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        42
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        43
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        44
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        45
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        46
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        47
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        48
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        49
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        50
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        51
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        52
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        53
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        54
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        55
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        56
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        57
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        58
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        59
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        60
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        61
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        62
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        63
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        64
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        65
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        66
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        67
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        68
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        69
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        70
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        71
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        72
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        73
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        74
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        75
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        76
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        77
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        78
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        79
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        80
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        81
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        82
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        83
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        84
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        85
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        86
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        87
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        88
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        89
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        90
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        91
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        92
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        93
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        94
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 5459735552,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "finite logical arena; resident physical base needs provider binding",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": null,
+      "rank_group": [
+        95
+      ],
+      "required_bytes": 5459735552,
+      "required_minimum_AW": 33,
+      "source_provider_AW": 27,
+      "source_provider_address_width_fits": false,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    }
+  ],
+  "cycles": 2018579897074,
+  "explicit_auxiliary_provider_names": {
+    "E4M3_decode": [
+      "engram_fetch"
+    ],
+    "attn_scale": [
+      "attend"
+    ],
+    "engram_scale": [
+      "engram_mix"
+    ],
+    "expert_descriptor_table": [
+      "expert_fetch"
+    ],
+    "index_rope_cos": [
+      "compressor"
+    ],
+    "index_rope_sin": [
+      "compressor"
+    ],
+    "index_w_scale": [
+      "index_q"
+    ],
+    "multipliers": [
+      "engram_fetch"
+    ],
+    "offsets": [
+      "engram_fetch"
+    ],
+    "open_group": [
+      "compressor"
+    ],
+    "ownership_mask": [
+      "all_gather"
+    ],
+    "primes": [
+      "engram_fetch"
+    ],
+    "raw_recent_tokens": [
+      "engram_fetch"
+    ],
+    "rope_cos": [
+      "attend",
+      "compressor",
+      "index_q",
+      "q_norm_kv_row",
+      "q_rope"
+    ],
+    "rope_sin": [
+      "attend",
+      "compressor",
+      "index_q",
+      "q_norm_kv_row",
+      "q_rope"
+    ],
+    "scores": [
+      "topk_merge"
+    ],
+    "selected_ckv_codes": [
+      "kv_gather"
+    ],
+    "selected_ckv_scales": [
+      "kv_gather"
+    ],
+    "selected_codes": [
+      "engram_fetch"
+    ],
+    "selected_exp": [
+      "engram_fetch"
+    ],
+    "selected_row_ids": [
+      "engram_fetch",
+      "kv_gather"
+    ],
+    "token_map": [
+      "engram_fetch"
+    ]
+  },
+  "latencies": "Explicit positive provisional software ticks; unmeasured; no clock transfer",
+  "native_PC_count_artifact_sha256": "6ba55e1f1f9bcf0bbb8830dacf9a7b2b5179d8b2f911e5e52e81486b738e294c",
+  "native_lowering_PC_count": 2213,
+  "native_operator_lowering_complete": true,
+  "native_primitive_count_gate": "PASS_ALL_PC_EXPORTED_COUNTS",
+  "numerical_evidence": {
+    "checkpoint_token_executed": false,
+    "producer_tests": 82,
+    "scope": "Pinned producer toy kernels, exact scalar DIV, finite logical provider joins and selected packet negative controls; source emission replay, not trained checkpoint token"
+  },
+  "opcode_classes": 30,
+  "primitive_batches128": {
+    "AND": 356803948,
+    "ASSERT": 54229632,
+    "BITCAST_F": 25663420,
+    "BITCAST_U": 25829184,
+    "BROADCAST": 232541312,
+    "CONCAT": 105383820,
+    "CONST": 51893594,
+    "DIV": 392832,
+    "F2I": 3299096,
+    "FADD": 99486964,
+    "FCMP_EQ": 807510628,
+    "FCMP_GT": 487116424,
+    "FCMP_LT": 127428820,
+    "FMAX": 8710084,
+    "FMIN": 123160,
+    "FMUL": 107055148,
+    "I2F": 17092672,
+    "IADD": 454196108,
+    "IMOD": 576,
+    "IMUL": 330763892,
+    "IOTA": 77858304,
+    "ISUB": 13865580,
+    "LDEXP": 17260740,
+    "LOAD": 337045784,
+    "OR": 492198692,
+    "PACKET_COMMIT": 3542804,
+    "RESHAPE": 1086821220,
+    "SELECT": 1066281028,
+    "SHL": 81700,
+    "SHR": 56391460,
+    "SLICE": 720292876,
+    "SQRT": 4608,
+    "TAKE": 273251520,
+    "TRANSPOSE": 83752944,
+    "XOR": 81269840
+  },
+  "producer_workspace_constraints": {
+    "maximum_logical_scalar_spill_bytes": 0,
+    "maximum_materialized_tensor_workspace_bytes": 207020036,
+    "resident_tensor_base_bound": false,
+    "streaming_tiling_fit_proved": false
+  },
+  "proof": {
+    "dependency_edges": 22839443,
+    "events": 6589361,
+    "resource_slots_used": 21505,
+    "status": "PASS_FINITE_INTERVAL_PROOF"
+  },
+  "provider_descriptor_census": {
+    "explicit_auxiliary_provider": 672,
+    "immutable_parameter_provider": 497,
+    "immutable_weight_provider": 2938,
+    "versioned_operand": 108475,
+    "zero_initial_partial_destination": 3840
+  },
+  "provider_scope": "Actual version residence indices and source address views consumed; auxiliary/immutable payload providers remain logical descriptors, not physical base qualification",
+  "replay": "PASS_SOURCE_PINNED_COMPLETE_CALENDAR_REPLAY",
+  "replay_elapsed_seconds": 228.9,
+  "replay_peak_RSS_KiB": 39770360,
+  "runtime": {
+    "generation_seconds": 404.33,
+    "peak_RSS_KiB": 33610096,
+    "recommended_free_memory_GiB": 65
+  },
+  "source_backed_extent_admission": false,
+  "source_closure": "18 portable archived producer input/source files validated byte-exact",
+  "source_commit": "bed325f89",
+  "source_native_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "status": "PASS_COMPLETE_NATIVE_SOFTWARE_CALENDAR",
+  "templates_consumed": 1127,
+  "templates_emitted": 1127,
+  "workspace_provider_proof": null
+}

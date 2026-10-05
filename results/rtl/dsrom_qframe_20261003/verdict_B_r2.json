@@ -1,0 +1,17 @@
+{
+ "cause": "ot-agidock128 is shared; another session started ~95 GB of qwen_rom_rt_lp/verilator jobs while this run was in progress, leaving <7 GB available. Not a design verdict.",
+ "design_evidence_before_kill": {
+  "drt_0419_offtrack_pin_warnings": 0,
+  "instance_utilisation": 0.483713,
+  "note": "the mirrored-macro track fix removed all 576 DRT-0419 warnings seen in B_r1",
+  "post_cts_hold_wns_ps_SS": 0.354716,
+  "post_cts_setup_tns_ps": -484412,
+  "post_cts_setup_wns_ps": -248.532
+ },
+ "follow_up": "B_r3 on ot-pve1 (identical args, same commit b128da83), launched 2026-10-03T05:17:14Z",
+ "remote_preserved": "ot-agidock128:/home/ubuntu/otjobs/dsrom_qframe_20261003/B_r2/",
+ "run": "B_r2",
+ "schema": "opentallas.dsrom_qframe.verdict.v1",
+ "stage_failed": "5_2_route (detail route) killed by the host global OOM killer (make Error 247; kernel: Out of memory: Killed process openroad, anon-rss 10.4 GB) at 2026-10-03T05:12:45Z",
+ "verdict": "FAIL_INFRASTRUCTURE_OOM"
+}

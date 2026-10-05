@@ -1,0 +1,258 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'rearm_rdy'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:10:14: ... Location of port declaration
+   10 |  output wire rearm_rdy,idle,
+      |              ^~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'idle'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:10:24: ... Location of port declaration
+   10 |  output wire rearm_rdy,idle,
+      |                        ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_req_rdy'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:12:22: ... Location of port declaration
+   12 |  output reg [NC-1:0] c_req_rdy,
+      |                      ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_rsp_v'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:17:22: ... Location of port declaration
+   17 |  output reg [NC-1:0] c_rsp_v,c_wr_done_v,
+      |                      ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_wr_done_v'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:17:30: ... Location of port declaration
+   17 |  output reg [NC-1:0] c_rsp_v,c_wr_done_v,
+      |                              ^~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_rsp_tag'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:19:28: ... Location of port declaration
+   19 |  output reg [NC*CTAGW-1:0] c_rsp_tag,c_wr_done_tag,
+      |                            ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_wr_done_tag'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:19:38: ... Location of port declaration
+   19 |  output reg [NC*CTAGW-1:0] c_rsp_tag,c_wr_done_tag,
+      |                                      ^~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_rsp_gen'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:20:27: ... Location of port declaration
+   20 |  output reg [NC*GENW-1:0] c_rsp_gen,c_wr_done_gen,
+      |                           ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_wr_done_gen'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:20:37: ... Location of port declaration
+   20 |  output reg [NC*GENW-1:0] c_rsp_gen,c_wr_done_gen,
+      |                                     ^~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'c_rsp_data'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:21:26: ... Location of port declaration
+   21 |  output reg [NC*256-1:0] c_rsp_data,
+      |                          ^~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_req_we'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:22:21: ... Location of port declaration
+   22 |  output reg p_req_v,p_req_we,
+      |                     ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_req_addr'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:24:22: ... Location of port declaration
+   24 |  output reg [AW-1:0] p_req_addr,
+      |                      ^~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_req_tag'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:25:25: ... Location of port declaration
+   25 |  output reg [PTAGW-1:0] p_req_tag,
+      |                         ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_req_gen'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:26:24: ... Location of port declaration
+   26 |  output reg [GENW-1:0] p_req_gen,
+      |                        ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_req_data'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:27:21: ... Location of port declaration
+   27 |  output reg [255:0] p_req_data,
+      |                     ^~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_rsp_rdy'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:29:13: ... Location of port declaration
+   29 |  output reg p_rsp_rdy,p_wr_done_ready,
+      |             ^~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'p_wr_done_ready'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:29:23: ... Location of port declaration
+   29 |  output reg p_rsp_rdy,p_wr_done_ready,
+      |                       ^~~~~~~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:30:63: Instance has missing pin: 'repair_busy'
+   30 |  ot_w2_nc6_protected_completion_reset_quarantine #(.PC_ID(7)) disabled(
+      |                                                               ^~~~~~~~
+                     /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:33:20: ... Location of port declaration
+   33 |  output wire fault,repair_busy,
+      |                    ^~~~~~~~~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1034:32: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OPT_RESET_QUARANTINE' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1034 |  .local_other_idle(core_idle&&(!OPT_RESET_QUARANTINE||(!(|c_req_v)&&!p_rsp_v&&!p_wr_done_v))),.rearm_ready(secondary_rearm),.local_idle(secondary_idle),
+      |                                ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1072:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1072 |  if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error&&!core_bad)begin
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1119:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1119 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1189:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1189 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1249:22: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1249 |  if(permit&&!core_bad&&OPT_EXACT&&rst_n)begin
+      |                      ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1257:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1257 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1379:24: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1379 |  if(!permit||core_bad||!OPT_EXACT||!rst_n)begin
+      |                        ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1383:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                               : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1383 |  if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error)begin
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/ot_w2_nc6_protected_completion_reset_quarantine.sv:1395:7: Logical operator IF expects 1 bit on the If, but If's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                              : ... note: In instance 'tb_w2_fullnc6.disabled'
+ 1395 |  else if(OPT_EXACT)begin for(integer x=0;x<NW;x=x+1)if(WE[x])cw[x]<=encoded[x];end
+      |       ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:198:17: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  198 |    if(!fault||pv||rv||wv||cready||prr||pwr)$fatal(1,"cold reset quarantine missing before fenced rearm");
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:198:21: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  198 |    if(!fault||pv||rv||wv||cready||prr||pwr)$fatal(1,"cold reset quarantine missing before fenced rearm");
+      |                     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:198:25: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  198 |    if(!fault||pv||rv||wv||cready||prr||pwr)$fatal(1,"cold reset quarantine missing before fenced rearm");
+      |                         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:253:9: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                : ... note: In instance 'tb_w2_fullnc6'
+  253 |    if(pv||rv||wv||prr||pwr||cready)$fatal(1,"bad completion not quarantined");
+      |         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:253:13: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  253 |    if(pv||rv||wv||prr||pwr||cready)$fatal(1,"bad completion not quarantined");
+      |             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:253:27: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  253 |    if(pv||rv||wv||prr||pwr||cready)$fatal(1,"bad completion not quarantined");
+      |                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:732:9: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                : ... note: In instance 'tb_w2_fullnc6'
+  732 |    if(pv||cready||rv||wv||prr||pwr)$fatal(1,"single error allowed current normal handshake");
+      |         ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:732:17: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  732 |    if(pv||cready||rv||wv||prr||pwr)$fatal(1,"single error allowed current normal handshake");
+      |                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:732:21: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  732 |    if(pv||cready||rv||wv||prr||pwr)$fatal(1,"single error allowed current normal handshake");
+      |                     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:746:19: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  746 |      if(!fault||pv||cready||rv||wv||prr||pwr)$fatal(1,"double not current failclosed");
+      |                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:746:27: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  746 |      if(!fault||pv||cready||rv||wv||prr||pwr)$fatal(1,"double not current failclosed");
+      |                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:746:31: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  746 |      if(!fault||pv||cready||rv||wv||prr||pwr)$fatal(1,"double not current failclosed");
+      |                               ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:809:34: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  809 |     if(!fault||prr||took_read||pv||rv||wv||cready||pwr||took_req||took_client_read||took_client_write)
+      |                                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:809:38: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  809 |     if(!fault||prr||took_read||pv||rv||wv||cready||pwr||took_req||took_client_read||took_client_write)
+      |                                      ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:809:42: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  809 |     if(!fault||prr||took_read||pv||rv||wv||cready||pwr||took_req||took_client_read||took_client_write)
+      |                                          ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:809:65: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'took_client_read' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  809 |     if(!fault||prr||took_read||pv||rv||wv||cready||pwr||took_req||took_client_read||took_client_write)
+      |                                                                 ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:809:83: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'took_client_write' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  809 |     if(!fault||prr||took_read||pv||rv||wv||cready||pwr||took_req||took_client_read||took_client_write)
+      |                                                                                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:825:14: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  825 |     if(cready||pv||took_req||took_rearm||prr||took_read||!fault)$fatal(1,"reset quarantine allowed samekey ABA attempt");
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:841:51: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'rv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  841 |     if(!fault||rearm_rdy||took_rearm||prr||pwr||pv||rv||wv||cready||took_read||took_write||took_req)
+      |                                                   ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:841:55: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'wv' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  841 |     if(!fault||rearm_rdy||took_rearm||prr||pwr||pv||rv||wv||cready||took_read||took_write||took_req)
+      |                                                       ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:841:59: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  841 |     if(!fault||rearm_rdy||took_rearm||prr||pwr||pv||rv||wv||cready||took_read||took_write||took_req)
+      |                                                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:848:8: Logical operator LOGOR expects 1 bit on the LHS, but LHS's VARREF 'rv' generates 6 bits.
+                                                                                                                : ... note: In instance 'tb_w2_fullnc6'
+  848 |   if(rv||pv||cready||prr||pwr)$fatal(1,"dirty held delivery allowed release");
+      |        ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/inputs/tb.sv:848:12: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'cready' generates 6 bits.
+                                                                                                                 : ... note: In instance 'tb_w2_fullnc6'
+  848 |   if(rv||pv||cready||prr||pwr)$fatal(1,"dirty held delivery allowed release");
+      |            ^~
+make: Entering directory '/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/obj'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_w2_fullnc6__pch.h -o Vtb_w2_fullnc6__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_w2_fullnc6__pch.h -o Vtb_w2_fullnc6__pch.h.slow.gch
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.fast -c Vtb_w2_fullnc6_vm_classes_0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.fast -c Vtb_w2_fullnc6_vm_classes_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.slow -c Vtb_w2_fullnc6__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.slow -c Vtb_w2_fullnc6___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.slow -c Vtb_w2_fullnc6___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_w2_fullnc6__pch.h.slow -c Vtb_w2_fullnc6__Syms__Slow.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_w2_fullnc6__ALL.a    -pthread -lpthread -latomic   -o /srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/gate.bin
+rm Vtb_w2_fullnc6__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/jobs/w2-fullnc6-c857b9b83-resetquarantine-r7/out/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.465 MB sources in 6 modules, into 362.458 MB in 404 C++ files needing 0.285 MB
+- Verilator: Walltime 413.401 s (elab=0.210, cvt=58.431, bld=350.386); cpu 66.038 s on 2 threads; allocated 3214.434 MB

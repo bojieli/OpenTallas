@@ -1,0 +1,343 @@
+{
+ "schema": "opentallas.hbm_accel.ha3_system_run.v1",
+ "model": "qwen",
+ "mode": "base",
+ "ha3": 1,
+ "flat": 5,
+ "tool": "tools/hbm_accel_ha3_run.py",
+ "top": "ot_hbm_accel_hbm_system",
+ "bench": "rtl/test/hbm_accel/tb_hbm_accel_ha3_system.sv",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "golden": "tools/hdc_golden.py Model(groups=256, tp=2)",
+ "prompt": [
+  92,
+  872,
+  198,
+  361,
+  448,
+  2210,
+  13,
+  93,
+  198,
+  92,
+  3363,
+  198,
+  115,
+  271,
+  116,
+  271
+ ],
+ "expected_steps": [
+  {
+   "pos": 0,
+   "input": 92,
+   "next": 3978
+  },
+  {
+   "pos": 1,
+   "input": 872,
+   "next": 382
+  },
+  {
+   "pos": 2,
+   "input": 198,
+   "next": 382
+  },
+  {
+   "pos": 3,
+   "input": 361,
+   "next": 382
+  },
+  {
+   "pos": 4,
+   "input": 448,
+   "next": 382
+  },
+  {
+   "pos": 5,
+   "input": 2210,
+   "next": 3932
+  },
+  {
+   "pos": 6,
+   "input": 13,
+   "next": 382
+  },
+  {
+   "pos": 7,
+   "input": 93,
+   "next": 382
+  },
+  {
+   "pos": 8,
+   "input": 198,
+   "next": 382
+  },
+  {
+   "pos": 9,
+   "input": 92,
+   "next": 382
+  },
+  {
+   "pos": 10,
+   "input": 3363,
+   "next": 3837
+  },
+  {
+   "pos": 11,
+   "input": 198,
+   "next": 382
+  },
+  {
+   "pos": 12,
+   "input": 115,
+   "next": 382
+  },
+  {
+   "pos": 13,
+   "input": 271,
+   "next": 382
+  },
+  {
+   "pos": 14,
+   "input": 116,
+   "next": 382
+  },
+  {
+   "pos": 15,
+   "input": 271,
+   "next": 1073
+  },
+  {
+   "pos": 16,
+   "input": 1073,
+   "next": 382
+  },
+  {
+   "pos": 17,
+   "input": 382,
+   "next": 93
+  }
+ ],
+ "steps": [
+  {
+   "step": 0,
+   "pos": 0,
+   "input": 92,
+   "next": 3978,
+   "status": "OK",
+   "step_cycles": 87806
+  },
+  {
+   "step": 1,
+   "pos": 1,
+   "input": 872,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87784
+  },
+  {
+   "step": 2,
+   "pos": 2,
+   "input": 198,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87583
+  },
+  {
+   "step": 3,
+   "pos": 3,
+   "input": 361,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87032
+  },
+  {
+   "step": 4,
+   "pos": 4,
+   "input": 448,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87112
+  },
+  {
+   "step": 5,
+   "pos": 5,
+   "input": 2210,
+   "next": 3932,
+   "status": "OK",
+   "step_cycles": 88790
+  },
+  {
+   "step": 6,
+   "pos": 6,
+   "input": 13,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87553
+  },
+  {
+   "step": 7,
+   "pos": 7,
+   "input": 93,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87087
+  },
+  {
+   "step": 8,
+   "pos": 8,
+   "input": 198,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87646
+  },
+  {
+   "step": 9,
+   "pos": 9,
+   "input": 92,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87508
+  },
+  {
+   "step": 10,
+   "pos": 10,
+   "input": 3363,
+   "next": 3837,
+   "status": "OK",
+   "step_cycles": 86845
+  },
+  {
+   "step": 11,
+   "pos": 11,
+   "input": 198,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87881
+  },
+  {
+   "step": 12,
+   "pos": 12,
+   "input": 115,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 88529
+  },
+  {
+   "step": 13,
+   "pos": 13,
+   "input": 271,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 88009
+  },
+  {
+   "step": 14,
+   "pos": 14,
+   "input": 116,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 88148
+  },
+  {
+   "step": 15,
+   "pos": 15,
+   "input": 271,
+   "next": 1073,
+   "status": "OK",
+   "step_cycles": 87845
+  },
+  {
+   "step": 16,
+   "pos": 16,
+   "input": 1073,
+   "next": 382,
+   "status": "OK",
+   "step_cycles": 87597
+  },
+  {
+   "step": 17,
+   "pos": 17,
+   "input": 382,
+   "next": 93,
+   "status": "OK",
+   "step_cycles": 90736
+  }
+ ],
+ "kernel_words": {
+  "embed": 7,
+  "L0": 1085,
+  "L1": 1085,
+  "L2": 1085,
+  "L3": 1085,
+  "head": 341
+ },
+ "clk_sm_cycles": 1763376,
+ "wall_seconds": 627.8,
+ "status": "pass",
+ "trace": true,
+ "source_sha256": {
+  "rtl/gpu_sys/ot_gpu_bd_line.sv": "f3e8ea0358815ec6acf07eef8c837080b95ef21cb59d05c9f778e979e6e9d81c",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/gpu_sys/ot_gpu_cmdproc.sv": "d0b1f0710af11ea1f60acb790ad23c9192e0794fd94383f23728ea663d327c5a",
+  "rtl/gpu_sys/ot_gpu_coll_endpoint.sv": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+  "rtl/gpu_sys/ot_gpu_coll_fabric.sv": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+  "rtl/gpu_sys/ot_gpu_coll_mux.sv": "fa7250f9fe44dc7a4ed18eb37d826b9ac9670d9d6dfccad15ccdf06d1a1db6cb",
+  "rtl/gpu_sys/ot_gpu_hbm_partition.sv": "1a2f10061d9bb7900fc9b9fd9b306c10345985d8f5be7be8d7f38fdb8330497f",
+  "rtl/gpu_sys/ot_gpu_hbm_system.sv": "22d8da84b86d866c0aaa9407fb3b4155a69976890ca05a7383503aac48b15c72",
+  "rtl/gpu_sys/ot_gpu_host_bridge.sv": "015ee63361328844b27e407f1fb48497e6788eaf54387b64e49741c7e74a0a96",
+  "rtl/gpu_sys/ot_gpu_l2_slice.sv": "22f6c39433c9551e2c931853225a41de1a84bc1f44ae2f231a8cec793cc8986a",
+  "rtl/gpu_sys/ot_gpu_memsys.sv": "73882cfce6282a027a678edc4eadf92b67875dae3544faf25c5fe1d026aba986",
+  "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f",
+  "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+  "rtl/gpu_sys/ot_gpu_simt_divlane.sv": "01cc0cc9d0acb9eca4c65393e4c8cec96593e4bb9327ae2f71983f8dfd9f5275",
+  "rtl/gpu_sys/ot_gpu_simt_lane.sv": "97d0ea8512443174bc48789435697676f051e64159966eaa842217688f2a9c4e",
+  "rtl/gpu_sys/ot_gpu_simt_sm.sv": "2b8f32d896656deb0238c35f288b82f7def329396a8840e3671cf1e978d2ada8",
+  "rtl/gpu_sys/ot_gpu_sys_glue.sv": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129",
+  "rtl/gpu_sys/ot_gpu_xbar.sv": "5fa9a43e08af4ef23455b1b98b7e1094245775700a6441c2883f81cd0563cc0d",
+  "rtl/gpu/ot_gpu_sm.sv": "43489304c695bed14c53eb93bf7d93e71db5e66e8ccc4610572b1d5b9bdcc6f7",
+  "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+  "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+  "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+  "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+  "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+  "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+  "rtl/abi3/ot_a3_fp32_sqrt_rne.sv": "09f03bc02617c6b6d20f75992f25c47f0b3b0401d0004c86141ed0f1c5e94e55",
+  "rtl/gpu/ot_gpu_sm_bd.sv": "f0229375762a515aae5cba3f82e275a143909ede5357daebcd94f2e85f5f7abb",
+  "rtl/gpu/ot_gpu_bd_col.sv": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+  "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+  "rtl/v41rom/ot_v41_bterm2.sv": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+  "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+  "rtl/host/ot_host_if.sv": "a093c932db0a17352479d87b28bacc5b86e7d1e134c5c233d9087272cc15bc74",
+  "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv": "7230273667d61d7c87e67f93cff39523420a00913b40b76b03ae76e849ee3e94",
+  "rtl/hbm_accel/collective/ot_hbm_accel_simt_sm.sv": "fbe3454ccb0fda8f22c8c541ae1a943d3b111881cb1058e0318fa563286a04fc",
+  "rtl/hbm_accel/collective/ot_hbm_accel_coll_port.sv": "3877106848aa5f17dca89c7942ee9c737e7f813a9b01c925890af736a7ba4a77",
+  "rtl/hbm_accel/collective/ot_hbm_accel_hbm_system.sv": "3be78ba81f952bc38a0a0947703346a6897378dbff7de10cc2cbb8685e60fbd2",
+  "rtl/test/hbm_accel/tb_hbm_accel_ha3_system.sv": "3ed6da487103f203bf29900b6d4b78e3e49bfb0e46e3955b685e600b1e9dfaa5",
+  "tools/hbm_accel_ha3.py": "73e2b8c97f532140714033a8a2bf8a90dfbbe840747b39da852bd69bbb32570b",
+  "tools/hbm_accel_ha3_run.py": "6829c7e714596175df7ceb2c4bcc5fdf499b5a9e220a547243e3800e3e77b359",
+  "tools/gpu_sys/asm.py": "ffe25d4ed9ea7d00e3a45cf470a303056f62182c9cdccfebbababb37cb04702c",
+  "tools/gpu_sys/isa.py": "0554044c77d6e3da00cd159a46061f1c48c51778d2178871998f3dde4c392677",
+  "tools/gpu_sys/machine.py": "cec01d7ddc0087eaee72e8e20b9fef37f2358584484447a243ecfcb29a363b82",
+  "tools/gpu_sys/mem_image.py": "5f49a213735b218bf7e4e7154506ac55b17d8b1803a04c35f64cf699616bd170",
+  "tools/gpu_sys/qwen_hbm.py": "dfdbfb8de427b3df931ab4e83e68c26abd349035d56b9e334b053808f187ab1f",
+  "tools/gpu_sys/run_system.py": "70cc802ba0eb58294178ae668538d3b46b11c74701972e8b9d9474db81f6301b",
+  "tools/gpu_sys/v41_hbm.py": "69798a0034eaeaee91d30907fa4b34ac4848d757abfbe941398af2e80523b153",
+  "tools/hbm_accel_ha3_v41.py": "b369d5a991f2ba87589ad134aa68cc090f41e645e25ee0a62ebb7af128130042"
+ }
+}

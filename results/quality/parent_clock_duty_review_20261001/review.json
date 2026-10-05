@@ -1,0 +1,209 @@
+{
+  "schema": "opentallas.parent-clock-duty-review.v1",
+  "source_commit": "a82060185c93b5f50ca05ff79bf13fd8cbd56e76",
+  "verdict": "PASS_AT_RETAINED_VECTOR_DUTY_SCOPE",
+  "focused_tests": 6,
+  "ledger_byte_identical": true,
+  "ledger_sha256": "3730812d2c366d05bb25cfd6235faeb4e98b52495ed509d0d56a0cf88422ec09",
+  "all_trace_and_log_hashes_verified": true,
+  "independent_raw_leaf_counts": [
+    {
+      "case": "exact",
+      "element": "dut",
+      "root_edges": 20778,
+      "each_leaf_edges": 16804,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_a_whole_rows",
+      "element": "e0",
+      "root_edges": 1324,
+      "each_leaf_edges": 1287,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_a_whole_rows",
+      "element": "e1",
+      "root_edges": 1324,
+      "each_leaf_edges": 1287,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_tiny_one_row",
+      "element": "e0",
+      "root_edges": 551,
+      "each_leaf_edges": 514,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_tiny_one_row",
+      "element": "e1",
+      "root_edges": 551,
+      "each_leaf_edges": 514,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_a_ksplit",
+      "element": "e0",
+      "root_edges": 942,
+      "each_leaf_edges": 905,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_a_ksplit",
+      "element": "e1",
+      "root_edges": 942,
+      "each_leaf_edges": 905,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_b",
+      "element": "e0",
+      "root_edges": 556,
+      "each_leaf_edges": 517,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_b",
+      "element": "e1",
+      "root_edges": 556,
+      "each_leaf_edges": 519,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wo_b_kquarter",
+      "element": "e0",
+      "root_edges": 558,
+      "each_leaf_edges": 517,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wo_b_kquarter",
+      "element": "e1",
+      "root_edges": 558,
+      "each_leaf_edges": 521,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp4_expert_w1",
+      "element": "e0",
+      "root_edges": 654,
+      "each_leaf_edges": 615,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp4_expert_w1",
+      "element": "e1",
+      "root_edges": 654,
+      "each_leaf_edges": 617,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_b_two_rows_per_element",
+      "element": "e0",
+      "root_edges": 658,
+      "each_leaf_edges": 617,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp8_wq_b_two_rows_per_element",
+      "element": "e1",
+      "root_edges": 658,
+      "each_leaf_edges": 617,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp4_two_experts_w1_w3",
+      "element": "e0",
+      "root_edges": 658,
+      "each_leaf_edges": 617,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "fp4_two_experts_w1_w3",
+      "element": "e1",
+      "root_edges": 658,
+      "each_leaf_edges": 617,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_router_gate",
+      "element": "e0",
+      "root_edges": 1710,
+      "each_leaf_edges": 1673,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_router_gate",
+      "element": "e1",
+      "root_edges": 1710,
+      "each_leaf_edges": 1484,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_compressor_wkv_ksplit",
+      "element": "e0",
+      "root_edges": 1710,
+      "each_leaf_edges": 1673,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_compressor_wkv_ksplit",
+      "element": "e1",
+      "root_edges": 1710,
+      "each_leaf_edges": 1484,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_wkv_4096_whole_rows",
+      "element": "e0",
+      "root_edges": 1710,
+      "each_leaf_edges": 1673,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_wkv_4096_whole_rows",
+      "element": "e1",
+      "root_edges": 1710,
+      "each_leaf_edges": 1673,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_indexer_wk",
+      "element": "e0",
+      "root_edges": 554,
+      "each_leaf_edges": 517,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "bf16_indexer_wk",
+      "element": "e1",
+      "root_edges": 554,
+      "each_leaf_edges": 517,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+      "element": "e0",
+      "root_edges": 562,
+      "each_leaf_edges": 521,
+      "all_eight_leaf_counts_identical": true
+    },
+    {
+      "case": "mixed_down_fp4_expert_w2_fp8_shared_w2",
+      "element": "e1",
+      "root_edges": 562,
+      "each_leaf_edges": 521,
+      "all_eight_leaf_counts_identical": true
+    }
+  ],
+  "retained_qualification_cases": 13,
+  "retained_qualification_exact_rows": 240,
+  "buffer_projection_scope": "Only four XF8 BF16 vector cases; other Q/XF4 and reset fixtures remain protocol-only.",
+  "wire_baseline_reconciled": false,
+  "actual_operating_voltage_and_slew_load": null,
+  "full_token_activity_qualified": false,
+  "physical_admission": false,
+  "adopted": false,
+  "scope": "Retained ideal-phase vector simulator activity; no extracted clock/gating timing, measured energy or full-token execution."
+}

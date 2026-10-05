@@ -1,0 +1,660 @@
+{
+ "schema": "opentallas.rtl.dsrom_lever_su_kr.v1",
+ "status": "pass",
+ "lever": "free-levers audit L2: SU operator fusion (`_kr` lane-register core fork, tools/w11_su_fuse_die.py --sukr)",
+ "finding": "The audit's blocker 'PINMISSING i_preloaded' is stale: the fork at HEAD connects i_preloaded and the shared_* pins (37ac8d2ef). What still fails the decode campaign's -Wall lint step (the step that turns the functionally exact matched pairs into status 'fail') is 18 warnings, ALL inherited from code the fork shares with the original core: 9 SELRANGE (FULL-profile-only fields QE_UNROUNDED / COLL_* sliced past the reduced 1536-bit instruction inside a run-time FULL_SHAPE guard), 1 PINMISSING (u_qe.qr_issue_ready), 8 GENUNNAMED (ot_hdc_v41x_me_adapt.sv:278-302, not a fork file). The ORIGINAL core fails the same lint at HEAD with 27 warnings (these 18 + 9 PINMISSING it never connects), so the unfused original is no cleaner than the fork.",
+ "fix": "rtl/dsrom_sys/levers/ot_hdc_core_v41x_kr_lv.sv: FULL-only slices from ir_w = 2048'(ir) (equal to ir when FULL_SHAPE, never selected otherwise); u_qe.qr_issue_ready tied 1'b1 (only read under WEIGHT_STALL != 0, which this instance leaves at its 0 default). rtl/dsrom_sys/levers/ot_hdc_v41x_me_adapt_lv.sv: the four if/else generate blocks labelled. Both keep their module names (source-list swap, as the fork itself). No behaviour change intended; the matched pairs re-run checks it.",
+ "cost": "cheap: 3 lint-only edits in 2 successor files",
+ "lint": {
+  "campaign_lint_original_core": {
+   "warnings": 27,
+   "by_message": {
+    "%Warning-PINMISSING: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 10,
+    "%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_me_a": 8,
+    "%Warning-SELRANGE: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 9
+   },
+   "returncode": 1
+  },
+  "campaign_lint_kr_fork": {
+   "warnings": 18,
+   "by_message": {
+    "%Warning-PINMISSING: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 1,
+    "%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_me_a": 8,
+    "%Warning-SELRANGE: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 9
+   },
+   "returncode": 1
+  },
+  "campaign_lint_kr_successor": {
+   "warnings": 0,
+   "by_message": {},
+   "returncode": 0
+  },
+  "strict_w11_kr_command_kr_fork": {
+   "warnings": 18,
+   "by_message": {
+    "%Warning-PINMISSING: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 1,
+    "%Warning-GENUNNAMED: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_me_a": 8,
+    "%Warning-SELRANGE: /srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x": 9
+   },
+   "returncode": 1
+  },
+  "strict_w11_kr_command_kr_successor": {
+   "warnings": 0,
+   "by_message": {},
+   "returncode": 0
+  }
+ },
+ "matched_pair_rerun": {
+  "u00": {
+   "status": "pass",
+   "cycles": 326676,
+   "next_token": 3118,
+   "isa_next_token": 3118,
+   "fault": 0,
+   "logit_mismatches": 0,
+   "vector_memory_mismatches": 0,
+   "kv_cache_mismatches": 0,
+   "su_busy": 172533,
+   "functional_pass": true,
+   "golden_next_token": 3118,
+   "lint_returncode": 0,
+   "lint_messages": [],
+   "wall_utc": {
+    "start": "2026-10-03T11:29:59Z",
+    "end": "2026-10-03T11:41:14Z"
+   },
+   "operator_fusion": {
+    "sukr": 0,
+    "subcast": 0,
+    "suret": 0,
+    "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "swapped_sources": {
+     "ot_hdc_v41x_vec.sv": "ot_hdc_v41x_vec_kr.sv",
+     "ot_hdc_v41x_vec_lane.sv": "ot_hdc_v41x_vec_lane_kr.sv",
+     "ot_hdc_v41x_su_adapt.sv": "ot_hdc_v41x_su_adapt_kr.sv",
+     "ot_hdc_core_v41x.sv": "ot_hdc_core_v41x_kr.sv"
+    },
+    "fused_program": false
+   },
+   "record_sha256": "617e649fb015a7a32b0b992b3c67dfbfcbed1844efa4a269fe71063cadb36458"
+  },
+  "f00": {
+   "status": "pass",
+   "cycles": 318034,
+   "next_token": 3118,
+   "isa_next_token": 3118,
+   "fault": 0,
+   "logit_mismatches": 0,
+   "vector_memory_mismatches": 0,
+   "kv_cache_mismatches": 0,
+   "su_busy": 163005,
+   "functional_pass": true,
+   "golden_next_token": 3118,
+   "lint_returncode": 0,
+   "lint_messages": [],
+   "wall_utc": {
+    "start": "2026-10-03T11:33:08Z",
+    "end": "2026-10-03T11:43:42Z"
+   },
+   "operator_fusion": {
+    "sukr": 40,
+    "subcast": 0,
+    "suret": 0,
+    "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "swapped_sources": {
+     "ot_hdc_v41x_vec.sv": "ot_hdc_v41x_vec_kr.sv",
+     "ot_hdc_v41x_vec_lane.sv": "ot_hdc_v41x_vec_lane_kr.sv",
+     "ot_hdc_v41x_su_adapt.sv": "ot_hdc_v41x_su_adapt_kr.sv",
+     "ot_hdc_core_v41x.sv": "ot_hdc_core_v41x_kr.sv"
+    },
+    "fused_program": true
+   },
+   "record_sha256": "f9f39e692d0a3e582f3cb259c68cac0a61fbc97ec9ff3c5f3dec1c1cafba822b"
+  },
+  "u2517": {
+   "status": "pass",
+   "cycles": 398676,
+   "next_token": 3118,
+   "isa_next_token": 3118,
+   "fault": 0,
+   "logit_mismatches": 0,
+   "vector_memory_mismatches": 0,
+   "kv_cache_mismatches": 0,
+   "su_busy": 256096,
+   "functional_pass": true,
+   "golden_next_token": 3118,
+   "lint_returncode": 0,
+   "lint_messages": [],
+   "wall_utc": {
+    "start": "2026-10-03T11:44:16Z",
+    "end": "2026-10-03T11:54:08Z"
+   },
+   "operator_fusion": {
+    "sukr": 0,
+    "subcast": 25,
+    "suret": 17,
+    "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "swapped_sources": {
+     "ot_hdc_v41x_vec.sv": "ot_hdc_v41x_vec_kr.sv",
+     "ot_hdc_v41x_vec_lane.sv": "ot_hdc_v41x_vec_lane_kr.sv",
+     "ot_hdc_v41x_su_adapt.sv": "ot_hdc_v41x_su_adapt_kr.sv",
+     "ot_hdc_core_v41x.sv": "ot_hdc_core_v41x_kr.sv"
+    },
+    "fused_program": false
+   },
+   "record_sha256": "56e3193cbcc1283c5d1ef61cd03d5ec722258b21b1065de61432a387659047e4"
+  },
+  "f2517": {
+   "status": "pass",
+   "cycles": 376638,
+   "next_token": 3118,
+   "isa_next_token": 3118,
+   "fault": 0,
+   "logit_mismatches": 0,
+   "vector_memory_mismatches": 0,
+   "kv_cache_mismatches": 0,
+   "su_busy": 233937,
+   "functional_pass": true,
+   "golden_next_token": 3118,
+   "lint_returncode": 0,
+   "lint_messages": [],
+   "wall_utc": {
+    "start": "2026-10-03T11:44:16Z",
+    "end": "2026-10-03T11:57:49Z"
+   },
+   "operator_fusion": {
+    "sukr": 40,
+    "subcast": 25,
+    "suret": 17,
+    "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "swapped_sources": {
+     "ot_hdc_v41x_vec.sv": "ot_hdc_v41x_vec_kr.sv",
+     "ot_hdc_v41x_vec_lane.sv": "ot_hdc_v41x_vec_lane_kr.sv",
+     "ot_hdc_v41x_su_adapt.sv": "ot_hdc_v41x_su_adapt_kr.sv",
+     "ot_hdc_core_v41x.sv": "ot_hdc_core_v41x_kr.sv"
+    },
+    "fused_program": true
+   },
+   "record_sha256": "5eb3995eb1edef9ad6adf7816ec174ff47038cce8a329975d2bc8204e6d1b677"
+  }
+ },
+ "cycles": {
+  "u00/f00": {
+   "unfused": 326676,
+   "fused": 318034,
+   "saved": 8642,
+   "fraction": 0.026454,
+   "su_busy": {
+    "unfused": 172533,
+    "fused": 163005
+   },
+   "same_token": true,
+   "recorded": {
+    "unfused": 326676,
+    "fused": 318034,
+    "saved": 8642
+   },
+   "cycles_reproduce_recorded": true
+  },
+  "u2517/f2517": {
+   "unfused": 398676,
+   "fused": 376638,
+   "saved": 22038,
+   "fraction": 0.055278,
+   "su_busy": {
+    "unfused": 256096,
+    "fused": 233937
+   },
+   "same_token": true,
+   "recorded": {
+    "unfused": 398676,
+    "fused": 376638,
+    "saved": 22038
+   },
+   "cycles_reproduce_recorded": true
+  }
+ },
+ "execution": {
+  "images": "local (python golden/ISA/program/images need `tokenizers`), tools/dsrom_lever_su_kr.py images --pregen; shipped by rsync",
+  "build_and_simulation": "ot-epyc1tb, Verilator 5.050 (pinned), tools/dsrom_lever_su_kr.py run --pregen (campaign unchanged except the image step reads the shipped directory, asserted to match sukr/params/units/args)",
+  "image_step": {
+   "sukr0": {
+    "meta": {
+     "extra": [
+      "--multi",
+      "3"
+     ],
+     "lanes": null,
+     "fuse": {
+      "sukr": 0,
+      "subcast": 0,
+      "suret": 0,
+      "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+     },
+     "params": {
+      "hhw": 8,
+      "mg": 8,
+      "sun": 16,
+      "sum": 8,
+      "fp": "rtl"
+     },
+     "units": [
+      "he",
+      "me",
+      "su"
+     ],
+     "arith": "he,idx,me,su"
+    },
+    "wall_utc": {
+     "start": "2026-10-03T11:15:59Z",
+     "end": "2026-10-03T11:25:05Z"
+    },
+    "expect_json_sha256": "576bba852159058494ea9c46a29be0a9e8116f99d5b0a51f10f36241ca4e7129"
+   },
+   "sukr40": {
+    "meta": {
+     "extra": [
+      "--multi",
+      "3"
+     ],
+     "lanes": null,
+     "fuse": {
+      "sukr": 40,
+      "subcast": 0,
+      "suret": 0,
+      "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+     },
+     "params": {
+      "hhw": 8,
+      "mg": 8,
+      "sun": 16,
+      "sum": 8,
+      "fp": "rtl"
+     },
+     "units": [
+      "he",
+      "me",
+      "su"
+     ],
+     "arith": "he,idx,me,su"
+    },
+    "wall_utc": {
+     "start": "2026-10-03T11:15:59Z",
+     "end": "2026-10-03T11:31:42Z"
+    },
+    "expect_json_sha256": "576bba852159058494ea9c46a29be0a9e8116f99d5b0a51f10f36241ca4e7129"
+   }
+  }
+ },
+ "reference": {
+  "path": "results/rtl/w11_main_compatible_20261001/matched_pairs.json",
+  "sha256": "0483494e23113ea042e99753156d16a6a31a0d28527ce70a12f386bd5a9a6072",
+  "pairs": [
+   {
+    "unfused": "u00",
+    "fused": "f00",
+    "unfused_cycles": 326676,
+    "fused_cycles": 318034,
+    "saved_cycles": 8642,
+    "fraction_saved": 0.0264543462023534,
+    "unfused_SU_busy": 172533,
+    "fused_SU_busy": 163005,
+    "functional_exact": "PASS",
+    "original_overall": [
+     "fail",
+     "fail"
+    ],
+    "adoption": false
+   },
+   {
+    "unfused": "u2517",
+    "fused": "f2517",
+    "unfused_cycles": 398676,
+    "fused_cycles": 376638,
+    "saved_cycles": 22038,
+    "fraction_saved": 0.055277970080968006,
+    "unfused_SU_busy": 256096,
+    "fused_SU_busy": 233937,
+    "functional_exact": "PASS",
+    "original_overall": [
+     "fail",
+     "fail"
+    ],
+    "adoption": false
+   }
+  ]
+ },
+ "commands": {
+  "lint_campaign": "python3 tools/dsrom_lever_su_kr.py lint [--orig | --pinned] --cmd-json C.json",
+  "images": "python3 tools/dsrom_lever_su_kr.py images --pregen IMG_K{0,40} --sukr {0,40} --units he,me,su --single-only --output X.json",
+  "u00": "python3 tools/dsrom_lever_su_kr.py run --pregen IMG_K0 --sukr 0 --units he,me,su --single-only --output U00.json",
+  "f00": "python3 tools/dsrom_lever_su_kr.py run --pregen IMG_K40 --sukr 40 --units he,me,su --single-only --output F00.json",
+  "u2517": "... run --pregen IMG_K0 --sukr 0 --subcast 25 --suret 17 ... --output U2517.json",
+  "f2517": "... run --pregen IMG_K40 --sukr 40 --subcast 25 --suret 17 ... --output F2517.json",
+  "expanded": {
+   "campaign_lint_kr_successor": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--lint-only",
+    "-Wall",
+    "-Wno-DECLFILENAME",
+    "-Wno-UNUSED",
+    "-Wno-WIDTH",
+    "-Wno-BLKSEQ",
+    "-Wno-PINCONNECTEMPTY",
+    "-Wno-IMPORTSTAR",
+    "-Wno-MODDUP",
+    "-Wno-SYNCASYNCNET",
+    "-Wno-VARHIDDEN",
+    "-Wno-UNOPTFLAT",
+    "--top-module",
+    "ot_hdc_core_v41x",
+    "-GSW=8",
+    "-GHHW=8",
+    "-GMG=8",
+    "-GSUN=16",
+    "-GSUM=8",
+    "-GX_HE=1",
+    "-GX_ME=1",
+    "-GX_ATT=0",
+    "-GX_IDX=0",
+    "-GX_SEL=0",
+    "-GX_EG=0",
+    "-GX_SU=1",
+    "-Wno-TIMESCALEMOD",
+    "-I/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_reduce.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_accept.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_select.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/dsrom_sys/levers/ot_hdc_v41x_me_adapt_lv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_su_adapt_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/dsrom_sys/levers/ot_hdc_core_v41x_kr_lv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv"
+   ],
+   "campaign_lint_original_core": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--lint-only",
+    "-Wall",
+    "-Wno-DECLFILENAME",
+    "-Wno-UNUSED",
+    "-Wno-WIDTH",
+    "-Wno-BLKSEQ",
+    "-Wno-PINCONNECTEMPTY",
+    "-Wno-IMPORTSTAR",
+    "-Wno-MODDUP",
+    "-Wno-SYNCASYNCNET",
+    "-Wno-VARHIDDEN",
+    "-Wno-UNOPTFLAT",
+    "--top-module",
+    "ot_hdc_core_v41x",
+    "-GSW=8",
+    "-GHHW=8",
+    "-GMG=8",
+    "-GSUN=16",
+    "-GSUM=8",
+    "-GX_HE=1",
+    "-GX_ME=1",
+    "-GX_ATT=0",
+    "-GX_IDX=0",
+    "-GX_SEL=0",
+    "-GX_EG=0",
+    "-GX_SU=1",
+    "-Wno-TIMESCALEMOD",
+    "-I/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_reduce.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_accept.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_select.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
+   ],
+   "strict_kr_successor": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--lint-only",
+    "-Wall",
+    "-Wno-DECLFILENAME",
+    "-Wno-UNUSED",
+    "-Wno-WIDTH",
+    "-Wno-BLKSEQ",
+    "-Wno-PINCONNECTEMPTY",
+    "-Wno-IMPORTSTAR",
+    "-Wno-MODDUP",
+    "-Wno-SYNCASYNCNET",
+    "-Wno-VARHIDDEN",
+    "-Wno-UNOPTFLAT",
+    "-Wno-TIMESCALEMOD",
+    "--top-module",
+    "ot_hdc_core_v41x",
+    "-I/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41",
+    "-GSUKR=40",
+    "-GSUBCAST=25",
+    "-GSURET=17",
+    "-GSW=8",
+    "-GHHW=8",
+    "-GMG=8",
+    "-GSUN=16",
+    "-GSUM=8",
+    "-GX_HE=1",
+    "-GX_ME=1",
+    "-GX_ATT=0",
+    "-GX_IDX=0",
+    "-GX_SEL=0",
+    "-GX_EG=0",
+    "-GX_SU=1",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/proto/ot_fp32_mul_rne_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_delay.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fpu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_reduce.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_accept.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_engram_hash.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_select.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_blockdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_chunk8_stack.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_actquant.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_softplus.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_matvec.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_stream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_qe.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_xu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41/ot_hdc_v41_hcproj.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_he_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_bdot.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_mac.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_wgt_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/dsrom_sys/levers/ot_hdc_v41x_me_adapt_lv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_egather.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_xu_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_lane_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_red.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_vec_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_su_adapt_kr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/dsrom_sys/levers/ot_hdc_core_v41x_kr_lv.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pcol.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_hsum.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_finish.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_batch.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_replica.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_adapt.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv",
+    "/srv/opentallas-scratch/claude/dsrom-system/levers/su_kr/src/rtl/hdc/v41x/ot_hdc_v41x_idx_pool_hbm_bridge.sv"
+   ]
+  }
+ },
+ "run_root": "results/rtl/dsrom_system_rtl_20261003/levers/su_kr/run_root_sha.json",
+ "run_root_sources_identical": {
+  "rtl/dsrom_sys/levers/ot_hdc_core_v41x_kr_lv.sv": true,
+  "rtl/dsrom_sys/levers/ot_hdc_v41x_me_adapt_lv.sv": true,
+  "tools/dsrom_lever_su_kr.py": true,
+  "rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv": true,
+  "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": true,
+  "rtl/hdc/v41x/ot_hdc_core_v41x.sv": true,
+  "tools/w11_su_fuse_die.py": true,
+  "tools/rtl_hdc_v41x_decode_campaign.py": true
+ },
+ "source_sha256": {
+  "successors": {
+   "rtl/dsrom_sys/levers/ot_hdc_core_v41x_kr_lv.sv": "63d1183f1fcd986a95ded9775bd20628000b4758cf5466aaa399cec3f5e472b3",
+   "rtl/dsrom_sys/levers/ot_hdc_v41x_me_adapt_lv.sv": "f0f054ccbdeaddc9d3aefb0bcbf6dec1011b9a1d421c3b3c84f61baa47920f4e",
+   "tools/dsrom_lever_su_kr.py": "f7d2a562aa54d63f45960abadf2b045bfb4c2a28949c8b445c895932fdbbd4f0",
+   "tools/dsrom_lever_record_su_kr.py": "3eaf7af3f4fcffd92dcf443c7176f51f3fa4524854370518608c4e6cc4e00784"
+  },
+  "replaced_or_wrapped": {
+   "rtl/hdc/v41x/ot_hdc_core_v41x_kr.sv": "ed0e478099af34dc44863e9484e9b8db16956f004edea60ec03018671c82d1fa",
+   "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
+   "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+   "tools/w11_su_fuse_die.py": "aa48b5fcccc19a477ff8a0eea9a0a24104bd39ad409cd0efa0f72a10c78a370c",
+   "tools/rtl_hdc_v41x_decode_campaign.py": "dd2eb2bafa809db5f37ee35f950d9e163a0feb3ce5a69192d5f52a0ec77d26db"
+  }
+ },
+ "claim_boundary": "Reduced V4.1 token, one decode step at position 7 on the reduced core (HE, ME, SU re-specified), Verilator 5.050. Both matched pairs re-run: 0/0 wire stages (u00/f00) and the 25/17 pair (u2517/f2517). No SS/FF closure of the lane registers, no full-shape or W17-runtime-core port (the fork is of ot_hdc_core_v41x, not rtl/w17_runtime), no adoption.",
+ "recorded_utc": "2026-10-03T11:58:46Z"
+}

@@ -1,0 +1,27 @@
+{
+  "RF_alias_diagnostic_no_area_credit": true,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "clock_union": {
+    "FF_native_via_cap_remaining_fF": 0.13560311,
+    "SS_native_via_R_remaining_at_full_cap_kohm": 0.5717463853538103,
+    "cell_floor_um2_per_element": 7.45038,
+    "clock_buffers": 73,
+    "core_reservation_um2_per_element_at50pct": 14.90076,
+    "current_source_commit": "283ed0249",
+    "do_not_add_Maxwell_rejected_62buffer_tree": true,
+    "do_not_recharge_WAKEx8_cloneFF_holdBUF_or_selector226_142": true,
+    "necessary_area_delta_proven": false,
+    "physical_build_admitted": false,
+    "replacement_increment_screen_mm2_per_shard": 0.03009871872,
+    "replacement_increment_vs_single_leaf_um2": 14.69664,
+    "root_prefix_reset_release_and_25ps_matched_skew_unbound": true,
+    "source_scalar_D_QN_route_closed": false,
+    "unique_named_endpoints": 1100,
+    "via_R_source_entries": 0
+  },
+  "current_parent_review": "6bb3ac9e7",
+  "no_jobs_or_RTL": true,
+  "owner": "Maxwell",
+  "recipient": "Archimedes",
+  "requested_next_union": "Keep73 named BUF instances/1100 named sinks authoritative. Replace earlier single-leaf allocation only by exact instance union; do not add rejected9bcd62buffer proposal. Price root prefix, native via C/R, reset tree and source scalar D/QN separately with immutable failed maps retained. No installed CTS prerequisite; prebuild native geometry and positive bounds still required."
+}

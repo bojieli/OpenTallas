@@ -1,0 +1,138 @@
+
+### 2026-10-04T04:46:07 make /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/1_2_yosys.v
+[orfs_gate] slot 1, 92 GB free (floor 20): docker run --rm -v /home/ubuntu/wt-s81-window-bind:/src:ro -v /tmp/claude-1000/-home-ubuntu-OpenTallas/98bed5ce-ef4e-4140-93b4-b898444c4b99/scratchpad/s81wl/screen_wl:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/1_2_yosys.v
+mkdir -p /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/
+echo 833 > /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/clock_period.txt
+/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/scr_ot_dsrom_s81_wl_screen/base/1_1_yosys_canonicalize.log
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/clock_period.txt
+Setting clock period to 833
+1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+6. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+11. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/phys/ot_dsrom_s81_wl_screen.sv
+12. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv
+13. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv
+14. Executing Verilog-2005 frontend: /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv
+15. Executing Verilog-2005 frontend: /src/rtl/chip/ot_dsrom_window_stream_la.sv
+16. Executing Verilog-2005 frontend: /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv
+17. Executing Verilog-2005 frontend: /src/rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv
+18. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_refill_schedule.sv
+19. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_retention.sv
+20. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_row_codec.sv
+21. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_stage4.sv
+22. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_window_stream.sv
+23. Executing Verilog-2005 frontend: /src/rtl/chip/ot_chip_v41x_attn_row_merge.sv
+24. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/yoSys/cells_clkgate_R.v
+25. Executing HIERARCHY pass (managing design hierarchy).
+26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_s81_wl_screen'.
+26.1. Analyzing design hierarchy..
+26.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_hbm_wmux'.
+Warning: Replacing memory \g_on.g_pc[31].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[31].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[31].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[30].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[30].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[30].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[29].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[29].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[29].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[28].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[28].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[28].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[27].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[27].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[27].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[26].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[26].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[26].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[25].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[25].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[25].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[24].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[24].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[24].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[23].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[23].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[23].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[22].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[22].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[22].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[21].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[21].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[21].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[20].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[20].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[20].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[19].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[19].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[19].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[18].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[18].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[18].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[17].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[17].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[17].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[16].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[16].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[16].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[15].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[15].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[15].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[14].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[14].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[14].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[13].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[13].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[13].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[12].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[12].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[12].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[11].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[11].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[11].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[10].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[10].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[10].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[9].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[9].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[9].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[8].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[8].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[8].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[7].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[7].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[7].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[6].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[6].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[6].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[5].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[5].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[5].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[4].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[4].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[4].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[3].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[3].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[3].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[2].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[2].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[2].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[1].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[1].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[1].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[0].ht with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:122
+Warning: Replacing memory \g_on.g_pc[0].hl with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+Warning: Replacing memory \g_on.g_pc[0].ha with list of registers. See /src/rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv:121
+26.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dsrom_window_attn_source_la'.
+/src/rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv:282: ERROR: Invalid nesting of always blocks and/or initializations.
+Elapsed time: 0:01.52[h:]min:sec. CPU time: user 1.45 sys 0.04 (98%). Peak memory: 84224KB.
+make[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1
+make: *** [Makefile:308: /work/results/asap7/scr_ot_dsrom_s81_wl_screen/base/1_1_yosys_canonicalize.rtlil] Error 2

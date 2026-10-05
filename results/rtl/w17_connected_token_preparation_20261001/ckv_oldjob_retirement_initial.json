@@ -1,0 +1,75 @@
+{
+  "status": "PASS_UNCHANGED_OLDJOB_ENDPOINTS",
+  "source_pins": {
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv",
+      "sha256": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_ckv_sel_fetch.sv",
+      "sha256": "7a2cb51b8c5784c9c74c40012dae318034da05da6f9bbb5598699a94925c86cc"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv",
+      "sha256": "673cd79bb136b37684a128d13da23a05c6073f1f629d2f94f2ee275f698ae78a"
+    },
+    "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_ckv_fp4_decode.sv",
+      "sha256": "3ce5ca80f0a72d1b785689ae3bd854f94cc2fa96789b0a19c06d19b613ff1988"
+    },
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv",
+      "sha256": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062"
+    },
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "path": "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+      "sha256": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042"
+    }
+  },
+  "cases": {
+    "P_0": {
+      "returncode": 0,
+      "log": "PASS_P_OLD_RETIRED issued=8 received=8\n",
+      "matched_expectation": true,
+      "bench_sha256": "908f6ac1f3932731ef8cde515ddec231ea1ba403d3848500d15c9a8f1762d517"
+    },
+    "P_1": {
+      "returncode": 1,
+      "log": "FATAL: /home/ubuntu/w17-oldjob-8nrba2k6/Ptb.sv:26: finite P drain failed issued=8 received=7\n       Time: 3000000 Scope: tb\n",
+      "matched_expectation": true,
+      "bench_sha256": "908f6ac1f3932731ef8cde515ddec231ea1ba403d3848500d15c9a8f1762d517"
+    },
+    "C_0": {
+      "returncode": 0,
+      "log": "PASS_C_OLD_RETIRED issued=9 received=9 emitted=1\n",
+      "matched_expectation": true,
+      "bench_sha256": "470737415e73bb473fae1b3747542612abfbe306b57287b22f9588054d885523"
+    },
+    "C_1": {
+      "returncode": 1,
+      "log": "FATAL: /home/ubuntu/w17-oldjob-8nrba2k6/Ctb.sv:24: finite C drain failed issued=9 received=9 emitted=0\n       Time: 3000000 Scope: tb\n",
+      "matched_expectation": true,
+      "bench_sha256": "470737415e73bb473fae1b3747542612abfbe306b57287b22f9588054d885523"
+    },
+    "W_0": {
+      "returncode": 0,
+      "log": "PASS_W_OLD_RETIRED writes=2 completions=2\n",
+      "matched_expectation": true,
+      "bench_sha256": "a6b9294f4bbeb1ffd9ea726fb8c6e15e3021a3478e333ae3300830ffb9bbcf94"
+    },
+    "W_1": {
+      "returncode": 1,
+      "log": "FATAL: /home/ubuntu/w17-oldjob-8nrba2k6/Wtb.sv:22: finite W drain failed writes=2 completions=1\n       Time: 3000000 Scope: tb\n",
+      "matched_expectation": true,
+      "bench_sha256": "a6b9294f4bbeb1ffd9ea726fb8c6e15e3021a3478e333ae3300830ffb9bbcf94"
+    }
+  },
+  "scope": "production NSLOT64/K512 Cfetch one old row; Pcache8sectors; Wtwo writes with delayed fixture completions. No actual HBM burst-visible provider, peer credit, wholeprelease latency, fulltoken or numerical claim",
+  "hardware_admission": false
+}

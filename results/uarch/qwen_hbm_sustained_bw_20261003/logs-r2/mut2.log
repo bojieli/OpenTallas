@@ -1,0 +1,12 @@
+DATA MISMATCH layer=1 s=10389
+RESULT ref_mode=1 hint=320 b2b=0 phase=0 cred=32 layers=2
+LAYER 0 go=65 first_ps=24576 stream_ps=1085440 data_ps=1060864
+LAYER 1 go=5176 first_ps=24576 stream_ps=1082368 data_ps=1057792
+SUMMARY worst_stream_ps=1085440 mean_stream_ps=1083904 first_data_ps_min=24576 first_data_ps_max=24576 layers_over_need=0
+SUMMARY bytes_per_layer=1048576 worst_Bps=966037735849 mean_Bps=967406707605
+SUMMARY sectors_good=65535 sectors_bad=1 violations=0 cmds ACT=2048 PRE=2048 PREab=0 REF=1645 RD=65536 max_ref_gap_ps=121856 max_landing=12
+SUMMARY verdict=FAIL
+- rtl/test/model_ready_hbm_r14/tb_hbm_stream_bw.sv:220: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 1.427 s; speed 4.474 us/s
+- Verilator: cpu 0.681 s on 1 threads; allocated 10 MB

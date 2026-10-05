@@ -1,0 +1,94 @@
+{
+  "target": "2ae90a0116f20654005e479fec2f1b951a014b8f",
+  "branch": "codex/dsrom-capture-home-r49-20261002",
+  "main_head": "63773dd57",
+  "baseline": "7c3fb3e43",
+  "ancestry": {
+    "merge_base_with_baseline": "03a8cf4fe",
+    "range_7c3fb3e43..target": 10,
+    "already_on_main_patch_equivalent": [
+      "4cc368a46",
+      "8b9772654",
+      "51ae1d0e1",
+      "c9d19ed59",
+      "78153540c"
+    ],
+    "clock_repair_53dfdf1c9_on_main": false,
+    "composition_origin_e380a8e13_on_main": true
+  },
+  "commits_needed": [
+    "db47c807f",
+    "341e871cb",
+    "5f5e4a310",
+    "53dfdf1c9",
+    "2ae90a011"
+  ],
+  "hard_dependencies_of_target": {
+    "341e871cb": "tools/dsrom_capture_consumer_admission.py imported by hook tool",
+    "53dfdf1c9": "clock-reallocation shard sites read for collision check"
+  },
+  "soft_independent": {
+    "db47c807f": "not imported by hook/clock tools",
+    "5f5e4a310": "not imported by hook tool"
+  },
+  "cherry_pick": {
+    "order": "db47c807f,341e871cb,5f5e4a310,53dfdf1c9,2ae90a011 onto 63773dd57",
+    "conflicts": [],
+    "dsrom_paths_identical_to_branch_tip": true
+  },
+  "changed_paths": "all additions (A) only: results/uarch/dsrom_capture_{named_pg_escape,consumer_admission,existing_fences,clock_branch_reallocation,completion_hook_slot}_20261003/**, tools/dsrom_capture_{named_pg_escape,consumer_admission,existing_fences,clock_branch_reallocation,completion_hook_slot}.py, tests/test_dsrom_capture_{same five}.py (65 files)",
+  "modified_preexisting_paths": [],
+  "tests": [
+    {
+      "cmd": "python3 -m pytest -q tests/test_dsrom_capture_completion_hook_slot.py tests/test_dsrom_capture_clock_branch_reallocation.py",
+      "rc": 0,
+      "summary": "27 passed (matches handoff tests=27)",
+      "log": "maxwell_tests_handoff.log"
+    },
+    {
+      "cmd": "python3 -m pytest -q (named_pg_escape, consumer_admission, existing_fences, completion_hook_slot, clock_branch_reallocation, selected_bank_escape, identity_slot_join, publication_credit)",
+      "rc": 0,
+      "summary": "73 passed",
+      "log": "maxwell_tests_all.log"
+    }
+  ],
+  "cold_replay": {
+    "dir": "/tmp/claude-review-20261003/maxwell-replay",
+    "byte_identical": true,
+    "mismatches": [],
+    "compared": [
+      "completion_hook_slot model.json (sha 41681f5a...)",
+      "clock_branch_reallocation model.json + 8 shard .json.gz",
+      "consumer_admission model.json",
+      "existing_fences model.json",
+      "named_pg_escape model.json + signal_escape/local_supply_feed .json.gz"
+    ]
+  },
+  "artifact_hash_check": {
+    "note": "handoff.json carries no hashes; hashes live in manifest.json",
+    "completion_hook_slot_manifest": "6/6 OK",
+    "clock_branch_reallocation_manifest": "22/22 OK",
+    "named_pg_escape": "10/10 OK",
+    "consumer_admission": "11/11 OK",
+    "existing_fences": "11/11 OK",
+    "composition_input_vs_e380a8e13_git_blob": "OK 51e2e7d4...",
+    "current_parent_source_pins_vs_main": "4/4 OK"
+  },
+  "disjointness_check": {
+    "method": "independent scan of every *bbox*/rect 4-int box in all results/uarch/dsrom_capture_*, dsrom_c9_*, dsrom_selector_* JSON/JSONL(.gz) (~6.9M boxes) vs reservation [11274336,15990210,11292264,15990480]",
+    "result": "PASS: zero overlaps with any cell, site, identity cell, c9 correction site, relocated clock site, clock net, escape or PG construction; only overlaps are enclosing regions (identity_strip_bbox, common/local-controller reservation, island) which contain the reservation as claimed",
+    "extra": "24 hook cells pairwise disjoint and inside reservation; reservation = 2x placed body (2.42028 um2 -> 4.84056e-6 mm2); starts at max-x of prior identity proposal; inside strip x-extent",
+    "tool_gap": "tool's own collision check covers prior identity cells and relocated clock sites only, not c9 correction sites/cell inventories; independent scan closes that gap"
+  },
+  "overclaim_check": {
+    "result": "PASS",
+    "facts": "physical_fit=false, contextual_PR_admitted=false, full_control_PG_escape_and_clock_reset_routes_qualified=false, samecell_feedback_lower_bound_not_FF_closure=true, added_cycles/token_delta/C=null, SS/FF figures are pin-cap loads only, no slack/fmax/closure claimed; single stage0/rank0/shard0 home, replication not selected"
+  },
+  "verdict": "INTAKE_OK",
+  "issues": [
+    "Five commits needed, not one: target hard-depends on 341e871cb and 53dfdf1c9 (neither on main); db47c807f and 5f5e4a310 ride along in range",
+    "handoff.json contains no artifact hashes (manifest.json does); handoff replay is a single /tmp path, not a full-artifact replay",
+    "Commit messages lack the reviewer-facing claim text (one line each)",
+    "Reservation-only: no loaded timing, routes, or SS/FF closure; next gate is binding localCLK/localRESETN to qualified endpoints"
+  ]
+}

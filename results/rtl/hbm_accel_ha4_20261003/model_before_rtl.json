@@ -1,0 +1,178 @@
+{
+  "schema": "opentallas.hbm_accel.ha4.price.v1",
+  "status": "ESTIMATE_NOT_ADOPTED",
+  "source_sha256": {
+    "tools/uarch_model.py": "c79fb2e3b803a1f83bf960f66c474a7733091dbfe0ebf5732a72da57a6bd5fd9"
+  },
+  "reuse": {
+    "model_parent": "8564e79eaf906c820aec5eb92bfda1cca80ee43d",
+    "stream": "52ce3e9c1",
+    "expert_fetch": "c52ae6d7f",
+    "clock_verdict": "2078c269c",
+    "edge_owner": "Cicero01a101ea-9229"
+  },
+  "lifecycle": {
+    "baseline": {
+      "writer_slots": 1,
+      "reader_rows": 72,
+      "rank_count": 2,
+      "SM_count": 32,
+      "stage_useful_bytes": 1024,
+      "stage_physical_bytes": 1024,
+      "stage_allocation": "existing source-allocated 16 aligned shared beats",
+      "added_SRAM_bytes": 0,
+      "raw_control_bits": 14390,
+      "protection": "not implemented; gross raw control inventory only",
+      "storage_area_proxy_mm2": 0.008392248000000001,
+      "replicas": 1,
+      "row_select_fanout": 72,
+      "row_read_ports": 1,
+      "row_write_ports": 1,
+      "scratch_ports": {
+        "address_bits": 10,
+        "SM_bits": 5,
+        "rank_bits": 1,
+        "data_bits": 512,
+        "outstanding": 1
+      },
+      "writer_visible_ports": {
+        "identity_bits": 84,
+        "sector_bits": 9,
+        "sectors": 272,
+        "reverse_required": true
+      },
+      "reader_event_ports": {
+        "identity_bits": 84,
+        "stage_bits": 1
+      },
+      "command_bits": 231,
+      "command_II_min_edges": 3,
+      "local_response_min_edges": 2,
+      "scratch_roundtrip_count_per_stage_beat": 2,
+      "payload_sector_reads": 256,
+      "payload_sector_writes": 272,
+      "payload_K_partial_sectors": 256,
+      "payload_V_full_sectors": 16,
+      "prospective_clock_GHz": 1.2,
+      "setup_uncertainty_ps": 60,
+      "hold_uncertainty_ps": 25,
+      "physical_clock_qualified": false,
+      "external_bounds": {
+        "scratch": null,
+        "payload_owner": null,
+        "W2": null,
+        "metadata_visibility": null,
+        "consumer": null,
+        "reverse": null,
+        "CDC": null,
+        "reset_drain": null
+      },
+      "routing_tracks": null,
+      "placed_area_mm2": null,
+      "full_token_latency": null
+    },
+    "added_control_bits": 245,
+    "added_storage_proxy_um2": 71.44200000000001,
+    "added_slot_proxy_um2": 102.06000000000002,
+    "added_SRAM_bytes": 0,
+    "added_MACs_per_cycle": 0,
+    "memory_ports_bytes_per_cycle": {
+      "shared": 64,
+      "payload_read": 32,
+      "payload_write": 32
+    },
+    "boundaries_bits": {
+      "command": 826,
+      "row_snapshot": 164,
+      "shared_data": 512,
+      "payload_data": 256,
+      "payload_owner_sector_address": 127,
+      "drain_owner_cohorts": 92
+    },
+    "row_mux_inputs": 72,
+    "row_select_flops": 72,
+    "row_demux_replicas": 72,
+    "maximum_row_select_fanout_estimate": 164,
+    "added_dispatch_cycles": 2,
+    "unchanged_sector_issue_fsm": true,
+    "arithmetic": "unchanged K byte RMW and V packed bytes",
+    "floorplan_slot_fit": null,
+    "routing_tracks_capacity": null,
+    "area_proxy_excludes": [
+      "logic",
+      "protection",
+      "clock",
+      "route",
+      "power_grid",
+      "repeaters"
+    ]
+  },
+  "clocks": {
+    "stream_ps": 833,
+    "serial_ps": 1111,
+    "service_ps": 1024,
+    "service_MHz": 976.5625,
+    "headline_1p2GHz_qualified": false,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25
+  },
+  "crossing": {
+    "request_bits": 56,
+    "response_bits_per_pc": 277,
+    "response_PC_lanes": 32,
+    "request_latency_ns_estimate": 4.7379999999999995,
+    "return_latency_ns_estimate": 4.547,
+    "status": "ESTIMATE; no measured CDC, no free CDC allowed"
+  },
+  "models": {
+    "qwen3_8b_hbm": {
+      "added_dispatch_ns_per_command": 1.666,
+      "commands_per_token_estimate": 1728,
+      "token_added_us_estimate": 2.878848,
+      "external_service_and_wire_ns": null,
+      "full_token_measured_gain": null,
+      "per_stack_index_attachment": "existing scorer; exact saved owner/tag required"
+    },
+    "deepseek_v41_hbm": {
+      "added_dispatch_ns_per_command": 1.666,
+      "commands_per_token_estimate": null,
+      "token_added_us_estimate": null,
+      "external_service_and_wire_ns": null,
+      "full_token_measured_gain": null,
+      "per_stack_index_attachment": "existing scorer; exact saved owner/tag required"
+    },
+    "qwen3_8b_rom": {
+      "added_dispatch_ns_per_command": 1.666,
+      "commands_per_token_estimate": null,
+      "token_added_us_estimate": null,
+      "external_service_and_wire_ns": null,
+      "full_token_measured_gain": null,
+      "per_stack_index_attachment": "existing scorer; exact saved owner/tag required"
+    },
+    "deepseek_v41_rom": {
+      "added_dispatch_ns_per_command": 1.666,
+      "commands_per_token_estimate": null,
+      "token_added_us_estimate": null,
+      "external_service_and_wire_ns": null,
+      "full_token_measured_gain": null,
+      "per_stack_index_attachment": "existing scorer; exact saved owner/tag required"
+    },
+    "qwen3_8_27b_hbm": {
+      "added_dispatch_ns_per_command": 1.666,
+      "commands_per_token_estimate": null,
+      "token_added_us_estimate": null,
+      "external_service_and_wire_ns": null,
+      "full_token_measured_gain": null,
+      "per_stack_index_attachment": "existing scorer; exact saved owner/tag required"
+    }
+  },
+  "adoption": false,
+  "gates": {
+    "exact": "PENDING",
+    "latency": "PENDING",
+    "area": "PENDING",
+    "route": "PENDING",
+    "SS_FF": "PENDING",
+    "composed_gain_ge_1pct": "PENDING"
+  }
+}

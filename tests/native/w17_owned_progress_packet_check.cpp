@@ -1,0 +1,31 @@
+// Native helper/ABI check only. No generated DUT classes or RTL qualification.
+#include "../../tools/runtime/w17_successor_owned_capture.hpp"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <vector>
+int main(int argc,char** argv) {
+ if(argc!=2)return 2;
+ w17_capture::LocalProgress progress;
+ std::string text;
+ try {
+  while(std::getline(std::cin,text)) {
+   if(text.size()!=256 || text.find_first_not_of("0123456789abcdef")!=std::string::npos)throw std::runtime_error("hex envelope");
+   std::array<uint32_t,32> words{};
+   for(unsigned i=0;i<32;++i)words[i]=uint32_t(std::stoul(text.substr((31-i)*8,8),nullptr,16));
+   if(std::string(argv[1])=="decode") {
+    const w17_owned::Field fields[]={w17_owned::epoch,w17_owned::cycle,w17_owned::rank,w17_owned::ckv_available,w17_owned::user,w17_owned::desc_gen,w17_owned::desc_accept,w17_owned::desc_done,w17_owned::source_accept,w17_owned::source_gen,w17_owned::active_gen,w17_owned::source_first,w17_owned::source_count,w17_owned::source_done,w17_owned::staged,w17_owned::merge_accept,w17_owned::merge_done,w17_owned::stream_take,w17_owned::stream_mask,w17_owned::window_blk_accept,w17_owned::window_blk_user,w17_owned::window_blk_row,w17_owned::window_prime_accept,w17_owned::window_prime_user,w17_owned::window_prime_row,w17_owned::window_prefetch_accept,w17_owned::window_prefetch_user,w17_owned::window_prefetch_row,w17_owned::window_blk_idx,w17_owned::window_state,w17_owned::window_row,w17_owned::window_active_user,w17_owned::window_sector,w17_owned::window_block,w17_owned::window_req_take,w17_owned::window_req_offer,w17_owned::window_req_ready,w17_owned::window_req_we,w17_owned::window_req_addr,w17_owned::window_req_tag,w17_owned::window_rsp_take,w17_owned::window_rsp_tag,w17_owned::window_rsp_beat,w17_owned::window_rsp_poison,w17_owned::window_write_done,w17_owned::window_reply_ok,w17_owned::window_row_publish,w17_owned::window_block_publish,w17_owned::stage_req_take,w17_owned::stage_req_user,w17_owned::stage_req_first,w17_owned::stage_req_mask,w17_owned::stage_rsp_take,w17_owned::stage_rsp_user,w17_owned::stage_rsp_first,w17_owned::stage_rsp_mask,w17_owned::stage_rsp_valid,w17_owned::stage_rsp_fault,w17_owned::ckv_select_accept,w17_owned::ckv_select_vmword,w17_owned::ckv_fetch_accept,w17_owned::ckv_fetch_done,w17_owned::ckv_job_accept,w17_owned::ckv_job_done,w17_owned::ckv_stream_take,w17_owned::ckv_stream_mask,w17_owned::ckv_rows_ready,w17_owned::ckv_collect_take,w17_owned::ckv_collect_rank,w17_owned::ckv_collect_gid,w17_owned::ckv_collect_bad,w17_owned::ckv_fault,w17_owned::ckv_fault_code,w17_owned::ckv_job_gen,w17_owned::ckv0_req_take,w17_owned::ckv0_req_offer,w17_owned::ckv0_req_ready,w17_owned::ckv0_req_we,w17_owned::ckv0_req_addr,w17_owned::ckv0_req_tag,w17_owned::ckv0_rsp_take,w17_owned::ckv0_rsp_tag,w17_owned::ckv0_rsp_beat,w17_owned::ckv1_req_take,w17_owned::ckv1_req_offer,w17_owned::ckv1_req_ready,w17_owned::ckv1_req_we,w17_owned::ckv1_req_addr,w17_owned::ckv1_req_tag,w17_owned::ckv1_rsp_take,w17_owned::ckv1_rsp_tag,w17_owned::ckv1_rsp_beat,w17_owned::ckv2_req_take,w17_owned::ckv2_req_offer,w17_owned::ckv2_req_ready,w17_owned::ckv2_req_we,w17_owned::ckv2_req_addr,w17_owned::ckv2_req_tag,w17_owned::ckv2_rsp_take,w17_owned::ckv2_rsp_tag,w17_owned::ckv2_rsp_beat,w17_owned::ckv3_req_take,w17_owned::ckv3_req_offer,w17_owned::ckv3_req_ready,w17_owned::ckv3_req_we,w17_owned::ckv3_req_addr,w17_owned::ckv3_req_tag,w17_owned::ckv3_rsp_take,w17_owned::ckv3_rsp_tag,w17_owned::ckv3_rsp_beat};
+    for(auto f:fields) {
+     if(f.width<=64)std::cout<<w17_owned::get(words,f);
+     else {std::cout<<"0b";for(int bit=int(f.width)-1;bit>=0;--bit)std::cout<<((words[(f.offset+bit)/32]>>((f.offset+bit)%32))&1);}
+     std::cout<<' ';
+    }
+    std::cout<<'\n';
+   } else if(std::string(argv[1])=="sample") {
+    progress.sample(words);
+    std::cout<<progress.read_retires<<' '<<progress.write_acks<<' '<<progress.raw_ckv_replies<<' '<<progress.last_qualified<<' '<<progress.pending.size()<<' '<<progress.source_active<<' '<<progress.conditional_exceeded<<'\n';
+   } else return 2;
+  }
+ } catch(const std::exception& e){std::cerr<<"REJECT "<<e.what()<<'\n';return 3;}
+ return 0;
+}

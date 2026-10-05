@@ -1,0 +1,167 @@
+{
+  "schema": "hbrom.clock.constraints.v1",
+  "scope": "Analytical HBROM contributor; no RTL edits, simulation or physical jobs. Local predecessor evidence is not HBROM parent closure.",
+  "sources": [
+    {
+      "path": "results/uarch/v41_rom_depth_study.json",
+      "sha256": "2486182dfd3bfd8f37db72ee59c254222d2586292efdead2697bd71ccf095c5b"
+    },
+    {
+      "path": "rtl/common/ot_ratio_cdc_fifo.sv",
+      "sha256": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+    },
+    {
+      "path": "physical/two_clock/ratio_cdc_fifo_f2s.sdc",
+      "sha256": "982d3edf9d5442454712a4d42caa170468014cdbb16894a140784d65f970458e"
+    },
+    {
+      "path": "physical/two_clock/ratio_cdc_fifo_s2f.sdc",
+      "sha256": "ed465cfddc68d611a0d2d21dc3d0835b5022c74842f430f9c6e792440dcedca0"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/crossing_model.json",
+      "sha256": "c212d98c9c803fb2aa71420d80f7b6ca98af60a2d7808d605c74a4c98f4d73db"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/bench_campaign.json",
+      "sha256": "07a65a7ce480570bf7659efc45ba188b2ddd9079f726a8d8e795e1fe15b40259"
+    },
+    {
+      "path": "docs/MICROARCH_MODEL.md",
+      "sha256": "86bee5d2713409f98461dd7d46aa1e5fa8d30db34dfec51a50e96949805b4f6a"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/f2s_w64_d4/physical.json",
+      "sha256": "b41883366bbeb10f404916002b76f65de78470fa59118bf07b03bcb18b15812a"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/f2s_w64_d4/corner_sta.json",
+      "sha256": "f5b1b92a54c553aa968658c2e847d33674b7545d9fa0344370fd35fa6de2970b"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/s2f_w64_d4/physical.json",
+      "sha256": "ddb0779999ac44ec118f061a718d2cd5d42203fe3bb0fe2758f516e9f04ee780"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/s2f_w64_d4/corner_sta.json",
+      "sha256": "78c23d5fc916e02e770df3a320cdf54f7135737a009bdd91b55f3ad1b549fc7b"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/f2s_w512_d4/physical.json",
+      "sha256": "54574e9e00810f40a6b8b655b10c9af8c217d4832a16163886c6a561dab1de60"
+    },
+    {
+      "path": "results/rtl/two_clock_crossing_20261003/physical/f2s_w512_d4/corner_sta.json",
+      "sha256": "5efe0ad410d676bebcba79f17bfb64028bd2f178d895cf92555ab3fd72937ab9"
+    }
+  ],
+  "clocks": {
+    "streaming_ghz": 1.2,
+    "serial_ghz": 0.9,
+    "VCO_ghz": 3.6,
+    "fast_div": 3,
+    "slow_div": 4,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "setup_corner": "SS",
+    "hold_corner": "FF",
+    "tightest_related_crossing_setup_ps": 277.77777777777777,
+    "related_scope": "Same-die single PLL only. Separate die PLLs require independently qualified link CDC."
+  },
+  "rom": {
+    "macro": "ot_rom_4096x274_m8",
+    "basis": "Calibrated analytical Liberty generator, historical274bit macro; no-ECC successor width requires new characterized contract",
+    "clk_q_ss_ps": 744,
+    "capture_setup_ps": 25,
+    "min_period_ss_ps": 711.9,
+    "capture_period_required_ps": 829,
+    "residual_wire_plus_skew_budget_at_1p2ghz_ps": 4.333333333333371,
+    "rule": "Local capture adjacent to macro required; no bank mux/large wire before capture can be assumed to fit residual. Price a new full cycle for registered bank selection and each transport stage.",
+    "single_macro_peak_words_per_fast_cycle": 1,
+    "slot_macros": 2,
+    "slot_alternation_note": "Two4096 halves restore8192-depth capacity; alternation does not imply two usable words/cycle. Actual port schedule governs.",
+    "SSFF_parent_status": "unproven"
+  },
+  "cdc": {
+    "reuse": "rtl/common/ot_ratio_cdc_fifo.sv",
+    "depth": 4,
+    "width_parameter": true,
+    "physical": [
+      {
+        "name": "f2s_w64_d4",
+        "SS_setup_ps": 41.46,
+        "FF_hold_ps": 9.76,
+        "standalone_closes": true,
+        "cell_area_um2": 320.92,
+        "core_area_um2": 901.438,
+        "source_hash": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+      },
+      {
+        "name": "s2f_w64_d4",
+        "SS_setup_ps": 33.62,
+        "FF_hold_ps": 7.78,
+        "standalone_closes": true,
+        "cell_area_um2": 320.454,
+        "core_area_um2": 901.438,
+        "source_hash": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+      },
+      {
+        "name": "f2s_w512_d4",
+        "SS_setup_ps": 32.36,
+        "FF_hold_ps": 5.31,
+        "standalone_closes": true,
+        "cell_area_um2": 2498.82,
+        "core_area_um2": 6893.13,
+        "source_hash": "af1d71dc477ff709de44c0c563f2ba3a703236c78a8ae4cf12159ed7c4682cc6"
+      }
+    ],
+    "fast_to_slow_max_ns": 2.2222222222222223,
+    "slow_to_fast_max_ns": 1.6666666666666667,
+    "max_sustained_words_per_s": 900000000,
+    "depth2_sustained_words_per_s": 600000000,
+    "bandwidth_bytes_s_formula": "0.9e9*W/8 per same-width FIFO, not1.2e9*W/8",
+    "minimum_slow_width_formula": "ceil(4*Wfast/3), rounded to actual payload/alignment; requires explicit width converter",
+    "width_examples": [
+      {
+        "fast_bits": 64,
+        "slow_bits_min": 86,
+        "slow_bits_32aligned": 96
+      },
+      {
+        "fast_bits": 256,
+        "slow_bits_min": 342,
+        "slow_bits_32aligned": 352
+      },
+      {
+        "fast_bits": 512,
+        "slow_bits_min": 683,
+        "slow_bits_32aligned": 704
+      },
+      {
+        "fast_bits": 1024,
+        "slow_bits_min": 1366,
+        "slow_bits_32aligned": 1376
+      }
+    ],
+    "bit_state_formula": "2*DEPTH*W data/shadow flops, plus pointer/state/reset flops; shadow captures every destination cycle",
+    "boundary_track_floor_formula": "DEPTH*W + 2*(ceil(log2(DEPTH))+1) +4 crossed pointer/state wires; excludes shielding, clocks, power and external buses",
+    "credit": "Every read increments rp; sampled back at next strict write edge. Writer ready uses sampled rp. Depth4 sustains0.9Gword/s in both directions; arbitrary downstream stalls require producer throttling, cannot hide unbounded backlog.",
+    "reset": "Whole FIFO epoch flush; synchronous per-domain resets with upstream reset synchronizers; DOWN/WAIT/RUN handshake and HOLD>=1 (default2). No data accepted until peer live. Reset-flushed in-flight work must be replayed at transaction layer.",
+    "gating": "Peer state/pointer sampling must remain clocked during reset recovery and pending credit. Gate datapath only with explicit wake/drain protocol; stale credits or missed DOWN pulses are incorrect.",
+    "legacy": "Do not reuse rtl/chip/ot_chip_v41_ratio_fifo.sv: recorded SS setup failure -75.59ps; older4slow/5fast model is conservative latency but does not cure failed implementation."
+  },
+  "floorplan": {
+    "requirements": [
+      "Count local ROM capture registers before weight mux, register bank mux outputs, and count every transport pipeline stage.",
+      "Reserve physical rows and routing for ICG, CTS buffers, reset synchronization, FIFO shadow state, credit/status wires, isolation/power control and hold repair.",
+      "Include clock spine and gated leaf capacitance in power; no ideal zero idle-clock assumption.",
+      "Use actual routing layers and subtract power straps, clocks and blockages before boundary track fit.",
+      "Clock gate ROM and local capture per active bank group. More sharing increases selection/fanout network and active clock load.",
+      "Hub links to slow compute incur full CDC service and width-conversion costs; weights feeding1.2GHz matrix tiles do not incur unnecessary slow-domain crossings.",
+      "SS/FF closure must include capture, mux, CDC and full cluster interconnect; standalone FIFO pass does not prove parent closure."
+    ],
+    "quantitative_cts_reservation": "Unknown until selected cluster floorplan/inventory; do not invent fixed overhead or transfer old full-die clock watts.",
+    "conservative_latency_composition": "1fast ROM capture + mux/register and transport cycles + 2slow when crossing f2s + measured compute dependency +2fast when crossing s2f; CDC service serialization and stalls charged separately."
+  },
+  "recommendation": "Keep streaming reusable matrix compute with ROM in1.2GHz domain, place serial SU/reducers0.9GHz adjacent. Use predecessor CDC only as measured reusable primitive and qualify required widths in context."
+}

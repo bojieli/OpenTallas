@@ -1,0 +1,43 @@
+{
+  "Archimedes_needed": "accept complete fixedshape replacement once and actual corridor/lane placement/channel/pin/clockPG/via map; do not treat empty coarse reservations as routed fit",
+  "G0_admitted": false,
+  "Maxwell_needed": "bind actual input/result pin endpoints, existing registered/link transport segmentation and composed residence to ninecaller sourcecalendar; do not subtract geometric lowerbounds to claim transport delta",
+  "actual_transport_delta": null,
+  "authoritative_model": "model_r2.json",
+  "complete_cell_construction_um2": 841209.80868,
+  "complete_proxy_mm2": 1.68241961736,
+  "complete_state_bits": 698354,
+  "full_shape": "N4 NMAX2048 LDW4 P64 PF64 DIG8 CB14; unchanged fullcompiled instance, both runtime512/2048",
+  "geometry_and_clock_source_model_only": true,
+  "headline_policy": "third-partyagentic perrequest median numericpending; historical localtau is sensitivity only",
+  "horizontal_signal_track_screen": 4242,
+  "increment_over_current_parent_map_no_containment_credit_mm2": 2.8315666368,
+  "initial_geometry_drafts": [
+    "model.json",
+    "model_r2_pre_pin_draft.json"
+  ],
+  "linear_wholewidth_filter_layout_allowed": false,
+  "mandatory_next": "source-bound G0 admission, then one defaultoff balanced mandatory selector; exact fullinstance/control/numerical gate and fullcontext SSsetup/FFhold on admitted activehost, no D1/HBMwait",
+  "minimum_VM_rectangle_distance_um": 16306.72,
+  "minimum_collective_rectangle_distance_um": 14103.52,
+  "new_corridor_union_mm2": 2.6571105216,
+  "no_new_jobs": true,
+  "no_undersized_proxy": true,
+  "owner": "Epicurus",
+  "public_signal_tracks": 4210,
+  "recipients": [
+    "parent",
+    "Maxwell",
+    "Archimedes"
+  ],
+  "row_aligned_slot_mm2": 1.6848787968,
+  "schema": "COMPLETE_SELECTOR_PHYSICAL_G0_HANDOFF_V1",
+  "source_calendar_delta_ns_at_policy_clock": 1065,
+  "source_calendar_service_delta_cycles": 1278,
+  "tests": {
+    "byte_content_replay": true,
+    "new_static_tests": 14,
+    "prior_complete_models_unchanged": true
+  },
+  "vertical_signal_track_screen": 4252
+}

@@ -1,0 +1,206 @@
+import importlib.util
+from pathlib import Path
+import sys
+import pytest
+ROOT=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('operation_schema',ROOT/'tools/operation_deadline_provider_schema.py')
+M=importlib.util.module_from_spec(spec);sys.modules[spec.name]=M;spec.loader.exec_module(M)
+
+
+def op(n=0,rank=0,family='window_source',epoch=0):return M.Operation(epoch,rank,family,n)
+def event(c,k,o=None,r=None,**kw):
+    if k=='op_retire' and 'label' not in kw:kw['label']=M.RETIRE_HOOKS.get(o.family,'unavailable')
+    return M.Observation(c,k,o,r,**kw)
+
+
+def test_pure_provider_does_not_mutate_or_install_bound():
+    o=op();r=M.Request(o,0,0,'window',0)
+    obs=(event(0,'op_accept',o),event(1,'request_accept',o,r),event(2,'phase',o,label='busy'))
+    before=repr(obs);v=M.project(obs,1000000)[0]
+    assert repr(obs)==before
+    assert v.operation_age==1000000 and v.outstanding==((r,1),)
+    assert v.deadline is None and v.response_deadlines==()
+    assert 'BOUND_MISSING' in v.status and not v.universal_timeout_admitted
+
+
+def test_link_freeze_creates_no_dut_operation():
+    assert M.project((event(0,'link_queue',label='frozen oldest due timestamp'),),1000000)==()
+    with pytest.raises(ValueError,match='not a DUT operation'):
+        event(0,'link_queue',op())
+
+
+def test_busy_or_pc_is_not_a_causal_event():
+    for kind in ('pc','busy','link_delivered','state_change'):
+        with pytest.raises(ValueError,match='uncausal'):event(0,kind,op())
+
+
+def test_all_four_selected_ckv_responses_same_cycle_retained():
+    o=op(family='ckv_fetch');rs=[M.Request(o,i,i,'selected_ckv',i<<4) for i in range(4)]
+    obs=(event(0,'op_accept',o),)+tuple(event(1,'request_accept',o,r) for r in rs)+tuple(
+        event(9,'read_reply',o,r,association_proven=True) for r in reversed(rs))+(event(10,'op_retire',o),)
+    v=M.project(obs,11)[0]
+    assert not v.outstanding and v.retired_cycle==10
+
+
+def test_window_write_ack_and_read_reply_are_separate():
+    w=op(family='window_block_write');r=op(n=1)
+    wr=M.Request(w,0,0,'window',0,True);rd=M.Request(r,0,0,'window',0)
+    obs=(event(0,'op_accept',w),event(0,'op_accept',r),event(1,'request_accept',w,wr),
+         event(1,'request_accept',r,rd),event(2,'write_done',w,wr,association_proven=True),
+         event(3,'read_reply',r,rd,association_proven=True))
+    assert all(not v.outstanding for v in M.project(obs,4))
+    with pytest.raises(ValueError,match='kind mismatch'):
+        M.project(obs[:4]+(event(2,'read_reply',w,wr,association_proven=True),),3)
+
+
+def test_selected_ckv_write_cannot_invent_accepted_retirement():
+    o=op(family='ckv_selection');r=M.Request(o,0,0,'selected_ckv',0,True)
+    with pytest.raises(ValueError,match='mux rejects'):
+        M.project((event(0,'op_accept',o),event(1,'request_accept',o,r)),2)
+
+
+def test_all_five_collector_sources_same_cycle():
+    o=op(family='ckv_selection')
+    obs=(event(0,'op_accept',o),)+tuple(event(4,'row_commit',o,selection_rank=i,gid=100+i,
+        label=source) for i,source in enumerate(('local_fetch','remote0','remote1','remote2','own_row')))
+    v=M.project(obs,6)[0]
+    assert v.rows_committed==tuple((i,100+i) for i in range(5))
+    assert v.retired_cycle is None # collector rows_ready is not service quiescence
+
+
+def test_duplicate_collector_rank_and_poison_are_not_progress():
+    o=op(family='ckv_selection');good=event(1,'row_commit',o,selection_rank=2,gid=9)
+    obs=(event(0,'op_accept',o),good,event(2,'row_commit',o,selection_rank=2,gid=9))
+    before=repr(obs)
+    with pytest.raises(ValueError,match='duplicate'):M.project(obs,3)
+    assert repr(obs)==before
+    bad=(event(0,'op_accept',o),event(1,'row_commit',o,qualified=False,selection_rank=2,gid=9))
+    v=M.project(bad,2)[0];assert not v.rows_committed and 'SOURCE_QUALIFICATION_FAILED' in v.status
+
+
+def test_legacy_tag_alias_requires_proof_not_current_pc_context():
+    o=op();r=M.Request(o,5,0,'window',0)
+    obs=(event(0,'op_accept',o),event(1,'request_accept',o,r),event(8,'read_reply',o,r))
+    v=M.project(obs,9)[0]
+    assert v.outstanding==((r,1),) and 'IDENTITY_UNAVAILABLE' in v.status
+    with pytest.raises(ValueError,match='unretired'):
+        M.project(obs+(event(9,'op_retire',o),),10)
+
+
+def test_cross_operation_same_wire_read_identity_rejected():
+    a=op();b=op(n=1)
+    ra=M.Request(a,0,0,'window',0);rb=M.Request(b,0,0,'window',0)
+    obs=(event(0,'op_accept',a),event(0,'op_accept',b),event(1,'request_accept',a,ra),event(2,'request_accept',b,rb))
+    with pytest.raises(ValueError,match='ambiguously|ambiguous'):M.project(obs,3)
+
+
+def test_spent_request_or_old_epoch_response_cannot_match_new_request():
+    a=op();b=op(epoch=1)
+    ra=M.Request(a,0,0,'window',0);rb=M.Request(b,0,0,'window',0)
+    obs=(event(0,'op_accept',a),event(1,'request_accept',a,ra),event(2,'read_reply',a,ra,association_proven=True),
+         event(3,'op_accept',b),event(4,'request_accept',b,rb))
+    with pytest.raises(ValueError,match='accepted request'):
+        M.project(obs+(event(5,'read_reply',a,ra,association_proven=True),),6)
+    with pytest.raises(ValueError,match='reused'):
+        M.project(obs+(event(5,'request_accept',a,ra),),6)
+
+
+def test_qk_pv_replay_are_distinct_operations_same_selection():
+    qk=op(0,family='ckv_stream');pv=op(1,family='ckv_stream')
+    obs=(event(0,'op_accept',qk),event(1,'phase',qk,label='kv_v&&kv_ready'),event(2,'op_retire',qk),
+         event(3,'op_accept',pv),event(4,'phase',pv,label='kv_v&&kv_ready'))
+    views=M.project(obs,5)
+    assert views[0].retired_cycle==2 and views[1].retired_cycle is None
+
+
+def test_late_reply_and_completion_cannot_erase_synthetic_violations():
+    o=op();r=M.Request(o,0,0,'window',0)
+    obs=(event(0,'op_accept',o),event(1,'request_accept',o,r),event(20,'read_reply',o,r,association_proven=True),event(21,'op_retire',o))
+    v=M.project(obs,30,M.Bounds(10,5,'synthetic','test only'))[0]
+    assert 'SYNTHETIC_RESPONSE_DEADLINE_VIOLATION' in v.status
+    assert 'SYNTHETIC_OPERATION_DEADLINE_VIOLATION' in v.status
+    assert not v.universal_timeout_admitted
+
+
+@pytest.mark.parametrize('bad',[True,0.5,-1,2**64])
+def test_exact_time_envelope(bad):
+    with pytest.raises(ValueError):M.project((),bad)
+
+
+@pytest.mark.parametrize('rank',[True,4,-1])
+def test_rank_envelope(rank):
+    with pytest.raises(ValueError):op(rank=rank)
+
+
+def test_bounds_cannot_claim_actual_authority():
+    with pytest.raises(ValueError,match='not yet supplied'):M.Bounds(100000,100,'actual','single cold case')
+    with pytest.raises(ValueError,match='missing'):M.Bounds(100000)
+
+
+def test_window_registered_stage_response_identity_and_lane_mask():
+    o=op(family='window_stream');r=M.StageRead(o,0,1,128,15)
+    obs=(event(0,'op_accept',o),event(1,'request_accept',o,r),
+         event(2,'read_reply',o,r,association_proven=True,valid_mask=15),event(3,'op_retire',o))
+    assert not M.project(obs,5)[0].outstanding
+    bad=obs[:2]+(event(2,'read_reply',o,r,association_proven=True,valid_mask=7),)
+    v=M.project(bad,5)[0]
+    assert v.outstanding and 'SOURCE_QUALIFICATION_FAILED' in v.status
+
+
+def test_stage_metadata_does_not_match_other_user_or_row_request():
+    o=op(family='window_stream');r=M.StageRead(o,0,1,128,15);wrong=M.StageRead(o,0,2,128,15)
+    obs=(event(0,'op_accept',o),event(1,'request_accept',o,r),event(2,'read_reply',o,wrong,association_proven=True,valid_mask=15))
+    with pytest.raises(ValueError,match='accepted request'):M.project(obs,3)
+
+
+def test_selected_lifetime_and_rows_ready_cannot_invent_retirement():
+    selection=op(family='ckv_selection')
+    with pytest.raises(ValueError,match='retirement hook unavailable'):
+        event(4,'op_retire',selection,label='rows_ready')
+    source=op()
+    with pytest.raises(ValueError,match='retirement hook unavailable'):
+        event(4,'op_retire',source,label='staged_v')
+
+
+def test_derived_deadline_overflow_rejected_without_mutating_observations():
+    o=op();obs=(event(2**64-2,'op_accept',o),)
+    before=repr(obs)
+    with pytest.raises(ValueError,match='derived operation deadline'):
+        M.project(obs,2**64-1,M.Bounds(10,None,'synthetic','test only'))
+    assert repr(obs)==before
+
+
+def test_source_mapping_parallel_cost_and_protected_copy():
+    import json,hashlib,subprocess
+    data=json.loads((ROOT/'results/rtl/operation_deadline_hooks_4e383_20261001/r2/mapping.json').read_text())
+    cost=data['port_cost']
+    assert sum(c['bits'] for c in cost['components'])==cost['candidate_projection_bits_per_rank']==766
+    assert cost['four_rank_bits']==3064
+    assert cost['proposed_added_flipflops']==0
+    assert len(data['hooks'])>=30
+    names={h['name'] for h in data['hooks']}
+    assert {'window_stage_row_request','window_stage_row_response','selected_ckv_actual_dma_pipeline'}<=names
+    assert data['guardrails']['product_liveness']=='BLOCKED_PENDING_ACTUAL_CAUSAL_SERVICE_BOUNDS'
+    copy=data['protected_future_copy']
+    raw=subprocess.check_output(['git','show',copy['commit']+':'+copy['path']],cwd=ROOT)
+    assert hashlib.sha256(raw).hexdigest()==copy['sha256']
+
+
+def test_qk_pv_hook_context_references_explicit_selection_and_generation():
+    sel=op(family='ckv_selection')
+    qk=M.Operation(0,0,'ckv_stream',0,1,sel);pv=M.Operation(0,0,'ckv_stream',1,2,sel)
+    obs=(event(0,'op_accept',sel),event(1,'op_accept',qk),event(2,'op_retire',qk),event(3,'op_accept',pv))
+    v=M.project(obs,4)
+    assert v[1].operation.selection_epoch==v[2].operation.selection_epoch==sel
+    assert v[1].operation.native_generation==1 and v[2].operation.native_generation==2
+    assert 'SELECTION_CONTEXT_UNAVAILABLE' not in v[1].status
+    with pytest.raises(ValueError,match='owner mismatch'):M.Operation(0,1,'ckv_stream',0,1,sel)
+
+
+def test_ordinal_or_accept_identity_cannot_be_changed_by_metadata():
+    a=op();b=M.Operation(0,0,'window_source',0,2)
+    with pytest.raises(ValueError,match='identity reused'):
+        M.project((event(0,'op_accept',a),event(1,'op_accept',b)),2)
+    r=M.Request(a,0,0,'window',0);alias=M.Request(a,0,0,'window',1)
+    with pytest.raises(ValueError,match='ordinal identity reused'):
+        M.project((event(0,'op_accept',a),event(1,'request_accept',a,r),event(2,'request_accept',a,alias)),3)

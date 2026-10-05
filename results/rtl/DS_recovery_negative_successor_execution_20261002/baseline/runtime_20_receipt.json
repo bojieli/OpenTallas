@@ -1,0 +1,14 @@
+{
+  "verdict": "POSITIVE_CONTROL_PASS",
+  "cut": "PREFIX",
+  "prefix": 14,
+  "stage": "baseline/runtime_20",
+  "args": [
+    "+CUT=PREFIX",
+    "+PREFIX=14"
+  ],
+  "returncode": 0,
+  "log_sha256": "ee5a5f60c601ae85c6719c4fbc734a05dc930fcc61e864d19828f9f2a66dcfc1",
+  "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+  "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+}

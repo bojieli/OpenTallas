@@ -1,0 +1,159 @@
+{
+  "actual_finite_manifest_active_warps": [
+    0,
+    1
+  ],
+  "allocator_residency": [
+    [
+      {
+        "partition": 0,
+        "source_warp": 0,
+        "warp_slot": 0
+      }
+    ],
+    [
+      {
+        "partition": 0,
+        "source_warp": 1,
+        "warp_slot": 1
+      }
+    ]
+  ],
+  "checkpoint_reads": 0,
+  "fixture": {
+    "events": [
+      {
+        "active_lanes": [
+          {
+            "lanes": [
+              0,
+              1
+            ],
+            "warp": 0
+          }
+        ],
+        "dependencies": [],
+        "id": "a",
+        "opcode": "MOV",
+        "operand_register_bindings": [],
+        "result_register_bindings": [
+          {
+            "lane": 0,
+            "register": "ra",
+            "result_id": "a:ra:0:0",
+            "warp": 0
+          },
+          {
+            "lane": 1,
+            "register": "ra",
+            "result_id": "a:ra:0:1",
+            "warp": 0
+          }
+        ]
+      },
+      {
+        "active_lanes": [
+          {
+            "lanes": [
+              0,
+              1
+            ],
+            "warp": 1
+          }
+        ],
+        "dependencies": [],
+        "id": "b",
+        "opcode": "MOV",
+        "operand_register_bindings": [],
+        "result_register_bindings": [
+          {
+            "lane": 0,
+            "register": "rb",
+            "result_id": "b:rb:1:0",
+            "warp": 1
+          },
+          {
+            "lane": 1,
+            "register": "rb",
+            "result_id": "b:rb:1:1",
+            "warp": 1
+          }
+        ]
+      }
+    ],
+    "opcode_contract": {
+      "MOV": {
+        "II": 4,
+        "core_latency": 3
+      }
+    }
+  },
+  "hardware_admitted": false,
+  "required_resolution": [
+    "explicit common warp-to-partition and slot authority for RF allocation service and provider addresses",
+    "reject absent invalid or conflicting mapping; do not grant free striped RF/address conversion",
+    "use same mapping in read writeback collision and opcode II schedule",
+    "retain actual full-phase address/latency/provider/clock gates"
+  ],
+  "same_allocator_partition_minimum_under_fixture_II_and_latency": 7,
+  "scheduler_calendar": [
+    {
+      "RF_logical_write_bits": 64,
+      "RF_physical_write_copies": 2,
+      "RF_read_bits": 0,
+      "RF_read_cycle": null,
+      "active_lanes": [
+        0,
+        1
+      ],
+      "issue_cycle": 0,
+      "opcode": "MOV",
+      "partition": 0,
+      "result_ids": [
+        "a:ra:0:0",
+        "a:ra:0:1"
+      ],
+      "shared_bank_service_cycles": 0,
+      "shared_service_first_cycle": null,
+      "shared_word_addresses": [],
+      "source_event": "a",
+      "source_operand_result_ids": [],
+      "warp": 0,
+      "writeback_or_retirement_cycle": 3
+    },
+    {
+      "RF_logical_write_bits": 64,
+      "RF_physical_write_copies": 2,
+      "RF_read_bits": 0,
+      "RF_read_cycle": null,
+      "active_lanes": [
+        0,
+        1
+      ],
+      "issue_cycle": 0,
+      "opcode": "MOV",
+      "partition": 1,
+      "result_ids": [
+        "b:rb:1:0",
+        "b:rb:1:1"
+      ],
+      "shared_bank_service_cycles": 0,
+      "shared_service_first_cycle": null,
+      "shared_word_addresses": [],
+      "source_event": "b",
+      "source_operand_result_ids": [],
+      "warp": 1,
+      "writeback_or_retirement_cycle": 3
+    }
+  ],
+  "scheduler_candidate_cycles": 3,
+  "schema": "parent_HBM_RF_calendar_residency_disagreement",
+  "scope": "Constructive software model inconsistency, not observed DUT timing or qualified hardware topology",
+  "source_commit": "f2bffec82",
+  "source_pins": {
+    "tools/w13_index_lane_allocation.py": "d29e82c26def80098e3d6e1f9d9375c459fc594d8cf161ca28aefee62ebdb337",
+    "tools/w13_index_resource_calendar.py": "d35c81922052b0b06d4aca518ca6336dbde13ba4cac3cba4d00baf9761e4b4af",
+    "tools/w13_index_ssa_allocation.py": "1b739659fc15037802427db975ea176972f5ec6f4a78ac918af2dceff309f9ab"
+  },
+  "verdict": "FAIL_TRANSFER_BETWEEN_DIFFERENT_RF_PARTITION_MAPPINGS"
+}

@@ -1,0 +1,190 @@
+make: Entering directory '/tmp/dsrom-s81-embedding-8f65ab021'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/tmp/dsrom-s81-embedding-8f65ab021'
+In file included from /usr/share/verilator/include/verilated_threads.cpp:18:
+/usr/share/verilator/include/verilated_threads.h:48:17: error: ‘atomic’ in namespace ‘std’ does not name a template type
+   48 |     static std::atomic<vluint64_t> s_yields;  // Statistics
+      |                 ^~~~~~
+/usr/share/verilator/include/verilated_threads.h:28:1: note: ‘std::atomic’ is defined in header ‘<atomic>’; did you forget to ‘#include <atomic>’?
+   27 | #include <vector>
+  +++ |+#include <atomic>
+   28 | 
+/usr/share/verilator/include/verilated_threads.h:66:10: error: ‘atomic’ in namespace ‘std’ does not name a template type
+   66 |     std::atomic<vluint32_t> m_upstreamDepsDone;
+      |          ^~~~~~
+/usr/share/verilator/include/verilated_threads.h:66:5: note: ‘std::atomic’ is defined in header ‘<atomic>’; did you forget to ‘#include <atomic>’?
+   66 |     std::atomic<vluint32_t> m_upstreamDepsDone;
+      |     ^~~
+/usr/share/verilator/include/verilated_threads.h: In static member function ‘static vluint64_t VlMTaskVertex::yields()’:
+/usr/share/verilator/include/verilated_threads.h:78:41: error: ‘s_yields’ was not declared in this scope; did you mean ‘yields’?
+   78 |     static vluint64_t yields() { return s_yields; }
+      |                                         ^~~~~~~~
+      |                                         yields
+/usr/share/verilator/include/verilated_threads.h: In static member function ‘static void VlMTaskVertex::yieldThread()’:
+/usr/share/verilator/include/verilated_threads.h:80:11: error: ‘s_yields’ was not declared in this scope; did you mean ‘yields’?
+   80 |         ++s_yields;  // Statistics
+      |           ^~~~~~~~
+      |           yields
+/usr/share/verilator/include/verilated_threads.h:81:14: error: ‘std::this_thread’ has not been declared
+   81 |         std::this_thread::yield();
+      |              ^~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h: In member function ‘bool VlMTaskVertex::signalUpstreamDone(bool)’:
+/usr/share/verilator/include/verilated_threads.h:90:23: error: ‘m_upstreamDepsDone’ was not declared in this scope; did you mean ‘upstreamDepsDone’?
+   90 |                 = 1 + m_upstreamDepsDone.fetch_add(1, std::memory_order_release);
+      |                       ^~~~~~~~~~~~~~~~~~
+      |                       upstreamDepsDone
+/usr/share/verilator/include/verilated_threads.h:90:60: error: ‘memory_order_release’ is not a member of ‘std’
+   90 |                 = 1 + m_upstreamDepsDone.fetch_add(1, std::memory_order_release);
+      |                                                            ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h:95:19: error: ‘m_upstreamDepsDone’ was not declared in this scope; did you mean ‘areUpstreamDepsDone’?
+   95 |                 = m_upstreamDepsDone.fetch_sub(1, std::memory_order_release);
+      |                   ^~~~~~~~~~~~~~~~~~
+      |                   areUpstreamDepsDone
+/usr/share/verilator/include/verilated_threads.h:95:56: error: ‘memory_order_release’ is not a member of ‘std’
+   95 |                 = m_upstreamDepsDone.fetch_sub(1, std::memory_order_release);
+      |                                                        ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h: In member function ‘bool VlMTaskVertex::areUpstreamDepsDone(bool) const’:
+/usr/share/verilator/include/verilated_threads.h:102:16: error: ‘m_upstreamDepsDone’ was not declared in this scope; did you mean ‘areUpstreamDepsDone’?
+  102 |         return m_upstreamDepsDone.load(std::memory_order_acquire) == target;
+      |                ^~~~~~~~~~~~~~~~~~
+      |                areUpstreamDepsDone
+/usr/share/verilator/include/verilated_threads.h:102:45: error: ‘memory_order_acquire’ is not a member of ‘std’
+  102 |         return m_upstreamDepsDone.load(std::memory_order_acquire) == target;
+      |                                             ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h: In member function ‘void VlMTaskVertex::waitUntilUpstreamDone(bool) const’:
+/usr/share/verilator/include/verilated_threads.h:107:13: error: ‘VL_CPU_RELAX’ was not declared in this scope
+  107 |             VL_CPU_RELAX();
+      |             ^~~~~~~~~~~~
+In file included from /usr/share/verilator/include/verilated_threads.cpp:17:
+/usr/share/verilator/include/verilated_threads.h:109:34: error: ‘VL_LOCK_SPINS’ was not declared in this scope
+  109 |             if (VL_UNLIKELY(ct > VL_LOCK_SPINS)) {
+      |                                  ^~~~~~~~~~~~~
+/usr/share/verilator/include/verilatedos.h:57:45: note: in definition of macro ‘VL_UNLIKELY’
+   57 | # define VL_UNLIKELY(x) __builtin_expect(!!(x), 0)
+      |                                             ^
+In file included from /usr/share/verilator/include/verilated_threads.cpp:18:
+/usr/share/verilator/include/verilated_threads.h: At global scope:
+/usr/share/verilator/include/verilated_threads.h:197:10: error: ‘atomic’ in namespace ‘std’ does not name a template type
+  197 |     std::atomic<size_t> m_ready_size;
+      |          ^~~~~~
+/usr/share/verilator/include/verilated_threads.h:197:5: note: ‘std::atomic’ is defined in header ‘<atomic>’; did you forget to ‘#include <atomic>’?
+  197 |     std::atomic<size_t> m_ready_size;
+      |     ^~~
+/usr/share/verilator/include/verilated_threads.h:202:10: error: ‘atomic’ in namespace ‘std’ does not name a template type
+  202 |     std::atomic<bool> m_exiting;  // Worker thread should exit
+      |          ^~~~~~
+/usr/share/verilator/include/verilated_threads.h:202:5: note: ‘std::atomic’ is defined in header ‘<atomic>’; did you forget to ‘#include <atomic>’?
+  202 |     std::atomic<bool> m_exiting;  // Worker thread should exit
+      |     ^~~
+/usr/share/verilator/include/verilated_threads.h:203:10: error: ‘thread’ in namespace ‘std’ does not name a type
+  203 |     std::thread m_cthread;  // Underlying C++ thread record
+      |          ^~~~~~
+/usr/share/verilator/include/verilated_threads.h:28:1: note: ‘std::thread’ is defined in header ‘<thread>’; did you forget to ‘#include <thread>’?
+   27 | #include <vector>
+  +++ |+#include <thread>
+   28 | 
+/usr/share/verilator/include/verilated_threads.h: In member function ‘void VlWorkerThread::dequeWork(VlWorkerThread::ExecRec*)’:
+/usr/share/verilator/include/verilated_threads.h:215:29: error: ‘VL_LOCK_SPINS’ was not declared in this scope
+  215 |         for (int i = 0; i < VL_LOCK_SPINS; ++i) {
+      |                             ^~~~~~~~~~~~~
+In file included from /usr/share/verilator/include/verilated_threads.cpp:17:
+/usr/share/verilator/include/verilated_threads.h:216:27: error: ‘m_ready_size’ was not declared in this scope
+  216 |             if (VL_LIKELY(m_ready_size.load(std::memory_order_relaxed))) {  //
+      |                           ^~~~~~~~~~~~
+/usr/share/verilator/include/verilatedos.h:56:43: note: in definition of macro ‘VL_LIKELY’
+   56 | # define VL_LIKELY(x) __builtin_expect(!!(x), 1)
+      |                                           ^
+/usr/share/verilator/include/verilated_threads.h:216:50: error: ‘memory_order_relaxed’ is not a member of ‘std’
+  216 |             if (VL_LIKELY(m_ready_size.load(std::memory_order_relaxed))) {  //
+      |                                                  ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilatedos.h:56:43: note: in definition of macro ‘VL_LIKELY’
+   56 | # define VL_LIKELY(x) __builtin_expect(!!(x), 1)
+      |                                           ^
+In file included from /usr/share/verilator/include/verilated_threads.cpp:18:
+/usr/share/verilator/include/verilated_threads.h:219:13: error: ‘VL_CPU_RELAX’ was not declared in this scope
+  219 |             VL_CPU_RELAX();
+      |             ^~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h:231:9: error: ‘m_ready_size’ was not declared in this scope
+  231 |         m_ready_size.fetch_sub(1, std::memory_order_relaxed);
+      |         ^~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h:231:40: error: ‘memory_order_relaxed’ is not a member of ‘std’
+  231 |         m_ready_size.fetch_sub(1, std::memory_order_relaxed);
+      |                                        ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h: In member function ‘void VlWorkerThread::addTask(VlExecFnp, bool, VlThrSymTab)’:
+/usr/share/verilator/include/verilated_threads.h:239:13: error: ‘m_ready_size’ was not declared in this scope
+  239 |             m_ready_size.fetch_add(1, std::memory_order_relaxed);
+      |             ^~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.h:239:44: error: ‘memory_order_relaxed’ is not a member of ‘std’
+  239 |             m_ready_size.fetch_add(1, std::memory_order_relaxed);
+      |                                            ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp: At global scope:
+/usr/share/verilator/include/verilated_threads.cpp:22:6: error: ‘atomic’ in namespace ‘std’ does not name a template type
+   22 | std::atomic<vluint64_t> VlMTaskVertex::s_yields;
+      |      ^~~~~~
+/usr/share/verilator/include/verilated_threads.cpp:21:1: note: ‘std::atomic’ is defined in header ‘<atomic>’; did you forget to ‘#include <atomic>’?
+   20 | #include <cstdio>
+  +++ |+#include <atomic>
+   21 | 
+/usr/share/verilator/include/verilated_threads.cpp: In constructor ‘VlMTaskVertex::VlMTaskVertex(vluint32_t)’:
+/usr/share/verilator/include/verilated_threads.cpp:30:7: error: class ‘VlMTaskVertex’ does not have any field named ‘m_upstreamDepsDone’
+   30 |     : m_upstreamDepsDone(0)
+      |       ^~~~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/cassert:44,
+                 from /usr/share/verilator/include/verilated.h:32,
+                 from /usr/share/verilator/include/verilated_threads.h:23,
+                 from /usr/share/verilator/include/verilated_threads.cpp:18:
+/usr/share/verilator/include/verilated_threads.cpp:32:33: error: ‘m_upstreamDepsDone’ was not declared in this scope; did you mean ‘areUpstreamDepsDone’?
+   32 |     assert(atomic_is_lock_free(&m_upstreamDepsDone));
+      |                                 ^~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp:32:12: error: ‘atomic_is_lock_free’ was not declared in this scope
+   32 |     assert(atomic_is_lock_free(&m_upstreamDepsDone));
+      |            ^~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp: In constructor ‘VlWorkerThread::VlWorkerThread(VlThreadPool*, bool)’:
+/usr/share/verilator/include/verilated_threads.cpp:40:7: error: class ‘VlWorkerThread’ does not have any field named ‘m_ready_size’
+   40 |     , m_ready_size(0)
+      |       ^~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp:43:7: error: class ‘VlWorkerThread’ does not have any field named ‘m_exiting’
+   43 |     , m_exiting(false)
+      |       ^~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp:45:7: error: class ‘VlWorkerThread’ does not have any field named ‘m_cthread’
+   45 |     , m_cthread(startWorker, this) {}
+      |       ^~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp: In destructor ‘VlWorkerThread::~VlWorkerThread()’:
+/usr/share/verilator/include/verilated_threads.cpp:48:5: error: ‘m_exiting’ was not declared in this scope; did you mean ‘m_waiting’?
+   48 |     m_exiting.store(true, std::memory_order_release);
+      |     ^~~~~~~~~
+      |     m_waiting
+/usr/share/verilator/include/verilated_threads.cpp:48:32: error: ‘memory_order_release’ is not a member of ‘std’
+   48 |     m_exiting.store(true, std::memory_order_release);
+      |                                ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilated_threads.cpp:51:5: error: ‘m_cthread’ was not declared in this scope
+   51 |     m_cthread.join();
+      |     ^~~~~~~~~
+In file included from /usr/share/verilator/include/verilated_threads.cpp:17:
+/usr/share/verilator/include/verilated_threads.cpp: In member function ‘void VlWorkerThread::workerLoop()’:
+/usr/share/verilator/include/verilated_threads.cpp:64:25: error: ‘m_exiting’ was not declared in this scope; did you mean ‘m_waiting’?
+   64 |         if (VL_UNLIKELY(m_exiting.load(std::memory_order_acquire))) break;
+      |                         ^~~~~~~~~
+/usr/share/verilator/include/verilatedos.h:57:45: note: in definition of macro ‘VL_UNLIKELY’
+   57 | # define VL_UNLIKELY(x) __builtin_expect(!!(x), 0)
+      |                                             ^
+/usr/share/verilator/include/verilated_threads.cpp:64:45: error: ‘memory_order_acquire’ is not a member of ‘std’
+   64 |         if (VL_UNLIKELY(m_exiting.load(std::memory_order_acquire))) break;
+      |                                             ^~~~~~~~~~~~~~~~~~~~
+/usr/share/verilator/include/verilatedos.h:57:45: note: in definition of macro ‘VL_UNLIKELY’
+   57 | # define VL_UNLIKELY(x) __builtin_expect(!!(x), 0)
+      |                                             ^
+/usr/share/verilator/include/verilated_threads.cpp: In constructor ‘VlThreadPool::VlThreadPool(int, bool)’:
+/usr/share/verilator/include/verilated_threads.cpp:83:26: error: ‘std::thread’ has not been declared
+   83 |     unsigned cpus = std::thread::hardware_concurrency();
+      |                          ^~~~~~
+Traceback (most recent call last):
+  File "/home/ubuntu/dsrom-c-w2-20261003/tools/dsrom_s81_cold_input.py", line 155, in <module>
+    if __name__=='__main__':main()
+  File "/home/ubuntu/dsrom-c-w2-20261003/tools/dsrom_s81_cold_input.py", line 153, in main
+    lib=build(a.build) if a.build else a.library
+  File "/home/ubuntu/dsrom-c-w2-20261003/tools/dsrom_s81_cold_input.py", line 57, in build
+    subprocess.run(['g++','-shared','-fPIC','-pthread','-std=c++17',
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['g++', '-shared', '-fPIC', '-pthread', '-std=c++17', '-I/tmp/dsrom-s81-embedding-8f65ab021', '-I/usr/share/verilator/include', '-I/usr/share/verilator/include/vltstd', '-I/home/ubuntu/dsrom-c-w2-20261003/tools/runtime/dsrom', '/home/ubuntu/dsrom-c-w2-20261003/tools/runtime/dsrom/s81_embedding_bridge.cpp', '/tmp/dsrom-s81-embedding-8f65ab021/Vembedding_vm__ALL.a', '/usr/share/verilator/include/verilated.cpp', '/usr/share/verilator/include/verilated_threads.cpp', '-o', '/tmp/dsrom-s81-embedding-8f65ab021/libdsrom_s81_embedding.so']' returned non-zero exit status 1.

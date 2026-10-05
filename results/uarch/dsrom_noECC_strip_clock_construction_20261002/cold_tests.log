@@ -1,0 +1,15 @@
+test_all_literal_pins_independent_translation (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_clock_tree_topology_has_one_parent_per_leaf (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_every_actual_spine_tap_projection_is_connected (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_exact_candidate_sources_and_policy (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_exact_original_source_fanout_and_reset_scope (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_legal_disjoint_sites_and_positive_area (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_no_dropped_capture_bits_or_unmatched_extra_stage (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_no_physical_credit_or_selector_PG_transfer (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_positive_rc_and_finite_joint_via_budget (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+test_upper_planes_disjoint_from_existing_D_and_PG (test_dsrom_noECC_strip_clock_construction.StripClock) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 4.095s
+
+OK

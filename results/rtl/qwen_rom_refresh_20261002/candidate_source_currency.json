@@ -1,0 +1,104 @@
+{
+  "all_candidate_inputs_current": true,
+  "model_ast_join": {
+    "QWEN_KV_PREP_CYCLES_TOKEN": true,
+    "QWEN_SS": true,
+    "QWEN_W12_TP4_ME_EXTRA_SS": true,
+    "qwen_l0_rtl_vs_model": true,
+    "qwen_product_ss": true,
+    "qwen_tp_point": true
+  },
+  "parent_intake_commit": "d29e2651be9f3714aff8035f3d8f6d359fa88e47",
+  "source_checks": {
+    "rtl/hdc/ot_hdc_matvec.sv": {
+      "parent_joined": true,
+      "parent_sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+      "sidecar_sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+    },
+    "rtl/hdc/ot_qwen_me_array.sv": {
+      "parent_joined": true,
+      "parent_sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388",
+      "sidecar_sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388"
+    },
+    "rtl/hdc/ot_qwen_me_array_w12.sv": {
+      "parent_joined": true,
+      "parent_sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+      "sidecar_sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+    },
+    "rtl/hdc/ot_qwen_rom_tile.sv": {
+      "parent_joined": true,
+      "parent_sha256": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e",
+      "sidecar_sha256": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e"
+    },
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": {
+      "parent_joined": true,
+      "parent_sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "sidecar_sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+    },
+    "rtl/hdc/ot_qwen_w12_arith.sv": {
+      "parent_joined": true,
+      "parent_sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+      "sidecar_sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+    },
+    "rtl/hdc/ot_qwen_w12_matvec.sv": {
+      "parent_joined": true,
+      "parent_sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+      "sidecar_sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": {
+      "parent_joined": true,
+      "parent_sha256": "0e1305252163ed4e03bfa598f55a44e186526d4cacdad2e0de279875b69ec3a3",
+      "sidecar_sha256": "0e1305252163ed4e03bfa598f55a44e186526d4cacdad2e0de279875b69ec3a3"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": {
+      "parent_joined": true,
+      "parent_sha256": "406739495be0f81dc326b91c3b69384869ecc1b7eccf7532bd3cdbe168ec7580",
+      "sidecar_sha256": "406739495be0f81dc326b91c3b69384869ecc1b7eccf7532bd3cdbe168ec7580"
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": {
+      "parent_joined": true,
+      "parent_sha256": "b591d49f7a6986de93852a31dd91712c5b44ff3f629c8ac0397580c432ba0d46",
+      "sidecar_sha256": "b591d49f7a6986de93852a31dd91712c5b44ff3f629c8ac0397580c432ba0d46"
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": {
+      "parent_joined": true,
+      "parent_sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "sidecar_sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea"
+    },
+    "rtl/test/tb_qwen_me_partition_w12.sv": {
+      "parent_joined": true,
+      "parent_sha256": "eacf140fecf87323076eb8cbb0b3ecfa8eb20c431e02f810a0182974a74821c2",
+      "sidecar_sha256": "eacf140fecf87323076eb8cbb0b3ecfa8eb20c431e02f810a0182974a74821c2"
+    },
+    "tools/qwen_o4_kv_slice_map_w12.py": {
+      "parent_joined": true,
+      "parent_sha256": "ef3b5c470dd19e29779ee8215dfc07a52fbc5ee6ebe9b2ffc591d0f93107b7e7",
+      "sidecar_sha256": "ef3b5c470dd19e29779ee8215dfc07a52fbc5ee6ebe9b2ffc591d0f93107b7e7"
+    },
+    "tools/qwen_rom_rt_core_emit.py": {
+      "parent_joined": true,
+      "parent_sha256": "a50996906e3ae7981e59d2dac200abaa330f7f6505f5bbfbf8beb77c8164b801",
+      "sidecar_sha256": "a50996906e3ae7981e59d2dac200abaa330f7f6505f5bbfbf8beb77c8164b801"
+    },
+    "tools/qwen_rom_rt_core_emit_w12.py": {
+      "parent_joined": true,
+      "parent_sha256": "27c37931c74c7896e689f385d65e080ad43a3865f3c7c087ad860845de6df2f7",
+      "sidecar_sha256": "27c37931c74c7896e689f385d65e080ad43a3865f3c7c087ad860845de6df2f7"
+    },
+    "tools/qwen_rom_rt_token.py": {
+      "parent_joined": true,
+      "parent_sha256": "e96f25fee5794ab28a7e0c9feda78fcd88e91c1940a1ce0bef1be425a85f7652",
+      "sidecar_sha256": "e96f25fee5794ab28a7e0c9feda78fcd88e91c1940a1ce0bef1be425a85f7652"
+    },
+    "tools/qwen_rom_rt_token_w12.py": {
+      "parent_joined": true,
+      "parent_sha256": "fef075a94bfcb960383ccd1be7c468bc79544bbdd1c16a78dcb161a877200811",
+      "sidecar_sha256": "fef075a94bfcb960383ccd1be7c468bc79544bbdd1c16a78dcb161a877200811"
+    },
+    "tools/qwen_rom_wire_budget_w12.py": {
+      "parent_joined": true,
+      "parent_sha256": "0d911209509fe06658ad17426b0e0d29bc3231d010aef528056d5e191fa6d566",
+      "sidecar_sha256": "0d911209509fe06658ad17426b0e0d29bc3231d010aef528056d5e191fa6d566"
+    }
+  }
+}

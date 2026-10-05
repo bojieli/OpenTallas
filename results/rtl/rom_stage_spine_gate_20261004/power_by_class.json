@@ -1,0 +1,92 @@
+{
+ "active": {
+  "ao_element": {
+   "total_w": 1.4023676930458896e-06,
+   "instances": 753
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.00014406188009633448,
+   "instances": 186
+  },
+  "aon_clock": {
+   "total_w": 0.00033847204122139374,
+   "instances": 20
+  },
+  "domain": {
+   "total_w": 0.10708685786987718,
+   "instances": 31102
+  },
+  "root_clock": {
+   "total_w": 0.00024773090990493074,
+   "instances": 18
+  },
+  "spine": {
+   "total_w": 1.2367282838048228e-05,
+   "instances": 4
+  },
+  "unnamed": {
+   "total_w": 0.007842566375367184,
+   "instances": 310244
+  }
+ },
+ "pg_idle": {
+  "ao_element": {
+   "total_w": 1.0326040348952216e-06,
+   "instances": 753
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.00014370971431180047,
+   "instances": 186
+  },
+  "aon_clock": {
+   "total_w": 0.00033847204122139374,
+   "instances": 20
+  },
+  "domain": {
+   "total_w": 0.00021972815046343737,
+   "instances": 31102
+  },
+  "root_clock": {
+   "total_w": 2.5004340598044905e-08,
+   "instances": 18
+  },
+  "spine": {
+   "total_w": 1.9208163764038513e-06,
+   "instances": 4
+  },
+  "unnamed": {
+   "total_w": 4.403065060799502e-05,
+   "instances": 310244
+  }
+ },
+ "cg_idle": {
+  "ao_element": {
+   "total_w": 1.033092301683334e-06,
+   "instances": 753
+  },
+  "ao_sched_ctrl": {
+   "total_w": 0.0001407091530474569,
+   "instances": 186
+  },
+  "aon_clock": {
+   "total_w": 0.00033847204122139374,
+   "instances": 20
+  },
+  "domain": {
+   "total_w": 0.0017332031601034349,
+   "instances": 31102
+  },
+  "root_clock": {
+   "total_w": 0.00017972926054710125,
+   "instances": 18
+  },
+  "spine": {
+   "total_w": 1.2367282838048228e-05,
+   "instances": 4
+  },
+  "unnamed": {
+   "total_w": 6.133407969503152e-05,
+   "instances": 310244
+  }
+ }
+}

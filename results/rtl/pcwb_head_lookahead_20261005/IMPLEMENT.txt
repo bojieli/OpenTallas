@@ -1,0 +1,45 @@
+Actual PCWB source remedy: accepted-pop next-head readiness lookahead
+
+The baseline-era -34.28ps c_oh->wnro notes are obsolete for current59746 DIGEST1.
+Its actual qualified route euclid-svc-pcwb-digest-route-r1 failed SS-111.511688ps,
+hbg_oh[0]->wr_ok/acceptedpop->nrp/nv->nextheadbank/hit->wbr_q; FF+10.53ps,
+area5436.07um2. Preserve original9b1d and59746 source/failure records byte-identical.
+
+NEW rtl/hbm_accel/service/ot_hbm_accel_stream_pc_wb_command_match.sv
+module ot_hbm_accel_stream_pc_wb_command_match, CMD_MATCH_CUT=0 default.
+Candidate selection: ENABLE1 WB_EN1 WA_LATE1 DIGEST_CUT1 CMD_MATCH_CUT1,
+REF_MODE1 PC0 CRED64 WQ8. CMD0 preserves59746 at matching parameters.
+The change computes bank/row/tRCDWR/refresh eligibility for each next-slot image
+BEFORE accepted-pop head selection; current and rotated head readiness feed a
+final wr_ok mux. Nonempty: stay wq_ner||push; advance wq_n>1||push.
+Accepted pop implies nonempty; singleton pop withoutpush suppresses stale head;
+newpush and pop/push replacement use nboh/nhit exactly as the retained queue.
+No new CBK/CROW cut; genericnhit/currentACT compare, c_* everyedge alignment,
+timers, actual row grant, ACK/order, DRAM state and published head fields unchanged.
+Warm-debt priority preserved: wbr is bank/row/tRCDWR/blk only; do not move tCCD,
+tRTW, or rd_block into it because RD suppression must persist while debt expires.
+
+Preedit model: delta0FF/0commandedge/0ACKedge/0boundaryports/tracks/clock-resetload.
+Existing DIGEST8FF retained, not charged again. Added local slotready8,
+slot-bank mask256 lanes, two8term head selects/finalmux; mappedarea/localtrackfit
+and SSFF effect UNKNOWN, not free or predicted closure. See preedit_model.json.
+
+Actual EPYC2 /srv/opentallas-scratch/jobs/bacon-pcwb-head-lookahead-r1 EXIT0:
+100k seed26 cycles vs actual59746 DIGEST1 WA1, CMD0+1 all outputs and wbr_next
+sameedge,0mismatches; 1449ACKs,538simultaneouspush/pop,297stalled row commands.
+One connected Herschel r2 fixture L20/die31/stack1/P1048575, exact packed hashes,
+checker/stimulus bytes unchanged; new candidate-only compile j16/admit16GiB,
+no baseline compile/packer/inference/oldcampaign. Five cases all exact metrics:
+positivePASS12writes/40235words/7467readback/zeroerrors/fence103136ps;
+DRAMcorrupt/fenceskip/inputflip/tRCDWR mutants all expectedFAIL.
+Functional fixture controller clock1024ps; NOT 833ps physical proof or warm-reset
+coverage. See connected_result.json and lockstep.log. Remote sources/objects retained.
+
+Euclid sole ONE new qualified PC route after exactsource intake, Sagan inventory;
+retain util40/density0.6/HM0.01/IO0/833SS60FF25/CRED64/WA1/DIGEST1;
+change module/source, add CMD_MATCH_CUT1, fresh work/output/nickname only.
+Current corrected runner with explicit synth/flow unlimited, admitted EPYC2j<=16
+with fresh actual headroom; no floorplan/clock/IO relaxation/rescue sweep.
+Use tools/w18/corner_sta.py on exactselected ODB/SPEF; accept only source-qualified
+SS/FF>=0, clean DRC/antenna/DRV and closes_signoff. IO0 standalone is NOT parentfit.
+No physical/adoption/rate claim until actual terminal. Shared files/livejobs untouched.

@@ -1,0 +1,482 @@
+{
+ "blackboxes": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "completed_at": "2026-10-04T01:26:01.097187+00:00",
+ "corner": "ASAP7 RVT SS (ORFS asap7 WC liberty: 0.63 V, 100 C)",
+ "defines": [],
+ "domain": "1.2GHz-SM",
+ "floorplan": {
+  "macro_area_um2": 76963.81049999999,
+  "port_bits": 2304,
+  "requested": 30,
+  "used": 30
+ },
+ "image": "openroad/orfs:latest",
+ "includes": [],
+ "io_delay_fraction": 0.2,
+ "label": "bulk_ds_e1",
+ "macros": [
+  "ot_sram_1r1w_1024x256_m2_r2c2"
+ ],
+ "mapping": "Yosys 0.68 + ABC on the TT RVT liberty at the target period, the pinned driver's synth.ys (tools/run_abi3_physical.py run_synthesis) plus defines/includes, rename -wire before mapping and opt_clean without -purge so paths read in RTL names; timed on SS",
+ "openroad_rc": 0,
+ "parameters": {
+  "DEPTH": "1024",
+  "ENABLE": "1",
+  "LINE_BITS": "1088",
+  "MAX_OUT": "512",
+  "SRAM_RING": "1"
+ },
+ "period_ns": 0.833,
+ "phases": {
+  "raw": {
+   "all_fmax_mhz": 1200.4801920585242,
+   "all_setup_wns_ps": -1.2702658480634454e-08,
+   "cells": 17447.0,
+   "focus": {
+    "ctl": {
+     "endpoints": 1151.0,
+     "fmax_mhz": 342.67043340835454,
+     "path": {
+      "arrival_ps": 2813.6,
+      "cells": [
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.next2_slot[0]$_DFFE_PN0P_/CLK",
+        "slew_ps": 0.0
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 986.4,
+        "fanout": 268,
+        "pin": "g_lookahead.next2_slot[0]$_DFFE_PN0P_/QN",
+        "slew_ps": 2001.5
+       },
+       {
+        "cell": "INVx1_ASAP7_75t_R",
+        "delay_ps": 1545.7,
+        "fanout": 267,
+        "pin": "_26024_/Y",
+        "slew_ps": 1062.3
+       },
+       {
+        "cell": "NAND2x1_ASAP7_75t_R",
+        "delay_ps": 204.7,
+        "fanout": 2,
+        "pin": "_22658_/Y",
+        "slew_ps": 246.4
+       },
+       {
+        "cell": "XNOR2x2_ASAP7_75t_R",
+        "delay_ps": 76.9,
+        "fanout": 1,
+        "pin": "_22676_/Y",
+        "slew_ps": 60.6
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.next2_slot[1]$_DFFE_PN1P_/D",
+        "slew_ps": 60.6
+       }
+      ],
+      "endpoint": "g_lookahead.next2_slot[1]$_DFFE_PN1P_",
+      "logic_cells": 6,
+      "max_fanout_on_path": 268,
+      "startpoint": "g_lookahead.next2_slot[0]$_DFFE_PN0P_",
+      "worst_cell": {
+       "cell": "INVx1_ASAP7_75t_R",
+       "delay_ps": 1545.7,
+       "fanout": 267,
+       "pin": "_26024_/Y",
+       "slew_ps": 1062.3
+      }
+     },
+     "regex": "(^|\\.)(q_cnt|q_wp|q_rp|act|a_addr|a_left|full|alloc_p|cons_p|oq_n|rd_v|head_full|next_full|space_q|outstanding|next_slot|next2_slot|take_q|clr_slot|oq_wp|oq_rp)(\\[|$)",
+     "setup_wns_ps": -2085.255859
+    }
+   },
+   "io_path": {
+    "arrival_ps": 13309.1,
+    "endpoint": "s_data[1087]",
+    "logic_cells": 3,
+    "max_fanout_on_path": 0,
+    "startpoint": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "DFFASRHQNx1_ASAP7_75t_R",
+     "delay_ps": 10447.9,
+     "pin": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_/QN",
+     "slew_ps": 2177.0
+    }
+   },
+   "r2r_fmax_mhz": 74.93334664391354,
+   "r2r_path": {
+    "arrival_ps": 13226.1,
+    "cells": [
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_/CLK",
+      "slew_ps": 0.0
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 10447.9,
+      "fanout": 2177,
+      "pin": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_/QN",
+      "slew_ps": 22843.3
+     },
+     {
+      "cell": "XNOR2x2_ASAP7_75t_R",
+      "delay_ps": 2778.2,
+      "fanout": 1,
+      "pin": "_24393_/Y",
+      "slew_ps": 413.0
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_/D",
+      "slew_ps": 413.0
+     }
+    ],
+    "endpoint": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_",
+    "logic_cells": 4,
+    "max_fanout_on_path": 2177,
+    "startpoint": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "DFFASRHQNx1_ASAP7_75t_R",
+     "delay_ps": 10447.9,
+     "fanout": 2177,
+     "pin": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_/QN",
+     "slew_ps": 22843.3
+    }
+   },
+   "r2r_required_period_ps": 13345.193359,
+   "r2r_setup_wns_ps": -12512.193359,
+   "tns_ps": -3.377553730388172e-05
+  },
+  "rep": {
+   "all_fmax_mhz": 1200.4801920761322,
+   "all_setup_wns_ps": -4.847580670208629e-10,
+   "cells": 20104.0,
+   "focus": {
+    "ctl": {
+     "endpoints": 1151.0,
+     "fmax_mhz": 760.6356738815623,
+     "path": {
+      "arrival_ps": 1214.9,
+      "cells": [
+       {
+        "cell": "in",
+        "delay_ps": 0.0,
+        "fanout": 2,
+        "pin": "rsp_tag[7]",
+        "slew_ps": 0.0
+       },
+       {
+        "cell": "BUFx8_ASAP7_75t_R",
+        "delay_ps": 41.8,
+        "fanout": 3,
+        "pin": "wire2589/Y",
+        "slew_ps": 44.0
+       },
+       {
+        "cell": "BUFx12f_ASAP7_75t_R",
+        "delay_ps": 174.4,
+        "fanout": 2,
+        "pin": "fanout2586/Y",
+        "slew_ps": 26.1
+       },
+       {
+        "cell": "BUFx8_ASAP7_75t_R",
+        "delay_ps": 56.7,
+        "fanout": 1,
+        "pin": "wire2588/Y",
+        "slew_ps": 37.3
+       },
+       {
+        "cell": "BUFx8_ASAP7_75t_R",
+        "delay_ps": 108.7,
+        "fanout": 10,
+        "pin": "wire2587/Y",
+        "slew_ps": 51.7
+       },
+       {
+        "cell": "BUFx6f_ASAP7_75t_R",
+        "delay_ps": 107.2,
+        "fanout": 24,
+        "pin": "fanout2585/Y",
+        "slew_ps": 60.4
+       },
+       {
+        "cell": "INVx1_ASAP7_75t_R",
+        "delay_ps": 44.3,
+        "fanout": 1,
+        "pin": "_25633_/Y",
+        "slew_ps": 46.0
+       },
+       {
+        "cell": "BUFx5_ASAP7_75t_R",
+        "delay_ps": 74.4,
+        "fanout": 20,
+        "pin": "fanout2503/Y",
+        "slew_ps": 100.5
+       },
+       {
+        "cell": "BUFx10_ASAP7_75t_R",
+        "delay_ps": 80.4,
+        "fanout": 24,
+        "pin": "fanout2502/Y",
+        "slew_ps": 54.0
+       },
+       {
+        "cell": "XNOR2x2_ASAP7_75t_R",
+        "delay_ps": 95.5,
+        "fanout": 5,
+        "pin": "_26354_/Y",
+        "slew_ps": 65.1
+       },
+       {
+        "cell": "BUFx4f_ASAP7_75t_R",
+        "delay_ps": 70.6,
+        "fanout": 22,
+        "pin": "fanout189/Y",
+        "slew_ps": 68.9
+       },
+       {
+        "cell": "BUFx3_ASAP7_75t_R",
+        "delay_ps": 72.5,
+        "fanout": 17,
+        "pin": "fanout188/Y",
+        "slew_ps": 68.9
+       },
+       {
+        "cell": "OR5x1_ASAP7_75t_R",
+        "delay_ps": 96.2,
+        "fanout": 2,
+        "pin": "_27918_/Y",
+        "slew_ps": 42.6
+       },
+       {
+        "cell": "OAI21x1_ASAP7_75t_R",
+        "delay_ps": 25.6,
+        "fanout": 1,
+        "pin": "_29136_/Y",
+        "slew_ps": 33.5
+       },
+       {
+        "cell": "DFFASRHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "g_lookahead.full[144]$_DFF_PN0_/D",
+        "slew_ps": 33.5
+       }
+      ],
+      "endpoint": "g_lookahead.full[144]$_DFF_PN0_",
+      "logic_cells": 15,
+      "max_fanout_on_path": 24,
+      "startpoint": "rsp_tag[7]",
+      "worst_cell": {
+       "cell": "BUFx12f_ASAP7_75t_R",
+       "delay_ps": 174.4,
+       "fanout": 2,
+       "pin": "fanout2586/Y",
+       "slew_ps": 26.1
+      }
+     },
+     "regex": "(^|\\.)(q_cnt|q_wp|q_rp|act|a_addr|a_left|full|alloc_p|cons_p|oq_n|rd_v|head_full|next_full|space_q|outstanding|next_slot|next2_slot|take_q|clr_slot|oq_wp|oq_rp)(\\[|$)",
+     "setup_wns_ps": -481.68985
+    }
+   },
+   "io_path": {
+    "arrival_ps": 1091.2,
+    "endpoint": "s_data[25]",
+    "logic_cells": 12,
+    "max_fanout_on_path": 0,
+    "startpoint": "g_lookahead.g_sram.oq_rp$_DFFE_PN0P_",
+    "worst_cell": {
+     "cell": "BUFx24_ASAP7_75t_R",
+     "delay_ps": 115.9,
+     "pin": "wire889/Y",
+     "slew_ps": 1.0
+    }
+   },
+   "r2r_fmax_mhz": 769.5207234554892,
+   "r2r_path": {
+    "arrival_ps": 1229.1,
+    "cells": [
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.take_q$_DFF_PN0_/CLK",
+      "slew_ps": 0.0
+     },
+     {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "delay_ps": 122.3,
+      "fanout": 2,
+      "pin": "g_lookahead.take_q$_DFF_PN0_/QN",
+      "slew_ps": 89.7
+     },
+     {
+      "cell": "BUFx10_ASAP7_75t_R",
+      "delay_ps": 72.9,
+      "fanout": 24,
+      "pin": "fanout1897/Y",
+      "slew_ps": 42.5
+     },
+     {
+      "cell": "INVx2_ASAP7_75t_R",
+      "delay_ps": 51.8,
+      "fanout": 6,
+      "pin": "_26127_/Y",
+      "slew_ps": 68.4
+     },
+     {
+      "cell": "AND2x6_ASAP7_75t_R",
+      "delay_ps": 71.9,
+      "fanout": 4,
+      "pin": "_18291_/Y",
+      "slew_ps": 69.7
+     },
+     {
+      "cell": "BUFx8_ASAP7_75t_R",
+      "delay_ps": 62.2,
+      "fanout": 3,
+      "pin": "wire862/Y",
+      "slew_ps": 71.3
+     },
+     {
+      "cell": "BUFx12f_ASAP7_75t_R",
+      "delay_ps": 146.0,
+      "fanout": 3,
+      "pin": "fanout856/Y",
+      "slew_ps": 26.7
+     },
+     {
+      "cell": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 54.3,
+      "fanout": 4,
+      "pin": "fanout813/Y",
+      "slew_ps": 54.0
+     },
+     {
+      "cell": "BUFx6f_ASAP7_75t_R",
+      "delay_ps": 46.5,
+      "fanout": 3,
+      "pin": "wire814/Y",
+      "slew_ps": 61.2
+     },
+     {
+      "cell": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 96.9,
+      "fanout": 4,
+      "pin": "fanout791/Y",
+      "slew_ps": 62.4
+     },
+     {
+      "cell": "BUFx6f_ASAP7_75t_R",
+      "delay_ps": 51.4,
+      "fanout": 9,
+      "pin": "wire793/Y",
+      "slew_ps": 65.2
+     },
+     {
+      "cell": "BUFx6f_ASAP7_75t_R",
+      "delay_ps": 78.5,
+      "fanout": 7,
+      "pin": "wire792/Y",
+      "slew_ps": 56.6
+     },
+     {
+      "cell": "HB1xp67_ASAP7_75t_R",
+      "delay_ps": 86.4,
+      "fanout": 3,
+      "pin": "fanout779/Y",
+      "slew_ps": 76.9
+     },
+     {
+      "cell": "BUFx3_ASAP7_75t_R",
+      "delay_ps": 61.9,
+      "fanout": 9,
+      "pin": "fanout777/Y",
+      "slew_ps": 56.1
+     },
+     {
+      "cell": "BUFx5_ASAP7_75t_R",
+      "delay_ps": 63.8,
+      "fanout": 16,
+      "pin": "load_slew778/Y",
+      "slew_ps": 53.6
+     },
+     {
+      "cell": "BUFx2_ASAP7_75t_R",
+      "delay_ps": 52.5,
+      "fanout": 4,
+      "pin": "fanout775/Y",
+      "slew_ps": 36.9
+     },
+     {
+      "cell": "BUFx6f_ASAP7_75t_R",
+      "delay_ps": 47.8,
+      "fanout": 21,
+      "pin": "wire776/Y",
+      "slew_ps": 53.3
+     },
+     {
+      "cell": "NOR2x1_ASAP7_75t_R",
+      "delay_ps": 26.3,
+      "fanout": 1,
+      "pin": "_19058_/Y",
+      "slew_ps": 21.5
+     },
+     {
+      "cell": "AO21x1_ASAP7_75t_R",
+      "delay_ps": 35.5,
+      "fanout": 1,
+      "pin": "_19059_/Y",
+      "slew_ps": 18.4
+     },
+     {
+      "cell": "DFFHQNx1_ASAP7_75t_R",
+      "delay_ps": 0.0,
+      "pin": "g_lookahead.g_sram.oq0[703]$_DFFE_PP_/D",
+      "slew_ps": 18.4
+     }
+    ],
+    "endpoint": "g_lookahead.g_sram.oq0[703]$_DFFE_PP_",
+    "logic_cells": 20,
+    "max_fanout_on_path": 24,
+    "startpoint": "g_lookahead.take_q$_DFF_PN0_",
+    "worst_cell": {
+     "cell": "BUFx12f_ASAP7_75t_R",
+     "delay_ps": 146.0,
+     "fanout": 3,
+     "pin": "fanout856/Y",
+     "slew_ps": 26.7
+    }
+   },
+   "r2r_required_period_ps": 1299.510162,
+   "r2r_setup_wns_ps": -466.510162,
+   "tns_ps": -1.0856239214263042e-06
+  }
+ },
+ "repair": "global_placement, repair_design (max_transition 320 ps, max_fanout 24), repair_timing -setup, legalised; utilisation 30%",
+ "schema": "opentallas-risk-clock-loops-screen-v1",
+ "screen_tool": "jobs/risk_clock_loops_screen_hbm.py (copy of tools/risk_clock_loops_screen.py + --macro + IO-aware utilisation + non-macro black boxes cut to top inputs)",
+ "setup_uncertainty_ps": 60,
+ "source_commit": "3467bcd0831c29d3eeb1463b84f05f779cc0526e",
+ "sources": {
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+  "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "9bc26ad470bb39ebff6dd3b8071b8c557ffa9606fd0466d111f912716bf394e9"
+ },
+ "synth": {
+  "area_um2": 2355.48648,
+  "cells": 17447
+ },
+ "top": "ot_hbm_accel_bulk_copy",
+ "wires": "raw: none (ideal clock, zero wire load); repaired: global+detailed placement, placement parasitics (asap7 setRC), ideal clock, no route"
+}

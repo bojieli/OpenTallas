@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.qwen-async-collective.fullshape-verdict.v1",
+ "at": "2026-10-04",
+ "lever": "Qwen3-8B ROM TP4 asynchronous collective: fused post-TP epilogue + cut-through all-reduce (ASYNC_COLL=1, descriptor bit 20), ot_qwen_tp_seq_async_w12",
+ "source_commit": "a756c6a7bbfe4304fb5b20746b700e2a3f0417e2",
+ "verdict": "REJECT",
+ "reason": "cannot close physically: in-context SS setup at 1.2 GHz is -546 ps (548 endpoints, scoreboard seq.lw[*]; vw -> 24-bit subtract/range compare -> one-hot decode -> 48-port OR tree, ~1.3 ns logic depth); the same flow closes ASYNC_COLL=0 (+17.1 ps SS, +6.2 ps FF hold). Owner rule: no rescue loop.",
+ "full_token_ideal_memory_P0": {
+  "method": "tools/qwen_rom_layer_parallel_sim.py, 37 single-stage jobs from golden checkpoints, one ASYNC_COLL=1 ENABLE_AR256=1 binary (audited link byte-identical to driver), poison-discharged entry state",
+  "baseline_one_stream_img256_cycles": 144522,
+  "async_fused_cut_imgFC_cycles": 134514,
+  "saved_cycles": 10008,
+  "per_layer_chained": {
+   "baseline": 3930,
+   "async": 3652
+  },
+  "head_chained_cycles": 2998,
+  "per_user_rate_gain_pct": 7.44,
+  "per_user_tok_s_at_1p2GHz": {
+   "baseline": 8303.2,
+   "async": 8921.1
+  },
+  "exact": true,
+  "head_token": 50994,
+  "head_logit_bits": "419c72b5",
+  "baseline_reproduces_pinned_ar256_record": "144,522 = results/rtl/qwen_rom_TP4_allreduce_oneseg_fulltoken_20261003 (pinned non-async die), so images without bit 20 run cycle-identically on the async binary at full token"
+ },
+ "real_memory_prefix_E_L0_L2": {
+  "method": "tools/qwen_rom_rt_token_w12_rm_async.py --real-mem, new die ot_qwen_rom_rt_die_w12_rm_async.sv (tap qualified by me_clk_en), one binary 68d9bdb0aae2, real HBM KV fill/write-done, frozen REAL_MEM goldens; every layer X and token K/V bit-exact",
+  "P0": {
+   "baseline": {
+    "E": 98,
+    "L0": 4222,
+    "L1": 4970,
+    "L2": 4973,
+    "total": 14273
+   },
+   "async": {
+    "E": 98,
+    "L0": 3902,
+    "L1": 4283,
+    "L2": 3947,
+    "total": 12240
+   },
+   "prefix_rate_gain_pct": 16.61
+  },
+  "P255": {
+   "baseline": {
+    "E": 98,
+    "L0": 4337,
+    "L1": 4776,
+    "L2": 4653,
+    "total": 13874
+   },
+   "async": {
+    "E": 98,
+    "L0": 4017,
+    "L1": 4017,
+    "L2": 4545,
+    "total": 12687
+   },
+   "prefix_rate_gain_pct": 9.36
+  },
+  "P1023": "running at record time (ot-epyc1tb res/rm_*_p1023*.json); not used",
+  "note": "real-memory per-layer saving ranges 108-1026 cycles: shifting the layer's timing moves its KV write-drain against HBM refresh (P255 L1 stall_drain 808 -> 369), so the saving does not compose additively with the ideal-memory 278/layer"
+ },
+ "full_token_nonzero_position": "NOT RUN. When this campaign launched, no 36-layer P255 golden existed: the position oracle is NumPy-only, and CPU goldens are banned. A local-GPU full-36 P255 golden landed on main during the campaign (results/inputs/qwen_rom_full36_p255_20261003). It was not used, because the lever is rejected physically and the owner rule forbids rescue runs. Nonzero positions are measured on the E+L0-L2 prefix.",
+ "physical": {
+  "record": "results/rtl/qwen_async_collective_20261003/physical_incontext_20261004/verdict.json (main 00619aa10)",
+  "ss_setup_wns_ps": {
+   "async_coll_0": 17.1,
+   "async_coll_1": -546
+  },
+  "ff_hold_wns_ps": {
+   "async_coll_0": 6.2,
+   "async_coll_1": null
+  },
+  "prelayout_area_delta_um2": 2816,
+  "hub_routing_of_48_port_tap": "PASS: 1,968 wires (4,075 with baseline sequencer buses) = 9.6% of netted track target over 2,428 um; the 174 um hop (459 ps SS) needs its own register stage (<= 2 cycles/layer)"
+ },
+ "adoption": "not adopted; defaults remain ASYNC_COLL=0; not to be included in the combined Qwen top"
+}

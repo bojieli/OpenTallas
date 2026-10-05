@@ -1,0 +1,5 @@
+PASS_CODE_REAL_TILE continuous_issues=32 continuous_max=32 code_results=32 tags=40 x=40 kv_port_control=8 extra_edges=1 MEM_EXTRA=1 arithmetic_reference=pinned_original_tile fulltoken=0
+- rtl/test/hbm_accel/integration/tb_hbm_qwen_code_tile_join.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 1.357 s; speed 5.832 us/s
+- Verilator: cpu 1.357 s on 1 threads; allocated 12 MB

@@ -1,0 +1,177 @@
+{
+  "adaptation_contracts": [
+    {
+      "actual_native_HROM768_consumer_not_equivalent": true,
+      "kind": "HE",
+      "mapping_API": "provider_tensor_address + source tensor rank slices",
+      "packing_reference": "8banks x256-bit pack_he_fp32 HHW8",
+      "required_binding": "native accepted address -> readbank/address/FP32lane -> exact native output schedule and reply ownership"
+    },
+    {
+      "actual_consumer_64bit_interface_not_equivalent": true,
+      "kind": "CROM",
+      "required_binding": "native address/half -> packed word/lane -> source precision/rank -> exact native reply ownership",
+      "storage": "8FP32 per256bitword"
+    },
+    {
+      "candidate_extra_sidecar_bits": 8,
+      "candidate_inline_bits": 2,
+      "current_decoder_or_sidecar_ports_present": false,
+      "kind": "FP4_ECC",
+      "required_SECDED_bits": 10,
+      "required_binding": "Accept real paired codeword+sidecar read; align ECC parity to same codeword/row/epoch; terminal good/corrected/fault before arithmetic acceptance",
+      "sidecar_address_API": "sidecar_address(provider,linear_bit)",
+      "source_code_scale_payload_bits": 272
+    }
+  ],
+  "cfg_physical_PASS": false,
+  "containment_commit": "a7d981d65c4961052dd58af32e7a5a9c0212dbe2",
+  "delivery_contract": {
+    "cfgfault_route": "UNIMPLEMENTED: pair fault is u_e.fault; dedicated sticky cfgfault/freeze/drain integration needed",
+    "element_delivery_fence": "All25 actual element writes and class-valid act visible before go && act",
+    "generic_CW_plus2_not_physical_latency_credit": true,
+    "hardprovider_latency_cycles": null,
+    "source_c_v": "unbackpressured valid from ld_run; not provider acknowledgement",
+    "word16_cfg_np_overlay_bits": [
+      3,
+      6
+    ]
+  },
+  "export_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 taskset -c 30,31 timeout 90 python3 tools/dsrom_owner_cfg_interface_export.py --out <fresh-output-directory>",
+  "export_terminal": {
+    "RTL_or_payload_or_PR_jobs": 0,
+    "exit_code": 0,
+    "packing_rerun": false
+  },
+  "native_admission_contract": {
+    "ME_m_ok": [
+      "m_xks==1",
+      "m_xcs==m_k",
+      "m_xjs==0",
+      "m_ots==IL",
+      "m_ojs==1",
+      "m_round",
+      "!m_amax",
+      "!m_mmode"
+    ],
+    "export_duplicate_stage_key_rejected": true,
+    "full4778_descriptor_mode_address_and_calendar_binding": false,
+    "idle": "st==S_IDLE && s_idle",
+    "key_lookup": "valid[31], ME[30], key[29:0]; descending loop resolves duplicate matches to lowest phase index",
+    "ready": "st==S_IDLE && s_ready",
+    "source": "inputs/ot_v41_rom_adapt.sv:100"
+  },
+  "next_cheapest_gate": "Join exact phase/provider tables with Maxwell compiled-site/service/whole-token ownership budget; bind every actual descriptor to native admission and HE/CROM/codeword/config request-return-delivery identities and finite source calendars before selecting one successor. No physical/build admission from this snapshot.",
+  "no_new_partition_selected": true,
+  "owner_commit": "622dbc897fd5ecb5a5b691e1ae39bea0ad751524",
+  "prior_622_records_rewritten": false,
+  "protected_sources_edited": false,
+  "required_hardprovider": {
+    "candidate_SECDED_bits": 7,
+    "decoded_payload_bits": 48,
+    "implemented": false,
+    "layout_and_decode_not_implemented": true,
+    "macro_OBS_layers": [
+      "M1",
+      "M2",
+      "M3",
+      "M4"
+    ],
+    "macro_body_area_mm2_per_stage": 68.57156984832,
+    "macro_dimensions_um": [
+      38.016,
+      62.91
+    ],
+    "macro_port_interface": [
+      "clk",
+      "ce_in",
+      "addr_in[11:0]",
+      "rd_out[71:0]"
+    ],
+    "macros_per_compiled_pair": 7,
+    "macros_per_stage": 28672,
+    "onehot_slice_CE_bits": 7,
+    "pins_per_stage": 2523136,
+    "raw_return_bits_per_pair": 504,
+    "slice_select_bits": 3,
+    "spare_bits_per_72word": 17
+  },
+  "required_shared_identity": {
+    "address_is_derived_not_additional_owner": true,
+    "backend17bit_WINDOWowner_tag_is_not_cfg_identity": true,
+    "coordinates_total_bits": 27,
+    "generation_width": "UNBOUND: no existing cfg generation port; choose a finite drained lifecycle before hardware",
+    "implemented": false,
+    "logical_address_bits": 15,
+    "pair_bits": 12,
+    "phase_bits": 10,
+    "reset_or_lease_reuse_precondition": "Stop admission, retire or discard all accepted provider returns, prove delivery fence and no outstanding prior-era returns before identity reuse. A timer is not retirement.",
+    "selected_slice_bits": 3,
+    "word_index_bits": 5
+  },
+  "schema": "opentallas.dsrom.cfg-provider-join-handoff.v1",
+  "snapshot_PASS": true,
+  "source_configuration": {
+    "CW": 25,
+    "NBF": 724,
+    "PHW": 10,
+    "TP_ranks": 4,
+    "actual_cfg_ECC_or_cfgfault_path": false,
+    "actual_hardcfg_provider_instances": 0,
+    "actual_phase_entries": 46509,
+    "compiled_NP": 4096,
+    "native_cfg_go_bits": 1,
+    "native_cfg_np_bits": 3,
+    "native_cfg_ph_bits": 10,
+    "native_element_c_a_bits": 5,
+    "native_element_c_d_bits": 48,
+    "native_loader_logical_address_bits": 15,
+    "native_loader_word_index_bits": 5,
+    "pair_payload_bits": 48,
+    "stages": 58,
+    "uniform_words_per_pair": 25600
+  },
+  "test_command": "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 taskset -c 30,31 python3 -m pytest -q tests/test_dsrom_owner_cfg_interface_export.py",
+  "tests": {
+    "elapsed_seconds": 1.42,
+    "exit_code": 0,
+    "passed": 12
+  },
+  "verdict": "PASS_SYMBOLIC_TABLE_AND_PROVIDER_INTERFACE_EXPORT_ONLY",
+  "whole_join": {
+    "containment_area_credit_mm2": 0,
+    "fixed_service_already_in_parent_inherited_debit_do_not_add_again": true,
+    "halo_route_clockPG_SS_FF_fit_not_qualified": true,
+    "old_packed274_two_macro_screen_not_72bit_provider": true,
+    "parent_ledger": {
+      "RNE_BF724_upper_proxy": 12.987328389120002,
+      "WAKE_full_compiled_upper_proxy": 1.63214534656,
+      "already_inside_inherited_named_service_proxy_do_not_add_again": 90.44685198583997,
+      "composed_priced_field_terms": 458.81144120512,
+      "config_prospective_body_plus_local_mux": 69.19074349056,
+      "conservative_no_containment_credit_die_total": 924.2886185238459,
+      "conservative_no_containment_credit_reticle_margin": -66.28861852384591,
+      "counterfactual_unknown_native_residual_disjoint_total": 506.0194543837759,
+      "declared_return_FF50_proxy": 52.897587425279994,
+      "earlier_unidentified_native_residual_proxy_47_208": {
+        "excluded_from_named_component_sum_until_containment_reconciled": "No provider identity proves disjointness from new cfg/ECC/raw/dispatch/control terms; conservative counterfactual adding it is recorded separately.",
+        "mm2": 47.208013178655904,
+        "not_silently_removed": true
+      },
+      "fit_verdict": "NOT_QUALIFIED_mix_of_source_macro_body_and_conservative_frame_return_RNE_WAKE_proxies_not_minimum_or_impossibility",
+      "full_compiled_q_BF_catalog_frames": 322.1036365536,
+      "inherited_service_routes_clockPG_debit": 418.26916414007,
+      "remaining_against_corrected_inherited_field_allowance": -19.08060534519,
+      "reticle": 858,
+      "service_clock_PG_actual_shapes_bound": false,
+      "unpriced_nonzero_terms": [
+        "qFP4 separateECC provider/decoder",
+        "actualHE/CROM/shared dispatch provider",
+        "cfgmux/capture/PHW fanout decode area and routes",
+        "currentRNEWAKE dualcompute outline growth",
+        "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
+      ]
+    },
+    "reticle_margin_mm2": -66.28861852384591
+  }
+}

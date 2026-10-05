@@ -1,0 +1,39 @@
+--- rtl/chip/ot_chip_v41x_hbm_karb.sv
++++ hbm_karb_recovery.sv_enabled
+@@ -32,7 +32,9 @@
+     // the HBM handshake may occur a cycle later.  Default keeps the reduced
+     // die's previously verified combinational timing and cycle counts.
+     parameter integer PIPE_OUT = 0,
+-    parameter integer PIPE_RSP = 0
++    parameter integer PIPE_RSP = 0,
++    parameter bit OPT_RECOVERY = 0,
++    parameter integer SELECT_STACK = 2
+ ) (
+     input  wire                 clk,
+     input  wire                 rst_n,
+@@ -85,7 +87,25 @@
+     output reg  [31:0]          k_grants,
+     output reg  [31:0]          b_grants,
+     output reg  [31:0]          contended
++,
++    input wire rec_freeze,
++    input wire rec_token,
++    input wire rec_commit,
++    input wire rec_down_empty,
++    input wire rec_down_visible,
++    input wire rec_down_token_ack,
++    output wire rec_owner_empty,
++    output wire rec_visible_empty,
++    output wire rec_token_ack
+ );
++    // Direct mux/arbiter: control only, no new request/response holding state.
++    assign rec_owner_empty = rec_freeze && rec_down_empty && !(k_v && k_tag[TAGW-1 -: 2] == 0) && !k_wr_done && !(k_rsp_v && k_rsp_tag[TAGW-1 -: 2] == 0);
++    assign rec_visible_empty = rec_down_visible;
++    assign rec_token_ack = (rec_owner_empty && rec_visible_empty &&
++        rec_down_token_ack == rec_token) ? rec_token : !rec_token;
++    initial if (SELECT_STACK != 2 || NPC != 32 || TAGW != 16 || AW != 30 || LENW != 4 || BEATW != 4 || DW != 256 || PIPE_OUT || PIPE_RSP)
++        $fatal(1,"recovery direct-path aperture");
++
+     localparam integer LPC = (NPC > 1) ? $clog2(NPC) : 1;
+     // the model's address -> pseudo-channel map (ot_hdc_v41x_idx_hbm pc_of)
+     function automatic [LPC-1:0] pc_of(input [AW-1:0] s);

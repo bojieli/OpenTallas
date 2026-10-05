@@ -1,0 +1,81 @@
+{
+  "status": "pass",
+  "scope": "Current-source loaded credit/service boundaries; only first two records are matched credit-count performance comparison; no all-workload optimal credit claim",
+  "source_manifests_match": true,
+  "current_sources_verified": true,
+  "records": [
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_depth160_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_auto_schedule.json",
+      "sha256": "0e790d32363ad4d7120384bbc2f0c0d432ef19b7f07315c66140a244c5e62400",
+      "depth": 160,
+      "pass_columns": 3,
+      "read_credits": 1,
+      "service": {
+        "response_delay_cycles": 3,
+        "outstanding_limit": 1,
+        "request_ready_pattern": "cycles modulo 5 != 0"
+      },
+      "peak_outstanding": 1,
+      "median_successful_phase_cycles": 27645.5,
+      "first_weight_bytes": 34556,
+      "first_activation_fills": 2880,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_readcredits8_objectqueue1_depth160_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_auto_schedule.json",
+      "sha256": "e2a3b0aac8461af0ceeb4ffd291204b4b31221967f8b82e05d2246b471136837",
+      "depth": 160,
+      "pass_columns": 3,
+      "read_credits": 8,
+      "service": {
+        "response_delay_cycles": 3,
+        "outstanding_limit": 1,
+        "request_ready_pattern": "cycles modulo 5 != 0"
+      },
+      "peak_outstanding": 1,
+      "median_successful_phase_cycles": 27587.0,
+      "first_weight_bytes": 34556,
+      "first_activation_fills": 2880,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_readcredits8_objectqueue8_object_latency0_depth513_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols1_auto_schedule.json",
+      "sha256": "3ae4c91f6698a40e360b161fc91bd19225b7cc455ba794ce057456b61916585c",
+      "depth": 513,
+      "pass_columns": 1,
+      "read_credits": 8,
+      "service": {
+        "response_delay_cycles": 0,
+        "outstanding_limit": 8,
+        "request_ready_pattern": "cycles modulo 5 != 0"
+      },
+      "peak_outstanding": 1,
+      "median_successful_phase_cycles": 121629.0,
+      "first_weight_bytes": 109392,
+      "first_activation_fills": 21546,
+      "outputs": 2234,
+      "writes": 295
+    },
+    {
+      "record": "results/rtl/a3_g2_runtime_byte_transport_readcredits8_objectqueue8_object_latency32_depth513_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights_pass_first_passcols1_auto_schedule.json",
+      "sha256": "334890e897684e34f14fe76d169b538ce53881479aa834e1719315511c420e0a",
+      "depth": 513,
+      "pass_columns": 1,
+      "read_credits": 8,
+      "service": {
+        "response_delay_cycles": 32,
+        "outstanding_limit": 8,
+        "request_ready_pattern": "cycles modulo 5 != 0"
+      },
+      "peak_outstanding": 8,
+      "median_successful_phase_cycles": 225672.0,
+      "first_weight_bytes": 109392,
+      "first_activation_fills": 21546,
+      "outputs": 2234,
+      "writes": 295
+    }
+  ],
+  "single_request_service_cycle_reduction_percent": 0.21160767575193473
+}

@@ -1,0 +1,43 @@
+{
+  "acceptance_policy": "Current third-party agentic headline policy supersedes local pooled-budget interpretation; historical inputs unchanged.",
+  "artifact_and_source_checks": {
+    "dsrom_absolute_acceptance_trace_prepare_20261002": {
+      "artifacts": 5,
+      "pins": 9
+    },
+    "topk_balanced_filter_successor_model_20261002": {
+      "artifacts": 18,
+      "pins": 3
+    }
+  },
+  "hardware_admitted": false,
+  "headline_rate_qualified": false,
+  "selector": {
+    "construction_proxy_not_mapped": true,
+    "extra_cycles_each_ROM_call": 142,
+    "extra_cycles_nine_ROM_calls": 1278,
+    "proposed_complete_slot_mm2": 1.68242,
+    "slot_owner_accepted": false,
+    "state_bits": 698354
+  },
+  "selector_model_byte_exact": true,
+  "static_test_scope": "balanced stable integer selection/prefix/quota/compaction and VCD parser; not RTL timing or complete phase",
+  "status": "PASS_PARENT_SELECTOR_MODEL_AND_TRACE_PREPARATION_REVIEW_G0_UNADMITTED",
+  "tests_passed": 41,
+  "trace": {
+    "LAT8_fixture_is_complete_phase": false,
+    "actual_ROM_phase_trace_producer_live": false,
+    "existing_runtime_trace_missing": [
+      "cfg acceptance",
+      "VM activation capture",
+      "root return",
+      "final destination visible writes",
+      "source retirement/drain"
+    ],
+    "requires_current_PAR2_observer_at_actual_consumer": true
+  },
+  "worker_commits": [
+    "aa745a879e20e3db598f7be9345cb7ad3b1d5d2f",
+    "abfdbad6665591d5f868363e0dfc06b35ed328d6"
+  ]
+}

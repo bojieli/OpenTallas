@@ -1,0 +1,95 @@
+{
+  "schema": "qwen.rom.controller_three_variant_escalation.v1",
+  "verdict": "FAIL_NOT_ADOPTED",
+  "source_git": "29ee4efaec2e1a96e86941a06c8ff2ddc509a024",
+  "terminal_exit": 0,
+  "clock_policy_ps": {
+    "period": 833,
+    "SS_setup_uncertainty": 60,
+    "FF_hold_uncertainty": 25
+  },
+  "final": {
+    "SS_all_ps": -297.95,
+    "SS_R2R_ps": -72.98,
+    "FF_hold_ps": 9.81,
+    "DRC": 0,
+    "max_fanout_violations": 1,
+    "core_area_um2": 19970.8,
+    "standard_cell_area_um2": 7102.69
+  },
+  "actual_internal_path": {
+    "start": "la_chase_q[2]",
+    "end": "run_idx[4]",
+    "arrival_ps": 1134.53,
+    "required_ps": 1061.55,
+    "cause": "registered chase count comparison -> issue/me_go -> existing argmax state enable; counter carry no longer worst"
+  },
+  "actual_output_path": {
+    "start": "la_chase_q[6]",
+    "end": "u_me.go",
+    "arrival_ps": 904.35,
+    "required_ps": 606.4,
+    "external_delay_ps": 166.6,
+    "receiver_capture_clock_measured": false
+  },
+  "ICG_ENA_slack_ps": 143.08,
+  "repair_inventory": [
+    {
+      "name": "DEC_LA_BOUND",
+      "added_cycles": 0,
+      "SS_R2R_ps": -148.34
+    },
+    {
+      "name": "DEC_LA_CHASE_Q",
+      "added_bits": 16,
+      "added_cycles": 0,
+      "SS_R2R_ps": -109.51
+    },
+    {
+      "name": "DEC_LA_COUNT_LA",
+      "added_bits": 3,
+      "added_cycles": 0,
+      "SS_R2R_ps": -72.98
+    }
+  ],
+  "counter_only_cost": {
+    "added_clock_pin_nominal_uW": 0.816553836,
+    "main_counter_bits": 32,
+    "bytes_per_cycle_added": 0,
+    "external_bits_tracks_added": 0
+  },
+  "source_semantics_gate": "4 focused AR/VPOS position cases PASS, per-edge cycle/carry invariants + 878 decoded fields + real chunked argmax/END; not a full-token proof",
+  "next_choice": "ESCALATE actual controller/consumer boundary; no fourth RTL or route variant",
+  "consumer_interfaces": [
+    {
+      "source": "retained gen/ot_hdc_vstream_rt.sv",
+      "accept": "go && ready",
+      "ready": "!active && ((i_sfu == cls) || (inflight == 0))",
+      "capture": "active/cls + descriptor bank at same positive clk edge"
+    },
+    {
+      "source": "retained rtl/hdc/ot_qwen_me_array_w12.sv:ot_qwen_me_spine_w12",
+      "accept": "go && ready into u_top, op_split, range_fault, existing BD-IREG issue broadcast delay",
+      "clock": "controller me_clk through actual ICG; consumer clock tree omitted by cut"
+    }
+  ],
+  "minimum_required_context": "Selected-parent existing receiver register cones/physical loads/locations and capture-clock relationship, root/Laplace coordination; frozen P0 unchanged. Do not replace with invented output delay or async/multicycle exceptions.",
+  "architectural_alternative_before_RTL": {
+    "name": "registered issue/commit",
+    "state_and_total_latency_ready": false,
+    "minimum_added_cycles_per_affected_issue": 1,
+    "minimum_added_ns_per_affected_issue": 0.833,
+    "token_penalty_formula_ns": ".833 * affected_instruction_count; exact selected-program issue count and overlap must be composed before build",
+    "mandatory_semantics": [
+      "descriptor stable until receiver accept",
+      "no stale ready/chase qualification",
+      "barrier/END ordering and actual argmax fold identity",
+      "controller cycles must include positive added cost"
+    ],
+    "launch_authorized": false
+  },
+  "existing_live_context3": "OpenROAD1742436 retained unchanged; no duplicate or restart",
+  "failures_preserved": true,
+  "default_off": true,
+  "adoption": false
+}

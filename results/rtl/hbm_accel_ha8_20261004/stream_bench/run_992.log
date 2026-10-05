@@ -1,0 +1,28 @@
+RESULT nstk=4 words=992 ref_mode=1 cycles=24759 rd=3047424 room_block=0 desc_gap_pc_cycles=3072 bytes=97517568 ns=25353 TBps_per_stack=0.9616
+- tb_hbmacc_wstream_bw.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 25us; walltime 13.775 s; speed 1.841 us/s
+- Verilator: cpu 13.775 s on 1 threads; allocated 15 MB
+	Command being timed: "./obj_992/Vtb_hbmacc_wstream_bw"
+	User time (seconds): 13.77
+	System time (seconds): 0.00
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:13.78
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 11544
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 288
+	Voluntary context switches: 0
+	Involuntary context switches: 22
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,9 @@
+{
+  "status": "FAIL_TEST_EXPECTED_METADATA_ARITHMETIC",
+  "tests_passed": 12,
+  "tests_failed": 1,
+  "expected_entry_bits": 424,
+  "actual_sum_entry_bits": 324,
+  "reason": "Test hand arithmetic was wrong; source field widths unchanged. Corrected expectation324 and12288*324=3981312.",
+  "test_source_sha256": "4987b5101cb973debee31b83b5cf815ae41a6c17514408959893f57edf3fb2f8"
+}

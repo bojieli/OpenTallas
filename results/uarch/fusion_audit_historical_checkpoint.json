@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.fa.historical-checkpoint.v1",
+  "adoption": false,
+  "claim_boundary": "Original FA MODEL ESTIMATE at S=41 and historical C_rotate compact geometry. Validate original committed sources and retained numerical fields; never qualify current W16 model, RTL gains, or adoption. Later pin-only edits are archived metadata, not a recertification of numerical values against newer sources.",
+  "original_commit": "a86b17cd5533aafc66c9f6eb90b2eae77ecb7096",
+  "record_path": "results/uarch/fusion_audit.json",
+  "original_record_sha256": "e6f32d3f9f88c21197b0744f63bf6e5b2d8a9dfee7b767b93946baf75712821b",
+  "original_source_sha256": {
+    "tools/fusion_audit.py": "6d93dd35e3f2c10c4a49ae5fa6519e8ca0d5475dd3305b42e372f6fc6ebcd34d",
+    "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/uarch/w19_hbm_token_ar.json": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2",
+    "results/uarch/w19_hbm_token_mtp.json": "8d7998a64b22fe5ef322638c0cca5c501f6dfdce7b443dfe0c1212a3895e3dbb",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3"
+  },
+  "tools_tree_git_oid": "3a5125b8cea99fe329945b5b6a1844ef58d1bc2b",
+  "replay_inputs_sha256": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "configs/hardware/architectures.json": "fd3b286eebe534f52547ff7fe9e23b1d9c3024e7afb72e15f8b1824511b7d04e",
+    "configs/hardware/power_scenarios.json": "727435b50f6acb1f6c542a095715388cf5e3ba1e4713b8ffd3cf5b48a6242a59",
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "configs/hardware/technology_inputs.json": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+    "configs/models/candidates/deepseek-v4.1-flash.json": "8a8676b128cca0c6aaef0e983dc0f3e2eed9edce122a4018ad40ce1820d2b2d6",
+    "configs/models/decode_graph_shapes.json": "acf80bb9339fbe9b841727555f0e97dfa866d089b04e0bb220d5d497dad917ac",
+    "configs/models/qwen3-8b.json": "dd84212ecd7d0dac9193a19d340108473f06b85bb8f056b66f3e44e3c7f11f7b",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+    "results/arch/qwen_gpu_calibration.json": "6ae77c9ccad72c915cb8903ee2c61843265248b9dbbdce96a2f88a7c63676ee9",
+    "results/arch/v41_die_assembly.json": "9966fa08a48e9e904e23c093312ffd0a2ee2d7fe4eb197b70215c07f52224189",
+    "results/arch/v41_die_placement.json": "03d81990492168618e27173328f14c2d8df32047c59b035c76d08ad19d2f307a",
+    "results/floorplan/qwen_o4_rom_placement.json": "4d8f33abd67692c5ac515326490be3a7b5561997216fb4f02ed89d622f57d43d",
+    "results/floorplan/v41_die_macromap_expanded_woa.json": "01f10d3d3f03cfa93ca5212803883e54daa7d05a936938ac2f78dbbcf785c775",
+    "results/physical_abi3/asap7/hdc/ot_hdc_matvec/physical.json": "06b8f9204b64cf575bea19c5935bd0cf63fd7554030146d8f18f78cd7d5497d4",
+    "results/physical_abi3/asap7/hdc/ot_hdc_stream/physical.json": "bf31d25157899c0cb6e52565c4e2e4d706ffcda69fe366f1bafa8b110c800596",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_actquant/physical.json": "fc825c0d0cf3f34af62f5135924158c2a30beb55de3aaea5c5d78db0c6fef688",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_blockdot/physical.json": "e9a17536e3033715f4163e22d332e4543b11ba44706da107799f463d98034175",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_fp4qdq/physical.json": "419ce4d0aaeec8813601eb663f6c12ad04b984ff1281ca12b79270a6b5c39785",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_select_k512/physical.json": "8b37711a30f55b837c531c9758c6ef4f4c80ae014de79f2fe8391536cc1a53ea",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_sinkhorn/physical.json": "3b85a8c972bbd49062a8d43c4fc0b0a57d9c470f19eb36335b6edec2a5e50d6c",
+    "results/physical_abi3/asap7/hdc/v41/ot_hdc_softplus/physical.json": "6371bfe96d03da05e786d2609cee1cd8ae83642421f4dc854a169931eca3b188",
+    "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json": "ae9fbf54ee73a41bfad7a589ee252eda0712972572a112242e7ce81491b1897c",
+    "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/points.json": "ade84990d12c79cedd1d725bff27e3a00025b47211a3c9c7d8bc9baec2d9c222",
+    "results/rtl/hdc_v41_cand_campaign.json": "b83aad197d0fff78cf5663d0ce4b790b7ddb24bddb83093eb4a8ad662efd4789",
+    "results/rtl/hdc_v41_sinkhorn_campaign.json": "7d4b6b697c4394c70378e7e5d6aa97b40b4762bad85c2475ef52234bcd4e541a",
+    "results/rtl/hdc_v41_tselect_scale_campaign.json": "ee7dde83a8d3f68b355549d54bdec5fbd6c5005c6ddb769c21a1286c8c9a592e",
+    "results/rtl/v41_program_constants.json": "0ef0b72b91f52ec48f694671f06b828e828ab7e992d835cc68d5c19aeda380f1",
+    "results/rtl/w15_collectives.json": "7b1a318782f98f0f2b27c99b1b3866570dce09680e6777d7a4bc6e6730e55a65",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/speculative/v41_flash_dspark_onpolicy_greedy.json": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d",
+    "results/uarch/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "results/uarch/w19_hbm_token_ar.json": "ab41e0ad471686a602162980e16d4e48d83764088049cbaf2419373fb6fd1ca2",
+    "results/uarch/w19_hbm_token_mtp.json": "8d7998a64b22fe5ef322638c0cca5c501f6dfdce7b443dfe0c1212a3895e3dbb",
+    "tools/fusion_audit.py": "6d93dd35e3f2c10c4a49ae5fa6519e8ca0d5475dd3305b42e372f6fc6ebcd34d",
+    "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+    "tools/hdc_replay_v41.py": "bd50a013e30e457c855afd493bbe759b27801e3124c0cd3a229a470ac755347d",
+    "tools/uarch_model.py": "0116a42e7b6cd57eff53755f9e671478819f9a7c7f5eb29fc84f5236e8e9ecea"
+  },
+  "replay_method": "Export original tools and src trees and listed inputs using git archive into a temporary directory, run original tools/fusion_audit.py with only the exported src on PYTHONPATH, require full JSON equality with original record.",
+  "retained_pin_only_records": [
+    {
+      "commit": "dc7804df7414d4af7a574100eaacaaf90586a414",
+      "sha256": "a4d745ca374547642fe1100f9359e8825c1c7bfc1fb5283f95685ced14303518",
+      "interpretation": "Historical numerical fields identical; later source_sha256 edits do not certify the refreshed current model."
+    }
+  ],
+  "publication_roots": [
+    {
+      "ref": "refs/heads/main",
+      "commit": "cddda6070efc155cec165a9514b91b951b901ee5",
+      "state": "Existing parent main history; publish parent main normally. Full ancestry or explicit fetch of required commits is needed."
+    },
+    {
+      "ref": "refs/tags/fa-evidence/w11-recovery-20261001",
+      "commit": "db6b1c343451b8dda6af4a4250ffd3a1ace3c2bd",
+      "state": "Proposed immutable evidence ref; must be published by parent. Covers 86e88836 W11 scheduling source as an ancestor."
+    },
+    {
+      "ref": "refs/tags/fa-evidence/w11-landing-20261001",
+      "commit": "12f5d4576edc190765f3fcb004e7de67e3b706ff",
+      "state": "Proposed immutable evidence ref; must be published by parent. Separate ancestry from recovery."
+    }
+  ],
+  "publication_note": "No refs created or pushed by FA. Ref names are proposed publication targets; refs must resolve to these commits (or a retained descendant exposing full history). Fetch evidence tags explicitly in fresh clones; a shallow main-only checkout is insufficient.",
+  "external_replay_prerequisites": "W11 reduced scheduling replay additionally requires the checkpoint file/digest recorded in fusion_audit_w11_run_level.json. Baseline Git replay needs no untracked model checkpoint.",
+  "required_git_commits": [
+    "12f5d4576edc190765f3fcb004e7de67e3b706ff",
+    "57f750d6f64dc69d676bf94c1666b78e12ec777b",
+    "86e888364a6fdf2ca5d669e68ffcc8d079dad5cb",
+    "a86b17cd5533aafc66c9f6eb90b2eae77ecb7096",
+    "db6b1c343451b8dda6af4a4250ffd3a1ace3c2bd",
+    "dc7804df7414d4af7a574100eaacaaf90586a414"
+  ],
+  "src_tree_git_oid": "062a7a2e41ed24c7530d18a17c058492b4a9397a"
+}

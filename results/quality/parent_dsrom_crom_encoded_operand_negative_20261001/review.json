@@ -1,0 +1,54 @@
+{
+  "baseline_focused_tests_passed": 10,
+  "binding": {
+    "actual_address": 1808,
+    "extent_words": 5120,
+    "instruction": 6,
+    "kind": "checkpoint_CROM",
+    "offset": 0,
+    "operand": "c",
+    "output_slice_sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
+    "source_sha256": "1e862a4492423ffe1663b101267ac4710ba72ec0cea51b1396ea5c9c0a1fa682",
+    "tensor": "layers.0.attn_norm.weight",
+    "tensor_base": 1808,
+    "tensor_end": 6928
+  },
+  "hardware_admission": false,
+  "negative_cases": [
+    {
+      "changed_field": "c_si",
+      "changed_value": 127,
+      "computed_extent_words": 650114,
+      "error": null,
+      "mutant": "CROM_stride_exceeds_tensor",
+      "validator_accepted": true
+    },
+    {
+      "changed_field": "c_src",
+      "changed_value": 0,
+      "computed_extent_words": 5120,
+      "error": null,
+      "mutant": "CROM_source_changed_to_VM",
+      "validator_accepted": true
+    },
+    {
+      "changed_field": "c_d",
+      "changed_value": 1,
+      "computed_extent_words": 5120,
+      "error": null,
+      "mutant": "CROM_dynamic_address_enabled",
+      "validator_accepted": true
+    }
+  ],
+  "owner_commit": "4080bb5fdc1493dd9c58de15d0c947e64a3ea597",
+  "required_correction": [
+    "Check decoded source class and dynamic addressing against binding",
+    "Recompute actual decoded operand extent and require equality with bound extent plus entire range in source tensor",
+    "Add encoded-field mutants for stride/source/dynamic flags; preserve this failed review"
+  ],
+  "schema": "opentallas.parent.dsrom-encoded-crom-negative-review.v1",
+  "scope": "Generic validate_encoded gate accepts changed source/dynamic/stride fields when unit/base match. Existing generated template hashes and non-CROM bit equality remain positive; do not transfer that generator evidence into a complete encoded-operand mutation gate.",
+  "valid_source_bound_template_claim_withdrawn": false,
+  "validator_sha256": "942222075a8a31b7f6de45866b2784aa968334e89770bcec840accec3d90b97b",
+  "verdict": "FAIL_INCOMPLETE_ENCODED_OPERAND_VALIDATION"
+}

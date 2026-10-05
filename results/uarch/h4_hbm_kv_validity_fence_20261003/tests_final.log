@@ -1,0 +1,18 @@
+test_actual_shared_write_edge_combined_ack_maps_two_copy_facts (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_all_actual_payload_and_metadata_masks_preserve_old_bytes (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_bitmap_visible_does_not_grant_reader_or_metadata_credit (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_complete_profile_prices_all_mandatory_terms (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_exact_replay (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_finite_arbitration_no_starvation_under_continuous_reads (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_full72_fences_require_producer_mirrors_spill_and_consumer_records (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_missing_zero_or_promoted_costs_refuse (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_model_geometry_and_admission_remain_separate (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_no_implicit_zero_or_invalid_old_capture (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_source_metadata_and_runtime_spill_projection (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_stale_capture_and_credit_held_through_reverse (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+test_validity_connection_holds_actual_shared_bank_ledger (test_h4_hbm_kv_validity_fence_model.SourceBoundModelTests) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 3.983s
+
+OK

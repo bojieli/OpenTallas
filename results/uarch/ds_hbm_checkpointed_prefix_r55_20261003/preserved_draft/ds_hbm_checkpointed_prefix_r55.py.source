@@ -1,0 +1,173 @@
+"""Prepared fresh PC0..10 execution with actual quiescent PC9 checkpoint.
+
+No numerical launch without exact reviewed source/storage plan. No CPU, wall,
+address-space or file-size limits; no witness/reference restore. All originals
+remain immutable. A fresh prefix is necessary because R45 payload was not saved.
+"""
+import argparse
+import copy
+import gzip
+import hashlib
+import importlib
+import json
+import os
+import resource
+import time
+from pathlib import Path
+from h3_ds_connected_provider_r37 import ROOT,D,peer
+from ds_hbm_connected_prepare_r37 import load,sha
+from ds_hbm_storage_home_binding_r41 import bind_storage,create_bound_provider
+from ds_hbm_source_prefix_r45 import driver_class
+from ds_hbm_prefix_observed_outputs_r42 import Observed
+from ds_hbm_pc10_engine_r44 import Witness
+import ds_hbm_additive_endpoint_join_r54 as join
+
+
+def source_gate(plan,*,available_bytes):
+    if plan.get('schema')!='DS_PC0_10_ACTUAL_CHECKPOINT_LAUNCH_PLAN_R55':
+        raise ValueError('exact reviewed launch-plan schema required')
+    if plan.get('status')!='PASS_SOURCE_AND_STORAGE_REVIEW' or plan.get('stop')!=10 or plan.get('checkpoint_boundary')!=9:
+        raise ValueError('complete PC0..10 source/storage review required')
+    if plan.get('helper_module')!='ds_producer_checkpoint_resume_v3':
+        raise ValueError('explicit enrolled compact V3 checkpoint helper required')
+    pins=plan.get('source_sha256',{})
+    required=['tools/ds_hbm_checkpointed_prefix_r55.py','tools/ds_hbm_additive_endpoint_join_r54.py',
+              'tools/h3_complete_native_calendar_successor_r1.py','tools/ds_producer_checkpoint_resume_v3.py',
+              'tools/h3_complete_native_calendar.py','tools/ds_producer_checkpoint_resume.py']
+    if any(p not in pins for p in required):raise ValueError('complete runner/calendar/helper/original source list required')
+    for path,wanted in pins.items():
+        target=(ROOT/path).resolve()
+        if not target.is_relative_to(ROOT.resolve()) or sha(target)!=wanted:
+            raise ValueError('exact reviewed source pin mismatch: '+path)
+    proof=plan.get('storage_proof',{})
+    if set(proof)!={'path','sha256'}:raise ValueError('source-sized storage proof artifact required')
+    target=(ROOT/proof['path']).resolve()
+    if not target.is_relative_to(ROOT.resolve()) or sha(target)!=proof['sha256']:
+        raise ValueError('exact storage proof artifact required')
+    projection=json.loads(target.read_bytes())
+    costs={key:projection.get(key) for key in ('journal_new_bytes','checkpoint_new_bytes','other_new_bytes')}
+    if any(type(v)is not int or v<=0 for v in costs.values()):
+        raise ValueError('positive complete journal/checkpoint/metadata projection required')
+    required_bytes=sum(costs.values())
+    if projection.get('projection_complete') is not True or projection.get('source_sha256')!=pins:
+        raise ValueError('storage proof must compose exact reviewed source list')
+    if type(available_bytes)is not int or available_bytes<required_bytes:
+        raise ValueError('fresh aggregate journal/checkpoint/metadata disk headroom insufficient')
+    return dict(costs,required_new_bytes=required_bytes,available_bytes=available_bytes,
+                headroom_bytes=available_bytes-required_bytes,capacity_reservation_acquired=False)
+
+
+def enrolled_helper(plan):
+    helper=importlib.import_module(plan['helper_module'])
+    path=ROOT/'tools'/('ds_producer_checkpoint_resume_v3.py')
+    if Path(helper.__file__).resolve()!=path.resolve() or sha(path)!=plan['source_sha256'][str(path.relative_to(ROOT))]:
+        raise ValueError('exact compact checkpoint runtime origin required')
+    for name in ('scope_role_proof','project_checkpoint','capture_quiescent','journal_inventory'):
+        if not callable(getattr(helper,name,None)):raise ValueError('checkpoint API absent: '+name)
+    return helper
+
+
+def install_source_modules():
+    # Import exact pinned peer modules BEFORE replacing their evidence aliases.
+    import sys
+    import hbm_bound_event_journal_r30 as journal
+    import h3_ds_checkpoint_provider_r30
+    import h4_hbm_w19_pc10_endpoints
+    import ds_hbm_prefix_observed_outputs_r42
+    OriginalDiskEvents=journal.DiskEvents
+    OriginalBudget=journal.JournalBudget
+    OriginalProvider=join.OriginalSectorProvider
+    peer('h4_c0_ds_source_views');peer('h4_c0_provider_movement')
+    prefix=driver_class()
+    classes=(OriginalDiskEvents,OriginalBudget,OriginalProvider)
+    modules=[]
+    for module in list(sys.modules.values()):
+        if module is None or module is join or getattr(module,'__name__','')=='ds_hbm_current_calendar_adapter_r50':continue
+        filename=getattr(module,'__file__',None)
+        if not filename or not Path(filename).resolve().is_relative_to(ROOT.resolve()):continue
+        if any(isinstance(value,type) and value in classes for value in vars(module).values()):modules.append(module)
+    receipt=join.install(modules)
+    return prefix,receipt
+
+
+def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--plan',type=Path,required=True)
+    parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--preflight-only',action='store_true')
+    args=parser.parse_args()
+    if not args.out.is_absolute() or args.out.exists():raise ValueError('fresh absolute output; no retry/fallback')
+    plan=json.loads(args.plan.read_bytes())
+    stat=os.statvfs(args.out.parent)
+    admitted=source_gate(plan,available_bytes=stat.f_bavail*stat.f_frsize)
+    helper=enrolled_helper(plan)
+    args.out.mkdir()
+    record=dict(status='INITIALIZING',pid=os.getpid(),start_ns=time.time_ns(),source_plan_sha256=sha(args.plan),
+                source_commit=os.popen('git rev-parse HEAD').read().strip(),storage=admitted,
+                prefix_stop=10,checkpoint_boundary=9,full_token_GO=False,hardware_qualified=False)
+    provider=None
+    def save():
+        (args.out/'receipt.json').write_text(json.dumps(record,sort_keys=True,indent=2)+'\n')
+    save()
+    try:
+        nativepath=ROOT/'results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/actual_native_c65.json.gz'
+        dispatchpath=ROOT/'results/uarch/ds_hbm_bound_engine_r43_20261002/inputs/actual_dispatch_bcf.json.gz'
+        original=load(nativepath);dispatch=load(dispatchpath)
+        homes=load(D/'inputs/actual_DeepSeek_homes.json.gz')['homes']
+        manifest=load(D/'inputs/prefix_input_manifest.json.gz')
+        if sha(nativepath)!=manifest['native_program_sha256'] or sha(dispatchpath)!=manifest['source_dispatch_sha256']:
+            raise ValueError('exact original native/dispatch artifacts')
+        native,homes,directory,binding=bind_storage(original,homes,manifest)
+        for name,value in [('bound_native',native),('bound_homes',homes)]:
+            (args.out/(name+'.json.gz')).write_bytes(gzip.compress(json.dumps(value,sort_keys=True).encode(),mtime=0))
+        (args.out/'storage_home_binding.json').write_text(json.dumps(binding,sort_keys=True)+'\n')
+        manifest.update(prefix_inputs_bound=True,prefix_GO=True,prefix_stop=10,
+            provider_module='tools/ds_hbm_storage_home_binding_r41.py',
+            provider_module_sha256=sha(ROOT/'tools/ds_hbm_storage_home_binding_r41.py'),
+            journal_root=str(args.out/'actual-prefix-journal'),journal_capacity_bytes=admitted['journal_new_bytes'])
+        prefix,install_receipt=install_source_modules()
+        record['compact_install']=install_receipt;save()
+        _,hard=resource.getrlimit(resource.RLIMIT_NOFILE);resource.setrlimit(resource.RLIMIT_NOFILE,(hard,hard))
+        declared=copy.deepcopy(manifest)
+        provider=create_bound_provider(manifest,native,dispatch,homes,10)
+        if declared!=manifest:raise ValueError('constructor mutated source declaration')
+        witness=Witness(provider,original,ROOT/'results/uarch/ds_hbm_storage_home_binding_r41_20261002/inputs/independent_prefix_expected_outputs.json')
+        observed=Observed(provider,witness)
+        engine=join.engine_class(prefix,finite_pc10=True,retire_unconsumed=True)(native,dispatch,observed,
+            manifest['checkpoint_revision'],manifest['generation'],homes,native_artifact_path=args.out/'bound_native.json.gz',
+            dispatch_artifact_path=dispatchpath,original_native_artifact_path=nativepath)
+        role=helper.scope_role_proof(provider,engine)
+        if helper.shared_factory(provider,engine) is not engine.groups.shared:raise ValueError('exact enrolled shared factory required')
+        (args.out/'actual_manifest.json.gz').write_bytes(gzip.compress(json.dumps(manifest,sort_keys=True).encode(),mtime=0))
+        (args.out/'initialization_provenance.json').write_text(json.dumps(witness.initialization_provenance,sort_keys=True)+'\n')
+        record.update(role_proof=role,expected_outputs=len(witness.expected),retired_PCs=[],native_PCs_executed=0)
+        if args.preflight_only:
+            if any(path.stat().st_size>6 for path in provider.journal_budget.root.glob('*.events')):
+                raise ValueError('constructor preflight generated actual execution events')
+            record['status']='PASS_ACTUAL_ADDITIVE_PROVIDER_WITNESS_ENGINE_COMPACT_ROLE_CONSTRUCTORS';save();return
+        record['status']='RUNNING_FRESH_ACTUAL_SOURCE_PREFIX_WITH_PC9_CHECKPOINT';save()
+        for op in native['instructions'][:11]:
+            engine.execute_operation(op)
+            record.update(retired_PCs=sorted(engine.retired),native_PCs_executed=len(engine.retired),
+                          observed_outputs=len(witness.seen),aggregate_reserved_bytes=provider.journal_budget.used)
+            if op['pc']==9:
+                checkpoint=args.out/'actual-PC9-producer-checkpoint'
+                projection=helper.project_checkpoint(engine,observed,witness,boundary_pc=9,destination=checkpoint)
+                if projection['filesystem_reservation_bytes']>admitted['checkpoint_new_bytes']:
+                    raise ValueError('actual producer checkpoint exceeds source-reviewed storage proof')
+                receipt=helper.capture_quiescent(engine,observed,witness,boundary_pc=9,destination=checkpoint,
+                    source_contract=dict(identity=helper.identity(provider,engine),runner_source_sha256=sha(__file__),
+                                         source_plan_sha256=sha(args.plan)))
+                record['actual_PC9_checkpoint_receipt']=receipt
+            save()
+        record.update(comparison=witness.finish(),status='PASS_ACTUAL_CHECKPOINTED_PC0_10_BYTE_EXACT',
+                      journal_inventory=helper.journal_inventory(provider,engine,witness,hashes=True),
+                      full_token_exact_qualified=False)
+    except BaseException as exc:
+        record.update(status='FAIL_CLOSED_PRESERVED',exception_type=type(exc).__name__,reason=str(exc));save();raise
+    finally:
+        if provider is not None:provider.journal_budget.db.commit()
+        record.update(end_ns=time.time_ns(),max_rss_KiB=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss);save()
+
+
+if __name__=='__main__':main()

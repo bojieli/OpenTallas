@@ -1,0 +1,4831 @@
+{
+ "protocol": "results/speculative/v41_mtp_acceptance_qualified_20261003/PROTOCOL.md",
+ "gamma": 5,
+ "t1_replays_per_prompt": 2000,
+ "rate_basis": {
+  "rom": {
+   "ar": 2786.8,
+   "mtp_at_3649": 4588.9,
+   "src": "results/uarch/consolidation.json headline_table v41[0] (per_user_ar, per_user_mtp)"
+  },
+  "hbm_w19": {
+   "ar_us": 442.14,
+   "mtp_pass_us": 715.82,
+   "drafter_us": 49.9,
+   "src": "tools/uarch_model.py HBM_W19 (fused)"
+  },
+  "v41_tau_current": 3.649,
+  "draft_cost": "V41_DRAFT_FRACTION = 3/40 of AR (ROM) / 49.9 us modelled (HBM): UNVALIDATED",
+  "ar": {
+   "rom": 2786.8,
+   "hbm_w19": 2261.7
+  },
+  "breakeven_tau": {
+   "rom": 2.216,
+   "hbm_w19": 1.732
+  }
+ },
+ "modes": {
+  "greedy": {
+   "headline_multiturn": {
+    "prompts": 72,
+    "cycles": 1201.0,
+    "generated_tokens": 5077,
+    "tau_pooled": 4.001,
+    "tau_pooled_ci95": [
+     3.824,
+     4.199
+    ],
+    "tau_median_of_prompts": 3.925,
+    "tau_median_of_prompts_ci95": [
+     3.842,
+     4.136
+    ],
+    "per_prompt_tau_quartiles": [
+     3.575,
+     3.925,
+     4.5
+    ],
+    "histogram_accepted_0_5": [
+     145.0,
+     170.0,
+     180.0,
+     167.0,
+     122.0,
+     417.0
+    ],
+    "conditional_acceptance_by_depth": [
+     0.8793,
+     0.839,
+     0.7968,
+     0.7635,
+     0.7737
+    ],
+    "alpha_equivalent_pooled": 0.8344,
+    "alpha_equivalent_median": 0.8263,
+    "rates": {
+     "rom_mtp_at_median": 4936.0,
+     "rom_mtp_at_median_ci95": [
+      4831.6,
+      5201.3
+     ],
+     "rom_mtp_at_pooled": 5031.4,
+     "hbm_w19_mtp_at_median": 5125.9,
+     "hbm_w19_mtp_at_median_ci95": [
+      5017.5,
+      5401.5
+     ],
+     "hbm_w19_mtp_at_pooled": 5224.9
+    },
+    "per_workload": {
+     "agentic_mind2web": {
+      "prompts": 24,
+      "tau_pooled": 3.719,
+      "tau_median": 3.809,
+      "n_prompt_range": [
+       1520,
+       3163
+      ]
+     },
+     "agentic_swe_agent": {
+      "prompts": 24,
+      "tau_pooled": 3.855,
+      "tau_median": 3.95,
+      "n_prompt_range": [
+       1891,
+       7593
+      ]
+     },
+     "agentic_tau_bench": {
+      "prompts": 24,
+      "tau_pooled": 4.234,
+      "tau_median": 4.16,
+      "n_prompt_range": [
+       3820,
+       8428
+      ]
+     }
+    }
+   },
+   "separate_single_shot": {
+    "prompts": 48,
+    "cycles": 761.0,
+    "generated_tokens": 4378,
+    "tau_pooled": 5.531,
+    "tau_pooled_ci95": [
+     5.455,
+     5.603
+    ],
+    "tau_median_of_prompts": 5.597,
+    "tau_median_of_prompts_ci95": [
+     5.449,
+     5.679
+    ],
+    "per_prompt_tau_quartiles": [
+     5.369,
+     5.597,
+     5.892
+    ],
+    "histogram_accepted_0_5": [
+     25.0,
+     19.0,
+     30.0,
+     16.0,
+     34.0,
+     637.0
+    ],
+    "conditional_acceptance_by_depth": [
+     0.9671,
+     0.9742,
+     0.9582,
+     0.9767,
+     0.9493
+    ],
+    "alpha_equivalent_pooled": 0.9673,
+    "alpha_equivalent_median": 0.9721,
+    "rates": {
+     "rom_mtp_at_median": 7038.9,
+     "rom_mtp_at_median_ci95": [
+      6852.5,
+      7141.8
+     ],
+     "rom_mtp_at_pooled": 6955.5,
+     "hbm_w19_mtp_at_median": 7309.7,
+     "hbm_w19_mtp_at_median_ci95": [
+      7116.2,
+      7416.5
+     ],
+     "hbm_w19_mtp_at_pooled": 7223.1
+    },
+    "per_workload": {
+     "agentic_bfcl": {
+      "prompts": 24,
+      "tau_pooled": 5.386,
+      "tau_median": 5.4,
+      "n_prompt_range": [
+       309,
+       1249
+      ]
+     },
+     "agentic_json_mode": {
+      "prompts": 24,
+      "tau_pooled": 5.733,
+      "tau_median": 5.85,
+      "n_prompt_range": [
+       214,
+       453
+      ]
+     }
+    }
+   },
+   "all_agentic": {
+    "prompts": 120,
+    "cycles": 1962.0,
+    "generated_tokens": 9455,
+    "tau_pooled": 4.594,
+    "tau_pooled_ci95": [
+     4.445,
+     4.751
+    ],
+    "tau_median_of_prompts": 4.862,
+    "tau_median_of_prompts_ci95": [
+     4.5,
+     5.114
+    ],
+    "per_prompt_tau_quartiles": [
+     3.873,
+     4.862,
+     5.623
+    ],
+    "histogram_accepted_0_5": [
+     170.0,
+     189.0,
+     210.0,
+     183.0,
+     156.0,
+     1054.0
+    ],
+    "conditional_acceptance_by_depth": [
+     0.9134,
+     0.8945,
+     0.869,
+     0.8686,
+     0.8711
+    ],
+    "alpha_equivalent_pooled": 0.8919,
+    "alpha_equivalent_median": 0.9151,
+    "rates": {
+     "rom_mtp_at_median": 6114.2,
+     "rom_mtp_at_median_ci95": [
+      5659.1,
+      6431.3
+     ],
+     "rom_mtp_at_pooled": 5777.7,
+     "hbm_w19_mtp_at_median": 6349.5,
+     "hbm_w19_mtp_at_median_ci95": [
+      5876.8,
+      6678.7
+     ],
+     "hbm_w19_mtp_at_pooled": 6000.0
+    },
+    "per_workload": {
+     "agentic_bfcl": {
+      "prompts": 24,
+      "tau_pooled": 5.386,
+      "tau_median": 5.4,
+      "n_prompt_range": [
+       309,
+       1249
+      ]
+     },
+     "agentic_json_mode": {
+      "prompts": 24,
+      "tau_pooled": 5.733,
+      "tau_median": 5.85,
+      "n_prompt_range": [
+       214,
+       453
+      ]
+     },
+     "agentic_mind2web": {
+      "prompts": 24,
+      "tau_pooled": 3.719,
+      "tau_median": 3.809,
+      "n_prompt_range": [
+       1520,
+       3163
+      ]
+     },
+     "agentic_swe_agent": {
+      "prompts": 24,
+      "tau_pooled": 3.855,
+      "tau_median": 3.95,
+      "n_prompt_range": [
+       1891,
+       7593
+      ]
+     },
+     "agentic_tau_bench": {
+      "prompts": 24,
+      "tau_pooled": 4.234,
+      "tau_median": 4.16,
+      "n_prompt_range": [
+       3820,
+       8428
+      ]
+     }
+    }
+   },
+   "per_prompt": [
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_219",
+     "n_prompt": 355,
+     "n_generated": 77,
+     "cycles": 15,
+     "committed": 73,
+     "hist": [
+      0,
+      3,
+      1,
+      1,
+      0,
+      10
+     ],
+     "tau": 4.8667
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_199",
+     "n_prompt": 342,
+     "n_generated": 76,
+     "cycles": 13,
+     "committed": 73,
+     "hist": [
+      0,
+      0,
+      1,
+      0,
+      2,
+      10
+     ],
+     "tau": 5.6154
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_168",
+     "n_prompt": 423,
+     "n_generated": 114,
+     "cycles": 21,
+     "committed": 113,
+     "hist": [
+      1,
+      1,
+      1,
+      0,
+      1,
+      17
+     ],
+     "tau": 5.381
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_149",
+     "n_prompt": 309,
+     "n_generated": 57,
+     "cycles": 9,
+     "committed": 53,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      8
+     ],
+     "tau": 5.8889
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_175",
+     "n_prompt": 332,
+     "n_generated": 68,
+     "cycles": 12,
+     "committed": 66,
+     "hist": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      10
+     ],
+     "tau": 5.5
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_46",
+     "n_prompt": 462,
+     "n_generated": 101,
+     "cycles": 17,
+     "committed": 96,
+     "hist": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      15
+     ],
+     "tau": 5.6471
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_118",
+     "n_prompt": 742,
+     "n_generated": 80,
+     "cycles": 15,
+     "committed": 79,
+     "hist": [
+      1,
+      0,
+      1,
+      1,
+      1,
+      11
+     ],
+     "tau": 5.2667
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_25",
+     "n_prompt": 635,
+     "n_generated": 103,
+     "cycles": 19,
+     "committed": 97,
+     "hist": [
+      1,
+      3,
+      0,
+      0,
+      0,
+      15
+     ],
+     "tau": 5.1053
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_188",
+     "n_prompt": 755,
+     "n_generated": 103,
+     "cycles": 18,
+     "committed": 98,
+     "hist": [
+      1,
+      0,
+      1,
+      1,
+      0,
+      15
+     ],
+     "tau": 5.4444
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_177",
+     "n_prompt": 625,
+     "n_generated": 82,
+     "cycles": 15,
+     "committed": 81,
+     "hist": [
+      1,
+      0,
+      0,
+      1,
+      2,
+      11
+     ],
+     "tau": 5.4
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_18",
+     "n_prompt": 428,
+     "n_generated": 63,
+     "cycles": 12,
+     "committed": 60,
+     "hist": [
+      1,
+      0,
+      2,
+      0,
+      1,
+      8
+     ],
+     "tau": 5.0
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_3",
+     "n_prompt": 513,
+     "n_generated": 90,
+     "cycles": 15,
+     "committed": 87,
+     "hist": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      14
+     ],
+     "tau": 5.8
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_196",
+     "n_prompt": 427,
+     "n_generated": 161,
+     "cycles": 28,
+     "committed": 159,
+     "hist": [
+      0,
+      2,
+      0,
+      0,
+      1,
+      25
+     ],
+     "tau": 5.6786
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_69",
+     "n_prompt": 390,
+     "n_generated": 115,
+     "cycles": 21,
+     "committed": 109,
+     "hist": [
+      1,
+      1,
+      2,
+      1,
+      0,
+      16
+     ],
+     "tau": 5.1905
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_176",
+     "n_prompt": 429,
+     "n_generated": 159,
+     "cycles": 27,
+     "committed": 153,
+     "hist": [
+      1,
+      0,
+      1,
+      0,
+      1,
+      24
+     ],
+     "tau": 5.6667
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_112",
+     "n_prompt": 385,
+     "n_generated": 125,
+     "cycles": 22,
+     "committed": 119,
+     "hist": [
+      2,
+      0,
+      1,
+      0,
+      0,
+      19
+     ],
+     "tau": 5.4091
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_186",
+     "n_prompt": 375,
+     "n_generated": 161,
+     "cycles": 29,
+     "committed": 160,
+     "hist": [
+      1,
+      0,
+      2,
+      1,
+      1,
+      24
+     ],
+     "tau": 5.5172
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_45",
+     "n_prompt": 377,
+     "n_generated": 115,
+     "cycles": 20,
+     "committed": 113,
+     "hist": [
+      1,
+      0,
+      0,
+      0,
+      2,
+      17
+     ],
+     "tau": 5.65
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_898-185-8",
+     "n_prompt": 1249,
+     "n_generated": 111,
+     "cycles": 20,
+     "committed": 108,
+     "hist": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      16
+     ],
+     "tau": 5.4
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_1027-255-1",
+     "n_prompt": 744,
+     "n_generated": 156,
+     "cycles": 29,
+     "committed": 154,
+     "hist": [
+      1,
+      2,
+      1,
+      0,
+      4,
+      21
+     ],
+     "tau": 5.3103
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_401-139-5",
+     "n_prompt": 891,
+     "n_generated": 93,
+     "cycles": 17,
+     "committed": 87,
+     "hist": [
+      0,
+      1,
+      3,
+      1,
+      0,
+      12
+     ],
+     "tau": 5.1176
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_29-9-0",
+     "n_prompt": 640,
+     "n_generated": 66,
+     "cycles": 13,
+     "committed": 65,
+     "hist": [
+      2,
+      0,
+      1,
+      0,
+      0,
+      10
+     ],
+     "tau": 5.0
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_690-164-6",
+     "n_prompt": 916,
+     "n_generated": 53,
+     "cycles": 10,
+     "committed": 52,
+     "hist": [
+      0,
+      0,
+      2,
+      1,
+      0,
+      7
+     ],
+     "tau": 5.2
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_540-152-2",
+     "n_prompt": 967,
+     "n_generated": 137,
+     "cycles": 26,
+     "committed": 131,
+     "hist": [
+      4,
+      0,
+      1,
+      0,
+      2,
+      19
+     ],
+     "tau": 5.0385
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task41-trial2-turn28",
+     "n_prompt": 8073,
+     "n_generated": 71,
+     "cycles": 13,
+     "committed": 65,
+     "hist": [
+      0,
+      0,
+      3,
+      1,
+      2,
+      7
+     ],
+     "tau": 5.0
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task95-trial2-turn8",
+     "n_prompt": 4392,
+     "n_generated": 57,
+     "cycles": 10,
+     "committed": 51,
+     "hist": [
+      1,
+      0,
+      0,
+      2,
+      0,
+      7
+     ],
+     "tau": 5.1
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task96-trial1-turn14",
+     "n_prompt": 5693,
+     "n_generated": 44,
+     "cycles": 7,
+     "committed": 40,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      6
+     ],
+     "tau": 5.7143
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task59-trial3-turn16",
+     "n_prompt": 5262,
+     "n_generated": 161,
+     "cycles": 42,
+     "committed": 156,
+     "hist": [
+      5,
+      8,
+      5,
+      9,
+      6,
+      9
+     ],
+     "tau": 3.7143
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task87-trial0-turn12",
+     "n_prompt": 4934,
+     "n_generated": 146,
+     "cycles": 24,
+     "committed": 142,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      23
+     ],
+     "tau": 5.9167
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task108-trial2-turn24",
+     "n_prompt": 7296,
+     "n_generated": 161,
+     "cycles": 40,
+     "committed": 155,
+     "hist": [
+      4,
+      6,
+      8,
+      5,
+      7,
+      10
+     ],
+     "tau": 3.875
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task7-trial0-turn12",
+     "n_prompt": 4509,
+     "n_generated": 99,
+     "cycles": 32,
+     "committed": 95,
+     "hist": [
+      11,
+      4,
+      7,
+      1,
+      3,
+      6
+     ],
+     "tau": 2.9688
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task83-trial3-turn6",
+     "n_prompt": 4275,
+     "n_generated": 32,
+     "cycles": 8,
+     "committed": 27,
+     "hist": [
+      1,
+      2,
+      1,
+      2,
+      1,
+      1
+     ],
+     "tau": 3.375
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task94-trial0-turn24",
+     "n_prompt": 8428,
+     "n_generated": 128,
+     "cycles": 30,
+     "committed": 125,
+     "hist": [
+      3,
+      5,
+      5,
+      2,
+      1,
+      14
+     ],
+     "tau": 4.1667
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task1-trial2-turn26",
+     "n_prompt": 7975,
+     "n_generated": 161,
+     "cycles": 39,
+     "committed": 159,
+     "hist": [
+      5,
+      5,
+      7,
+      3,
+      3,
+      16
+     ],
+     "tau": 4.0769
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task62-trial2-turn14",
+     "n_prompt": 4946,
+     "n_generated": 44,
+     "cycles": 7,
+     "committed": 38,
+     "hist": [
+      0,
+      0,
+      1,
+      0,
+      1,
+      5
+     ],
+     "tau": 5.4286
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task108-trial1-turn24",
+     "n_prompt": 6352,
+     "n_generated": 75,
+     "cycles": 17,
+     "committed": 70,
+     "hist": [
+      2,
+      1,
+      6,
+      0,
+      0,
+      8
+     ],
+     "tau": 4.1176
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task42-trial2-turn6",
+     "n_prompt": 4229,
+     "n_generated": 45,
+     "cycles": 7,
+     "committed": 41,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      6
+     ],
+     "tau": 5.8571
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task10-trial1-turn8",
+     "n_prompt": 4438,
+     "n_generated": 112,
+     "cycles": 26,
+     "committed": 108,
+     "hist": [
+      3,
+      3,
+      3,
+      5,
+      2,
+      10
+     ],
+     "tau": 4.1538
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task37-trial1-turn6",
+     "n_prompt": 4015,
+     "n_generated": 67,
+     "cycles": 19,
+     "committed": 61,
+     "hist": [
+      1,
+      6,
+      6,
+      2,
+      2,
+      2
+     ],
+     "tau": 3.2105
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task49-trial3-turn8",
+     "n_prompt": 4392,
+     "n_generated": 154,
+     "cycles": 47,
+     "committed": 148,
+     "hist": [
+      7,
+      12,
+      11,
+      7,
+      4,
+      6
+     ],
+     "tau": 3.1489
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task32-trial2-turn18",
+     "n_prompt": 5173,
+     "n_generated": 148,
+     "cycles": 37,
+     "committed": 143,
+     "hist": [
+      7,
+      4,
+      5,
+      4,
+      5,
+      12
+     ],
+     "tau": 3.8649
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task48-trial0-turn2",
+     "n_prompt": 3820,
+     "n_generated": 27,
+     "cycles": 7,
+     "committed": 24,
+     "hist": [
+      0,
+      2,
+      2,
+      2,
+      0,
+      1
+     ],
+     "tau": 3.4286
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task17-trial2-turn22",
+     "n_prompt": 6501,
+     "n_generated": 161,
+     "cycles": 34,
+     "committed": 160,
+     "hist": [
+      3,
+      2,
+      3,
+      4,
+      4,
+      18
+     ],
+     "tau": 4.7059
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task19-trial3-turn10",
+     "n_prompt": 4917,
+     "n_generated": 80,
+     "cycles": 13,
+     "committed": 76,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      12
+     ],
+     "tau": 5.8462
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task42-trial3-turn4",
+     "n_prompt": 3891,
+     "n_generated": 81,
+     "cycles": 13,
+     "committed": 76,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      12
+     ],
+     "tau": 5.8462
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task26-trial1-turn38",
+     "n_prompt": 7447,
+     "n_generated": 143,
+     "cycles": 24,
+     "committed": 139,
+     "hist": [
+      0,
+      1,
+      0,
+      0,
+      1,
+      22
+     ],
+     "tau": 5.7917
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task40-trial1-turn16",
+     "n_prompt": 5866,
+     "n_generated": 161,
+     "cycles": 40,
+     "committed": 158,
+     "hist": [
+      3,
+      4,
+      11,
+      8,
+      2,
+      12
+     ],
+     "tau": 3.95
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task7-trial2-turn4",
+     "n_prompt": 3874,
+     "n_generated": 56,
+     "cycles": 10,
+     "committed": 55,
+     "hist": [
+      0,
+      0,
+      1,
+      1,
+      0,
+      8
+     ],
+     "tau": 5.5
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "aio-libs__aioftp-97-swe-agent-llama-70b-step10",
+     "n_prompt": 2917,
+     "n_generated": 46,
+     "cycles": 10,
+     "committed": 41,
+     "hist": [
+      2,
+      0,
+      2,
+      1,
+      1,
+      4
+     ],
+     "tau": 4.1
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "johnsyweb__python_sparse_list-17-swe-agent-llama-70b-step2",
+     "n_prompt": 1891,
+     "n_generated": 21,
+     "cycles": 4,
+     "committed": 18,
+     "hist": [
+      1,
+      0,
+      0,
+      0,
+      1,
+      2
+     ],
+     "tau": 4.5
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "matchms__matchms-493-swe-agent-llama-70b-step16",
+     "n_prompt": 4674,
+     "n_generated": 52,
+     "cycles": 12,
+     "committed": 49,
+     "hist": [
+      1,
+      3,
+      1,
+      1,
+      1,
+      5
+     ],
+     "tau": 4.0833
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "RDFLib__rdflib-1130-swe-agent-llama-70b-step2",
+     "n_prompt": 1933,
+     "n_generated": 24,
+     "cycles": 6,
+     "committed": 21,
+     "hist": [
+      1,
+      0,
+      2,
+      2,
+      0,
+      1
+     ],
+     "tau": 3.5
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "pydantic__pydantic-4399-swe-agent-llama-70b-step22",
+     "n_prompt": 6738,
+     "n_generated": 102,
+     "cycles": 25,
+     "committed": 97,
+     "hist": [
+      5,
+      4,
+      3,
+      0,
+      3,
+      10
+     ],
+     "tau": 3.88
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Erotemic__ubelt-64-swe-agent-llama-70b-step12",
+     "n_prompt": 6133,
+     "n_generated": 92,
+     "cycles": 23,
+     "committed": 87,
+     "hist": [
+      3,
+      5,
+      2,
+      3,
+      4,
+      6
+     ],
+     "tau": 3.7826
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "geomet__geomet-101-swe-agent-llama-8b-step4",
+     "n_prompt": 2418,
+     "n_generated": 108,
+     "cycles": 23,
+     "committed": 102,
+     "hist": [
+      1,
+      2,
+      2,
+      6,
+      5,
+      7
+     ],
+     "tau": 4.4348
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "ttu__ruuvitag-sensor-41-swe-agent-llama-70b-step12",
+     "n_prompt": 5933,
+     "n_generated": 90,
+     "cycles": 27,
+     "committed": 85,
+     "hist": [
+      5,
+      9,
+      2,
+      4,
+      2,
+      5
+     ],
+     "tau": 3.1481
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "asottile__pyupgrade-347-swe-agent-llama-70b-step16",
+     "n_prompt": 5547,
+     "n_generated": 161,
+     "cycles": 47,
+     "committed": 156,
+     "hist": [
+      9,
+      9,
+      10,
+      5,
+      5,
+      9
+     ],
+     "tau": 3.3191
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "pydantic__pydantic-3975-swe-agent-llama-405b-step6",
+     "n_prompt": 6292,
+     "n_generated": 24,
+     "cycles": 5,
+     "committed": 21,
+     "hist": [
+      0,
+      1,
+      0,
+      2,
+      1,
+      1
+     ],
+     "tau": 4.2
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "multiply-org__multiply-ui-13-swe-agent-llama-70b-step28",
+     "n_prompt": 6579,
+     "n_generated": 161,
+     "cycles": 40,
+     "committed": 156,
+     "hist": [
+      5,
+      6,
+      6,
+      6,
+      5,
+      12
+     ],
+     "tau": 3.9
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "snowblink14__smatch-30-swe-agent-llama-70b-step10",
+     "n_prompt": 3605,
+     "n_generated": 64,
+     "cycles": 15,
+     "committed": 58,
+     "hist": [
+      1,
+      4,
+      2,
+      2,
+      1,
+      5
+     ],
+     "tau": 3.8667
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "marshmallow-code__apispec-webframeworks-64-swe-agent-llama-70b-step24",
+     "n_prompt": 3586,
+     "n_generated": 20,
+     "cycles": 5,
+     "committed": 16,
+     "hist": [
+      0,
+      2,
+      1,
+      1,
+      1,
+      0
+     ],
+     "tau": 3.2
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Azure__msrest-for-python-208-swe-agent-llama-70b-step6",
+     "n_prompt": 3034,
+     "n_generated": 19,
+     "cycles": 4,
+     "committed": 16,
+     "hist": [
+      1,
+      0,
+      0,
+      1,
+      1,
+      1
+     ],
+     "tau": 4.0
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "iterative__dvc-5785-swe-agent-llama-70b-step4",
+     "n_prompt": 2236,
+     "n_generated": 25,
+     "cycles": 4,
+     "committed": 21,
+     "hist": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      3
+     ],
+     "tau": 5.25
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "nose-devs__nose2-472-swe-agent-llama-70b-step6",
+     "n_prompt": 2472,
+     "n_generated": 33,
+     "cycles": 9,
+     "committed": 30,
+     "hist": [
+      1,
+      2,
+      2,
+      1,
+      3,
+      0
+     ],
+     "tau": 3.3333
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "ameily__cincoconfig-26-swe-agent-llama-70b-step22",
+     "n_prompt": 6826,
+     "n_generated": 36,
+     "cycles": 7,
+     "committed": 33,
+     "hist": [
+      1,
+      0,
+      1,
+      0,
+      1,
+      4
+     ],
+     "tau": 4.7143
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Azure__msrest-for-python-208-swe-agent-llama-405b-step6",
+     "n_prompt": 3025,
+     "n_generated": 19,
+     "cycles": 3,
+     "committed": 18,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      3
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "fairlearn__fairlearn-896-swe-agent-llama-70b-step14",
+     "n_prompt": 7427,
+     "n_generated": 83,
+     "cycles": 21,
+     "committed": 78,
+     "hist": [
+      4,
+      4,
+      3,
+      1,
+      1,
+      8
+     ],
+     "tau": 3.7143
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "just-work__fffw-100-swe-agent-llama-70b-step28",
+     "n_prompt": 7593,
+     "n_generated": 161,
+     "cycles": 36,
+     "committed": 157,
+     "hist": [
+      5,
+      2,
+      4,
+      5,
+      4,
+      16
+     ],
+     "tau": 4.3611
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "imageio__imageio-255-swe-agent-llama-70b-step8",
+     "n_prompt": 2671,
+     "n_generated": 103,
+     "cycles": 31,
+     "committed": 99,
+     "hist": [
+      5,
+      10,
+      4,
+      5,
+      0,
+      7
+     ],
+     "tau": 3.1935
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "tobymao__sqlglot-1841-swe-agent-llama-70b-step4",
+     "n_prompt": 2164,
+     "n_generated": 68,
+     "cycles": 16,
+     "committed": 64,
+     "hist": [
+      3,
+      0,
+      2,
+      4,
+      3,
+      4
+     ],
+     "tau": 4.0
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "iterative__dvc-3493-swe-agent-llama-70b-step12",
+     "n_prompt": 5792,
+     "n_generated": 161,
+     "cycles": 36,
+     "committed": 156,
+     "hist": [
+      3,
+      3,
+      5,
+      7,
+      4,
+      14
+     ],
+     "tau": 4.3333
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "devopshq__artifactory-439-swe-agent-llama-70b-step8",
+     "n_prompt": 4461,
+     "n_generated": 43,
+     "cycles": 11,
+     "committed": 40,
+     "hist": [
+      1,
+      3,
+      1,
+      2,
+      2,
+      2
+     ],
+     "tau": 3.6364
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+     "n_prompt": 2758,
+     "n_generated": 37,
+     "cycles": 9,
+     "committed": 35,
+     "hist": [
+      1,
+      0,
+      3,
+      2,
+      1,
+      2
+     ],
+     "tau": 3.8889
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step4",
+     "n_prompt": 2319,
+     "n_generated": 36,
+     "cycles": 8,
+     "committed": 31,
+     "hist": [
+      1,
+      0,
+      2,
+      2,
+      2,
+      1
+     ],
+     "tau": 3.875
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step2",
+     "n_prompt": 1837,
+     "n_generated": 42,
+     "cycles": 10,
+     "committed": 39,
+     "hist": [
+      1,
+      1,
+      4,
+      0,
+      0,
+      4
+     ],
+     "tau": 3.9
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step9",
+     "n_prompt": 2801,
+     "n_generated": 40,
+     "cycles": 10,
+     "committed": 38,
+     "hist": [
+      2,
+      1,
+      1,
+      1,
+      3,
+      2
+     ],
+     "tau": 3.8
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step1",
+     "n_prompt": 1723,
+     "n_generated": 41,
+     "cycles": 10,
+     "committed": 36,
+     "hist": [
+      1,
+      2,
+      2,
+      2,
+      1,
+      2
+     ],
+     "tau": 3.6
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step7",
+     "n_prompt": 2658,
+     "n_generated": 36,
+     "cycles": 10,
+     "committed": 33,
+     "hist": [
+      2,
+      3,
+      1,
+      0,
+      2,
+      2
+     ],
+     "tau": 3.3
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step6",
+     "n_prompt": 2993,
+     "n_generated": 42,
+     "cycles": 10,
+     "committed": 40,
+     "hist": [
+      0,
+      2,
+      2,
+      2,
+      2,
+      2
+     ],
+     "tau": 4.0
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step5",
+     "n_prompt": 1520,
+     "n_generated": 38,
+     "cycles": 9,
+     "committed": 33,
+     "hist": [
+      1,
+      2,
+      1,
+      2,
+      1,
+      2
+     ],
+     "tau": 3.6667
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step6",
+     "n_prompt": 2523,
+     "n_generated": 47,
+     "cycles": 11,
+     "committed": 42,
+     "hist": [
+      1,
+      3,
+      1,
+      1,
+      2,
+      3
+     ],
+     "tau": 3.8182
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step1",
+     "n_prompt": 3163,
+     "n_generated": 49,
+     "cycles": 16,
+     "committed": 44,
+     "hist": [
+      3,
+      4,
+      3,
+      6,
+      0,
+      0
+     ],
+     "tau": 2.75
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "63d1f820-37bf-4adb-aabb-65eb7925790c-step1",
+     "n_prompt": 1724,
+     "n_generated": 39,
+     "cycles": 7,
+     "committed": 37,
+     "hist": [
+      0,
+      0,
+      0,
+      2,
+      1,
+      4
+     ],
+     "tau": 5.2857
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step0",
+     "n_prompt": 2702,
+     "n_generated": 34,
+     "cycles": 9,
+     "committed": 33,
+     "hist": [
+      1,
+      1,
+      2,
+      3,
+      0,
+      2
+     ],
+     "tau": 3.6667
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step4",
+     "n_prompt": 1532,
+     "n_generated": 37,
+     "cycles": 8,
+     "committed": 35,
+     "hist": [
+      0,
+      1,
+      1,
+      2,
+      2,
+      2
+     ],
+     "tau": 4.375
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step0",
+     "n_prompt": 1521,
+     "n_generated": 41,
+     "cycles": 8,
+     "committed": 36,
+     "hist": [
+      0,
+      1,
+      1,
+      2,
+      1,
+      3
+     ],
+     "tau": 4.5
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "0633c328-f1ad-42bd-8aec-7a1883b5898d-step3",
+     "n_prompt": 3068,
+     "n_generated": 33,
+     "cycles": 11,
+     "committed": 31,
+     "hist": [
+      3,
+      3,
+      1,
+      2,
+      1,
+      1
+     ],
+     "tau": 2.8182
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step2",
+     "n_prompt": 2213,
+     "n_generated": 39,
+     "cycles": 7,
+     "committed": 34,
+     "hist": [
+      0,
+      1,
+      0,
+      1,
+      2,
+      3
+     ],
+     "tau": 4.8571
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step2",
+     "n_prompt": 2639,
+     "n_generated": 38,
+     "cycles": 12,
+     "committed": 37,
+     "hist": [
+      3,
+      3,
+      2,
+      1,
+      0,
+      3
+     ],
+     "tau": 3.0833
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step1",
+     "n_prompt": 2818,
+     "n_generated": 43,
+     "cycles": 9,
+     "committed": 41,
+     "hist": [
+      1,
+      1,
+      0,
+      1,
+      2,
+      4
+     ],
+     "tau": 4.5556
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step6",
+     "n_prompt": 2378,
+     "n_generated": 38,
+     "cycles": 8,
+     "committed": 36,
+     "hist": [
+      1,
+      0,
+      1,
+      1,
+      2,
+      3
+     ],
+     "tau": 4.5
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step8",
+     "n_prompt": 2677,
+     "n_generated": 49,
+     "cycles": 15,
+     "committed": 47,
+     "hist": [
+      4,
+      1,
+      4,
+      3,
+      1,
+      2
+     ],
+     "tau": 3.1333
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step2",
+     "n_prompt": 2865,
+     "n_generated": 41,
+     "cycles": 10,
+     "committed": 36,
+     "hist": [
+      1,
+      1,
+      2,
+      4,
+      1,
+      1
+     ],
+     "tau": 3.6
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step4",
+     "n_prompt": 2633,
+     "n_generated": 38,
+     "cycles": 8,
+     "committed": 35,
+     "hist": [
+      0,
+      2,
+      1,
+      1,
+      0,
+      4
+     ],
+     "tau": 4.375
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step3",
+     "n_prompt": 2759,
+     "n_generated": 37,
+     "cycles": 10,
+     "committed": 35,
+     "hist": [
+      1,
+      2,
+      2,
+      3,
+      0,
+      2
+     ],
+     "tau": 3.5
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step2",
+     "n_prompt": 3101,
+     "n_generated": 32,
+     "cycles": 10,
+     "committed": 30,
+     "hist": [
+      3,
+      1,
+      2,
+      2,
+      1,
+      1
+     ],
+     "tau": 3.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-29",
+     "n_prompt": 424,
+     "n_generated": 105,
+     "cycles": 17,
+     "committed": 102,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      17
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-83",
+     "n_prompt": 236,
+     "n_generated": 46,
+     "cycles": 7,
+     "committed": 42,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      7
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-51",
+     "n_prompt": 214,
+     "n_generated": 53,
+     "cycles": 8,
+     "committed": 48,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      8
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-33",
+     "n_prompt": 273,
+     "n_generated": 112,
+     "cycles": 19,
+     "committed": 106,
+     "hist": [
+      0,
+      1,
+      1,
+      0,
+      1,
+      16
+     ],
+     "tau": 5.5789
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-55",
+     "n_prompt": 299,
+     "n_generated": 54,
+     "cycles": 9,
+     "committed": 49,
+     "hist": [
+      0,
+      1,
+      0,
+      0,
+      1,
+      7
+     ],
+     "tau": 5.4444
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-27",
+     "n_prompt": 453,
+     "n_generated": 161,
+     "cycles": 27,
+     "committed": 156,
+     "hist": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      24
+     ],
+     "tau": 5.7778
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-4",
+     "n_prompt": 243,
+     "n_generated": 124,
+     "cycles": 21,
+     "committed": 119,
+     "hist": [
+      1,
+      0,
+      0,
+      1,
+      0,
+      19
+     ],
+     "tau": 5.6667
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-93",
+     "n_prompt": 305,
+     "n_generated": 71,
+     "cycles": 11,
+     "committed": 66,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      11
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-26",
+     "n_prompt": 311,
+     "n_generated": 82,
+     "cycles": 13,
+     "committed": 78,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      13
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-84",
+     "n_prompt": 332,
+     "n_generated": 79,
+     "cycles": 13,
+     "committed": 78,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      13
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-89",
+     "n_prompt": 262,
+     "n_generated": 47,
+     "cycles": 8,
+     "committed": 46,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      2,
+      6
+     ],
+     "tau": 5.75
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-28",
+     "n_prompt": 355,
+     "n_generated": 159,
+     "cycles": 26,
+     "committed": 154,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      0,
+      25
+     ],
+     "tau": 5.9231
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-90",
+     "n_prompt": 322,
+     "n_generated": 92,
+     "cycles": 15,
+     "committed": 87,
+     "hist": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      13
+     ],
+     "tau": 5.8
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-11",
+     "n_prompt": 329,
+     "n_generated": 84,
+     "cycles": 14,
+     "committed": 81,
+     "hist": [
+      0,
+      0,
+      1,
+      0,
+      0,
+      13
+     ],
+     "tau": 5.7857
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-49",
+     "n_prompt": 273,
+     "n_generated": 61,
+     "cycles": 10,
+     "committed": 59,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      9
+     ],
+     "tau": 5.9
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-73",
+     "n_prompt": 338,
+     "n_generated": 53,
+     "cycles": 8,
+     "committed": 48,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      8
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-39",
+     "n_prompt": 262,
+     "n_generated": 133,
+     "cycles": 24,
+     "committed": 128,
+     "hist": [
+      2,
+      1,
+      0,
+      1,
+      0,
+      20
+     ],
+     "tau": 5.3333
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-10",
+     "n_prompt": 256,
+     "n_generated": 37,
+     "cycles": 6,
+     "committed": 36,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      6
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-43",
+     "n_prompt": 314,
+     "n_generated": 78,
+     "cycles": 14,
+     "committed": 77,
+     "hist": [
+      0,
+      0,
+      2,
+      0,
+      1,
+      11
+     ],
+     "tau": 5.5
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-37",
+     "n_prompt": 271,
+     "n_generated": 22,
+     "cycles": 3,
+     "committed": 18,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      3
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-52",
+     "n_prompt": 318,
+     "n_generated": 65,
+     "cycles": 11,
+     "committed": 60,
+     "hist": [
+      0,
+      0,
+      1,
+      1,
+      1,
+      8
+     ],
+     "tau": 5.4545
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-12",
+     "n_prompt": 317,
+     "n_generated": 121,
+     "cycles": 22,
+     "committed": 120,
+     "hist": [
+      1,
+      1,
+      0,
+      0,
+      3,
+      17
+     ],
+     "tau": 5.4545
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-77",
+     "n_prompt": 264,
+     "n_generated": 41,
+     "cycles": 6,
+     "committed": 36,
+     "hist": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      6
+     ],
+     "tau": 6.0
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-97",
+     "n_prompt": 298,
+     "n_generated": 32,
+     "cycles": 6,
+     "committed": 29,
+     "hist": [
+      1,
+      0,
+      0,
+      0,
+      2,
+      3
+     ],
+     "tau": 4.8333
+    }
+   ]
+  },
+  "t1": {
+   "headline_multiturn": {
+    "prompts": 72,
+    "cycles": 1259.0,
+    "generated_tokens": 5159,
+    "tau_pooled": 3.877,
+    "tau_pooled_ci95": [
+     3.695,
+     4.083
+    ],
+    "tau_median_of_prompts": 3.793,
+    "tau_median_of_prompts_ci95": [
+     3.608,
+     4.08
+    ],
+    "per_prompt_tau_quartiles": [
+     3.407,
+     3.793,
+     4.363
+    ],
+    "histogram_accepted_0_5": [
+     154.92,
+     204.76,
+     198.76,
+     175.46,
+     132.13,
+     392.93
+    ],
+    "conditional_acceptance_by_depth": [
+     0.8769,
+     0.8145,
+     0.779,
+     0.7495,
+     0.7484
+    ],
+    "alpha_equivalent_pooled": 0.8211,
+    "alpha_equivalent_median": 0.8118,
+    "rates": {
+     "rom_mtp_at_median": 4769.7,
+     "rom_mtp_at_median_ci95": [
+      4537.3,
+      5130.9
+     ],
+     "rom_mtp_at_pooled": 4875.5,
+     "hbm_w19_mtp_at_median": 4953.2,
+     "hbm_w19_mtp_at_median_ci95": [
+      4711.9,
+      5328.3
+     ],
+     "hbm_w19_mtp_at_pooled": 5063.0
+    },
+    "per_workload": {
+     "agentic_mind2web": {
+      "prompts": 24,
+      "tau_pooled": 3.491,
+      "tau_median": 3.488,
+      "n_prompt_range": [
+       1520,
+       3163
+      ]
+     },
+     "agentic_swe_agent": {
+      "prompts": 24,
+      "tau_pooled": 3.818,
+      "tau_median": 3.817,
+      "n_prompt_range": [
+       1891,
+       7593
+      ]
+     },
+     "agentic_tau_bench": {
+      "prompts": 24,
+      "tau_pooled": 4.105,
+      "tau_median": 4.432,
+      "n_prompt_range": [
+       3820,
+       8428
+      ]
+     }
+    }
+   },
+   "separate_single_shot": {
+    "prompts": 48,
+    "cycles": 795.5,
+    "generated_tokens": 4422,
+    "tau_pooled": 5.356,
+    "tau_pooled_ci95": [
+     5.004,
+     5.582
+    ],
+    "tau_median_of_prompts": 5.573,
+    "tau_median_of_prompts_ci95": [
+     5.455,
+     5.705
+    ],
+    "per_prompt_tau_quartiles": [
+     5.29,
+     5.573,
+     5.782
+    ],
+    "histogram_accepted_0_5": [
+     31.76,
+     33.91,
+     41.7,
+     28.36,
+     35.81,
+     623.97
+    ],
+    "conditional_acceptance_by_depth": [
+     0.9601,
+     0.9556,
+     0.9429,
+     0.9588,
+     0.9457
+    ],
+    "alpha_equivalent_pooled": 0.9544,
+    "alpha_equivalent_median": 0.9704,
+    "rates": {
+     "rom_mtp_at_median": 7008.7,
+     "rom_mtp_at_median_ci95": [
+      6860.1,
+      7174.5
+     ],
+     "rom_mtp_at_pooled": 6735.9,
+     "hbm_w19_mtp_at_median": 7278.3,
+     "hbm_w19_mtp_at_median_ci95": [
+      7124.0,
+      7450.5
+     ],
+     "hbm_w19_mtp_at_pooled": 6995.1
+    },
+    "per_workload": {
+     "agentic_bfcl": {
+      "prompts": 24,
+      "tau_pooled": 5.109,
+      "tau_median": 5.319,
+      "n_prompt_range": [
+       309,
+       1249
+      ]
+     },
+     "agentic_json_mode": {
+      "prompts": 24,
+      "tau_pooled": 5.694,
+      "tau_median": 5.775,
+      "n_prompt_range": [
+       214,
+       453
+      ]
+     }
+    }
+   },
+   "all_agentic": {
+    "prompts": 120,
+    "cycles": 2054.5,
+    "generated_tokens": 9581,
+    "tau_pooled": 4.45,
+    "tau_pooled_ci95": [
+     4.272,
+     4.637
+    ],
+    "tau_median_of_prompts": 4.624,
+    "tau_median_of_prompts_ci95": [
+     4.262,
+     5.052
+    ],
+    "per_prompt_tau_quartiles": [
+     3.608,
+     4.624,
+     5.568
+    ],
+    "histogram_accepted_0_5": [
+     186.68,
+     238.67,
+     240.46,
+     203.83,
+     167.94,
+     1016.91
+    ],
+    "conditional_acceptance_by_depth": [
+     0.9091,
+     0.8722,
+     0.8524,
+     0.8532,
+     0.8583
+    ],
+    "alpha_equivalent_pooled": 0.8787,
+    "alpha_equivalent_median": 0.8946,
+    "rates": {
+     "rom_mtp_at_median": 5815.1,
+     "rom_mtp_at_median_ci95": [
+      5359.8,
+      6353.3
+     ],
+     "rom_mtp_at_pooled": 5595.9,
+     "hbm_w19_mtp_at_median": 6038.8,
+     "hbm_w19_mtp_at_median_ci95": [
+      5566.0,
+      6597.7
+     ],
+     "hbm_w19_mtp_at_pooled": 5811.1
+    },
+    "per_workload": {
+     "agentic_bfcl": {
+      "prompts": 24,
+      "tau_pooled": 5.109,
+      "tau_median": 5.319,
+      "n_prompt_range": [
+       309,
+       1249
+      ]
+     },
+     "agentic_json_mode": {
+      "prompts": 24,
+      "tau_pooled": 5.694,
+      "tau_median": 5.775,
+      "n_prompt_range": [
+       214,
+       453
+      ]
+     },
+     "agentic_mind2web": {
+      "prompts": 24,
+      "tau_pooled": 3.491,
+      "tau_median": 3.488,
+      "n_prompt_range": [
+       1520,
+       3163
+      ]
+     },
+     "agentic_swe_agent": {
+      "prompts": 24,
+      "tau_pooled": 3.818,
+      "tau_median": 3.817,
+      "n_prompt_range": [
+       1891,
+       7593
+      ]
+     },
+     "agentic_tau_bench": {
+      "prompts": 24,
+      "tau_pooled": 4.105,
+      "tau_median": 4.432,
+      "n_prompt_range": [
+       3820,
+       8428
+      ]
+     }
+    }
+   },
+   "per_prompt": [
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_219",
+     "n_prompt": 355,
+     "n_generated": 76,
+     "cycles": 14.8275,
+     "committed": 72.2485,
+     "hist": [
+      0.2765,
+      2.4185,
+      1.211,
+      0.6635,
+      0.7,
+      9.558
+     ],
+     "tau_replay_sd": 0.19424735280609803,
+     "tau": 4.8726
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_199",
+     "n_prompt": 342,
+     "n_generated": 76,
+     "cycles": 13.132,
+     "committed": 73.231,
+     "hist": [
+      0.092,
+      0.125,
+      0.9145,
+      0.0565,
+      1.7445,
+      10.1995
+     ],
+     "tau_replay_sd": 0.1314047304649169,
+     "tau": 5.5765
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_168",
+     "n_prompt": 423,
+     "n_generated": 114,
+     "cycles": 20.5335,
+     "committed": 112.276,
+     "hist": [
+      0.433,
+      1.06,
+      1.064,
+      0.3295,
+      0.669,
+      16.978
+     ],
+     "tau_replay_sd": 0.13808231686621755,
+     "tau": 5.4679
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_149",
+     "n_prompt": 309,
+     "n_generated": 56,
+     "cycles": 9.9255,
+     "committed": 50.979,
+     "hist": [
+      1.5305,
+      0.1455,
+      0.0145,
+      0.071,
+      0.154,
+      8.01
+     ],
+     "tau_replay_sd": 0.41868609428319653,
+     "tau": 5.1362
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_175",
+     "n_prompt": 332,
+     "n_generated": 68,
+     "cycles": 12.1515,
+     "committed": 65.908,
+     "hist": [
+      0.3155,
+      0.835,
+      0.0305,
+      0.968,
+      0.056,
+      9.9465
+     ],
+     "tau_replay_sd": 0.15687494299456886,
+     "tau": 5.4239
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "simple_46",
+     "n_prompt": 462,
+     "n_generated": 106,
+     "cycles": 19.0015,
+     "committed": 104.6165,
+     "hist": [
+      0.0195,
+      1.9745,
+      0.0855,
+      0.098,
+      0.9445,
+      15.8795
+     ],
+     "tau_replay_sd": 0.07642853773337138,
+     "tau": 5.5057
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_118",
+     "n_prompt": 742,
+     "n_generated": 85,
+     "cycles": 16.413,
+     "committed": 83.7895,
+     "hist": [
+      0.7555,
+      0.677,
+      1.498,
+      1.2115,
+      1.286,
+      10.985
+     ],
+     "tau_replay_sd": 0.1618596670959608,
+     "tau": 5.1051
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_25",
+     "n_prompt": 635,
+     "n_generated": 103,
+     "cycles": 19.334,
+     "committed": 99.8985,
+     "hist": [
+      1.7995,
+      1.245,
+      0.5525,
+      0.203,
+      0.0645,
+      15.4695
+     ],
+     "tau_replay_sd": 0.16832702745766967,
+     "tau": 5.167
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_188",
+     "n_prompt": 755,
+     "n_generated": 103,
+     "cycles": 19.0295,
+     "committed": 100.2245,
+     "hist": [
+      1.146,
+      0.581,
+      1.3295,
+      0.5805,
+      0.749,
+      14.6435
+     ],
+     "tau_replay_sd": 0.16022078930493683,
+     "tau": 5.2668
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_177",
+     "n_prompt": 625,
+     "n_generated": 82,
+     "cycles": 15.0445,
+     "committed": 79.3195,
+     "hist": [
+      0.945,
+      0.303,
+      0.7295,
+      1.037,
+      0.748,
+      11.282
+     ],
+     "tau_replay_sd": 0.1812856218331917,
+     "tau": 5.2723
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_18",
+     "n_prompt": 428,
+     "n_generated": 63,
+     "cycles": 11.1305,
+     "committed": 58.766,
+     "hist": [
+      0.7405,
+      0.127,
+      0.765,
+      0.345,
+      0.8215,
+      8.3315
+     ],
+     "tau_replay_sd": 0.2748264450362211,
+     "tau": 5.2797
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "multiple_3",
+     "n_prompt": 513,
+     "n_generated": 90,
+     "cycles": 15.023,
+     "committed": 86.904,
+     "hist": [
+      0.0055,
+      0.092,
+      0.9295,
+      0.016,
+      0.018,
+      13.962
+     ],
+     "tau_replay_sd": 0.06043344652039405,
+     "tau": 5.7847
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_196",
+     "n_prompt": 427,
+     "n_generated": 161,
+     "cycles": 27.414,
+     "committed": 157.095,
+     "hist": [
+      0.055,
+      1.1935,
+      0.432,
+      0.276,
+      0.492,
+      24.9655
+     ],
+     "tau_replay_sd": 0.10201490323583164,
+     "tau": 5.7305
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_69",
+     "n_prompt": 390,
+     "n_generated": 115,
+     "cycles": 20.699,
+     "committed": 110.629,
+     "hist": [
+      1.007,
+      0.905,
+      0.852,
+      0.942,
+      0.47,
+      16.523
+     ],
+     "tau_replay_sd": 0.18983893522845366,
+     "tau": 5.3447
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_176",
+     "n_prompt": 429,
+     "n_generated": 156,
+     "cycles": 26.2925,
+     "committed": 150.539,
+     "hist": [
+      0.668,
+      0.2635,
+      0.26,
+      0.578,
+      0.886,
+      23.637
+     ],
+     "tau_replay_sd": 0.09087074756959714,
+     "tau": 5.7255
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_112",
+     "n_prompt": 385,
+     "n_generated": 125,
+     "cycles": 22.076,
+     "committed": 120.073,
+     "hist": [
+      1.63,
+      0.166,
+      1.0225,
+      0.2495,
+      0.0025,
+      19.0055
+     ],
+     "tau_replay_sd": 0.14279253502489336,
+     "tau": 5.4391
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_186",
+     "n_prompt": 375,
+     "n_generated": 161,
+     "cycles": 27.921,
+     "committed": 158.593,
+     "hist": [
+      0.147,
+      0.033,
+      1.604,
+      1.2055,
+      0.843,
+      24.0885
+     ],
+     "tau_replay_sd": 0.0503839563193367,
+     "tau": 5.6801
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "parallel_45",
+     "n_prompt": 377,
+     "n_generated": 115,
+     "cycles": 20.287,
+     "committed": 112.466,
+     "hist": [
+      1.215,
+      0.136,
+      0.031,
+      0.5085,
+      1.527,
+      16.8695
+     ],
+     "tau_replay_sd": 0.15235192330330924,
+     "tau": 5.5437
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_898-185-8",
+     "n_prompt": 1249,
+     "n_generated": 111,
+     "cycles": 19.273,
+     "committed": 107.563,
+     "hist": [
+      0.0505,
+      0.254,
+      1.7815,
+      0.3625,
+      0.737,
+      16.0875
+     ],
+     "tau_replay_sd": 0.13070000553164038,
+     "tau": 5.581
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_1027-255-1",
+     "n_prompt": 744,
+     "n_generated": 161,
+     "cycles": 53.361,
+     "committed": 155.0475,
+     "hist": [
+      12.5315,
+      14.311,
+      9.88,
+      5.4155,
+      4.746,
+      6.477
+     ],
+     "tau_replay_sd": 0.12411086843865252,
+     "tau": 2.9056
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_401-139-5",
+     "n_prompt": 891,
+     "n_generated": 93,
+     "cycles": 16.897,
+     "committed": 87.423,
+     "hist": [
+      0.0,
+      0.8905,
+      2.5955,
+      1.117,
+      0.3765,
+      11.9175
+     ],
+     "tau_replay_sd": 0.14926378464445486,
+     "tau": 5.1739
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_29-9-0",
+     "n_prompt": 640,
+     "n_generated": 17,
+     "cycles": 3.738,
+     "committed": 12.6125,
+     "hist": [
+      0.331,
+      0.995,
+      0.9215,
+      0.442,
+      0.532,
+      0.5165
+     ],
+     "tau_replay_sd": 0.6654492217041558,
+     "tau": 3.3741
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_690-164-6",
+     "n_prompt": 916,
+     "n_generated": 53,
+     "cycles": 10.3865,
+     "committed": 51.951,
+     "hist": [
+      0.3265,
+      0.358,
+      1.881,
+      0.827,
+      0.0065,
+      6.9875
+     ],
+     "tau_replay_sd": 0.25745694067720243,
+     "tau": 5.0018
+    },
+    {
+     "workload": "agentic_bfcl",
+     "prompt_id": "live_multiple_540-152-2",
+     "n_prompt": 967,
+     "n_generated": 137,
+     "cycles": 25.1985,
+     "committed": 133.3905,
+     "hist": [
+      1.8655,
+      0.498,
+      1.255,
+      0.603,
+      1.51,
+      19.467
+     ],
+     "tau_replay_sd": 0.18433161240375806,
+     "tau": 5.2936
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task41-trial2-turn28",
+     "n_prompt": 8073,
+     "n_generated": 71,
+     "cycles": 13.7795,
+     "committed": 68.099,
+     "hist": [
+      0.222,
+      0.197,
+      2.79,
+      1.546,
+      1.218,
+      7.8065
+     ],
+     "tau_replay_sd": 0.21630484728503063,
+     "tau": 4.9421
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task95-trial2-turn8",
+     "n_prompt": 4392,
+     "n_generated": 57,
+     "cycles": 9.91,
+     "committed": 53.531,
+     "hist": [
+      0.304,
+      0.157,
+      0.205,
+      1.5785,
+      0.009,
+      7.6565
+     ],
+     "tau_replay_sd": 0.2610245273277921,
+     "tau": 5.4017
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task96-trial1-turn14",
+     "n_prompt": 5693,
+     "n_generated": 155,
+     "cycles": 38.8375,
+     "committed": 150.8765,
+     "hist": [
+      5.3785,
+      6.324,
+      5.5305,
+      4.94,
+      3.4885,
+      13.176
+     ],
+     "tau_replay_sd": 0.1775202314072915,
+     "tau": 3.8848
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task59-trial3-turn16",
+     "n_prompt": 5262,
+     "n_generated": 161,
+     "cycles": 45.3385,
+     "committed": 156.458,
+     "hist": [
+      6.8115,
+      8.507,
+      9.0375,
+      7.416,
+      5.543,
+      8.0235
+     ],
+     "tau_replay_sd": 0.15776526234224264,
+     "tau": 3.4509
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task87-trial0-turn12",
+     "n_prompt": 4934,
+     "n_generated": 146,
+     "cycles": 24.536,
+     "committed": 142.099,
+     "hist": [
+      0.0,
+      0.0065,
+      0.009,
+      2.299,
+      0.466,
+      21.7555
+     ],
+     "tau_replay_sd": 0.11767468221046273,
+     "tau": 5.7914
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task108-trial2-turn24",
+     "n_prompt": 7296,
+     "n_generated": 143,
+     "cycles": 40.482,
+     "committed": 140.7115,
+     "hist": [
+      5.275,
+      11.005,
+      5.597,
+      5.5525,
+      3.8895,
+      9.163
+     ],
+     "tau_replay_sd": 0.16317079286559805,
+     "tau": 3.4759
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task7-trial0-turn12",
+     "n_prompt": 4509,
+     "n_generated": 105,
+     "cycles": 36.869,
+     "committed": 102.2115,
+     "hist": [
+      11.6725,
+      7.8755,
+      6.1,
+      3.841,
+      3.156,
+      4.224
+     ],
+     "tau_replay_sd": 0.17325616594243878,
+     "tau": 2.7723
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task83-trial3-turn6",
+     "n_prompt": 4275,
+     "n_generated": 33,
+     "cycles": 7.667,
+     "committed": 28.039,
+     "hist": [
+      1.0565,
+      1.304,
+      1.526,
+      0.757,
+      1.3725,
+      1.651
+     ],
+     "tau_replay_sd": 0.26701705898372946,
+     "tau": 3.6571
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task94-trial0-turn24",
+     "n_prompt": 8428,
+     "n_generated": 134,
+     "cycles": 31.9645,
+     "committed": 130.6635,
+     "hist": [
+      2.6645,
+      3.9315,
+      6.472,
+      3.564,
+      5.531,
+      9.8015
+     ],
+     "tau_replay_sd": 0.16199201734603075,
+     "tau": 4.0878
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task1-trial2-turn26",
+     "n_prompt": 7975,
+     "n_generated": 115,
+     "cycles": 20.762,
+     "committed": 109.9735,
+     "hist": [
+      0.181,
+      0.93,
+      1.993,
+      1.5495,
+      0.8955,
+      15.213
+     ],
+     "tau_replay_sd": 0.11576147978639394,
+     "tau": 5.2969
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task62-trial2-turn14",
+     "n_prompt": 4946,
+     "n_generated": 78,
+     "cycles": 12.887,
+     "committed": 74.74,
+     "hist": [
+      0.0,
+      0.0005,
+      0.0485,
+      0.787,
+      0.8605,
+      11.1905
+     ],
+     "tau_replay_sd": 0.12673123030148412,
+     "tau": 5.7996
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "retail-task108-trial1-turn24",
+     "n_prompt": 6352,
+     "n_generated": 78,
+     "cycles": 15.834,
+     "committed": 72.963,
+     "hist": [
+      0.875,
+      0.5985,
+      2.421,
+      2.803,
+      2.403,
+      6.7335
+     ],
+     "tau_replay_sd": 0.26681897453895875,
+     "tau": 4.608
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task42-trial2-turn6",
+     "n_prompt": 4229,
+     "n_generated": 45,
+     "cycles": 7.0,
+     "committed": 40.893,
+     "hist": [
+      0.0,
+      0.0,
+      0.0025,
+      0.039,
+      1.0215,
+      5.937
+     ],
+     "tau_replay_sd": 0.05706262224208461,
+     "tau": 5.8419
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task10-trial1-turn8",
+     "n_prompt": 4438,
+     "n_generated": 133,
+     "cycles": 36.0345,
+     "committed": 129.994,
+     "hist": [
+      4.737,
+      7.358,
+      7.6705,
+      3.995,
+      2.0945,
+      10.1795
+     ],
+     "tau_replay_sd": 0.1369566656600738,
+     "tau": 3.6075
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task37-trial1-turn6",
+     "n_prompt": 4015,
+     "n_generated": 75,
+     "cycles": 19.9685,
+     "committed": 69.5675,
+     "hist": [
+      2.141,
+      3.831,
+      4.4835,
+      3.606,
+      3.552,
+      2.355
+     ],
+     "tau_replay_sd": 0.24573083642059884,
+     "tau": 3.4839
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task49-trial3-turn8",
+     "n_prompt": 4392,
+     "n_generated": 155,
+     "cycles": 49.3355,
+     "committed": 149.7975,
+     "hist": [
+      11.7215,
+      10.8105,
+      8.3955,
+      6.9725,
+      5.2345,
+      6.201
+     ],
+     "tau_replay_sd": 0.1369253754144076,
+     "tau": 3.0363
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task32-trial2-turn18",
+     "n_prompt": 5173,
+     "n_generated": 161,
+     "cycles": 42.071,
+     "committed": 156.9135,
+     "hist": [
+      5.1755,
+      10.2475,
+      5.6675,
+      3.594,
+      4.4545,
+      12.932
+     ],
+     "tau_replay_sd": 0.16678895376231845,
+     "tau": 3.7297
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task48-trial0-turn2",
+     "n_prompt": 3820,
+     "n_generated": 34,
+     "cycles": 7.0205,
+     "committed": 30.5615,
+     "hist": [
+      0.749,
+      1.167,
+      0.3905,
+      0.6775,
+      0.622,
+      3.4145
+     ],
+     "tau_replay_sd": 0.3061802429714035,
+     "tau": 4.3532
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task17-trial2-turn22",
+     "n_prompt": 6501,
+     "n_generated": 161,
+     "cycles": 34.4265,
+     "committed": 155.2695,
+     "hist": [
+      2.5155,
+      2.493,
+      5.559,
+      3.881,
+      4.301,
+      15.677
+     ],
+     "tau_replay_sd": 0.18188948030302743,
+     "tau": 4.5102
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task19-trial3-turn10",
+     "n_prompt": 4917,
+     "n_generated": 80,
+     "cycles": 13.0025,
+     "committed": 75.9875,
+     "hist": [
+      0.0,
+      0.0055,
+      0.0,
+      1.002,
+      0.0015,
+      11.9935
+     ],
+     "tau_replay_sd": 0.04783411212025418,
+     "tau": 5.8441
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task42-trial3-turn4",
+     "n_prompt": 3891,
+     "n_generated": 93,
+     "cycles": 16.659,
+     "committed": 88.1925,
+     "hist": [
+      1.09,
+      0.828,
+      0.7175,
+      0.2505,
+      0.346,
+      13.427
+     ],
+     "tau_replay_sd": 0.20887996834014727,
+     "tau": 5.294
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task26-trial1-turn38",
+     "n_prompt": 7447,
+     "n_generated": 143,
+     "cycles": 24.1105,
+     "committed": 139.0005,
+     "hist": [
+      0.117,
+      0.89,
+      0.039,
+      0.227,
+      0.9465,
+      21.891
+     ],
+     "tau_replay_sd": 0.07290656810400577,
+     "tau": 5.7651
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task40-trial1-turn16",
+     "n_prompt": 5866,
+     "n_generated": 51,
+     "cycles": 17.5235,
+     "committed": 45.003,
+     "hist": [
+      5.884,
+      3.059,
+      3.267,
+      4.1745,
+      0.332,
+      0.807
+     ],
+     "tau_replay_sd": 0.2398506302591671,
+     "tau": 2.5682
+    },
+    {
+     "workload": "agentic_tau_bench",
+     "prompt_id": "airline-task7-trial2-turn4",
+     "n_prompt": 3874,
+     "n_generated": 46,
+     "cycles": 8.0,
+     "committed": 44.5415,
+     "hist": [
+      0.058,
+      0.129,
+      0.445,
+      0.37,
+      0.5775,
+      6.4205
+     ],
+     "tau_replay_sd": 0.12217288915201278,
+     "tau": 5.5677
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "aio-libs__aioftp-97-swe-agent-llama-70b-step10",
+     "n_prompt": 2917,
+     "n_generated": 60,
+     "cycles": 14.5425,
+     "committed": 57.718,
+     "hist": [
+      1.339,
+      2.1555,
+      2.658,
+      1.5385,
+      3.169,
+      3.6825
+     ],
+     "tau_replay_sd": 0.29961223915645663,
+     "tau": 3.9689
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "johnsyweb__python_sparse_list-17-swe-agent-llama-70b-step2",
+     "n_prompt": 1891,
+     "n_generated": 35,
+     "cycles": 8.344,
+     "committed": 31.645,
+     "hist": [
+      0.6875,
+      1.443,
+      1.8095,
+      1.2025,
+      1.376,
+      1.8255
+     ],
+     "tau_replay_sd": 0.4303043609843501,
+     "tau": 3.7925
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "matchms__matchms-493-swe-agent-llama-70b-step16",
+     "n_prompt": 4674,
+     "n_generated": 39,
+     "cycles": 9.8385,
+     "committed": 36.751,
+     "hist": [
+      0.9835,
+      1.7845,
+      1.7955,
+      2.304,
+      0.23,
+      2.741
+     ],
+     "tau_replay_sd": 0.3677532045431772,
+     "tau": 3.7354
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "RDFLib__rdflib-1130-swe-agent-llama-70b-step2",
+     "n_prompt": 1933,
+     "n_generated": 35,
+     "cycles": 8.233,
+     "committed": 31.228,
+     "hist": [
+      0.4695,
+      1.1655,
+      2.194,
+      1.9885,
+      0.6015,
+      1.814
+     ],
+     "tau_replay_sd": 0.31452856808728696,
+     "tau": 3.793
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "pydantic__pydantic-4399-swe-agent-llama-70b-step22",
+     "n_prompt": 6738,
+     "n_generated": 101,
+     "cycles": 22.8545,
+     "committed": 95.995,
+     "hist": [
+      2.948,
+      2.6475,
+      3.618,
+      1.785,
+      1.378,
+      10.478
+     ],
+     "tau_replay_sd": 0.28134897980674645,
+     "tau": 4.2003
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Erotemic__ubelt-64-swe-agent-llama-70b-step12",
+     "n_prompt": 6133,
+     "n_generated": 103,
+     "cycles": 26.57,
+     "committed": 99.0025,
+     "hist": [
+      5.0165,
+      4.718,
+      2.985,
+      2.876,
+      1.756,
+      9.2185
+     ],
+     "tau_replay_sd": 0.23149980127961522,
+     "tau": 3.7261
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "geomet__geomet-101-swe-agent-llama-8b-step4",
+     "n_prompt": 2418,
+     "n_generated": 121,
+     "cycles": 28.343,
+     "committed": 117.334,
+     "hist": [
+      0.983,
+      4.4825,
+      5.1745,
+      5.0455,
+      4.2645,
+      8.393
+     ],
+     "tau_replay_sd": 0.19436169624576757,
+     "tau": 4.1398
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "ttu__ruuvitag-sensor-41-swe-agent-llama-70b-step12",
+     "n_prompt": 5933,
+     "n_generated": 161,
+     "cycles": 42.9695,
+     "committed": 155.0245,
+     "hist": [
+      6.246,
+      7.5315,
+      7.5635,
+      5.967,
+      6.812,
+      8.8495
+     ],
+     "tau_replay_sd": 0.15540626256909604,
+     "tau": 3.6078
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "asottile__pyupgrade-347-swe-agent-llama-70b-step16",
+     "n_prompt": 5547,
+     "n_generated": 161,
+     "cycles": 46.4335,
+     "committed": 157.0945,
+     "hist": [
+      7.2755,
+      11.0955,
+      7.749,
+      6.513,
+      4.474,
+      9.3265
+     ],
+     "tau_replay_sd": 0.17127293400734492,
+     "tau": 3.3832
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "pydantic__pydantic-3975-swe-agent-llama-405b-step6",
+     "n_prompt": 6292,
+     "n_generated": 23,
+     "cycles": 5.142,
+     "committed": 19.7495,
+     "hist": [
+      0.3245,
+      0.971,
+      0.8535,
+      1.1745,
+      0.6865,
+      1.132
+     ],
+     "tau_replay_sd": 0.375292660735344,
+     "tau": 3.8408
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "multiply-org__multiply-ui-13-swe-agent-llama-70b-step28",
+     "n_prompt": 6579,
+     "n_generated": 75,
+     "cycles": 17.014,
+     "committed": 70.086,
+     "hist": [
+      1.4935,
+      3.229,
+      2.108,
+      2.0645,
+      1.1615,
+      6.9575
+     ],
+     "tau_replay_sd": 0.26713206523546645,
+     "tau": 4.1193
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "snowblink14__smatch-30-swe-agent-llama-70b-step10",
+     "n_prompt": 3605,
+     "n_generated": 41,
+     "cycles": 9.419,
+     "committed": 38.4625,
+     "hist": [
+      1.0795,
+      1.5555,
+      0.797,
+      1.1715,
+      1.698,
+      3.1175
+     ],
+     "tau_replay_sd": 0.4289642628269289,
+     "tau": 4.0835
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "marshmallow-code__apispec-webframeworks-64-swe-agent-llama-70b-step24",
+     "n_prompt": 3586,
+     "n_generated": 15,
+     "cycles": 3.439,
+     "committed": 9.436,
+     "hist": [
+      0.7925,
+      0.9155,
+      0.425,
+      1.022,
+      0.2545,
+      0.0295
+     ],
+     "tau_replay_sd": 0.6704793277118161,
+     "tau": 2.7438
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Azure__msrest-for-python-208-swe-agent-llama-70b-step6",
+     "n_prompt": 3034,
+     "n_generated": 19,
+     "cycles": 3.575,
+     "committed": 15.696,
+     "hist": [
+      0.0355,
+      0.706,
+      0.2445,
+      0.22,
+      1.579,
+      0.79
+     ],
+     "tau_replay_sd": 0.8829573223296557,
+     "tau": 4.3905
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "iterative__dvc-5785-swe-agent-llama-70b-step4",
+     "n_prompt": 2236,
+     "n_generated": 30,
+     "cycles": 5.6575,
+     "committed": 26.1635,
+     "hist": [
+      0.301,
+      0.2925,
+      0.7935,
+      1.0195,
+      0.687,
+      2.564
+     ],
+     "tau_replay_sd": 0.5246888939789489,
+     "tau": 4.6246
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "nose-devs__nose2-472-swe-agent-llama-70b-step6",
+     "n_prompt": 2472,
+     "n_generated": 31,
+     "cycles": 8.189,
+     "committed": 26.8655,
+     "hist": [
+      1.6985,
+      0.7365,
+      1.51,
+      2.91,
+      0.48,
+      0.854
+     ],
+     "tau_replay_sd": 0.37609042027333656,
+     "tau": 3.2807
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "ameily__cincoconfig-26-swe-agent-llama-70b-step22",
+     "n_prompt": 6826,
+     "n_generated": 32,
+     "cycles": 6.0555,
+     "committed": 28.9965,
+     "hist": [
+      0.3445,
+      0.2635,
+      0.803,
+      0.721,
+      0.709,
+      3.2145
+     ],
+     "tau_replay_sd": 0.38750918847918076,
+     "tau": 4.7885
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "Azure__msrest-for-python-208-swe-agent-llama-405b-step6",
+     "n_prompt": 3025,
+     "n_generated": 19,
+     "cycles": 3.383,
+     "committed": 17.263,
+     "hist": [
+      0.349,
+      0.032,
+      0.0965,
+      0.287,
+      0.2985,
+      2.32
+     ],
+     "tau_replay_sd": 0.8524222115047605,
+     "tau": 5.1029
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "fairlearn__fairlearn-896-swe-agent-llama-70b-step14",
+     "n_prompt": 7427,
+     "n_generated": 60,
+     "cycles": 15.036,
+     "committed": 56.243,
+     "hist": [
+      1.977,
+      2.6235,
+      1.444,
+      3.657,
+      1.948,
+      3.3865
+     ],
+     "tau_replay_sd": 0.3129228290523069,
+     "tau": 3.7406
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "just-work__fffw-100-swe-agent-llama-70b-step28",
+     "n_prompt": 7593,
+     "n_generated": 156,
+     "cycles": 36.938,
+     "committed": 152.4265,
+     "hist": [
+      3.237,
+      6.596,
+      4.958,
+      4.1235,
+      3.5115,
+      14.512
+     ],
+     "tau_replay_sd": 0.17387209177274918,
+     "tau": 4.1265
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "imageio__imageio-255-swe-agent-llama-70b-step8",
+     "n_prompt": 2671,
+     "n_generated": 80,
+     "cycles": 21.9525,
+     "committed": 74.175,
+     "hist": [
+      3.0045,
+      4.8425,
+      5.196,
+      2.176,
+      3.2075,
+      3.526
+     ],
+     "tau_replay_sd": 0.2499706838218076,
+     "tau": 3.3789
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "tobymao__sqlglot-1841-swe-agent-llama-70b-step4",
+     "n_prompt": 2164,
+     "n_generated": 40,
+     "cycles": 11.02,
+     "committed": 34.38,
+     "hist": [
+      1.76,
+      2.165,
+      2.8275,
+      2.3855,
+      1.0265,
+      0.8555
+     ],
+     "tau_replay_sd": 0.3396560963658914,
+     "tau": 3.1198
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "iterative__dvc-3493-swe-agent-llama-70b-step12",
+     "n_prompt": 5792,
+     "n_generated": 161,
+     "cycles": 38.7185,
+     "committed": 157.9335,
+     "hist": [
+      3.683,
+      5.4995,
+      6.823,
+      3.6585,
+      6.1785,
+      12.876
+     ],
+     "tau_replay_sd": 0.1653994767750885,
+     "tau": 4.079
+    },
+    {
+     "workload": "agentic_swe_agent",
+     "prompt_id": "devopshq__artifactory-439-swe-agent-llama-70b-step8",
+     "n_prompt": 4461,
+     "n_generated": 57,
+     "cycles": 15.269,
+     "committed": 51.5685,
+     "hist": [
+      1.1805,
+      3.9535,
+      2.9485,
+      4.365,
+      0.7535,
+      2.068
+     ],
+     "tau_replay_sd": 0.2531666962328303,
+     "tau": 3.3773
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step7",
+     "n_prompt": 2758,
+     "n_generated": 51,
+     "cycles": 16.164,
+     "committed": 47.4755,
+     "hist": [
+      4.0905,
+      3.6525,
+      2.62,
+      2.533,
+      1.52,
+      1.748
+     ],
+     "tau_replay_sd": 0.20407319625850387,
+     "tau": 2.9371
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step4",
+     "n_prompt": 2319,
+     "n_generated": 44,
+     "cycles": 11.726,
+     "committed": 40.999,
+     "hist": [
+      1.0175,
+      2.2955,
+      3.372,
+      1.3465,
+      2.2785,
+      1.416
+     ],
+     "tau_replay_sd": 0.25876056799255465,
+     "tau": 3.4964
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step2",
+     "n_prompt": 1837,
+     "n_generated": 41,
+     "cycles": 8.1105,
+     "committed": 37.4985,
+     "hist": [
+      0.0195,
+      0.5855,
+      1.8195,
+      1.347,
+      0.5725,
+      3.7665
+     ],
+     "tau_replay_sd": 0.3421956931239286,
+     "tau": 4.6235
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step9",
+     "n_prompt": 2801,
+     "n_generated": 38,
+     "cycles": 10.458,
+     "committed": 35.273,
+     "hist": [
+      1.692,
+      3.532,
+      0.6045,
+      0.78,
+      1.5135,
+      2.336
+     ],
+     "tau_replay_sd": 0.2272329278687166,
+     "tau": 3.3728
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step1",
+     "n_prompt": 1723,
+     "n_generated": 37,
+     "cycles": 10.2145,
+     "committed": 32.4435,
+     "hist": [
+      1.8285,
+      2.1255,
+      2.85,
+      1.153,
+      0.343,
+      1.9145
+     ],
+     "tau_replay_sd": 0.2437699535964976,
+     "tau": 3.1762
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step7",
+     "n_prompt": 2658,
+     "n_generated": 48,
+     "cycles": 14.8955,
+     "committed": 45.0055,
+     "hist": [
+      4.093,
+      2.376,
+      2.83,
+      2.6175,
+      0.6735,
+      2.3055
+     ],
+     "tau_replay_sd": 0.2924950764562891,
+     "tau": 3.0214
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step6",
+     "n_prompt": 2993,
+     "n_generated": 37,
+     "cycles": 9.054,
+     "committed": 34.81,
+     "hist": [
+      1.1505,
+      0.756,
+      2.167,
+      1.398,
+      1.4405,
+      2.142
+     ],
+     "tau_replay_sd": 0.37652171407908214,
+     "tau": 3.8447
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step5",
+     "n_prompt": 1520,
+     "n_generated": 42,
+     "cycles": 8.7265,
+     "committed": 37.7245,
+     "hist": [
+      0.592,
+      0.192,
+      1.816,
+      2.015,
+      1.4285,
+      2.683
+     ],
+     "tau_replay_sd": 0.3921505565111185,
+     "tau": 4.323
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step6",
+     "n_prompt": 2523,
+     "n_generated": 46,
+     "cycles": 12.9005,
+     "committed": 41.075,
+     "hist": [
+      1.559,
+      4.2435,
+      1.2005,
+      2.719,
+      2.5195,
+      0.659
+     ],
+     "tau_replay_sd": 0.2339669381916482,
+     "tau": 3.184
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step1",
+     "n_prompt": 3163,
+     "n_generated": 33,
+     "cycles": 8.936,
+     "committed": 28.2615,
+     "hist": [
+      0.7895,
+      2.294,
+      2.7605,
+      1.511,
+      0.9275,
+      0.6535
+     ],
+     "tau_replay_sd": 0.35076019298761774,
+     "tau": 3.1627
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "63d1f820-37bf-4adb-aabb-65eb7925790c-step1",
+     "n_prompt": 1724,
+     "n_generated": 40,
+     "cycles": 8.67,
+     "committed": 36.4685,
+     "hist": [
+      0.4085,
+      1.521,
+      1.0035,
+      1.605,
+      1.2045,
+      2.9275
+     ],
+     "tau_replay_sd": 0.37483611909434544,
+     "tau": 4.2063
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step0",
+     "n_prompt": 2702,
+     "n_generated": 41,
+     "cycles": 11.79,
+     "committed": 39.6925,
+     "hist": [
+      0.997,
+      3.533,
+      2.1775,
+      2.325,
+      0.748,
+      2.0095
+     ],
+     "tau_replay_sd": 0.25876890425444105,
+     "tau": 3.3666
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step4",
+     "n_prompt": 1532,
+     "n_generated": 39,
+     "cycles": 9.51,
+     "committed": 35.399,
+     "hist": [
+      0.556,
+      2.2675,
+      1.6105,
+      1.759,
+      1.4615,
+      1.8555
+     ],
+     "tau_replay_sd": 0.39007676359758064,
+     "tau": 3.7223
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "56e4a9c1-d39e-4173-9857-9cf980c0fba9-step0",
+     "n_prompt": 1521,
+     "n_generated": 40,
+     "cycles": 8.806,
+     "committed": 34.989,
+     "hist": [
+      0.865,
+      1.0785,
+      1.2795,
+      2.198,
+      0.9735,
+      2.4115
+     ],
+     "tau_replay_sd": 0.36864088176386284,
+     "tau": 3.9733
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "0633c328-f1ad-42bd-8aec-7a1883b5898d-step3",
+     "n_prompt": 3068,
+     "n_generated": 50,
+     "cycles": 15.9055,
+     "committed": 46.821,
+     "hist": [
+      3.204,
+      2.879,
+      4.2065,
+      3.8215,
+      0.8135,
+      0.981
+     ],
+     "tau_replay_sd": 0.2544144086060266,
+     "tau": 2.9437
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1a16a98f-4e8f-4ff9-9fa2-b97d2d403cc3-step2",
+     "n_prompt": 2213,
+     "n_generated": 38,
+     "cycles": 8.14,
+     "committed": 35.2385,
+     "hist": [
+      0.235,
+      1.049,
+      1.6075,
+      1.1115,
+      1.185,
+      2.952
+     ],
+     "tau_replay_sd": 0.38642118685470517,
+     "tau": 4.3291
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step2",
+     "n_prompt": 2639,
+     "n_generated": 44,
+     "cycles": 12.0985,
+     "committed": 41.317,
+     "hist": [
+      0.967,
+      3.5145,
+      2.358,
+      1.78,
+      1.747,
+      1.732
+     ],
+     "tau_replay_sd": 0.20303181969179623,
+     "tau": 3.4151
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step1",
+     "n_prompt": 2818,
+     "n_generated": 48,
+     "cycles": 12.368,
+     "committed": 43.031,
+     "hist": [
+      0.973,
+      1.879,
+      3.008,
+      3.509,
+      2.754,
+      0.245
+     ],
+     "tau_replay_sd": 0.28485112818937003,
+     "tau": 3.4792
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step6",
+     "n_prompt": 2378,
+     "n_generated": 43,
+     "cycles": 8.389,
+     "committed": 40.585,
+     "hist": [
+      0.141,
+      0.303,
+      0.3635,
+      2.3575,
+      2.0265,
+      3.1975
+     ],
+     "tau_replay_sd": 0.3233082601259851,
+     "tau": 4.8379
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step8",
+     "n_prompt": 2677,
+     "n_generated": 48,
+     "cycles": 11.7465,
+     "committed": 42.093,
+     "hist": [
+      1.5045,
+      1.9075,
+      2.5295,
+      2.093,
+      1.459,
+      2.253
+     ],
+     "tau_replay_sd": 0.3621623383747816,
+     "tau": 3.5835
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step2",
+     "n_prompt": 2865,
+     "n_generated": 68,
+     "cycles": 23.2845,
+     "committed": 62.099,
+     "hist": [
+      8.107,
+      4.276,
+      4.716,
+      2.5305,
+      0.76,
+      2.895
+     ],
+     "tau_replay_sd": 0.17444923362610687,
+     "tau": 2.667
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1ba150cb-3b4a-4f0a-bff0-b448c78608ae-step4",
+     "n_prompt": 2633,
+     "n_generated": 46,
+     "cycles": 12.22,
+     "committed": 43.1525,
+     "hist": [
+      1.2855,
+      3.047,
+      2.531,
+      1.558,
+      0.843,
+      2.9555
+     ],
+     "tau_replay_sd": 0.3038260319059825,
+     "tau": 3.5313
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "1c1af35c-a0d7-4fe8-bcd3-baf30862235b-step3",
+     "n_prompt": 2759,
+     "n_generated": 48,
+     "cycles": 11.3705,
+     "committed": 45.9535,
+     "hist": [
+      1.577,
+      0.7135,
+      1.3685,
+      3.304,
+      0.817,
+      3.5905
+     ],
+     "tau_replay_sd": 0.341327058286591,
+     "tau": 4.0415
+    },
+    {
+     "workload": "agentic_mind2web",
+     "prompt_id": "33964bc4-fc1d-417c-ba5a-2c1c45ed8d8b-step2",
+     "n_prompt": 3101,
+     "n_generated": 41,
+     "cycles": 10.5235,
+     "committed": 36.0935,
+     "hist": [
+      1.4255,
+      1.6785,
+      2.2175,
+      2.495,
+      1.5635,
+      1.1435
+     ],
+     "tau_replay_sd": 0.3337863886872252,
+     "tau": 3.4298
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-29",
+     "n_prompt": 424,
+     "n_generated": 105,
+     "cycles": 17.0,
+     "committed": 101.9905,
+     "hist": [
+      0.0,
+      0.0,
+      0.0005,
+      0.0,
+      0.008,
+      16.9915
+     ],
+     "tau_replay_sd": 0.006552885732155336,
+     "tau": 5.9994
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-83",
+     "n_prompt": 236,
+     "n_generated": 50,
+     "cycles": 8.001,
+     "committed": 46.085,
+     "hist": [
+      0.001,
+      0.0,
+      0.0,
+      0.9575,
+      0.001,
+      7.0415
+     ],
+     "tau_replay_sd": 0.0505665128540838,
+     "tau": 5.7599
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-51",
+     "n_prompt": 214,
+     "n_generated": 53,
+     "cycles": 8.031,
+     "committed": 48.124,
+     "hist": [
+      0.0,
+      0.0,
+      0.0,
+      0.03,
+      0.002,
+      7.999
+     ],
+     "tau_replay_sd": 0.03851502833190453,
+     "tau": 5.9923
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-33",
+     "n_prompt": 273,
+     "n_generated": 120,
+     "cycles": 22.716,
+     "committed": 116.6905,
+     "hist": [
+      0.9795,
+      1.081,
+      2.2365,
+      0.806,
+      2.0625,
+      15.5505
+     ],
+     "tau_replay_sd": 0.10572190193362299,
+     "tau": 5.1369
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-55",
+     "n_prompt": 299,
+     "n_generated": 49,
+     "cycles": 8.007,
+     "committed": 43.451,
+     "hist": [
+      0.001,
+      0.876,
+      0.0015,
+      0.071,
+      0.9355,
+      6.122
+     ],
+     "tau_replay_sd": 0.13549753123320443,
+     "tau": 5.4266
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-27",
+     "n_prompt": 453,
+     "n_generated": 161,
+     "cycles": 27.25,
+     "committed": 155.471,
+     "hist": [
+      0.0,
+      0.0,
+      1.4695,
+      1.0475,
+      1.5255,
+      23.2075
+     ],
+     "tau_replay_sd": 0.08730274458180984,
+     "tau": 5.7054
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-4",
+     "n_prompt": 243,
+     "n_generated": 124,
+     "cycles": 21.1605,
+     "committed": 119.387,
+     "hist": [
+      0.0335,
+      0.097,
+      0.73,
+      2.1225,
+      0.5855,
+      17.592
+     ],
+     "tau_replay_sd": 0.07223085938416045,
+     "tau": 5.642
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-93",
+     "n_prompt": 305,
+     "n_generated": 71,
+     "cycles": 11.7925,
+     "committed": 69.1455,
+     "hist": [
+      0.005,
+      0.0,
+      0.005,
+      0.7785,
+      0.0125,
+      10.9915
+     ],
+     "tau_replay_sd": 0.07667425776832032,
+     "tau": 5.8635
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-26",
+     "n_prompt": 311,
+     "n_generated": 76,
+     "cycles": 12.8565,
+     "committed": 74.497,
+     "hist": [
+      0.0,
+      0.0005,
+      0.555,
+      0.3,
+      0.375,
+      11.626
+     ],
+     "tau_replay_sd": 0.06934525605955388,
+     "tau": 5.7945
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-84",
+     "n_prompt": 332,
+     "n_generated": 79,
+     "cycles": 13.0,
+     "committed": 77.9895,
+     "hist": [
+      0.0005,
+      0.0,
+      0.0005,
+      0.0,
+      0.0065,
+      12.9925
+     ],
+     "tau_replay_sd": 0.012730653032237542,
+     "tau": 5.9992
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-89",
+     "n_prompt": 262,
+     "n_generated": 47,
+     "cycles": 7.8135,
+     "committed": 45.078,
+     "hist": [
+      0.0,
+      0.0,
+      0.0,
+      0.0245,
+      1.754,
+      6.035
+     ],
+     "tau_replay_sd": 0.04706565309788659,
+     "tau": 5.7692
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-28",
+     "n_prompt": 355,
+     "n_generated": 159,
+     "cycles": 26.027,
+     "committed": 154.0625,
+     "hist": [
+      0.0015,
+      0.0005,
+      0.0205,
+      0.6875,
+      0.6535,
+      24.6635
+     ],
+     "tau_replay_sd": 0.03047368876613666,
+     "tau": 5.9193
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-90",
+     "n_prompt": 322,
+     "n_generated": 92,
+     "cycles": 15.222,
+     "committed": 87.6085,
+     "hist": [
+      0.0,
+      0.0005,
+      0.2105,
+      1.0775,
+      0.935,
+      12.9985
+     ],
+     "tau_replay_sd": 0.07232047888853237,
+     "tau": 5.7554
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-11",
+     "n_prompt": 329,
+     "n_generated": 84,
+     "cycles": 13.978,
+     "committed": 80.8115,
+     "hist": [
+      0.001,
+      0.0125,
+      0.917,
+      0.0285,
+      0.1935,
+      12.8255
+     ],
+     "tau_replay_sd": 0.0518267443369871,
+     "tau": 5.7813
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-49",
+     "n_prompt": 273,
+     "n_generated": 61,
+     "cycles": 10.1035,
+     "committed": 59.168,
+     "hist": [
+      0.096,
+      0.0065,
+      0.0015,
+      0.0135,
+      0.9155,
+      9.0705
+     ],
+     "tau_replay_sd": 0.17203757781897025,
+     "tau": 5.8562
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-73",
+     "n_prompt": 338,
+     "n_generated": 53,
+     "cycles": 8.0265,
+     "committed": 48.0885,
+     "hist": [
+      0.0,
+      0.0,
+      0.0,
+      0.0265,
+      0.0175,
+      7.9825
+     ],
+     "tau_replay_sd": 0.04344491898629008,
+     "tau": 5.9912
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-39",
+     "n_prompt": 262,
+     "n_generated": 137,
+     "cycles": 24.637,
+     "committed": 133.6495,
+     "hist": [
+      1.4085,
+      1.227,
+      0.1715,
+      0.803,
+      0.1015,
+      20.9255
+     ],
+     "tau_replay_sd": 0.09504239189988807,
+     "tau": 5.4247
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-10",
+     "n_prompt": 256,
+     "n_generated": 37,
+     "cycles": 6.0465,
+     "committed": 35.805,
+     "hist": [
+      0.011,
+      0.0355,
+      0.019,
+      0.0915,
+      0.037,
+      5.8525
+     ],
+     "tau_replay_sd": 0.21372344088488154,
+     "tau": 5.9216
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-43",
+     "n_prompt": 314,
+     "n_generated": 78,
+     "cycles": 13.557,
+     "committed": 75.5095,
+     "hist": [
+      0.0,
+      0.005,
+      1.6925,
+      0.0075,
+      0.72,
+      11.132
+     ],
+     "tau_replay_sd": 0.15680888394413858,
+     "tau": 5.5698
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-37",
+     "n_prompt": 271,
+     "n_generated": 22,
+     "cycles": 3.0,
+     "committed": 17.931,
+     "hist": [
+      0.0,
+      0.0,
+      0.0,
+      0.0005,
+      0.068,
+      2.9315
+     ],
+     "tau_replay_sd": 0.08513975439110548,
+     "tau": 5.977
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-52",
+     "n_prompt": 318,
+     "n_generated": 65,
+     "cycles": 11.0065,
+     "committed": 60.4165,
+     "hist": [
+      0.0,
+      0.0,
+      0.8605,
+      0.972,
+      1.097,
+      8.077
+     ],
+     "tau_replay_sd": 0.10413761678676728,
+     "tau": 5.4892
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-12",
+     "n_prompt": 317,
+     "n_generated": 119,
+     "cycles": 20.9185,
+     "committed": 117.5615,
+     "hist": [
+      0.0495,
+      0.607,
+      0.5465,
+      0.4055,
+      2.8235,
+      16.4865
+     ],
+     "tau_replay_sd": 0.1695880602186603,
+     "tau": 5.62
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-77",
+     "n_prompt": 264,
+     "n_generated": 41,
+     "cycles": 6.001,
+     "committed": 36.0015,
+     "hist": [
+      0.0,
+      0.0,
+      0.0005,
+      0.0005,
+      0.002,
+      5.998
+     ],
+     "tau_replay_sd": 0.01370152763053927,
+     "tau": 5.9993
+    },
+    {
+     "workload": "agentic_json_mode",
+     "prompt_id": "json-mode-eval-97",
+     "n_prompt": 298,
+     "n_generated": 112,
+     "cycles": 20.2865,
+     "committed": 110.994,
+     "hist": [
+      1.2855,
+      0.3785,
+      0.6255,
+      0.005,
+      0.897,
+      17.095
+     ],
+     "tau_replay_sd": 0.15826174894533684,
+     "tau": 5.4713
+    }
+   ]
+  }
+ },
+ "tau_by_gamma_truncated": {
+  "greedy": {
+   "headline_multiturn": {
+    "1": {
+     "tau_pooled": 1.9,
+     "tau_median_of_prompts": 1.895
+    },
+    "2": {
+     "tau_pooled": 2.648,
+     "tau_median_of_prompts": 2.636
+    },
+    "3": {
+     "tau_pooled": 3.249,
+     "tau_median_of_prompts": 3.272
+    },
+    "4": {
+     "tau_pooled": 3.684,
+     "tau_median_of_prompts": 3.682
+    },
+    "5": {
+     "tau_pooled": 4.001,
+     "tau_median_of_prompts": 3.925
+    }
+   },
+   "separate_single_shot": {
+    "1": {
+     "tau_pooled": 1.981,
+     "tau_median_of_prompts": 2.0
+    },
+    "2": {
+     "tau_pooled": 2.944,
+     "tau_median_of_prompts": 3.0
+    },
+    "3": {
+     "tau_pooled": 3.874,
+     "tau_median_of_prompts": 3.881
+    },
+    "4": {
+     "tau_pooled": 4.725,
+     "tau_median_of_prompts": 4.76
+    },
+    "5": {
+     "tau_pooled": 5.531,
+     "tau_median_of_prompts": 5.597
+    }
+   }
+  },
+  "t1": {
+   "headline_multiturn": {
+    "1": {
+     "tau_pooled": 1.898,
+     "tau_median_of_prompts": 1.901
+    },
+    "2": {
+     "tau_pooled": 2.623,
+     "tau_median_of_prompts": 2.614
+    },
+    "3": {
+     "tau_pooled": 3.204,
+     "tau_median_of_prompts": 3.223
+    },
+    "4": {
+     "tau_pooled": 3.605,
+     "tau_median_of_prompts": 3.527
+    },
+    "5": {
+     "tau_pooled": 3.877,
+     "tau_median_of_prompts": 3.793
+    }
+   },
+   "separate_single_shot": {
+    "1": {
+     "tau_pooled": 1.974,
+     "tau_median_of_prompts": 1.989
+    },
+    "2": {
+     "tau_pooled": 2.915,
+     "tau_median_of_prompts": 2.962
+    },
+    "3": {
+     "tau_pooled": 3.801,
+     "tau_median_of_prompts": 3.873
+    },
+    "4": {
+     "tau_pooled": 4.608,
+     "tau_median_of_prompts": 4.748
+    },
+    "5": {
+     "tau_pooled": 5.356,
+     "tau_median_of_prompts": 5.573
+    }
+   }
+  }
+ },
+ "tau_by_gamma_note": "gamma g < 5 truncates the same native DSpark block (5 slots) to its first g drafts; the verify checks g+1 positions.  Exact for greedy; for T=1 the coupling at depth g+1 becomes the bonus token."
+}

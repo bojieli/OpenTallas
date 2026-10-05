@@ -1,0 +1,127 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_dynamic_generation_control_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "base_session_id": {"$ref": "#/$defs/sha256"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "changes_model_forward_execution": {"const": false},
+        "eos_terminated_decode_control": {"const": true},
+        "semantic_golden_bound": {"const": true},
+        "token_legitimacy_fail_closed": {"const": true},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "changes_model_forward_execution",
+        "eos_terminated_decode_control",
+        "semantic_golden_bound",
+        "token_legitimacy_fail_closed",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "control_id": {"$ref": "#/$defs/sha256"},
+    "control_version": {"const": "tensor-accelerator-qwen-dynamic-generation-control-0.1.0"},
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {
+          "prefixItems": [{"const": 151645}, {"const": 151643}],
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "eos_token_included_in_generated_sequence": {"const": true},
+        "maximum_generated_token_count": {"maximum": 8000, "minimum": 32, "type": "integer"},
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "stop_rule": {"const": "first_eos_or_maximum_generated_token_count"},
+        "undecodable_token_policy": {"const": "fail_closed_before_report_publication"}
+      },
+      "required": [
+        "eos_token_ids",
+        "eos_token_included_in_generated_sequence",
+        "maximum_generated_token_count",
+        "selection",
+        "stop_rule",
+        "undecodable_token_policy"
+      ],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "model_id": {"const": "qwen3-8b"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_dynamic_generation_control.v1"},
+    "tokenizer_contract": {
+      "additionalProperties": false,
+      "properties": {
+        "base_vocabulary_size": {"const": 151643},
+        "explicit_vocabulary_size": {"const": 151669},
+        "model_vocabulary_size": {"const": 151936},
+        "padded_model_token_policy": {"const": "reject_if_selected_for_generation"}
+      },
+      "required": [
+        "base_vocabulary_size",
+        "explicit_vocabulary_size",
+        "model_vocabulary_size",
+        "padded_model_token_policy"
+      ],
+      "type": "object"
+    },
+    "workload_binding": {"$ref": "#/$defs/workload_binding"},
+    "workload_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "base_session_id",
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "control_id",
+    "control_version",
+    "generation",
+    "graph_id",
+    "model_id",
+    "schema",
+    "tokenizer_contract",
+    "workload_binding",
+    "workload_id"
+  ],
+  "title": "Qwen dynamic first-EOS and token-legitimacy control",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "workload_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {"minLength": 1, "type": "string"},
+        "expected_generated_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "expected_generated_token_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_rom_result_id": {"$ref": "#/$defs/sha256"},
+        "kind": {"enum": ["agent_turn", "natural_question"]},
+        "prompt_text_utf8_sha256": {"$ref": "#/$defs/sha256"},
+        "prompt_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"},
+        "turn": {
+          "oneOf": [
+            {"maximum": 4, "minimum": 1, "type": "integer"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": [
+        "case_id",
+        "expected_generated_token_count",
+        "expected_generated_token_sha256",
+        "expected_rom_result_id",
+        "kind",
+        "prompt_text_utf8_sha256",
+        "prompt_token_count",
+        "prompt_token_sha256",
+        "turn"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema": "opentallas.ha1.txcount.run.v1",
+  "source_commit": "aacae8b23678f2b7978f5676c997232b9cbd461a",
+  "input_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/txcount/ot_hbm_txcount_sm.sv": "4a1552e9eedfb615529e4936cc114718c87c7d1780a5401e9ef5cac7c48dcc19",
+    "rtl/hbm_accel/txcount/tb_txcount.sv": "dc9efac9b1f8aaf56a7dff1df5228e311b1d506eb24c875f7f60cf1c15b3a0a7",
+    "rtl/hbm_accel/txcount/ot_hbm_rf_visibility_fence_live.sv": "76ef99668d75739881242d6b08a3a62e928769d6db00093952b43813ee934b13",
+    "rtl/hbm_accel/txcount/ot_hbm_txcount_tap.sv": "555414c725ccd4e78fc49d9918559f53ff678d90beec4fc2355fa3dd1c76ecb5",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_gpu_rf_service.sv": "0c78df13fc5f356a24b99e42fbf0b7477e0fe57ba6475d3c8f5b80eab966b7d9",
+    "results/uarch/Euclid_W4_RFACK_identity_contract_20261003/selfcontained-peer-r10/design/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/txcount/tb_txcount_actual_w4_w6.sv": "d7a532f08be0aae7fc23a4bef1785cf5acb8a5f27e626849521c2475b7d8a523",
+    "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396",
+    "rtl/test/w6/tb_w6_fullwidth_fence.sv": "d6ea75192585523923a5398691128f8f1f561f3cb74c9c033f4249e69eb3bc93",
+    "tb_w6_live.sv": "dc77b37b64d3e635ce585f598264ba6cd7f3c70483dfa77afeb165d8a3eca8d8"
+  },
+  "jobs": [
+    {
+      "name": "counter",
+      "stages": [
+        {
+          "stage": "compile",
+          "exit_code": 0,
+          "log": "counter-compile.log"
+        },
+        {
+          "stage": "run",
+          "exit_code": 0,
+          "log": "counter-run.log"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "name": "actual_w4_w6",
+      "stages": [
+        {
+          "stage": "compile",
+          "exit_code": 0,
+          "log": "actual_w4_w6-compile.log"
+        },
+        {
+          "stage": "run",
+          "exit_code": 0,
+          "log": "actual_w4_w6-run.log"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "name": "w6_original",
+      "stages": [
+        {
+          "stage": "compile",
+          "exit_code": 0,
+          "log": "w6_original-compile.log"
+        },
+        {
+          "stage": "run",
+          "exit_code": 0,
+          "log": "w6_original-run.log"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "name": "w6_live_mutation",
+      "stages": [
+        {
+          "stage": "compile",
+          "exit_code": 0,
+          "log": "w6_live_mutation-compile.log"
+        },
+        {
+          "stage": "run",
+          "exit_code": 0,
+          "log": "w6_live_mutation-run.log"
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "protocol_pass": true,
+  "exact_real_program": "UNMEASURED",
+  "serial_path_including_wire_CDC_credits_refresh": "UNMEASURED",
+  "boundary_target_cycles": 47,
+  "priced_boundary_cycles": 78,
+  "measured_composed_gain": null,
+  "area": "ESTIMATE storage-only portbook; full die fit unmeasured",
+  "route": "NOT_RUN",
+  "SS_WNS": null,
+  "FF_WNS": null,
+  "adopt": false,
+  "verdict": "PROTOCOL_ONLY_NOT_QUALIFIED",
+  "qualification_order": [
+    "exact",
+    "serial_latency",
+    "area",
+    "route",
+    "SS60_FF25",
+    "composed_gain_ge_1percent"
+  ]
+}

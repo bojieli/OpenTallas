@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.uarch.mbist-bira-pipeline.v1",
+  "enabled_default": false,
+  "source": "rtl/dft/ot_mbist_bira.sv S_SRCH/S_SRCH2/S_SRCH3; item8(b) prescribed pipeline",
+  "geometry": {
+    "dmax": 256,
+    "entries": 6,
+    "sram_banks": 2
+  },
+  "search_cycles_per_subset": {
+    "baseline": 3,
+    "successor": 5
+  },
+  "added_cycles_per_analysis": 128,
+  "worst_added_bist_cycles": 256,
+  "worst_added_bist_ns": 213.248,
+  "clean_bist_added_cycles": 0,
+  "single_user_token_added_cycles": 0,
+  "memory_port_bytes_per_cycle_delta": 0,
+  "external_boundary_bits_per_cycle_delta": 0,
+  "macs_per_cycle": 0,
+  "replicas": 1,
+  "shared_controller": true,
+  "pipeline_register_bits": 108,
+  "added_state_bits": 1,
+  "registered_boundaries_bits": [
+    80,
+    28
+  ],
+  "fanin": {
+    "chunk_bits": 16,
+    "group_chunks": 4,
+    "final_groups": 4
+  },
+  "fanout": "each cm_r bit to one chunk; each chunk count to one group; no new external fanout",
+  "area_estimate_um2": 31.7844,
+  "area_status": "ESTIMATE flop-only; adder/mux/clock/routing delta requires measured shell",
+  "routing_tracks_status": "ESTIMATE internal local tree, no added shell ports; actual route required",
+  "floorplan_status": "existing shell vehicle; slot fit requires measured total area",
+  "clock_status": "UNVALIDATED: require routed SS60/FF25 at 0.833ns, DRC/antenna/electrical zero",
+  "model_source_sha256": "d49d2d001e8243d875e791e2105f68146817b2c5e46ed6a5c20cd25426d39d0b"
+}

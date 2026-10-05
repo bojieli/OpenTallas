@@ -1,0 +1,114 @@
+{
+  "scope": "P8191 token24 actual E -> L0 -> head component chain; not full36 token",
+  "runtime_exit": 0,
+  "runtime_pid": 2344404,
+  "runtime_root": "/srv/opentallas-scratch/jobs/laplace-qwen-P8191-E-L0-head-r1",
+  "actual_source": "db289ef05",
+  "cycles": 20503,
+  "edges": 20511,
+  "timing": "SIM_ONLY shared-row service excluded from performance claims",
+  "comparison": "Existing GPU head oracle only, initialized from newly produced L0 X; no decoder replay or expected intermediate injection",
+  "inputs": [
+    {
+      "rank": 0,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "words": 4096
+    },
+    {
+      "rank": 1,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "words": 4096
+    },
+    {
+      "rank": 2,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "words": 4096
+    },
+    {
+      "rank": 3,
+      "sha256": "b952d27c165bddfcc675fe3e7f9febafa5140a1f18d898b3d313290966c19bcb",
+      "words": 4096
+    }
+  ],
+  "head_program_sha256": [
+    "09a43eb1a4de11e5a483fe6f569a434bc7d4e7c6ade6842a5bcc1d35ac697043",
+    "09a43eb1a4de11e5a483fe6f569a434bc7d4e7c6ade6842a5bcc1d35ac697043",
+    "09a43eb1a4de11e5a483fe6f569a434bc7d4e7c6ade6842a5bcc1d35ac697043",
+    "09a43eb1a4de11e5a483fe6f569a434bc7d4e7c6ade6842a5bcc1d35ac697043"
+  ],
+  "expected": {
+    "head_die0": {
+      "argmax_local": 22301,
+      "row0": 0,
+      "rows": 37984,
+      "logit_bits": "4149bcce"
+    },
+    "head_die1": {
+      "argmax_local": 15563,
+      "row0": 37984,
+      "rows": 37984,
+      "logit_bits": "415fb064"
+    },
+    "head_die2": {
+      "argmax_local": 37774,
+      "row0": 75968,
+      "rows": 37984,
+      "logit_bits": "416335ab"
+    },
+    "head_die3": {
+      "argmax_local": 1684,
+      "row0": 113952,
+      "rows": 37984,
+      "logit_bits": "413f611e"
+    },
+    "next_token": 113742,
+    "next_logit_bits": "416335ab",
+    "top2_margin": 0.22003841400146484
+  },
+  "ranks": [
+    {
+      "rank": 0,
+      "actual_token": 113742,
+      "actual_logit_bits": "416335ab",
+      "winner_exact": true,
+      "xnorm_words": 4096,
+      "xnorm_mismatches": 0
+    },
+    {
+      "rank": 1,
+      "actual_token": 113742,
+      "actual_logit_bits": "416335ab",
+      "winner_exact": true,
+      "xnorm_words": 4096,
+      "xnorm_mismatches": 0
+    },
+    {
+      "rank": 2,
+      "actual_token": 113742,
+      "actual_logit_bits": "416335ab",
+      "winner_exact": true,
+      "xnorm_words": 4096,
+      "xnorm_mismatches": 0
+    },
+    {
+      "rank": 3,
+      "actual_token": 113742,
+      "actual_logit_bits": "416335ab",
+      "winner_exact": true,
+      "xnorm_words": 4096,
+      "xnorm_mismatches": 0
+    }
+  ],
+  "elapsed_s": 7.3074257373809814,
+  "exact": true,
+  "head_oracle_source": "tools/qwen_rom_position_oracle_gpu.py",
+  "head_oracle_source_sha256": "9b47d0ce68955ea1239f736daf8c7a8233a1aec7a2561f38740c54a4f21182ab",
+  "released_head_npz_sha256": [
+    "2b1ebbdd7416a600e347b1ac55d68ba599cf200007eedf9bc0949f214577812d",
+    "3a336cc994b8d980a62c1201c357a6091a998857af6e8e5e104ce527622f57dc",
+    "343836871aaa6317e3f7de565b851bc70572f5d24dbcee16c84bdc3e237acc56",
+    "df971a64d133eab3d55b3ebded573498b54e0138329870b06d589075c78ec1d8"
+  ],
+  "prior_failure_preserved": "60b numerical PASS/process SIGSEGV -11 remains historical; this db289 continuation has normal EXIT0",
+  "L0_comparison": "L0_output_comparison.json: 16384 X words and 2048 K/V codes exact"
+}

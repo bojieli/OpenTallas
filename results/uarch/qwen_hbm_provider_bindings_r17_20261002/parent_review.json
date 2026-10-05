@@ -1,0 +1,20 @@
+{
+  "Q2_concurrency_model_replay": "BYTE_IDENTICAL_R2",
+  "Qwen_binding_replay": "BYTE_IDENTICAL_GZIP",
+  "Qwen_binding_sha256": "01cb064303e809b2389dad4da6932bb1ffa9d7e40f93cd0918b1eba43ca56da1",
+  "Qwen_software_coverage": {
+    "PCs": 1737,
+    "control_homes": 144,
+    "data_homes": 31232,
+    "opcode_classes": 21,
+    "unbound_versions": 0,
+    "versions": 2027
+  },
+  "focused_tests": 19,
+  "native_program_execution_pass": false,
+  "physical_credit": false,
+  "provider_visibility_measured": false,
+  "rate_credit": false,
+  "schema": "opentallas.Qwen-HBM-r17.parent-review.v1",
+  "status": "PASS_SOFTWARE_BINDING_AND_CONCURRENCY_REPLAY"
+}

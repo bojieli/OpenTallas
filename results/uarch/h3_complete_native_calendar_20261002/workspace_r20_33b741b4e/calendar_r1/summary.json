@@ -1,0 +1,126 @@
+{
+  "I64_sidecar_homes": 432,
+  "PC_count": 1737,
+  "committed_interval_sha256": "bfa2cf6a18f807700e22980d58e732279c6b3f2092e514d96da246249dc3b052",
+  "constrained_extent_successors": [
+    {
+      "additional_bytes": 2801511424,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "producer concrete software base and lease; physical residence unqualified",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": {
+        "capacity_fit": true,
+        "end_address": 7549844480,
+        "rank": 0,
+        "residence_qualified": false,
+        "source_spill_base": 4714740864,
+        "source_spill_bytes": 33554432,
+        "stack_capacity_bytes": 20250000000,
+        "stack_count": 4,
+        "stripe": "global128Bline stack=line%4; stackline=line//4",
+        "workspace_base": 4748333056,
+        "workspace_bytes": 2801511424
+      },
+      "rank_group": [
+        0
+      ],
+      "required_bytes": 2801511424,
+      "required_minimum_AW": 32,
+      "source_provider_AW": 34,
+      "source_provider_address_width_fits": true,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    },
+    {
+      "additional_bytes": 2801511424,
+      "admission_scope": "outside retained source spill extent; software workspace reservation only",
+      "alignment_bytes": 512,
+      "bounded_tiled_allocation": false,
+      "calendar_binding": "producer concrete software base and lease; physical residence unqualified",
+      "class": "native_temporary_scratch",
+      "constraints": [
+        "distinct from all version spill, checkpoint and persistent extents",
+        "capacity >= maximum bound recipe arena; no modulo alias",
+        "producer allocation leases retire before workspace reuse; conservative fallback buffers drain before reuse"
+      ],
+      "producer_workspace_layout": {
+        "capacity_fit": true,
+        "end_address": 7549844480,
+        "rank": 1,
+        "residence_qualified": false,
+        "source_spill_base": 4714740864,
+        "source_spill_bytes": 33554432,
+        "stack_capacity_bytes": 20250000000,
+        "stack_count": 4,
+        "stripe": "global128Bline stack=line%4; stackline=line//4",
+        "workspace_base": 4748333056,
+        "workspace_bytes": 2801511424
+      },
+      "rank_group": [
+        1
+      ],
+      "required_bytes": 2801511424,
+      "required_minimum_AW": 32,
+      "source_provider_AW": 34,
+      "source_provider_address_width_fits": true,
+      "status": "CONSTRAINED_SUCCESSOR_EXTENT_REQUIRED"
+    }
+  ],
+  "cycles": 1729318542447,
+  "native_lowering_PC_count": 1737,
+  "native_operator_lowering_complete": true,
+  "native_primitive_count_gate": "PASS_ALL_PC_EXPORTED_COUNTS",
+  "opcode_classes": 21,
+  "proof": {
+    "dependency_edges": 356675,
+    "events": 108441,
+    "resource_slots_used": 449,
+    "status": "PASS_FINITE_INTERVAL_PROOF"
+  },
+  "replay": "PASS_SOURCE_PINNED_COMPLETE_CALENDAR_REPLAY",
+  "source_native_commit": "8fab95560",
+  "source_native_sha256": "75a3997b07b492c4c1f8eeec55488c8ef754a49987aa297e1cc16648e49c3674",
+  "status": "PASS_COMPLETE_NATIVE_SOFTWARE_CALENDAR",
+  "unknown_costs": {
+    "I64_RMW_merge": 32,
+    "I64_highword_read_sector": 106,
+    "I64_highword_write_sector": 126,
+    "I64_split_join": 32,
+    "all": "positive provisional endpoint values; none measured",
+    "hardware_clock_claim": false
+  },
+  "workspace_commit": "33b741b4e",
+  "workspace_provider_proof": {
+    "I64_physical_codec_implemented": false,
+    "I64_software_codec": "LE lower/upper32; equal owner/definition/iteration; two visible writes before publication",
+    "final_native_source_match": true,
+    "older_calendar_source_mismatch_preserved": true,
+    "physical_or_clock_admission": false,
+    "rank_PC_leases": 1956,
+    "review_candidate_arena_adopted": false,
+    "status": "PASS_CONCRETE_SOFTWARE_WORKSPACE_INTERVALS",
+    "temporary_home_count": 19620
+  },
+  "workspace_rank_extents": [
+    {
+      "I64_highword_sidecar_base": 7549844480,
+      "I64_highword_sidecar_bytes": 1572864,
+      "native_workspace_bytes": 2801511424,
+      "native_workspace_end": 7549844480,
+      "rank": 0
+    },
+    {
+      "I64_highword_sidecar_base": 7549844480,
+      "I64_highword_sidecar_bytes": 1572864,
+      "native_workspace_bytes": 2801511424,
+      "native_workspace_end": 7549844480,
+      "rank": 1
+    }
+  ]
+}

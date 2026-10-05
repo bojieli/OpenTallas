@@ -1,0 +1,68 @@
+{
+  "FSIZE": "infinity",
+  "GCC_version": "g++ Ubuntu11.4.0-1ubuntu1~22.04.3",
+  "HDL_frontend_executed": false,
+  "PATH_default_verilator": "4.038 unsupported for this timingbench; must use explicit reviewed5.050 path",
+  "PVE2_PVE3": "no new tasks",
+  "build_inventory": "Five separately elaborated fullshape profiles; original reference and opt-in candidate each profile, no smaller substitute or source change after freeze",
+  "compiler_options_and_warning_dispositions_review_pending": true,
+  "elaboration_options": [
+    "--binary",
+    "--timing",
+    "--assert",
+    "--top-module",
+    "bench_dsrom_balanced_selector_gate_prepare",
+    "-I<fresh_package>/fixture",
+    "-GMUTANT=<reviewed_profile>",
+    "--Mdir",
+    "<fresh_build>/profile_<reviewed_profile>"
+  ],
+  "existing_job_1950286": "untouched",
+  "help_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+  "no_auto_retry_or_fallback": true,
+  "package": "gate_r4",
+  "package_artifact_manifest_sha256": "2d18488b320038a991a7dfe09edcd5235c269d9b32037a5d09822d6d9368e47f",
+  "physical_or_fulltoken_credit": false,
+  "profiles": {
+    "0": "enabled exactfullshape legal/reset/fault gate",
+    "1": "threshold mutant",
+    "2": "exclusive quota mutant",
+    "3": "early caller-retirement mutant",
+    "4": "defaultoff fullshape parity legal/reset/fault gate"
+  },
+  "resource_admission": "Not yet reserved. Fresh measured CPU/RAM/disk inventory and owned-handle plan before source-bound GO; preserve incremental outputs. No arbitrary elapsed/CPU-time, per-file or guessed process-AS caps.",
+  "source_files": [
+    "fixture/bench_dsrom_balanced_selector_gate_prepare.sv",
+    "candidate/ot_chip_v41x_coll_transpose.sv",
+    "candidate/ot_coll_topk_merge.sv",
+    "candidate/ot_coll_topk_merge_balanced_prepare.sv",
+    "candidate/ot_coll_topk_merge_staged_impl_prepare.sv",
+    "candidate/ot_topk_fixed_packet_delay_prepare.sv",
+    "candidate/ot_w15_coll_dma.sv",
+    "candidate/ot_w15_coll_dma_balanced_station_prepare.sv"
+  ],
+  "status": "SOURCE_PACKAGE_COMPLETE_REVIEW_REQUIRED_NO_LAUNCH",
+  "tool_commands_executed_only": [
+    "--version",
+    "--help"
+  ],
+  "tool_observations": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "resolved_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "resolved_path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    },
+    {
+      "path": "/usr/bin/g++",
+      "resolved_path": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0"
+    }
+  ],
+  "top": "bench_dsrom_balanced_selector_gate_prepare",
+  "verilator_version": "Verilator5.0502026-07-01revv5.050"
+}

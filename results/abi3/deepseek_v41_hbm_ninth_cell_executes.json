@@ -1,0 +1,46 @@
+{
+ "answer": "it runs.  Prefill completes over the 32-token pinned workload and the cell emits a token; decode step 1 then refuses on an off-by-one in the HBM lane's phase-split join, and the emitted token disagrees with the oracle.",
+ "not_a_claim": [
+  "no cell is closed by this record",
+  "512 positions is a declared maximum context, not a shortened model"
+ ],
+ "question": "does the ninth cell RUN, and what does it emit?",
+ "schema": "opentallas.result.v41_hbm_ninth_cell_executes.v1",
+ "the_cell": {
+  "admission": "admitted=True instructions=4759 work=163723/163723",
+  "context_tokens": 512,
+  "decode_failure": "GROUPED_CONCAT output view 8480 dims (162, 512) differ from the axis-0 concatenation (161, 512)",
+  "emitted_token_ids": [
+   305
+  ],
+  "event_board": 4096,
+  "first_divergence_index": 0,
+  "model": "deepseek-v4.1-flash (shipped release)",
+  "oracle_token_ids": [
+   13806,
+   345,
+   7472,
+   49665
+  ],
+  "prefill": "completed",
+  "store": "HBM/SRAM, cluster-n comparator, 8 nodes",
+  "wall_seconds": 4377.4,
+  "workload": "TA-DS41-CHAT-1-P32"
+ },
+ "the_two_remaining_faults_are_separate": {
+  "decode_join": {
+   "observed": "output 162 rows against operands 161",
+   "reading": "the same family as the ROM lane's ratio-1 join -- a phase-split join whose output extent and operands are stated in different units -- but off by one in the other direction and in the HBM lowering, which has its own phase-layout code.  The ROM fix does not reach it."
+  },
+  "prefill_token": {
+   "and_it_is_NOT_a_rounding_story_at_shipped_scale": "the shipped oracle's first-token logit margin is 2.494688 (top1 27.3745 against top2 24.8798), 484x the reduced fixture's 0.00515.  A margin that wide cannot be crossed by a sub-ulp arithmetic difference, so unlike the reduced vehicle this is a real defect to find rather than a property of an untrained router.",
+   "expected": 13806,
+   "observed": 305,
+   "shared_across_stores": "the shipped ROM wafer and ROM array scratch walks emitted 305 too, so the cause is upstream of the store and not a lowering difference"
+  }
+ },
+ "what_this_is_and_is_not": {
+  "is": "the first execution of the ninth cell.  It had never built, so it had never run; this is a graded run through tools/run_accelerator_tokens.py with mandatory admission and gold selected by workload digest.",
+  "is_not": "a closed cell.  The token disagrees at index 0."
+ }
+}

@@ -1,0 +1,21 @@
+{
+  "status": "SOURCE_BOUND_STRUCTURAL_FENCE_ARGUMENT; NOT_FORMAL_OR_EXECUTED_RTL_PROOF",
+  "assumptions": [
+    "same source clock and direct PIPE_OUT0/PIPE_RSP0, no hidden external response/delivery channel",
+    "no reset while any owned read/write/intent/visibility remains; shared reset is outside local recovery",
+    "all selected requests accepted only from source/actual nested owner tags; requests single-beat and addresses<MEM_WORDS",
+    "backend queue memory/tags and handshake protocol are not corrupted; oracle intentionally violates this assumption in ghost mutant",
+    "ingress freezes new operations; only already-accepted WC/WS continuation may issue until source empty; offered unaccepted producer inputs withdrawn before commit"
+  ],
+  "induction": [
+    "reset with no owned entries initializes read/write ledgers and queues empty",
+    "accepted selected read increments per-PC read count and creates exactly one live Q entry; accepted selected WR similarly increments unissued-write count",
+    "read issue replaces one Q with one R entry without changing read count; WR issue removes Q and decrements write count, retaining selected issue-ACK flag and monotonic projected visibility watermark",
+    "registered R offer aliases R head; only its ready handshake removes R and decrements read count. Held offer remains owned. Source fault discards data without clearing a different identity",
+    "finite ring provenance assertion equates each read count to selected-owner Qread+R and each write count to Qwrite after every backend transition",
+    "fence requires source latent-intent empty plus backend count/ring and registered offer/request/issue-ACK empty, visibility deadline elapsed, and direct mux/KARB empty. All entry creation is excluded by frozen owner source after continuation drains",
+    "therefore no old selected queue entry can emit later in this pinned provider; token is control-transaction matching only. Restart clears no backend ownership and never resets backend"
+  ],
+  "identical_ghost": "An old-operation0/new-operation512 wire-identical delivery is observationally indistinguishable at WINDOW. Hostile post-fence injection violates closed-provider provenance and must FAIL independent oracle; source cannot be claimed to detect it. Lying fence is excluded by the source argument, not cured by its1bit token.",
+  "actual_provider_limit": "This is an inspectable preparation argument with runtime assertions prepared, not a source-level formal proof. Parent source review and future adversarial execution required before admission. Physical PHY/provider has not supplied these guarantees."
+}

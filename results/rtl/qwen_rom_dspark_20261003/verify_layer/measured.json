@@ -1,0 +1,75 @@
+{
+ "schema": "opentallas.qwen-rom-verify-layer-measured.v1",
+ "status": "PASS_L0_L1",
+ "runtime": "TP4 W12 companion runtime (Verilator 5.050), ot-epyc1tb, source a0c4818dd; die ot_qwen_rom_rt_die_w12_vp VPOS=1 ENABLE_ARP=1 ENABLE_AR256=1, coll LAT 339 DEPTH 1024, SW64, G 6144",
+ "tokens": {
+  "2": [
+   0,
+   50994
+  ],
+  "4": [
+   0,
+   50994,
+   279,
+   13
+  ]
+ },
+ "positions": "0..p-1 (block from position 0; position j sees block positions <= j)",
+ "L0_cycles": {
+  "1": 3931,
+  "2": 5487,
+  "4": 8715
+ },
+ "L0_increment_per_extra_position": {
+  "p2": 1556,
+  "p4_avg": 1594.7
+ },
+ "me_busy_edges": {
+  "1": 2033,
+  "2": 2509,
+  "4": 3577
+ },
+ "su_writes": {
+  "1": 30236,
+  "2": 60480,
+  "4": 120992
+ },
+ "bit_exact": "runner status pass for p=1,2,4: every position's X after L0 and L1 on all 4 dies equals the AR golden (8/16/32 checks, 0 mismatches); p=1 = retained terminal, 3,931/3,930 cycles",
+ "model_increment_per_extra_position": {
+  "source": "qwen_rom_speculation_recheck_20261003 pricing.json (branch claude/qwen-rom-speculation-recheck-20261003)",
+  "me_issue": 512,
+  "su_serial": 473,
+  "allreduce_widened": 512,
+  "attention": "in-core at context <= 4 (not the near-HBM 1,512 term)",
+  "widened_ar_without_attention_su_serial": 1497,
+  "widened_ar_with_su_overlap": 1028
+ },
+ "pending": [
+  "head1/head4 RTL per-position argmax (chain.sh on ot-epyc1tb, res/head{1,4}.json)"
+ ],
+ "claim_boundary": "Measured runtime cycles of one layer at p = 1, 2, 4 verify positions at the start of a sequence (context <= 4) with the in-core attention path; no near-HBM attention, no SS/FF closure of the VPOS/ARP additions, physical wire stages as parameters.",
+ "L1_cycles": {
+  "1": 3930,
+  "2": 5486,
+  "4": 8714
+ },
+ "L1_increment_per_extra_position": {
+  "p2": 1556,
+  "p4_avg": 1594.7
+ },
+ "head_oracle": {
+  "tokens": [
+   0,
+   50994,
+   279,
+   13
+  ],
+  "ar_argmax_per_position": [
+   50994,
+   67,
+   2168,
+   16
+  ],
+  "note": "36-layer AR ISA golden; position 0 = retained terminal token 50994; RTL head runs (head1/head4) queued in chain.sh on ot-epyc1tb"
+ }
+}

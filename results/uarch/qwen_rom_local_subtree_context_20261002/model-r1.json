@@ -1,0 +1,446 @@
+{
+  "FF_hold_uncertainty_ps": 25,
+  "PG": {
+    "DRC_IR_EM": false,
+    "clock": 64,
+    "existing_stripes_preserved": true,
+    "fill": 1048,
+    "macro_pin_via_access_proven": false,
+    "reset": 64,
+    "signal_capacity": 1360,
+    "source": "results/uarch/qwen_rom_mapped_root_pg_context_20261002/directional-PG-allocation-r1.json",
+    "spare": 184
+  },
+  "PnR": false,
+  "SS_setup_uncertainty_ps": 60,
+  "added_distribution_cells": 278599,
+  "additional_maps": 0,
+  "allocation_sha256": "2b481d2c8caf18f60c0156d904eca3694b364b073f4309cc71b3cf739d227f4d",
+  "area_terms_um2": {
+    "all_new_clock_reset_buffers": 28433.81394,
+    "launch_route": 0.61236,
+    "mask_selector480BUF": 48.9888,
+    "provider": 1.44342,
+    "retention53FF85INV": 23.80914,
+    "selected_mapped_cells": 65983.07303971479
+  },
+  "binary_init_contract": {
+    "data_state": "Unreset ROM capture data is ignored until source read/capture tags are valid; no uninitialized payload becomes a control producer",
+    "domain": "driven binary controls at accepted transactions",
+    "initialization": "All90metadataRESETN pins see >=330ps low pulse and valid recovery/removal before owned parent_ready permits first accepted launch",
+    "inputs": "clock/reset/go/owned-ready are0or1; all accepted ib/address/control fields stable and0or1 through acceptance",
+    "stored_Z": "FAIL_RETAINED; no full four-state equivalence/adoption claim",
+    "verified_literal_scope": "Euclid01X literal fragments PASS; source-reachable binary/init proof and full data graph still prerequisites"
+  },
+  "cell_area_fit": true,
+  "cell_ceiling_um2": 125000,
+  "clock_buffers": 138981,
+  "clock_demand_ps": 20,
+  "collector_cuts": {
+    "0:130.464": {
+      "all_meander_cut_proof": false,
+      "clock": 20,
+      "clock_reserved": 64,
+      "reset": 56,
+      "reset_reserved": 64
+    },
+    "0:227.232": {
+      "all_meander_cut_proof": false,
+      "clock": 20,
+      "clock_reserved": 64,
+      "reset": 69,
+      "reset_reserved": 64
+    },
+    "1:393.12": {
+      "all_meander_cut_proof": false,
+      "clock": 11,
+      "clock_reserved": 64,
+      "reset": 96,
+      "reset_reserved": 64
+    },
+    "1:489.888": {
+      "all_meander_cut_proof": false,
+      "clock": 387,
+      "clock_reserved": 64,
+      "reset": 410,
+      "reset_reserved": 64
+    }
+  },
+  "complete_cell_area_um2": 94491.74069971479,
+  "current_once_calendar": {
+    "C0_control_recharged": false,
+    "RF_highword_RMW_recharged": false,
+    "actual_receipt": null,
+    "admitted": false,
+    "no_new_numerical_run": true,
+    "owner": "Dewey",
+    "required_receipt_fields": {
+      "C0_control_recharged": false,
+      "RF_highword_RMW_recharged": false,
+      "actual_scalar_count_delta": {
+        "LOAD": -1966080
+      },
+      "catalog_sha256": "cb40b52b8c77bdcf9d59295a2c7eca3a2bf908b08ab15dc2037fb1e0d3464e3c",
+      "dispatch_sha256": "df2a4fbbdd0204772d1c0d479bb43b22c209d933ac3745433a8c1bbe7efcb210",
+      "native_sha256": "a862fc0bee5e5367e29e67511507977711e78c875d77ddde52789b46be584b00",
+      "reprice_count": 1
+    },
+    "required_schema": "H4_R33_DEWEY_ONCE_REPRICE_V1"
+  },
+  "global_equalization_chain_duplicated": false,
+  "historical_global_fit": false,
+  "historical_global_lower_bound_um2": 157385.58875971477,
+  "launch": "Actual source/provider arrival must be recomputed on this clock; prior632.65..999.82window not transferred",
+  "numerical_runs": 0,
+  "period_ps": 833.3333333333334,
+  "persistent_KV": {
+    "actual_service_macros_per_stack": 96,
+    "assembly_slots_per_stack": 1024,
+    "cold_calendar_role": "reference only, not selected production",
+    "current_slot_fit": null,
+    "domains_Hz": {
+      "serial": 900000000,
+      "service": 1000000000,
+      "stream": 1200000000
+    },
+    "inherited_slot_is_current_fit": false,
+    "latency": {
+      "admitted_latency_or_rate": false,
+      "conservative_composition": {
+        "compute_cycles": 134086,
+        "delta_from_old_max": 387403068,
+        "existing_kv_bound_cycles": 50331.647999999994,
+        "existing_kv_bound_replaced": true,
+        "finite_delivery_cycles": 387403068,
+        "incremental_read_bytes": 0,
+        "proven_overlap_cycles": 0,
+        "token_cycles": 387537154
+      },
+      "conservative_seconds": 0.32294762833333335,
+      "existing_read_bytes_charged_once": 150994944,
+      "incremental_full_reload_bytes": 0,
+      "qualification": "Legal conservative calendar under disclosed guards. No measured r14 stall bound, selected prefetch overlap, actual8K ROM state, runtime or physical transfer credit.",
+      "reset_startup_addition": "Two streaming startup edges only once, conditional on joined domain readiness; never repeat per layer or per token, never add another KV read charge.",
+      "selected_production_policy": false
+    },
+    "macro_area_mm2_per_stack": 0.976969184,
+    "physical_contract_blockers": [
+      "existing TP2 raw-state provider now translated by global head identity; actual ROM TP4 producer/stage owner state still unconnected",
+      "r14 tag freed on owned acceptance before reverse credit and lacks caller-visible allocation receipt; provider successor must retain identity/quarantine and expose allocation tag",
+      "r14 read reverse credit validation missing; no inherited runtime PASS",
+      "calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved",
+      "complete service area, finite port arbitration, hub routing-layer capacity and current slot placement unresolved",
+      "contextual SS60ps/FF25ps at source-matched1GHz service and1.2GHz fill unresolved"
+    ],
+    "source_commit": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe"
+  },
+  "provider_clock_FFs": 2,
+  "reset_mirror_buffers": 138981,
+  "retained_source_sha256": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+  "schema": "QWEN_ONE_LOCAL_SUBTREE_CONTEXT_V1",
+  "selected_corridor_um": 96.768,
+  "selected_map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "selected_slot_um": [
+    357.696,
+    1360.8
+  ],
+  "source_allocation_only": true,
+  "source_bins_um": [
+    44.712,
+    42.525
+  ],
+  "source_groups": 299,
+  "source_map_admission": false,
+  "source_reachable_binary_init_proof": false,
+  "startup_admitted": false,
+  "status": "FAIL_LOCAL_SUBTREE_RESET_PHASE",
+  "steady_added_cycles": 0,
+  "steady_latency_credit": false,
+  "successor_clock_sinks": 102352,
+  "successor_reset_sinks": 56683,
+  "tile_macro_area_um2": 84422.63231999999,
+  "tile_macro_plus_cells_area_fit": true,
+  "tile_macro_plus_cells_area_um2": 178914.37301971478,
+  "tilefield": {
+    "complete_cell_area_mm2": 145.13931371476193,
+    "die_clock_reset_spine_and_other_domains_priced": false,
+    "die_other_area_mm2": 67.347827,
+    "field_capacity_not_full_die_signoff": true,
+    "field_clock_ports": 157212672,
+    "field_reset_pins": 87065088,
+    "macro_area_mm2": 129.67316324351998,
+    "macro_plus_cell_area_mm2": 274.8124769582819,
+    "provider_extra_clock_FFs": 3072,
+    "selected_field_area_mm2": 747.6521730047999,
+    "slot_area_mm2": 0.4867527168,
+    "tiles": 1536
+  },
+  "timing": {
+    "ff": {
+      "release_relative_provider_clock_ps": [
+        133.0453630134271,
+        226.56883035440973
+      ],
+      "scenarios": [
+        {
+          "clock_arrival_minmax_ps": [
+            1110.644333390185,
+            1121.3941828313657
+          ],
+          "last_reset_edge_offset": 1,
+          "max_BUF_load_fF": 25.876848,
+          "primary_clock_slew_ps": 5,
+          "proposed_first_accept_edge_after_provider_edge0": 4,
+          "provider_clock": [
+            1119.7174730573354,
+            1119.7174730573354,
+            12.032609792043743,
+            12.032609792043743
+          ],
+          "reset_FF_sinks": 56683,
+          "reset_failures": 77,
+          "reset_recovery_worst": {
+            "absolute_reset_minus_clock_ps": [
+              831.8192127235754,
+              925.79562683104
+            ],
+            "crosses_clock_edge": true,
+            "instance": "u_tile.u_logic.g_bank_control.g_bank[3].g_retained.u_read_ff",
+            "phase_ps": [
+              831.8192127235754,
+              925.79562683104
+            ],
+            "recovery_margin_ps": -134.29309349770654,
+            "release_cycle_offset": [
+              0,
+              1
+            ],
+            "removal_margin_ps": 781.7699157235754
+          },
+          "reset_removal_worst": {
+            "absolute_reset_minus_clock_ps": [
+              524.4937272549996,
+              618.4701413624641
+            ],
+            "crosses_clock_edge": false,
+            "instance": "$auto$ff.cc:337:slice$664697",
+            "phase_ps": [
+              524.4937272549996,
+              618.4701413624641
+            ],
+            "recovery_margin_ps": 173.0323919708693,
+            "release_cycle_offset": [
+              0,
+              0
+            ],
+            "removal_margin_ps": 474.4444302549996
+          },
+          "root_clock_slew_pass": true,
+          "root_release_slew_pass": true,
+          "root_release_slew_ps": [
+            28.61198417282986,
+            30.27592914344618
+          ],
+          "same_source_skew_ps": 10.749849441180686,
+          "startup_not_admitted_if_any_reset_or_source_gate_fails": true
+        },
+        {
+          "clock_arrival_minmax_ps": [
+            1128.3079810530332,
+            1139.057830494214
+          ],
+          "last_reset_edge_offset": 1,
+          "max_BUF_load_fF": 25.876848,
+          "primary_clock_slew_ps": 80,
+          "proposed_first_accept_edge_after_provider_edge0": 4,
+          "provider_clock": [
+            1137.3811207201836,
+            1137.3811207201836,
+            12.032609792043743,
+            12.032609792043743
+          ],
+          "reset_FF_sinks": 56683,
+          "reset_failures": 77,
+          "reset_recovery_worst": {
+            "absolute_reset_minus_clock_ps": [
+              831.8192127235754,
+              925.79562683104
+            ],
+            "crosses_clock_edge": true,
+            "instance": "u_tile.u_logic.g_bank_control.g_bank[3].g_retained.u_read_ff",
+            "phase_ps": [
+              831.8192127235754,
+              925.79562683104
+            ],
+            "recovery_margin_ps": -134.29309349770654,
+            "release_cycle_offset": [
+              0,
+              1
+            ],
+            "removal_margin_ps": 781.7699157235754
+          },
+          "reset_removal_worst": {
+            "absolute_reset_minus_clock_ps": [
+              524.4937272549996,
+              618.4701413624641
+            ],
+            "crosses_clock_edge": false,
+            "instance": "$auto$ff.cc:337:slice$664697",
+            "phase_ps": [
+              524.4937272549996,
+              618.4701413624641
+            ],
+            "recovery_margin_ps": 173.0323919708693,
+            "release_cycle_offset": [
+              0,
+              0
+            ],
+            "removal_margin_ps": 474.4444302549996
+          },
+          "root_clock_slew_pass": true,
+          "root_release_slew_pass": true,
+          "root_release_slew_ps": [
+            28.61198417282986,
+            30.27592914344618
+          ],
+          "same_source_skew_ps": 10.749849441180686,
+          "startup_not_admitted_if_any_reset_or_source_gate_fails": true
+        }
+      ]
+    },
+    "ss": {
+      "release_relative_provider_clock_ps": [
+        266.19355898498264,
+        412.79343684046876
+      ],
+      "scenarios": [
+        {
+          "clock_arrival_minmax_ps": [
+            2491.0379899513996,
+            2505.4929688746474
+          ],
+          "last_reset_edge_offset": 3,
+          "max_BUF_load_fF": 25.312199999999994,
+          "primary_clock_slew_ps": 5,
+          "proposed_first_accept_edge_after_provider_edge0": 6,
+          "provider_clock": [
+            2505.2140295181484,
+            2505.2140295181484,
+            26.37380032948687,
+            26.37380032948687
+          ],
+          "reset_FF_sinks": 56683,
+          "reset_failures": 49,
+          "reset_recovery_worst": {
+            "absolute_reset_minus_clock_ps": [
+              1654.258765981016,
+              1801.1868620152527
+            ],
+            "crosses_clock_edge": true,
+            "instance": "u_tile.u_logic.g_pair[1].g_bank[3].g_cap.g_direct.g_mask[0].g_retained.u_mask_ff",
+            "phase_ps": [
+              820.9254326476827,
+              967.8535286819193
+            ],
+            "recovery_margin_ps": -176.3509953485859,
+            "release_cycle_offset": [
+              1,
+              2
+            ],
+            "removal_margin_ps": 770.8761356476826
+          },
+          "reset_removal_worst": {
+            "absolute_reset_minus_clock_ps": [
+              1692.8518657476707,
+              1839.7799617819073
+            ],
+            "crosses_clock_edge": false,
+            "instance": "u_tile.u_logic.g_pair[0].g_bank[4].g_cap.g_direct.g_mask[7].g_retained.u_mask_ff",
+            "phase_ps": [
+              26.18519908100393,
+              173.1132951152406
+            ],
+            "recovery_margin_ps": 618.3892382180928,
+            "release_cycle_offset": [
+              2,
+              2
+            ],
+            "removal_margin_ps": -23.864097918996073
+          },
+          "root_clock_slew_pass": true,
+          "root_release_slew_pass": true,
+          "root_release_slew_ps": [
+            63.664121891302074,
+            64.600417323125
+          ],
+          "same_source_skew_ps": 14.454978923247836,
+          "startup_not_admitted_if_any_reset_or_source_gate_fails": true
+        },
+        {
+          "clock_arrival_minmax_ps": [
+            2517.616894798722,
+            2532.07187372197
+          ],
+          "last_reset_edge_offset": 3,
+          "max_BUF_load_fF": 25.312199999999994,
+          "primary_clock_slew_ps": 80,
+          "proposed_first_accept_edge_after_provider_edge0": 6,
+          "provider_clock": [
+            2531.792934365471,
+            2531.792934365471,
+            26.37380032948687,
+            26.37380032948687
+          ],
+          "reset_FF_sinks": 56683,
+          "reset_failures": 49,
+          "reset_recovery_worst": {
+            "absolute_reset_minus_clock_ps": [
+              1654.258765981016,
+              1801.1868620152527
+            ],
+            "crosses_clock_edge": true,
+            "instance": "u_tile.u_logic.g_pair[1].g_bank[3].g_cap.g_direct.g_mask[0].g_retained.u_mask_ff",
+            "phase_ps": [
+              820.9254326476827,
+              967.8535286819193
+            ],
+            "recovery_margin_ps": -176.3509953485859,
+            "release_cycle_offset": [
+              1,
+              2
+            ],
+            "removal_margin_ps": 770.8761356476826
+          },
+          "reset_removal_worst": {
+            "absolute_reset_minus_clock_ps": [
+              1692.8518657476707,
+              1839.7799617819064
+            ],
+            "crosses_clock_edge": false,
+            "instance": "u_tile.u_logic.g_pair[0].g_bank[4].g_cap.g_direct.g_mask[7].g_retained.u_mask_ff",
+            "phase_ps": [
+              26.18519908100393,
+              173.11329511523968
+            ],
+            "recovery_margin_ps": 618.3892382180937,
+            "release_cycle_offset": [
+              2,
+              2
+            ],
+            "removal_margin_ps": -23.864097918996073
+          },
+          "root_clock_slew_pass": true,
+          "root_release_slew_pass": true,
+          "root_release_slew_ps": [
+            63.664121891302074,
+            64.600417323125
+          ],
+          "same_source_skew_ps": 14.454978923247836,
+          "startup_not_admitted_if_any_reset_or_source_gate_fails": true
+        }
+      ]
+    }
+  },
+  "total_clock_reset_wire_um": 7673122.159486729,
+  "total_meander_reservation_um": 6581716.7980123395
+}

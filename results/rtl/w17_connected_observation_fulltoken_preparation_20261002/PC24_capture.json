@@ -1,0 +1,74 @@
+{
+  "recorded_utc": "2026-10-01T21:23:53.169769+00:00",
+  "owner_commit": "d2cabe7ce7c79cb3c9ec9aea13d67606f2b5e035",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04",
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/w17_runtime/chip/ot_chip_v41x_die.sv": "751c8b0d4945cdbf391d0255552282c00ed32d0e5a0b6e88ea475e015f55c054",
+    "tools/w17_current_L0_supervisor_v4.py": "807df7fb1d7fe22348f90d05f95f39481a630a4b7199f6056cb7ce8ecbf36257"
+  },
+  "reference_only_not_launch_inputs": [
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv"
+  ],
+  "launch_pin_count": 145,
+  "launch_mismatches": [],
+  "source_git_status": "",
+  "binary_sha256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+  "environment": {
+    "RT_WATCHDOG": "100000",
+    "RT_SKIP": "0"
+  },
+  "processes": {
+    "1307359": {
+      "cmdline": "/usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py ",
+      "stat": "1307359 (python3) S 1 1307359 1307359 0 -1 4194304 5082 1196 0 0 246 1 0 1 20 0 32 0 307093847 1414496256 7967 18446744073709551615 96134748147712 96134750987789 140721195263712 0 0 0 0 16781312 2 0 0 0 17 17 0 0 0 0 0 96134753359920 96134753643992 96135413043200 140721195265981 140721195266078 140721195266078 140721195270119 0\n",
+      "status": "State:\tS (sleeping)\nVmRSS:\t   32608 kB\nThreads:\t32"
+    },
+    "1307441": {
+      "cmdline": "/usr/bin/python3 /home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_L0_supervisor_v4.py --admitted ",
+      "stat": "1307441 (python3) S 1307433 1307359 1307359 0 -1 4194304 23275 456361874 0 138 348 38 11840634 89937 20 0 32 0 307093863 1436975104 13747 18446744073709551615 100387379802112 100387382642189 140734846429296 0 0 0 0 16781312 2 0 0 0 17 18 0 0 0 0 0 100387385014320 100387385298392 100388173484032 140734846431120 140734846431228 140734846431228 140734846435303 0\n",
+      "status": "State:\tS (sleeping)\nVmRSS:\t   55724 kB\nThreads:\t32"
+    },
+    "1968070": {
+      "cmdline": "/usr/bin/time -v /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt /home/ubuntu/w17-current-L0-fastpp-20261001-r3/images /home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output 400000 ",
+      "stat": "1968070 (time) S 1968038 1307359 1307359 0 -1 4194304 58 0 0 0 0 0 0 0 20 0 1 0 308728976 2859008 320 18446744073709551615 94250461405184 94250461411321 140734809548480 0 0 0 0 6 0 1 0 0 17 1 0 0 0 0 0 94250461424624 94250461425984 94250870403072 140734809550606 140734809550805 140734809550805 140734809554922 0\n",
+      "status": "State:\tS (sleeping)\nVmRSS:\t    1428 kB\nThreads:\t1"
+    },
+    "1968071": {
+      "cmdline": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt /home/ubuntu/w17-current-L0-fastpp-20261001-r3/images /home/ubuntu/w17-current-L0-fastpp-20261001-r4/L0_output 400000 ",
+      "stat": "1968071 (v41_die_rt) S 1968070 1307359 1307359 0 -1 4194304 3104515 0 11 0 2855297 2066 0 0 20 0 505 0 308728976 17755500544 3197946 18446744073709551615 109814274891776 109814685566265 140725817127568 0 0 0 0 0 0 0 0 0 17 6 0 0 0 0 0 109814693828120 109814693834872 109815314624512 140725817130733 140725817130915 140725817130915 140725817135032 0\n",
+      "status": "State:\tS (sleeping)\nVmRSS:\t12797160 kB\nThreads:\t505"
+    },
+    "2069324": {
+      "cmdline": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 4 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/5_1_grt.json ",
+      "stat": "2069324 (openroad) R 2069323 1328461 1328461 0 -1 4194560 6821561 1243 14 0 1569662 1616 0 0 20 0 8 0 309002034 22850547712 5374075 18446744073709551615 1 1 0 0 0 0 0 4096 1258 0 0 0 17 8 0 0 0 0 0 0 0 0 0 0 0 0 0\n",
+      "status": "State:\tR (running)\nVmRSS:\t21501168 kB\nThreads:\t8"
+    }
+  },
+  "terminal_files_present": {
+    "terminal.json": false,
+    "failure.json": false,
+    "L0_output/result.json": false
+  },
+  "archive_sha256": {
+    "owner_scalar.py": "00960b3f28c7e2a168f4251ecfc8d10d68da397152d6a54574c63c7889d6ef35",
+    "launch.json": "f741a93a13aacad45efd7d18fea86f7891de9c35ee44d6854dafd3bee3eceecc",
+    "progress_snapshot.log": "51513d4b8cf9585031162964eba6c387b2af39312cf3684b9e1ef697bcda3019",
+    "owner_binding.json": "68374138ec907bbb6a98bf1877801fda11014993ed1996dcb6318fb53be1cd85",
+    "owner_scalar.json": "e375cd6ccc78d739f12f358176f57abc8a453554efcda9e728b61f12959b10fe",
+    "state_snapshot.json": "0c82e049559bbafd5fdca8d051a3d0dd358d2b78b206e4449038c705ea21979f"
+  }
+}

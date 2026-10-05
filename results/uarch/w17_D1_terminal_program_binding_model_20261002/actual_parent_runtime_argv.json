@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-02T18:44:34.462471+00:00",
+  "PID": 1636598,
+  "source": "/proc/1636598/cmdline and cwd metadata only",
+  "argv": [
+    "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix"
+  ],
+  "cwd": "/tmp/w17-D1-native-joined-20261002-r1",
+  "required_same_program_argument": "+DIR=/tmp/w17-D1-native-diagnostic-result-20261002-r1/input",
+  "required_argument_present": false,
+  "loaded_program_contents": "UNOBSERVED; no memory reads or inferior calls",
+  "process_unchanged": true,
+  "default_program_path": "/tmp/w17-D1-native-joined-20261002-r1/prog.hex",
+  "default_program_file_exists": false,
+  "source_loader": {
+    "path": "results/uarch/w17_D1_disjoint_native_actual_runtime_20261002_r1/inputs/ot_v41_rt_die_D1_scope.sv",
+    "lines": [
+      192,
+      193
+    ],
+    "rule": "Missing DIR defaults to dot; prog.hex read only if it exists"
+  }
+}

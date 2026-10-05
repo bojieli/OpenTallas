@@ -1,0 +1,50 @@
+{
+  "available_minus_increment_bytes": 8562889980,
+  "component_snapshot_is_not_a_recomputed_replacement_bound": true,
+  "coordination": {
+    "Kepler": "Preserve actual R58 checkpoint/class identity, no signals/restart/duplicate. Future PC11+ follows actual PC9 restore/replayPC10/real PC10 capture, and reviewed source-class migration if selecting Ampere successor.",
+    "Peirce": "Bind exact source-object copy multiplicity/lifetimes for capture and cold restore; retain current increment and unknown additional phase costs until counted. No RSS substitute.",
+    "parent": "Normal GPU-owner/process terminal release may change measured headroom; count host RAM release only after owner cleanup and fresh measurement, never from GPU allocation or missing old parent PID alone."
+  },
+  "known_base_role_components_bytes": {
+    "canonical_identity_lineage_workspace": 1035636830,
+    "cold_restored_partial_sector_objects": 28485857280,
+    "metadata_allocation_slots": 24611743040,
+    "producer_partial_sector_objects": 28485857280,
+    "restore_port_dictionary_copy": 117325824,
+    "serialization_workspace": 27364965738
+  },
+  "memory": {
+    "MemAvailable": 99440279552,
+    "SwapFree": 1032192
+  },
+  "no_V3_class_guard_exception": true,
+  "no_job_change": true,
+  "no_new_large_RAM_admission": true,
+  "pids": {
+    "1998275": {
+      "Name": "yosys",
+      "State": "R (running)",
+      "Threads": "1",
+      "VmRSS": "48768056 kB",
+      "VmSwap": "4767188 kB"
+    },
+    "2591875": {
+      "Name": "python",
+      "State": "T (stopped)",
+      "Threads": "32",
+      "VmRSS": "2754032 kB",
+      "VmSwap": "7584 kB"
+    },
+    "2659940": {
+      "Name": "python3",
+      "State": "R (running)",
+      "Threads": "115",
+      "VmRSS": "8537652 kB",
+      "VmSwap": "2164 kB"
+    }
+  },
+  "sample_ns": 1790995895246581655,
+  "source_provenance": "R58 PC9 boundary ownership packet + r56 object-size role model; RSS is observation only and never an upper bound",
+  "unchanged_R58_cold_serialization_increment_bytes": 90877389572
+}

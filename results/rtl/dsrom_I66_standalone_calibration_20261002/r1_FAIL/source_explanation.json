@@ -1,0 +1,39 @@
+{
+  "actual_unbound": "True postphase spine-idle edge was not journaled by defective one-shot observer. Source derivation421 is not an observed event. Actual adapter retire422 is observed. coll_busy/fullcore/general writers/physicalPAR2 transport/provider clocks remain unbound.",
+  "functional_runtime": "PASS",
+  "no_new_prediction_or_execution": true,
+  "overall_verdict": "FAIL preserved exactly; no retry/model fit",
+  "source_contract_references": [
+    {
+      "lines": [
+        132,
+        133,
+        250,
+        251,
+        270,
+        271
+      ],
+      "path": "rtl/test/dsrom_PAR2_runtime_consumer_observer/pinned/rtl/v41die/ot_v41_spine_w17w10.sv"
+    },
+    {
+      "lines": [
+        97,
+        98,
+        133
+      ],
+      "path": "rtl/test/dsrom_PAR2_runtime_consumer_observer/pinned/rtl/v41die/ot_v41_rom_adapt.sv"
+    },
+    {
+      "lines": [
+        240,
+        241,
+        242
+      ],
+      "path": "rtl/test/dsrom_PAR2_runtime_consumer_observer/host.cpp"
+    }
+  ],
+  "source_derivation": {
+    "retirement_prediction_defect": "spine rows_left <= rows_left - countones(r_v) is NBA; S_RUN tests old rows_left. Last root at419 reduces to0 after419. Edge420 tests0 and changes st toS_IDLE after420; preedge spine idle is421. Adapter S_WAIT tests preedge s_idle at421 and changes st toS_IDLE after421; joined adapter idle preedge422. Original prediction420/421 omitted the final old-state transition. No request/response/arithmetic timing mismatch.",
+    "spine_idle_observer_defect": "host.cpp seenrun is set by adapter !idle at edge11 during EID lookup, while spine remains idle before phase15. The one-shot spinedone latch records this prephase idle as completion and suppresses true later spine idle. Must arm after actual phase acceptance and observe spine busy before its idle transition."
+  }
+}

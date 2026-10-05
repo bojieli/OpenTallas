@@ -1,0 +1,41 @@
+{
+  "scope": "Existing engine assembly, not new engine hardware or full token admission",
+  "inventory": {
+    "ranks": 2,
+    "SM_per_rank": 32,
+    "RF_per_SM": 1,
+    "W2_PC": 128,
+    "NC_per_PC": 6,
+    "KV_lifecycle": 1,
+    "payload_sector_root": 1,
+    "native_PC40_connector": 1
+  },
+  "replica_credit": "Existing SM/RF/shared/W2 inventory reused; no extra memory or engine replica credit",
+  "source_models": [
+    "tools/gpu_sys/canonical_qwen_kv_controller_model.py",
+    "tools/gpu_sys/canonical_qwen_sector_authority_model.py",
+    "tools/gpu_sys/canonical_qwen_kv_connections_model.py",
+    "tools/gpu_sys/qwen_native_consumer_drain_model.py"
+  ],
+  "assembly_sequential_bits_added": 0,
+  "assembly_SRAM_bytes_added": 0,
+  "selected_PC_bits": 7,
+  "selected_W2_bus_inputs": "6 callers, address34/tag32/gen4/direction and both raw response identities; actual retained physical-PC mux",
+  "request_and_capture_guard": "Existing six-comparator root; requests and effective readiness and both captures masked at selected PC",
+  "physical_selected_bus_mux_area_mm2": null,
+  "physical_selected_bus_wire_delay_ps": null,
+  "routing_tracks": null,
+  "streaming_period_ps": "2500/3",
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "external_CDC_latency_cycles": null,
+  "external_owner_and_reset_latency_cycles": null,
+  "full1737_composed_latency_cycles": null,
+  "assembly_component_elaboration_allowed": true,
+  "new_engine_or_PnR_admitted": false,
+  "headline_credit": false,
+  "connected_shared_services": 64,
+  "KV_connections": "ONE original lifecycle controller, Dewey shared router/state observer/metadata join, replacing Dewey owner55 reader leaf with Popper fullnative230 protected consumer/drain. Neither peer controller wrapper instantiated.",
+  "native_bridge_raw_bits": 335,
+  "native_bridge_protected_bits": 432
+}

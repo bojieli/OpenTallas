@@ -1,0 +1,12 @@
+{
+  "inherited_occupancy_credit": 0,
+  "invariant": "RemainingPC=popcount(ExpectedPC minus DonePC). Global owned-return lane emits at most one PCterminal/coreedge. SeenMask32/context andCAMvalid prevent duplicate terminals. Actual release identical to reference masks.",
+  "map_budget_refund": 0,
+  "new_state": "RemainingPC6 per4096tag;max32,min0,only decrement once perCAM context after all immutableLEN beat bits seen",
+  "old_state": "ExpectedPC32+DonePC32 per4096tag",
+  "reasoning": "Replace only logically redundant root mask state in this bounded serialized KV-owner lane. Future parallel-owner adaptation must reconcile simultaneous PCterminal population count; not automatically admitted.",
+  "scenarios": 6592,
+  "source_snapshot_SHA256": "7a33be219f01e0be94789ea9d5a0e15e32dcc4e59dbf4f66efa79803e08de0ab",
+  "status": "PASS_BOUNDED_PROTOCOL_STATE_EQUIVALENCE_NOT_RTL_MEASUREMENT",
+  "timer_width_reduction": false
+}

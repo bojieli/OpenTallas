@@ -1,0 +1,85 @@
+images loaded in 7.4 s
+models constructed in 8.2 s (tiles/die=1536 nodes/die=1488)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 wall=3s passes=3
+DEPSITE die=0 addr=0 port=1 cyc=19
+DEPSITE die=1 addr=0 port=1 cyc=19
+DEPSITE die=2 addr=0 port=1 cyc=19
+DEPSITE die=3 addr=0 port=1 cyc=19
+progress tick=500 cyc=501 pc_base=0/0 me_busy=258/258 wall=577s passes=1193
+DEPSITE die=0 addr=1 port=5 cyc=573
+DEPSITE die=0 addr=2 port=5 cyc=573
+DEPSITE die=0 addr=3 port=5 cyc=573
+DEPSITE die=0 addr=4 port=5 cyc=573
+DEPSITE die=0 addr=5 port=5 cyc=573
+DEPSITE die=0 addr=6 port=5 cyc=573
+DEPSITE die=0 addr=7 port=5 cyc=573
+DEPSITE die=0 addr=8 port=5 cyc=573
+DEPSITE die=0 addr=9 port=5 cyc=573
+DEPSITE die=0 addr=10 port=5 cyc=573
+DEPSITE die=0 addr=11 port=5 cyc=573
+DEPSITE die=0 addr=12 port=5 cyc=573
+DEPSITE die=0 addr=13 port=5 cyc=573
+DEPSITE die=0 addr=14 port=5 cyc=573
+DEPSITE die=0 addr=15 port=5 cyc=573
+DEPSITE die=0 addr=17 port=5 cyc=573
+DEPSITE die=0 addr=18 port=5 cyc=573
+DEPSITE die=0 addr=19 port=5 cyc=573
+DEPSITE die=0 addr=20 port=5 cyc=573
+DEPSITE die=0 addr=21 port=5 cyc=573
+DEPSITE die=0 addr=22 port=5 cyc=573
+DEPSITE die=0 addr=23 port=5 cyc=573
+DEPSITE die=0 addr=24 port=5 cyc=573
+DEPSITE die=0 addr=25 port=5 cyc=573
+DEPSITE die=0 addr=26 port=5 cyc=573
+DEPSITE die=0 addr=27 port=5 cyc=573
+DEPSITE die=0 addr=28 port=5 cyc=573
+DEPSITE die=0 addr=29 port=5 cyc=573
+DEPSITE die=0 addr=30 port=5 cyc=573
+DEPSITE die=0 addr=31 port=5 cyc=573
+DEPSITE die=0 addr=33 port=5 cyc=573
+DEPSITE die=0 addr=34 port=5 cyc=573
+DEPSITE die=0 addr=35 port=5 cyc=573
+DEPSITE die=0 addr=36 port=5 cyc=573
+DEPSITE die=0 addr=37 port=5 cyc=573
+DEPSITE die=0 addr=38 port=5 cyc=573
+DEPSITE die=0 addr=39 port=5 cyc=573
+DEPSITE die=0 addr=40 port=5 cyc=573
+DEPSITE die=0 addr=41 port=5 cyc=573
+DEPSITE die=0 addr=42 port=5 cyc=573
+DEPSITE die=0 addr=43 port=5 cyc=573
+DEPSITE die=0 addr=44 port=5 cyc=573
+DEPSITE die=0 addr=45 port=5 cyc=573
+DEPSITE die=0 addr=46 port=5 cyc=573
+DEPSITE die=0 addr=47 port=5 cyc=573
+DEPSITE die=0 addr=49 port=5 cyc=573
+DEPSITE die=0 addr=50 port=5 cyc=573
+DEPSITE die=0 addr=51 port=5 cyc=573
+DEPSITE die=0 addr=52 port=5 cyc=573
+DEPSITE die=0 addr=53 port=5 cyc=573
+DEPSITE die=0 addr=54 port=5 cyc=573
+DEPSITE die=0 addr=55 port=5 cyc=573
+DEPSITE die=0 addr=56 port=5 cyc=573
+DEPSITE die=0 addr=57 port=5 cyc=573
+DEPSITE die=0 addr=58 port=5 cyc=573
+DEPSITE die=0 addr=59 port=5 cyc=573
+DEPSITE die=0 addr=60 port=5 cyc=573
+DEPSITE die=0 addr=61 port=5 cyc=573
+DEPSITE die=0 addr=62 port=5 cyc=573
+DEPSITE die=0 addr=63 port=5 cyc=573
+progress tick=1000 cyc=1001 pc_base=0/0 me_busy=751/751 wall=1577s passes=2686
+progress tick=1500 cyc=1501 pc_base=0/0 me_busy=1025/1025 wall=2156s passes=4182
+progress tick=2000 cyc=2001 pc_base=18/18 me_busy=1059/1059 wall=2255s passes=5509
+progress tick=2500 cyc=2501 pc_base=18/18 me_busy=1553/1553 wall=3092s passes=7003
+progress tick=3000 cyc=3001 pc_base=18/18 me_busy=1940/1940 wall=3670s passes=8390
+progress tick=3500 cyc=3501 pc_base=18/18 me_busy=2033/2033 wall=3877s passes=9788
+STAGE L29 done cycles=3931 start_cyc=7 end_cyc=3938 me_busy=2033/2033 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=1536 su_writes=30236 wall=3907s
+DEP stage=L29 die=0 vm_rbw_x=4096 vm_rbw_other=4089 kv_rbw=327296 vm_x_ranges=4096-8191 vm_other_ranges=0-0,16241-16751,24433-24943,32625-33135,40817-41327,49009-49519,57201-57711,65393-65903,73585-74095 kv_ranges=1-15,17-31,33-47,49-63,65-79,81-95,97-111,113-127,129-143,145-159,161-175,177-191,193-207,209-223,225-239,241-255
+DEP stage=L29 die=1 vm_rbw_x=4096 vm_rbw_other=4089 kv_rbw=327296 vm_x_ranges=4096-8191 vm_other_ranges=0-0,16241-16751,24433-24943,32625-33135,40817-41327,49009-49519,57201-57711,65393-65903,73585-74095 kv_ranges=1-15,17-31,33-47,49-63,65-79,81-95,97-111,113-127,129-143,145-159,161-175,177-191,193-207,209-223,225-239,241-255
+DEP stage=L29 die=2 vm_rbw_x=4096 vm_rbw_other=4089 kv_rbw=327296 vm_x_ranges=4096-8191 vm_other_ranges=0-0,16241-16751,24433-24943,32625-33135,40817-41327,49009-49519,57201-57711,65393-65903,73585-74095 kv_ranges=1-15,17-31,33-47,49-63,65-79,81-95,97-111,113-127,129-143,145-159,161-175,177-191,193-207,209-223,225-239,241-255
+DEP stage=L29 die=3 vm_rbw_x=4096 vm_rbw_other=4089 kv_rbw=327296 vm_x_ranges=4096-8191 vm_other_ranges=0-0,16241-16751,24433-24943,32625-33135,40817-41327,49009-49519,57201-57711,65393-65903,73585-74095 kv_ranges=1-15,17-31,33-47,49-63,65-79,81-95,97-111,113-127,129-143,145-159,161-175,177-191,193-207,209-223,225-239,241-255
+QWEN_ROM_TOKEN_TP2 PASS stages=1 token=0 val=00000000 die1_token=0 cycles=3938 edges=3938 settle_max=2 wall_s=3906.9 RSS_KiB=1493824 threads=1
+progress tick=4000 cyc=4001 pc_base=26/26 me_busy=2033/2033 wall=3911s passes=10998
+DRAIN stage=L29 die=0 cycles=512 vm_writes=0 x_writes=0 kv_writes=0
+DRAIN stage=L29 die=1 cycles=512 vm_writes=0 x_writes=0 kv_writes=0
+DRAIN stage=L29 die=2 cycles=512 vm_writes=0 x_writes=0 kv_writes=0
+DRAIN stage=L29 die=3 cycles=512 vm_writes=0 x_writes=0 kv_writes=0

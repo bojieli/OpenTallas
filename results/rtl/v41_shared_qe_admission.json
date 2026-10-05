@@ -1,0 +1,68 @@
+{
+  "status": "measured_fixed_rate_admission_failure",
+  "logical_matrix": "L0.wq_a",
+  "sectors": 65280,
+  "alone": {
+    "word_count": 3840,
+    "window_words": 1024,
+    "initial_window_ready_cycle": 2881,
+    "first_missing_word": 1679,
+    "available_words_at_consume_end": 2006,
+    "end_deficit_words": 1834,
+    "earliest_optimistic_unstalled_start": 17487,
+    "words_already_resident_at_that_start": 3352,
+    "final_word_cycle": 21326,
+    "fixed_rate_window_pass": false
+  },
+  "mixed": {
+    "word_count": 3840,
+    "window_words": 1024,
+    "initial_window_ready_cycle": 9073,
+    "first_missing_word": 1212,
+    "available_words_at_consume_end": 1554,
+    "end_deficit_words": 2286,
+    "earliest_optimistic_unstalled_start": 29173,
+    "words_already_resident_at_that_start": 3370,
+    "final_word_cycle": 33013,
+    "fixed_rate_window_pass": false
+  },
+  "scope": "Real descriptor shape; synthetic weight payload and sustained K traffic; optimistic unlimited completion capture; one stack",
+  "limits": [
+    "No actual QE numeric consumption",
+    "No complete production index/WINDOW trace",
+    "Service can change when consumer scheduling changes; this is a rejected prototype operating point, not universal impossibility"
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/chip/ot_chip_v41x_weight_pc_adapter.sv": "b260b3367389891fb2c25f1bc719d81ac73e8be3ba32969dae20e7db2adcc11f",
+    "rtl/chip/ot_chip_v41x_shared_hbm_model.sv": "f7ae842f2e90254478ee8dd060baf09eb5bab0701759f27b0b40bc6f2b9d3535",
+    "rtl/test/tb_v41_shared_qe_admission.sv": "c5b7fd92bae672411958c4853b889516e0b443c855a59aa351cefb9e172f647b",
+    "tools/v41_shared_qe_admission.py": "0f160b976a5639dcc4644162f6bc68cdc275ad5c71b667da4d4f16968148c6cc",
+    "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04"
+  },
+  "trace_sha256": {
+    "alone": "b8099645d6fde3ecb6ed507dc46819e881bf49050cf4583b551e0843cc8e4a66",
+    "mixed": "53a9c181e7d71a197816573da6723262ecaf3fe10c59e2db6a9ae5d3f39d0571"
+  },
+  "landing_20260929": {
+    "integration_branch": "claude/land-frozen-20260929",
+    "action": "labelled_pins_moved",
+    "changed_pins": {
+      "rtl/chip/ot_chip_v41x_shared_hbm_model.sv": "cfca3ce2fe7e17148df625a5990fec3c9093c0d5c4c9a15c41b74bf584c487f7",
+      "rtl/chip/ot_chip_v41x_weight_pc_adapter.sv": "4f3c46b340fed66494d1284655bbe06c303c7367257e7d5678aae0a0a7bab922"
+    },
+    "reason": "claude/w4-qe-shared-stall made the weight adapter and shared HBM model geometry parameters opt-in (bit-identical at defaults per its handoff); this record was not re-run. Its focused test still passes on the integrated tree."
+  },
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json": {
+        "old": "81fa804534d548b7c1f77dc97b33b643d49fd78d63316a15592d920fcc1eca37",
+        "new": "ffcc20a520ec7faebd26c184d6b59e9cf192d4ae199f5a7f149ceab19803fc04"
+      }
+    },
+    "historical_copy": "v41_shared_qe_admission_historical_before_w17_isa.json"
+  }
+}

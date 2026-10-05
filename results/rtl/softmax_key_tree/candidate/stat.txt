@@ -1,0 +1,58 @@
+
+15. Printing statistics.
+
+=== ot_a3_attention_softmax_block ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    84059        - wires
+    84059        - wire bits
+     4539        - public wires
+     4539        - public wire bits
+     4302        - ports
+     4302        - port bits
+    81841 1.05E+04 cells
+     5420  474.142   AND2x2_ASAP7_75t_R
+     3027  264.802   AND3x1_ASAP7_75t_R
+      449   45.825   AND4x1_ASAP7_75t_R
+      181   21.112   AND5x1_ASAP7_75t_R
+       43   10.031   AO211x2_ASAP7_75t_R
+     9988   873.75   AO21x1_ASAP7_75t_R
+      172   25.078   AO221x1_ASAP7_75t_R
+      120   20.995   AO222x2_ASAP7_75t_R
+     1463  191.975   AO22x1_ASAP7_75t_R
+       22    5.132   AO31x2_ASAP7_75t_R
+      703   81.998   AO32x1_ASAP7_75t_R
+        7    1.021   AO33x2_ASAP7_75t_R
+       97   16.971   AOI211x1_ASAP7_75t_R
+     1364  159.097   AOI21x1_ASAP7_75t_R
+       16    3.266   AOI221x1_ASAP7_75t_R
+      219    31.93   AOI22x1_ASAP7_75t_R
+     6820 2.59E+03   DFFASRHQNx1_ASAP7_75t_R
+      427  124.513   DFFHQNx1_ASAP7_75t_R
+     6792  297.082   INVx1_ASAP7_75t_R
+     1768  231.997   MAJx2_ASAP7_75t_R
+     7722  675.521   NAND2x1_ASAP7_75t_R
+      646  103.605   NAND3x1_ASAP7_75t_R
+     3959  346.333   NOR2x1_ASAP7_75t_R
+      124   19.887   NOR3x1_ASAP7_75t_R
+      884   103.11   OA211x2_ASAP7_75t_R
+     3586  365.987   OA21x2_ASAP7_75t_R
+       14    3.266   OA221x2_ASAP7_75t_R
+       61   10.673   OA222x2_ASAP7_75t_R
+      482   70.276   OA22x2_ASAP7_75t_R
+       60   13.122   OA31x2_ASAP7_75t_R
+       10    1.458   OA33x2_ASAP7_75t_R
+     3270  381.413   OAI21x1_ASAP7_75t_R
+     3282  478.516   OAI22x1_ASAP7_75t_R
+     4249  371.703   OR2x2_ASAP7_75t_R
+     1387  121.335   OR3x1_ASAP7_75t_R
+     2307  235.452   OR4x1_ASAP7_75t_R
+      276   32.193   OR5x1_ASAP7_75t_R
+     7238  1160.83   XNOR2x2_ASAP7_75t_R
+     3186  510.971   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_attention_softmax_block': 10471.691340
+     of which used for sequential elements: 2709.838800 (25.88%)
+

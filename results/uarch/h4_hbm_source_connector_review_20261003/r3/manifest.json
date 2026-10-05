@@ -1,0 +1,79 @@
+[
+  {
+    "archive": "inputs/Qwen_tiled.json.gz",
+    "bytes": 3783521,
+    "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+    "path": "results/uarch/h3_qwen_complete_native_20261002/bounded_r2/Qwen_tiled.json.gz",
+    "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+  },
+  {
+    "archive": "inputs/program_final.json.gz",
+    "bytes": 14322040,
+    "commit": "fd7220c1e55397dec90222e1f99a8bd95ae02e03",
+    "path": "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+    "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+  },
+  {
+    "archive": "inputs/h4_c0_parent_provider_join.py",
+    "bytes": 18431,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "tools/h4_c0_parent_provider_join.py",
+    "sha256": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a"
+  },
+  {
+    "archive": "inputs/h4_c0_v1_owner_lock_addressed.py",
+    "bytes": 29566,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "tools/h4_c0_v1_owner_lock_addressed.py",
+    "sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528"
+  },
+  {
+    "archive": "inputs/h4_c0_provider_movement.py",
+    "bytes": 10473,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "tools/h4_c0_provider_movement.py",
+    "sha256": "4ab7c01298d9e6948c3d53a04c833bf0e2f55cf0e664215b88fcb097f4899164"
+  },
+  {
+    "archive": "inputs/atomic_owner_contract.json",
+    "bytes": 6121,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h4_c0_parent_provider_join_20261002/r2_parent_additive/model/atomic_owner_contract.json",
+    "sha256": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d"
+  },
+  {
+    "archive": "inputs/composed_owner_model.json",
+    "bytes": 2216,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h4_c0_parent_provider_join_20261002/r2_parent_additive/model/composed_owner_model.json",
+    "sha256": "6c6fc77dbc52d7312491699d332272376a58309cb835c72fc8d4ad71995f90af"
+  },
+  {
+    "archive": "inputs/ot_gpu_rf_service.sv",
+    "bytes": 2365,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "rtl/gpu/ot_gpu_rf_service.sv",
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+  },
+  {
+    "archive": "inputs/qwen_hbm_provider_bindings_r17.py",
+    "bytes": 22125,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "tools/qwen_hbm_provider_bindings_r17.py",
+    "sha256": "df61c383a1eeb7666f5b62b2829b8c9d6ef35086265ba3ac387fc8eb3b6745c4"
+  },
+  {
+    "archive": "inputs/Qwen_actual_runtime_demand_join.json",
+    "bytes": 3262,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h3_complete_native_calendar_20261002/c0_program_shared64_additive_r2/Qwen_actual_runtime_demand_join.json",
+    "sha256": "514c573e10fda238b7623e6757dccb4fd607b592a133d70b2c08ebf7c6dc2d0c"
+  },
+  {
+    "archive": "inputs/W2_pricing_model.json",
+    "bytes": 28079,
+    "commit": "a9cab7990bdd24b6fe3b3ea24bd4cb53e9d8962b",
+    "path": "results/uarch/h4_hbm_source_connector_review_20261003/r2/inputs/results/uarch/w2_pc_exact_completion_20261003/model.json",
+    "sha256": "2d6ee341f43c3537ffbf23d1465350379eab801b11769339bf4394eea4fcc655"
+  }
+]

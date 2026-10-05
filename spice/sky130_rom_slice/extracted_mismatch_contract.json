@@ -1,0 +1,78 @@
+{
+  "acceptance": {
+    "absent_bitline_fraction_min": 0.75,
+    "discharge_delay_ns_max": 4.0,
+    "masked_bitline_fraction_min": 0.75,
+    "minimum_distinct_discharge_delay_values": 2,
+    "minimum_distinct_read_margin_values": 2,
+    "present_bitline_fraction_max": 0.25,
+    "read_energy_fj_max": 20000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.5,
+    "replay_max_abs_measure_delta": 0.0,
+    "sample_failures_max": 0,
+    "sense_high_fraction_min": 0.75,
+    "sense_low_fraction_max": 0.25,
+    "supply_current_rms_ua_max": 1000.0,
+    "unexpected_warnings_max": 0
+  },
+  "claim_boundary": {
+    "establishes": [
+      "deterministic fixed-seed sampling of the installed public SKY130A 1V8 per-instance mismatch equations at nominal TT conditions",
+      "electrical sensitivity of the exact capacitance-extracted two-column demonstration slice to the mismatch model over the declared sample set",
+      "same-seed replay reproducibility and observed cross-seed variation for the local extracted testbench"
+    ],
+    "evidence_class": "public_open_pdk_mismatch_model_simulation_of_capacitance_extracted_slice",
+    "forbidden_inferences": [
+      "silicon yield, defect probability, process capability, confidence level, production failure rate, or sign-off Monte Carlo coverage",
+      "sense-amplifier offset or yield because the demonstration slice contains only its local static sense inverters",
+      "distributed wire resistance, compact-array behavior, full-row or full-column behavior, decoder or repair behavior, IR drop, noise, aging, electromigration, or simultaneous full-array activity",
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "whole-wafer inference throughput or GPU speedup",
+      "target-foundry correlation, manufacturing sign-off, or silicon correlation"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "sky130_via_rom_extracted_mismatch_v1",
+  "inputs": {
+    "deterministic_pvt_result": "results/spice/sky130_extracted_pvt.json",
+    "pdk_lock": "configs/pdk/sky130_physical_lock.json",
+    "pex_netlist": "results/spice/sky130_physical/artifacts/sky130_rom_slice.pex.spice",
+    "physical_result": "results/spice/sky130_physical/physical.json",
+    "template": "spice/sky130_rom_slice/extracted_testbench.spice.in"
+  },
+  "model_mode": {
+    "corner": "tt",
+    "mc_mm_switch": 1,
+    "mc_pr_switch": 0,
+    "scope": "mismatch_only_process_variation_disabled"
+  },
+  "operating_point": {
+    "output_load_ff": 20.0,
+    "temperature_c": 25.0,
+    "vdd_v": 1.8
+  },
+  "reports": {
+    "json": "results/spice/sky130_extracted_mismatch.json",
+    "markdown": "results/spice/SKY130_EXTRACTED_MISMATCH_REPORT.md"
+  },
+  "sampling": {
+    "count": 256,
+    "default_workers": 4,
+    "index_origin": 0,
+    "quantiles": [
+      0.0,
+      0.01,
+      0.05,
+      0.5,
+      0.95,
+      0.99,
+      1.0
+    ],
+    "replay_index": 0,
+    "seed_algorithm": "sha256_namespace_colon_index_first_u64_mod_2147483646_plus_1",
+    "seed_namespace": "OpenTallas/SKY130A/extracted-via-ROM/mismatch/v1"
+  },
+  "schema_version": 1
+}

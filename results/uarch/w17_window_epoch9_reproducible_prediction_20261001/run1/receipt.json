@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS_COMPLETE_METADATA_REPRODUCTION_AND_TIMING_IDENTITY",
+  "prior_failure": "FAIL_METADATA_REPRODUCTION_PRESERVED; original generator omitted owner-added pin fields. Parent found numerical/event identity, no numeric mismatch.",
+  "preserved_prediction_sha256": "69df40105b42594d8240b0b545b2614672c0e5bb2c4ed5c62d1041047af6d29b",
+  "original_model_sha256": "061d685634e33b3601a41b11f366091a8dc879feb8f6e69f42791c77b4b208dd",
+  "metadata_generator_sha256": "b4590dc2baee5cbadf34121db343e29dfc2db87023c8178035b11a6f2e7906af",
+  "new_prediction_sha256": "ca680492c0c1628a2e81b277919ddff2162b3663047cd7228918c18a512dca1e",
+  "old_field_differences_except_wall_seconds": {},
+  "event_sha256": {
+    "credit1": "415805db80b8fb0b67c6506bcce4a293a4eaea2fb1fd558fc3c451889cd78ae7",
+    "credit8": "ecf641a3baeb054769158e178a9e2d1082082af08d7b73f0baddb5322500efe2"
+  },
+  "build_or_candidate_rerun": false
+}

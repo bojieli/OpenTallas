@@ -1,0 +1,542 @@
+{
+ "design": "qwen_hbm_gpu_die",
+ "model": "qwen",
+ "clock_hz": 1098640000.0,
+ "die_um": [
+  31800.0,
+  25628.930817610064
+ ],
+ "core_um": {
+  "x0": 913.3,
+  "y0": 1554.7,
+  "x1": 31780.0,
+  "y1": 24078.0,
+  "area_mm2": 695.22
+ },
+ "sm_tile": {
+  "w": 1909.008,
+  "h": 2155.68,
+  "abstract": "ot_gpu_sm_q",
+  "placed_vs_model": 0.884,
+  "abstract_lef": "pending: harden die 1900 x 2150 um",
+  "abstract_um": [
+   1900.0,
+   2150.0
+  ],
+  "footprint_mm2": 4.085,
+  "model_mm2": 4.621,
+  "sram": 0,
+  "macros": [],
+  "logic_h": 0.0
+ },
+ "sm_count": 32,
+ "array": {
+  "x": 8325.504,
+  "y": 8065.44,
+  "w": 16043.184000000001,
+  "h": 9504.0
+ },
+ "channels_um": {
+  "x": 110.16,
+  "y": 293.76,
+  "v_wires": 2696,
+  "h_wires": 4104,
+  "tracks_per_um_v": 24.48,
+  "tracks_per_um_h": 14.06
+ },
+ "quadrants": {
+  "0": [
+   0,
+   1,
+   2,
+   3,
+   8,
+   9,
+   10,
+   11
+  ],
+  "1": [
+   4,
+   5,
+   6,
+   7,
+   12,
+   13,
+   14,
+   15
+  ],
+  "2": [
+   16,
+   17,
+   18,
+   19,
+   24,
+   25,
+   26,
+   27
+  ],
+  "3": [
+   20,
+   21,
+   22,
+   23,
+   28,
+   29,
+   30,
+   31
+  ]
+ },
+ "barrier_network": {
+  "max_leaf_um": 4253.5,
+  "max_trunk_um": 6489.3,
+  "levels": 2,
+  "fan_in": [
+   8,
+   4
+  ],
+  "nodes": {
+   "0": [
+    12308.8,
+    10368.0
+   ],
+   "1": [
+    20385.4,
+    10368.0
+   ],
+   "2": [
+    12308.8,
+    15266.9
+   ],
+   "3": [
+    20385.4,
+    15266.9
+   ]
+  },
+  "root": [
+   16346.7,
+   12816.4
+  ],
+  "leaf_cycles": 9,
+  "trunk_cycles": 13
+ },
+ "l2_slices": {
+  "0": {
+   "x": 10840.2,
+   "y": 1554.7,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  "1": {
+   "x": 18916.8,
+   "y": 1554.7,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  "2": {
+   "x": 10840.2,
+   "y": 23655.6,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  "3": {
+   "x": 18916.8,
+   "y": 23655.6,
+   "w": 2937.6,
+   "h": 422.4
+  }
+ },
+ "dedicated_hub": null,
+ "crossings": [
+  {
+   "name": "barrier_leaf",
+   "distance_um": 4253.5,
+   "bits": 2,
+   "per_token_crossings": 362,
+   "cycles_one_way": 9
+  },
+  {
+   "name": "barrier_trunk",
+   "distance_um": 6489.3,
+   "bits": 2,
+   "per_token_crossings": 362,
+   "cycles_one_way": 13
+  },
+  {
+   "name": "x_broadcast_root_to_sm",
+   "distance_um": 10742.8,
+   "bits": 2048,
+   "per_token_crossings": 181,
+   "cycles_one_way": 22
+  },
+  {
+   "name": "weight_phy_to_sm",
+   "distance_um": 18056.2,
+   "bits": 1088,
+   "per_token_crossings": 0,
+   "note": "prefetched stream: adds to the bulk-copy loaded latency (in-flight bytes), not to the token",
+   "cycles_one_way": 36
+  },
+  {
+   "name": "tp_root_to_ucie",
+   "distance_um": 15495.2,
+   "bits": 512,
+   "per_token_crossings": 146,
+   "cycles_one_way": 31
+  }
+ ],
+ "area_used": {
+  "sm_array_mm2": 131.69,
+  "l2_mm2": 4.96,
+  "hub_mm2": 0.0
+ },
+ "fits": true,
+ "legality": {
+  "macros": 292,
+  "overlaps_including_halo": 0,
+  "errors": [],
+  "legal": true
+ },
+ "macro_counts": {
+  "ot_gpu_sm_q": 32,
+  "ot_hbm3e_phy": 4,
+  "ot_sram_1r1w_1024x256_m2_r2c2": 256
+ },
+ "regions": [
+  {
+   "name": "die",
+   "kind": "die",
+   "x": 0,
+   "y": 0,
+   "w": 31800.0,
+   "h": 25628.931
+  },
+  {
+   "name": "svc_south",
+   "kind": "service",
+   "x": 20.0,
+   "y": 864.0,
+   "w": 31760.0,
+   "h": 630.72,
+   "holds": "HBM3E controllers, 64 PC arbiters and the bulk-copy request/response heads of two stacks"
+  },
+  {
+   "name": "svc_north",
+   "kind": "service",
+   "x": 20.0,
+   "y": 24138.0,
+   "w": 31760.0,
+   "h": 630.72,
+   "holds": "as svc_south"
+  },
+  {
+   "name": "ucie_phy",
+   "kind": "reservation",
+   "x": 20.0,
+   "y": 6814.465,
+   "w": 833.333,
+   "h": 12000,
+   "note": "10 mm2 ledger (qwen3_budget ucie.link.phy_mm2_per_die); no LEF view"
+  },
+  {
+   "name": "sm0",
+   "kind": "sm",
+   "x": 8325.504,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm1",
+   "kind": "sm",
+   "x": 10344.672,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm2",
+   "kind": "sm",
+   "x": 12363.84,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm3",
+   "kind": "sm",
+   "x": 14383.008,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm4",
+   "kind": "sm",
+   "x": 16402.176,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm5",
+   "kind": "sm",
+   "x": 18421.344,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm6",
+   "kind": "sm",
+   "x": 20440.512,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm7",
+   "kind": "sm",
+   "x": 22459.68,
+   "y": 8065.44,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm8",
+   "kind": "sm",
+   "x": 8325.504,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm9",
+   "kind": "sm",
+   "x": 10344.672,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm10",
+   "kind": "sm",
+   "x": 12363.84,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm11",
+   "kind": "sm",
+   "x": 14383.008,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm12",
+   "kind": "sm",
+   "x": 16402.176,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm13",
+   "kind": "sm",
+   "x": 18421.344,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm14",
+   "kind": "sm",
+   "x": 20440.512,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm15",
+   "kind": "sm",
+   "x": 22459.68,
+   "y": 10514.88,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm16",
+   "kind": "sm",
+   "x": 8325.504,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm17",
+   "kind": "sm",
+   "x": 10344.672,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm18",
+   "kind": "sm",
+   "x": 12363.84,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm19",
+   "kind": "sm",
+   "x": 14383.008,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm20",
+   "kind": "sm",
+   "x": 16402.176,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm21",
+   "kind": "sm",
+   "x": 18421.344,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm22",
+   "kind": "sm",
+   "x": 20440.512,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm23",
+   "kind": "sm",
+   "x": 22459.68,
+   "y": 12964.32,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm24",
+   "kind": "sm",
+   "x": 8325.504,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm25",
+   "kind": "sm",
+   "x": 10344.672,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm26",
+   "kind": "sm",
+   "x": 12363.84,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm27",
+   "kind": "sm",
+   "x": 14383.008,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm28",
+   "kind": "sm",
+   "x": 16402.176,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm29",
+   "kind": "sm",
+   "x": 18421.344,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm30",
+   "kind": "sm",
+   "x": 20440.512,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "sm31",
+   "kind": "sm",
+   "x": 22459.68,
+   "y": 15413.76,
+   "w": 1909.008,
+   "h": 2155.68
+  },
+  {
+   "name": "l2_s0",
+   "kind": "l2",
+   "x": 10840.176,
+   "y": 1554.72,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  {
+   "name": "l2_s1",
+   "kind": "l2",
+   "x": 18916.848,
+   "y": 1554.72,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  {
+   "name": "l2_n0",
+   "kind": "l2",
+   "x": 10840.176,
+   "y": 23655.6,
+   "w": 2937.6,
+   "h": 422.4
+  },
+  {
+   "name": "l2_n1",
+   "kind": "l2",
+   "x": 18916.848,
+   "y": 23655.6,
+   "w": 2937.6,
+   "h": 422.4
+  }
+ ],
+ "def_sha256": "476b6c476a72d58efd932227b40816e4656ee7ecabcf68b8c3d14b941061a85b",
+ "schema": "opentallas.floorplan.hbm_gpu.v1",
+ "tool": "tools/hbm_gpu_floorplan.py",
+ "source_sha256": {
+  "tools/uarch_model.py": "d683f27c4d851fcf98b35538a63a5adee019732e2ae0f69aec53dad6ad9b7f16",
+  "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+  "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.lef": "bfb2797e8af014b88bea9717847ae66d67eb8038ec63bc00ab4543f2a913a3a4",
+  "tools/hbm_gpu_floorplan.py": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205"
+ },
+ "claim_boundary": "placement legality, fit and priced distances only; no route, timing or power claim"
+}

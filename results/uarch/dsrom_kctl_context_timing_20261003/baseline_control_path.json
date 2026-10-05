@@ -1,0 +1,223 @@
+{
+  "endpoints": 2.0,
+  "fmax_mhz": 670.7293607049677,
+  "path": {
+    "arrival_ps": 1401.6,
+    "cells": [
+      {
+        "cell": "DFFHQNx2_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "d_hi[4]$_SDFFCE_PP0P_/CLK",
+        "slew_ps": 0.0
+      },
+      {
+        "cell": "DFFHQNx2_ASAP7_75t_R",
+        "delay_ps": 111.4,
+        "fanout": 3,
+        "pin": "d_hi[4]$_SDFFCE_PP0P_/QN",
+        "slew_ps": 92.3
+      },
+      {
+        "cell": "BUFx16f_ASAP7_75t_R",
+        "delay_ps": 62.8,
+        "fanout": 12,
+        "pin": "fanout3562/Y",
+        "slew_ps": 46.8
+      },
+      {
+        "cell": "INVx3_ASAP7_75t_R",
+        "delay_ps": 73.6,
+        "fanout": 2,
+        "pin": "_076773_/Y",
+        "slew_ps": 45.6
+      },
+      {
+        "cell": "BUFx2_ASAP7_75t_R",
+        "delay_ps": 51.0,
+        "fanout": 3,
+        "pin": "fanout2400/Y",
+        "slew_ps": 29.4
+      },
+      {
+        "cell": "BUFx5_ASAP7_75t_R",
+        "delay_ps": 53.9,
+        "fanout": 7,
+        "pin": "load_slew2404/Y",
+        "slew_ps": 46.6
+      },
+      {
+        "cell": "BUFx6f_ASAP7_75t_R",
+        "delay_ps": 50.8,
+        "fanout": 6,
+        "pin": "load_slew2402/Y",
+        "slew_ps": 43.1
+      },
+      {
+        "cell": "BUFx6f_ASAP7_75t_R",
+        "delay_ps": 58.7,
+        "fanout": 7,
+        "pin": "wire2401/Y",
+        "slew_ps": 43.3
+      },
+      {
+        "cell": "BUFx3_ASAP7_75t_R",
+        "delay_ps": 63.4,
+        "fanout": 3,
+        "pin": "fanout2397/Y",
+        "slew_ps": 39.3
+      },
+      {
+        "cell": "BUFx8_ASAP7_75t_R",
+        "delay_ps": 55.6,
+        "fanout": 7,
+        "pin": "wire2399/Y",
+        "slew_ps": 49.3
+      },
+      {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 109.0,
+        "fanout": 1,
+        "pin": "_078983_/Y",
+        "slew_ps": 19.4
+      },
+      {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 44.1,
+        "fanout": 1,
+        "pin": "_078984_/Y",
+        "slew_ps": 21.5
+      },
+      {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 44.6,
+        "fanout": 1,
+        "pin": "_078985_/Y",
+        "slew_ps": 18.8
+      },
+      {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 42.1,
+        "fanout": 1,
+        "pin": "_078986_/Y",
+        "slew_ps": 17.1
+      },
+      {
+        "cell": "OA21x2_ASAP7_75t_R",
+        "delay_ps": 26.5,
+        "fanout": 1,
+        "pin": "_078987_/Y",
+        "slew_ps": 14.7
+      },
+      {
+        "cell": "AO221x1_ASAP7_75t_R",
+        "delay_ps": 45.9,
+        "fanout": 1,
+        "pin": "_078988_/Y",
+        "slew_ps": 23.0
+      },
+      {
+        "cell": "AO221x1_ASAP7_75t_R",
+        "delay_ps": 44.9,
+        "fanout": 1,
+        "pin": "_078993_/Y",
+        "slew_ps": 21.9
+      },
+      {
+        "cell": "OA21x2_ASAP7_75t_R",
+        "delay_ps": 28.8,
+        "fanout": 1,
+        "pin": "_078994_/Y",
+        "slew_ps": 21.4
+      },
+      {
+        "cell": "AO221x1_ASAP7_75t_R",
+        "delay_ps": 48.5,
+        "fanout": 1,
+        "pin": "_078995_/Y",
+        "slew_ps": 23.5
+      },
+      {
+        "cell": "AO22x1_ASAP7_75t_R",
+        "delay_ps": 41.6,
+        "fanout": 1,
+        "pin": "_078996_/Y",
+        "slew_ps": 17.6
+      },
+      {
+        "cell": "AO221x1_ASAP7_75t_R",
+        "delay_ps": 48.2,
+        "fanout": 1,
+        "pin": "_079004_/Y",
+        "slew_ps": 23.6
+      },
+      {
+        "cell": "MAJx2_ASAP7_75t_R",
+        "delay_ps": 43.5,
+        "fanout": 1,
+        "pin": "_079005_/Y",
+        "slew_ps": 15.2
+      },
+      {
+        "cell": "AO21x1_ASAP7_75t_R",
+        "delay_ps": 42.7,
+        "fanout": 1,
+        "pin": "_079006_/Y",
+        "slew_ps": 31.3
+      },
+      {
+        "cell": "INVx1_ASAP7_75t_R",
+        "delay_ps": 17.0,
+        "fanout": 1,
+        "pin": "_079007_/Y",
+        "slew_ps": 18.0
+      },
+      {
+        "cell": "AO221x1_ASAP7_75t_R",
+        "delay_ps": 28.0,
+        "fanout": 1,
+        "pin": "_079008_/Y",
+        "slew_ps": 24.4
+      },
+      {
+        "cell": "OA211x2_ASAP7_75t_R",
+        "delay_ps": 79.3,
+        "fanout": 7,
+        "pin": "_079009_/Y",
+        "slew_ps": 107.5
+      },
+      {
+        "cell": "BUFx2_ASAP7_75t_R",
+        "delay_ps": 57.0,
+        "fanout": 1,
+        "pin": "rebuffer3877/Y",
+        "slew_ps": 20.6
+      },
+      {
+        "cell": "AO21x1_ASAP7_75t_R",
+        "delay_ps": 28.6,
+        "fanout": 1,
+        "pin": "_108289_/Y",
+        "slew_ps": 17.5
+      },
+      {
+        "cell": "DFFHQNx1_ASAP7_75t_R",
+        "delay_ps": 0.0,
+        "pin": "run$_SDFF_PN0_/D",
+        "slew_ps": 17.5
+      }
+    ],
+    "endpoint": "run$_SDFF_PN0_",
+    "logic_cells": 29,
+    "max_fanout_on_path": 12,
+    "startpoint": "d_hi[4]$_SDFFCE_PP0P_",
+    "worst_cell": {
+      "cell": "DFFHQNx2_ASAP7_75t_R",
+      "delay_ps": 111.4,
+      "fanout": 3,
+      "pin": "d_hi[4]$_SDFFCE_PP0P_/QN",
+      "slew_ps": 92.3
+    }
+  },
+  "regex": "(^|\\.)(st|state|pst|ph|pc|busy|pend|run|running|rr|cnt|wp|rp|ds|drain|e_mode|rx_st|tx_st|st_rx|st_user|nu_pend|step|stg|stn|ld_run|sm_run|s_ph|a_started|go|issue_unit)(\\[|\\$|$)",
+  "setup_wns_ps": -657.914307
+}

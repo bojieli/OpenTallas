@@ -1,0 +1,120 @@
+{
+  "G0": {
+    "engine_RTL_admitted": false,
+    "PR_admitted": false,
+    "decision": "REFUSE_CURRENT_RESERVED_SLOT_AND_UNCLOSED_FILTER",
+    "reasons": [
+      "compiled ROM2048 full retained FF state exceeds storage-only X_SEL_TOPK_STORE at source50pct before integer/filter logic",
+      "staged suffix does not remove source PF64/256 serial filter quota/prefix paths; actual SS/FF bounds absent",
+      "HBM full2048 hardware provider/slot and ACK leases unbound"
+    ],
+    "next_engineering_action": "Reconcile ONE full N4/NMAX2048/LDW4 selector reservation with physical owner using FF lower bound and shared decode/filter construction. Price balanced filter quota/prefix and compaction alongside staged histogram/suffix/choice before opt-in RTL; reject this suffix-only pipeline as a build-ready revision.",
+    "topology_preference_for_next_model": "staged DIG8 is lower serial residence than DIG4 at both full runtime lengths, but no adoption until area/slot/filter/clock admission; balanced combinational has zero added cycles and unqualified multi-adder stage delay"
+  },
+  "composition": {
+    "DIG8_balanced_comb": {
+      "ROM_added_serial_service_cycles_per_position": 0,
+      "ROM_added_ns_at_policy_1p2GHz": 0.0,
+      "HBM_added_serial_service_cycles_per_position_if_same_provider": 0,
+      "HBM_added_ns_at_policy_1p2GHz_if_same_provider": 0.0,
+      "HBM_six_verify_positions_added_ns_if_serial_same_provider": 0.0,
+      "scope": "source service residence increments; transport/load gaps and actual overlap are not measured, no full-token rate claim"
+    },
+    "DIG8_staged": {
+      "ROM_added_serial_service_cycles_per_position": 1044,
+      "ROM_added_ns_at_policy_1p2GHz": 870.0,
+      "HBM_added_serial_service_cycles_per_position_if_same_provider": 1188,
+      "HBM_added_ns_at_policy_1p2GHz_if_same_provider": 990.0,
+      "HBM_six_verify_positions_added_ns_if_serial_same_provider": 5940.0,
+      "scope": "source service residence increments; transport/load gaps and actual overlap are not measured, no full-token rate claim"
+    },
+    "DIG4_existing": {
+      "ROM_added_serial_service_cycles_per_position": 1788,
+      "ROM_added_ns_at_policy_1p2GHz": 1490.0,
+      "HBM_added_serial_service_cycles_per_position_if_same_provider": 2556,
+      "HBM_added_ns_at_policy_1p2GHz_if_same_provider": 2130.0,
+      "HBM_six_verify_positions_added_ns_if_serial_same_provider": 12780.0,
+      "scope": "source service residence increments; transport/load gaps and actual overlap are not measured, no full-token rate claim"
+    }
+  },
+  "ROM_slot": [
+    {
+      "kind": "DIG8_balanced_comb",
+      "runtime_n": 512,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.5415130900376168,
+      "retained_state_required_core_mm2_at_source_50pct": 0.33313200480000005,
+      "shortfall_state_only_mm2_at_source_50pct": 0.025538328000000055,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 156.73554878048782,
+      "fit_35pct": false
+    },
+    {
+      "kind": "DIG8_staged",
+      "runtime_n": 512,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.600411623286009,
+      "retained_state_required_core_mm2_at_source_50pct": 0.3693656376,
+      "shortfall_state_only_mm2_at_source_50pct": 0.061771960800000025,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 173.78314024390244,
+      "fit_35pct": false
+    },
+    {
+      "kind": "DIG4_existing",
+      "runtime_n": 512,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.5189856737653198,
+      "retained_state_required_core_mm2_at_source_50pct": 0.3192734232,
+      "shortfall_state_only_mm2_at_source_50pct": 0.011679746400000024,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 150.21521341463415,
+      "fit_35pct": false
+    },
+    {
+      "kind": "DIG8_balanced_comb",
+      "runtime_n": 2048,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.5415130900376168,
+      "retained_state_required_core_mm2_at_source_50pct": 0.33313200480000005,
+      "shortfall_state_only_mm2_at_source_50pct": 0.025538328000000055,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 156.73554878048782,
+      "fit_35pct": false
+    },
+    {
+      "kind": "DIG8_staged",
+      "runtime_n": 2048,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.600411623286009,
+      "retained_state_required_core_mm2_at_source_50pct": 0.3693656376,
+      "shortfall_state_only_mm2_at_source_50pct": 0.061771960800000025,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 173.78314024390244,
+      "fit_35pct": false
+    },
+    {
+      "kind": "DIG4_existing",
+      "runtime_n": 2048,
+      "slot_mm2": 0.3075936768,
+      "candidate_memory_only_required_core_mm2_at_35pct": 0.4368068022857144,
+      "shortfall_mm2_at_35pct": 0.1292131254857144,
+      "state_only_utilization_required": 0.5189856737653198,
+      "retained_state_required_core_mm2_at_source_50pct": 0.3192734232,
+      "shortfall_state_only_mm2_at_source_50pct": 0.011679746400000024,
+      "fit_source_50pct": false,
+      "state_only_required_height_um_at_reserved_width_source_50pct": 150.21521341463415,
+      "fit_35pct": false
+    }
+  ]
+}

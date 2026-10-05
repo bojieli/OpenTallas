@@ -1,0 +1,61 @@
+{
+  "artifact_sha256": {
+    "5_1_grt.json": "315beee23aeb904c0d3e463ab044a04a904bfd65a540c4ed69a3b78caf9ae997",
+    "config.mk": "ffe43cd90f03d52d7094be3d4daef5c44af2d7f6aac6b2ab3358839fc37dceef",
+    "constraint.sdc": "a4afc85cde91b2eb8421c96245fc8f40270a9e537a720ae1e6f48860f7c57796",
+    "drc_iteration50.rpt": "db18a8e6a2c82447fd88f26b0fb31324381fe0c4fd8bcde48b6128d38f59c7b9",
+    "ot_coll_topk_merge.sv": "d81e9210744528aea2e1aef7dad3cda3c7eada82e4e628c8e4a91a36134347b9"
+  },
+  "candidate_analysis_only": {
+    "DIG4_bins": 16,
+    "actual_full_token_impact_priced": false,
+    "extra_cycles": 60,
+    "extra_ns_at_1p2GHz": 50,
+    "reduced_bin_count_does_not_prove_proportional_total_area_reduction": true,
+    "source_no_stall_cycles_DIG4": 137,
+    "source_no_stall_cycles_DIG8": 77
+  },
+  "constraints": {
+    "CORE_UTILIZATION": 35,
+    "PLACE_DENSITY": 0.6,
+    "hold_uncertainty_ps": 25,
+    "io_false_paths": true,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60
+  },
+  "final_route_running_at_observation": true,
+  "future_design_change_admitted": false,
+  "globalroute": {
+    "globalroute__design__core__area": 209024,
+    "globalroute__design__instance__area": 87541.6,
+    "globalroute__design__instance__count": 702380,
+    "globalroute__design__instance__count__macros": 0,
+    "globalroute__timing__hold__ws": 1.98813,
+    "globalroute__timing__setup__ws": -10228.6
+  },
+  "next_required": [
+    "actual worst endpoint paths",
+    "existing SRAM/radix variants source comparison",
+    "full512 geometry and token latency price before new RTL/P&R",
+    "final route verdict retained independently"
+  ],
+  "physical_adopted": false,
+  "remaining_DRC_iteration50": {
+    "metal_spacing_M3_to_VSS": 2,
+    "short_M2": 2
+  },
+  "schema": "opentallas.topk.parent-existing-route-review.v1",
+  "scope": {
+    "DIG": 8,
+    "N": 4,
+    "NMAX": 128,
+    "P": 64,
+    "PF": 64,
+    "bins": 256,
+    "is_full_512_candidate_shape": false
+  },
+  "source_commit": "0ea194879d44b81c2fc4c623641c507d6dd17fe0",
+  "source_sha256": "d81e9210744528aea2e1aef7dad3cda3c7eada82e4e628c8e4a91a36134347b9",
+  "source_worktree_was_clean": true,
+  "verdict": "FAIL_GLOBAL_ROUTE_TIMING_AS_BUILT_NOT_FINAL_ROUTE_VERDICT"
+}

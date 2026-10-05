@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-drafter-rom.v1",
+ "status": "MODEL_ONLY",
+ "rom": {
+  "drafter_unique_params": 1126422017,
+  "tile_code_words_per_die": {
+   "5_layers": 2560,
+   "fc": 214,
+   "markov_w2": 99,
+   "total": 2873
+  },
+  "target_code_words_per_die": 20016,
+  "tile_capacity_words": 20480,
+  "tile_slack_words": 464,
+  "extra_words_beyond_slack": 2409,
+  "extra_4096_banks_per_tile": 1,
+  "extra_bank_fill": 0.588,
+  "option_a_plus_one_4096_bank": {
+   "mm2_per_die": 30.84,
+   "macros_per_tile": 2,
+   "macro_ss_fmax_mhz": 1414.2,
+   "closes_1p2ghz": true,
+   "die_mm2": 822.8,
+   "over_815_mm2": 7.8,
+   "reticle_26x33": "width 24.147 -> 25.09 mm at 32.8 mm height"
+  },
+  "option_b_rebank_8192": {
+   "mm2_per_die": 21.93,
+   "macro_ss_fmax_mhz": 1017.5,
+   "closes_1p2ghz": false,
+   "verdict": "rejected: SS fmax 1,017.5 MHz < 1,200"
+  },
+  "markov_w1": {
+   "bytes_per_die_replicated": 38895616,
+   "mm2_replicated": 2.98,
+   "mm2_split_by_rank": 0.74,
+   "home": "IO-edge ROM beside the embedding ROM (IO spare 9.11)",
+   "split_costs": "a 256-element all-gather a slot (~2 x 339 link cycles) on the sequential chain"
+  },
+  "markov_pricing_correction": {
+   "pricing_mm2": 1.13,
+   "w2_home": "tile bank (part of option A)",
+   "w1_mm2": 2.98,
+   "note": "pricing counted one of the two 151,936 x 256 matrices"
+  },
+  "fit_verdict": "does NOT fit r2 at 815 mm2: the drafter must sit in the tiles that consume it (a word a tile a cycle), so the free shoreline (20.29) and IO spare (9.11) cannot host it; +1 bank of two 4096x266 macros per tile = 30.84 mm2 makes the die 822.8 mm2 (7.8 over). The pricing's 'fits r2 slack ~52' treated shoreline/IO area as fungible with tile ROM."
+ },
+ "draft_step_cycles": {
+  "existing_rtl": [
+   {
+    "S": 3,
+    "n_ctx": 3,
+    "ingest": 3024,
+    "block": 57140,
+    "lm_head": 4940,
+    "markov_per_slot": 1617,
+    "markov": 4851,
+    "total": 69955,
+    "us_at_1p2ghz": 58.3
+   },
+   {
+    "S": 7,
+    "n_ctx": 4,
+    "ingest": 3448,
+    "block": 132120,
+    "lm_head": 11276,
+    "markov_per_slot": 1617,
+    "markov": 11319,
+    "total": 158163,
+    "us_at_1p2ghz": 131.8
+   }
+  ],
+  "widened_ar": [
+   {
+    "S": 3,
+    "n_ctx": 3,
+    "ingest": 3024,
+    "block": 49780,
+    "lm_head": 4940,
+    "markov_per_slot": 1617,
+    "markov": 4851,
+    "total": 62595,
+    "us_at_1p2ghz": 52.16
+   },
+   {
+    "S": 7,
+    "n_ctx": 4,
+    "ingest": 3448,
+    "block": 110040,
+    "lm_head": 11276,
+    "markov_per_slot": 1617,
+    "markov": 11319,
+    "total": 136083,
+    "us_at_1p2ghz": 113.4
+   }
+  ],
+  "widened_ar_attn2_overlap": [
+   {
+    "S": 3,
+    "n_ctx": 3,
+    "ingest": 3024,
+    "block": 31050,
+    "lm_head": 4940,
+    "markov_per_slot": 1617,
+    "markov": 4851,
+    "total": 43865,
+    "us_at_1p2ghz": 36.55
+   },
+   {
+    "S": 7,
+    "n_ctx": 4,
+    "ingest": 3448,
+    "block": 53850,
+    "lm_head": 11276,
+    "markov_per_slot": 1617,
+    "markov": 11319,
+    "total": 79893,
+    "us_at_1p2ghz": 66.58
+   }
+  ]
+ },
+ "draft_step_basis": {
+  "layer_p1": 3930,
+  "per_extra_position_increment": {
+   "existing_rtl": 3749,
+   "widened_ar": 3013,
+   "widened_ar_attn2_overlap": 1140
+  },
+  "increment_status": "MODEL (pricing.json); replace with the step-1 measured verify-layer increment",
+  "ctx_kv_proj_words_per_token_per_layer": 21,
+  "me_fixed": 188,
+  "allgather_ctx_feature": 624,
+  "su_width": 64,
+  "link_lat": 339
+ },
+ "target_ar_token_cycles": 202590,
+ "sources_sha256": {
+  "tools/qwen_rom_dspark_drafter_rom.py": "4524d96996f46f874599c1bd18f6006f76a3a4e429e29c94e320082756b65390",
+  "results/rtl/qwen_rom_dspark_20261003/drafter/drafter_facts.json": "c2ec0e284b2c8f3ce761a4880a0ac87e5226b83e28adbcb4ad381b406ece7997",
+  "physical/asap7_memory_macros/index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+ },
+ "claim_boundary": "Placement/area/schedule model from pinned constants; no RTL, no P&R. Draft block term uses the MODEL verify-layer increment until step 1 measures it."
+}

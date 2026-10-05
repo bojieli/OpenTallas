@@ -1,0 +1,59 @@
+{
+ "claim_boundary": "Random back-to-back dense and KV-sourced ops on hash-image memories at the listed small group count; exactness of the partition, pruning and wire stages against the original engine. Not a checkpoint, token, timing or physical result.",
+ "negative_control": "FAIL cyc=78 array result word group=0",
+ "negative_control_rejected": true,
+ "params": {
+  "ACC_LAT": "7",
+  "GT": "16",
+  "MUL_LAT": "6",
+  "SMAX": "4",
+  "SMIN": "3",
+  "TCUT": "3",
+  "TG": "4",
+  "TREE_LAT": "7",
+  "W": "4"
+ },
+ "reference": "rtl/hdc/ot_hdc_matvec.sv at 0e8df511 (renamed ot_hdc_matvec_ref)",
+ "reference_sha256": "370f37a65d84488dd1de395b29fdd1bba1df89b81219a818b0e4b89cfd4b7d2c",
+ "schema": "opentallas.qwen-me-partition-gate.v1",
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fastfp.sv": "933efd1766f008560fd01b14e40723ef3249adb85667c85b03382839d9a85c59",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "afa7fbda71e1da3c1f5a7ca38309582a2c3567cfafe336f292fa24a5c80877ee",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "d603cb58d074295c1e50799aac5b6e3990f872d5e3d9ac32f230bd00f8fa3976",
+  "rtl/hdc/ot_hdc_matvec.sv": "bde73980267bce435029ea2d22d575f47c621cac38ce1f6d8ca182ee83fa0d5d",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_qwen_me_array.sv": "a50e60b1537909cef3c3caafb501ab9eb5a11ce836a42967b4574db1c5ba2d0c",
+  "rtl/hdc/ot_qwen_rom_tile.sv": "bd999147070c4d57502d82f847e581dd17ba63c3052806ffd6b08785b7cef4ef",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/test/tb_qwen_me_partition.sv": "4b4c7aff40bca61f90918c93c8e21a990625a15b67e398ac8f7e4e8700c11112",
+  "tools/rtl_qwen_me_partition_gate.py": "71b5f6636c8d1b9703226388e35d60d229f6de282daeead6acd9267e560e4733"
+ },
+ "source_stable": true,
+ "status": "pass",
+ "steps": [
+  {
+   "rc": 0,
+   "seconds": 111.0,
+   "step": "build_dut"
+  },
+  {
+   "rc": 0,
+   "seconds": 45.5,
+   "step": "sim_dut"
+  },
+  {
+   "rc": 0,
+   "seconds": 104.1,
+   "step": "build_mutant"
+  },
+  {
+   "rc": 0,
+   "seconds": 34.6,
+   "step": "sim_mutant"
+  }
+ ],
+ "verdict": "PASS GT=16 TG=4 SMIN=3 SMAX=4 TCUT=3 BD=0 XVM=0 NWS=0 TWS=0 ORD=0 ops=300 cycles=20007 result_writes=5704 maxima=22 argmax_changes=496 scale_reads=2263 latency_added=0 ACC_LAT=7 TREE_LAT=7 FAST_ISSUE=0 KV_PREP=0 adder_latency_added=19",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

@@ -1,0 +1,9 @@
+images loaded in 8.7 s
+models constructed and preloaded in 29.5 s (tiles/die=1536, kv_ideal=0, pos=255 token=6280)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=2s passes=3
+STAGE head done cycles=2999 start_cyc=7 end_cyc=3006 me_busy=2434/2434 next_token=98951/98951 next_val=42098785/42098785 seq_fault=0 core_fault=0 coll_fault=0 wall=1663s
+MEMSTAT head die0 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+MEMSTAT head die1 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+MEMSTAT head die2 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+MEMSTAT head die3 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=70 stall_retire=0 stall_mem=0 tile_edges=2434
+QWEN_ROM_REALMEM PASS stages=1 cycles=3006 edges=3006 settle_max=2 wall_s=1663.5 RSS_KiB=13196776 threads=2 kv_ideal=0

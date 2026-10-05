@@ -1,0 +1,29 @@
+images loaded in 0.0 s
+models constructed and preloaded in 7.3 s (tiles/die=1536, kv_ideal=0, pos=0 token=0)
+progress tick=0 cyc=1 pc_base=0/0 me_busy=1/1 kv_ok=0 drained=1 wall=2s passes=3
+STAGE E done cycles=98 start_cyc=7 end_cyc=105 me_busy=6/6 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=12s
+MEMSTAT E die0 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0 tile_edges=6
+MEMSTAT E die1 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0 tile_edges=6
+MEMSTAT E die2 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0 tile_edges=6
+MEMSTAT E die3 fill_cycles=0 fill_sectors=0 wr_sectors=0 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=0 wr_lat_max=0 stall_kv=0 stall_drain=0 stall_bridge=0 stall_retire=0 stall_mem=0 tile_edges=6
+stage L0 loaded (layer 0): code_words=1056 scale_words=50112 crom_words=541953 preload 5.2 s
+STAGE L0 done cycles=3902 start_cyc=106 end_cyc=4008 me_busy=2037/2037 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=1312s
+MEMSTAT L0 die0 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=300 wr_lat_max=71 stall_kv=15 stall_drain=278 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=2051
+MEMSTAT L0 die1 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=300 wr_lat_max=71 stall_kv=15 stall_drain=278 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=2051
+MEMSTAT L0 die2 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=300 wr_lat_max=71 stall_kv=15 stall_drain=278 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=2051
+MEMSTAT L0 die3 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=300 wr_lat_max=71 stall_kv=15 stall_drain=278 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=2051
+stage L1 loaded (layer 1): code_words=1056 scale_words=50112 crom_words=541953 preload 5.7 s
+progress tick=4096 cyc=4097 pc_base=0/0 me_busy=2121/2121 kv_ok=0 drained=1 wall=1359s passes=11148
+progress tick=8192 cyc=8193 pc_base=25/25 me_busy=4080/4080 kv_ok=1 drained=1 wall=4390s passes=22195
+STAGE L1 done cycles=4283 start_cyc=4009 end_cyc=8292 me_busy=2037/2037 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=4421s
+MEMSTAT L1 die0 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=757 wr_lat_max=552 stall_kv=15 stall_drain=735 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=4096
+MEMSTAT L1 die1 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=757 wr_lat_max=552 stall_kv=15 stall_drain=735 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=4096
+MEMSTAT L1 die2 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=757 wr_lat_max=552 stall_kv=15 stall_drain=735 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=4096
+MEMSTAT L1 die3 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=757 wr_lat_max=552 stall_kv=15 stall_drain=735 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=4096
+stage L2 loaded (layer 2): code_words=1056 scale_words=50112 crom_words=541953 preload 24.2 s
+STAGE L2 done cycles=3947 start_cyc=8293 end_cyc=12240 me_busy=2037/2037 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 wall=7866s
+MEMSTAT L2 die0 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=345 wr_lat_max=552 stall_kv=15 stall_drain=323 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=6141
+MEMSTAT L2 die1 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=345 wr_lat_max=552 stall_kv=15 stall_drain=323 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=6141
+MEMSTAT L2 die2 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=345 wr_lat_max=552 stall_kv=15 stall_drain=323 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=6141
+MEMSTAT L2 die3 fill_cycles=132 fill_sectors=128 wr_sectors=136 rsp_tile_stall=0 kvok_low_with_desc=0 drain_low=345 wr_lat_max=552 stall_kv=15 stall_drain=323 stall_bridge=383 stall_retire=0 stall_mem=0 tile_edges=6141
+QWEN_ROM_REALMEM PASS stages=4 cycles=12240 edges=12240 settle_max=2 wall_s=7866.3 RSS_KiB=12838560 threads=12 kv_ideal=0

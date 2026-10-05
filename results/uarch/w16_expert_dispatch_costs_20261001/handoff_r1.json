@@ -1,0 +1,51 @@
+{
+  "source_commit": "2f5b6cf49ae85ed77e33402fd92f92580141a733",
+  "source_pins": {
+    "results/quality/w16_w17_geometry_search_20261001/search.json": "d3031257bf3e8c479e2b54e880e080e374c9866c976432aa65445de55c69fe20",
+    "tools/w17_integer_expert_residency.py": "570e4b7b21fd086b30b19d092b86becedff05072d61fe62c2bf5217ce5b20852",
+    "tools/w16_expert_dispatch_costs.py": "350df2d1aba7befcb3b35319cd1eb0a8f891a607e9d27e167d8de1609376a1c1"
+  },
+  "tests": "4 PASS",
+  "check": "PASS source-pinned refusal replay",
+  "dispatch": {
+    "known_conditional_partial_fabric_cycles": 606960,
+    "known_conditional_partial_ns": "505800",
+    "scope": "Config/stream issue plus serialization components only; no complete operator bound.",
+    "packet_buffer_data_bits_per_rank_hop": {
+      "request": 81920,
+      "return_packet": 20480
+    },
+    "simultaneous_TP4_request_plus_return_buffer_bytes_per_hop": 51200,
+    "missing_inputs": [
+      "registered_route_ticks_per_hop",
+      "forward_CDC_ticks",
+      "reverse_CDC_ticks",
+      "consumer_remainder_ticks",
+      "source_arbitration_ticks",
+      "return_visibility_ticks",
+      "request_queue_data_bits_per_rank_hop",
+      "return_queue_data_bits_per_rank_hop"
+    ],
+    "complete_dispatch_bound_ticks": null,
+    "validated_progress_bound": false,
+    "physical_admission": false,
+    "engine_RTL_build_ready": false,
+    "headline_rate": null,
+    "status": "BLOCKED_FINITE_OPERATOR_INPUTS"
+  },
+  "scope": "Ram q1024 expert-only geometry; complete mixed operator/physical admission absent. No forced productstage count and no capacityfit transfer.",
+  "owners": {
+    "geometry_finite_composition": "Ram 01a0f697-9c82-7572-8900-dd7b15d59ebf",
+    "wholeHBMphysicalcaps": "Boyle",
+    "Turing": "This finite instruction/packet cost companion"
+  },
+  "CPUfunctional_evidence": "DS full40+head2213 softwarePASS reported and retained byParent; not cost calibration.",
+  "distributedHBM_failure": "11/32 layout failure remains separate admission blocker; no inherited resource cap credit.",
+  "job_queue_or_scientific_execution_touched": false,
+  "worktree": "/home/ubuntu/OpenTallas-w16-nonsm",
+  "active_jobs": [],
+  "engine_RTL_build_ready": false,
+  "physical_admission": false,
+  "full_token_cycles": null,
+  "headline_rate": null
+}

@@ -1,0 +1,138 @@
+{
+  "Dewey": {
+    "entrypoint": "latency_delta: positive incremental request/return proposal; no implicit existing-route zero or discount",
+    "exact_RF_baseline": "2R1W issue intervals3/2, finite single owner; I64 codec/RMW and C0 front stages retained once",
+    "models": {
+      "DeepSeek": {
+        "PCs": 2213,
+        "distance_ticks": {
+          "dependency_path_ticks_upper": 21856555324608,
+          "hardware_token_rate": null,
+          "scope": "V1 isolated contribution only; absent M1/S1/R1/T1/provider/collective costs remain unknown, never zero full-token latency",
+          "serialized_single_worker_ticks_upper": 21856555324608
+        },
+        "provider_fetch_round_trip_ticks": 36
+      },
+      "Qwen": {
+        "PCs": 1737,
+        "distance_ticks": {
+          "dependency_path_ticks_upper": 3246206255,
+          "hardware_token_rate": null,
+          "scope": "V1 isolated contribution only; absent M1/S1/R1/T1/provider/collective costs remain unknown, never zero full-token latency",
+          "serialized_single_worker_ticks_upper": 3246206255
+        },
+        "provider_fetch_round_trip_ticks": 44
+      }
+    },
+    "required_receipt_fields": [
+      "model",
+      "source_program_sha256",
+      "source_PC",
+      "template_id",
+      "ordered_step",
+      "source_bittypes",
+      "rank",
+      "SM",
+      "C0_ticket",
+      "actual_source_RF_homes",
+      "existing_provider_interval_ids",
+      "existing_RF_route_ticks",
+      "new_cut_ids",
+      "mirror_ACK_generation"
+    ],
+    "scope": "V1 whole-PC DAG contribution only. Whole-token ns remains unknown until existing provider/native/C0 intervals reconcile; no full hardware rate."
+  },
+  "Goodall": {
+    "Qwen_private_routes": "twelve explicit r11 source-sized bands relocated and repriced. Their existing provider charges must be joined by interval id before replacement.",
+    "live_trained_job_edited": false,
+    "mutable_KV": "unchanged actual mutableKV/fence backend; checkpoint image is not a mutable state home"
+  },
+  "PVE2_or_PVE3_used": false,
+  "RTL_or_PnR_launched": false,
+  "Sagan": {
+    "atomic_contract": {
+      "C0_ticket_fields": [
+        "generation",
+        "PC",
+        "sequence",
+        "rank",
+        "SM"
+      ],
+      "RF_home_resolver": "Sagan C0 source_home / original rank-SM9bit RF base; no new virtual storage",
+      "actual_H1_gateway_present": false,
+      "bank_mask_state_owner": "existing V1 control reservation plus staged transport metadata; no numeric engine callback",
+      "entrypoint": "ProviderAtomicFence",
+      "one_command_credit_per_SM": true,
+      "partial_bank_publication": false,
+      "read_mask_bits": 16,
+      "read_publication_requires": 16,
+      "write_mask_bits": 32,
+      "write_visibility_requires": 32
+    },
+    "required_actual_owner": "Connect the actual H1 host/matrix/SIMD arbitration beneath the C0 ticket lock. Neither per-transaction RF arbitration nor this executable fence model is an installed gateway.",
+    "source_endpoint_placement": "all actual parent FF/cone endpoints remain unplaced; retained native sampled cuts are evidence, not global routing sufficiency",
+    "source_homes": {
+      "I64_policy": "actual codec supplies both source RF vectors; no invented adjacent highword or duplicate RMW cost",
+      "bank_count": 16,
+      "entrypoint": "provider_location",
+      "lanes_per_vector": 128,
+      "logical_RF_bytes": 262144,
+      "logical_vector_bits": 4096,
+      "pages": 4,
+      "physical_RF_bytes": 524288,
+      "physical_word_bits": 32,
+      "read_copies": 2,
+      "source_home_owner": "Sagan C0 resolves actual native version_homes; mutableKV/checkpoint remain separate providers",
+      "vector_count": 512
+    },
+    "source_parent_FF_obligations": {
+      "DeepSeek": {
+        "ODB_sha256": "5014f27a0ba5f3aaa15e3e4393f958320426e742ea7267a801226f5d5931a47d",
+        "actual_FFs": 77192,
+        "actual_FFs_placed": 0,
+        "macros": 168,
+        "retained_PDN_shapes": 1964636,
+        "retained_macro_body_all_OBS_FF_PG_excluded_from_service": true,
+        "retained_macros_outside_body": 0,
+        "retained_physical_cells_outside_body": 0,
+        "retained_placed_physical_cells": 147510,
+        "unknown_layer_vias_blocked_on_all_planes": 1469977
+      },
+      "Qwen": {
+        "ODB_sha256": "c7496226650db2bf27cd31fac5f4ad6010a84e52bdf6b2b092503f6414605b21",
+        "actual_FFs": 185341,
+        "actual_FFs_placed": 0,
+        "macros": 85,
+        "retained_PDN_shapes": 3454966,
+        "retained_macro_body_all_OBS_FF_PG_excluded_from_service": true,
+        "retained_macros_outside_body": 0,
+        "retained_physical_cells_outside_body": 0,
+        "retained_placed_physical_cells": 216283,
+        "unknown_layer_vias_blocked_on_all_planes": 2550505
+      }
+    }
+  },
+  "authoritative_model": "private_routes_r4/model.json",
+  "base_commit": "85fe47df63b8696aeb4570ff77c2a0b27ae2fc47",
+  "entrypoint": "tools/h4_v1_expanded_service.py",
+  "hardware_admitted": false,
+  "hardware_opcode_coverage": 0,
+  "model_first": true,
+  "physical_owner": {
+    "PG_policy": "50% explicit track seats reserved, original unknown-layer vias block every retained plane. Actual new PG/via shape binding and crossing proof still required.",
+    "blockers": [
+      "all original parent FFs unplaced; actual FF/cone endpoint ownership incomplete",
+      "new bank-local H1+C0+V1 source endpoint absent; Sagan atomic gateway must own all16bank tags/ACKs; Qwen shallowRF abstract remains unqualified",
+      "new PDN/clock/via geometry and pin escapes not source-bound;50% reservation is a proposal",
+      "full retained-parent detailed cuts and all unrelated provider occupancy required before routing sufficiency",
+      "Dewey actual typed ordered distance and shared-fetch interval reconciliation",
+      "full-context SS/FF closure"
+    ],
+    "complete_die_source": "retained r11 PHY/L2/link/hub reservations; actual ODB bodies and input source hashes copied byte-exact",
+    "new_service": "bank-local macro/logic slots and13,376 global service cuts plus24 interSM corridor cuts and12 Qwen private-provider cuts"
+  },
+  "schema": "opentallas.H4.V1.expanded-service.owner-handoff.v1",
+  "software_numerical_sources_changed": false,
+  "tests": "tests/test_h4_v1_expanded_service.py",
+  "tests_passed": 35
+}

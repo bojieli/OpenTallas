@@ -1,0 +1,299 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "qwen3.6-35b-a3b",
+ "repo": "Qwen/Qwen3.6-35B-A3B",
+ "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+ "original_repo": "Qwen/Qwen3.6-35B-A3B",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "93a4693fa9d8392fbfccd4b3c9873f4bfdcb14fdede978b123d07d19675efe99",
+ "index_sha256": "41b9356101ebf8e7519e150dc811f80c4226e727301fbb032b890f006ed0be83",
+ "shards": 26,
+ "tensors": 1045,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 71903645408
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "qwen3_5_moe_text",
+ "architectures": [
+  "Qwen3_5MoeForConditionalGeneration"
+ ],
+ "layers": 40,
+ "hidden": 2048,
+ "heads": 16,
+ "kv_heads": 2,
+ "head_dim": 256,
+ "vocab": 248320,
+ "tied_embeddings": false,
+ "max_context": 262144,
+ "intermediate": null,
+ "moe_intermediate": 512,
+ "moe": {
+  "experts": 256,
+  "top_k": 8,
+  "shared": 1
+ },
+ "params": {
+  "dense_layers": 1431237248,
+  "routed": 32212254720,
+  "embed": 508559360,
+  "head": 508559360,
+  "mtp": 844640768,
+  "vision": 446571248,
+  "total_text": 34660610688,
+  "total_all": 35951822704,
+  "active_per_token": 2946429568,
+  "active_routed": 1006632960,
+  "head_streamed": 508559360
+ },
+ "header_bytes": {
+  "embed": 1017118720,
+  "dense": 2862474496,
+  "routed": 64424509440,
+  "vision": 893142496,
+  "mtp": 1689281536,
+  "head": 1017118720
+ },
+ "layer_count_in_headers": 40,
+ "kv_layers": [
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "linear",
+   "bytes_per_pos": 0,
+   "window": 0,
+   "state_bytes": 2146304
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 1,
+  "weights_present": true,
+  "params": 844640768
+ },
+ "drafters_published": {
+  "dflash": "z-lab/Qwen3.6-35B-A3B-DFlash"
+ },
+ "quantization": null
+}

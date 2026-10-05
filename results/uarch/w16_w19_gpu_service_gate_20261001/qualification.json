@@ -1,0 +1,145 @@
+{
+  "GPU_authority": "results/quality/w16_w19_gpu_mapping_scope_20261001/gpu_scope.json",
+  "GPU_budget": {
+    "actual_general_FP32_instruction_path": false,
+    "actual_general_RF_service": false,
+    "available_HC_lanes_after_shared_schedule": null,
+    "incremental_area_mm2": null,
+    "modeled_SIMT_lanes_per_die": 4096,
+    "modeled_SIMT_logic_mm2_already_budgeted": 4.787367936000001,
+    "note": "Existing GPU model budget only; no new block or free implementation/area credit",
+    "sm_count_per_die": 32
+  },
+  "W19_handoff": {
+    "acknowledgement": false,
+    "next_boundary": "Pin standard GPU SIMT instruction/warp lowering and RF/shared-memory bank liveness for full-F32 HC plus SU/SFU/Sinkhorn. Bind DMA replication/credits and commit/fence before graph timing; retain allocation unchanged.",
+    "owner": "Euler / GPU allocation and service"
+  },
+  "allocation": {
+    "aperture_remaining_bytes": 1119751680,
+    "bulk_line_bits": 25,
+    "max_stack_bytes": 3175215616,
+    "qualification": "Fixed owner HBM allocation; GPU compute/storage/route integration pending",
+    "sector_bits": 27
+  },
+  "allocation_source": "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json",
+  "base_commit": "603c2b5d2c35284a102677f67e7eed5e2b422088",
+  "candidate_area_and_routes_qualified": false,
+  "candidate_composed_latency_us": null,
+  "candidate_rate": null,
+  "copy_port_illustrations": [
+    {
+      "assumed_generic_128B_copy_ports": 1,
+      "completed_service_cycles": null,
+      "ideal_line_delivery_rounds": 15360,
+      "instantiated_nonSM_port_count": null
+    },
+    {
+      "assumed_generic_128B_copy_ports": 4,
+      "completed_service_cycles": null,
+      "ideal_line_delivery_rounds": 3840,
+      "instantiated_nonSM_port_count": null
+    },
+    {
+      "assumed_generic_128B_copy_ports": 16,
+      "completed_service_cycles": null,
+      "ideal_line_delivery_rounds": 960,
+      "instantiated_nonSM_port_count": null
+    }
+  ],
+  "excluded_reference_credits": [
+    "W32 dedicated HCP timing or area adoption",
+    "247.885us reference as a GPU lower bound",
+    "historical ROM-derived dedicated HC/SU hub as GPU composition",
+    "ideal byte splitting as bank/port/liveness fit",
+    "controller ingress as completed DMA service"
+  ],
+  "finite_service": {
+    "actual_nonSM_copy_replication": null,
+    "actual_service_cycles": null,
+    "candidate_queue_classes_per_controller": 4,
+    "class_queue_depth": null,
+    "class_queue_entry_bits": null,
+    "controller_count": 4,
+    "controller_write_completion": null,
+    "queue_storage_area_mm2": null,
+    "scatter_tag_credit_bridge": null
+  },
+  "hardware_adopted": false,
+  "model_generator_changed": false,
+  "model_ready_to_build": false,
+  "pins": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "results/quality/w16_w19_gpu_mapping_scope_20261001/gpu_scope.json": "c2a43b8aa34543867f4ff8f1585ab791307fbb5fc31d2a0aa87101aac57cc39c",
+    "results/quality/w16_w19_resident_service_price_20261001/partial_price.json": "39f46ab7632d8fba887f75a7053af4a287a514573b6edbcdcf1e450e2c80bfbe",
+    "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json": "00f369307f174a3aa25bb6251b056d78b5df26cd091f460f573d6cd298d991f3",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+    "tests/test_w16_w19_gpu_service_gate.py": "b6f75fa2644fed177e6f358097a82073ce7e2d58b5f3b36abcbb88efeb438d9c",
+    "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w16_measured_calibration.py": "c2ec884074be22a3339731b7ee577e617697b5d37b931656ace96a6295677bbb",
+    "tools/w16_w19_address_prerequisite.py": "097d7657d7932979f9a0d9899a5a6e3fa107bfb5778f0405c3f6e46c8463c421",
+    "tools/w16_w19_gpu_service_gate.py": "037995e6822cfb740caffadaf3147eeb91c60d1b8965e6d720addb93947ec32c",
+    "tools/w16_w19_resident_bounds.py": "c00a4602fe80032d55db2ed6d8a072e93beb6aa02955a0a1eb9bcde619f311f5",
+    "tools/w19_resident_contract.py": "ea5e6944ccf347537a38864d8e261a1257b7dbb1639d2cddf8af5f3fa36f722d"
+  },
+  "prior_reference_partial_price": "results/quality/w16_w19_resident_service_price_20261001/partial_price.json",
+  "refusal_reason": "GPU lowering/RF/shared-memory/service critical-chain contract missing",
+  "required_gpu_schedule": {
+    "DMA_tag_credit_arbitration": null,
+    "RF_allocation_and_ports": null,
+    "SU_SFU_Sinkhorn_schedule": null,
+    "available_SIMT_lanes": null,
+    "collective_chunk_tree": null,
+    "controller_commit_fence": null,
+    "critical_chain": null,
+    "dedicated_HCP": false,
+    "instruction_latencies": null,
+    "instruction_lowering": null,
+    "multiply_add_rounding": null,
+    "shared_bank_allocation_and_ports": null,
+    "source_bindings": null,
+    "warp_issue_schedule": null
+  },
+  "residency_arithmetic": {
+    "actual_RF_allocation": null,
+    "actual_liveness": null,
+    "actual_per_SM_bank_mapping": null,
+    "candidate_HBM_region_bytes": {
+      "hc.activation_staging": 40960,
+      "hc.operator_staging": 1966080,
+      "hc.scalar_scratch": 82688
+    },
+    "fit": false,
+    "ideal_even_split_bytes_per_sm": 65304,
+    "modeled_scratch_bytes_per_die": 2097152,
+    "remaining_bytes_arithmetic": 7424,
+    "scope": "Conditional byte accounting only; HBM reservations do not allocate SM scratch/RF or supply ports",
+    "sum_bytes": 2089728
+  },
+  "routing": {
+    "DMA_mux_demux_fanout": null,
+    "actual_RF_port_bits_per_cycle": null,
+    "actual_SM_shared_bank_read_bits_per_cycle": null,
+    "actual_simultaneous_port_ownership": null,
+    "channel_capacity_tracks": null,
+    "route_tracks": null
+  },
+  "schema": "opentallas.w16.w19.GPU_service_qualification.v1",
+  "unified_work": {
+    "FP32_products_per_operator": 491520,
+    "FP32_products_rank_token": 39321600,
+    "HC_operators": 80,
+    "SIMD_instruction_issue_cycles": null,
+    "coefficient_bytes_all96_rank_token": 15099494400,
+    "coefficient_bytes_per_operator": 1966080,
+    "coefficient_bytes_per_rank_token": 157286400,
+    "operand_rounding": "Separate multiply and chunk8 sequential add; no fused-MAC or BF16 coefficient conversion credit",
+    "separate_multiply_and_add_scalar_operations_rank_token": 78643200
+  },
+  "verdict": "REFUSED_PENDING_GPU_LOWERING_AND_RESOURCES"
+}

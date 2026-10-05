@@ -1,0 +1,275 @@
+{
+  "acceptance_failures": [
+    "setup_wns_ns=-7.60565 < 0.0",
+    "setup_tns_ns=-217.837 < 0.0",
+    "setup_violations=32.0 > 0.0"
+  ],
+  "campaign_id": "opentallas-asap7-predictive-physical-v1",
+  "canonical": true,
+  "case": {
+    "async_reset_ports": [
+      "rst_n"
+    ],
+    "clock_period_ns": 2.0,
+    "clock_port": "clk",
+    "core_utilization_percent": 35,
+    "corner": "TC",
+    "description": "Four-expert, 16-lane signed integer-DV scaling point with 64 multipliers; not an FP8/MXFP4 implementation.",
+    "equivalence_method": "feedforward_output_register_next_state_cec",
+    "name": "numeric_e4_l16_tc",
+    "parameters": {
+      "ACC_W": 32,
+      "ACT_W": 8,
+      "LANES": 16,
+      "NUM_EXPERTS": 4,
+      "REPORT_SATURATION_RISK": 1,
+      "WEIGHT_W": 4
+    },
+    "place_density": 0.6,
+    "primary_vt": "RVT",
+    "sources": {
+      "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c"
+    },
+    "temperature_c": 0,
+    "top": "ot_numeric_dot",
+    "voltage_v": 0.7
+  },
+  "claim_boundary": [
+    "ASAP7 is a predictive research PDK and is not tied to a foundry.",
+    "The three cases contain no ROM or SRAM macro; bundled ASAP7 FakeRAM collateral is forbidden and unused.",
+    "The numeric cases implement signed integer DV only, not OpenTallas target MXFP4 x FP8, FP8 x FP8, BF16, or FP32 arithmetic.",
+    "Passing results constrain public digital-cell and routed-wire plausibility only; they do not validate target ROM density, energy, sense margin, power delivery, package, HBM, yield, or manufacturability.",
+    "The reported TC model is the ASAP7 library's nominal model condition and has no calibrated error bar against TSMC N7 or N4."
+  ],
+  "copied_artifacts": {
+    "1_2_yosys.raw.v": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/1_2_yosys.raw.v",
+      "sha256": "548b832ef2ddc24c8bab0c3f0d154f6724dc3c88b27eac19385b0cc6a801b2d7",
+      "size_bytes": 4843909
+    },
+    "5_route_drc.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/5_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "6_finish.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/6_finish.rpt",
+      "sha256": "54d253d58f1be703c67d37818fef3cf886d3d53baa1cb7bf34162154552d66fd",
+      "size_bytes": 151235
+    },
+    "config.mk": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/config.mk",
+      "sha256": "245826aca8c1d5945c7867f0a4438f115459c1cdf93f05d889a9f3a7988300a3",
+      "size_bytes": 767
+    },
+    "constraint.sdc": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/constraint.sdc",
+      "sha256": "4b50cf636a67f3b438eb86e2584495166be5f33128d9bc121e4b171a41c85cf4",
+      "size_bytes": 379
+    },
+    "equivalence_mapped_abc_cec.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_abc_cec.log",
+      "sha256": "974444936c1941b4debb0a40a76ca081d7b3e37b3cb67dafde892432738cb2cc",
+      "size_bytes": 146
+    },
+    "equivalence_mapped_gate.aag": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.aag",
+      "sha256": "250626550534e9c742312b0c05e23713bf235c3349e6eef87bd748352b54d1f7",
+      "size_bytes": 498441
+    },
+    "equivalence_mapped_gate.aig": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.aig",
+      "sha256": "928c640c1311ac1f8f094ef538c8854dcb85a66326b0e3cbfd21dc66d1fed409",
+      "size_bytes": 83764
+    },
+    "equivalence_mapped_gate.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.log",
+      "sha256": "de62736438016f8a1dc1cbfeca52b6159daf31ce7b5ae05a7d6c5e67beeff231",
+      "size_bytes": 107699
+    },
+    "equivalence_mapped_gate.ys": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate.ys",
+      "sha256": "fd17fc80d94a90b9dbd4ed3fc448b634a748627621fefa0388c76a7869809c34",
+      "size_bytes": 1605
+    },
+    "equivalence_mapped_gate_state.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gate_state.json",
+      "sha256": "c7239a7aadcc497fcc65b016a0309ec69b6a7b93def7d2d379ca1aff0bd78357",
+      "size_bytes": 1507
+    },
+    "equivalence_mapped_gold.aag": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.aag",
+      "sha256": "34d2676a16a9f68e477ec312d1b2dd61180c113a055d6ac249e9356b16bee5d9",
+      "size_bytes": 404059
+    },
+    "equivalence_mapped_gold.aig": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.aig",
+      "sha256": "9fe9cf2bb09b945106c5019929e7ff4b4f74581823d27ef17631fdef808a0ea7",
+      "size_bytes": 68748
+    },
+    "equivalence_mapped_gold.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.log",
+      "sha256": "0387d645939a3cfc373079b6ac32501dd7067c072e204d470b7deea159352ec1",
+      "size_bytes": 31257
+    },
+    "equivalence_mapped_gold.ys": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold.ys",
+      "sha256": "b5ce3df32547f620d7214f1def249c13044afdff6dcc3acc2fa211a33089d053",
+      "size_bytes": 961
+    },
+    "equivalence_mapped_gold_state.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/equivalence_mapped_gold_state.json",
+      "sha256": "5c4bf5f246f398b95e6dbcfa5ac557f426e45e082ef85f3ec5545c1dd7bba43a",
+      "size_bytes": 1587
+    },
+    "metadata.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/metadata.json",
+      "sha256": "6eaaf831bcf89bf035a167222756dc0cd9569540237f02b2dd75fe737f9ac142",
+      "size_bytes": 23635
+    },
+    "openroad_flow.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/openroad_flow.log",
+      "sha256": "9a1b78448874c262cc0048207ae973033362660a4499e50c07536fcac0e84b44",
+      "size_bytes": 200384
+    },
+    "openroad_synthesis.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/openroad_synthesis.log",
+      "sha256": "6fb21859762e7dcee6cd10fd3fb1e629b5734ec3863239bb627cb49d7c12f21a",
+      "size_bytes": 18269
+    },
+    "unconstrained_check.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "unconstrained_check.tcl": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_check.tcl",
+      "sha256": "e159d4d1f023a0e59b27e403aa5acd198e033ac64b6afd7bc1bee57ef1409ca5",
+      "size_bytes": 839
+    },
+    "unconstrained_endpoints.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e4_l16_tc/2ns/artifacts/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "final_artifact_manifests": {
+    "6_final.def": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.def",
+      "sha256": "cd3fce8dbb3057ee746e7965311ab1258d2d4770775a9837a4587087296d76a0",
+      "size_bytes": 25073434
+    },
+    "6_final.gds": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.gds",
+      "sha256": "3053094833ff41516c602fc22e670e10cd987ba4691e9731b7997b56e2767021",
+      "size_bytes": 28433244
+    },
+    "6_final.odb": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.odb",
+      "sha256": "c2da5693132e463bbb04b65d87478156a0dfa41137326fe09a9c8363bea61f41",
+      "size_bytes": 47034083
+    },
+    "6_final.sdc": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.sdc",
+      "sha256": "b19d097a11cabc4231c94d3535dc33799474bff12475aba61bd4c20543ac0021",
+      "size_bytes": 43428
+    },
+    "6_final.spef": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.spef",
+      "sha256": "fc450da43e3328651f72a2c9e7fc9bd49c22e5ff018f622bd6b1532a160f1224",
+      "size_bytes": 25598157
+    },
+    "6_final.v": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.v",
+      "sha256": "c7ed94ae1864c9b28f3f367caf10768ae7766aea9a79b41d713b5e96e1ce58bb",
+      "size_bytes": 2711957
+    }
+  },
+  "generated_at": "2026-08-28T10:19:53+00:00",
+  "git": {
+    "dirty_paths": [],
+    "head": "6b5e6cf4580c709024a7365d25abe22d103be7b3",
+    "selected_sources": [
+      "rtl/ot_numeric_dot.sv"
+    ],
+    "selected_sources_match_index": true,
+    "worktree_clean": true
+  },
+  "lock": {
+    "path": "configs/pdk/asap7_physical_lock.json",
+    "sha256": "9999eafa3f39cca8fb0f4a9c129f9f12d80ac3b3ea5e91f2f42964f4dddc1704",
+    "size_bytes": 8331
+  },
+  "metrics": {
+    "antenna_violating_nets": 0.0,
+    "antenna_violating_pins": 0.0,
+    "clock_count": 1.0,
+    "clock_period_ns": 2.0,
+    "core_area_um2": 6790.42,
+    "die_area_um2": 7490.04,
+    "drc_errors": 0.0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_hz": 104105000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0.0,
+    "hold_wns_ns": 0.361685,
+    "raw_timing_ps": {
+      "hold_tns_ns": 0.0,
+      "hold_wns_ns": 361.685,
+      "setup_tns_ns": -217837.0,
+      "setup_wns_ns": -7605.65
+    },
+    "sdc_clock_period_ps": 2000.0,
+    "setup_tns_ns": -217.837,
+    "setup_violations": 32.0,
+    "setup_wns_ns": -7.60565,
+    "standard_cell_area_um2": 2870.52,
+    "utilization_fraction": 0.422732,
+    "vias": 216624.0,
+    "wirelength_um": 80307.0
+  },
+  "runner": {
+    "path": "tools/run_asap7_physical.py",
+    "sha256": "7db0636b3931499818a2ce4d46dcf7b8f79b1d92d9b4b9fa0213f3f830e1cb5c",
+    "size_bytes": 79700
+  },
+  "schema_version": 1,
+  "source_inventory": [
+    {
+      "path": "rtl/ot_numeric_dot.sv",
+      "sha256": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+      "size_bytes": 3914
+    }
+  ],
+  "status": "fail",
+  "unconstrained_endpoint_audit": {
+    "acceptance_max": 0,
+    "artifact": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "log": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "script": {
+      "path": "build/asap7_physical/numeric_e4_l16_tc/unconstrained_check.tcl",
+      "sha256": "e159d4d1f023a0e59b27e403aa5acd198e033ac64b6afd7bc1bee57ef1409ca5",
+      "size_bytes": 839
+    },
+    "status": "pass",
+    "unconstrained_endpoint_report_lines": 0
+  }
+}

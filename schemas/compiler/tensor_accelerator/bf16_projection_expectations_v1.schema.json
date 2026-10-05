@@ -1,0 +1,19 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "counters": {"$ref": "bf16_projection_physical_plan_v1.schema.json#/$defs/counters"},
+    "expectations_id": {"$ref": "#/$defs/sha256"},
+    "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_expectations.v1"}
+  },
+  "required": ["check_id", "counters", "expectations_id", "output_payload_sha256", "qualification_report_id", "schema"],
+  "title": "OpenTallas BF16 projection execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

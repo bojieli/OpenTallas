@@ -1,0 +1,38 @@
+2026-10-03T11:17:57Z chain start
+2026-10-03T11:21:20Z 740 image pins OK
+2026-10-03T11:21:20Z img256 derived
+planned 39 jobs in /srv/opentallas-scratch/claude/layer-parallel-sim/plans/base-epyc-r1
+  epyc1tb: 39 jobs x 1 threads
+planned 37 jobs in /srv/opentallas-scratch/claude/layer-parallel-sim/plans/ar256-epyc-r1
+  epyc1tb: 37 jobs x 1 threads
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/layer-parallel-sim/tool/qwen_rom_layer_parallel_sim.py", line 804, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch/claude/layer-parallel-sim/tool/qwen_rom_layer_parallel_sim.py", line 789, in main
+    cmd_plan(a)
+    ~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/layer-parallel-sim/tool/qwen_rom_layer_parallel_sim.py", line 379, in cmd_plan
+    src = entry_for(a, stages, ii[0], D, jd)
+  File "/srv/opentallas-scratch/claude/layer-parallel-sim/tool/qwen_rom_layer_parallel_sim.py", line 339, in entry_for
+    n, pw = host_vm_elems(a.source_root), f"{int(a.poison, 16):08x}\n"
+            ~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/layer-parallel-sim/tool/qwen_rom_layer_parallel_sim.py", line 311, in host_vm_elems
+    m = re.search(r"VM_ELEMS = (\d+)", (src_root / HOST_CPP).read_text())
+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/layer-parallel-sim/rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp'
+2026-10-03T11:21:20Z stage 1: launch baseline (39) + AR256 (37)
+2026-10-03T11:31:06Z ar256 poison plan made manually; the chain attempt lacked --source-root
+2026-10-03T15:04:28Z stage 1 launched
+2026-10-03T15:31:29Z baseline verified rc=1
+2026-10-03T15:31:29Z stage 2: AR256 poison (37) as soon as capacity allows
+2026-10-03T15:31:31Z ar256 verified (no poison) rc=1
+2026-10-03T15:57:32Z ar256 poison verified rc=1
+2026-10-03T15:57:32Z ar256 final verdict with poison rc=0
+2026-10-03T15:57:32Z chain done

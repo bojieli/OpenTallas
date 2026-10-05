@@ -1,0 +1,8 @@
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:102: warning: Port 5 (op_blocks) of ot_gpu_xstore expects 16 bits, got 32.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:102:        : Pruning 16 high bits of the expression.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:189: warning: Port 3 (r_addr_in) of ot_sram_1r1w_256x256_m2_r2c2 expects 8 bits, got 4.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:189:        : Padding 4 high bits of the port.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:189: warning: Port 6 (w_addr_in) of ot_sram_1r1w_256x256_m2_r2c2 expects 8 bits, got 4.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/gpu/ot_gpu_sm_q.sv:189:        : Padding 4 high bits of the port.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/test/tb_gpu_sm_q.sv:24: warning: Port 22 (xw_grp) of ot_gpu_sm_q expects 1 bits, got 8.
+/home/ubuntu/qwen-recovery-jobs/hbm_w13_real_run/sm_snapshot/rtl/test/tb_gpu_sm_q.sv:24:        : Pruning 7 high bits of the expression.

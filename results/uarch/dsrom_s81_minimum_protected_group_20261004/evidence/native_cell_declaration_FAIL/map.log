@@ -1,0 +1,767 @@
+
+ /----------------------------------------------------------------------------\
+ |                                                                            |
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |                                                                            |
+ |  Copyright (C) 2012 - 2019  Clifford Wolf <clifford@clifford.at>           |
+ |                                                                            |
+ |  Permission to use, copy, modify, and/or distribute this software for any  |
+ |  purpose with or without fee is hereby granted, provided that the above    |
+ |  copyright notice and this permission notice appear in all copies.         |
+ |                                                                            |
+ |  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  |
+ |  WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF          |
+ |  MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR   |
+ |  ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES    |
+ |  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN     |
+ |  ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF   |
+ |  OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.            |
+ |                                                                            |
+ \----------------------------------------------------------------------------/
+
+ Yosys 0.9 (git sha1 1979e0b)
+
+
+-- Executing script file `/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/map.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv
+Parsing SystemVerilog input from `/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv' to AST representation.
+Generating RTLIL representation for module `\leaf'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \leaf
+
+2.2. Analyzing design hierarchy..
+Top module:  \leaf
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 568 empty switches in `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+Cleaned up 568 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+     1/412: $269$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1248
+     2/412: $268$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1246
+     3/412: $267$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1244
+     4/412: $266$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1242
+     5/412: $265$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1240
+     6/412: $264$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1238
+     7/412: $263$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[63:63]$1236
+     8/412: $262$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1234
+     9/412: $261$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1232
+    10/412: $260$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1230
+    11/412: $259$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1228
+    12/412: $258$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1226
+    13/412: $257$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1224
+    14/412: $256$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1222
+    15/412: $255$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1220
+    16/412: $254$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1218
+    17/412: $253$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1216
+    18/412: $252$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1214
+    19/412: $251$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1212
+    20/412: $250$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1210
+    21/412: $249$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1208
+    22/412: $248$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1206
+    23/412: $247$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1204
+    24/412: $246$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1202
+    25/412: $245$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1200
+    26/412: $244$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1198
+    27/412: $243$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1196
+    28/412: $242$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1194
+    29/412: $241$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1192
+    30/412: $240$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1190
+    31/412: $239$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1188
+    32/412: $238$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1186
+    33/412: $237$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1184
+    34/412: $236$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1182
+    35/412: $235$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1180
+    36/412: $234$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1178
+    37/412: $233$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1176
+    38/412: $232$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[31:31]$1174
+    39/412: $231$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1172
+    40/412: $230$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1170
+    41/412: $229$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1168
+    42/412: $228$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1166
+    43/412: $227$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1164
+    44/412: $226$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1162
+    45/412: $225$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1160
+    46/412: $224$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1158
+    47/412: $223$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1156
+    48/412: $222$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1154
+    49/412: $221$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1152
+    50/412: $220$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1150
+    51/412: $219$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1148
+    52/412: $218$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1146
+    53/412: $217$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1144
+    54/412: $216$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1142
+    55/412: $215$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1140
+    56/412: $214$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1138
+    57/412: $213$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1136
+    58/412: $212$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1134
+    59/412: $211$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1132
+    60/412: $210$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1130
+    61/412: $209$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1128
+    62/412: $208$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1126
+    63/412: $207$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1124
+    64/412: $206$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1122
+    65/412: $205$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1120
+    66/412: $204$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1118
+    67/412: $203$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1116
+    68/412: $202$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1114
+    69/412: $201$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[15:15]$1112
+    70/412: $200$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1110
+    71/412: $199$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1108
+    72/412: $198$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1106
+    73/412: $197$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1104
+    74/412: $196$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1102
+    75/412: $195$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1100
+    76/412: $194$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1098
+    77/412: $193$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1096
+    78/412: $192$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1094
+    79/412: $191$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1092
+    80/412: $190$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1090
+    81/412: $189$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1088
+    82/412: $188$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1086
+    83/412: $187$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1084
+    84/412: $186$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1082
+    85/412: $185$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1080
+    86/412: $184$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1078
+    87/412: $183$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1076
+    88/412: $182$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1074
+    89/412: $181$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1072
+    90/412: $180$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1070
+    91/412: $179$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1068
+    92/412: $178$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1066
+    93/412: $177$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1064
+    94/412: $176$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1062
+    95/412: $175$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1060
+    96/412: $174$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1058
+    97/412: $173$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1056
+    98/412: $172$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1054
+    99/412: $171$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1052
+   100/412: $170$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[7:7]$1050
+   101/412: $169$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1048
+   102/412: $168$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1046
+   103/412: $167$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1044
+   104/412: $166$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1042
+   105/412: $165$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1040
+   106/412: $164$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1038
+   107/412: $163$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1036
+   108/412: $162$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1034
+   109/412: $161$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1032
+   110/412: $160$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1030
+   111/412: $159$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1028
+   112/412: $158$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1026
+   113/412: $157$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1024
+   114/412: $156$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1022
+   115/412: $155$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1020
+   116/412: $154$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1018
+   117/412: $153$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1016
+   118/412: $152$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1014
+   119/412: $151$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1012
+   120/412: $150$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1010
+   121/412: $149$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1008
+   122/412: $148$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1006
+   123/412: $147$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1004
+   124/412: $146$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1002
+   125/412: $145$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$1000
+   126/412: $144$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$998
+   127/412: $143$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$996
+   128/412: $142$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$994
+   129/412: $141$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$992
+   130/412: $140$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$990
+   131/412: $139$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$988
+   132/412: $138$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$986
+   133/412: $137$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$984
+   134/412: $136$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$982
+   135/412: $135$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[3:3]$980
+   136/412: $134$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$978
+   137/412: $133$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$976
+   138/412: $132$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$974
+   139/412: $131$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$972
+   140/412: $130$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$970
+   141/412: $129$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$968
+   142/412: $128$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$966
+   143/412: $127$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$964
+   144/412: $126$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$962
+   145/412: $125$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$960
+   146/412: $124$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$958
+   147/412: $123$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$956
+   148/412: $122$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$954
+   149/412: $121$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$952
+   150/412: $120$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$950
+   151/412: $119$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$948
+   152/412: $118$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$946
+   153/412: $117$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$944
+   154/412: $116$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$942
+   155/412: $115$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$940
+   156/412: $114$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$938
+   157/412: $113$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$936
+   158/412: $112$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$934
+   159/412: $111$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$932
+   160/412: $110$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$930
+   161/412: $109$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$928
+   162/412: $108$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$926
+   163/412: $107$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$924
+   164/412: $106$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$922
+   165/412: $105$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$920
+   166/412: $104$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$918
+   167/412: $103$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$916
+   168/412: $102$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$914
+   169/412: $101$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$912
+   170/412: $100$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[1:1]$910
+   171/412: $99$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$908
+   172/412: $98$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$906
+   173/412: $97$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$904
+   174/412: $96$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$902
+   175/412: $95$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$900
+   176/412: $94$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$898
+   177/412: $93$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$896
+   178/412: $92$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$894
+   179/412: $91$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$892
+   180/412: $90$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$890
+   181/412: $89$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$888
+   182/412: $88$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$886
+   183/412: $87$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$884
+   184/412: $86$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$882
+   185/412: $85$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$880
+   186/412: $84$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$878
+   187/412: $83$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$876
+   188/412: $82$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$874
+   189/412: $81$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$872
+   190/412: $80$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$870
+   191/412: $79$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$868
+   192/412: $78$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$866
+   193/412: $77$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$864
+   194/412: $76$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$862
+   195/412: $75$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$860
+   196/412: $74$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$858
+   197/412: $73$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$856
+   198/412: $72$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$854
+   199/412: $71$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$852
+   200/412: $70$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$850
+   201/412: $69$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$848
+   202/412: $68$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$846
+   203/412: $67$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$844
+   204/412: $66$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$842
+   205/412: $65$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[0:0]$840
+   206/412: $64$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$837
+   207/412: $64$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[70:70]$836
+   208/412: $63$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$833
+   209/412: $63$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[69:69]$832
+   210/412: $62$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$829
+   211/412: $62$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[68:68]$828
+   212/412: $61$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$825
+   213/412: $61$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[67:67]$824
+   214/412: $60$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$821
+   215/412: $60$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[66:66]$820
+   216/412: $59$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$817
+   217/412: $59$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[65:65]$816
+   218/412: $58$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$813
+   219/412: $58$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[64:64]$812
+   220/412: $57$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$809
+   221/412: $57$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[62:62]$808
+   222/412: $56$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$805
+   223/412: $56$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[61:61]$804
+   224/412: $55$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$801
+   225/412: $55$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[60:60]$800
+   226/412: $54$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$797
+   227/412: $54$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[59:59]$796
+   228/412: $53$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$793
+   229/412: $53$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[58:58]$792
+   230/412: $52$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$789
+   231/412: $52$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[57:57]$788
+   232/412: $51$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$785
+   233/412: $51$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[56:56]$784
+   234/412: $50$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$781
+   235/412: $50$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[55:55]$780
+   236/412: $49$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$777
+   237/412: $49$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[54:54]$776
+   238/412: $48$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$773
+   239/412: $48$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[53:53]$772
+   240/412: $47$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$769
+   241/412: $47$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[52:52]$768
+   242/412: $46$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$765
+   243/412: $46$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[51:51]$764
+   244/412: $45$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$761
+   245/412: $45$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[50:50]$760
+   246/412: $44$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$757
+   247/412: $44$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[49:49]$756
+   248/412: $43$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$753
+   249/412: $43$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[48:48]$752
+   250/412: $42$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$749
+   251/412: $42$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[47:47]$748
+   252/412: $41$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$745
+   253/412: $41$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[46:46]$744
+   254/412: $40$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$741
+   255/412: $40$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[45:45]$740
+   256/412: $39$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$737
+   257/412: $39$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[44:44]$736
+   258/412: $38$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$733
+   259/412: $38$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[43:43]$732
+   260/412: $37$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$729
+   261/412: $37$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[42:42]$728
+   262/412: $36$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$725
+   263/412: $36$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[41:41]$724
+   264/412: $35$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$721
+   265/412: $35$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[40:40]$720
+   266/412: $34$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$717
+   267/412: $34$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[39:39]$716
+   268/412: $33$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$713
+   269/412: $33$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[38:38]$712
+   270/412: $32$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$709
+   271/412: $32$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[37:37]$708
+   272/412: $31$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$705
+   273/412: $31$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[36:36]$704
+   274/412: $30$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$701
+   275/412: $30$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[35:35]$700
+   276/412: $29$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$697
+   277/412: $29$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[34:34]$696
+   278/412: $28$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$693
+   279/412: $28$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[33:33]$692
+   280/412: $27$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$689
+   281/412: $27$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[32:32]$688
+   282/412: $26$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$685
+   283/412: $26$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[30:30]$684
+   284/412: $25$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$681
+   285/412: $25$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[29:29]$680
+   286/412: $24$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$677
+   287/412: $24$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[28:28]$676
+   288/412: $23$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$673
+   289/412: $23$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[27:27]$672
+   290/412: $22$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$669
+   291/412: $22$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[26:26]$668
+   292/412: $21$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$665
+   293/412: $21$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[25:25]$664
+   294/412: $20$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$661
+   295/412: $20$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[24:24]$660
+   296/412: $19$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$657
+   297/412: $19$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[23:23]$656
+   298/412: $18$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$653
+   299/412: $18$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[22:22]$652
+   300/412: $17$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$649
+   301/412: $17$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[21:21]$648
+   302/412: $16$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$645
+   303/412: $16$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[20:20]$644
+   304/412: $15$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$641
+   305/412: $15$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[19:19]$640
+   306/412: $14$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$637
+   307/412: $14$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[18:18]$636
+   308/412: $13$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$633
+   309/412: $13$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[17:17]$632
+   310/412: $12$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$629
+   311/412: $12$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[16:16]$628
+   312/412: $11$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$625
+   313/412: $11$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[14:14]$624
+   314/412: $10$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$621
+   315/412: $10$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[13:13]$620
+   316/412: $9$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$617
+   317/412: $9$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[12:12]$616
+   318/412: $8$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$613
+   319/412: $8$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[11:11]$612
+   320/412: $7$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$609
+   321/412: $7$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[10:10]$608
+   322/412: $6$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$605
+   323/412: $6$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[9:9]$604
+   324/412: $5$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$601
+   325/412: $5$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[8:8]$600
+   326/412: $4$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$597
+   327/412: $4$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[6:6]$596
+   328/412: $3$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$593
+   329/412: $3$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[5:5]$592
+   330/412: $2$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$589
+   331/412: $2$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[4:4]$588
+   332/412: $1$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$585
+   333/412: $1$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[2:2]$584
+   334/412: $0\q[71:0]
+   335/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\encode64[71:0]$578
+   336/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [71]
+   337/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\k[31:0]$582
+   338/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\p[31:0]$581
+   339/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [63]
+   340/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [31]
+   341/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [15]
+   342/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [7]
+   343/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [3]
+   344/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [1]
+   345/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [0]
+   346/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j[31:0]$583
+   347/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [70]
+   348/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [69]
+   349/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [68]
+   350/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [67]
+   351/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [66]
+   352/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [65]
+   353/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [64]
+   354/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [62]
+   355/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [61]
+   356/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [60]
+   357/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [59]
+   358/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [58]
+   359/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [57]
+   360/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [56]
+   361/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [55]
+   362/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [54]
+   363/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [53]
+   364/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [52]
+   365/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [51]
+   366/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [50]
+   367/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [49]
+   368/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [48]
+   369/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [47]
+   370/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [46]
+   371/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [45]
+   372/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [44]
+   373/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [43]
+   374/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [42]
+   375/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [41]
+   376/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [40]
+   377/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [39]
+   378/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [38]
+   379/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [37]
+   380/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [36]
+   381/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [35]
+   382/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [34]
+   383/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [33]
+   384/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [32]
+   385/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [30]
+   386/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [29]
+   387/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [28]
+   388/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [27]
+   389/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [26]
+   390/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [25]
+   391/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [24]
+   392/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [23]
+   393/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [22]
+   394/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [21]
+   395/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [20]
+   396/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [19]
+   397/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [18]
+   398/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [17]
+   399/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [16]
+   400/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [14]
+   401/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [13]
+   402/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [12]
+   403/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [11]
+   404/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [10]
+   405/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [9]
+   406/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [8]
+   407/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [6]
+   408/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [5]
+   409/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [4]
+   410/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c[71:0]$580 [2]
+   411/412: $0$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\data[63:0]$579
+   412/412: $0\d[63:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\encode64' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1251' with positive edge clock.
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\data' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1252' with positive edge clock.
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\c' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1253' with positive edge clock.
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\p' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1254' with positive edge clock.
+Creating register for signal `\leaf.\q' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1255' with positive edge clock.
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\k' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1256' with positive edge clock.
+Creating register for signal `\leaf.\d' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1257' with positive edge clock.
+Creating register for signal `\leaf.$func$\encode64$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$1$\j' using process `\leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+  created $dff cell `$procdff$1258' with positive edge clock.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `leaf.$proc$/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/encode/leaf.sv:15$577'.
+Cleaned up 0 empty switches.
+
+4. Executing FLATTEN pass (flatten design).
+No more expansions possible.
+
+5. Executing OPT pass (performing simple optimizations).
+
+5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+<suppressed ~136 debug messages>
+
+5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+<suppressed ~12 debug messages>
+Removed a total of 4 cells.
+
+5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+5.6. Executing OPT_RMDFF pass (remove dff with constant values).
+Removing $procdff$1251 ($dff) from module leaf.
+Removing $procdff$1252 ($dff) from module leaf.
+Removing $procdff$1254 ($dff) from module leaf.
+Replaced 3 DFF cells.
+
+5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+Removed 0 unused cells and 489 unused wires.
+<suppressed ~7 debug messages>
+
+5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+5.13. Executing OPT_RMDFF pass (remove dff with constant values).
+
+5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+
+5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+5.16. Finished OPT passes. (There is nothing left to do.)
+
+6. Executing TECHMAP pass (map to technology primitives).
+
+6.1. Executing Verilog-2005 frontend: <techmap.v>
+Parsing Verilog input from `<techmap.v>' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `\$__div_mod_u'.
+Generating RTLIL representation for module `\$__div_mod'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_pmux'.
+Generating RTLIL representation for module `\_90_lut'.
+Successfully finished Verilog frontend.
+
+6.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $dff.
+Using extmapper simplemap for cells of type $xor.
+Using extmapper simplemap for cells of type $reduce_xor.
+No more expansions possible.
+<suppressed ~201 debug messages>
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \leaf..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \leaf.
+Performed a total of 0 changes.
+
+7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\leaf'.
+Removed a total of 0 cells.
+
+7.6. Executing OPT_RMDFF pass (remove dff with constant values).
+
+7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \leaf..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module leaf.
+
+7.9. Finished OPT passes. (There is nothing left to do.)
+
+8. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  create mapping for $_DFF_N_ from mapping for $_DFF_P_.
+  final dff cell mappings:
+    DFFHQNx1_ASAP7_75t_R _DFF_N_ (.CLK(~C), .D( D), .QN(~Q));
+    DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    unmapped dff cell: $_DFFSR_PNN_
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+Mapping DFF cells in module `\leaf':
+  mapped 136 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+
+9. Executing ABC pass (technology mapping using ABC).
+
+9.1. Extracting gate netlist of module `\leaf' to `<abc-temp-dir>/input.blif'..
+Extracted 399 gates and 535 wires to a netlist network with 136 inputs and 144 outputs.
+
+9.1.1. Executing ABC.
+Running ABC command: berkeley-abc -s -f <abc-temp-dir>/abc.script 2>&1
+ABC: ABC command line: "source <abc-temp-dir>/abc.script".
+ABC: 
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_lib -w /tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/allowed_ss.lib 
+ABC: Parsing finished successfully.  Parsing time =     0.00 sec
+ABC: Scl_LibertyReadGenlib() skipped sequential cell "DFFHQNx1_ASAP7_75t_R".
+ABC: Library "asap7sc7p5t_AO_RVT_SS_nldm_211120" from "/tmp/dsrom-s81-minimum-w6-leaves-20261004-r2/allowed_ss.lib" has 3 cells (1 skipped: 1 seq; 0 tri-state; 0 no func; 0 dont_use).  Time =     0.00 sec
+ABC: Memory =    0.10 MB. Time =     0.00 sec
+ABC: + strash 
+ABC: + ifraig 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + retime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+
+9.1.2. Re-integrating ABC results.
+ABC RESULTS:   INVx1_ASAP7_75t_R cells:      215
+ABC RESULTS:   NAND2x1_ASAP7_75t_R cells:      855
+ABC RESULTS:        internal signals:      255
+ABC RESULTS:           input signals:      136
+ABC RESULTS:          output signals:      144
+Removing temp directory.
+Removed 0 unused cells and 477 unused wires.
+
+10. Executing CHECK pass (checking for obvious problems).
+checking module leaf..
+Warning: Wire leaf.\q [71] is used but has no driver.
+Warning: Wire leaf.\q [70] is used but has no driver.
+Warning: Wire leaf.\q [69] is used but has no driver.
+Warning: Wire leaf.\q [68] is used but has no driver.
+Warning: Wire leaf.\q [67] is used but has no driver.
+Warning: Wire leaf.\q [66] is used but has no driver.
+Warning: Wire leaf.\q [65] is used but has no driver.
+Warning: Wire leaf.\q [64] is used but has no driver.
+Warning: Wire leaf.\q [63] is used but has no driver.
+Warning: Wire leaf.\q [62] is used but has no driver.
+Warning: Wire leaf.\q [61] is used but has no driver.
+Warning: Wire leaf.\q [60] is used but has no driver.
+Warning: Wire leaf.\q [59] is used but has no driver.
+Warning: Wire leaf.\q [58] is used but has no driver.
+Warning: Wire leaf.\q [57] is used but has no driver.
+Warning: Wire leaf.\q [56] is used but has no driver.
+Warning: Wire leaf.\q [55] is used but has no driver.
+Warning: Wire leaf.\q [54] is used but has no driver.
+Warning: Wire leaf.\q [53] is used but has no driver.
+Warning: Wire leaf.\q [52] is used but has no driver.
+Warning: Wire leaf.\q [51] is used but has no driver.
+Warning: Wire leaf.\q [50] is used but has no driver.
+Warning: Wire leaf.\q [49] is used but has no driver.
+Warning: Wire leaf.\q [48] is used but has no driver.
+Warning: Wire leaf.\q [47] is used but has no driver.
+Warning: Wire leaf.\q [46] is used but has no driver.
+Warning: Wire leaf.\q [45] is used but has no driver.
+Warning: Wire leaf.\q [44] is used but has no driver.
+Warning: Wire leaf.\q [43] is used but has no driver.
+Warning: Wire leaf.\q [42] is used but has no driver.
+Warning: Wire leaf.\q [41] is used but has no driver.
+Warning: Wire leaf.\q [40] is used but has no driver.
+Warning: Wire leaf.\q [39] is used but has no driver.
+Warning: Wire leaf.\q [38] is used but has no driver.
+Warning: Wire leaf.\q [37] is used but has no driver.
+Warning: Wire leaf.\q [36] is used but has no driver.
+Warning: Wire leaf.\q [35] is used but has no driver.
+Warning: Wire leaf.\q [34] is used but has no driver.
+Warning: Wire leaf.\q [33] is used but has no driver.
+Warning: Wire leaf.\q [32] is used but has no driver.
+Warning: Wire leaf.\q [31] is used but has no driver.
+Warning: Wire leaf.\q [30] is used but has no driver.
+Warning: Wire leaf.\q [29] is used but has no driver.
+Warning: Wire leaf.\q [28] is used but has no driver.
+Warning: Wire leaf.\q [27] is used but has no driver.
+Warning: Wire leaf.\q [26] is used but has no driver.
+Warning: Wire leaf.\q [25] is used but has no driver.
+Warning: Wire leaf.\q [24] is used but has no driver.
+Warning: Wire leaf.\q [23] is used but has no driver.
+Warning: Wire leaf.\q [22] is used but has no driver.
+Warning: Wire leaf.\q [21] is used but has no driver.
+Warning: Wire leaf.\q [20] is used but has no driver.
+Warning: Wire leaf.\q [19] is used but has no driver.
+Warning: Wire leaf.\q [18] is used but has no driver.
+Warning: Wire leaf.\q [17] is used but has no driver.
+Warning: Wire leaf.\q [16] is used but has no driver.
+Warning: Wire leaf.\q [15] is used but has no driver.
+Warning: Wire leaf.\q [14] is used but has no driver.
+Warning: Wire leaf.\q [13] is used but has no driver.
+Warning: Wire leaf.\q [12] is used but has no driver.
+Warning: Wire leaf.\q [11] is used but has no driver.
+Warning: Wire leaf.\q [10] is used but has no driver.
+Warning: Wire leaf.\q [9] is used but has no driver.
+Warning: Wire leaf.\q [8] is used but has no driver.
+Warning: Wire leaf.\q [7] is used but has no driver.
+Warning: Wire leaf.\q [6] is used but has no driver.
+Warning: Wire leaf.\q [5] is used but has no driver.
+Warning: Wire leaf.\q [4] is used but has no driver.
+Warning: Wire leaf.\q [3] is used but has no driver.
+Warning: Wire leaf.\q [2] is used but has no driver.
+Warning: Wire leaf.\q [1] is used but has no driver.
+Warning: Wire leaf.\q [0] is used but has no driver.
+ERROR: Found 72 problems in 'check -assert'.

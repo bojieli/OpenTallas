@@ -1,0 +1,147 @@
+{
+  "claim_boundary": "a placement and connection abstract for licensed IP; no PHY design, no GDS, no signal-integrity or bump-map analysis; footprint and timing are assumed",
+  "energy_per_sector_fj": {
+    "grade": "measured",
+    "source": "configs/hardware/technology.json energy.hbm_j_per_byte x 32 B (whole-path HBM energy incl. controller and PHY, A100-measured)",
+    "value": 3356160.0
+  },
+  "footprint": {
+    "area_basis": {
+      "grade": "assumed",
+      "note": "as hbm2e",
+      "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack",
+      "value_mm2": 10.0
+    },
+    "area_mm2": 10.00196001504,
+    "depth_grade": "derived from two assumed values: area / beachfront",
+    "height_um": 833.49,
+    "width_basis": {
+      "grade": "assumed",
+      "source": "configs/hardware/technology.json hbm.hbm3e.stack_beachfront_mm",
+      "value_mm": 12.0
+    },
+    "width_um": 12000.096
+  },
+  "generator": "tools/mem_compiler/hbm_phy_gen.py v1.0",
+  "interface": {
+    "controller_clock_mhz": {
+      "grade": "assumed",
+      "note": "the core clock the HBM model's time base assumes (CLK_PS = 1000)",
+      "value": 1000.0
+    },
+    "controller_side": {
+      "address_basis": "ceil(log2(stack capacity 2.25e+10 B / 32 B))",
+      "address_bits": 31,
+      "beat_bits": 4,
+      "grade": "defined here (the repository's own controller interface), not DFI 5.x",
+      "len_bits": 5,
+      "protocol": "rtl/hdc/kv/ot_hdc_hbm_model.sv request/response ports",
+      "pseudo_channels": 32,
+      "sector_bits": 256,
+      "tag_bits": 16
+    },
+    "hbm3": {
+      "grade": "published",
+      "source": "JEDEC JESD238 (HBM3): 1,024-bit interface as 16 independent 64-bit channels, each two 32-bit pseudo-channels, BL8; the same organisation rtl/hdc/kv/ot_hdc_hbm_model.sv models",
+      "value": {
+        "burst_length": 8,
+        "channels": 16,
+        "dq_bits": 1024,
+        "pseudo_channel_dq_bits": 32,
+        "pseudo_channels": 32,
+        "sector_bytes": 32
+      }
+    },
+    "package_side": "1,024 DQ + CA + clocks under the macro in the micro-bump field: blackbox, not in the LEF",
+    "stack_bandwidth": {
+      "grade": "derived",
+      "source": "configs/hardware/technology.json hbm.hbm3e.stack_bandwidth_bytes_s",
+      "value_bytes_s": 1000000000000.0
+    }
+  },
+  "kind": "hbm_phy_abstract",
+  "name": "ot_hbm3e_phy",
+  "pins": {
+    "fits_on_edge": true,
+    "pin_block_x_um": [
+      5115.984,
+      6884.112
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_pitch_um": 0.192,
+    "pin_span_um": 1768.128,
+    "signal_pins": 9209
+  },
+  "schema": "opentallas.hbm-phy-abstract.v1",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 1000.0,
+      "min_pulse_ps": 400.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 1000.0,
+      "min_pulse_ps": 400.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 1000.0,
+      "min_pulse_ps": 400.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 3356160.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "timing_grade": "assumed: registered boundary (ASAP7 flop clock-to-Q / setup plus 3 FO4 of PHY-side logic); the request/response latencies (10 ns each) and all DRAM timing are in ot_hdc_hbm_model.sv, not in the liberty",
+  "views": {
+    "ot_hbm3e_phy.lef": "4d671aba6f1110d9dd74e6452499197e2dbe52f0fda448108b93d534c56b8b12",
+    "ot_hbm3e_phy_bb.v": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688",
+    "ot_hbm3e_phy_ff.lib": "124256a4cb74e5e82249dbcfc0e174fab7461e70d0095e8af23e47b35226a7b9",
+    "ot_hbm3e_phy_ss.lib": "04c91e9a2f93b14b6b32fe28d62cd693e7e8f45839c8dc59ee0be3cc13a9d070",
+    "ot_hbm3e_phy_tt.lib": "84c30aec0d9ea8d3085cd35b643338d38ec004672ec1d8e9cd2dd88f3606d3db"
+  }
+}

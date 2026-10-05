@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/tmp/ds-full-continuation-plan-20261003/tools/ds_full_checkpoint_continuation_plan.py", line 342, in <module>
+    if __name__=='__main__':main()
+  File "/tmp/ds-full-continuation-plan-20261003/tools/ds_full_checkpoint_continuation_plan.py", line 337, in main
+    result=reconcile_from_retained(args.reconcile_from) if args.reconcile_from else generate();args.out.mkdir(parents=True)
+  File "/tmp/ds-full-continuation-plan-20261003/tools/ds_full_checkpoint_continuation_plan.py", line 303, in reconcile_from_retained
+    dynamic.append(dict(PC=op['pc'],family=op['family'],template=tid,operand=name,slot_matrix=b['logical_tensor'],implementation='r33',route_required=b['logical_tensor'][0]<6,actual_route_or_shared_source_binding_pass=None))
+TypeError: '<' not supported between instances of 'str' and 'int'

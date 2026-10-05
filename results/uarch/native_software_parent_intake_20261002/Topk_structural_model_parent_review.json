@@ -1,0 +1,19 @@
+{
+  "status": "PASS_STRUCTURAL_MODEL_AND_STATIC_ARITHMETIC_ONLY",
+  "owner_commit": "16f2245dd4061503159fe7c0ae0f66b57380cd2f",
+  "tests_pass": 10,
+  "artifact_hashes_verified": 19,
+  "baseline_files_unchanged": true,
+  "real_ROM_caller_binding_complete": false,
+  "required_real_ROM_caller": {
+    "NMAX": 2048,
+    "LDW": 4
+  },
+  "full_instance_slot_and_route_bound": false,
+  "balanced_combinational_comparison_complete": false,
+  "SS_FF_clock_qualified": false,
+  "engine_RTL_admitted": false,
+  "physical_PR_admitted": false,
+  "old_PVE2_route_restarted": false,
+  "next": "source-matched caller, slot and ROM/HBM calendar comparison before selecting and implementing exact integer tree"
+}

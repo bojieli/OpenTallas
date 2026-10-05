@@ -1,0 +1,34 @@
+{
+  "PR_admitted": false,
+  "PVE2_live_route_PID": 551255,
+  "PVE3_archive_hashes_verified": 12,
+  "PVE3_fresh_heavy_process_check": "NONE",
+  "PVE3_results": "2 physical failures; attention incomplete without numerical verdict",
+  "actual_complete_survival": "FAIL_COMPLETE_MAPPED_SURVIVAL_RETAINED",
+  "actual_masks": 30,
+  "actual_strobes": 2,
+  "actual_successor_mapping": "UNRUN",
+  "cold_replay_expected_failure_exit": 1,
+  "contextual_SSFF": false,
+  "full_source_equivalence": false,
+  "independent_Qwen_manifest_hashes": 63,
+  "ordered_capture_witness_status": "PASS_INDEPENDENT_ORDERED_CAPTURE_WITNESS_JOIN_ONLY",
+  "other_open_endpoint_checks": {
+    "KV_capture": {
+      "PASS": false,
+      "expected": 512,
+      "unique_FF_count": 64
+    },
+    "address_producer": {
+      "PASS": false,
+      "expected": 24,
+      "unique_FF_count": 12
+    }
+  },
+  "parent_tests_passed": 29,
+  "required_masks": 80,
+  "required_strobes": 5,
+  "status": "PASS_SCOPED_QWEN_PRESERVATION_PARENT_INTAKE",
+  "stored_Z_equivalence": "FAIL_PRESERVED",
+  "successor_defaultoff": true
+}

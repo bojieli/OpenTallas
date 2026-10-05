@@ -1,0 +1,20 @@
+{
+  "FAILs_preserved": true,
+  "budget_r4_numerical_values_unchanged": true,
+  "demand_byteidentical_replay": true,
+  "files": {
+    "results/uarch/dsrom_full_product_binding_20261002/BF_DUAL_source_capability-r1.json": "a5cebe73a551531ee86e1ddc299f1c8fd27df06123f007b8c869a8a1ba9d4fb1",
+    "results/uarch/dsrom_full_product_binding_20261002/demand-r7.json.gz": "05bb31089f9dd8c140642dfb88b031c453ed9514e8efb108b2257fff430d0355",
+    "results/uarch/dsrom_full_product_binding_20261002/tests-BF-DUAL-r10.log": "3d62d17cda0245ac103dacbc19a54714f32a472955ffa1297184c4315837fbd1",
+    "tests/test_dsrom_resident_site_binding.py": "512a1d56271decef775cd5c5d5827d6009243708ea907fc3bdd5ecc4434d0488",
+    "tools/dsrom_resident_site_binding.py": "5452d6c4a0e9963426c74e6428a02e1a1af1d2a0793e633e095daeea43511fee"
+  },
+  "functional_program_sha256": "e923be14667cdaa6b7f0a5bc1589f16193556293b3a195b635267863bc0eb033",
+  "new_jobs": 0,
+  "old_demand_r6_retained_historical": true,
+  "prerequisite": "1da4a4d30f23b83e43efa55c68f6106c0b89c350",
+  "resident_helper_hash": "5452d6c4a0e9963426c74e6428a02e1a1af1d2a0793e633e095daeea43511fee",
+  "schema": "opentallas.dsrom.BF-DUAL-currency-review.v1",
+  "source_capability_proved_physical_abstract_still_required": true,
+  "tests_passed": 81
+}

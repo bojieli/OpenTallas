@@ -1,0 +1,112 @@
+{
+  "source_commit": "a59187cd5293f7003f5bd5f2468d8bea6ce9e86c",
+  "source_pins": {
+    "rtl/hbm_accel/service/ot_hbm_accel_owned_crossing.sv": "0969552e5c1f153a3bacba3a6f94029004454e5c0fc854d94266c47482524ec1",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/test/qwen_rom_runtime/qwen_hbmacc_rt_w12.cpp": "1f35dbe10ae759e39e5ad0c58e8330e7827e0c6e869aaf4403f9373ae0285cd4",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv": "84f4ed15806552ce08d5650057ab7227be456be193df94be0edbfd59657a4704",
+    "rtl/test/qwen_rom_runtime/ot_qwen_hbmacc_rt_die_w12.sv": "761799736039b1345140b7d2da2634829baf3adfe4be49477c04af3e815f4618",
+    "tools/qwen_hbmacc_rt_token_w12.py": "eec0fec9836d3a4d52f7c2e7f648af1c2d0f4d426869703990be1c086e94c78b"
+  },
+  "default_enabled": false,
+  "adopted": false,
+  "scope": "ONE selected CODE leaf columns0/1 only, no KV expansion, no installed whole array or fulltoken",
+  "source": {
+    "tile": 0,
+    "paired_columns": 2,
+    "data_bits": 256,
+    "source_word_range": [
+      0,
+      512
+    ],
+    "source_bytes": "(sourceword*6144+tile*4+2*pair)*16;32B takes actual8U32 image words",
+    "install": "actual source installer packs only these two unchanged columns per word into a contiguous two-sector-per-row span; base/stack comes from real allocator, not an assumed live aperture",
+    "sector": "returned id.sector already includes physical beat; never add beat"
+  },
+  "destination": {
+    "row_bits": 13,
+    "column_bits": 12,
+    "columns": [
+      0,
+      1
+    ],
+    "capacity_rows": 4496,
+    "paired_payload_bytes": 287744,
+    "active_selected_source_rows": 512,
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "macro_count": 20,
+    "bank": "row[12:10]",
+    "macro_row": "row[9:0]",
+    "macro_body_mm2_proxy": 0.1620578664,
+    "read_mux_cell_um2_estimate": 8192,
+    "write_decoder_cell_um2_estimate": 120,
+    "read_capture_ff_bits": 936,
+    "read_capture_body_um2": 272.93760000000003,
+    "read_binding": "actual virtual24 address selects unique seg_base/len/kind; checked installed segment ordinal/base/len/sidx/kind maps physicalrow=firstrow+virtual-base. Resident sidx0 is NOT allocator index. All five virtual banks supported only with matching installed grant. CODE private kind0 explicit from programkind1/2. Two-edge SRAM/protected response + delayed bankselect, MEM_EXTRA remains separate original capture.",
+    "installed_array_macro_count": null,
+    "SSFF_closed": false
+  },
+  "span_translation": {
+    "physical_span": "stack2, first_sector34, rows14<=4496, first_row13, first_column12==0, op64,phase32,rank7; immutable during delivery/read leases",
+    "byte_order": "private source installer packs two unchanged32B pair-column sectors per source word; delta=returnedsector-firstsector,row=firstrow+(delta>>1),col=delta[0]",
+    "required_real_owner": "expected identity192 supplied by actual hardware issuer/tag owner, exact comparison, not Python certified callback",
+    "positive_compare_cell_um2_estimate": 1004,
+    "shift_add_decode_cell_um2_estimate": 108,
+    "mapper_ff_bits": 1,
+    "mapper_register_body_um2": 0.2916,
+    "extra_payload_queue_entries": 0
+  },
+  "CDC": {
+    "module": "ot_hbm_accel_owned_crossing",
+    "service_period_ps": 1024,
+    "core_period_ps": 833.333,
+    "original_owned_bits": 465,
+    "forward_coded_bits": 576,
+    "reverse_coded_bits": 288,
+    "two_entry_coded_storage_bits": 1728,
+    "storage_body_um2_proxy": 503.88480000000004,
+    "codec_seals_sync_cost": "existing crossing source counted, not zero; actual source netlist footprint from family context",
+    "ir": "service release only decoded matched reverse ACK",
+    "ore": "CORE private SRAM visible receipt, not CDC acceptance/rd_freed"
+  },
+  "API": {
+    "destination_packet_bits": 593,
+    "packet": "operation64,phase32,globalrank7,row13,column12,owned465",
+    "private_visible_key_bits": 337,
+    "visible_key": "operation64,phase32,globalrank7,row13,column12,identity192,physical_tag12,beat5",
+    "owned_ready": "only exact private-visible-key match; wrong metadata/identity holds and faults",
+    "global_publication": "Sagan owns fullword3072sector completeness and destination leases; private leaf receipt alone not A_count"
+  },
+  "latency": "original crossing forward/reverse phase-dependent cycles + actual w_ce capture/readvisibility + actual leaf2edges (delta+1) + separate MEM_EXTRA; no free admission/clockheadline, price against Hubble+15287edge control sensitivity",
+  "whole_storage": {
+    "code_source_bytes": 441974784,
+    "code_coded_bytes": 497221632,
+    "code_padded_bytes": 566231040,
+    "conditional_pair_replicas": 1536,
+    "conditional_code_macros": 30720,
+    "scale_u32": 50112,
+    "scale_bytes": 200448,
+    "CROM_u32": 541953,
+    "CROM_bytes": 2167812,
+    "VM_u32": 177808,
+    "VM_bytes": 711232,
+    "KV_u32": 8388608,
+    "KV_bytes": 33554432,
+    "extra_bytes_outside_code": 36633924,
+    "installed_whole_array": false,
+    "capacity": "conditional Erdos20macro replication only, not Kant alternative3072sidecar proposal or installed physical fit; allocator/port/mux/clock/PG costs remain positive and require selected wholemodel"
+  },
+  "source_segment_price": {
+    "NSEG": 8,
+    "parallel_range_checks": 8,
+    "compare_add_mux_gate_equivalents_estimate": 1908,
+    "gate_um2_proxy": 4,
+    "source_descriptor_bits": 148,
+    "descriptor_owner": "existing hardware issuer held pins, no new namespace/software grant",
+    "read_response_extra_edges": 1,
+    "extra_read_alignment": "peer Erdos prices bankvalid/hold and MEM_EXTRA, not free"
+  },
+  "hooks": "Erdos writes leaf+readbinding; Sagan installs checked source span/identity/striping/globalpublication; Kant prices ARRAY only after selected primitive/current footprints"
+}

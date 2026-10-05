@@ -1,0 +1,198 @@
+{
+  "scope": "Native I14 two canonical fragments on actual native I13 QR; initial I0-I6 prefix SIM_ONLY; no fulltoken or physicaltiming claim",
+  "rank": 0,
+  "position": 1048575,
+  "token": 16754,
+  "exact": false,
+  "expected_outputs_used_by_native": false,
+  "input_sha256": "bc277f3033a08ca9ffd67b4a74d2369cd885722747f127b20a6a58d71a864ada",
+  "source_inputs_sha256": {
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",
+    "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
+    "results/uarch/dsrom_native_weight_address_join_20261002/inputs/demand-r5.json.gz": "fec91ca041e8b1640292ca06163def706c0d0dab8c5d524ba9e8f611dd925d0f",
+    "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz": "07a9a3ff9a371c4ef3fbe941661105b91da281636674c4045a7b961e81c2b434"
+  },
+  "results": [
+    {
+      "fragment": 0,
+      "phase": 20,
+      "output_base": 55744,
+      "words": 4608,
+      "bit_mismatches": 4604,
+      "output_sha256": "1ff7e7a7b2db79195977c22c0f3da310567f8a3cb3fef72f5ca08ef00983718f",
+      "first": [
+        {
+          "row": 0,
+          "actual": 3193176064,
+          "reference": 3209887744
+        },
+        {
+          "row": 1,
+          "actual": 1065943040,
+          "reference": 1060110336
+        },
+        {
+          "row": 2,
+          "actual": 1051328512,
+          "reference": 1061748736
+        },
+        {
+          "row": 3,
+          "actual": 1054801920,
+          "reference": 1066336256
+        },
+        {
+          "row": 4,
+          "actual": 1055916032,
+          "reference": 1033830400
+        },
+        {
+          "row": 5,
+          "actual": 1032716288,
+          "reference": 1052508160
+        },
+        {
+          "row": 6,
+          "actual": 1062600704,
+          "reference": 1067581440
+        },
+        {
+          "row": 7,
+          "actual": 3207069696,
+          "reference": 3198025728
+        },
+        {
+          "row": 8,
+          "actual": 3210608640,
+          "reference": 3215261696
+        },
+        {
+          "row": 9,
+          "actual": 1064108032,
+          "reference": 1071448064
+        },
+        {
+          "row": 10,
+          "actual": 1059586048,
+          "reference": 3201630208
+        },
+        {
+          "row": 11,
+          "actual": 3201630208,
+          "reference": 3202678784
+        },
+        {
+          "row": 12,
+          "actual": 3210936320,
+          "reference": 1050148864
+        },
+        {
+          "row": 13,
+          "actual": 1050214400,
+          "reference": 3200647168
+        },
+        {
+          "row": 14,
+          "actual": 1051983872,
+          "reference": 1051656192
+        },
+        {
+          "row": 15,
+          "actual": 3207331840,
+          "reference": 3206152192
+        }
+      ]
+    },
+    {
+      "fragment": 1,
+      "phase": 21,
+      "output_base": 60352,
+      "words": 3584,
+      "bit_mismatches": 3576,
+      "output_sha256": "0a4f794adef5d556270faa83e01b3eb934f562b25061c9bf4809367c7c6f3f7e",
+      "first": [
+        {
+          "row": 0,
+          "actual": 1067843584,
+          "reference": 1040580608
+        },
+        {
+          "row": 1,
+          "actual": 1073020928,
+          "reference": 1061093376
+        },
+        {
+          "row": 2,
+          "actual": 3229286400,
+          "reference": 3213819904
+        },
+        {
+          "row": 3,
+          "actual": 1049165824,
+          "reference": 1067384832
+        },
+        {
+          "row": 4,
+          "actual": 1007222784,
+          "reference": 1064435712
+        },
+        {
+          "row": 5,
+          "actual": 1050869760,
+          "reference": 3187867648
+        },
+        {
+          "row": 6,
+          "actual": 1068498944,
+          "reference": 1069481984
+        },
+        {
+          "row": 7,
+          "actual": 3208052736,
+          "reference": 1057619968
+        },
+        {
+          "row": 8,
+          "actual": 1082327040,
+          "reference": 1062273024
+        },
+        {
+          "row": 9,
+          "actual": 1062207488,
+          "reference": 1075314688
+        },
+        {
+          "row": 10,
+          "actual": 3156869120,
+          "reference": 1065615360
+        },
+        {
+          "row": 11,
+          "actual": 3220963328,
+          "reference": 3222470656
+        },
+        {
+          "row": 12,
+          "actual": 3224371200,
+          "reference": 3216244736
+        },
+        {
+          "row": 13,
+          "actual": 3221618688,
+          "reference": 3213557760
+        },
+        {
+          "row": 14,
+          "actual": 3187605504,
+          "reference": 1066926080
+        },
+        {
+          "row": 15,
+          "actual": 1079181312,
+          "reference": 1074528256
+        }
+      ]
+    }
+  ]
+}

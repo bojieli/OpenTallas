@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+________ ERROR collecting tests/test_dsrom_PAR2_mapped_q_growth_join.py ________
+ImportError while importing test module '/tmp/opentallas-parent-recovery-intake-20261002/tests/test_dsrom_PAR2_mapped_q_growth_join.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.10/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+tests/test_dsrom_PAR2_mapped_q_growth_join.py:5: in <module>
+    import dsrom_PAR2_mapped_q_growth_join as G
+tools/dsrom_PAR2_mapped_q_growth_join.py:7: in <module>
+    import dsrom_PAR2_complete_selector_wire_join as J
+E   ModuleNotFoundError: No module named 'dsrom_PAR2_complete_selector_wire_join'
+=========================== short test summary info ============================
+ERROR tests/test_dsrom_PAR2_mapped_q_growth_join.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!

@@ -1,0 +1,162 @@
+{
+  "claim_boundary": "All requested code/scale words and both ISA-oracle layer0 traces match bit for bit. This is an opt-in image/ISA capacity gate; no compact-bank RTL, ROM macro packing, route, full token, or rate is measured.",
+  "dies": [
+    {
+      "compact_code_bytes": 97517568,
+      "compact_manifest_sha256": "236e8c79f3b325918a35f5d8063c2009eb8d74b06784ee9284f694c185362f36",
+      "compact_scale_bytes": 47616,
+      "die": 0,
+      "matrices": [
+        {
+          "code_stream_sha256": "9e174adfa4afb89db65718facf25b3e3a62c82802f3ea832cc567befa7470ae7",
+          "code_words_exact": 128,
+          "compact_code_base": 0,
+          "compact_scale_base": 0,
+          "name": "qkv",
+          "padded_code_base": 0,
+          "padded_scale_base": 0,
+          "scale_stream_sha256": "46a8cabb392dd29c39af69cea3a6453c62be4b15a1ad33e33b263466cf5afac0",
+          "scale_words_exact": 192
+        },
+        {
+          "code_stream_sha256": "8f2f0cb17e437b0718666647c656339d12044e7df08596ae26f62198920d0bc0",
+          "code_words_exact": 88,
+          "compact_code_base": 128,
+          "compact_scale_base": 192,
+          "name": "o",
+          "padded_code_base": 192,
+          "padded_scale_base": 192,
+          "scale_stream_sha256": "4bdc244c12983a4626604fa17220e53255ff9c2ef374e6cafcd3ff4ea20bfbca",
+          "scale_words_exact": 264
+        },
+        {
+          "code_stream_sha256": "bb5b13f56207b7ee94e261dfc3e8170e8e874d173648c4fc1a2272e193a186fa",
+          "code_words_exact": 512,
+          "compact_code_base": 216,
+          "compact_scale_base": 456,
+          "name": "gu",
+          "padded_code_base": 456,
+          "padded_scale_base": 456,
+          "scale_stream_sha256": "0a2c79fe08797fe817881607cd5c545da6c47bd8c5cfc9b533854c4e0d60bc3c",
+          "scale_words_exact": 768
+        },
+        {
+          "code_stream_sha256": "4d1e700718e6a5d9609181f68303a1b446c01ed110f3205351cf48c7ec224f20",
+          "code_words_exact": 264,
+          "compact_code_base": 728,
+          "compact_scale_base": 1224,
+          "name": "down",
+          "padded_code_base": 1224,
+          "padded_scale_base": 1224,
+          "scale_stream_sha256": "4bdc244c12983a4626604fa17220e53255ff9c2ef374e6cafcd3ff4ea20bfbca",
+          "scale_words_exact": 264
+        }
+      ],
+      "padded_code_bytes": 146276352,
+      "padded_manifest_sha256": "e59a7c140abf46d00a3055f5761985242763f1d76318afeb87081574df09c6a0",
+      "padded_scale_bytes": 1619712,
+      "program_words": 33,
+      "relocated_weight_pcs": [
+        18,
+        23,
+        27
+      ],
+      "segments_sha256": "5483f2be9d48e9b861a81a2cc84241d897d7c384d159ce1d88bbb4bf4ee0a00e"
+    },
+    {
+      "compact_code_bytes": 97517568,
+      "compact_manifest_sha256": "2e8ac2b2b4a6fdaff4331e09cb78bf3f5ab250a4e96bdcbaad75353ada732962",
+      "compact_scale_bytes": 47616,
+      "die": 1,
+      "matrices": [
+        {
+          "code_stream_sha256": "c927ddbbed474a25c1261bcd04ce6e986e30019a949211c3bd9e45c40734f18c",
+          "code_words_exact": 128,
+          "compact_code_base": 0,
+          "compact_scale_base": 0,
+          "name": "qkv",
+          "padded_code_base": 0,
+          "padded_scale_base": 0,
+          "scale_stream_sha256": "15e067e1e7feb112012b3ecc21760cc7e9a086311b0da57a5edd946e25608409",
+          "scale_words_exact": 192
+        },
+        {
+          "code_stream_sha256": "c54ba7cf5b564737aa50b1150fd83f25baabfa47277914b19e7d495677a831fa",
+          "code_words_exact": 88,
+          "compact_code_base": 128,
+          "compact_scale_base": 192,
+          "name": "o",
+          "padded_code_base": 192,
+          "padded_scale_base": 192,
+          "scale_stream_sha256": "4bdc244c12983a4626604fa17220e53255ff9c2ef374e6cafcd3ff4ea20bfbca",
+          "scale_words_exact": 264
+        },
+        {
+          "code_stream_sha256": "5b5a48c3e0ed452dd22e38d3a218182a742a0a277620b36e304e7e0d8efe0eb1",
+          "code_words_exact": 512,
+          "compact_code_base": 216,
+          "compact_scale_base": 456,
+          "name": "gu",
+          "padded_code_base": 456,
+          "padded_scale_base": 456,
+          "scale_stream_sha256": "27e386bbff2130e3ce07ea6e95cf363b16026c4d4699257b98d54632b9f60c04",
+          "scale_words_exact": 768
+        },
+        {
+          "code_stream_sha256": "96a3f2e7efe7ec0fc1c9df9d0a6ba7e74ed207da18a3cb2344f271ff23cb8a8a",
+          "code_words_exact": 264,
+          "compact_code_base": 728,
+          "compact_scale_base": 1224,
+          "name": "down",
+          "padded_code_base": 1224,
+          "padded_scale_base": 1224,
+          "scale_stream_sha256": "4bdc244c12983a4626604fa17220e53255ff9c2ef374e6cafcd3ff4ea20bfbca",
+          "scale_words_exact": 264
+        }
+      ],
+      "padded_code_bytes": 146276352,
+      "padded_manifest_sha256": "8d4a5560b4391b02c0c72eb7c08f55629e76b0d46a172ac9920ce40d2def4a77",
+      "padded_scale_bytes": 1619712,
+      "program_words": 33,
+      "relocated_weight_pcs": [
+        18,
+        23,
+        27
+      ],
+      "segments_sha256": "5483f2be9d48e9b861a81a2cc84241d897d7c384d159ce1d88bbb4bf4ee0a00e"
+    }
+  ],
+  "exact_oracle_vector_sha256": {
+    "die0": {
+      "k_pos0": "d38fb91c0147f117712af0a2df558d1123c605d8fd7def3ffb06ef68b70ad34d",
+      "t1_after_down_scale": "0b4c189c447515fefad0ded552c29c4359136621d79f51628bba8ed6dd7e8691",
+      "t1_after_o_scale": "8b3a7edb8c354778eb03a64a7c91eef3b5631e18af26c97fb2871a75bf6ede98",
+      "v_pos0": "ad4a732d6f4b81d4d6e2bb81e4f2ee24c34959b65f110f5329f4958e13aac126",
+      "x_final": "300035ae842c439cdd67d9fd6852254482f92c334efe623a9aa156b0370a495f",
+      "x_initial": "dfd9c77b863c36dc32e8941e42eedce866ff1604ce2d34537872fad44a27ff57"
+    },
+    "die1": {
+      "k_pos0": "1edad4a1fa7cc718b12262ea13b51f41e3301113db12c9444d1a72b4a468c364",
+      "t1_after_down_scale": "0b4c189c447515fefad0ded552c29c4359136621d79f51628bba8ed6dd7e8691",
+      "t1_after_o_scale": "8b3a7edb8c354778eb03a64a7c91eef3b5631e18af26c97fb2871a75bf6ede98",
+      "v_pos0": "ac6e74606cfb4657871ac93aaa7fa545c22e189d7464356c99add789dc8083df",
+      "x_final": "300035ae842c439cdd67d9fd6852254482f92c334efe623a9aa156b0370a495f",
+      "x_initial": "dfd9c77b863c36dc32e8941e42eedce866ff1604ce2d34537872fad44a27ff57"
+    }
+  },
+  "oracle_sha256": {
+    "compact": "a6bbe5e89a5ab6f895e90390ee2298a71e48e771fbfd69bf69f532b3b687d2ef",
+    "padded": "a0e573561e4ecf27487126725f6b312ad4669d46cc1aeeeef57f62383438565f"
+  },
+  "per_die_savings_bytes": {
+    "code_ROM": 48758784,
+    "scale_ROM": 1572096
+  },
+  "schema": "opentallas.qwen-o4-layer0-compact-rom.v1",
+  "source_sha256": {
+    "tools/hdc_qwen_layer0_rom.py": "97e530278f273bcfebaa8346aedaa3d73652554906abf7700f32dd88b6ef97c7",
+    "tools/qwen_o4_compact_bank_gate.py": "21fb76e9acbd2f439fc46a83e0943d6a5ceefc94698c33c4296a19316f6fbda7",
+    "tools/qwen_o4_layer0_oracle.py": "480b9d3d29d08de1983992bc56467b8f1a94732f10ac768abcf0c9aa2b0e53e0"
+  },
+  "status": "exact_image_and_ISA_equivalence"
+}

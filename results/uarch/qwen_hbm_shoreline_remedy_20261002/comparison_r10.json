@@ -1,0 +1,118 @@
+{
+  "DeepSeek": {
+    "L2_macros_per_source_die": 256,
+    "SMs_per_source_die": 32,
+    "qualification_transfer": false,
+    "remediation_fit": false,
+    "required_service_mm2_per_stack": null,
+    "service_regions": [
+      {
+        "h": 630.72,
+        "holds": "HBM3E controllers, 64 PC arbiters and the bulk-copy request/response heads of two stacks",
+        "kind": "service",
+        "name": "svc_south",
+        "w": 31760.0,
+        "x": 20.0,
+        "y": 864.0
+      },
+      {
+        "h": 630.72,
+        "holds": "as svc_south",
+        "kind": "service",
+        "name": "svc_north",
+        "w": 31760.0,
+        "x": 20.0,
+        "y": 24138.0
+      }
+    ],
+    "source_commit": "a39eacc6bcfb75565313837d1303886b3395bf03",
+    "source_path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+    "source_sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+    "stacks_per_source_die": 4
+  },
+  "Qwen": {
+    "L2_macros_per_die": 256,
+    "SMs_per_die": 32,
+    "base_system_shortfall_mm2": 10.532050947199991,
+    "required_base_mm2_per_stack": 11.3323399684,
+    "source_geometry_commit": "a39eacc6bcfb75565313837d1303886b3395bf03",
+    "stacks_per_die": 4,
+    "stacks_system": 8
+  },
+  "package": "Retained candidate outline and source PHY locations/width; no new package electrical/bump-map/PDN qualification inferred",
+  "parent_lower_bound": {
+    "commit": "80ba82e57",
+    "path": "results/uarch/parent_qwen_hbm_service_enlargement_lower_bound_20261002/review.json",
+    "review": {
+      "DS_area_transfer_allowed": false,
+      "clock_transfer_allowed": false,
+      "conditional_die_area_increment_mm2": "5.272657747496221662468513854",
+      "conditional_die_height_increment_um_if_preserving_all_current_interior": "165.8068474055415617128463476",
+      "current_band_depth_um": "630.72",
+      "current_mm2_per_stack": "10.0158336",
+      "fit": false,
+      "fixed_band_width_um": "31760",
+      "geometry_source": {
+        "commit": "0b88edc97d6d836e094492b09b0ea3c444819f7c",
+        "path": "results/floorplan/hbm_gpu/qwen_hbm_die.json",
+        "sha256": "cf08b4b792227b649e8646a14ce9dfe6c36b0775d5753d8c79b4e5f6e4c12af4"
+      },
+      "hardware_admission": false,
+      "inherited_floorplan_clock_hz": 1098640000.0,
+      "l2_macro_count_per_die_preserved_requirement": 256,
+      "minimum_band_depth_um_before_unpriced_via_PDN_CTS_margins": "713.6234237027707808564231738",
+      "minimum_depth_increment_um_per_band": "82.9034237027707808564231738",
+      "model_sha256": "eb78a6fa70f453a45d639c811c122c368f9bd07d91711aed0c1bd92c2b906d03",
+      "required_mm2_per_stack": "11.3323399684",
+      "scope": "Qwen HBM only: four stacks per die, two equal service bands, two stacks per band; eight stacks system",
+      "sm_count_per_die_preserved_requirement": 32,
+      "status": "PARENT_GEOMETRIC_LOWER_BOUND_NOT_FIT_OR_PNR_QUALIFICATION",
+      "unpriced": [
+        "60352 via escapes/stack with actual cut/enclosure",
+        "extra PDN/CTS/halo and channel geometry",
+        "package/reticle feasibility of enlarged die",
+        "recomputed source-to-SM and PHY crossings",
+        "actual provider ports and SS/FF"
+      ]
+    },
+    "sha256": "8baa2f32522e1015228d9fc2651810ff6dd49a320a71398a34678d666e68efd2"
+  },
+  "remedies": [
+    {
+      "added_oneway_FAST_edges": 2,
+      "added_reserved_service_mm2_per_die": 23.461747199999998,
+      "depth_um": 1000.08,
+      "geometry_fit": true,
+      "hardware_fit": false,
+      "name": "deeper bands and inward L2, retained outline",
+      "outline_mm2": 815,
+      "recommended": true
+    },
+    {
+      "available_width_um": 31760,
+      "implied_die_width_um": 50314.899743423244,
+      "implied_outline_mm2": 1289.5170846191807,
+      "name": "wider bands at existing630.72um depth",
+      "package_qualification": false,
+      "required_width_um": 50274.899743423244,
+      "width_only_inside_outline": false
+    },
+    {
+      "added_outline_mm2": 23.491296000000037,
+      "name": "deeper bands preserving every interior coordinate by enlarging die",
+      "outline_mm2": 838.4912960000001,
+      "package_qualification": false,
+      "required_die_height_um": 26367.650817610065,
+      "reticle_source_limit_mm2": 815,
+      "within_source_reticle": false
+    },
+    {
+      "band_depth_um": 5492.88,
+      "name": "exclusive projection PDN stress alternative",
+      "reason": "Deliberately reserves complete strap projections below every routing layer; not chosen physical minimum",
+      "slot_mm2_per_stack": 87.2018659596131
+    }
+  ],
+  "scope": "QWEN_HBM_ONLY; NO_DEEPSEEK_AREA_OR_QUALIFICATION_TRANSFER",
+  "zero_PHY_replacement_credit": true
+}

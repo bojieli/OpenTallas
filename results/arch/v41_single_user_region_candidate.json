@@ -1,0 +1,814 @@
+{
+  "acceptance_checks": [
+    "Bind one selected context and mode to K_MEM, index/window/CKV/weight/RoPE base+count registers; assert all [start,end) disjoint and end <= 0.9 physical sectors.",
+    "Set IDX_SHARDED and replay writer+reader at first/last key, partial 200K superblock and four-stack PC hash; require exact keys and no out-of-region requests.",
+    "Connect selected CKV DMA and remote-row path; test first/last source on each die and stack, nine sectors/row, window-vs-CKV isolation and kv_ok after full row.",
+    "Load both full RoPE tables, bind reserved_end to actual state+weight end per stack, and test first/last position with index/window/CKV traffic active.",
+    "Replace W_HBM's 24-bit, one-stack separate model with a source-pinned checkpoint weight image in the shared physical map; test an address above 2^24 sectors and concurrency with K and B clients.",
+    "Run two-client and all-client sustained traces through one controller, account PC occupancy/refresh/queue stalls, then compare matched ROM/HBM token cycles."
+  ],
+  "comparator_weight_bytes_per_die_model": 5154404272.727273,
+  "comparator_weight_sectors_per_stack_if_even_stripe": 40268784,
+  "contexts": {
+    "1048576": {
+      "index_highest_addressed_end_sector_from_region_base": 139264,
+      "index_superblock_reserved_sectors_per_stack": 139264,
+      "placement_status": "candidate_unapproved_unwired",
+      "scenarios": {
+        "hbm_comparator": {
+          "placement_status": "candidate_unapproved_unwired",
+          "stacks": {
+            "0": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 2176,
+                  "end_sector_exclusive": 141440,
+                  "owner": "window_fp8",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "connected_module_candidate_base"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 731264,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 141440,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 41000048,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 731264,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 43097200,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 41000048,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 45194352,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 43097200,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 45194352,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "1": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40997872,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 729088,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 43095024,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40997872,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 45192176,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 43095024,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 45192176,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "2": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40997872,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 729088,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 43095024,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40997872,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 45192176,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 43095024,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 45192176,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "3": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40997872,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 729088,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 43095024,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40997872,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 45192176,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 43095024,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 45192176,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            }
+          }
+        },
+        "rom": {
+          "placement_status": "candidate_unapproved_unwired",
+          "stacks": {
+            "0": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 2176,
+                  "end_sector_exclusive": 141440,
+                  "owner": "window_fp8",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "connected_module_candidate_base"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 731264,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 141440,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2828416,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 731264,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4925568,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2828416,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4925568,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "1": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2826240,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 729088,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4923392,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2826240,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4923392,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "2": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2826240,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 729088,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4923392,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2826240,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4923392,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "3": {
+              "regions": [
+                {
+                  "count_sectors": 139264,
+                  "end_sector_exclusive": 139264,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 589824,
+                  "end_sector_exclusive": 729088,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 139264,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2826240,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 729088,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4923392,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2826240,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4923392,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            }
+          }
+        }
+      },
+      "selected_ckv_sectors_per_stack": 589824,
+      "source_rows_per_die": 262144,
+      "source_rows_per_die_stack": 65536
+    },
+    "200000": {
+      "index_highest_addressed_end_sector_from_region_base": 26664,
+      "index_superblock_reserved_sectors_per_stack": 28288,
+      "placement_status": "candidate_unapproved_unwired",
+      "scenarios": {
+        "hbm_comparator": {
+          "placement_status": "candidate_unapproved_unwired",
+          "stacks": {
+            "0": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 2176,
+                  "end_sector_exclusive": 30464,
+                  "owner": "window_fp8",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "connected_module_candidate_base"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 142964,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 30464,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40411748,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 142964,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 42508900,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40411748,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 44606052,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 42508900,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 44606052,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "1": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40409572,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 140788,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 42506724,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40409572,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 44603876,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 42506724,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 44603876,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "2": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40409572,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 140788,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 42506724,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40409572,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 44603876,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 42506724,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 44603876,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "3": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 40268784,
+                  "end_sector_exclusive": 40409572,
+                  "owner": "comparator_weights",
+                  "service": "new shared physical weight service required",
+                  "start_sector": 140788,
+                  "status": "unmapped_provisional_equal_stripe"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 42506724,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 40409572,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 44603876,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 42506724,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 44603876,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            }
+          }
+        },
+        "rom": {
+          "placement_status": "candidate_unapproved_unwired",
+          "stacks": {
+            "0": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 2176,
+                  "end_sector_exclusive": 30464,
+                  "owner": "window_fp8",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "connected_module_candidate_base"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 142964,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 30464,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2240116,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 142964,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4337268,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2240116,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4337268,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "1": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2237940,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 140788,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4335092,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2237940,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4335092,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "2": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2237940,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 140788,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4335092,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2237940,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4335092,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            },
+            "3": {
+              "regions": [
+                {
+                  "count_sectors": 28288,
+                  "end_sector_exclusive": 28288,
+                  "owner": "index_keys",
+                  "service": "B port, hashed among 32 PCs",
+                  "start_sector": 0,
+                  "status": "candidate_requires_IDX_SHARDED"
+                },
+                {
+                  "count_sectors": 112500,
+                  "end_sector_exclusive": 140788,
+                  "owner": "selected_ckv_fp4",
+                  "service": "K port, one request per stack",
+                  "start_sector": 28288,
+                  "status": "standalone_dma_unconnected"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 2237940,
+                  "owner": "rope_plain",
+                  "service": "K port, read-only",
+                  "start_sector": 140788,
+                  "status": "external_base_unbound"
+                },
+                {
+                  "count_sectors": 2097152,
+                  "end_sector_exclusive": 4335092,
+                  "owner": "rope_yarn",
+                  "service": "K port, read-only",
+                  "start_sector": 2237940,
+                  "status": "external_base_unbound"
+                }
+              ],
+              "reserved_end_sector": 4335092,
+              "within_physical_stack": true,
+              "within_usable_stack": true
+            }
+          }
+        }
+      },
+      "selected_ckv_sectors_per_stack": 112500,
+      "source_rows_per_die": 50000,
+      "source_rows_per_die_stack": 12500
+    }
+  },
+  "currency": {
+    "marked": "2026-09-30 by claude/records-currency; the verdict above is historical, bound to the pinned sources, and was not re-run",
+    "reason": "The tool asserts die gaps that main has since closed: the die passes .IDX_SHARDED( since 27bea8d3 and .W_HBM(, the 24-bit wq_addr/PHY AW/qstream HAW were widened at cf4940f0, and '.c_v(4\\'b0)' / 'assign kv_ok = 1\\'b0' are gone. Its conclusions (index blocked because the die does not set IDX_SHARDED; comparator weights truncated at 2^24 sectors) no longer hold, so the assertions cannot be updated without changing the ledger's conclusions; it needs re-derivation against the current die.",
+    "stale_since": "27bea8d3",
+    "state": "stale",
+    "verdict_kept": "candidate_for_root_review_not_configured_in_die"
+  },
+  "physical_sectors_per_stack": 703125000,
+  "placement_status": "candidate_for_root_review_not_configured_in_die",
+  "schema": "v41_single_user_region_candidate_v1",
+  "service_gates": {
+    "hbm_comparator_weights": "blocked: tile qstream HAW24 and die wq_addr[23:0] truncate AW30; only W_STACK has a separate W model, no four-stack physical service or shared arbitration",
+    "index": "blocked: opt-in IDX_SHARDED is not set by die; writer/reader paired image and PC timing needed",
+    "rom_weight_selection": "blocked: die does not forward W_HBM and tile defaults to W_HBM=1; ROM tile service must be integrated and die mode selectable",
+    "rope": "partial: cache/mux connected; caller-supplied bases/reserved_end do not prove CKV/weight floor",
+    "selected_ckv": "blocked: standalone DMA source exists, die C mux client tied off; remote die row delivery absent",
+    "simultaneous_traffic": "blocked: index B vs KV/RoPE K arbiter exists, but C client absent and W weight model is physically separate; exact multi-client backpressure/timing unmeasured",
+    "window": "partial: packed 17-sector client connected only on stack 0, prefetch/attention path incomplete"
+  },
+  "source_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "results/arch/arch_budget_v41.json": "c02ad6a57d617d10b412a5816fefab8c051971d085848d7abcbfb95294f9fca2",
+    "rtl/chip/ot_chip_v41x_ckv_selected_dma.sv": "794ab28f92dde86bed6a29c30e5e42e7ffe1bc5b211d1013bdecaf4eac25821c",
+    "rtl/chip/ot_chip_v41x_die.sv": "ee02d399f0e3583bce8ac3032e11d4ce0e68d6b0ebfbdc30d183145fdc7ef61c",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee",
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb",
+    "rtl/chip/ot_chip_v41x_tile.sv": "a72c011a4655f419327f683b49bf6368a2748a9cd2f928e2cc9be58528afd67b",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "4731fa1dfd492bdf792d87349e73f231f123752b674144663097d7a506e463eb",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_pool_kwr.sv": "a4ce9d82f1489d14824b7ef5ebea200c31af86859a80fbad3bbe421f5790eafd",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_addr.sv": "cfd22aed389eb116049b74409c88bab95f9a47e274d64366598221b99f473ee1"
+  },
+  "units": {
+    "address": "32-byte sector",
+    "region_end": "exclusive",
+    "stack_capacity": "physical HBM3E"
+  },
+  "usable_sectors_per_stack": 632812500
+}

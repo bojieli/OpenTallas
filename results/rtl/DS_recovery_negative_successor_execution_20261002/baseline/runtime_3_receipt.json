@@ -1,0 +1,13 @@
+{
+  "verdict": "POSITIVE_CONTROL_PASS",
+  "cut": "SU_SUFFIX",
+  "prefix": 8,
+  "stage": "baseline/runtime_3",
+  "args": [
+    "+CUT=SU_SUFFIX"
+  ],
+  "returncode": 0,
+  "log_sha256": "7608a5aa210c1cbd48900bac681cc37726d87f5581f615e4b1f24b1333648103",
+  "binary_sha256": "ce586b5f1aa420c39face70c4fb9053829c151d70ddb65f0b1358d01a61d029a",
+  "snapshot_digest": "055556ce4347bcd727c1b7fb22714e20c4d6f02398462a725ceeb1df3f0800f6"
+}

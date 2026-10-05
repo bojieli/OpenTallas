@@ -1,0 +1,47 @@
+{
+ "against_the_committed_depth_1_records": [
+  {
+   "cells": 430151,
+   "closed": true,
+   "dep_check_stages": 1,
+   "fmax_mhz": 317.1,
+   "max_slew_violations": 0,
+   "target_ns": 3.4
+  },
+  {
+   "cells": 430255,
+   "closed": true,
+   "dep_check_stages": 1,
+   "fmax_mhz": 299.7,
+   "max_slew_violations": 0,
+   "target_ns": 4.4
+  }
+ ],
+ "measured": [
+  {
+   "cells": 507727,
+   "closed": false,
+   "dep_check_stages": 2,
+   "fmax_mhz": 72.9,
+   "max_slew_violations": 0,
+   "target_ns": 1.8
+  },
+  {
+   "cells": 487492,
+   "closed": false,
+   "dep_check_stages": 2,
+   "fmax_mhz": 73.8,
+   "max_slew_violations": 0,
+   "target_ns": 2.6
+  }
+ ],
+ "not_a_claim": [
+  "no sustained figure moves on this record",
+  "the split's block-level equivalence and cost are separately measured and unaffected"
+ ],
+ "question": "the dependence table's split conflict check costs nothing at the block level (599.9 MHz unsplit against 603.7 split).  What does the FULL twelve-module sequencer do with it?",
+ "schema": "opentallas.result.full_sequencer_at_dep_depth_two.v1",
+ "the_control_that_settles_it": "the same twelve sources, the same 2.6 ns target, the same --slew-margin-percent 60 and --false-path-from rst_n, with DEP_CHECK_STAGES=1.  It is running.  If it also lands near 74 MHz the depth is innocent and my configuration differs from the committed one; if it lands near 300 MHz the split is actively harmful at the sequencer level, which would be the third measurement in a row to undercut the audit's highest-leverage item.",
+ "the_reading_I_am_NOT_making": "that depth 2 costs the full sequencer 317 MHz -> 74 MHz.  Two things differ between my runs and the committed ones besides the depth: the cell counts (487k and 508k against 430k) and therefore something in the source list or the flags.  A 4.3x frequency claim cannot rest on a comparison with two variables in it.",
+ "what_is_already_certain": "neither depth-2 route CLOSES at these targets, and both are slew-clean, so the shortfall is setup depth rather than drive.  The sustained iso-area figure therefore still rests on the committed depth-1 records: 1.216x from the 4.4 ns closure and 1.287x from the 3.4 ns one."
+}

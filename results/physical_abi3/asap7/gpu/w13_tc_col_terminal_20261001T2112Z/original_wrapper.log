@@ -1,0 +1,5 @@
+[remote_gate] worker ot-pve1 (floor 31 GB), job 70bbc5e9a2: bash -c export LD_LIBRARY_PATH=/home/ubuntu/.local/w13lib; mkdir -p /home/ubuntu/w13work; docker run --rm -v /home/ubuntu/w13work:/w alpine:latest rm -rf /w/tc_col_13; mkdir -p /home/ubuntu/w13work/tc
+{"block": "ot_gpu_tc_col", "ports": 11}
+{"block": "ot_gpu_tc_col", "closed": false, "setup_wns_ps": -102.655}
+{"block": "ot_gpu_tc_col", "ss_fmax_hz": 1068764295.0, "closed_signoff": false, "SS": {"rc": 0, "macros_at_tt": [], "setup_wns_ps": -102.66, "setup_tns_ps": -38377.03, "hold_wns_ps": 70.36, "hold_tns_ps": 0.0, "hold_buffers": 23839, "hold_buffer_um2": 1737.9, "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ss.lib"}, "FF": {"rc": 0, "macros_at_tt": [], "setup_wns_ps": 186.11, "setup_tns_ps": 0.0, "hold_wns_ps": -0.91, "hold_tns_ps": -0.91, "hold_buffers": 23839, "hold_buffer_um2": 1737.9, "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ff.lib"}}
+[remote_gate] worker ot-pve1 job 70bbc5e9a2 finished rc=0; 14 worktree files returned

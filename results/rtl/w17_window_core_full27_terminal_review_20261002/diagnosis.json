@@ -1,0 +1,24 @@
+{
+  "status": "SOURCE_BOUND_DIAGNOSIS_NO_RETRY",
+  "observed": "Exact declared physical_QE_gate mutation caused fatal local ACK before actual suffix and logical EMPTY at13ns, before declared acceptance-counter assertion.",
+  "source_sites": {
+    "bench_acceptance_counter": 1259,
+    "bench_wait_local_ack": 1342,
+    "bench_ack_idle_invariant": 1343,
+    "bench_expected_acceptance_counter_assertion": 1347,
+    "core_physical_go_gate": 2566,
+    "core_local_suffix_closed": 2559
+  },
+  "limits": "The retained failing log does not print acceptance counters or which ACK invariant disjunct failed. Source ordering is confirmed; no unobserved counter values or causal completion are claimed.",
+  "next_action": {
+    "requires_fresh_review_GO": true,
+    "old_expectation_unchanged": true,
+    "proposed_new_added_control": "Assert registered go cut accepted QE directly in the existing physical qe_go_e && qe_ready_e posedge observer for injected ISSUE/GO cuts. Keep existing local ACK invariant and end-of-case assertions. Pin revised fatal line and exact exit1 marker; prove source edge ordering before measurement.",
+    "scope": "Same actual core/SUN256/SUM64/QE/selected-owner cone; no provider, reset, payload or engine substitution. No DUT source fix justified by mutant-only failure.",
+    "baseline_binary_reuse": "Original baseline remains valid only for byteidentical old fixture. Revised observer changes bench text and therefore requires new frontend/CXX closure; do not reuse old binary as proof of new observer.",
+    "remaining_mutants": "PC_advance, VM_frozen_store_drop and scalar_suppression remain NOT_RUN.",
+    "runtime_campaign": "No launch, retry or expected-predicate widening authorized by this diagnosis."
+  },
+  "physical_provider": false,
+  "fulltoken": false
+}

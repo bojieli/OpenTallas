@@ -1,0 +1,2793 @@
+{
+  "added_endpoint_parameters": {
+    "I64_codec_split_join": 32
+  },
+  "added_software_ticks": 880669448,
+  "affected_PCs": 144,
+  "affected_programs": [
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 717,
+      "program_ref": "0256dea5ed93f11a6dc46477",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 909,
+      "program_ref": "05dddefbee764a22b56ff459",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 990,
+      "program_ref": "071b4eaf3c7b7342ed218c56",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1624,
+      "program_ref": "081e60a548e41097a1282ed7",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1480,
+      "program_ref": "0c43f2bb4a19a4e05f2c5957",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 573,
+      "program_ref": "0d55ffc6906e25d3020bd975",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 158,
+      "program_ref": "0ecfd05d38814abf34687555",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1022,
+      "program_ref": "0f728bdf1a292c83398af4d1",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 542,
+      "program_ref": "104dc3b72f1cba127507f282",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 510,
+      "program_ref": "13dc24a98deedb768fc130e2",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 638,
+      "program_ref": "14f6c32084fd44a8b765c374",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1406,
+      "program_ref": "15cd8214cd55d274379bbcd3",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 616,
+      "program_ref": "15faf8e3ba3f41b8db096654",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 222,
+      "program_ref": "1993c772f3f95d88525f75cf",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1672,
+      "program_ref": "1a8dbb9caeb27a04aecc0200",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1374,
+      "program_ref": "1ac8d5842dd38e56afa7752a",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 189,
+      "program_ref": "1c15eefa12ede44d7bfd6b84",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 712,
+      "program_ref": "1ddb83d769c9552d9147a6d2",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 88,
+      "program_ref": "20d4921468abf5c58730756f",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1485,
+      "program_ref": "2c8bcf1e8ffa3b273ec1f636",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1629,
+      "program_ref": "2cbdbac8b47c61c6506fff39",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1677,
+      "program_ref": "2d7f1562947da86a46bf0a35",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 328,
+      "program_ref": "3139a1e27bb0212e7ea402d3",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 184,
+      "program_ref": "32447cba59d4229acb87e0b7",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 174,
+      "program_ref": "33aec34d7ad2a8b3352a8fbc",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 808,
+      "program_ref": "3786fb9f2a038b9ed0e76643",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1502,
+      "program_ref": "398fe12248c5cc9a3e7caa83",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 141,
+      "program_ref": "399462fe3f09db910ff5d706",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 280,
+      "program_ref": "40350c438e1df13df680cb85",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 765,
+      "program_ref": "420cb3109f55d7a7e0a3da5c",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 78,
+      "program_ref": "44d7fcfb66a5d33292afa365",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1288,
+      "program_ref": "4547ed574bf94ddb276f815b",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 494,
+      "program_ref": "47b6f3a877401fa065665a33",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1646,
+      "program_ref": "48d85243f96ce5771c807e60",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 856,
+      "program_ref": "4b27b9ad196755703209bbf3",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1725,
+      "program_ref": "4d6fbcc3eb10a01ce28837d2",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1053,
+      "program_ref": "4e79b41c52fd9531146cdf9e",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 462,
+      "program_ref": "5176101c5a931859b631f7e1",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 126,
+      "program_ref": "5656eadc93895ef1b4251c67",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1598,
+      "program_ref": "6291760f2be40481ef0eb6d0",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1038,
+      "program_ref": "629ce99679b56419fd5645ba",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 525,
+      "program_ref": "6367171b595c63267b578b2f",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 45,
+      "program_ref": "642917a01ca5da136ea1dff6",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 664,
+      "program_ref": "6481b6f6a74531c8c75ce196",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 734,
+      "program_ref": "66bd716e82b3e8b0ef218f39",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1528,
+      "program_ref": "69d2a93474b7412b9df3c8b9",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 110,
+      "program_ref": "69e38dc96eafb1d4577d3655",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1358,
+      "program_ref": "6f28f41b4763ad0194a2b9a6",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 861,
+      "program_ref": "6fee246ac793d61757edf004",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 750,
+      "program_ref": "70574b489e4f8675d43d098d",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 477,
+      "program_ref": "705eb81f136c0daf2bc1c4c0",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1326,
+      "program_ref": "7082b4cd4eff5e775fd3bc6b",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1576,
+      "program_ref": "72ebf310d2f24eae7d7ac382",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 830,
+      "program_ref": "733d2d59a089c8eea92a23b0",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 302,
+      "program_ref": "73ddf4fb990446c6c915a971",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 568,
+      "program_ref": "777913c2c0d1443f946ff510",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1262,
+      "program_ref": "783e4f910d0f1f03cc279641",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1101,
+      "program_ref": "7864df8e0eb4a967f4710608",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1096,
+      "program_ref": "7890d42c17024a2bab5d0a97",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1720,
+      "program_ref": "7b2e718b290b84c9804234b4",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 621,
+      "program_ref": "7be04594f2725c161294c55a",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 30,
+      "program_ref": "7d62dcd5ca3259bd4a822909",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 14,
+      "program_ref": "7f5413b9b5a62799f3de493d",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1070,
+      "program_ref": "7f9f828aca677726ca359e4b",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1389,
+      "program_ref": "7fce951d72ba1c78416a68ed",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 270,
+      "program_ref": "80744aa9ea6a0e06e7432a69",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1118,
+      "program_ref": "812591147de2d95af41a8250",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1662,
+      "program_ref": "81429d41252d6e60eec2fa86",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1166,
+      "program_ref": "8a04e2ad099186665605db3f",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 232,
+      "program_ref": "8af1e042d3e85d2f24602e2e",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 878,
+      "program_ref": "8b643b886695be7f25091f8c",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1134,
+      "program_ref": "8cce6b50bf3636417e16f608",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1550,
+      "program_ref": "8d3c00d9eb6bc3764fc8d0e9",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 974,
+      "program_ref": "8df6e233f0795cf3bf845fb1",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1432,
+      "program_ref": "8f1d55ceb9db776a6c78fb82",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 894,
+      "program_ref": "8fd51a1d18985aeb452ae31c",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1341,
+      "program_ref": "927cccdb8afa0b33093579fb",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 285,
+      "program_ref": "9469e2b437ee571cc47c39d6",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1000,
+      "program_ref": "9a8ee8eea79e80c02fa27b8a",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 813,
+      "program_ref": "9b08c075c5c2b5b26dda6e5d",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1310,
+      "program_ref": "9ce8b74ddf75bbecddb8c349",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1694,
+      "program_ref": "9dcab67e285a1c6d9737deb4",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 558,
+      "program_ref": "9e874e5f17799a62833103b3",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1614,
+      "program_ref": "a26fd8ce57e6b5addcde3220",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1422,
+      "program_ref": "a44e715e44e0646443e78284",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 957,
+      "program_ref": "a46da2e5ae6a90044b386fc2",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1245,
+      "program_ref": "a4765f6374470e36d99f82c2",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 424,
+      "program_ref": "a6cc5538583afe7dcb4b8566",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 606,
+      "program_ref": "a8a9ea6c9e32ea7fa9ef4a86",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 472,
+      "program_ref": "a9346f2b1267f8b6135f7a7c",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 702,
+      "program_ref": "a934825856eff01e48af2d58",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 520,
+      "program_ref": "aa5d2281934b2adc3c8de520",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1182,
+      "program_ref": "ab0134f55523644491128336",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 904,
+      "program_ref": "ada252d90fe35cfc8d910dff",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1384,
+      "program_ref": "ae7173aa54fe72bb7e87d86b",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 93,
+      "program_ref": "afa7d7af6001b7f3e5503e4c",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1293,
+      "program_ref": "b1c64bd160142e2dfcf65be8",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 798,
+      "program_ref": "b2941d48fce8e8b299d19120",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1048,
+      "program_ref": "b509176ab3c4e5024d022bca",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1197,
+      "program_ref": "b62b40926543a8b5f6d63a04",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1230,
+      "program_ref": "b8baf22ce47a32c8ded9702f",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 654,
+      "program_ref": "ba1eda57c2e7d6a8911ec6a8",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 318,
+      "program_ref": "bc32193ec0d320bfcf2f589f",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1086,
+      "program_ref": "bc63623212d8c03564e415b1",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 398,
+      "program_ref": "bd88a631a6f47afa3d03aa02",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 446,
+      "program_ref": "c243a16a5071d79e46b5b036",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 926,
+      "program_ref": "c49be36acb80ae72d011fa05",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1710,
+      "program_ref": "c4c8a05960e6e2f5b664d1df",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 760,
+      "program_ref": "c664e30dd9c393eddc375150",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1192,
+      "program_ref": "c6f39898026716b8ed24b084",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 669,
+      "program_ref": "c7043b81fe780f221a6506fe",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 40,
+      "program_ref": "c93c7655def9fc5ada9d09d8",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 136,
+      "program_ref": "cdc4a9275ac5a27686c3506f",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1214,
+      "program_ref": "d1872120472f5a3c65778eaf",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 414,
+      "program_ref": "d3b92ea27c1e7dc967fe304d",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 254,
+      "program_ref": "d46bd88cb2c9c7d39d6ad02b",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1240,
+      "program_ref": "d4895cb704458c8861586840",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 237,
+      "program_ref": "d6a46fedac007b8fe4f5e04f",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 333,
+      "program_ref": "d892b38aef76ccad3d2b39dc",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 952,
+      "program_ref": "d8d6b885347cd8ba16f24012",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 206,
+      "program_ref": "db9bb972774dd1a7d6162f46",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 376,
+      "program_ref": "dc71eaf9244435637e17913a",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1454,
+      "program_ref": "dc847491fffdf9590fd74d23",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1533,
+      "program_ref": "dc887c36085a5e6f41828199",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1437,
+      "program_ref": "dd8dffc2a5259c223cad2173",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1144,
+      "program_ref": "deb8ec4ea8b487a21d2d6a7f",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 846,
+      "program_ref": "def369de6d87dbf7487d3ba5",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1470,
+      "program_ref": "df69f29f0af13f760d740ae9",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1005,
+      "program_ref": "e074f0b47165361e8bdbf26c",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 366,
+      "program_ref": "e0e061a06db7323f6a64301d",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1149,
+      "program_ref": "e23af596a2c232e369ff940d",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 62,
+      "program_ref": "e637f0242a95a647772af119",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 381,
+      "program_ref": "e68cc1c9eebdd0da0fc0a4ce",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1336,
+      "program_ref": "ea6bbe4234a43eb81a9be190",
+      "rank": 0,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 1581,
+      "program_ref": "eba593a94e835883bca2ac97",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1518,
+      "program_ref": "ed06fde7a3dd3167e29fc07a",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 590,
+      "program_ref": "eee9627c92e4836204a42a9c",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 12945452,
+      "delta": 547680,
+      "pc": 429,
+      "program_ref": "ef244b5df27f8e01f0837eda",
+      "rank": 1,
+      "source_duration": 12397772,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 144,
+        "codec_split_tiles": 144,
+        "highword_read_sectors": 2304,
+        "highword_write_sectors": 2304
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 942,
+      "program_ref": "ef9df414cdda9c06c824486c",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 350,
+      "program_ref": "f22e188bc5e32179a4239d4a",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1566,
+      "program_ref": "f7a0ebec5ad903755cdf864f",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 686,
+      "program_ref": "f89d4a5c2d97911e7c1a054d",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 782,
+      "program_ref": "fa65ad0b33a6cd95d9d2e9ba",
+      "rank": 0,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    },
+    {
+      "codec_duration": 271565173,
+      "delta": 11683840,
+      "pc": 1278,
+      "program_ref": "fb6c60f2bf12a2a0b3bfa0de",
+      "rank": 1,
+      "source_duration": 259881333,
+      "symbols": [
+        "exponent",
+        "ni",
+        "resultbits"
+      ],
+      "traffic": {
+        "codec_join_tiles": 3072,
+        "codec_split_tiles": 3072,
+        "highword_read_sectors": 49152,
+        "highword_write_sectors": 49152
+      }
+    }
+  ],
+  "affected_rank_programs": 144,
+  "baseline_software_ticks": 1728044080239,
+  "calendar_SHA256": "3a779bb418732165443119445c23a35688453843d6cb109303d860baa048e599",
+  "calibration": "PROVISIONAL_UNCALIBRATED",
+  "capacity": {
+    "IADD64_SHL64_logical_lanes_per_batch": 64,
+    "finite_data_staging_bytes": 1536,
+    "new_PHY_ports": 0,
+    "new_RF_ports": 0,
+    "replacement_or_area_credit": 0,
+    "upper32_sidecar_bytes_per_rank": 1572864
+  },
+  "codec_join_software_ticks": 1728924749687,
+  "cycle_unit": "abstract_software_tick",
+  "existing_endpoints": {
+    "highword_read_sector": 106,
+    "highword_write_sector": 126,
+    "mirrored_highword_write_ACK": 3,
+    "two_context_lookups": 24
+  },
+  "final_native_SHA256": "75a3997b07b492c4c1f8eeec55488c8ef754a49987aa297e1cc16648e49c3674",
+  "jobs": [],
+  "no_admission": {
+    "PHY": false,
+    "SSFF": false,
+    "hardware": false,
+    "rate": false,
+    "trained_checkpoint_fulltoken": false
+  },
+  "parent_calendar_commit": "5881a3b92",
+  "physical_tag_and_pair_ownership": "Actual software backing/capture, consume/reverse grant endpoints exercised by r21; physical provider still unqualified. No overwrite before joined generation retires.",
+  "proof": {
+    "dependency_edges": 356675,
+    "events": 108441,
+    "resource_slots_used": 449,
+    "status": "PASS_FINITE_INTERVAL_PROOF"
+  },
+  "source_match": true,
+  "source_primitive_counts_unchanged": true,
+  "source_scratch_homes_unchanged": true,
+  "split64_symbols": 432,
+  "status": "PASS_SOFTWARE_SPLIT64_TRAFFIC_AND_FINITE_INTERVAL_JOIN_ONLY",
+  "traffic": {
+    "codec_join_tiles": 231552,
+    "codec_split_tiles": 231552,
+    "highword_read_sectors": 3704832,
+    "highword_write_sectors": 3704832
+  }
+}

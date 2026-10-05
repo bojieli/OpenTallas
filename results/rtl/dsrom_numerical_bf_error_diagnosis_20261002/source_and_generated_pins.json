@@ -1,0 +1,26 @@
+{
+  "contract_pins": {
+    "results/rtl/dsrom_actual_element_numerical_prepare_20261002/input_fixture.json": "53f246827d4aad5fe3162ea82b5b759d6099fcaca9aafb77616d8ec15697c089",
+    "rtl/test/tb_dsrom_actual_element_numerical.sv": "0eb183ace3b0c0168aa32cefe997522202de587bf2f922d166003b38ca159202",
+    "tools/dsrom_actual_element_numerical_oracle.py": "058a008e92797efb285de03f822fcad83066a37c7a92cc24fe674dac2ea81daf",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "generated_CPP": {
+    "lines2750_2778": "                                                  | vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_f) \n                                                 >> \n                                                 (0x0000000fU \n                                                  & ((IData)(1U) \n                                                     - (IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_be)))))))));\n    vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s4_bad = 0U;\n    if ((1U & (~ ((IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_z) \n                  & (~ (IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_nf)))))) {\n        if ((((IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_nf) \n              | VL_LTS_III(11, 0x00feU, (IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_be))) \n             | VL_GTS_III(11, 0x07faU, (IData)(vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s3_be)))) {\n            vlSelfRef.__PVT__g_l__BRA__0__KET____DOT__u_m__DOT__s4_bad = 1U;\n        }\n    }\n    vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s4_y \n        = (((IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_z) \n            & (~ (IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_nf)))\n            ? 0U : ((((IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_nf) \n                      | VL_LTS_III(11, 0x00feU, (IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_be))) \n                     | VL_GTS_III(11, 0x07faU, (IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_be)))\n                     ? 0U : (VL_LTES_III(11, 1U, (IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_be))\n                              ? (((IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_s) \n                                  << 0x0000001fU) | \n                                 ((0x7f800000U & ((IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_be) \n                                                  << 0x00000017U)) \n                                  | vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_f))\n                              : (((IData)(vlSelfRef.__PVT__g_l__BRA__1__KET____DOT__u_m__DOT__s3_s) \n                                  << 0x0000001fU) | \n                                 (0x007fffffU & ((0x00800000U \n",
+    "path": "/tmp/dsrom-actual-element-numerical-bounded-build-r1-20261002/obj_bfcolumn/Vtb_bfcolumn_ref_ot_v41_bf16_lanes2__T7__0.cpp",
+    "sha256": "ae274b811d85ae1edc2f40f027c992e4541810763a49b7062517e015b22cbd3a"
+  },
+  "generated_sources": {
+    "cand_ot_v41_bmul2.sv": "1ee56c40e7f02f9a16c5e54bfafe29e1c9dbea49dfe0c78f3b1eae8bc9eab436",
+    "ref_ot_hdc_fp32_mul_pipe.sv": "14343c8348199b011cf5444a8a282bfde964f90cf30d5715acecfdd36aeff404",
+    "ref_ot_v41_bf16_lanes2.sv": "0170dae5f137849c8b419ef9fac48a1e32c624ffe31afa5792c5310691277d62",
+    "ref_ot_v41_bmul2.sv": "1962cba049379f71228c12108a6b529a93684272971a3d79284f0fb46e9d0ab3",
+    "ref_ot_v41_chain2.sv": "03f7018a0a9a9a0045831385cb1aeb71eecf4bea67861ae852bbbe1d2dcf9603",
+    "ref_ot_v41_fadd.sv": "60fe1d1857b986ad15cc7ed24664e02691f835e96d102d40a43971a4eadb67f3",
+    "ref_ot_v41_rom_elem_w10.sv": "867ae8b4d8ec80dbde19aa5104d6b91922bf20316a66d048170a221ce9c42311",
+    "ref_ot_v41_segtree2.sv": "5c9a5da0c1fd5b1cd4b191bba51b4e59a450c9db5304e9f2379c6b80555c2e43"
+  },
+  "prepared_commit": "c8a4358c27147138a4f05290c437737405eb2eed",
+  "terminal_commit": "bad80089193d5bf065a54c32efb1f3a4364b3b8e"
+}

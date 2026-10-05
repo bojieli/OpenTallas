@@ -1,0 +1,250 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 6.11980350384176,
+        "met": true,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": true,
+        "setup_violating_paths": 0,
+        "setup_wns_ns": 21.9029671710373,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-31T06:17:31.089478+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "ot_a3_probe_format_decode",
+    "clock_port": "clk",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "3f892e737057cdfb651c0022c913d00f5e1be02b960f9afe9f57b202f1d57fa9",
+        "size_bytes": 20796
+      },
+      {
+        "path": "rtl/abi3/ot_a3_format_pkg.sv",
+        "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+        "size_bytes": 7072
+      },
+      {
+        "path": "rtl/test/ot_a3_numeric_probes.sv",
+        "sha256": "4dd6cca31b30e61391367ec1ccd6350284b77b404849cf52b13755f995152078",
+        "size_bytes": 2221
+      }
+    ],
+    "top": "ot_a3_probe_format_decode"
+  },
+  "elapsed_seconds": 5.548,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-08-31T06:17:25.541650+00:00",
+  "git": {
+    "commit": "7a320bf3a7652393cf6632bf8fa22f9875c827b6",
+    "worktree_dirty": true
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--top",
+      "ot_a3_probe_format_decode",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "--source",
+      "rtl/test/ot_a3_numeric_probes.sv",
+      "--clock-period-ns",
+      "30",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--false-path-from",
+      "rst_n",
+      "--purpose",
+      "characterization",
+      "--output",
+      "results/physical_abi3/sky130hd/a3_numeric_probes/format_decode.json",
+      "--force"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 30.0,
+    "critical_path_ns": 8.0970328289627,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 123502031.06785583,
+    "fmax_search": {
+      "evaluations": 15,
+      "fmax_hz": 381378026.0707635,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 2.6220703125,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 1.875,
+          "setup_wns_ns": -0.5970343277638254
+        },
+        {
+          "clock_period_ns": 2.34375,
+          "setup_wns_ns": -0.22203417510815515
+        },
+        {
+          "clock_period_ns": 2.578125,
+          "setup_wns_ns": -0.03453815109447454
+        },
+        {
+          "clock_period_ns": 2.607421875,
+          "setup_wns_ns": -0.011098233757242401
+        },
+        {
+          "clock_period_ns": 2.61474609375,
+          "setup_wns_ns": -0.005234035575321473
+        },
+        {
+          "clock_period_ns": 2.618408203125,
+          "setup_wns_ns": -0.002306155331973902
+        },
+        {
+          "clock_period_ns": 2.6202392578125,
+          "setup_wns_ns": -0.0008419931656889117
+        },
+        {
+          "clock_period_ns": 2.6220703125,
+          "setup_wns_ns": 0.0006219469559848739
+        },
+        {
+          "clock_period_ns": 2.63671875,
+          "setup_wns_ns": 0.012341905624600944
+        },
+        {
+          "clock_period_ns": 2.6953125,
+          "setup_wns_ns": 0.05921396873767305
+        },
+        {
+          "clock_period_ns": 2.8125,
+          "setup_wns_ns": 0.15296608856982066
+        },
+        {
+          "clock_period_ns": 3.75,
+          "setup_wns_ns": 0.9029659497919387
+        },
+        {
+          "clock_period_ns": 7.5,
+          "setup_wns_ns": 3.9029660608142445
+        },
+        {
+          "clock_period_ns": 15.0,
+          "setup_wns_ns": 9.902966726948078
+        },
+        {
+          "clock_period_ns": 30.0,
+          "setup_wns_ns": 21.9029671710373
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 6.11980350384176,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 6.11980350384176,
+      "setup_tns": 0.0,
+      "setup_wns": 21.9029671710373
+    },
+    "sdc_clock_period_library_units": 30.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 21.9029671710373,
+    "timing_met": true
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 30000.0,
+    "cell_area_um2": 1531.468,
+    "cell_count": 145,
+    "cell_types_used": 29,
+    "chip_area_um2": 1531.4688,
+    "combinational_cell_count": 112,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "0ddbf2c9be4b230be28f694dd7e95fe2442eac1baad73fe88af2021ee496c08b",
+      "raw_netlist_sha256": "0ddbf2c9be4b230be28f694dd7e95fe2442eac1baad73fe88af2021ee496c08b",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 825.792,
+    "sequential_cell_count": 33,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 30.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

@@ -1,0 +1,106 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+OT_CORNER ss
+OT_WS -8.382550209518058e-11
+OT_TNS -4.521446328453749e-9
+Startpoint: u_me.s3_x[94]$_SDFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk (in)
+  58.57   58.57 ^ wire127624/Y (BUFx16f_ASAP7_75t_R)
+  69.31  127.88 ^ wire127623/Y (BUFx24_ASAP7_75t_R)
+  80.62  208.50 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.76  247.26 ^ clkbuf_1_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  36.96  284.22 ^ clkbuf_1_1_1_clk/Y (BUFx24_ASAP7_75t_R)
+  38.62  322.84 ^ clkbuf_1_1_2_clk/Y (BUFx24_ASAP7_75t_R)
+  38.90  361.74 ^ clkbuf_2_2_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.72  399.46 ^ clkbuf_2_2_1_clk/Y (BUFx24_ASAP7_75t_R)
+  38.97  438.43 ^ clkbuf_2_2_2_clk/Y (BUFx24_ASAP7_75t_R)
+  38.40  476.83 ^ clkbuf_3_5_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.49  516.31 ^ clkbuf_4_11_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.92  556.23 ^ clkbuf_4_11_1_clk/Y (BUFx24_ASAP7_75t_R)
+  39.53  595.76 ^ clkbuf_6_44_0_clk/Y (BUFx24_ASAP7_75t_R)
+  45.42  641.19 ^ clkbuf_7_88_0_clk/Y (BUFx24_ASAP7_75t_R)
+  47.27  688.46 ^ clkbuf_9_353__f_clk/Y (BUFx24_ASAP7_75t_R)
+  46.61  735.07 ^ clkbuf_leaf_1671_clk/Y (BUFx24_ASAP7_75t_R)
+   1.94  737.01 ^ u_me.s3_x[94]$_SDFF_PN0_/CLK (DFFHQNx2_ASAP7_75t_R)
+  85.63  822.64 ^ u_me.s3_x[94]$_SDFF_PN0_/QN (DFFHQNx2_ASAP7_75t_R)
+  65.67  888.31 ^ _0381101_/Y (AND4x2_ASAP7_75t_R)
+  31.08  919.39 ^ rebuffer162372/Y (BUFx6f_ASAP7_75t_R)
+  51.89  971.28 ^ _0381102_/Y (AND4x1_ASAP7_75t_R)
+  20.17  991.45 v _0381166_/Y (INVx1_ASAP7_75t_R)
+  60.36 1051.81 v _0381167_/Y (OA31x2_ASAP7_75t_R)
+  47.08 1098.89 v place108734/Y (BUFx12f_ASAP7_75t_R)
+  72.85 1171.74 v rebuffer162385/Y (BUFx2_ASAP7_75t_R)
+  27.88 1199.61 v rebuffer127767/Y (BUFx12f_ASAP7_75t_R)
+  24.71 1224.32 ^ _0381193_/Y (AOI22x1_ASAP7_75t_R)
+  48.74 1273.06 ^ _0381209_/Y (OA31x2_ASAP7_75t_R)
+  37.30 1310.36 ^ _0381210_/Y (MAJx2_ASAP7_75t_R)
+  36.95 1347.31 ^ _0381220_/Y (MAJx2_ASAP7_75t_R)
+  42.15 1389.46 ^ _0381221_/Y (MAJx2_ASAP7_75t_R)
+  40.80 1430.26 ^ _0381225_/Y (MAJx2_ASAP7_75t_R)
+  26.54 1456.80 ^ place105457/Y (BUFx6f_ASAP7_75t_R)
+  10.43 1467.23 v _0381246_/Y (NAND2x1_ASAP7_75t_R)
+  48.14 1515.37 v _0381251_/Y (AO32x1_ASAP7_75t_R)
+  45.56 1560.93 ^ _0381252_/Y (XNOR2x2_ASAP7_75t_R)
+   0.06 1560.99 ^ u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+        1560.99   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+   0.00  833.00   clock source latency
+   0.00  833.00 ^ clk (in)
+  56.78  889.78 ^ wire127624/Y (BUFx16f_ASAP7_75t_R)
+  67.31  957.09 ^ wire127623/Y (BUFx24_ASAP7_75t_R)
+  78.16 1035.25 ^ clkbuf_0_clk/Y (BUFx24_ASAP7_75t_R)
+  37.66 1072.91 ^ clkbuf_1_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  36.09 1109.00 ^ clkbuf_1_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  37.69 1146.69 ^ clkbuf_1_0_2_clk/Y (BUFx24_ASAP7_75t_R)
+  38.04 1184.73 ^ clkbuf_2_0_0_clk/Y (BUFx24_ASAP7_75t_R)
+  36.72 1221.45 ^ clkbuf_2_0_1_clk/Y (BUFx24_ASAP7_75t_R)
+  37.60 1259.05 ^ clkbuf_2_0_2_clk/Y (BUFx24_ASAP7_75t_R)
+  37.78 1296.83 ^ clkbuf_3_1_0_clk/Y (BUFx24_ASAP7_75t_R)
+  38.39 1335.22 ^ clkbuf_4_3_0_clk/Y (BUFx24_ASAP7_75t_R)
+  39.31 1374.54 ^ clkbuf_4_3_1_clk/Y (BUFx24_ASAP7_75t_R)
+  39.32 1413.85 ^ clkbuf_6_14_0_clk/Y (BUFx24_ASAP7_75t_R)
+  40.82 1454.67 ^ clkbuf_7_29_0_clk/Y (BUFx24_ASAP7_75t_R)
+  44.98 1499.65 ^ clkbuf_9_117__f_clk/Y (BUFx24_ASAP7_75t_R)
+  45.12 1544.77 ^ clkbuf_leaf_629_clk/Y (BUFx24_ASAP7_75t_R)
+   1.67 1546.44 ^ u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00 1486.44   clock uncertainty
+   6.25 1492.69   clock reconvergence pessimism
+ -15.52 1477.17   library setup time
+        1477.17   data required time
+---------------------------------------------------------
+        1477.17   data required time
+        -1560.99   data arrival time
+---------------------------------------------------------
+         -83.83   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 189
+OT_WS_REG_D -83.825500
+OT_WS_OUT 1e9
+OT_WS_R2R -83.825500
+OT_WS_I2R INF

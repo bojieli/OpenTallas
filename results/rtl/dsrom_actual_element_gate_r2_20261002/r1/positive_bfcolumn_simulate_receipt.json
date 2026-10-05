@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "./obj_bfcolumn/Vtb_bfcolumn"
+  ],
+  "case": "bfcolumn",
+  "elapsed_seconds": 0.05697916680946946,
+  "explicit_DIFF": false,
+  "log": "positive_bfcolumn_simulate.log",
+  "log_sha256": "e6382cfabc0b9363e336a9a7ef681ee91aa369d48177abe74a6a169ba771b13b",
+  "metrics": {
+    "cgroup.procs": "2554368",
+    "cpu.max": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "2526990336",
+    "memory.swap.max": "0"
+  },
+  "pass_marker": null,
+  "phase": "simulate",
+  "remaining_seconds_at_start": 59.983094885014,
+  "returncode": 1,
+  "variant": "positive"
+}

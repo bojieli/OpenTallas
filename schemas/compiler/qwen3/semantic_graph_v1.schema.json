@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/semantic_graph_v1.schema.json",
+  "title": "OpenTallas Qwen3 operator-complete semantic graph v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["coverage", "execution_contract", "graph_id", "model", "nodes", "numeric_contract", "operators", "schema", "source_lock"],
+  "properties": {
+    "coverage": {"type": "object"},
+    "execution_contract": {"type": "object"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "model": {"type": "object"},
+    "nodes": {
+      "type": "array",
+      "minItems": 616,
+      "maxItems": 616,
+      "items": {"$ref": "#/$defs/node"}
+    },
+    "numeric_contract": {"type": "object"},
+    "operators": {
+      "type": "array",
+      "minItems": 9,
+      "maxItems": 9,
+      "items": {"$ref": "#/$defs/operator"}
+    },
+    "schema": {"const": "opentallas.qwen3.semantic_graph.v1"},
+    "source_lock": {"type": "object"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["index", "inputs", "kind", "layer", "node_id", "outputs", "tensors"],
+      "properties": {
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"items": {"minLength": 1, "type": "string"}, "maxItems": 2, "type": "array"},
+        "kind": {"enum": ["GQA_CAUSAL_ATTENTION", "KV_COMMIT", "LAST_TOKEN_SELECT", "LINEAR", "RESIDUAL_ADD", "RMS_NORM", "ROPE", "SILU_MUL", "TOKEN_EMBEDDING_LOOKUP"]},
+        "layer": {"anyOf": [{"maximum": 35, "minimum": 0, "type": "integer"}, {"type": "null"}]},
+        "node_id": {"pattern": "^node\\.[0-9]{4}$", "type": "string"},
+        "outputs": {"items": {"minLength": 1, "type": "string"}, "maxItems": 2, "minItems": 1, "type": "array"},
+        "tensors": {"items": {"minLength": 1, "type": "string"}, "maxItems": 1, "type": "array"}
+      }
+    },
+    "operator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arithmetic", "kind", "lowering", "semantics", "source_symbol", "state_effect"],
+      "properties": {
+        "arithmetic": {"minLength": 1, "type": "string"},
+        "kind": {"minLength": 1, "type": "string"},
+        "lowering": {"minLength": 1, "type": "string"},
+        "semantics": {"minLength": 1, "type": "string"},
+        "source_symbol": {"minLength": 1, "type": "string"},
+        "state_effect": {"minLength": 1, "type": "string"}
+      }
+    }
+  }
+}

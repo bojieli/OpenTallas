@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS_STRUCTURE_ONLY",
+  "macros": [
+    "\\g_mac[0].g_pp.u_rom0",
+    "\\g_mac[0].g_pp.u_rom1",
+    "\\g_mac[1].g_pp.u_rom0",
+    "\\g_mac[1].g_pp.u_rom1"
+  ],
+  "icg_count": 8,
+  "distinct_wake_flops": [
+    "\\g_wake.g_leaf[0].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[1].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[2].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[3].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[4].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[5].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[6].wake$_DFF_PN1_",
+    "\\g_wake.g_leaf[7].wake$_DFF_PN1_"
+  ],
+  "flop_count": 91733,
+  "wake_control_pins": {
+    "CLK": "clk",
+    "D": "_000046_",
+    "RESETN": "_383944_",
+    "SETN": "rst_n"
+  },
+  "mapped_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea"
+}

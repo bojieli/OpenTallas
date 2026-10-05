@@ -1,0 +1,75 @@
+{
+  "acceptance": {
+    "bbox_um": [
+      0.0,
+      0.0,
+      32.5,
+      11.5
+    ],
+    "device_counts": {
+      "sky130_fd_pr__nfet_01v8": 6,
+      "sky130_fd_pr__pfet_01v8": 4
+    },
+    "drc_errors_max": 0,
+    "lvs_final_result": "Circuits match uniquely.",
+    "net_count": 15,
+    "programming_via1": {
+      "absent_column_count": 5,
+      "expected_delta": 1,
+      "present_column_count": 6
+    }
+  },
+  "artifacts": [
+    "sky130_rom_slice.mag",
+    "sky130_rom_slice.gds",
+    "sky130_rom_slice.ext",
+    "sky130_rom_slice.extracted.spice",
+    "sky130_rom_slice.pex.spice",
+    "magic.log",
+    "netgen.stdout",
+    "lvs.log"
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "legal geometry under the exact installed public SKY130A Magic deck",
+      "schematic-versus-layout connectivity for the two-column via-programmed ROM slice",
+      "one physical via1 programming difference between otherwise matched present and absent columns",
+      "device and coupling-capacitance extraction from the drawn local geometry"
+    ],
+    "evidence_class": "open_pdk_drc_lvs_and_extraction",
+    "forbidden_inferences": [
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "availability or economics of target-foundry late-via ROM personalization",
+      "full-array decoder, wordline, bitline, sense, repair, simultaneous-read, IR-drop, noise, or thermal behavior",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "experiment_id": "sky130_via_rom_physical_v1",
+  "inputs": {
+    "generator": "spice/sky130_rom_slice/generate_layout.tcl",
+    "schematic": "spice/sky130_rom_slice/schematic.spice"
+  },
+  "pdk_lock": "configs/pdk/sky130_physical_lock.json",
+  "reports": {
+    "artifacts": "results/spice/sky130_physical/artifacts",
+    "json": "results/spice/sky130_physical/physical.json",
+    "markdown": "results/spice/sky130_physical/REPORT.md"
+  },
+  "schema_version": 1,
+  "top_cell": "sky130_rom_slice",
+  "top_ports": [
+    "VGND",
+    "VPWR",
+    "WL_PRESENT",
+    "EN_PRESENT",
+    "PRE_PRESENT",
+    "Q_PRESENT",
+    "WL_ABSENT",
+    "EN_ABSENT",
+    "PRE_ABSENT",
+    "Q_ABSENT"
+  ]
+}

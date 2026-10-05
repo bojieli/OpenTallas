@@ -1,0 +1,73 @@
+--- captured-runtime
+
++++ rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv
+
+@@ -25,7 +25,6 @@
+
+     parameter integer TWS = 0,
+     parameter integer ORD = 0,
+     parameter integer SCALE_LOCAL = 0,
+-    parameter integer MEM_EXTRA = 0,
+     parameter integer D = 2
+ ) (
+     input  wire              clk,
+@@ -51,7 +50,7 @@
+
+     input  wire              r_valid,
+     input  wire [511:0]      r_data,
+     input  wire              r_last,
+-    input  wire [((D > 2) ? 2 : 1)-1:0] r_rank,
++    input  wire              r_rank,
+     input  wire              r_err,
+     output wire [11:0]       prog_base,
+     output wire              prog_re,
+@@ -67,13 +66,12 @@
+
+     output wire [7:0]        s_vwaddr,
+     output wire [511:0]      s_vwdata,
+     // core memories
+-    output wire              wrom_re,         // the stream unit's weight-ROM read (must never assert)
+     output wire              int8_wrom_re,
+     output wire [23:0]       int8_wrom_addr,
+     output wire              scale_re,
+-    output wire [(G >> SMIN)-1:0]      scale_gre,
+-    output wire [(G >> SMIN)*24-1:0]   scale_addr,
+-    input  wire [(G >> SMIN)*16*16-1:0] scale_q,
++    output wire [G-1:0]      scale_gre,
++    output wire [G*24-1:0]   scale_addr,
++    input  wire [G*16*16-1:0] scale_q,
+     output wire [SW-1:0]     crom_re,
+     output wire [SW*24-1:0]  crom_addr,
+     input  wire [SW*64-1:0]  crom_q,
+@@ -94,10 +92,10 @@
+
+     output wire [23:0]       vw_mx_addr,
+     output wire [15:0]       vw_mx_mask,
+     output wire [511:0]      vw_mx_data,
+-    output wire [(G >> SMIN)-1:0]      vw_me_we,
+-    output wire [(G >> SMIN)*24-1:0]   vw_me_addr,
+-    output wire [(G >> SMIN)*16-1:0]   vw_me_mask,
+-    output wire [(G >> SMIN)*16*32-1:0] vw_me_data,
++    output wire [G-1:0]      vw_me_we,
++    output wire [G*24-1:0]   vw_me_addr,
++    output wire [G*16-1:0]   vw_me_mask,
++    output wire [G*16*32-1:0] vw_me_data,
+     output wire              me_ov,
+     // array spine: x chunk port and tile fabric
+     output wire [(1<<SMAX)-1:0]    vx_re,
+@@ -128,12 +126,12 @@
+
+         .SU_VEC(1),.SW(SW),.LV(LV),.KV_FP8(1),
+         .INT8_WEIGHT(1),.INT8_SCALE_WCS_BASE(1),.INT8_EMBED(0),.QWEN_FULLSHAPE(QWEN_FULLSHAPE),
+         .ME_STALL(0),.ME_IDLE_GATE(ME_IDLE_GATE),
+-        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL),.MEM_EXTRA(MEM_EXTRA)) core (
++        .SMIN(SMIN),.SMAX(SMAX),.TCUT(TCUT),.BD(BD),.XVM(XVM),.NWS(NWS),.TWS(TWS),.ORD(ORD),.SCALE_LOCAL(SCALE_LOCAL)) core (
+         .clk(clk),.rst_n(rst_n),.start(core_start),.token(core_tok[NW-1:0]),.pos(core_pos[NW-1:0]),
+         .done(core_done),.next_token(core_ntok_c),.next_val(core_nval),
+         .cycles(core_cycles),.fault(core_fault),
+         .prog_re(prog_re),.prog_addr(prog_addr),.prog_q(prog_q),
+-        .wrom_re(wrom_re),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
++        .wrom_re(),.wrom_addr(),.wrom_q({(G*W*16){1'b0}}),
+         .int8_wrom_re(int8_wrom_re),.int8_wrom_addr(int8_wrom_addr),
+         .scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr),.scale_q(scale_q),
+         .embed_code_re(),.embed_code_addr(),.embed_code_q(512'd0),

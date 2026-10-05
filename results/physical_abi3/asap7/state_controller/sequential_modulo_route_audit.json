@@ -1,0 +1,61 @@
+{
+  "scope": "Historical sequential-modulo state controller before independent payload capture and parallel admission; final extracted result at tested 1 ns, not current-source closure.",
+  "record": "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns.json",
+  "record_sha256": "3cb21807a2b44949aa8cd1e3adc545df8ad53fdb7b099c51465e952f4d1cd4d6",
+  "source_bindings": [
+    {
+      "launch_path": "rtl/abi3/ot_a3_pkg.sv",
+      "retained_matching_source": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+      "matches_current_source": true
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_state_controller.sv",
+      "retained_matching_source": "results/rtl/state_payload_capture/before.sv",
+      "sha256": "f5640be1d6bef809fb31f15c45bde568efe11b4fe2a76e4ea8e7b793c8a581df",
+      "matches_current_source": false
+    }
+  ],
+  "verified_retained_artifacts": {
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/1_2_yosys.v": "e0296d666d818a63f1bd8d579c0d85d88122755f84d886d738d4e6dd4872f50f",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/6_final.v": "60d8e2b2879a3571774603f754d9444081382a5089d28d64e918f1e2aec99477",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/6_finish.rpt": "9e91e6dd62908f076f83119b56c947365fd7a94b5a28423bf1d95d289131beaf",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/config.mk": "3432084dd8406d535c09e02cfb03ea2a6eecbc7e84cdd41f8b5be68fa3c30308",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/state_controller/pnr_sequential_modulo_cts12_1ns_artifacts/metadata.json": "f3ddc1a99364eed400fdb6b684a7afab6e479570f5c1e15b6eb8df32e0022eae"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0560803,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 1895.0,
+        "setup_wns_ns": -0.843259,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "routed_cell_area_um2": 4409.3,
+  "critical_path": {
+    "startpoint": "op_descriptor_id[2]",
+    "endpoint": "count_commits[26]",
+    "setup_slack_ns": -0.843259
+  },
+  "next_action": "Compare payload-capture and parallel-admission routes when complete; both already running. Do not restart or infer tested frequency from slack-extrapolated Fmax."
+}

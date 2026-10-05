@@ -1,0 +1,30 @@
+abi3 (unittest.loader._FailedTest) ... ERROR
+test_all_actual_CB_widths_boundaries (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_all_full_shapes_rank_order_and_tie_filter (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_byte_exact_model_replay (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_checkpoint_explicitly_refuses_caller_credit (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_cycle_comparison_and_pipeline_cost (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_exhaustive_modulo_and_priority (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_model_complete_shapes_no_guessed_clock_slot_credit (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_mutants_detected (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_popcount_exhaustive16_and_full_P (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+test_retained_no_match_control_contract (test_uarch_topk_integer_tree_model.IntegerTree) ... ok
+
+======================================================================
+ERROR: abi3 (unittest.loader._FailedTest)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: abi3
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/unittest/loader.py", line 470, in _find_test_path
+    package = self._get_module_from_name(name)
+  File "/usr/lib/python3.10/unittest/loader.py", line 377, in _get_module_from_name
+    __import__(name)
+  File "/tmp/opentallas-H3-scalar-contract-model-20261002/tests/abi3/__init__.py", line 31, in <module>
+    from runtime.abi3.capability import Capability
+ModuleNotFoundError: No module named 'runtime.abi3'
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.093s
+
+FAILED (errors=1)

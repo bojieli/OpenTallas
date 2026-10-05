@@ -1,0 +1,129 @@
+{
+  "baseline": {
+    "candidate": {
+      "actual_execution": false,
+      "physical_admission": false,
+      "retired_source_PCs": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "status": "PASS_SOURCE_RF_RESIDENCE_ONLY",
+      "unconsumed_releases": [
+        {
+          "PC": 1,
+          "version": "DeepSeek.1.attn_x.55"
+        },
+        {
+          "PC": 5,
+          "version": "DeepSeek.5.win_new.61"
+        },
+        {
+          "PC": 8,
+          "version": "DeepSeek.8.o.65"
+        }
+      ]
+    },
+    "original": {
+      "PC": 9,
+      "listed_last_use": null,
+      "overlap": [
+        [
+          1,
+          32
+        ],
+        [
+          1,
+          33
+        ]
+      ],
+      "rank": 0,
+      "retained": "DeepSeek.8.o.65",
+      "retired_source_PCs": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "FAIL_SOURCE_RF_RESIDENCE",
+      "writer": "DeepSeek.9.zpart.67"
+    }
+  },
+  "original_live": {
+    "candidate": {
+      "actual_execution": false,
+      "physical_admission": false,
+      "retired_source_PCs": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "status": "PASS_SOURCE_RF_RESIDENCE_ONLY",
+      "unconsumed_releases": [
+        {
+          "PC": 1,
+          "version": "DeepSeek.1.attn_x.55"
+        },
+        {
+          "PC": 5,
+          "version": "DeepSeek.5.win_new.61"
+        },
+        {
+          "PC": 8,
+          "version": "DeepSeek.8.o.65"
+        }
+      ]
+    },
+    "original": {
+      "PC": 9,
+      "listed_last_use": null,
+      "overlap": [
+        [
+          1,
+          32
+        ],
+        [
+          1,
+          33
+        ]
+      ],
+      "rank": 0,
+      "retained": "DeepSeek.8.o.65",
+      "retired_source_PCs": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "status": "FAIL_SOURCE_RF_RESIDENCE",
+      "writer": "DeepSeek.9.zpart.67"
+    }
+  },
+  "status": "FAIL_BASELINE_AND_ACTUAL_MANIFEST_REPLAY_EQUALITY"
+}

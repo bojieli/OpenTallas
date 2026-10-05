@@ -1,0 +1,647 @@
+{
+ "schema": "opentallas.v41-hbm-speculation-methods.v1",
+ "source_commit": "f829666927fa0bfdd28e162ed2c302565022089b",
+ "generated_utc": "2026-10-03T05:35:47Z",
+ "status": "opt-in model rows; NOT adopted; defaults and pinned files unchanged",
+ "method_identity": {
+  "finding": "the repo's V4.1 'MTP' IS DSpark: the checkpoint's num_nextn_predict_layers = 3 modules mtp.0-2 are the three serial stages of one DSpark block drafter (dspark_block_size 5, noise token 128799, target layers 37/38/39, MoE 128 experts top-3, Markov head rank 256); V41_TAU 3.649 was measured with the vendor forward_spec; the 328b5fff golden/ISA evidence is DSpark (drafter: dspark). No V3-style chained MTP exists in V4.1, so DSpark is the only real-GPU-stack method.",
+  "what_the_rows_got_wrong": [
+   "draft cost ASSUMED 3/40 of AR (uarch_model.V41_DRAFT_FRACTION) or the audit's 49.9 us; a DSpark call is 3 full stages at 5 slots + LM head x 5 + 5 serial Markov argmax steps (priced here)",
+   "verify union from the uniform formula (34.6 at P 6) or one synthetic window (W19 ISA, 27.6); measured here on real greedy continuations"
+  ],
+  "structure": {
+   "draft_block": 5,
+   "verify_width_max": 6,
+   "stages": 3,
+   "stage_kind": "full V4.1 block, sliding window 128 + the 5 block slots, no compressor/indexer/Engram",
+   "semi_autoregressive": "stages parallel over the 5 slots; the Markov head chains the 5 argmaxes sequentially (each slot's bias depends on the previous slot's token)",
+   "drafter_inputs": "verified (bonus) token + attention input of layers 37-39 (mean over hc) at the last accepted position: the draft cannot start before the verify head"
+  }
+ },
+ "drafter_parameters": {
+  "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "tensors": 2401,
+  "bytes_total": 7932874632,
+  "bytes_by_group": {
+   "attention": 380259840,
+   "other": 15794312,
+   "routed_experts": 7219445760,
+   "shared_expert": 106272000,
+   "main_proj": 78720000,
+   "markov_head": 132382720
+  },
+  "bytes_per_routed_expert": 18800640,
+  "bytes_read_per_call_excl_routed": 713428872,
+  "note": "head and embed are tied to the backbone's (no separate tensors)"
+ },
+ "reproduction_gate": {
+  "ar_us": 442.14,
+  "verify_p6_w19_union_us": 715.82,
+  "expected": {
+   "ar_us": 442.14,
+   "mtp_pass_us": 715.82,
+   "drafter_us": 49.9
+  },
+  "ok": true
+ },
+ "union": {
+  "source": "router_union.json",
+  "measured_mean_by_P": {
+   "1": 6.0,
+   "2": 10.396,
+   "3": 14.24,
+   "4": 17.739,
+   "5": 20.927,
+   "6": 23.904,
+   "7": 26.71,
+   "8": 29.363
+  },
+  "uniform_by_P": {
+   "1": 6.0,
+   "2": 11.906,
+   "3": 17.72,
+   "4": 23.443,
+   "5": 29.077,
+   "6": 34.623,
+   "7": 40.082,
+   "8": 45.455
+  },
+  "w19_isa_p6_mean": 27.575,
+  "drafter_measured_per_stage": [
+   8.345,
+   8.297,
+   7.272
+  ],
+  "drafter_uniform": 14.313
+ },
+ "draft": {
+  "measured_union": {
+   "total_us": 51.88,
+   "stages_us": 41.19,
+   "head_us": 3.39,
+   "markov_step_us": 1.46,
+   "markov_steps": 5,
+   "parts_us": {
+    "sm": 9.59,
+    "barrier": 2.04,
+    "collective": 23.89,
+    "local": 14.86,
+    "fetch": 1.49
+   },
+   "flags": [
+    "SM shape bf16 K=256 R=43 priced by line rate (not measured)",
+    "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
+    "SM shape fp8 K=15360 R=2 priced by line rate (not measured)",
+    "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
+   ]
+  },
+  "uniform_union": {
+   "total_us": 53.82,
+   "stages_us": 43.13,
+   "head_us": 3.39,
+   "markov_step_us": 1.46,
+   "markov_steps": 5,
+   "parts_us": {
+    "sm": 10.86,
+    "barrier": 2.04,
+    "collective": 23.89,
+    "local": 14.86,
+    "fetch": 2.17
+   },
+   "flags": [
+    "SM shape bf16 K=256 R=43 priced by line rate (not measured)",
+    "SM shape bf16 K=5120 R=43 priced by line rate (not measured)",
+    "SM shape fp8 K=15360 R=2 priced by line rate (not measured)",
+    "collective o-group tree reduce (8 contributors) + multicast: extrapolated"
+   ]
+  },
+  "ratio_to_ar_1m": 0.1173,
+  "assumed_ratio": 0.075,
+  "w19_audit_drafter_us": 49.9
+ },
+ "tau_sets": {
+  "current_headline_mixed_n36 (gamma<5 derived by truncation of the walk survival)": {
+   "1": 1.8187,
+   "2": 2.4684,
+   "3": 2.9653,
+   "4": 3.3431,
+   "5": 3.6486
+  },
+  "agentic_all5_pilot_n30 (exact replay)": {
+   "1": 1.9382,
+   "2": 2.7736,
+   "3": 3.469,
+   "4": 4.1126,
+   "5": 4.5554
+  },
+  "agentic_multiturn_pilot (exact replay)": {
+   "1": 1.9042,
+   "2": 2.6629,
+   "3": 3.225,
+   "4": 3.7487,
+   "5": 4.0222
+  }
+ },
+ "contexts": {
+  "1048576": {
+   "ar_us": 442.14,
+   "ar_tokens_s": 2261.7,
+   "verify_by_P": {
+    "2": {
+     "measured_union_us": 498.33,
+     "uniform_union_us": 504.5,
+     "parts_measured_us": {
+      "sm": 82.3,
+      "barrier": 22.29,
+      "collective": 256.34,
+      "local": 122.71,
+      "fetch": 14.69
+     },
+     "mean_union_measured": 10.396,
+     "mean_union_uniform": 11.906
+    },
+    "3": {
+     "measured_union_us": 552.71,
+     "uniform_union_us": 566.91,
+     "parts_measured_us": {
+      "sm": 92.55,
+      "barrier": 22.29,
+      "collective": 275.8,
+      "local": 141.94,
+      "fetch": 20.12
+     },
+     "mean_union_measured": 14.24,
+     "mean_union_uniform": 17.72
+    },
+    "4": {
+     "measured_union_us": 601.89,
+     "uniform_union_us": 625.17,
+     "parts_measured_us": {
+      "sm": 101.88,
+      "barrier": 22.29,
+      "collective": 291.47,
+      "local": 161.18,
+      "fetch": 25.07
+     },
+     "mean_union_measured": 17.739,
+     "mean_union_uniform": 23.443
+    },
+    "5": {
+     "measured_union_us": 653.6,
+     "uniform_union_us": 686.84,
+     "parts_measured_us": {
+      "sm": 110.39,
+      "barrier": 22.29,
+      "collective": 310.93,
+      "local": 180.41,
+      "fetch": 29.57
+     },
+     "mean_union_measured": 20.927,
+     "mean_union_uniform": 29.077
+    },
+    "6": {
+     "measured_union_us": 700.85,
+     "uniform_union_us": 744.58,
+     "parts_measured_us": {
+      "sm": 118.32,
+      "barrier": 22.29,
+      "collective": 326.81,
+      "local": 199.64,
+      "fetch": 33.78
+     },
+     "mean_union_measured": 23.904,
+     "mean_union_uniform": 34.623,
+     "w19_isa_union_us": 715.82
+    }
+   },
+   "rates": {
+    "current_headline_mixed_n36 (gamma<5 derived by truncation of the walk survival)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.8187,
+       "step_us": 550.21,
+       "tokens_s": 3305.5,
+       "speedup_vs_ar": 1.461
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.4684,
+       "step_us": 604.59,
+       "tokens_s": 4082.8,
+       "speedup_vs_ar": 1.805
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 2.9653,
+       "step_us": 653.77,
+       "tokens_s": 4535.7,
+       "speedup_vs_ar": 2.005
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 3.3431,
+       "step_us": 705.48,
+       "tokens_s": 4738.8,
+       "speedup_vs_ar": 2.095
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 3.6486,
+       "step_us": 752.73,
+       "tokens_s": 4847.2,
+       "speedup_vs_ar": 2.143
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 4847.2
+    },
+    "agentic_all5_pilot_n30 (exact replay)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.9382,
+       "step_us": 550.21,
+       "tokens_s": 3522.7,
+       "speedup_vs_ar": 1.558
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.7736,
+       "step_us": 604.59,
+       "tokens_s": 4587.6,
+       "speedup_vs_ar": 2.028
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 3.469,
+       "step_us": 653.77,
+       "tokens_s": 5306.1,
+       "speedup_vs_ar": 2.346
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 4.1126,
+       "step_us": 705.48,
+       "tokens_s": 5829.5,
+       "speedup_vs_ar": 2.577
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 4.5554,
+       "step_us": 752.73,
+       "tokens_s": 6051.8,
+       "speedup_vs_ar": 2.676
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 6051.8
+    },
+    "agentic_multiturn_pilot (exact replay)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.9042,
+       "step_us": 550.21,
+       "tokens_s": 3460.9,
+       "speedup_vs_ar": 1.53
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.6629,
+       "step_us": 604.59,
+       "tokens_s": 4404.5,
+       "speedup_vs_ar": 1.947
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 3.225,
+       "step_us": 653.77,
+       "tokens_s": 4932.9,
+       "speedup_vs_ar": 2.181
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 3.7487,
+       "step_us": 705.48,
+       "tokens_s": 5313.7,
+       "speedup_vs_ar": 2.349
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 4.0222,
+       "step_us": 752.73,
+       "tokens_s": 5343.5,
+       "speedup_vs_ar": 2.363
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 5343.5
+    }
+   },
+   "headline_comparison_tau_3649_gamma5": {
+    "current_W19_row": {
+     "step_us": 765.72,
+     "tokens_s": 4765.4,
+     "note": "uarch_model.HBM_W19 (1M only): W19 ISA one-window union + audit drafter 49.9 us"
+    },
+    "assumed_3_40_draft": {
+     "step_us": 734.01,
+     "tokens_s": 4971.3
+    },
+    "dspark_priced": {
+     "step_us": 752.73,
+     "tokens_s": 4847.7
+    },
+    "dspark_priced_uniform_union": {
+     "step_us": 798.4,
+     "tokens_s": 4570.4
+    }
+   }
+  },
+  "200000": {
+   "ar_us": 441.3,
+   "ar_tokens_s": 2266.0,
+   "verify_by_P": {
+    "2": {
+     "measured_union_us": 497.33,
+     "uniform_union_us": 503.49,
+     "parts_measured_us": {
+      "sm": 82.3,
+      "barrier": 22.29,
+      "collective": 256.34,
+      "local": 121.71,
+      "fetch": 14.69
+     },
+     "mean_union_measured": 10.396,
+     "mean_union_uniform": 11.906
+    },
+    "3": {
+     "measured_union_us": 551.55,
+     "uniform_union_us": 565.75,
+     "parts_measured_us": {
+      "sm": 92.55,
+      "barrier": 22.29,
+      "collective": 275.8,
+      "local": 140.78,
+      "fetch": 20.12
+     },
+     "mean_union_measured": 14.24,
+     "mean_union_uniform": 17.72
+    },
+    "4": {
+     "measured_union_us": 600.57,
+     "uniform_union_us": 623.85,
+     "parts_measured_us": {
+      "sm": 101.88,
+      "barrier": 22.29,
+      "collective": 291.47,
+      "local": 159.86,
+      "fetch": 25.07
+     },
+     "mean_union_measured": 17.739,
+     "mean_union_uniform": 23.443
+    },
+    "5": {
+     "measured_union_us": 652.12,
+     "uniform_union_us": 685.37,
+     "parts_measured_us": {
+      "sm": 110.39,
+      "barrier": 22.29,
+      "collective": 310.93,
+      "local": 178.93,
+      "fetch": 29.57
+     },
+     "mean_union_measured": 20.927,
+     "mean_union_uniform": 29.077
+    },
+    "6": {
+     "measured_union_us": 699.21,
+     "uniform_union_us": 742.94,
+     "parts_measured_us": {
+      "sm": 118.32,
+      "barrier": 22.29,
+      "collective": 326.81,
+      "local": 198.01,
+      "fetch": 33.78
+     },
+     "mean_union_measured": 23.904,
+     "mean_union_uniform": 34.623,
+     "w19_isa_union_us": 714.19
+    }
+   },
+   "rates": {
+    "current_headline_mixed_n36 (gamma<5 derived by truncation of the walk survival)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.8187,
+       "step_us": 549.21,
+       "tokens_s": 3311.5,
+       "speedup_vs_ar": 1.461
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.4684,
+       "step_us": 603.43,
+       "tokens_s": 4090.6,
+       "speedup_vs_ar": 1.805
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 2.9653,
+       "step_us": 652.45,
+       "tokens_s": 4544.9,
+       "speedup_vs_ar": 2.006
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 3.3431,
+       "step_us": 704.0,
+       "tokens_s": 4748.7,
+       "speedup_vs_ar": 2.096
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 3.6486,
+       "step_us": 751.09,
+       "tokens_s": 4857.7,
+       "speedup_vs_ar": 2.144
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 4857.7
+    },
+    "agentic_all5_pilot_n30 (exact replay)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.9382,
+       "step_us": 549.21,
+       "tokens_s": 3529.1,
+       "speedup_vs_ar": 1.557
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.7736,
+       "step_us": 603.43,
+       "tokens_s": 4596.4,
+       "speedup_vs_ar": 2.028
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 3.469,
+       "step_us": 652.45,
+       "tokens_s": 5316.9,
+       "speedup_vs_ar": 2.346
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 4.1126,
+       "step_us": 704.0,
+       "tokens_s": 5841.8,
+       "speedup_vs_ar": 2.578
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 4.5554,
+       "step_us": 751.09,
+       "tokens_s": 6065.1,
+       "speedup_vs_ar": 2.677
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 6065.1
+    },
+    "agentic_multiturn_pilot (exact replay)": {
+     "by_gamma": [
+      {
+       "gamma": 1,
+       "verify_positions": 2,
+       "tau": 1.9042,
+       "step_us": 549.21,
+       "tokens_s": 3467.2,
+       "speedup_vs_ar": 1.53
+      },
+      {
+       "gamma": 2,
+       "verify_positions": 3,
+       "tau": 2.6629,
+       "step_us": 603.43,
+       "tokens_s": 4412.9,
+       "speedup_vs_ar": 1.947
+      },
+      {
+       "gamma": 3,
+       "verify_positions": 4,
+       "tau": 3.225,
+       "step_us": 652.45,
+       "tokens_s": 4942.9,
+       "speedup_vs_ar": 2.181
+      },
+      {
+       "gamma": 4,
+       "verify_positions": 5,
+       "tau": 3.7487,
+       "step_us": 704.0,
+       "tokens_s": 5324.9,
+       "speedup_vs_ar": 2.35
+      },
+      {
+       "gamma": 5,
+       "verify_positions": 6,
+       "tau": 4.0222,
+       "step_us": 751.09,
+       "tokens_s": 5355.2,
+       "speedup_vs_ar": 2.363
+      }
+     ],
+     "best_gamma": 5,
+     "best_tokens_s": 5355.2
+    }
+   },
+   "headline_comparison_tau_3649_gamma5": {
+    "current_W19_row": {
+     "step_us": 765.72,
+     "tokens_s": 4765.4,
+     "note": "uarch_model.HBM_W19 (1M only): W19 ISA one-window union + audit drafter 49.9 us"
+    },
+    "assumed_3_40_draft": {
+     "step_us": 732.31,
+     "tokens_s": 4982.9
+    },
+    "dspark_priced": {
+     "step_us": 751.09,
+     "tokens_s": 4858.3
+    },
+    "dspark_priced_uniform_union": {
+     "step_us": 796.76,
+     "tokens_s": 4579.8
+    }
+   }
+  }
+ },
+ "rom_note": {
+  "note": "NOTE ONLY (owner decision: ROM = DSpark/MTP m=1 time-multiplexed). The ROM step is the pilot sensitivity's (verify 6 positions + ASSUMED 3/40 draft); here only the draft term is replaced by the HBM composition's draft/AR ratio, a structural proxy, not a ROM pricing.",
+  "source": "results/speculative/v41_mtp_acceptance_pilot_20261003/mtp_acceptance.json sensitivity.designs.v41_rom_product (T_ar 358.8 us, step 795.2 us at gamma 5 with the ASSUMED 3/40 draft)",
+  "verify_g5_us": 768.3,
+  "draft_assumed_us": 26.9,
+  "draft_hbm_ratio": 0.1173,
+  "draft_proxy_us": 42.1,
+  "tokens_s_tau3649_assumed": 4588.8,
+  "tokens_s_tau3649_proxy": 4502.8,
+  "verify_is_union_insensitive": "ROM experts are stationary in their macros: a verify pass re-reads each position's experts (cheap) and the union saves no bytes; what matters is positions colliding on one expert's element (max multiplicity, below)",
+  "max_multiplicity_by_p": {
+   "1": 1.0,
+   "2": 1.762,
+   "3": 2.436,
+   "4": 3.034,
+   "5": 3.621,
+   "6": 4.19,
+   "7": 4.746,
+   "8": 5.292
+  }
+ },
+ "inputs": {
+  "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+  "results/rtl/w19_sm_real_ops.json": "349acc3465207796259092ba476e71281b39de705c4f9bca802815348399f67f",
+  "results/rtl/w19_sm_real_ops_oreduce.json": "fee3d3467b965c86afaccf0edead10b7f09f5c09477ff336231636704b2722d3",
+  "results/rtl/w19_expert_fetch.json": "93ea7b5768452fbe13c508919a8e7de2cb12a36954390aba995ff9c9fcd6fb72",
+  "results/rtl/w15_hbm_nvls.json": "c26c3e51a1058eb9b9a4918bc9ce22a2167268ea158050bbee5ab891595caef2",
+  "results/rtl/w15_topk_merge_hbm96_p1024f256.json": "3a7bca898f1109500f6382296161c09e8aeb5f553fdadddc68ce4fb87310eb1e",
+  "results/rtl/w19_hbm_tp96_isa_mtp_oreduce.json": "b1a731aa627fac139f9c9cc3c2db5b479100fee77f891916ccb9c4e1640ae7b1",
+  "results/speculative/v41_flash_dspark_onpolicy_greedy.json": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d",
+  "results/speculative/v41_hbm_speculation_methods_20261003/inputs/w19_hbm_token_compose_71b3ffc5.py": "342867b5fee9b65cf562a74d68346ecaa0d937f2022fb8cb4e2e2aa09398fb38",
+  "router_union.json": "9de89985fc1742b6607501e3c99ae31c368d57a46824300f194904ae00e9d633",
+  "tau_by_gamma.json": "0c73a62136b3bc373080dbee78cdf569a34ca2ee607af95643e0a0ead75d4805",
+  "drafter_params.json": "030ed215914374c19faeb2f2b10a9d70e9ac7c79f63ede8c0f980f6908704bd6"
+ },
+ "source_sha256": {
+  "tools/v41_hbm_speculation_methods.py": "05da8a49863734b4d99cc3093fab84124d7118f299ba0efdf7cdba3a7b1fd534"
+ }
+}

@@ -1,0 +1,217 @@
+{
+  "schema": "hbrom.index-service.contributor.v1",
+  "recommendation": "Retain a dedicated near-HBM index scorer and exact selector provisionally; choose 32 vs 48 vs 64 keys/cycle against measured reader BW and selector service. Shared compute wins only if sufficient exact FP4 capacity and local mutable-memory ingress fit and do not contend with parallel query/body work.",
+  "context": 1048576,
+  "arithmetic": {
+    "heads": 32,
+    "dims": 128,
+    "MACs_per_key": 4096,
+    "key_bytes": 68,
+    "MAC_per_byte": 60.23529411764706,
+    "score": "BF16",
+    "tie": "global ascending index; preserve signed-zero/NaN/Inf rules"
+  },
+  "work": [
+    {
+      "layer": 2,
+      "full_keys": 524288,
+      "candidate_keys": 524288,
+      "full_bytes": 35651584,
+      "candidate_bytes": 35651584,
+      "full_MACs": 2147483648,
+      "candidate_MACs": 2147483648
+    },
+    {
+      "layer": 8,
+      "full_keys": 524288,
+      "candidate_keys": 524288,
+      "full_bytes": 35651584,
+      "candidate_bytes": 35651584,
+      "full_MACs": 2147483648,
+      "candidate_MACs": 2147483648
+    },
+    {
+      "layer": 14,
+      "full_keys": 524288,
+      "candidate_keys": 524288,
+      "full_bytes": 35651584,
+      "candidate_bytes": 35651584,
+      "full_MACs": 2147483648,
+      "candidate_MACs": 2147483648
+    },
+    {
+      "layer": 20,
+      "full_keys": 1048576,
+      "candidate_keys": 1048576,
+      "full_bytes": 71303168,
+      "candidate_bytes": 71303168,
+      "full_MACs": 4294967296,
+      "candidate_MACs": 4294967296
+    },
+    {
+      "layer": 24,
+      "full_keys": 1048576,
+      "candidate_keys": 16384,
+      "full_bytes": 71303168,
+      "candidate_bytes": 1114112,
+      "full_MACs": 4294967296,
+      "candidate_MACs": 67108864
+    },
+    {
+      "layer": 28,
+      "full_keys": 1048576,
+      "candidate_keys": 16384,
+      "full_bytes": 71303168,
+      "candidate_bytes": 1114112,
+      "full_MACs": 4294967296,
+      "candidate_MACs": 67108864
+    },
+    {
+      "layer": 32,
+      "full_keys": 1048576,
+      "candidate_keys": 16384,
+      "full_bytes": 71303168,
+      "candidate_bytes": 1114112,
+      "full_MACs": 4294967296,
+      "candidate_MACs": 67108864
+    },
+    {
+      "layer": 36,
+      "full_keys": 1048576,
+      "candidate_keys": 16384,
+      "full_bytes": 71303168,
+      "candidate_bytes": 1114112,
+      "full_MACs": 4294967296,
+      "candidate_MACs": 67108864
+    }
+  ],
+  "full_scan_bytes": 463470592,
+  "candidate_gather_bytes": 182714368,
+  "compute_sweep": [
+    {
+      "keys_per_cycle": 4,
+      "macs_per_cycle": 16384,
+      "NK4_slices": 1,
+      "key_Bpc": 272,
+      "key_input_bits": 2176,
+      "score_output_bits": 184,
+      "query_storage_bits": 17920,
+      "estimated_scorer_area_mm2": 1.354872,
+      "L20_rank_MAC_cycles": 65536,
+      "L20_rank_MAC_us": 54.61333333333334
+    },
+    {
+      "keys_per_cycle": 8,
+      "macs_per_cycle": 32768,
+      "NK4_slices": 2,
+      "key_Bpc": 544,
+      "key_input_bits": 4352,
+      "score_output_bits": 368,
+      "query_storage_bits": 35840,
+      "estimated_scorer_area_mm2": 2.709744,
+      "L20_rank_MAC_cycles": 32768,
+      "L20_rank_MAC_us": 27.30666666666667
+    },
+    {
+      "keys_per_cycle": 16,
+      "macs_per_cycle": 65536,
+      "NK4_slices": 4,
+      "key_Bpc": 1088,
+      "key_input_bits": 8704,
+      "score_output_bits": 736,
+      "query_storage_bits": 71680,
+      "estimated_scorer_area_mm2": 5.419488,
+      "L20_rank_MAC_cycles": 16384,
+      "L20_rank_MAC_us": 13.653333333333334
+    },
+    {
+      "keys_per_cycle": 32,
+      "macs_per_cycle": 131072,
+      "NK4_slices": 8,
+      "key_Bpc": 2176,
+      "key_input_bits": 17408,
+      "score_output_bits": 1472,
+      "query_storage_bits": 143360,
+      "estimated_scorer_area_mm2": 10.838976,
+      "L20_rank_MAC_cycles": 8192,
+      "L20_rank_MAC_us": 6.826666666666667
+    },
+    {
+      "keys_per_cycle": 48,
+      "macs_per_cycle": 196608,
+      "NK4_slices": 12,
+      "key_Bpc": 3264,
+      "key_input_bits": 26112,
+      "score_output_bits": 2208,
+      "query_storage_bits": 215040,
+      "estimated_scorer_area_mm2": 16.258464,
+      "L20_rank_MAC_cycles": 5462,
+      "L20_rank_MAC_us": 4.551666666666667
+    },
+    {
+      "keys_per_cycle": 64,
+      "macs_per_cycle": 262144,
+      "NK4_slices": 16,
+      "key_Bpc": 4352,
+      "key_input_bits": 34816,
+      "score_output_bits": 2944,
+      "query_storage_bits": 286720,
+      "estimated_scorer_area_mm2": 21.677952,
+      "L20_rank_MAC_cycles": 4096,
+      "L20_rank_MAC_us": 3.4133333333333336
+    }
+  ],
+  "reader": {
+    "old_measured_Bpc": 1921.28,
+    "old_period_ps": 967,
+    "modern_s81_native_clock_ps": 833,
+    "modern_s81_native_full_L20_runtime": false,
+    "peak_4stack_Bps": 4000000000000.0,
+    "peak_keys_per_cycle_at_1p2GHz": 49.01960784313726,
+    "warning": "Do not scale old measured B/cycle to 1.2GHz as a measured modern reader; source matched native receipt needed."
+  },
+  "scorer": {
+    "element": "ot_hdc_v41x_idx_score_slice NK4 NB4 IH32",
+    "latency_cycles": 48,
+    "source_shape": "HBM NS16 NK4 composed from NS2 NK4 disjoint slot runs; shared handshake/query not full physical closure",
+    "area_basis": "Model estimate 512 blockdot lanes x2511um2 plus 4 tails x17310um2 per NK4; referenced idx_chunk physical.json is missing in checkout",
+    "SSFF_in_context": false
+  },
+  "candidate_select": {
+    "local_asbuilt_cycles": 12366,
+    "local_ingest_cycles": 4096,
+    "local_tail_cycles": 8270,
+    "local_replays": 2,
+    "AW12_sensitivity_cycles": 4794,
+    "AW12_sensitivity_not_adopted": true,
+    "final_cycles": 355,
+    "final_ingest_cycles": 128,
+    "final_tail_cycles": 227,
+    "merge_sent_B_per_rank": 8192,
+    "merge_received_B_per_rank": 24576,
+    "integration_gap": "ot_hdc_v41x_sel_cand exports block indices only (out_blk; u_sel's out_val is not brought out) and its front end overwrites the pinned block's max with +inf, so as built the merge records' values (and the true max of ranks 0-2's pinned blocks) are not available from the unit; the final here takes them from the golden scores",
+    "pin_issue": "Do not carry per-rank artificial +inf to global merge; true maxima required."
+  },
+  "shared_compute_comparison": {
+    "model": "T_dedicated = startup + max(N*68/B_mem,N*4096/C_idx,N/R_selector) + scorer_tail + selector_tail + merge; T_shared additionally maxes on mutable-ingress BW and subtracts concurrently occupied shared MAC capacity, plus switches and movement.",
+    "reuse_opportunity": "Index scoring can use a reusable exact FP4 dot engine only if chunk32 scales, head weighting/reduction and BF16 rounding match. Selector is integer/compare/memory work and not replaced by more MACs.",
+    "remote_penalty": "Each full scan rank sends 17,825,792B at L20; at 1TB/s extra route floor is17.826us if serialized, or max bottleneck if streamed. Near-HBM returns only selected score/ID records.",
+    "selection_reservation": "Keep local top512 per shard; global top512 of union is exact with total ordering. Candidate block top2048 is additional branch at L20, requires true block maxima and global newest pin."
+  },
+  "physical_gaps": [
+    "Complete scorer area not hardened; existing estimate is not floorplan fit.",
+    "Selector source model G0 refused current reservation and unclosed filter; add reader/selector/score buffers/control area, not scorer area alone.",
+    "Price query multicast17920bits per NK4 copy; do not assume no broadcast fanout.",
+    "64 keys/cycle consumes4352B/cycle=5.2224TB/s, above four-stack4TB/s; 48 consumes3.9168TB/s.",
+    "No integrated selector PASS from tests using golden-injected intermediate maxima."
+  ],
+  "source_sha256": {
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "tools/uarch_model.py": "d97982d88554cf74763c90ffaffd683d04e4a9a15e21f1ef90f7efdec094302b",
+    "results/rtl/dsrom_1m_allmeasured_20261004/cand_select.json": "76af1b31c74dab2438ef87564a14f0588ec258b880e6a5238458869f44534218",
+    "results/rtl/dsrom_idxkey_layout_20261004/verdict.json": "c92dfa860ee0d8d5dc31c7dcc90305251697e6f5660d5d6375e0e248c65317b2",
+    "results/rtl/dshbm_1m_allmeasured_20261004/local_runs/idx/idx.json": "32b7d8e001b076d4447a8a772c837258ba0bcd167e55bef4bc5dd852bd307bb5",
+    "results/uarch/topk_integer_tree_service_model_20261002/model.json": "10115626143f220360d34aba561526c8778fd2e51c59f843120370b696de73e1",
+    "results/uarch/dsrom_s81_native_index_hbm_20261004/model.json": "f42d812e9e640b9ceb09287b17a0f425cec616fb3b8ba6c73348bedf994aff12"
+  }
+}

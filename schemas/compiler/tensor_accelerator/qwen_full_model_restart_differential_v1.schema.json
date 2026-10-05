@@ -1,0 +1,246 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_restart_differential_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_inventory": {
+      "items": {"$ref": "#/$defs/artifact"},
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array"
+    },
+    "build_id": {"const": "6445ef52a940af167f3bde52e0a326258bb8c8da013d4bb25a3b16e18f171bad"},
+    "campaign_protocol": {
+      "additionalProperties": false,
+      "properties": {
+        "interrupted_then_restored": {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint_interval": {"const": 1},
+            "invocation_transaction_counts": {
+              "items": false,
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [{"const": 1}, {"const": 1}],
+              "type": "array"
+            },
+            "restore_step": {"const": 1}
+          },
+          "required": [
+            "checkpoint_interval",
+            "invocation_transaction_counts",
+            "restore_step"
+          ],
+          "type": "object"
+        },
+        "uninterrupted": {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint_interval": {"const": 2},
+            "invocation_transaction_counts": {
+              "items": false,
+              "maxItems": 1,
+              "minItems": 1,
+              "prefixItems": [{"const": 2}],
+              "type": "array"
+            }
+          },
+          "required": ["checkpoint_interval", "invocation_transaction_counts"],
+          "type": "object"
+        }
+      },
+      "required": ["interrupted_then_restored", "uninterrupted"],
+      "type": "object"
+    },
+    "checkpoint_restore": {"$ref": "#/$defs/checkpoint_one"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "exact_8000_token_acceptance": {"const": false},
+        "independent_reference_verified": {"const": false},
+        "restart_after_one_transaction_verified": {"const": true},
+        "timing_or_performance": {"const": false},
+        "two_full_model_transactions_verified": {"const": true}
+      },
+      "required": [
+        "exact_8000_token_acceptance",
+        "independent_reference_verified",
+        "restart_after_one_transaction_verified",
+        "timing_or_performance",
+        "two_full_model_transactions_verified"
+      ],
+      "type": "object"
+    },
+    "command_program_sha256": {"const": "dfc7ee4d89a091aea616f602174f8bd41cae319ceec92d31fda4cb43636dce6d"},
+    "comparison": {
+      "additionalProperties": false,
+      "properties": {
+        "all_36_kv_resources_restored": {"const": true},
+        "all_checkpoint_bytes_authenticated": {"const": true},
+        "command_counters_byte_equal": {"const": true},
+        "final_checkpoint_tree_byte_equal": {"const": true},
+        "greedy_tokens_equal": {"const": true},
+        "logit_records_byte_equal": {"const": true},
+        "request_files_byte_equal": {"const": true},
+        "runtime_bindings_byte_equal": {"const": true},
+        "state_records_byte_equal": {"const": true},
+        "transaction_reports_byte_equal": {"const": true}
+      },
+      "required": [
+        "all_36_kv_resources_restored",
+        "all_checkpoint_bytes_authenticated",
+        "command_counters_byte_equal",
+        "final_checkpoint_tree_byte_equal",
+        "greedy_tokens_equal",
+        "logit_records_byte_equal",
+        "request_files_byte_equal",
+        "runtime_bindings_byte_equal",
+        "state_records_byte_equal",
+        "transaction_reports_byte_equal"
+      ],
+      "type": "object"
+    },
+    "differential_id": {"$ref": "#/$defs/sha256"},
+    "differential_version": {"const": "tensor-accelerator-qwen-full-model-restart-differential-0.1.0"},
+    "final_checkpoint": {"$ref": "#/$defs/checkpoint_two"},
+    "graph_id": {"const": "738f3cd8cb5db1ce400c0a44c12385cef6c42ddb2854e22d473251e97a1a51e3"},
+    "runner": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"const": "tools/run_qwen3_tensor_accelerator_long_acceptance.py"},
+        "runner_version": {"const": "tensor-accelerator-qwen-long-acceptance-runner-0.1.0"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "runner_version", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_restart_differential.v1"},
+    "session_id": {"const": "0dae31559ee294dfa4e8e84c77c2f65040708c4e52faa5f433f62c62350556b2"},
+    "status": {"const": "byte_exact_restart_equivalence"},
+    "transactions": {
+      "items": {"$ref": "#/$defs/transaction"},
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    }
+  },
+  "required": [
+    "artifact_inventory",
+    "build_id",
+    "campaign_protocol",
+    "checkpoint_restore",
+    "claim_boundary",
+    "command_program_sha256",
+    "comparison",
+    "differential_id",
+    "differential_version",
+    "final_checkpoint",
+    "graph_id",
+    "runner",
+    "schema",
+    "session_id",
+    "status",
+    "transactions"
+  ],
+  "title": "Qwen full-model checkpoint/restart byte-exact differential v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"pattern": "^(?:checkpoint\\.000[12]/(?:checkpoint_manifest\\.json|state/hbm\\.00000\\.[0-9a-f]{64}\\.bin)|executions/execution\\.000[01]\\.json|requests/request\\.000[01]\\.json)$", "type": "string"},
+        "role": {
+          "enum": [
+            "post_restart_checkpoint",
+            "restart_checkpoint",
+            "transaction_execution",
+            "transaction_request"
+          ]
+        },
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "role", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "checkpoint_one": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_id": {"const": "20cfc61600b1b86b58e9aa677f17f195df4fdecba4e20a4d5db660dc4bb5e4b2"},
+        "logical_state_sha256": {"const": "fd6c50ddbe171c9242f995e3df1bebc3bbafe13321ccf5aef4060e376f4d6218"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_size_bytes": {"minimum": 1, "type": "integer"},
+        "next_step_index": {"const": 1},
+        "state_image_size_bytes": {"const": 147456}
+      },
+      "required": [
+        "checkpoint_id",
+        "logical_state_sha256",
+        "manifest_sha256",
+        "manifest_size_bytes",
+        "next_step_index",
+        "state_image_size_bytes"
+      ],
+      "type": "object"
+    },
+    "checkpoint_two": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_id": {"const": "12bd2c932062e4bb38d855618a5febd381c0f06b3ff430767148e019d2c9afe3"},
+        "logical_state_sha256": {"const": "3a323f2f4465b4e2ca3e4d8cb006166145e84ee8a1c55cc39e99040f9351b584"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "manifest_size_bytes": {"minimum": 1, "type": "integer"},
+        "next_step_index": {"const": 2},
+        "state_image_size_bytes": {"const": 294912}
+      },
+      "required": [
+        "checkpoint_id",
+        "logical_state_sha256",
+        "manifest_sha256",
+        "manifest_size_bytes",
+        "next_step_index",
+        "state_image_size_bytes"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "transaction": {
+      "additionalProperties": false,
+      "properties": {
+        "greedy_token_id": {"const": 33975},
+        "logits_sha256": {"$ref": "#/$defs/sha256"},
+        "previous_report_id": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "report_sha256": {"$ref": "#/$defs/sha256"},
+        "report_size_bytes": {"minimum": 1, "type": "integer"},
+        "request_id": {"$ref": "#/$defs/sha256"},
+        "request_sha256": {"$ref": "#/$defs/sha256"},
+        "request_size_bytes": {"minimum": 1, "type": "integer"},
+        "state_generation": {"maximum": 2, "minimum": 1, "type": "integer"},
+        "state_length": {"maximum": 2, "minimum": 1, "type": "integer"},
+        "step_index": {"maximum": 1, "minimum": 0, "type": "integer"}
+      },
+      "required": [
+        "greedy_token_id",
+        "logits_sha256",
+        "previous_report_id",
+        "report_id",
+        "report_sha256",
+        "report_size_bytes",
+        "request_id",
+        "request_sha256",
+        "request_size_bytes",
+        "state_generation",
+        "state_length",
+        "step_index"
+      ],
+      "type": "object"
+    }
+  }
+}

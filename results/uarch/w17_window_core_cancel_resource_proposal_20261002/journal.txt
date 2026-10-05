@@ -1,0 +1,9 @@
+2026-10-02T03:26:50.553547+0000 ubuntu systemd[1537]: Started /usr/bin/python3 /tmp/opentallas-core-cancel-join-exec-20261002-r1/tools/w17_window_core_cancel_join_run.py --worker --plan /tmp/opentallas-core-cancel-join-exec-20261002-r1/results/uarch/w17_window_core_cancel_join_preparation_r5_20261002/plan_r5/plan.json --out /tmp/opentallas-core-cancel-join-result-20261002-r1 --unit w17-recovery-core-parent-20261002-r1 --go-commit ecb58ee972836244ccbde1c3c4fb95a20da431e7 --go-path results/rtl/parent_actual_core_cancel_join_execution_20261002_r1/parent_GO.json.
+2026-10-02T03:27:16.011267+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: A process of this unit has been killed by the OOM killer.
+2026-10-02T03:27:16.012854+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Main process exited, code=killed, status=9/KILL
+2026-10-02T03:27:16.012910+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Killing process 3347812 (perl) with signal SIGKILL.
+2026-10-02T03:27:16.012922+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Killing process 3347815 (verilator_bin) with signal SIGKILL.
+2026-10-02T03:27:16.012952+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Failed with result 'oom-kill'.
+2026-10-02T03:27:16.012967+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Unit process 3347812 (perl) remains running after unit stopped.
+2026-10-02T03:27:16.012976+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Unit process 3347815 (verilator_bin) remains running after unit stopped.
+2026-10-02T03:27:16.013123+0000 ubuntu systemd[1537]: w17-recovery-core-parent-20261002-r1.service: Consumed 26.091s CPU time.

@@ -1,0 +1,8 @@
+{
+  "scope": "Failed acknowledgement coincident with successor CHECK must not publish successor",
+  "baseline_sha256": "d1cf9498656b3f81f32e543dbf6e07ab10a3a06a30e0fd99087f1efd363422c6",
+  "baseline_exit_code": 1,
+  "baseline_stdout": "stream depth=4 cycles=17\nFATAL: /tmp/pytest-of-ubuntu/pytest-4260/test_ordered_write_credits_2_current/credits.sv:66: failed ack published unchecked successor\n       Time: 800000 Scope: tb\n",
+  "fixed_rtl_sha256": "06f970284074c3e097619fb514d423336a430cd527cff0a0c606b85dab36ce11",
+  "fixed_tests": "tests/test_output_object_writer.py: all six cases pass; lifetime test passes"
+}

@@ -1,0 +1,2857 @@
+{
+  "cells": [
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 153763995300.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 1,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0013839022825878448
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 1356.8762376472337,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4405.119450436116,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "TA-DS41-ROM-WAFER, the primary target: two wafer-scale devices with both Engram tables resident in wafer-edge HBM (plan sections 3.1 and 3.4).  It is the engram-hbm study's own best_design at batch 32 (topology_choices[batch_size=32].best_design) and the only two-wafer rung of the DECIDED placement; its iso-area comparator is the b200_sxm-x58-tensor plan section 8 names"
+      ],
+      "why_this_cell": "the primary target of plan section 3.1: two wafer-scale devices, both Engram tables resident in wafer-edge HBM (section 3.4's decision).  92,450 mm2 against the b200_sxm-x58-tensor comparator section 8 names, which is this artifact's own iso_area_gpu_design for it at batch 1 and 8 (x58-hybrid at 32)"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 153763995300.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 8,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0013731568118187606
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 766.979413473942,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4401.143627624233,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "TA-DS41-ROM-WAFER, the primary target: two wafer-scale devices with both Engram tables resident in wafer-edge HBM (plan sections 3.1 and 3.4).  It is the engram-hbm study's own best_design at batch 32 (topology_choices[batch_size=32].best_design) and the only two-wafer rung of the DECIDED placement; its iso-area comparator is the b200_sxm-x58-tensor plan section 8 names"
+      ],
+      "why_this_cell": "the primary target of plan section 3.1: two wafer-scale devices, both Engram tables resident in wafer-edge HBM (section 3.4's decision).  92,450 mm2 against the b200_sxm-x58-tensor comparator section 8 names, which is this artifact's own iso_area_gpu_design for it at batch 1 and 8 (x58-hybrid at 32)"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 153763995300.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 32,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0013682172957875513
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 355.59299185456337,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-hybrid",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4385.311845472921,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "TA-DS41-ROM-WAFER, the primary target: two wafer-scale devices with both Engram tables resident in wafer-edge HBM (plan sections 3.1 and 3.4).  It is the engram-hbm study's own best_design at batch 32 (topology_choices[batch_size=32].best_design) and the only two-wafer rung of the DECIDED placement; its iso-area comparator is the b200_sxm-x58-tensor plan section 8 names"
+      ],
+      "why_this_cell": "the primary target of plan section 3.1: two wafer-scale devices, both Engram tables resident in wafer-edge HBM (section 3.4's decision).  92,450 mm2 against the b200_sxm-x58-tensor comparator section 8 names, which is this artifact's own iso_area_gpu_design for it at batch 1 and 8 (x58-hybrid at 32)"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 1,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_count_note": "the record declares limits.max_nodes 2 and this design point is 1 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 307527990600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 1,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-1",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0015716521153754117
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 1291.8428763308868,
+      "hbm_silicon_area_mm2": 46400.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "parallelism": "tensor",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "rom_devices": 1,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 5037.34652363914,
+      "rom_silicon_area_mm2": 46225.0,
+      "rom_token_slots": 1.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash-engram-hbm -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash-engram-hbm",
+        "best WAFER topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "best topology overall the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the engram-hbm study's own batch-1 recommendation (design_selection.models[].batch_regimes[1].recommended), one wafer against b200_sxm-x29-tensor.  It is in the matrix because it is what the study recommends at the batch the mandatory workload runs at, and because plan section 3.1's two-wafer target and this one-wafer recommendation are the two readings of 'the recommended N5 design' that have to be side by side rather than chosen between"
+      ],
+      "why_this_cell": "the engram-hbm study's OWN batch-1 recommendation, one wafer at 46,225 mm2 against b200_sxm-x29-tensor.  Section 3.1 states two wafer stages from the iso-node study while this roofline study recommends one device at batch 1; the disagreement is carried as two cells rather than resolved by preference"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 1,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_count_note": "the record declares limits.max_nodes 2 and this design point is 1 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 307527990600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 8,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-1",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0013310637059470857
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 710.2066643480905,
+      "hbm_silicon_area_mm2": 46400.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-hybrid",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "parallelism": "tensor",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "rom_devices": 1,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4266.22982675348,
+      "rom_silicon_area_mm2": 46225.0,
+      "rom_token_slots": 1.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash-engram-hbm -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash-engram-hbm",
+        "best WAFER topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "best topology overall the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the engram-hbm study's own batch-1 recommendation (design_selection.models[].batch_regimes[1].recommended), one wafer against b200_sxm-x29-tensor.  It is in the matrix because it is what the study recommends at the batch the mandatory workload runs at, and because plan section 3.1's two-wafer target and this one-wafer recommendation are the two readings of 'the recommended N5 design' that have to be side by side rather than chosen between"
+      ],
+      "why_this_cell": "the engram-hbm study's OWN batch-1 recommendation, one wafer at 46,225 mm2 against b200_sxm-x29-tensor.  Section 3.1 states two wafer stages from the iso-node study while this roofline study recommends one device at batch 1; the disagreement is carried as two cells rather than resolved by preference"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 1,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_count_note": "the record declares limits.max_nodes 2 and this design point is 1 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 307527990600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 32,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-1",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "below_bar": true,
+        "decision": "section 3.4 CONFIRMED",
+        "priced": true,
+        "worst_bound": "per_token_collided",
+        "worst_fraction_of_step": 0.0007004297937650525
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "hbm_devices": 29,
+      "hbm_per_user_tokens_s": 330.0962983697845,
+      "hbm_silicon_area_mm2": 46400.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-hybrid",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "parallelism": "tensor",
+      "rom_binding_constraint": "compute",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "rom_devices": 1,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 2244.9672877085018,
+      "rom_silicon_area_mm2": 46225.0,
+      "rom_token_slots": 1.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash-engram-hbm -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash-engram-hbm",
+        "best WAFER topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "best topology overall the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the engram-hbm study's own batch-1 recommendation (design_selection.models[].batch_regimes[1].recommended), one wafer against b200_sxm-x29-tensor.  It is in the matrix because it is what the study recommends at the batch the mandatory workload runs at, and because plan section 3.1's two-wafer target and this one-wafer recommendation are the two readings of 'the recommended N5 design' that have to be side by side rather than chosen between"
+      ],
+      "why_this_cell": "the engram-hbm study's OWN batch-1 recommendation, one wafer at 46,225 mm2 against b200_sxm-x29-tensor.  Section 3.1 states two wafer stages from the iso-node study while this roofline study recommends one device at batch 1; the disagreement is carried as two cells rather than resolved by preference"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 51,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 51 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 6029960600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 1,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash-engram-host__rom-n5-native-sramkv-array-hybrid-x51__b200-sxm-x26-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-host",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-tensor",
+      "hbm_devices": 26,
+      "hbm_per_user_tokens_s": 1276.3256861794666,
+      "hbm_silicon_area_mm2": 41600.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-tensor",
+      "iso_area_ratio": 0.9991586538461539,
+      "model": "DeepSeek-V4.1-Flash-engram-host",
+      "pair_id": "deepseek-v4-1-flash-engram-host__rom-n5-native-sramkv-array-hybrid-x51__b200-sxm-x26-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51",
+      "rom_devices": 51,
+      "rom_kv_store": "sram",
+      "rom_per_user_tokens_s": 2057.977321507846,
+      "rom_silicon_area_mm2": 41565.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-host",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-host at batch 1",
+        "TA-DS41-ROM-ARRAY at the node count plan section 3.2 states the plan builds, N = 51: the engram-host study's own array_best_design at batch 1, against its own iso-area comparator b200_sxm-x26-tensor"
+      ],
+      "why_this_cell": "the controlled experiment of plan section 3.2 at the node count it says the plan builds, N = 51 (41,565 mm2) against this artifact's own b200_sxm-x26-tensor (41,600 mm2).  NOT against b200_sxm-x43-tensor: see V41_CELLS' header.  Its kv_store is sram, so the Engram lookup cannot be priced on its HBM path -- the design point buys no HBM at all"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+      "analytical_feasible": false,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 51,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 51 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 6029960600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 8,
+      "blockers": [
+        {
+          "input": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json#points[design=DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51,batch_size=8].feasible",
+          "produced_by": "not a missing artifact: a refused configuration",
+          "why_needed": "the study declares this point INFEASIBLE -- binding_constraint 'capacity_or_format', per_user_tokens_s 0.0 -- and a machine derived from a configuration the analytical model refuses would be a machine for something that cannot run.  Nothing unblocks this except a different design point or a re-run study"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-host",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-tensor",
+      "hbm_devices": 26,
+      "hbm_per_user_tokens_s": 694.174788120544,
+      "hbm_silicon_area_mm2": 41600.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-hybrid",
+      "iso_area_ratio": 0.9991586538461539,
+      "model": "DeepSeek-V4.1-Flash-engram-host",
+      "pair_id": "deepseek-v4-1-flash-engram-host__rom-n5-native-sramkv-array-hybrid-x51__b200-sxm-x26-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "capacity_or_format",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51",
+      "rom_devices": 51,
+      "rom_kv_store": "sram",
+      "rom_per_user_tokens_s": 0.0,
+      "rom_silicon_area_mm2": 41565.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-host",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-host at batch 1",
+        "TA-DS41-ROM-ARRAY at the node count plan section 3.2 states the plan builds, N = 51: the engram-host study's own array_best_design at batch 1, against its own iso-area comparator b200_sxm-x26-tensor"
+      ],
+      "why_this_cell": "the controlled experiment of plan section 3.2 at the node count it says the plan builds, N = 51 (41,565 mm2) against this artifact's own b200_sxm-x26-tensor (41,600 mm2).  NOT against b200_sxm-x43-tensor: see V41_CELLS' header.  Its kv_store is sram, so the Engram lookup cannot be priced on its HBM path -- the design point buys no HBM at all"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+      "analytical_feasible": false,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 51,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 51 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 6029960600.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 32,
+      "blockers": [
+        {
+          "input": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json#points[design=DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51,batch_size=32].feasible",
+          "produced_by": "not a missing artifact: a refused configuration",
+          "why_needed": "the study declares this point INFEASIBLE -- binding_constraint 'capacity_or_format', per_user_tokens_s 0.0 -- and a machine derived from a configuration the analytical model refuses would be a machine for something that cannot run.  Nothing unblocks this except a different design point or a re-run study"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-host deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-host",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-host-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-host",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-tensor",
+      "hbm_devices": 26,
+      "hbm_per_user_tokens_s": 320.62833278962097,
+      "hbm_silicon_area_mm2": 41600.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-hybrid",
+      "iso_area_ratio": 0.9991586538461539,
+      "model": "DeepSeek-V4.1-Flash-engram-host",
+      "pair_id": "deepseek-v4-1-flash-engram-host__rom-n5-native-sramkv-array-hybrid-x51__b200-sxm-x26-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "capacity_or_format",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-host/ROM-N5-native-SRAMKV-array-hybrid-x51",
+      "rom_devices": 51,
+      "rom_kv_store": "sram",
+      "rom_per_user_tokens_s": 0.0,
+      "rom_silicon_area_mm2": 41565.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-host",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-host at batch 1",
+        "TA-DS41-ROM-ARRAY at the node count plan section 3.2 states the plan builds, N = 51: the engram-host study's own array_best_design at batch 1, against its own iso-area comparator b200_sxm-x26-tensor"
+      ],
+      "why_this_cell": "the controlled experiment of plan section 3.2 at the node count it says the plan builds, N = 51 (41,565 mm2) against this artifact's own b200_sxm-x26-tensor (41,600 mm2).  NOT against b200_sxm-x43-tensor: see V41_CELLS' header.  Its kv_store is sram, so the Engram lookup cannot be priced on its HBM path -- the design point buys no HBM at all"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 55,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 55 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 5591418010.909091,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 1,
+      "blockers": [
+        {
+          "input": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json#points[DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55]",
+          "produced_by": "not a missing artifact: a structural refusal -- the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared",
+          "why_needed": "the collapsed logical device carries an integer number of the GPU point's own HBM channels; this pair does not"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-tensor",
+      "hbm_devices": 28,
+      "hbm_per_user_tokens_s": 1286.9678647989892,
+      "hbm_silicon_area_mm2": 44800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-tensor",
+      "iso_area_ratio": 1.0005580357142858,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-array-hybrid-x55__b200-sxm-x28-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "weight_read",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55",
+      "rom_devices": 55,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 2057.977321507846,
+      "rom_silicon_area_mm2": 44825.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the array rung of the DECIDED placement: Engram in node-local HBM as WP-F builds it, which is the engram-hbm study's own array_best_design at batch 1.  Its node count is 55, not the 51 plan section 3.2 says the plan builds -- see V41_CELLS"
+      ],
+      "why_this_cell": "the array rung whose PLACEMENT matches WP-F -- Engram in node-local HBM -- which is this artifact's own array_best_design at batch 1.  It is 55 nodes, not 51: the placement WP-F builds and the node count section 3.2 builds are published in two different candidate studies and do not meet in one design point.  Carried so the array target is not represented by a cell whose Engram lives somewhere else"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 55,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 55 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 5591418010.909091,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 8,
+      "blockers": [
+        {
+          "input": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json#points[DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55]",
+          "produced_by": "not a missing artifact: a structural refusal -- the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared",
+          "why_needed": "the collapsed logical device carries an integer number of the GPU point's own HBM channels; this pair does not"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-tensor",
+      "hbm_devices": 28,
+      "hbm_per_user_tokens_s": 705.1229464721447,
+      "hbm_silicon_area_mm2": 44800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-hybrid",
+      "iso_area_ratio": 1.0005580357142858,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-array-hybrid-x55__b200-sxm-x28-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "compute",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55",
+      "rom_devices": 55,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 1927.3493469241753,
+      "rom_silicon_area_mm2": 44825.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the array rung of the DECIDED placement: Engram in node-local HBM as WP-F builds it, which is the engram-hbm study's own array_best_design at batch 1.  Its node count is 55, not the 51 plan section 3.2 says the plan builds -- see V41_CELLS"
+      ],
+      "why_this_cell": "the array rung whose PLACEMENT matches WP-F -- Engram in node-local HBM -- which is this artifact's own array_best_design at batch 1.  It is 55 nodes, not 51: the placement WP-F builds and the node count section 3.2 builds are published in two different candidate studies and do not meet in one design point.  Carried so the array target is not represented by a cell whose Engram lives somewhere else"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 55,
+        "hbm_bytes": 180000000000,
+        "hbm_channels_declared": 8,
+        "hbm_resident_region_bytes": 3168094257,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 64,
+        "node_count_note": "the record declares limits.max_nodes 64 and this design point is 55 device(s).  The base contributes capacities, limits, features and numeric contracts only -- every timing parameter is derived from the design point -- so the cell is still one machine emitted twice; but a deployment lowered for this point against this record is lowered for a different node count and that is a WP-F/WP-N decision, not a cycle-model one",
+        "node_counts_agree": false,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "rom_banks": 18,
+        "rom_bytes": 19327352832,
+        "rom_bytes_per_node_declared": 19327352832,
+        "stored_weight_bytes": 307527990600,
+        "stored_weight_bytes_per_node": 5591418010.909091,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 32,
+      "blockers": [
+        {
+          "input": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json#points[DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55]",
+          "produced_by": "not a missing artifact: a structural refusal -- the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared",
+          "why_needed": "the collapsed logical device carries an integer number of the GPU point's own HBM channels; this pair does not"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash-engram-hbm deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash-engram-hbm",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-engram-hbm-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash-engram-hbm",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-tensor",
+      "hbm_devices": 28,
+      "hbm_per_user_tokens_s": 327.08826581995703,
+      "hbm_silicon_area_mm2": 44800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x28-hybrid",
+      "iso_area_ratio": 1.0005580357142858,
+      "model": "DeepSeek-V4.1-Flash-engram-hbm",
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-array-hybrid-x55__b200-sxm-x28-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "compute",
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-array-hybrid-x55",
+      "rom_devices": 55,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 697.9857605598169,
+      "rom_silicon_area_mm2": 44825.0,
+      "rom_token_slots": 7.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash-engram-hbm",
+      "topology_kind": "array",
+      "why_the_matrix_selects_it": [
+        "best ARRAY topology the study names for DeepSeek-V4.1-Flash-engram-hbm at batch 1",
+        "the array rung of the DECIDED placement: Engram in node-local HBM as WP-F builds it, which is the engram-hbm study's own array_best_design at batch 1.  Its node count is 55, not the 51 plan section 3.2 says the plan builds -- see V41_CELLS"
+      ],
+      "why_this_cell": "the array rung whose PLACEMENT matches WP-F -- Engram in node-local HBM -- which is this artifact's own array_best_design at batch 1.  It is 55 nodes, not 51: the placement WP-F builds and the node count section 3.2 builds are published in two different candidate studies and do not meet in one design point.  Carried so the array target is not represented by a cell whose Engram lives somewhere else"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 510286023000,
+        "stored_weight_bytes_per_node": 255143011500.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 1,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-3",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 1356.8763207334591,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash/b200_sxm-x58-tensor",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash",
+      "pair_id": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4069.84099174924,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash",
+        "the Engram-in-ROM envelope plan section 3.4 retains as TA-DS41-ROM-WAFER-3: the Engram-in-ROM study's own batch-1 recommendation and a two-wafer design against b200_sxm-x58-tensor.  Kept because it is the cell the words of plan section 8 select if they are read against the Engram-in-ROM candidate instead of the decided placement"
+      ],
+      "why_this_cell": "the Engram-in-ROM envelope section 3.4 retains as TA-DS41-ROM-WAFER-3, and the literal reading of section 8's 'recommended N5 two-wafer design against b200_sxm-x58-tensor' against the Engram-in-ROM candidate: this study's own batch-1 recommendation, 92,450 mm2, comparator b200_sxm-x58-tensor"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 510286023000,
+        "stored_weight_bytes_per_node": 255143011500.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 8,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-3",
+      "comparator_is_this_batch_own": true,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 766.9796258502422,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash/b200_sxm-x58-tensor",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash",
+      "pair_id": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 4066.4471127049014,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash",
+        "the Engram-in-ROM envelope plan section 3.4 retains as TA-DS41-ROM-WAFER-3: the Engram-in-ROM study's own batch-1 recommendation and a two-wafer design against b200_sxm-x58-tensor.  Kept because it is the cell the words of plan section 8 select if they are read against the Engram-in-ROM candidate instead of the decided placement"
+      ],
+      "why_this_cell": "the Engram-in-ROM envelope section 3.4 retains as TA-DS41-ROM-WAFER-3, and the literal reading of section 8's 'recommended N5 two-wafer design against b200_sxm-x58-tensor' against the Engram-in-ROM candidate: this study's own batch-1 recommendation, 92,450 mm2, comparator b200_sxm-x58-tensor"
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json",
+      "analytical_feasible": true,
+      "base_capabilities": {
+        "hbm": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+        "rom": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+      },
+      "base_capability_facts": {
+        "design_point_device_count": 2,
+        "hbm_bytes": 1649267441664,
+        "hbm_channels_declared": null,
+        "hbm_resident_region_bytes": 202758032400,
+        "max_context_positions": 1048576,
+        "max_expert_ids": 384,
+        "max_nodes": 2,
+        "node_counts_agree": true,
+        "present": true,
+        "record": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "rom_banks": 24576,
+        "rom_bytes": 412316860416,
+        "rom_bytes_per_node_declared": 412316860416,
+        "stored_weight_bytes": 510286023000,
+        "stored_weight_bytes_per_node": 255143011500.0,
+        "weights_fit_declared_rom_per_node": true
+      },
+      "batch_size": 32,
+      "blockers": [
+        {
+          "input": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+          "produced_by": "ValueError: capability declares a fabric between devices but only 1 node(s); a fabric needs something to join",
+          "why_needed": "the derivation itself refused"
+        }
+      ],
+      "c2": {
+        "comparable": false,
+        "deployments": {
+          "hbm": {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "hbm",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/hbm_sram_single_chip.json"
+          },
+          "rom": {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "role": "rom",
+            "status": "no deployment built",
+            "why": "no compiled deepseek-v4-1-flash deployment is bound to configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json"
+          }
+        },
+        "gate": "C2",
+        "required_registrations": [
+          {
+            "base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-rom-...>"
+          },
+          {
+            "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+            "model_id": "deepseek-v4-1-flash",
+            "note": "configs/abi3/shipped_deployments.json must carry this (base_capability, model_id) pair before the cell can bind a deployment; the registration also needs the bundle's real deployment_sha256, which only exists once the bundle is built",
+            "pin_kind": "live",
+            "registration_id": "<deepseek-v4-1-flash-hbm-...>"
+          }
+        ]
+      },
+      "cell_id": "TA-DS41-ROM-WAFER-3",
+      "comparator_is_this_batch_own": false,
+      "comparator_rule": "comparisons[batch_size=1, rom_design=...].iso_area_gpu_design of this artifact, through matrix_cells; this tool never chooses a comparator",
+      "context_tokens": 200000,
+      "deployment_model_id": "deepseek-v4-1-flash",
+      "engram_pricing": {
+        "priced": false,
+        "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+      },
+      "hbm_binding_constraint": "link_latency",
+      "hbm_design": "DeepSeek-V4.1-Flash/b200_sxm-x58-tensor",
+      "hbm_devices": 58,
+      "hbm_per_user_tokens_s": 355.5931744563896,
+      "hbm_silicon_area_mm2": 92800.0,
+      "hbm_token_slots": 1.0,
+      "ir_model_slug": "deepseek-v4.1-flash",
+      "iso_area_gpu_design_at_this_batch": "DeepSeek-V4.1-Flash/b200_sxm-x58-hybrid",
+      "iso_area_ratio": 0.9962284482758621,
+      "model": "DeepSeek-V4.1-Flash",
+      "pair_id": "deepseek-v4-1-flash__rom-n5-native-hbmkv-wafer-hybrid-x2__b200-sxm-x58-tensor",
+      "parallelism": "hybrid",
+      "rom_binding_constraint": "link_latency",
+      "rom_design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2",
+      "rom_devices": 2,
+      "rom_kv_store": "hbm",
+      "rom_per_user_tokens_s": 3722.847815439257,
+      "rom_silicon_area_mm2": 92450.0,
+      "rom_token_slots": 2.0,
+      "status": "blocked",
+      "study_id": "n5_vs_b200-deepseek-v41-flash",
+      "topology_kind": "wafer",
+      "why_the_matrix_selects_it": [
+        "design_selection batch-1 recommendation for DeepSeek-V4.1-Flash -- the study's own headline pair",
+        "published batch-1 frontier entry for DeepSeek-V4.1-Flash",
+        "the Engram-in-ROM envelope plan section 3.4 retains as TA-DS41-ROM-WAFER-3: the Engram-in-ROM study's own batch-1 recommendation and a two-wafer design against b200_sxm-x58-tensor.  Kept because it is the cell the words of plan section 8 select if they are read against the Engram-in-ROM candidate instead of the decided placement"
+      ],
+      "why_this_cell": "the Engram-in-ROM envelope section 3.4 retains as TA-DS41-ROM-WAFER-3, and the literal reading of section 8's 'recommended N5 two-wafer design against b200_sxm-x58-tensor' against the Engram-in-ROM candidate: this study's own batch-1 recommendation, 92,450 mm2, comparator b200_sxm-x58-tensor"
+    }
+  ],
+  "cells_blocked": 15,
+  "cells_considered": 15,
+  "cells_emitted": 0,
+  "engram_hbm_pricing": [
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 1,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.0009580861956377388,
+        "per_module_distributed": 0.0005544480298829506,
+        "per_token_collided": 0.0013839022825878448,
+        "per_token_distributed": 0.0005544480298829506
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 3712,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "link_latency",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.00022700860016429248,
+          "sum_of_component_times_s": 0.00022544944388455795
+        },
+        "component_times_s": {
+          "compute": 2.6111635761612582e-06,
+          "kv_read": 1.6185309303074986e-06,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.00015906835692775867,
+          "weight_read": 5.209965707582986e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.00022544944388455795
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0013839022825878448
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 8,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.0009506470235668344,
+        "per_module_distributed": 0.0005501429534530291,
+        "per_token_collided": 0.0013731568118187606,
+        "per_token_distributed": 0.0005501429534530291
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 3712,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "link_latency",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.0002272136709475684,
+          "sum_of_component_times_s": 0.00023834359818724013
+        },
+        "component_times_s": {
+          "compute": 1.0444654304645033e-05,
+          "kv_read": 6.474123721229994e-06,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.0001592734277110346,
+          "weight_read": 5.209965707582986e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.0002272136709475684
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0013731568118187606
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 32,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.000947227358622151,
+        "per_module_distributed": 0.0005481639806841151,
+        "per_token_collided": 0.0013682172957875513,
+        "per_token_distributed": 0.0005481639806841151
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x58-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 3712,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-hybrid-x2-romfill__b200-sxm-x58-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "link_latency",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.0002280339540806722,
+          "sum_of_component_times_s": 0.00028992021539796904
+        },
+        "component_times_s": {
+          "compute": 4.177861721858013e-05,
+          "kv_read": 2.5896494884919978e-05,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.0001600937108441384,
+          "weight_read": 5.2099657075829873e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.0002280339540806722
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0013682172957875513
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 1,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.0010880668491060543,
+        "per_module_distributed": 0.0006296683154548925,
+        "per_token_collided": 0.0015716521153754117,
+        "per_token_distributed": 0.0006296683154548925
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 1856,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "link_latency",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.00019851721443169012,
+          "sum_of_component_times_s": 0.00020892906302787088
+        },
+        "component_times_s": {
+          "compute": 8.793317665873248e-06,
+          "kv_read": 1.6185309303074986e-06,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.000154000090261092,
+          "weight_read": 3.4465388796097466e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.00019851721443169012
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0015716521153754117
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 8,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.0009215056425787517,
+        "per_module_distributed": 0.000533278728344185,
+        "per_token_collided": 0.0013310637059470857,
+        "per_token_distributed": 0.000533278728344185
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 1856,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "link_latency",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.00023439899879022249,
+          "sum_of_component_times_s": 0.00028181263502878
+        },
+        "component_times_s": {
+          "compute": 7.034654132698598e-05,
+          "kv_read": 1.2948247442459989e-05,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.00015400072208873587,
+          "weight_read": 3.4465388796097466e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.00023439899879022249
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0013310637059470857
+    },
+    {
+      "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-hbm/n5_vs_b200/analytical.json",
+      "bandwidth_floor_seconds": 3.9689922480620157e-10,
+      "bar": 0.01,
+      "batch_size": 32,
+      "below_bar": true,
+      "bounds": {
+        "per_module_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 2,
+          "conflict_cycles": 4836,
+          "finish_cycles": 216,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 2.16e-07,
+          "serialised_cycles": 96,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_module_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 7680,
+          "busy_cycles": 120,
+          "bytes_moved": 6336,
+          "channels_touched": 25,
+          "conflict_cycles": 236,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 24,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 120,
+          "useful_bytes": 6336
+        },
+        "per_token_collided": {
+          "address_stride_bytes": 88064,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 2,
+          "conflict_cycles": 19464,
+          "finish_cycles": 312,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 3.12e-07,
+          "serialised_cycles": 192,
+          "transactions": 240,
+          "useful_bytes": 12672
+        },
+        "per_token_distributed": {
+          "address_stride_bytes": 256,
+          "burst_bytes": 15360,
+          "busy_cycles": 240,
+          "bytes_moved": 12672,
+          "channels_touched": 49,
+          "conflict_cycles": 476,
+          "finish_cycles": 125,
+          "read_latency_cycles": 120,
+          "rows": 48,
+          "seconds": 1.25e-07,
+          "serialised_cycles": 5,
+          "transactions": 240,
+          "useful_bytes": 12672
+        }
+      },
+      "burst_bytes_over_useful_bytes": 1.2121212121212122,
+      "burst_bytes_per_token": 15360,
+      "context_tokens": 200000,
+      "cost_is_dominated_by": "channel serialisation at the measured burst size",
+      "decision": "section 3.4 CONFIRMED",
+      "fraction_of_step": {
+        "per_module_collided": 0.0004849129341450364,
+        "per_module_distributed": 0.0002806209109635627,
+        "per_token_collided": 0.0007004297937650525,
+        "per_token_distributed": 0.0002806209109635627
+      },
+      "gate": "DS41-C2",
+      "hbm_design": "DeepSeek-V4.1-Flash-engram-hbm/b200_sxm-x29-tensor",
+      "lookup": {
+        "config": "configs/models/candidates/deepseek-v4.1-flash-engram_hbm.json",
+        "engram_placement": "Engram tables resident in the KV store -- wafer-edge HBM on the ROM side, the same HBM on the GPU side -- as a load-once, read-only region written at load and never at runtime (plan section 3.4). The weight store holds none of them, so a mask ROM is sized without them; instead they take capacity from the stage whose layers own them (metadata.hbm_resident_regions) and their row reads take that store's bandwidth on that stage",
+        "identity_checked": "2 modules x 24 rows x 264 B = 12672 B",
+        "lookup_bytes_per_token": 12672,
+        "module_layer_ids": [
+          1,
+          14
+        ],
+        "modules": 2,
+        "placement_variant": "engram_hbm",
+        "row_bytes_packed": 264,
+        "rows_read_per_token": 48,
+        "rows_read_per_token_per_module": 24
+      },
+      "machine": {
+        "channels_declared_by_capability": null,
+        "channels_derivation": "tools/derive_cycle_machine.py::_hbm_split on this anchor -- the ROM point's kv_transfer_bytes_per_step / component_times_s.kv_read over the per-channel rate the GPU point's stacks fix",
+        "channels_priced": 344,
+        "channels_source": "the derived ROM-role channel count (_hbm_split)",
+        "clock_derivation": "3 sequencer cycles over technology.json#latency.sequencer_issue_decode_s",
+        "clock_hz": 1000000000.0,
+        "gpu_role_hbm_channels": 1856,
+        "hbm_bytes_per_cycle_per_channel": 112.5,
+        "rom_role_hbm_bytes_s": 38700000000000.0,
+        "rom_role_hbm_channels": 344
+      },
+      "measured_inputs": {
+        "cost_table": "configs/hardware/abi3_cost_wafer_v2.json",
+        "cost_table_digest": "acd02d94972766425b9d5ac891f852ad34437e4dad9c611f308be3711d4ee938",
+        "parameters": {
+          "hbm.interleave_bytes": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "B",
+            "value": 256
+          },
+          "hbm.read_latency_cycles": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "cycles",
+            "value": 120
+          },
+          "hbm.transaction_bytes": {
+            "provenance": "characterized",
+            "source": "results/tensor_accelerator/qwen3_rtl_dma_campaign.json#correlation.hbm_burst_bytes",
+            "unit": "B",
+            "value": 64
+          },
+          "model.max_modeled_transactions_per_access": {
+            "provenance": "assumed",
+            "source": "",
+            "unit": "transactions",
+            "value": 4096
+          }
+        }
+      },
+      "pair_id": "deepseek-v4-1-flash-engram-hbm__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor",
+      "plan_section": "3.4 (placement) read against 4.4 (the bar)",
+      "read_latency_seconds": 1.2e-07,
+      "refusals": [
+        "not-a-tpot: every time here is a cycle-model charge against an analytical step, both above section 4 of the plan's floor.  No number in this record is a TPOT and none may be published as one.",
+        "numerator-and-denominator-are-different-layers: the lookup is charged by the L3 cycle model (cycles at the derived clock) and the step is the L1 analytical component-time sum of the same design point.  At gate DS41-C2 there is no third option -- no cycle run of a V4.1 deployment exists, because no V4.1 deployment exists -- so this fraction is a MAGNITUDE test across two layers and not a correlated one.  It answers 'could this lookup be on the critical path', which is what plan section 3.4 asks; it does not answer 'what fraction of a measured step is it'.",
+        "address-pattern-bounded-not-modelled: the Engram row address is an n-gram hash of the token ids, so which channel a row lands on is not knowable from the program.  Two address patterns bound it; the real one lies between them and is not modelled.",
+        "read-latency-is-assumed: hbm.read_latency_cycles is 120 with provenance assumed and the table says no HBM latency figure exists anywhere in this repository.  It dominates the distributed bound, so that bound is a latency assumption with a measured quantum on top, not a measurement.",
+        "load-path-not-priced: the tables are written once at load and never at runtime (section 3.4), and that one-off write is not priced here.  Neither is the capacity it costs the KV store, which the analytical model charges instead.",
+        "no-prefetch-credit: the lookup is charged as if it were issued and waited on inside the step.  Section 3.4 and the technology.json by-model note both argue it is prefetchable because the row address is a function of the token ids alone; charging it in full is the pessimistic reading, and it is the one a placement decision should survive.",
+        "one-token-only: this is one token's lookup at this batch.  It is not multiplied by batch, because the two modules' rows are read once per token and the study's batch axis is a throughput axis."
+      ],
+      "resident_region": {
+        "base_capability_max_nodes": 2,
+        "covers_as_per_node": true,
+        "covers_as_whole_machine": true,
+        "declared": 202758032400,
+        "declared_as_per_node_total_bytes": 405516064800,
+        "declared_as_whole_machine_bytes": 202758032400,
+        "exact_as_whole_machine": true,
+        "module_rows": [
+          384006168,
+          384016682
+        ],
+        "required_derivation": "sum(metadata.engram.num_embeddings) = 768022850 rows x 264 B = 202758032400 B",
+        "required_region_bytes": 202758032400,
+        "rom_base_capability": "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json",
+        "row_bytes_packed": 264,
+        "verdict": "exact: the reserved region is the tables, byte for byte"
+      },
+      "rom_design": "DeepSeek-V4.1-Flash-engram-hbm/ROM-N5-native-HBMKV-wafer-tensor-x1",
+      "schema": "opentallas.derived_cycle_machine.engram_hbm_pricing.v1",
+      "step": {
+        "binding_constraint": "compute",
+        "candidates_s": {
+          "one_over_per_user_tokens_s": 0.00044544078903738807,
+          "sum_of_component_times_s": 0.0005316991676033255
+        },
+        "component_times_s": {
+          "compute": 0.00028138616530794393,
+          "kv_read": 5.1792989769839955e-05,
+          "layer_fixed_latency": 1.0051735374500655e-05,
+          "link_latency": 0.00015400288835494346,
+          "weight_read": 3.4465388796097466e-05
+        },
+        "used": "the smallest step the design point publishes",
+        "used_s": 0.00044544078903738807
+      },
+      "transactions_per_row": 5,
+      "worst_bound": "per_token_collided",
+      "worst_fraction_of_step": 0.0007004297937650525
+    }
+  ],
+  "gate_ds41_c2": {
+    "c1_exits_0_with_v41_cells": {
+      "command": "python3 tools/derive_cycle_machine.py --check",
+      "note": "C1 checks the emitted files of a cell against a fresh derivation.  With no V4.1 cell emitted it can only be run on the cells that are, which is what configs/gates/redesign_gates.json evaluates; every V4.1 cell above that reaches status emitted becomes a --check target of its own"
+    },
+    "c2_comparable_on_every_v41_pair": {
+      "note": "gate C2 reads deployment_audit.comparable over results/derived/*machine_pair*.json with require_all, so a V4.1 pair that emits before its deployments exist turns the gate RED on 'no deployment built'.  That is the gate working: absence is a failure, not a skip",
+      "state": "not evaluable: no V4.1 pair has a compiled deployment on either side"
+    },
+    "c3_reconciliation_recorded": {
+      "command": "python3 tools/derive_cycle_machine.py --analytical <cell artifact> --rom-design <cell> --hbm-design <its iso comparator> --batch-size <b> --context-tokens 200000 --reconcile <rom run> <hbm run> --reconcile-out results/derived/<pair_id>_reconciliation.json",
+      "state": "blocked: --reconcile takes two tools/run_abi3_cycle.py run records, and a run needs a compiled deployment"
+    },
+    "engram_priced_on_the_hbm_path": {
+      "bar": 0.01,
+      "cost_is_dominated_by": [
+        "channel serialisation at the measured burst size"
+      ],
+      "decisions": [
+        "section 3.4 CONFIRMED"
+      ],
+      "priced_cells": 6,
+      "unpriced_cells": [
+        {
+          "batch_size": 1,
+          "cell_id": "TA-DS41-ROM-ARRAY",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        },
+        {
+          "batch_size": 8,
+          "cell_id": "TA-DS41-ROM-ARRAY",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        },
+        {
+          "batch_size": 32,
+          "cell_id": "TA-DS41-ROM-ARRAY",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        },
+        {
+          "batch_size": 1,
+          "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+          "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+        },
+        {
+          "batch_size": 8,
+          "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+          "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+        },
+        {
+          "batch_size": 32,
+          "cell_id": "TA-DS41-ROM-ARRAY-HBM-ENGRAM",
+          "why_not": "the ROM point's KV bandwidth 3.535714e+13 B/s is 314.285714 of the GPU point's per-channel rate 1.125000e+11 B/s, not a whole number of channels; the two points do not share an HBM generation and hbm.bytes_per_cycle_per_channel cannot be shared"
+        },
+        {
+          "batch_size": 1,
+          "cell_id": "TA-DS41-ROM-WAFER-3",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        },
+        {
+          "batch_size": 8,
+          "cell_id": "TA-DS41-ROM-WAFER-3",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        },
+        {
+          "batch_size": 32,
+          "cell_id": "TA-DS41-ROM-WAFER-3",
+          "why_not": "this cell's Engram tables are not in the store the cycle model would price them on; see V41_CELLS"
+        }
+      ],
+      "worst_fraction_of_step_over_all_priced_cells": 0.0015716521153754117
+    }
+  },
+  "generator": "tools/derive_cycle_machine.py --v41-cells",
+  "plan": "docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md sections 8 and 13 WP-J, gate DS41-C2",
+  "refusals": [
+    "not-a-tpot: nothing in this file is a token rate of a real machine.  Every per_user_tokens_s is the analytical study's own number and every cycle figure is a cycle-model charge; plan section 4 forbids reading either as a TPOT.",
+    "blocked-is-not-skipped: a cell that cannot derive is recorded with the inputs it waits for and the work package that produces each.  It is not omitted, and it is not given a placeholder machine.",
+    "no-invented-registration: the three shipped-deployment registrations plan section 13 WP-J asks for are ABSENT from configs/abi3/shipped_deployments.json, because a registration states a deployment_sha256 and no V4.1 bundle has been built.  Each cell names the (base_capability, model_id) pair its future registration must carry instead."
+  ],
+  "schema": "opentallas.derived_cycle_machine.v41_cells.v1",
+  "technology": "configs/hardware/technology.json",
+  "technology_view": "n5_design_target"
+}

@@ -1,0 +1,23 @@
+{
+  "files": [
+    {
+      "path": "src/transformers/models/qwen3/configuration_qwen3.py",
+      "sha256": "87f0d17326c44f2dfe1bfc329faf9201ab4b19a89ad555da085b4cc81461b201",
+      "size_bytes": 11202
+    },
+    {
+      "path": "src/transformers/models/qwen3/modeling_qwen3.py",
+      "sha256": "704c914530530a1acb0b443add1f520404e3ac2c28c0ab7e16f80f86cfe8ccb2",
+      "size_bytes": 51968
+    },
+    {
+      "path": "src/transformers/models/qwen3/modular_qwen3.py",
+      "sha256": "959460177639c3743496bc015f5cfdfd9f722171688b541852f3630b469cec56",
+      "size_bytes": 8050
+    }
+  ],
+  "repository": "huggingface/transformers",
+  "revision": "0720e206c6ba28887e4d60ef60a6a089f6c1cc76",
+  "schema": "opentallas.qwen3.reference_sources.v1",
+  "version": "4.51.0"
+}

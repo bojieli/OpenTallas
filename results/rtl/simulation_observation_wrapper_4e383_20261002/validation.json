@@ -1,0 +1,54 @@
+{
+  "status": "FAKE_HARNESS_ONLY_NO_HIERARCHY_ELABORATION",
+  "python": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "negative_controls": [
+    {
+      "name": "wrong_generation",
+      "mutated_packet_decimal": "110313045262039745974574564148618275912162262181702247288289774204935632548383887996095471213004664213733829485785403934059025414203553606726545358538233218358403596759813428768133023502522059382799139506856237717258241",
+      "input_state": "State(epoch=1, rank=0, cycle=1, serial=2, request_serial=0, source=None, merge=None, block=None, refill=None, selection=Operation(epoch=1, rank=0, family='ckv_selection', serial=1, generation=0, selection=0, context=()), fetch=None, replay=Operation(epoch=1, rank=0, family='ckv_replay', serial=2, generation=19, selection=1, context=()), requests=(), stages=())",
+      "mutation": "job gen19 -> beat gen20",
+      "verdict": "EXPECTED_REJECTION_BEFORE_MUTATION",
+      "diagnostic": "wrong QK/PV generation"
+    },
+    {
+      "name": "early_retire",
+      "mutated_packet_decimal": "28793048285076456849987446449190283896766061557132266451844835664715760516297522370041860391064901485759493828054533728788534263884631201763508424442943070583914497",
+      "input_state": "State(epoch=1, rank=0, cycle=3, serial=3, request_serial=1, source=None, merge=None, block=None, refill=None, selection=Operation(epoch=1, rank=0, family='ckv_selection', serial=1, generation=0, selection=0, context=()), fetch=Operation(epoch=1, rank=0, family='ckv_fetch', serial=3, generation=0, selection=1, context=()), replay=Operation(epoch=1, rank=0, family='ckv_replay', serial=2, generation=19, selection=1, context=()), requests=((('ckv', 0, 0), (Operation(epoch=1, rank=0, family='ckv_fetch', serial=3, generation=0, selection=1, context=()), False, 1, 1)),), stages=())",
+      "mutation": "fetch done with accepted request still outstanding",
+      "verdict": "EXPECTED_REJECTION_BEFORE_MUTATION",
+      "diagnostic": "early/unowned fetch_done"
+    },
+    {
+      "name": "repeated_step",
+      "mutated_packet_decimal": "104797392998937758675845835941187362116554149072617134762634215098260692561034993480825107830464486283106445881165054014947815252227250654155799900647873237187317979816433876113942184954953639747286674522157773278412801",
+      "input_state": "State(epoch=1, rank=0, cycle=1, serial=2, request_serial=0, source=None, merge=None, block=None, refill=None, selection=Operation(epoch=1, rank=0, family='ckv_selection', serial=1, generation=0, selection=0, context=()), fetch=None, replay=Operation(epoch=1, rank=0, family='ckv_replay', serial=2, generation=19, selection=1, context=()), requests=(), stages=())",
+      "mutation": "host repeats same sampled rising edge",
+      "verdict": "EXPECTED_REJECTION_BEFORE_MUTATION",
+      "diagnostic": "repeated or reversed sampled edge"
+    },
+    {
+      "name": "offer_as_accept",
+      "mutated_packet_decimal": "57717782514249725408611875146694746784784774321970869142502382916375569001216617106563866584322522389786543521793",
+      "input_state": "State(epoch=1, rank=0, cycle=0, serial=1, request_serial=0, source=None, merge=None, block=None, refill=Operation(epoch=1, rank=0, family='window_refill', serial=1, generation=0, selection=0, context=(0, 0)), selection=None, fetch=None, replay=None, requests=(), stages=())",
+      "mutation": "take=offer replaces take=offer&&ready",
+      "verdict": "EXPECTED_REJECTION_BEFORE_MUTATION",
+      "diagnostic": "WINDOW acceptance qualifier"
+    },
+    {
+      "name": "replace_selection",
+      "mutated_packet_decimal": "219673525124179510879420825570604582952621929604585773100622830693937381868724993667921908501166545759273481964527387458549033083674686455892760823190173777921",
+      "input_state": "State(epoch=1, rank=0, cycle=1, serial=2, request_serial=0, source=None, merge=None, block=None, refill=None, selection=Operation(epoch=1, rank=0, family='ckv_selection', serial=1, generation=0, selection=0, context=()), fetch=None, replay=Operation(epoch=1, rank=0, family='ckv_replay', serial=2, generation=19, selection=1, context=()), requests=(), stages=())",
+      "mutation": "selection accepted during old replay lifetime",
+      "verdict": "EXPECTED_REJECTION_BEFORE_MUTATION",
+      "diagnostic": "selection replacement while lifetime outstanding"
+    }
+  ],
+  "tests": "python -m pytest -q tests/test_simulation_observation_wrapper.py",
+  "product_liveness": "BOUND_MISSING",
+  "deadlines_admitted": 0,
+  "full_build_run": false,
+  "live_getter_selected": false,
+  "engine_edits": false
+}

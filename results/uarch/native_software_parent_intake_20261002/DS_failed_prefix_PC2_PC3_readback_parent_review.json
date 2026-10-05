@@ -1,0 +1,33 @@
+{
+  "coverage_scope": "Actual source-merge readback receipts for PC2 and PC3 output shards only; hash comparison to independent golden. PC1/PC4 output bytes and PC5-9 numerical comparison not evidenced by these read receipts.",
+  "execution_failure": "persistent output needs concrete physical home directory",
+  "execution_status": "FAIL_CLOSED_PRESERVED",
+  "full_output_payload_SHA_equal": true,
+  "full_prefix_qualified": false,
+  "full_token_qualified": false,
+  "per_PC_unique_outputs": {
+    "2": 96,
+    "3": 96
+  },
+  "physical_movement_qualified": false,
+  "raw_journal_bytes": 2494771200,
+  "raw_journal_path": "/tmp/kepler-ds-r39-PC0-9-execution-20261002/actual-prefix-journal/events.sqlite",
+  "raw_journal_sha256": "c8a7b5add4a16cfe541c406ed5d6b3e6ae4927c310f41d3c2c5e9b9a4fd251b9",
+  "readbacks_per_output": {
+    "96": 192
+  },
+  "reference_sha256": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+  "schema": "opentallas.parent.ds-prefix-terminal-readback-golden-review.v1",
+  "source_commit": "1eea54934831c0f859f7f9a828cea2999ae98513",
+  "source_native_numeric_calls": {
+    "0": 96,
+    "1": 96,
+    "2": 96,
+    "3": 96,
+    "4": 192
+  },
+  "source_read_receipts_compared": 18432,
+  "source_word_counts_match_reference_shapes": true,
+  "status": "PASS_PC2_PC3_READBACK_HASH_COMPARISON_ONLY",
+  "unique_output_payloads_compared": 192
+}

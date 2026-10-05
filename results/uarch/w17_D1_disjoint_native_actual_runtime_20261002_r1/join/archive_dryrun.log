@@ -1,0 +1,21 @@
+make: Entering directory '/tmp/w17-D1-native-joined-20261002-r1/obj'
+echo "" > Vtb_D1_scope_core__ALL.verilator_deplist.tmp
+if test 0 -eq 0; then \
+	rm -f -f Vtb_D1_scope_core__ALL.a; \
+	cat Vtb_D1_scope_core__ALL.a.verilator_deplist.tmp | xargs ar -rc Vtb_D1_scope_core__ALL.a; \
+	ar -s Vtb_D1_scope_core__ALL.a; \
+else \
+	rm -f -rf Vtb_D1_scope_core__ALL.a.tmpdir; \
+	for archive in ; do \
+		mkdir -p Vtb_D1_scope_core__ALL.a.tmpdir/$(basename ${archive}); \
+		cd Vtb_D1_scope_core__ALL.a.tmpdir/$(basename ${archive}); \
+		ar -x ../../${archive}; \
+		cd ../..; \
+	done; \
+	rm -f -f Vtb_D1_scope_core__ALL.a; \
+	cat Vtb_D1_scope_core__ALL.a.verilator_deplist.tmp | xargs ar -rc Vtb_D1_scope_core__ALL.a; \
+	ar -rcs Vtb_D1_scope_core__ALL.a Vtb_D1_scope_core__ALL.a.tmpdir/*/*.o; \
+fi \
+; rm -f -rf Vtb_D1_scope_core__ALL.a.verilator_deplist.tmp Vtb_D1_scope_core__ALL.a.tmpdir
+rm Vtb_D1_scope_core__ALL.verilator_deplist.tmp
+make: Leaving directory '/tmp/w17-D1-native-joined-20261002-r1/obj'

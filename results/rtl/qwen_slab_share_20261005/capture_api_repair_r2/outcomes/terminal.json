@@ -1,0 +1,103 @@
+{
+  "added_area_um2": 0,
+  "added_cycles": 0,
+  "artifactpins": {
+    "capture_api_repair_r1/resume_456.supervisor.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "capture_api_repair_r1/resume_570.supervisor.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "capture_api_repair_r1/resume_685.supervisor.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "qss_fanout_capture_456_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_456_l7/base/2_2_floorplan_macro.log": "0666a5c6f051290f0216123240b13b0a1da6268149794b747126d10d2d60f8e8",
+    "qss_fanout_capture_456_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_456_l7/base/3_3_place_gp.log": "885d521934002689098e98afe16a8d77922d2c1ddc3f407b24e6906decdf1e40",
+    "qss_fanout_capture_456_l7/work/orfs/resume_r2/config.mk": "e40692b6c7aa56e9e80b185ae9b133c49b4050e1bced2ebb5c7f4e3cbd5fadf6",
+    "qss_fanout_capture_456_l7/work/orfs/resume_r2/receipt.json": "c11014a504342212d4266737f08b2ed182120b71627074a56357acb069fc5fd2",
+    "qss_fanout_capture_456_l7/work/orfs/resume_r2/route.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "qss_fanout_capture_456_l7/work/orfs/resume_r2/route.log": "39704f379b28368d92468a8f975e1ff98f6834466eeac80da21f02543301b55b",
+    "qss_fanout_capture_456_l7/work/orfs/resume_r2/side_effects.mk": "bacf9e5c1bd0dc776f0a26ab798f26c996d7b5e6d3b8210de769ad9e275b4424",
+    "qss_fanout_capture_570_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_570_l7/base/2_2_floorplan_macro.log": "554e5217b759ad57513e0ae15d5f835292e60d69e4209ecc396e8ca2f2d078e4",
+    "qss_fanout_capture_570_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_570_l7/base/3_3_place_gp.log": "421e3a608181fed6c9121b1d3fd385a590ede69263309b20baaa2ab4332f11cc",
+    "qss_fanout_capture_570_l7/work/orfs/resume_r2/config.mk": "521c8f287de27709621e5ebe3cb6a44cb637921d921da76e0d8762fdb95834a7",
+    "qss_fanout_capture_570_l7/work/orfs/resume_r2/receipt.json": "f1bbec8bf59b3281845b368fb0d215e8abbd790222fd0999b81949520b109b9c",
+    "qss_fanout_capture_570_l7/work/orfs/resume_r2/route.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "qss_fanout_capture_570_l7/work/orfs/resume_r2/route.log": "1b1fcff0940f25de2231bb17744e864e04a9d9f5ee9bc0a1c1b02435c1f325d3",
+    "qss_fanout_capture_570_l7/work/orfs/resume_r2/side_effects.mk": "bacf9e5c1bd0dc776f0a26ab798f26c996d7b5e6d3b8210de769ad9e275b4424",
+    "qss_fanout_capture_685_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_685_l7/base/2_2_floorplan_macro.log": "df9df49a6173f4a8ecc0969a520f9021992cffee32bf15b4b37cd5ac0855d241",
+    "qss_fanout_capture_685_l7/work/orfs/logs/asap7/opentallas_ot_qwen_slab_port_group_capture_asap7_qss_fanout_capture_685_l7/base/3_3_place_gp.log": "bbcdeb0fe1faefa19b64d160b062b73de90fcda080837b8901219e32ee889591",
+    "qss_fanout_capture_685_l7/work/orfs/resume_r2/config.mk": "1f8d95f51757b9993df3ce5354c94f5f5620e975cbb9d09ea047fff92e0b5028",
+    "qss_fanout_capture_685_l7/work/orfs/resume_r2/receipt.json": "3177c790bafd4fee67924df70d23cf2bb6e0aa81ab3c9cbaf942c71441b01ccf",
+    "qss_fanout_capture_685_l7/work/orfs/resume_r2/route.exit": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+    "qss_fanout_capture_685_l7/work/orfs/resume_r2/route.log": "3d8e156a0aebfe1088385f800814428ae5d87853a2f2f55e1fcc3ef7fe294c96",
+    "qss_fanout_capture_685_l7/work/orfs/resume_r2/side_effects.mk": "bacf9e5c1bd0dc776f0a26ab798f26c996d7b5e6d3b8210de769ad9e275b4424"
+  },
+  "cases": [
+    {
+      "CTS_or_route_or_final_STA": false,
+      "api_repair_and_membership_PASS": true,
+      "classification": "PHYSICAL_PLACER_NUMERICAL_FAILURE",
+      "driver_pid_historical": 3055377,
+      "error": "GPL-0305 RePlAce Inf/NaN gradient-descent step",
+      "hardware_admission": false,
+      "name": "qss_fanout_capture_456_l7",
+      "placement_metrics": {
+        "final_placement_area_um2": 71144.16,
+        "routability_artificial_inflation_um2": 53155.92,
+        "timing_driven_delta_area_um2": -207.99
+      },
+      "regions": 4,
+      "remaining_processes": [],
+      "retained_objects_byteidentical": true,
+      "route_exit": 2,
+      "stage": "3_3_global_placement",
+      "supervisor_exit": 2,
+      "unique_capture_FF": 512
+    },
+    {
+      "CTS_or_route_or_final_STA": false,
+      "api_repair_and_membership_PASS": true,
+      "classification": "PHYSICAL_PLACER_NUMERICAL_FAILURE",
+      "driver_pid_historical": 3055378,
+      "error": "GPL-0305 RePlAce Inf/NaN gradient-descent step",
+      "hardware_admission": false,
+      "name": "qss_fanout_capture_570_l7",
+      "placement_metrics": {
+        "final_placement_area_um2": 44885.56,
+        "routability_artificial_inflation_um2": 25716.7,
+        "timing_driven_delta_area_um2": 972.62
+      },
+      "regions": 4,
+      "remaining_processes": [],
+      "retained_objects_byteidentical": true,
+      "route_exit": 2,
+      "stage": "3_3_global_placement",
+      "supervisor_exit": 2,
+      "unique_capture_FF": 512
+    },
+    {
+      "CTS_or_route_or_final_STA": false,
+      "api_repair_and_membership_PASS": true,
+      "classification": "PHYSICAL_PLACER_NUMERICAL_FAILURE",
+      "driver_pid_historical": 3055380,
+      "error": "GPL-0305 RePlAce Inf/NaN gradient-descent step",
+      "hardware_admission": false,
+      "name": "qss_fanout_capture_685_l7",
+      "placement_metrics": {
+        "final_placement_area_um2": 40092.96,
+        "routability_artificial_inflation_um2": 20942.81,
+        "timing_driven_delta_area_um2": 953.91
+      },
+      "regions": 4,
+      "remaining_processes": [],
+      "retained_objects_byteidentical": true,
+      "route_exit": 2,
+      "stage": "3_3_global_placement",
+      "supervisor_exit": 2,
+      "unique_capture_FF": 512
+    }
+  ],
+  "engine_source_commit": "14940752483dad5b24a76bb640c9b5c7f47f7945",
+  "frame_impossibility_not_proven": true,
+  "no_synthesis_or_gate_repeated": true,
+  "observed_utc": "2026-10-05T09:00:29.860184+00:00",
+  "original_API_failures_preserved": true,
+  "physical_attempts_rejected": true,
+  "repair_source_commit": "cc88ecfeda173d792758634419bbffc3b4b57c02",
+  "schema": "qwen.slab.capture.api_r2.terminal"
+}

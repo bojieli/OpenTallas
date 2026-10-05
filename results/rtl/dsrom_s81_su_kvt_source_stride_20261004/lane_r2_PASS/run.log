@@ -1,0 +1,5 @@
+PASS 36 source KVT registered-address cases: D128, D512, SH13 compatibility; leaf and default-off
+- /home/ubuntu/dsrom-s81-su-kvt-source-stride-20261004/rtl/test/tb_s81_kvt_source_stride.sv:233: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 287ns; walltime 0.000 s; speed 5.029 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 6 MB
