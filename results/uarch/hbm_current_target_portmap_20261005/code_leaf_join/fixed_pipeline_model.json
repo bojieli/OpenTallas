@@ -44,12 +44,13 @@
   },
   "read_mux": {
     "output_bits": 2660,
-    "payload_steering_bits": 512,
+    "payload_steering_bits": 2560,
     "virtual_bank_compare_bits": 6,
     "positive_logic_gate_um2_proxy": 4,
-    "steering_area_screen_um2": 2048,
-    "control_comparison_screen_um2": 24,
-    "codec_route_loaded_SSFF": false
+    "steering_area_screen_um2": 10240,
+    "control_comparison_screen_um2": 120,
+    "codec_route_loaded_SSFF": false,
+    "bank_comparators": 10
   },
   "MEM_EXTRA_policy": "PIPE adapter always0; successor tile owns original optional extra capture exactly once. CODEselector delayed2, MEM_EXTRA capture E+2; X D(MEM_EXTRA+1); KV actual C+1 input D(MEM_EXTRA+1); matvec MEM_EXTRA+1 all tags/round/gm/first/wsrc/valid.",
   "clock": "same actual core clock for leaf+tile pipeline, no private clocks or active clockskip. GO admission fullselectedspan residency/publication; any external wholeengine stall requires complete pipeline drain or holding ALL memory/tag participants, not assumed.",

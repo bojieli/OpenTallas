@@ -3,7 +3,7 @@
 // unchanged until matched reverse ACK and all declared read leases terminate.
 // Publication is an external actual hardware authority, not private visibility.
 module ot_hbm_qwen_code_pair_join #(
- parameter integer ENABLE=0,NSEG=8,CW=32,ROWS=4496
+ parameter integer ENABLE=0,NSEG=8,CW=32,ROWS=4496,READ_ALIGN=0,MEM_EXTRA=0
 )(
  input wire service_clk,core_clk,por_n,
  input wire service_v,output wire service_r,input ot_hbm_r14_pkg::owned_t service_owned,
@@ -16,15 +16,18 @@ module ot_hbm_qwen_code_pair_join #(
  input wire[23:0] installed_base,installed_length,input wire[CW-1:0] installed_sidx,
  input wire[1:0] installed_kind,input wire published,
  input wire read_v,input wire[23:0] virtual_address,
- output wire read_ready,output wire[1:0] read_response_valid,
+ output wire[1:0] read_accepted,output wire read_ready,output wire[1:0] read_response_valid,
  output wire[511:0] read_data,output wire[2:0] read_bank,
+ input wire consumer_enable,input wire[1:0] response_ready,
+ output wire[2659:0] rom_rd,output wire[1:0] tile_response_valid,
  output wire fault,output wire crossing_empty
 );
  import ot_hbm_r14_pkg::*;
  owned_t delivered;wire ov,ore,xf,mapf,lv,pv,pready,lf,rf;
  wire[592:0] packet;wire[336:0] key;
  identity_t visible_id;wire[11:0] visible_tag,visible_col;wire[4:0] visible_beat;
- wire[12:0] visible_row,read_row;wire bound;wire[1:0] rr;
+ wire[12:0] visible_row,read_row;wire bound;wire[1:0] rr,alignment_ready;wire alignment_fault;
+ wire read_issue=read_v&&bound&&(&alignment_ready);
  reg write_pending;
  wire span_format=installed&&(installed_kind==1||installed_kind==2)&&
    installed_length==span_rows&&installed_length!=0&&installed_segment<NSEG&&
@@ -58,9 +61,27 @@ module ot_hbm_qwen_code_pair_join #(
  .clk(core_clk),.por_n(por_n),.wr_v(lv&&!write_pending),.wr_r(pready),.wr_owned(delivered),
  .wr_span_bound(span_format),.wr_kind(1'b0),.wr_row(packet[489:477]),.wr_column(packet[476:465]),
  .visible_v(pv),.visible_r(ore),.visible_id(visible_id),.visible_tag(visible_tag),.visible_beat(visible_beat),
- .visible_row(visible_row),.visible_column(visible_col),.rd_v({2{read_v&&bound}}),
+ .visible_row(visible_row),.visible_column(visible_col),.rd_v({2{read_issue}}),
  .rd_span_bound({2{bound}}),.rd_published({2{published}}),.rd_row({read_row,read_row}),
  .rd_r(rr),.rd_rsp_v(read_response_valid),.rd_data(read_data),.rd_corrected(),.rd_uncorrectable(),.fault(lf));
- assign read_ready=bound&&(&rr)&&!fault;
- assign fault=xf||mapf||lf||rf;
+ assign read_accepted=rr & {2{read_issue}};
+ generate if(READ_ALIGN==2)begin:fixed_pipeline
+ assign alignment_ready=2'b11;
+ ot_qwen_hbm_code_read_pipeline #(.ENABLE(ENABLE)) align(
+  .clk(core_clk),.por_n(por_n),.rd_fire(read_accepted),.virtual_bank({read_bank,read_bank}),
+  .leaf_rd_rsp_v(read_response_valid),.leaf_rd_data(read_data),.leaf_fault(lf),
+  .rom_rd(rom_rd),.rsp_v(tile_response_valid),.fault(alignment_fault));
+ end else if(READ_ALIGN==1)begin:read_alignment
+ ot_qwen_hbm_code_read_align #(.ENABLE(ENABLE),.MEM_EXTRA(MEM_EXTRA)) align(
+  .clk(core_clk),.por_n(por_n),.consumer_enable(consumer_enable),
+  .rd_fire(rr & {2{read_issue}}),.virtual_bank({read_bank,read_bank}),
+  .leaf_rd_rsp_v(read_response_valid),.leaf_rd_data(read_data),.leaf_fault(lf),
+  .consumer_ready(alignment_ready),.rsp_v(tile_response_valid),.rsp_ready(response_ready),
+  .rom_rd(rom_rd),.fault(alignment_fault));
+ end else begin:raw_leaf_only
+ assign alignment_ready=2'b11;assign alignment_fault=0;
+ assign rom_rd=0;assign tile_response_valid=0;
+ end endgenerate
+ assign read_ready=bound&&(&rr)&&(&alignment_ready)&&!fault;
+ assign fault=xf||mapf||lf||rf||alignment_fault;
 endmodule
