@@ -85,8 +85,9 @@ module tb_hbm_accel_su_parent;
   .rsp_tag(x_rsp_tag),.rsp_we(x_rsp_we),.rsp_data(x_rsp_data),.fault(mem_fault));
  reg [689:0] words[0:3];reg [31:0] expected[0:20479];
  integer cycle=0,old_accepted=0,old_consumed=0,bulk_consumed=0,hold_checks=0;
- integer start_cycle=-1,finish_cycle=-1,request_edge=0,wait_edges=0;
- real start_time,finish_time;
+ integer start_cycle=-1,finish_cycle=-1,owned_cycle=-1,request_edge=0,wait_edges=0;
+ reg late_prior=0;
+ real start_time,finish_time,owned_time;
  always @(posedge clk) begin
   cycle<=cycle+1;
   if(old_req_v && old_req_ready) old_accepted=old_accepted+1;
@@ -96,7 +97,9 @@ module tb_hbm_accel_su_parent;
    if(owned || owner_done || su_req_v) $fatal(1,"borrow before real prior response consumption");
    hold_checks=hold_checks+1;
   end
-  if(owned && start_cycle<0) begin start_cycle=cycle;start_time=$realtime;$display("PARENT_EVENT owned cycle=%0d time_ns=%0.9f",cycle,$realtime);end
+  if(db_v && db_rdy && start_cycle<0) begin start_cycle=cycle;start_time=$realtime;end
+  if(owned && owned_cycle<0) begin owned_cycle=cycle;owned_time=$realtime;$display("PARENT_EVENT owned cycle=%0d time_ns=%0.9f",cycle,$realtime);end
+  if(late_prior && owned) $fatal(1,"borrow while late actual producer request/response outstanding");
   if(su_req_v && su_req_rdy) request_edge=cycle;
   if(su_rsp_v && su_rsp_rdy) wait_edges=wait_edges+cycle-request_edge;
   if(owner_fault || exec_fault || |cdc_fault || mem_fault) $fatal(1,"parent/provider fault mode=%0d cycle=%0d state=%0d cursor=%0d",mode,cycle,exec.g_on.state,exec.g_on.cursor);
@@ -144,6 +147,13 @@ module tb_hbm_accel_su_parent;
    $display("PARENT_FOREIGN_PASS hold=8 prior_debt=1 owned=0");$finish;
   end
   old_rsp_ready=1;bulk_rsp_ready=1;
+  // A real old-producer request arrives on the would-be quiet grant edge.
+  // It must retire through the same provider before ownership changes.
+  wait(owner.quiet_age==3);@(negedge clk);
+  late_prior=1;old_address=128;old_tag=16'h88;old_req_v=1;
+  do @(posedge clk);while(!old_req_ready);
+  @(negedge clk);old_req_v=0;
+  wait(old_rsp_v);@(negedge clk);late_prior=0;
   wait(cpl_v);@(negedge clk);finish_cycle=cycle;finish_time=$realtime;
   // This cut deliberately has no SM RESULT kernel: preserve CP's real status2.
   if(cpl_status!=2 || cpl_token!=0 || cpl_job!=41 || cpl_gen!=3 || cpl_pos!=20'hfffff ||
@@ -158,7 +168,7 @@ module tb_hbm_accel_su_parent;
    @(negedge clk);old_rsp_ready=0;
   end
   if(errors) $fatal(1,"cached1M comparison errors=%0d",errors);
-  $display("PARENT_END mode=%0d start=%0d finish=%0d virtual_edges=%0d reads=%0d writes=%0d publications=%0d request_response_wait_edges=%0d hold_checks=%0d checked=20480 errors=%0d start_time_ns=%0.9f finish_time_ns=%0.9f elapsed_us=%0.9f",mode,start_cycle,finish_cycle,vcount,rcount,wcount,fcount,wait_edges,hold_checks,errors,start_time,finish_time,(finish_time-start_time)/1000);
+  $display("PARENT_END mode=%0d start=%0d finish=%0d virtual_edges=%0d reads=%0d writes=%0d publications=%0d request_response_wait_edges=%0d hold_checks=%0d checked=20480 errors=%0d start_time_ns=%0.9f owned_cycle=%0d owned_time_ns=%0.9f finish_time_ns=%0.9f elapsed_us=%0.9f owned_us=%0.9f",mode,start_cycle,finish_cycle,vcount,rcount,wcount,fcount,wait_edges,hold_checks,errors,start_time,owned_cycle,owned_time,finish_time,(finish_time-start_time)/1000,(finish_time-owned_time)/1000);
   $display("PASS");$finish;
  end
 endmodule

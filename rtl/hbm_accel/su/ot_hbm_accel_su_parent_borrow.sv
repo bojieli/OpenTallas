@@ -113,7 +113,9 @@ module ot_hbm_accel_su_parent_borrow #(
     if(debt || (|observe_req) || (|observe_rsp) || (|sm_busy) ||
        (|launch_v) || rq_captured || rs_captured || inflight) quiet_age<=0;
     else if(quiet_age<3) quiet_age<=quiet_age+1;
-    if(pending && quiet_age==3 && !debt && !(|sm_busy) && !(|launch_v)) begin
+    if(pending && quiet_age==3 && !debt && !(|sm_busy) && !(|launch_v) &&
+       !(|observe_req) && !(|observe_rsp) && !source_v &&
+       !inflight && !rq_captured && !rs_captured) begin
      owned<=1;pending<=0;quiet_age<=0;
     end
     // Source must hold until the end of the two-edge encode interval.
