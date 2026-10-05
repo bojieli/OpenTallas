@@ -69,5 +69,23 @@
     "rtl/hdc/ot_qwen_w12_matvec.sv": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
   },
-  "original_source_commit": "a59187cd5"
+  "original_source_commit": "a59187cd5",
+  "minimal_parent": {
+    "module": "ot_qwen_hbm_code_tile_pair_parent",
+    "tile_id": 0,
+    "columns": [
+      0,
+      1
+    ],
+    "GT": 6144,
+    "TG": 4,
+    "SMIN": 7,
+    "CODE_BANKS": 5,
+    "extra_parent_state_bits": 2,
+    "extra_parent_FF_body_um2": 0.5832,
+    "extra_route_wires": "actual owned465+legacy/protectedROM2660+tag/control pins already component debit; new2-way legacy/protected mux2560steeringbits at4um2 screen10424incl46compare/muxcontrol allowance; buffers/loadedroute unknownpositive",
+    "new_protocol": false,
+    "publication": "real externalinstalled/published/retained sourcepins, no privatevisible->globalready tie",
+    "read_pipe_empty": "only two-edge request/response tail, not destination lease or fabric debt drain"
+  }
 }
