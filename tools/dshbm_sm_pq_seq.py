@@ -79,7 +79,7 @@ def cmd_run(a):
     seqname = a.seq
     ops, dep = seq_ops(seqname, a.serial)
     rng = np.random.default_rng(20261005)
-    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}")
+    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}_g{a.g1asb}")
     d.mkdir(parents=True, exist_ok=True)
     xb = -(-a.active * MS.XC // 2048)
     gens, seq, lines, xw = [], [], [], []
@@ -105,14 +105,14 @@ def cmd_run(a):
     (d / "lines.hex").write_text("\n".join(lines) + "\n")
     (d / "x.hex").write_text("\n".join(xw) + "\n")
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
-                  HAZ=a.haz)
-    bdir = Path(a.workdir) / f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}"
+                  HAZ=a.haz, G1ASB=a.g1asb)
+    bdir = Path(a.workdir) / f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}"
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
                        stderr=subprocess.STDOUT)
-    res, meta, total = {}, {}, None
+    res, meta, total, timeout = {}, {}, None, None
     for line in (d / "out.txt").read_text().splitlines():
         if line.startswith("# op"):
             t = line[2:].split()
@@ -121,7 +121,7 @@ def cmd_run(a):
             total = int(line.split()[-1])
         elif line.startswith("#"):
             if "TIMEOUT" in line:
-                raise SystemExit(line)
+                timeout = line[2:]
         else:
             o, r, h = line.split()
             res.setdefault(int(o), {})[int(r)] = h
@@ -145,11 +145,11 @@ def cmd_run(a):
         rows.append(dict(op=i, tag=tag, fmt=fmt, K=K, rows=R, groups=g["Gn"], x_load=bool(load), dep=bool(dp),
                          x_base=seq[i * NW + 9], x_addresses=g["Gn"] * 8 if load else 0, lines=len(g["lines"]),
                          mismatches=mism, results=len(got), exact=exact, rtl=m))
-    status = "pass" if bad == 0 else "fail"
-    out = dict(schema="opentallas.dshbm.sm_pq_seq.v1", seq=seqname, serial=a.serial, haz=a.haz,
+    status = "pass" if bad == 0 and timeout is None else "fail"
+    out = dict(schema="opentallas.dshbm.sm_pq_seq.v1", seq=seqname, serial=a.serial, haz=a.haz, g1_asbuilt=a.g1asb,
                element="ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves", nc=a.nc,
                active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
-               mismatching_ops=bad, total_cycles=total, ops=rows,
+               mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                build_command=cmd, source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest()
                                                  for s in SRC + ["tools/dshbm_sm_pq_seq.py",
@@ -195,6 +195,7 @@ def main(argv=None):
     ap.add_argument("--nc", type=int, default=8)
     ap.add_argument("--active", type=int, default=1)
     ap.add_argument("--haz", type=int, default=1)
+    ap.add_argument("--g1asb", type=int, default=0, help="1 = as-built leaf G1 select (negative test)")
     ap.add_argument("--serial", action="store_true")
     ap.add_argument("--expect-fail", action="store_true")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")

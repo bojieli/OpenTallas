@@ -59,7 +59,8 @@ def sha(p):
 
 
 def rel(p):
-    return str(Path(p).resolve().relative_to(ROOT))
+    p = Path(p).resolve()
+    return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -246,8 +247,8 @@ def main():
                gate_AR_us=ar0, gate_MTP_step_us=mm0["step_us"], tau=mm0["tau"], MTP_tok_s=mm0["mtp_tok_s"]))
     # (1) pipelined issue
     pqd = a.rec / "pq"
-    rp, rs = load_recs(pqd, "a1h1"), load_recs(pqd, "a1h1s")
-    r6p, r6s = load_recs(pqd, "a6h1"), load_recs(pqd, "a6h1s")
+    rp, rs = load_recs(pqd, "f1"), load_recs(pqd, "f1s")
+    r6p, r6s = load_recs(pqd, "f6"), load_recs(pqd, "f6s")
     i1 = {}
     if rp.get("l20") and rp.get("wg"):
         s1, per1 = item1(S, rows1, rp, 1)

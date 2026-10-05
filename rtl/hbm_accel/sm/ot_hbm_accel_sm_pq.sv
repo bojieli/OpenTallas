@@ -38,7 +38,8 @@ module ot_hbm_accel_sm_pq #(
     parameter integer DG   = 3,         // gather stages between a leaf's G1 and its column's tree input
     parameter integer PIO  = 2,         // boundary stages between the pins and the hub, each way
     parameter integer HAZ  = 1,         // PQ: retire-order hazard check (0 = negative test only)
-    parameter integer NOUT = 4          // PQ: outstanding ops in the issue
+    parameter integer NOUT = 4,         // PQ: outstanding ops in the issue
+    parameter integer G1ASB = 0         // PQ negative test only: 1 = the as-built leaf G1 select (by entering format)
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -241,7 +242,7 @@ module ot_hbm_accel_sm_pq #(
             for (c = h * HC; c < NC && c < (h + 1) * HC; c = c + 1) begin : g_c
                 wire gv1, gf1; wire [31:0] gy1; wire [TAGW-1:0] gt1;
                 ot_hbm_accel_smpq_leaf #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .TAGW(TAGW), .XD(XD),
-                                        .NBEAT(NBEAT), .COL(c), .SP(sp), .TCK(TCK)) u_leaf (
+                                        .NBEAT(NBEAT), .COL(c), .SP(sp), .TCK(TCK), .G1ASB(G1ASB)) u_leaf (
                     .clk(clk), .rst_n(rst_n), .c_in(c2), .w_in(w2), .x_ce(x2[0]), .x_addr(x2[1 +: XW]),
                     .b_en(b2[0]), .b_addr(b2[1 +: XW]), .b_oh(b2[1 + XW +: NBEAT]), .b_data(b2[1 + XW + NBEAT +: 2048]),
                     .gv(gv1), .gy(gy1), .gt(gt1), .gf(gf1));
@@ -317,7 +318,8 @@ module ot_hbm_accel_smpq_leaf #(
     parameter integer NBEAT = 13,
     parameter integer COL = 0,
     parameter integer SP  = 0,
-    parameter integer TCK = 1
+    parameter integer TCK = 1,
+    parameter integer G1ASB = 0
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -462,7 +464,7 @@ module ot_hbm_accel_smpq_leaf #(
     // format of the line now entering the column: under pipelined issue the next op's format reaches E4 while the
     // previous op's results are still leaving the column macros.
     always @(posedge clk) begin
-        gy <= bov ? by : fy;
-        gt <= bov ? btag : ftag;
+        gy <= (G1ASB != 0) ? (ibf ? fy : by) : (bov ? by : fy);
+        gt <= (G1ASB != 0) ? (ibf ? ftag : btag) : (bov ? btag : ftag);
     end
 endmodule
