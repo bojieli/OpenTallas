@@ -127,7 +127,7 @@ module tb_hbm_integrated_w2_sector_adapter;
   end
   if(native_rsp_v)takes<=takes+1;
  end
- task automatic edge;begin @(posedge clk);#0.01;end endtask
+ task automatic tick;begin @(posedge clk);#0.01;end endtask
  reg [1023:0] dir;integer watchdog,saved_reads,local_sector;
  initial begin
   if(!$value$plusargs("DIR=%s",dir)||!$value$plusargs("NWORDS=%d",nwords)||
@@ -156,13 +156,13 @@ module tb_hbm_integrated_w2_sector_adapter;
    end else if(provider.g_on.g_s[0].u_part.g_on.u_model.mem[local_sector]!==memory[j])$fatal(1,"NS2 overlay0/source mismatch");
   end
   // Real sink reservation follows the genuine shared-owner grant, never tied1.
-  repeat(3)edge();@(negedge clk);por_n=1;lease_v=1;
-  watchdog=0;while(!grants[2])begin edge();watchdog++;
+  repeat(3)tick();@(negedge clk);por_n=1;lease_v=1;
+  watchdog=0;while(!grants[2])begin tick();watchdog++;
    if(watchdog>8)$fatal(1,"protected owner quiet-count grant");end
   @(negedge clk);lease_v=0;native_req_v=1;map_valid=0;
-  repeat(3)begin edge();if(native_req_r||permit||adapter_busy)$fatal(1,"unreserved admission");end
+  repeat(3)begin tick();if(native_req_r||permit||adapter_busy)$fatal(1,"unreserved admission");end
   @(negedge clk);native_req_v=0;output_installed=1;reserve_v=1;
-  edge();if(!sink_retained)$fatal(1,"actual seat reservation missing");
+  tick();if(!sink_retained)$fatal(1,"actual seat reservation missing");
   @(negedge clk);reserve_v=0;
   for(current_case=0;current_case<ncases;current_case=current_case+1)begin
    @(negedge clk);
@@ -172,35 +172,35 @@ module tb_hbm_integrated_w2_sector_adapter;
    native_req_addr=map_native_addr;native_req_tag=10'(current_case*37);
    map_valid=1;native_req_v=1;delivery=0;part_seen=0;
    expected_addresses=map_byte_addresses;expected_tags=map_tags;
-   edge();if(!adapter_busy)$fatal(1,"qualified admission");
+   tick();if(!adapter_busy)$fatal(1,"qualified admission");
    tag_counter=tag_counter+integer'(map_count); // ONLY actual native acceptance.
    @(negedge clk);native_req_v=0;map_valid=0;
    // Foreign full tag and foreign read/write kind must not mutate/ACK the seam.
    wait(backend_pending);@(negedge clk);inject=1;
    alien={expected_tags[15:0]^16'h8000,1'b0,256'hdeadbeef};
-   edge();@(negedge clk);alien={expected_tags[15:0],1'b1,256'hbadcafe};
-   edge();@(negedge clk);inject=0;
+   tick();@(negedge clk);alien={expected_tags[15:0],1'b1,256'hbadcafe};
+   tick();@(negedge clk);inject=0;
    watchdog=0;
-   while(!pending)begin edge();watchdog++;
+   while(!pending)begin tick();watchdog++;
     // One outstanding read: full refresh blocking plus PRE/ACT/RD,
     // controller/PHY and protected request/return pipeline each sector.
     // Cycles derive unchanged HBM defaults at CLK_PS1000, not a gain cap.
     if(watchdog>6*((350000+16250+28125+19375+12500+10000+10000+2560+999)/1000+32))$fatal(1,"bounded declared backend service");
    end
    repeat(5)begin
-    edge();if(native_rsp_v||native_rsp_tag!==10'(current_case*37)||native_rsp_data!==expected[current_case])
+    tick();if(native_rsp_v||native_rsp_tag!==10'(current_case*37)||native_rsp_data!==expected[current_case])
      $fatal(1,"held line/tag/data %0d",current_case);
     if(native_req_r||adapter_drained)$fatal(1,"same-edge slot reuse");
    end
-   @(negedge clk);delivery=1;edge();
+   @(negedge clk);delivery=1;tick();
    if(!adapter_drained||adapter_fault||part_seen!==integer'(map_count))$fatal(1,"line retire");
    @(negedge clk);delivery=0;
   end
-  edge();if(reads!=returns||takes!=ncases||held_edges==0||foreign_edges!=2*ncases)
+  tick();if(reads!=returns||takes!=ncases||held_edges==0||foreign_edges!=2*ncases)
    $fatal(1,"accepted sector/line accounting");
   // Invalid cfg must be rejected BEFORE request/partial-line mutation.
   @(negedge clk);map_cfg[15:8]=8'hff;map_valid=1;native_req_v=1;saved_reads=reads;
-  edge();if(!adapter_fault||adapter_busy||reads!=saved_reads||native_req_r||req_v)
+  tick();if(!adapter_fault||adapter_busy||reads!=saved_reads||native_req_r||req_v)
    $fatal(1,"invalid source map accepted");
   $display("PASS_W2_SECTOR_PARENT_PERMITS cases=%0d reads=%0d returns=%0d held=%0d foreign=%0d seats_retained=%0d",ncases,reads,returns,held_edges,foreign_edges,sink_retained);
   $display("SCOPE adapter bytes/handshakes ONLY; native result publication/owner release NOT exercised");
