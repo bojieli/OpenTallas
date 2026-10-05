@@ -18159,7 +18159,7 @@
   ],
   "native_END_is_whole_stage_or_head_completion": false,
   "terminal": null,
-  "missing_terminal": "HEAD/global_argmax is outside selected resident layer scopes; no token terminal assigned",
+  "missing_terminal": "intermediate layer handoff needs complete ordered coverage/fences bound; token HEAD terminal outside scope",
   "source_input_sha256": {
     "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
     "results/uarch/dsrom_s81_released_binding_20261004/canonical/stage_map.json": "47ea9eb0ba0b404f629a4bc758d28d8ac1fe28dcb31de3e5816517fa1d097815",

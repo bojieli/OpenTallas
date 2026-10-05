@@ -1,0 +1,23 @@
+{
+  "verdict": "FAIL_FLOW_CONFIGURATION_BEFORE_PLACEMENT",
+  "source_commit": "50efa67373b186dac3e98d3349cff7825f730a06",
+  "supervisor_pid": 1262294,
+  "driver_pid": 1262298,
+  "terminal_exit": 1,
+  "source_synthesis_pass": true,
+  "mapped_instance_count": 2755,
+  "mapped_cell_area_um2": 297.68,
+  "limits": "Source-mapped total only; partition/clock/PG not yet constructed, no SS/FF qualification.",
+  "diagnosis": "Installed ASAP7 fastroute.tcl sets clock MIN_CLK_ROUTING_LAYER to MAX_ROUTING_LAYER, not nonexistent MAX_CLK_ROUTING_LAYER. Recipe MINclockM8/globalMAXM7 produced ODB-0137 before placement.",
+  "necessary_correction": "Explicit selected M8 clock and M2-M7 data sets via source-pinned FASTROUTE_TCL; globalmaximumM8 enables clock. No RTL/timing/area/PG change.",
+  "preservation": "Remote r2 source/work and all receipts retained. Existing user continuation authorizes routine tool correction.",
+  "sha256": {
+    "physical.json": "da59c1869d67729a0036d2e7869c0b9c1053a5c881ab9ae6cca26e77bc66b14d",
+    "route.log": "b0022beb87b5056d5a7d038b2ce3c4e7aff1c1d8aae1c934058b4a48c645e5e8",
+    "launch.json": "ce035f07c9f2d7690417e87fd778c7ab948b93e33ffdcacf320a7ada134af4b9",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "supervisor.pid": "3cab855167ea9919ccffd03935ec1eb43ffdc35a7669180a61dd95d990efe05c",
+    "admission.json": "ea5ee2a3680342cad71652c58f4fda261fd8f971524843b697f35b5f481a1821"
+  }
+}

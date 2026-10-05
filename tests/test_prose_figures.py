@@ -172,7 +172,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # The current-tree H200 FP8 calibration binds the last headline (198 -> 199).
     # Corrected numbers of 2026-10-03: docs/HEADLINE_BUNDLE_SCOPE.md binds them (0 -> 12), and the two existing
     # docs/MICROARCH_MODEL.md DS HBM annotations are pinned (unlisted -> 2) (1383 -> 1397).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1397
+    # docs/ANALYTICAL_REPORT.md Qwen ROM AR-mode (speculation break-even) annotations (280 -> 299) (1397 -> 1416).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1416
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 

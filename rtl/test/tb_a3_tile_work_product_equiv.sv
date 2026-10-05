@@ -87,6 +87,7 @@ module tb_a3_tile_work_product_equiv;
                      checks, outside);
         else
             $display("FAIL a3_tile_work_product: %0d of %0d in-bound vectors differ", errors, checks);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
