@@ -55,10 +55,10 @@ def w2_tag16_model(nout=4):
     """Priced W2-only row concatenation; older widened-tag estimate is history."""
     descriptor_bits = 13 + 13 + 7 + 7 + 7 + 32 + 32 + 1 + 1
     # a_rows,total_rows,xb_A,xb_B,delta_x,op_A,op_B,bound,pack.
-    held = nout * (descriptor_bits + 1 + 3) + 2 * 2 + 3
+    held = nout * (descriptor_bits + 1 + 3 + 4) + 2 * 2 + 3
     nand2_allowance = 600  # compare/subtract/add, 32+7-bit mux, bounds; nonzero
     buffers = 6  # positive select/control fanout allowance, no free global net
-    return dict(schema='opentallas.dshbm.wavepack.tag16_model.v1', default_enabled=False,
+    return dict(schema='opentallas.dshbm.wavepack.tag16_model.v2', default_enabled=False,
                 scope='three homogeneous FP4 W2 pairs, each A/B rows2 G2 c8',
                 tag=dict(row_bits=12, group_last_bits=1, reducer_slot_bits=3,
                          total_bits=16, extra_bits=0,
@@ -68,9 +68,10 @@ def w2_tag16_model(nout=4):
                                 golden_order_changed=False),
                 control=dict(descriptor_bits=descriptor_bits, max_outstanding=nout,
                              caller_held_ff_allowance=held, mapper_ff=0,
+                             retire_bitmap_bits_per_descriptor=4,
                              nand2_equivalent_allowance=nand2_allowance, buffers=buffers,
                              x_delta_precomputed='(xbB-xbA) mod128; held with descriptor',
-                             completion='retire descriptor only after all four actual rows; no early reuse'),
+                             completion='four distinct actual rows; duplicate fault; last-row pulse alone does not release'),
                 area=dict(ff_allowance_um2=held*0.37908,
                           combinational_allowance_um2=nand2_allowance*0.08748+buffers*0.10206,
                           cell_basis='uarch_model 0.37908 reset FF allowance/0.08748 NAND2/0.10206 BUF',
