@@ -67,6 +67,25 @@ def dsrom_source_program_inventory(words_by_home, *, tp=4, instruction_bits=2048
         new_hardware=False,adoption=False)
 
 
+def dsrom_source_selection_restore_inventory():
+    """Existing native SU BYP: exact L19.A0 restore, no physical credit.
+
+    s81_minimum_su256.cpp::inputs interns identical A/B/C/D addresses before
+    issuing scalar SourceIo requests. Four operands alias one 512-word span.
+    The actual owner still owes native transport, writes, ACK and reverse drain.
+    """
+    return dict(added_instruction_words_per_rank=2,added_active_program_bytes_TP4=2048,
+        copied_bytes_per_rank=2048,copied_bytes_TP4=8192,
+        native_operand_references_per_rank=4*512,
+        native_prefetch_scalar_reads_per_rank=512,
+        native_prefetch_scalar_port_parallelism=1,
+        native_publication_writes_per_rank=512,native_target_ACKs_per_rank=512,
+        added_FF=0,added_global_port_bits=0,added_response_edges=None,
+        SU_serial_clock_GHz=0.9,loaded_clock_binding_qualified=False,
+        copy_cycles=None,transport_cycles=None,source_lease_hold_cycles=None,
+        fence_drain_cycles=None,physical_area=None,physical_slots=None,adopted=False)
+
+
 def dsrom_source_fragment_calendar(events, measured_service_cycles=None):
     """Price a compiler's finite source order; missing service costs stay unknown.
 
