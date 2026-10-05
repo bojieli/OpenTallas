@@ -87,11 +87,27 @@ module ot_hbm_accel_pcwb_service_stack #(
     reg [65:0] d;d=decode64(frame_seal[w*72+:72]);
     if(d[65]||d[63:0]!=pad[w*64+:64])frame_bad=1;
    end
-   all_read_drained=1;read_bad=0;read_event_bad=0;ack_n=0;
+  end
+  // Decode checks depend only on retained words, never on admission or fault.
+  // Keep these independent from next-state to avoid an artificial ready/fault
+  // scheduling cycle in the enclosing combinational process.
+  always @* begin
+   all_read_drained=1;read_bad=0;
    for(integer n=0;n<32;n=n+1)begin
-    reg [65:0] d;integer total_n,phy_n;
+    reg [65:0] d;
     d=decode64(read_seal[n]);if(d[65]||d[63:0]!={31'b0,read_state[n]})read_bad=1;
     if(read_state[n][6:0]!=0||read_state[n][13:7]!=0)all_read_drained=0;
+   end
+  end
+  always @* begin
+   ack_n=0;
+   for(integer n=0;n<32;n=n+1)
+    if(wr_visible_v[n]&&active)ack_n=ack_n+6'd1;
+  end
+  always @* begin
+   read_event_bad=0;
+   for(integer n=0;n<32;n=n+1)begin
+    integer total_n,phy_n;
     read_next[n]=read_state[n];
     total_n=int'(read_state[n][6:0])+int'(col_v[n]&&!col_we[n])-int'(cred_ret[n*3+:3]);
     phy_n=int'(read_state[n][13:7])+int'(phy_col_v[n]&&phy_col_r[n]&&!phy_we[n])-int'(rd_to_land[n]);
@@ -99,8 +115,9 @@ module ot_hbm_accel_pcwb_service_stack #(
     if(rd_return_v[n]&&read_state[n][13:7]==0)read_event_bad=1;
     read_next[n][6:0]=7'(total_n);read_next[n][13:7]=7'(phy_n);
     if(desc_v[n]&&desc_r[n])read_next[n][32:14]=desc_row[n*19+:19];
-    if(wr_visible_v[n]&&active)ack_n=ack_n+6'd1;
    end
+  end
+  always @* begin
    frame_n=frame_q;
    if(bind_owner)frame_n[139:2]={producer,transport,irs_serial,rank,stack,1'b1};
    frame_n[1]=owner_held&&wb_fence&&(&wr_drained)&&(&wq_empty)&&all_column_drained&&!bind_owner;
