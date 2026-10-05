@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL_DIRECTED_FAULT_SAMPLING",
+  "exit_code": 1,
+  "observed": "ticket=4182 rd=0 fd=1 cf=0 bf=0 proto=0 rootcs=020a6; at21928324562fs",
+  "reason": "asynchronous wait(cf) catches checked-state rail-update delta transient before actual WR return; retained ticket bit14=1 and settled faults0; negative driver must sample real clock edge",
+  "positive_gate": "PASS actual desc/GO consumeACK OOO-WR130 ordered poolwrap warmgrant/heldpairedrow",
+  "source_sha256": {
+    "rtl/hdc/kv/ot_qwen_s4_stack_transport.sv": "b40ea45dbebac2c4187df1adf81ef200c02c8f914640e9533d0a88c215cb5771",
+    "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5af1f271972a17082430c9c2f53765967478c30566d36540ab3a006b2e58dc8e",
+    "rtl/test/qwen_rom_runtime/realmem/tb_qwen_s4_stack_transport.sv": "85e4c23dff40a17bfe3066b1d07e04fd68392f2024f9a86462e55caebb8aa433"
+  },
+  "physical_qualified": false
+}
