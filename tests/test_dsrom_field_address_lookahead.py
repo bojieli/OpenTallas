@@ -1,5 +1,5 @@
 import hashlib
-import importlib.util
+import ast
 import unittest
 from pathlib import Path
 
@@ -49,9 +49,14 @@ class AddressLookahead(unittest.TestCase):
         self.assertIn("v[8:1]=8'd11;v[11:9]=3'd7",bench)
 
     def test_named_budget(self):
-        spec=importlib.util.spec_from_file_location('um',ROOT/'tools/uarch_model.py')
-        mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
-        m=mod.dsrom_field_address_lookahead_price()
+        # This independent analytical function has no full-token model dependencies.
+        # Execute its literal source, avoiding unrelated import-time archived block records.
+        tree=ast.parse((ROOT/'tools/uarch_model.py').read_text())
+        funcs=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='dsrom_field_address_lookahead_price']
+        self.assertEqual(len(funcs),1)
+        namespace={}
+        exec(compile(ast.Module(body=funcs,type_ignores=[]),'uarch_model.py','exec'),namespace)
+        m=namespace['dsrom_field_address_lookahead_price']()
         self.assertEqual(m['added_state_bits'],47)
         self.assertEqual(m['instances_per_field_die'],1)
         self.assertAlmostEqual(m['reservation_um2'],559.872)
