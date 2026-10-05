@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import subprocess
 import shlex
+import shutil
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -19,6 +20,8 @@ def main():
     parser.add_argument('--corrected-sdc', type=Path, required=True)
     parser.add_argument('--checkpoint', choices=['mapped','tapcell','pdn','gp-no-io','placed'], required=True)
     parser.add_argument('--checkpoint-sha256', required=True)
+    parser.add_argument('--bind-inserted-cells', action='store_true',
+                        help='Bind CTS and repair cells to Turing\'s retained finite fences before legalization')
     args = parser.parse_args()
     r1, retry = args.r1_root.resolve(), args.retry_root.resolve()
     assert retry.parent == r1, 'Retry must remain under the same context job'
@@ -81,6 +84,30 @@ def main():
                    resume_checkpoint=str(checkpoint),resume_checkpoint_sha256=sha(checkpoint),
                    frozen_upstream_artifacts={str(p.relative_to(retry/'work/orfs')):h for p,h in frozen.items()})
     (retry/'resume.json').write_text(json.dumps(receipt,indent=2)+'\n')
+    if args.bind_inserted_cells:
+        assert args.checkpoint == 'placed'
+        model = json.loads((ROOT/'results/physical/hbm_cp_cts_allocation_20261005/model.json').read_text())
+        hook = ROOT/model['hook']
+        assert sha(hook) == model['hook_sha256']
+        assert sha(checkpoint) == model['last_valid_placed_checkpoint_sha256']
+        assert model['verification']['check_placement_PASS']
+        shutil.copyfile(hook, retry/'work/orfs/cts_membership.tcl')
+        # POST_CTS_TCL runs too late: inserted cells must join their fences before
+        # both the clock-tree and timing-repair detailed-placement calls.
+        patch = '''from pathlib import Path
+import hashlib,json
+p=Path('/OpenROAD-flow-scripts/flow/scripts/cts.tcl')
+s=p.read_text()
+needle='set result [catch { log_cmd detailed_placement } msg]'
+assert s.count(needle)==2, 'Installed CTS legalization API changed'
+print(json.dumps(dict(original_cts_sha256=hashlib.sha256(s.encode()).hexdigest(),membership_calls=2)))
+p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
+'''
+        (retry/'work/orfs/bind_cts_membership.py').write_text(patch)
+        receipt['inserted_cell_membership'] = dict(hook_sha256=sha(hook),
+            model_sha256=sha(ROOT/'results/physical/hbm_cp_cts_allocation_20261005/model.json'),
+            region_geometry_changed=False, padding_changed=False, timing_changed=False)
+        (retry/'resume.json').write_text(json.dumps(receipt,indent=2)+'\n')
     import run_abi3_physical as driver
     original_run = driver.run
     reused = 0
@@ -103,6 +130,8 @@ def main():
             for file in frozen:keep.extend(['-o','/work/'+str(file.relative_to(retry/'work/orfs'))])
             command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
                 'make '+shlex.join(keep)+' DESIGN_CONFIG=/work/config.mk',1)
+            if args.bind_inserted_cells:
+                command[-1] = 'python3 /work/bind_cts_membership.py && '+command[-1]
         return original_run(command, **kwargs)
     driver.run = run
     rc = driver.main(argv)
