@@ -83,10 +83,9 @@ set ref [lindex $refs 0]
 puts "FHBOUND reference [get_full_name $ref]"
 set q [get_ports {{ra_q[*]}}]
 if {{[llength $q] != 2048}} {{ error "not full G4W16" }}
-set_input_delay -min 0 -clock core_clk -reference_pin $ref $q
-set_input_delay -max 0 -clock core_clk -reference_pin $ref $q
-set_driving_cell -lib_cell {MACRO} -pin {{rd_out[0]}} -from_pin clk \
-    -input_transition_rise 20 -input_transition_fall 20 $q
+set_input_delay -min {timing['clk_to_q_ps']:.9f} -clock core_clk -reference_pin $ref $q
+set_input_delay -max {timing['clk_to_q_ps']:.9f} -clock core_clk -reference_pin $ref $q
+set_input_transition {timing['out_slew_intrinsic_ps']:.9f} $q
 set a [get_ports {{ra_addr[*] ra_re[*]}}]
 set_load {cap:.9f} $a
 set_output_delay -max {timing['setup_ps']:.9f} -clock core_clk -reference_pin $ref $a
@@ -126,7 +125,8 @@ puts "FHBOUND end"
             macro_lib_sha256=digest(lib), macro_nominal_clkq_ps=timing["clk_to_q_ps"],
             address_and_ce_load_ff=cap, unrouted_macro_clock_load_ff=16*timing["clk_cap_ff"],
             capture_relation="same local reference leaf, zero additional SRAM clock skew; unresolved parent CTS",
-            macro_output_driver="corner liberty clk->rd_out[0] including actual port load",
+            macro_output_driver="corner macro nominal clkQ and intrinsic slew; optimistic unloaded source",
+            unresolved_macro_output_load="Macro output resistance/load delay is absent; a passing screen cannot qualify this boundary",
             macro_constraint_reference="nominal macro setup/hold; parent input/clock slew tables remain unresolved")
         print(json.dumps({corner: record["corners"][corner]}), flush=True)
     record["valid"] = all(c["valid"] for c in record["corners"].values())
