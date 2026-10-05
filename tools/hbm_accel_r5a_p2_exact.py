@@ -82,12 +82,22 @@ def main(argv=None):
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--jobs', type=int, default=16)
     ap.add_argument('--points', type=int, default=64)
+    ap.add_argument('--mutations-only',action='store_true',help='verify corrected SM-code injections3/4 using one matching REFpb build; no ordinary or88-case replay')
     ap.add_argument('--variant', choices=sorted(VARIANTS), default='p2')
     a = ap.parse_args(argv)
     sources, top = VARIANTS[a.variant]
     if a.out.exists():
         raise SystemExit('fresh record path required')
     a.work.mkdir(parents=True, exist_ok=True)
+    if a.mutations_only:
+        if a.variant!='stack_p2':raise SystemExit('SM code injection gate requires real stack')
+        exe=build(a.work,1,sources,top)
+        rows=[dict(case='single_bit_correction',**run(exe,8000000,NOTICE_LEAD_PS,3)),
+              dict(case='double_bit_refusal',**run(exe,8000000,NOTICE_LEAD_PS,4))]
+        passed=rows[0]['verdict']=='PASS' and rows[0].get('bad',1)==0 and rows[1]['verdict']=='FAIL' and 'DUT FAULT' in rows[1].get('raw','') and 'bit_count=2' in rows[1].get('raw','') and 'sm0_delivered=0' in rows[1].get('raw','')
+        j=dict(source_commit=os.environ.get('OT_SOURCE_COMMIT'),input_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},
+               variant=a.variant,mutation_gate='PASS' if passed else 'FAIL',cases=rows,RTL_changed=False,ordinary_cases_replayed=False,physical_context='NOT_RUN',adoption=False)
+        a.out.write_text(json.dumps(j,indent=2)+'\n');print(json.dumps(j,indent=2));return
     with ThreadPoolExecutor(2) as ex:
         exe_pb, exe_ab = ex.map(lambda m: build(a.work, m, sources, top), (1, 0))
     t0 = 8_000_000                                    # after the first full REFpb round and first REFab stagger
