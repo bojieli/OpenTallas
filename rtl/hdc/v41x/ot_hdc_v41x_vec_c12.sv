@@ -8,8 +8,8 @@
 //          gate SIDEX deeper
 //   CAPR   the lanes' memory-word port register before the capture logic: every fetch one deeper
 //   FSQ    the side / softplus square roots are ot_hdc_fsqrt_c12 (same depth)
-//   RPAD, RSL, RTAP  the reducer's added registers (rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv: padding, slice
-//          boundary, tap): every result RPAD + RSL + RTAP deeper; RSLICE its slice width (physical only)
+//   RPAD, RSL, RTAP, ROUT  the reducer's added registers (rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv: padding, slice
+//          boundary, tap, OUT input): every result RPAD + RSL + RTAP + ROUT deeper; RSLICE its slice width (physical only)
 // The checkpoint depths, the control pipe and sfu_d (now 10 bits: sqrt(softplus) exceeds 255 at MLAT 6 / ALAT 6)
 // follow them.  Nothing else changes.
 // ---------------------------------------------------------------------------
@@ -178,6 +178,7 @@ module ot_hdc_v41x_vec #(
     parameter integer CAPR = 0,         // c12: lane memory-word port register (every fetch CAPR deeper)
     parameter integer RSL = 0,          // c12 reducer: slice-boundary register
     parameter integer RTAP = 0,         // c12 reducer: tap register
+    parameter integer ROUT = 0,         // c12 reducer: OUT input register
     parameter integer RSLICE = 64       // c12 reducer: lanes a slice
 ) (
     input  wire              clk,
@@ -400,7 +401,7 @@ module ot_hdc_v41x_vec #(
     wire [9:0] c_dS = c_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
     wire [9:0] c_lt = red_on ? {6'd0, c_ls} - 10'd3 : 10'd0;
     // retire (E1, E2, OUT: 2 MLAT + 1), then the reducer to its tap (IN 1, SQ MLAT, CHAIN 7 ALAT, TREE ALAT lt)
-    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP
+    wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + 10'd1 + H_M[9:0] + 10'd7 * H_A[9:0] + RPAD + RSL + RTAP + ROUT
                       + H_R[9:0] * c_lt;
     wire [9:0] c_dR = c_dT + 10'd1 + (c_span ? H_R[9:0] * {5'd0, c_L} : 10'd0);
     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
@@ -824,7 +825,7 @@ module ot_hdc_v41x_vec #(
     wire [NR*AW-1:0] l_res_addr;
     wire [NR*32-1:0] l_res_data;
     ot_hdc_v41x_vec_red #(.N(N), .LV(LV), .AW(AW), .MW(9), .MLAT(MLAT), .ALAT(ALAT), .RPAD(RPAD), .RSL(RSL),
-                          .RTAP(RTAP), .SL(RSLICE)) u_red (.clk(clk), .rst_n(rst_n),
+                          .RTAP(RTAP), .ROUT(ROUT), .SL(RSLICE)) u_red (.clk(clk), .rst_n(rst_n),
         .v_in(retire && r_red != RED_NONE), .x_in(l_rox), .live_in(l_rov), .mx_in(r_red == RED_MAX),
         .sq_in(r_sq), .lt_in(r_lt), .span_in(r_span), .l_in(r_L), .last_in(r_wrap), .nres_in(r_nres),
         .rnd_in(r_rnd), .rbase_in(r_rbase), .rsh_in(r_rsh), .meta_in({r_seq, r_lastres}),
