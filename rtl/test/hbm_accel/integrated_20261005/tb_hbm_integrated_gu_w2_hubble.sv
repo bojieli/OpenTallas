@@ -2,7 +2,7 @@
 // Minimum connected W2 runtime. Retained native GU/SwiGLU packets are inputs;
 // W2 arithmetic, sector service, checked publication and CP retirement run live.
 // expected.hex is comparison ONLY; no lines.hex weight-response shortcut.
-module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
+module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0,PROTECTED_TRANSACTION_PIPELINE=0,LOCAL_CP_RESET_ENABLE=0);
  `include "private_alloc.svh"
  reg clk=0; always #0.5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_rdy=0;
@@ -13,18 +13,30 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
  localparam [16:0] TOKEN=17'h1a321;
  localparam [19:0] POS=20'hfffff;
  localparam [72:0] FRAME={POS,TOKEN,GEN,JOB};
- wire db_rdy,cpl_v; wire [1:0] launch_v; wire [31:0] launch_pc;
+ // The existing enclosing-parent CP reset/quarantine boundary, with inactive
+ // SU/gather/formatter peers absent from this minimum selected W2 vehicle.
+ reg cp_reset_req=0;
+ wire cp_reset_wait,cp_reset_n,cp_reset_ack,cp_reset_fault;
+ wire cp_idle,cp_cpl_v,cp_retire_ready,all_routes_drained;
+ wire db_rdy=cp_idle&&all_routes_drained&&!cp_reset_wait;
+ wire cpl_v=cp_cpl_v&&all_routes_drained;
+ assign cp_retire_ready=cpl_rdy&&all_routes_drained;
+ ot_hbm_integrated_cp_reset #(.ENABLE(LOCAL_CP_RESET_ENABLE)) u_cp_reset(
+  .clk(clk),.por_n(por_n),.reset_req(cp_reset_req),.cp_idle(cp_idle),
+  .routes_drained(all_routes_drained),.cp_reset_n(cp_reset_n),
+  .reset_ack(cp_reset_ack),.block_new(cp_reset_wait),.fault(cp_reset_fault));
+ wire [1:0] launch_v; wire [31:0] launch_pc;
  wire [16:0] launch_token,cpl_token; wire [19:0] launch_pos,cpl_position;
  wire [31:0] cpl_job,cpl_cycles,st_kernels,st_busy; wire [3:0] cpl_generation,cpl_status;
  reg [1:0] sm_done=0,res_v=0; reg [63:0] res_data=0;
  wire shared_fault,sink_fault;
  ot_ds_hbm_cmdproc20 #(.ENABLE(1),.NSM(2),.NCMD(4)) cp(
-  .clk(clk),.rst_n(por_n),.cmd_we(cmd_we),.cmd_addr(cmd_addr),.cmd_wdata(cmd_wdata),
-  .db_v(db_v),.db_rdy(db_rdy),.db_token(TOKEN),.db_pos(POS),.db_job(JOB),.db_generation(GEN),
+  .clk(clk),.rst_n(cp_reset_n),.cmd_we(cmd_we&&!cp_reset_wait),.cmd_addr(cmd_addr),.cmd_wdata(cmd_wdata),
+  .db_v(db_v&&db_rdy),.db_rdy(cp_idle),.db_token(TOKEN),.db_pos(POS),.db_job(JOB),.db_generation(GEN),
   .cpl_position(cpl_position),.cpl_job(cpl_job),.cpl_generation(cpl_generation),
   .launch_v(launch_v),.launch_pc(launch_pc),.launch_token(launch_token),.launch_pos(launch_pos),
   .sm_done(sm_done),.sm_fault({1'b0,shared_fault|sink_fault}),.res_v(res_v),.res_data(res_data),
-  .cpl_v(cpl_v),.cpl_rdy(cpl_rdy),.cpl_token(cpl_token),.cpl_status(cpl_status),
+  .cpl_v(cp_cpl_v),.cpl_rdy(cp_retire_ready),.cpl_token(cpl_token),.cpl_status(cpl_status),
   .cpl_cycles(cpl_cycles),.st_kernels(st_kernels),.st_busy(st_busy));
  reg lease_requested=0,reserve_v=0,release_intent=0,allocated=0;
  wire native_done=arrive!=arrive_q;
@@ -51,6 +63,11 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
  reg [31:0] held_provider_addr=0;
  wire provider_drained=!m_rsp_v&&accepted_requests==consumed_responses;
  wire adapter_drained,adapter_busy,adapter_fault,foreign_rsp;
+ // Direct reduction of the parent's all_routes_drained for the selected W2
+ // owner/provider/adapter only. Root POR remains high across local CP reset.
+ assign all_routes_drained=native_credit_empty&&shared_idle&&adapter_drained&&
+  !retained&&!native_busy&&!native_pending&&!sink_transaction&&provider_drained&&
+  !(|launch_v)&&!native_req_v&&!s_req_v&&!s_rsp_v;
  wire native_req_v,native_req_r,native_rsp_v,native_rsp_pending;
  wire [31:0] native_req_addr;wire [9:0] native_req_tag,native_rsp_tag;
  wire [1087:0] native_rsp_data;
@@ -192,7 +209,7 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
  assign s_req_r=req_rdy[3];
  assign s_rsp_v=rsp_v[3]&&delivery_enabled;
  assign s_rsp={rsp_tag[63:48],rsp_we[3],rsp_data[1023:768]};
- ot_hbm_integrated_w2_result_sink #(.ENABLE(1)) sink(
+ ot_hbm_integrated_w2_result_sink #(.ENABLE(1),.PROTECTED_TRANSACTION_PIPELINE(PROTECTED_TRANSACTION_PIPELINE)) sink(
   .clk(clk),.por_n(por_n),.owned(grants[2]),.installed(installed),.reserve_v(reserve_v),.reserve_r(reserve_r),
   .pair_op(1'b1),.rows_a(2'd2),.rows_b(2'd2),.op_a(OPA),.op_b(OPB),
   .base_a(BASE_A),.limit_a(LIMIT_A),.base_b(BASE_B),.limit_b(LIMIT_B),.provider_tag(16'hf239),.frame(FRAME),
@@ -214,7 +231,7 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
   // Retained packets compare ONLY. Active operands come from live numerical q/e.
   if(LIVE_SWIGLU&&producer_xw_en&&producer_xw_data!==xwords[producer_fragment_index][2048*producer_xw_grp+:2048])
    $fatal(1,"live SwiGLU FP8 transpose differs from retained native packets");
-  if(shared_fault||sink_fault||adapter_fault||native_fault||mem_fault||foreign_rsp||producer_fault)
+  if(shared_fault||sink_fault||adapter_fault||native_fault||mem_fault||foreign_rsp||producer_fault||cp_reset_fault)
    $fatal(1,"connected source fault cycle=%0d native_req=%0d returns=%0d",cycle,native_requests,native_returns);
   if((release_accept||cp_callback||cpl_v)&&(verified!=4||!adapter_drained||!provider_drained))
    $fatal(1,"early release/CPL before real publication/provider drain");
@@ -283,6 +300,26 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
    if(slot<0||sink_rsp[255:0]!==captured_rows[slot]||sink_rsp[255:0]!==expected_rows[slot])
     $fatal(1,"actual native publication readback mismatch");
    verified<=verified+1;$display("ACTUAL_PUBLICATION_VERIFIED cycle=%0d slot=%0d",cycle,slot);
+  end
+ end
+ reg warm_requested=0,warm_reset_seen=0;
+ always @(negedge clk)if(por_n&&warm_requested)begin
+  if(!cp_reset_n)begin
+   if(!cp_idle||!all_routes_drained||cpl_v||retained||grants!=0||!provider_drained)
+    $fatal(1,"warm CP reset escaped actual checked publication/CPL/debt boundary");
+   warm_reset_seen=1;
+  end
+  if(!all_routes_drained&&(!cp_reset_n||cp_reset_ack))
+   $fatal(1,"warm reset erased accepted owner/provider debt");
+  if(cp_reset_wait&&db_rdy)$fatal(1,"warm quarantine admitted a new caller");
+ end
+ initial begin
+  if($test$plusargs("WARM_QUARANTINE"))begin
+   if(!LOCAL_CP_RESET_ENABLE||!PROTECTED_TRANSACTION_PIPELINE)
+    $fatal(1,"warm gate needs actual protected pipeline and parent hook");
+   wait(sink_transaction&&accepted_requests>consumed_responses);@(negedge clk);
+   cp_reset_req=1;warm_requested=1;
+   $display("ACTUAL_WARM_RESET_REQUEST cycle=%0d accepted=%0d consumed=%0d retained=%0d",cycle,accepted_requests,consumed_responses,retained);
   end
  end
  reg [76:0] held_cpl;
@@ -357,14 +394,24 @@ module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
    $fatal(1,"actual END/CPL identity/release");
   held_cpl={cpl_job,cpl_generation,cpl_position,cpl_token,cpl_status};
   repeat(12)begin @(negedge clk);
-   if(!cpl_v||{cpl_job,cpl_generation,cpl_position,cpl_token,cpl_status}!==held_cpl||db_rdy)
+   if(!cpl_v||{cpl_job,cpl_generation,cpl_position,cpl_token,cpl_status}!==held_cpl||db_rdy||
+      (warm_requested&&(!cp_reset_n||cp_reset_ack)))
     $fatal(1,"held actual CPL mutated");
   end
   if(writes!=4||reads!=4||verified!=4||result_seen!=15||native_requests!=64||native_returns!=64||
      accepted_native_addresses!==64'hffffffffffffffff||!provider_drained||!adapter_drained||!native_released||
      request_stalls==0||delivery_stalls==0)$fatal(1,"exact source/result/debt/stall/retirement counts");
   cpl_rdy=1;@(negedge clk);cpl_rdy=0;
-  if(cpl_v||!db_rdy)$fatal(1,"actual CPL take exactly once");
+  if(warm_requested)begin
+   if(cpl_v)$fatal(1,"CPL survived actual matched take");
+   wait(cp_reset_ack);@(negedge clk);
+   if(!warm_reset_seen||!por_n||!cp_reset_n||!all_routes_drained||cpl_v||db_rdy||grants!=0||retained)
+    $fatal(1,"warm reset acknowledgement before finite routes/CPL drained");
+   $display("ACTUAL_WARM_RESET_ACK cycle=%0d accepted=%0d consumed=%0d releases=%0d",cycle,accepted_requests,consumed_responses,released);
+   cp_reset_req=0;wait(!cp_reset_wait);@(negedge clk);
+   if(!db_rdy||cpl_v||!por_n)$fatal(1,"warm caller admission did not reopen exactly after ACK");
+   $display("PASS_W2_PARENT_WARM_QUARANTINE root_por_held=1 accepted_debt_preserved=1 held_cpl_preserved=1 matched_release=1");
+  end else if(cpl_v||!db_rdy)$fatal(1,"actual CPL take exactly once");
   $display("PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL rows=4 sectors=%0d requests=%0d returns=%0d writes=%0d readbacks=%0d sharedrelease=%0d cycles=%0d",sector_reads,native_requests,native_returns,writes,verified,released,cycle);
   if(LIVE_SWIGLU)begin
    $display("PASS_LIVE_SWIGLU_W2_CONNECTED_PUBLICATION_CPL producers=2 elements=4608 blocks=144");

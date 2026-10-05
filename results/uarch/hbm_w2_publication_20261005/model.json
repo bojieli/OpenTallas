@@ -38,6 +38,21 @@
     "compute_intensity_MAC_per_byte": 0,
     "incoming_FP32_words": 32
   },
+  "connected_parent_integration": {
+    "CP_writer": "Harvey; ot_ds_hbm_cmdproc20 and ot_hbm_integrated_su_cp_bind remain unchanged",
+    "added_sink_state_bits": 0,
+    "bench": "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv",
+    "bench_scope": "one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim",
+    "connected_gate_passed": false,
+    "default": 0,
+    "finite_ingress_seats": 4,
+    "no_physical_admission": true,
+    "parameter": "W2_PROTECTED_TRANSACTION_PIPELINE",
+    "parent_source": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv",
+    "reset_hook": "ot_hbm_integrated_cp_reset; CP local reset after CP idle and all_routes_drained",
+    "root_POR": "rst_sm_n; stays distinct from local CP reset",
+    "warm_test": "request while accepted publication debt outstanding; drain normally, preserve held CPL, ACK only after matched CPL take"
+  },
   "default_enabled": false,
   "engine_RTL_admitted": true,
   "gate": {

@@ -9020,6 +9020,17 @@ def hbm_w2_publication_model():
             measured_calendar_scope='same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory',
             release_181_plus_planned_edges_is_not_a_measurement=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
+        connected_parent_integration=dict(
+            parent_source='rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv',
+            parameter='W2_PROTECTED_TRANSACTION_PIPELINE', default=0,
+            finite_ingress_seats=4, added_sink_state_bits=0,
+            CP_writer='Harvey; ot_ds_hbm_cmdproc20 and ot_hbm_integrated_su_cp_bind remain unchanged',
+            reset_hook='ot_hbm_integrated_cp_reset; CP local reset after CP idle and all_routes_drained',
+            root_POR='rst_sm_n; stays distinct from local CP reset',
+            bench='rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv',
+            bench_scope='one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim',
+            warm_test='request while accepted publication debt outstanding; drain normally, preserve held CPL, ACK only after matched CPL take',
+            connected_gate_passed=False, no_physical_admission=True),
         parent_boundary_requirements=dict(
             consumer_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657',
             implemented_instance='g_on.g_die[d].u_w2_sink.transaction_pipeline.u_pipe',
