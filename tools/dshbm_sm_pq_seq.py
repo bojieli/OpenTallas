@@ -11,6 +11,7 @@ result, fault or unconsumed line.  `--serial` flags every op dependent (the seri
 
     python3 tools/dshbm_sm_pq_seq.py run --seq ar_l20 --nc 8 --active 1 --out R.json --workdir W
     python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 1 --haz 0 --expect-fail --out R.json
+    python3 tools/dshbm_sm_pq_seq.py run --seq stress --nc 8 --active 8 --smh --out R.json   # hierarchical element
 """
 from __future__ import annotations
 
@@ -35,6 +36,7 @@ TB = "tb_hbm_accel_sm_pq_seq"
 SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv", "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv",
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
+SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 
@@ -79,7 +81,8 @@ def cmd_run(a):
     seqname = a.seq
     ops, dep = seq_ops(seqname, a.serial)
     rng = np.random.default_rng(20261005)
-    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}_g{a.g1asb}")
+    d = Path(a.workdir) / (seqname + ("_serial" if a.serial else "") + f"_haz{a.haz}_g{a.g1asb}" +
+                           (f"_smh_a{a.active}" if a.smh else ""))
     d.mkdir(parents=True, exist_ok=True)
     xb = -(-a.active * MS.XC // 2048)
     gens, seq, lines, xw = [], [], [], []
@@ -106,8 +109,8 @@ def cmd_run(a):
     (d / "x.hex").write_text("\n".join(xw) + "\n")
     params = dict(SUB=MS.SUB, LBS=MS.LBS, LSB=MS.LSB, NC=a.nc, XDEPTH=XDEPTH, RMAX=MS.RMAX, LEV=MS.LEV, XB=xb,
                   HAZ=a.haz, G1ASB=a.g1asb)
-    bdir = Path(a.workdir) / f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}"
-    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs)
+    bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else ""))
+    run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh)
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
@@ -147,12 +150,14 @@ def cmd_run(a):
                          mismatches=mism, results=len(got), exact=exact, rtl=m))
     status = "pass" if bad == 0 and timeout is None else "fail"
     out = dict(schema="opentallas.dshbm.sm_pq_seq.v1", seq=seqname, serial=a.serial, haz=a.haz, g1_asbuilt=a.g1asb,
-               element="ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves", nc=a.nc,
+               element=("ot_hbm_accel_smh (hierarchical: front / identical leaf tiles / column back ends; pipelined "
+                        "issue, G1 select by the producing column)" if a.smh else
+                        "ot_hbm_accel_sm_pq (pipelined issue) on ot_hbm_accel_sm_v ENABLE=1 leaves"), nc=a.nc,
                active_columns=a.active, x_beats_per_address=xb, simulator=a.sim, bench_clock_ns=1.0, status=status,
                mismatching_ops=bad, total_cycles=total, timeout=timeout, ops=rows,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                build_command=cmd, source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest()
-                                                 for s in SRC + ["tools/dshbm_sm_pq_seq.py",
+                                                 for s in SRC + (SMH_SRC if a.smh else []) + ["tools/dshbm_sm_pq_seq.py",
                                                                  "tools/dshbm_matched_sm_seq.py",
                                                                  "tools/rtl_gpu_sm_exact.py"]})
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
@@ -170,20 +175,22 @@ def cmd_run(a):
     return 0 if ok else 1
 
 
-def compile_bench(sim, params, outdir, jobs):
+def compile_bench(sim, params, outdir, jobs, smh=False):
+    src = SRC + (SMH_SRC if smh else [])
+    defs = ["-DOT_SMH"] if smh else []
     outdir = Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
     if sim == "verilator":
         exe = outdir / ("V" + TB)
         cmd = ["verilator", "--binary", "--timing", "-O2", "-Wno-fatal", "--top-module", TB, "--Mdir", str(outdir),
-               "-j", str(jobs), *[f"-G{k}={v}" for k, v in params.items()], *[str(ROOT / s) for s in SRC]]
+               "-j", str(jobs), *defs, *[f"-G{k}={v}" for k, v in params.items()], *[str(ROOT / s) for s in src]]
         if not exe.is_file():
             with (outdir / "build.log").open("w") as log:
                 subprocess.run(cmd, check=True, cwd=ROOT, stdout=log, stderr=subprocess.STDOUT)
         return [str(exe)], cmd
     exe = outdir / "sim.vvp"
-    cmd = ["iverilog", "-g2012", "-o", str(exe), "-s", TB] + [f"-P{TB}.{k}={v}" for k, v in params.items()] + \
-        [str(ROOT / s) for s in SRC]
+    cmd = ["iverilog", "-g2012", "-o", str(exe), "-s", TB] + defs + [f"-P{TB}.{k}={v}" for k, v in params.items()] + \
+        [str(ROOT / s) for s in src]
     subprocess.run(cmd, check=True, cwd=ROOT)
     return ["vvp", "-n", str(exe)], cmd
 
@@ -197,6 +204,7 @@ def main(argv=None):
     ap.add_argument("--haz", type=int, default=1)
     ap.add_argument("--g1asb", type=int, default=0, help="1 = as-built leaf G1 select (negative test)")
     ap.add_argument("--serial", action="store_true")
+    ap.add_argument("--smh", action="store_true", help="DUT = the hierarchical element ot_hbm_accel_smh")
     ap.add_argument("--expect-fail", action="store_true")
     ap.add_argument("--trace", action="store_true", help="issue / retire trace in <workdir>/<seq>/runtime.log")
     ap.add_argument("--trace-from", type=int, default=0)

@@ -35,6 +35,19 @@ module tb_hbm_accel_sm_pq_seq;
     reg xw_en = 0; reg [XW-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data;
     wire rv; wire [RW-1:0] rrow; wire [NC*32-1:0] rdata; wire fault; wire arrive; wire released;
     reg release_in = 0;
+`ifdef OT_SMH
+    // the hierarchical element ot_hbm_accel_smh (same pins, same protocol; +define+OT_SMH)
+    ot_hbm_accel_smh #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
+                       .MAX_OUT(512), .HAZ(HAZ)) dut (
+        .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
+        .op_g(op_g), .op_gs(op_gs), .op_fmt(op_fmt), .op_xb(op_xb), .busy(busy), .d_valid(d_valid),
+        .d_ready(d_ready), .d_base(d_base), .d_lines(d_lines), .req_v(req_v), .req_ready(1'b1), .req_addr(req_addr),
+        .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
+        .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
+        .release_in(release_in), .released(released));
+`define OT_DP dut.g_fp.u_front   // the bench configuration (RMAX 256) instantiates the parameterised pieces
+`define OT_DCROW dut.g_fp.u_front.al[RW-1:0]
+`else
     ot_hbm_accel_sm_pq #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .RMAX(RMAX), .LEV(LEV), .XD(XDEPTH),
                          .MAX_OUT(512), .HAZ(HAZ), .G1ASB(G1ASB)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .start_ready(start_ready), .op_rows(op_rows), .op_c(op_c),
@@ -43,6 +56,9 @@ module tb_hbm_accel_sm_pq_seq;
         .req_tag(req_tag), .rsp_v(rsp_v), .rsp_tag(rsp_tag), .rsp_data(rsp_data), .xw_en(xw_en), .xw_addr(xw_addr),
         .xw_grp(xw_grp), .xw_data(xw_data), .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .arrive(arrive),
         .release_in(release_in), .released(released));
+`define OT_DP dut
+`define OT_DCROW dut.crow[RW-1:0]
+`endif
     reg [1087:0] lines [0:131071];
     reg [FRAGW+2047:0] xwords [0:MAXOPS*XDEPTH-1];
     reg [31:0] seq [0:MAXOPS*NW-1];
@@ -75,7 +91,7 @@ module tb_hbm_accel_sm_pq_seq;
         end
     end
     always @(posedge clk) cyc <= cyc + 1;
-    wire take = dut.w_valid && dut.w_ready;
+    wire take = `OT_DP.w_valid && `OT_DP.w_ready;
     always @(posedge clk) if (take) begin
         while (line_op < nops - 1 && cons_total >= base_of[line_op + 1]) line_op = line_op + 1;
         if (consumed[line_op] == 0) t_firstline[line_op] = cyc;
@@ -187,20 +203,20 @@ module tb_hbm_accel_sm_pq_seq;
         if (!$value$plusargs("TRACE_TO=%d", tr_to)) tr_to = 0;
     end
     always @(posedge clk) if (trace && rst_n) begin
-        if (dut.u_issue.launch)
+        if (`OT_DP.u_issue.launch)
             $display("T %0d LAUNCH rows %0d g %0d bf %0d xb %0d need_q %0d since %0d d_cur %0d d_head %0d on %0d",
-                     cyc, dut.u_issue.op_rows, dut.u_issue.op_g, dut.u_issue.op_bf, dut.h_xb, dut.u_issue.need_q,
-                     dut.u_issue.since, dut.u_issue.d_cur, dut.u_issue.d_head, dut.u_issue.on);
-        if (dut.u_issue.op_end) $display("T %0d OPEND", cyc);
-        if (dut.u_issue.rdone) $display("T %0d RDONE row %0d oh %0d ocnt %0d", cyc, dut.crow[RW-1:0], dut.u_issue.oh,
-                                        dut.u_issue.ocnt[dut.u_issue.oh]);
-        if (dut.u_issue.head_done) $display("T %0d HEADDONE oh %0d", cyc, dut.u_issue.oh);
-        if (dut.u_issue.adv && cyc >= tr_from && cyc <= tr_to)
+                     cyc, `OT_DP.u_issue.op_rows, `OT_DP.u_issue.op_g, `OT_DP.u_issue.op_bf, `OT_DP.h_xb, `OT_DP.u_issue.need_q,
+                     `OT_DP.u_issue.since, `OT_DP.u_issue.d_cur, `OT_DP.u_issue.d_head, `OT_DP.u_issue.on);
+        if (`OT_DP.u_issue.op_end) $display("T %0d OPEND", cyc);
+        if (`OT_DP.u_issue.rdone) $display("T %0d RDONE row %0d oh %0d ocnt %0d", cyc, `OT_DCROW, `OT_DP.u_issue.oh,
+                                        `OT_DP.u_issue.ocnt[`OT_DP.u_issue.oh]);
+        if (`OT_DP.u_issue.head_done) $display("T %0d HEADDONE oh %0d", cyc, `OT_DP.u_issue.oh);
+        if (`OT_DP.u_issue.adv && cyc >= tr_from && cyc <= tr_to)
             $display("T %0d ADV si %0d ti %0d row_ok %0d row %0d cr %0d first %0d last %0d glast %0d xa %0d wave_adv %0d lw %0d vm %b items %0d wb_n %0d",
-                     cyc, dut.u_issue.si, dut.u_issue.ti, dut.u_issue.row_ok, dut.u_issue.row_now, dut.u_issue.cr,
-                     dut.u_issue.iss_first, dut.u_issue.iss_last, dut.u_issue.iss_glast, dut.u_issue.xa,
-                     dut.u_issue.wave_adv, dut.u_issue.lw_q, dut.u_issue.valid_mask, dut.u_issue.items_q,
-                     dut.u_issue.wb_n);
+                     cyc, `OT_DP.u_issue.si, `OT_DP.u_issue.ti, `OT_DP.u_issue.row_ok, `OT_DP.u_issue.row_now, `OT_DP.u_issue.cr,
+                     `OT_DP.u_issue.iss_first, `OT_DP.u_issue.iss_last, `OT_DP.u_issue.iss_glast, `OT_DP.u_issue.xa,
+                     `OT_DP.u_issue.wave_adv, `OT_DP.u_issue.lw_q, `OT_DP.u_issue.valid_mask, `OT_DP.u_issue.items_q,
+                     `OT_DP.u_issue.wb_n);
         fault_q <= fault;
         if (fault && !fault_q) $display("T %0d FAULT", cyc);
     end
@@ -210,9 +226,9 @@ module tb_hbm_accel_sm_pq_seq;
     always @(posedge clk) if (rv || take || (arrive != arrive_q) || start) last_prog = cyc;
     always @(posedge clk) if (rst_n && cyc - last_prog > STALL) begin
         $fwrite(fo, "# TIMEOUT stall at cyc %0d: op %0d ndone %0d cur %0d nres %0d start %0d start_ready %0d busy %0d | issue on %0d issuing %0d init %0d start_v %0d hv %0d since %0d need %0d launch %0d w_valid %0d\n",
-                cyc, op, ndone, cur, nres[cur], start, start_ready, busy, dut.u_issue.on, dut.u_issue.issuing,
-                dut.u_issue.init_q, dut.u_issue.start_v, dut.u_issue.hv_q, dut.u_issue.since, dut.u_issue.need_q,
-                dut.u_issue.launch, dut.w_valid);
+                cyc, op, ndone, cur, nres[cur], start, start_ready, busy, `OT_DP.u_issue.on, `OT_DP.u_issue.issuing,
+                `OT_DP.u_issue.init_q, `OT_DP.u_issue.start_v, `OT_DP.u_issue.hv_q, `OT_DP.u_issue.since, `OT_DP.u_issue.need_q,
+                `OT_DP.u_issue.launch, `OT_DP.w_valid);
         $fclose(fo); $finish;
     end
     initial begin #50000000; $fwrite(fo, "# TIMEOUT\n"); $fclose(fo); $finish; end
