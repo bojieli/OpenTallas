@@ -1,0 +1,203 @@
+{
+  "status": "PASS_NATIVE_GU_NATIVE_SWIGLU_A8_SERVICE_PAIRED_W2",
+  "exit": 0,
+  "source_commit": "8a48bc29ac56a013b0b27f3f81d94f78719fdd64",
+  "layers": [
+    {
+      "layer": 20,
+      "status": "PASS_NATIVE_GU_NATIVE_SWIGLU_A8_SERVICE_PAIRED_W2",
+      "ids": [
+        41,
+        65,
+        158,
+        164,
+        259,
+        266
+      ],
+      "outputs": 84,
+      "calls": [
+        {
+          "sm": 0,
+          "rows": [
+            154
+          ],
+          "cycles": 1077,
+          "descriptors": 6,
+          "exact_outputs": 6
+        },
+        {
+          "sm": 1,
+          "rows": [
+            158
+          ],
+          "cycles": 1077,
+          "descriptors": 6,
+          "exact_outputs": 6
+        },
+        {
+          "sm": 4,
+          "rows": [
+            106,
+            122,
+            138
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 5,
+          "rows": [
+            110,
+            126,
+            142
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 6,
+          "rows": [
+            114,
+            130,
+            146
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 7,
+          "rows": [
+            118,
+            134,
+            150
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        }
+      ],
+      "die": 2,
+      "stack": 0,
+      "full_token": false,
+      "physical_closed": false
+    },
+    {
+      "layer": 3,
+      "status": "PASS_NATIVE_GU_NATIVE_SWIGLU_A8_SERVICE_PAIRED_W2",
+      "ids": [
+        128,
+        129,
+        142,
+        159,
+        160,
+        228
+      ],
+      "outputs": 84,
+      "calls": [
+        {
+          "sm": 0,
+          "rows": [
+            154
+          ],
+          "cycles": 1077,
+          "descriptors": 6,
+          "exact_outputs": 6
+        },
+        {
+          "sm": 1,
+          "rows": [
+            158
+          ],
+          "cycles": 1077,
+          "descriptors": 6,
+          "exact_outputs": 6
+        },
+        {
+          "sm": 4,
+          "rows": [
+            106,
+            122,
+            138
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 5,
+          "rows": [
+            110,
+            126,
+            142
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 6,
+          "rows": [
+            114,
+            130,
+            146
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        },
+        {
+          "sm": 7,
+          "rows": [
+            118,
+            134,
+            150
+          ],
+          "cycles": 1661,
+          "descriptors": 9,
+          "exact_outputs": 18
+        }
+      ],
+      "die": 2,
+      "stack": 0,
+      "full_token": false,
+      "physical_closed": false
+    }
+  ],
+  "scope": "Released L20/L3 routed experts, selected die2/stack0 W2 rows, cached 1M seed component inputs. Reused completed native GU; actual retained RTL SwiGLU and FP8 packets feed unchanged paired W2 using actual A8 service accepted bytes.",
+  "original_archive_unchanged": true,
+  "link_correction": "Private archive member Vtb_dsrom_su_swiglu_vm_classes_15.o: objcopy --redefine-sym main=retained_generated_main; all model symbols retained; no RTL regeneration.",
+  "original_main_symbols": [
+    "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/work4/obj_swiglu_W64_ROUTED1_NIN33_NOUT23_LM5_LA4_QLAT5_rtl/Vtb_dsrom_su_swiglu__ALL.a:Vtb_dsrom_su_swiglu_vm_classes_15.o:0000000000000000 T main"
+  ],
+  "private_main_symbols": [
+    "0000000000000000 T retained_generated_main"
+  ],
+  "native_activation_words": 27648,
+  "native_fp8_blocks": 864,
+  "w2_outputs": 168,
+  "accepted_w2_lines_per_layer": 816,
+  "literal_w2_cfg_lines": [
+    10,
+    10,
+    0,
+    0,
+    29,
+    29,
+    29,
+    29
+  ],
+  "full_token": false,
+  "physical_closed": false,
+  "start_delay_gain_qualified": false,
+  "pins": {
+    "/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/work4/obj_swiglu_W64_ROUTED1_NIN33_NOUT23_LM5_LA4_QLAT5_rtl/Vtb_dsrom_su_swiglu__ALL.a": "4f7866710e89368b9d139a6c366ef98dab6ab274e26e10db87e8c78041b0160b",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/native_swiglu.a": "a9f306f32919d5e8c2783001b12f50ae34bf466653688fc239c62c757be85a7f",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/native_swiglu": "427fc577ed5f8b31d2977651ea9ef9ae1a4d29be4de3ad799d15f63f75a63ec4",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/Vtb_dsrom_su_swiglu_vm_classes_15.o": "379e9b104aaade6be91bc8d414964a16b9315bd36536105e8c60cc66ea19e145",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/run.sh": "0f2d25b42d034844e25587c59ea240b7c5372817e2a5988c4ff503d7ec793535",
+    "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/result.json": "7881017295417f7c310facc3fcdf983fee2bf529a6ef447377add633357c9cd4"
+  }
+}
