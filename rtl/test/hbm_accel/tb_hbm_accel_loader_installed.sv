@@ -60,7 +60,8 @@ module tb_hbm_accel_loader_installed;
  end
  // Passive observers on the actual CDC and external ports. No ready/ACK drive.
  `define LD dut.g_on.u_loader_host.g_on.g_die[0].u_load.g_on
- `define ST dut.g_on.u_loader_host.g_on.g_die[0].u_store.g_on
+ `define ST dut.g_on.u_loader_host.g_on.g_die[0].u_store
+ `define STI dut.g_on.u_loader_host.g_on.g_die[0].u_store.g_on
  integer lp=0,lc=0,sp=0,sc=0,lpeak=0,speak=0,ls=0,ss=0;
  integer reqs=0,rsps=0,reqstall=0,wstall=0,rtseen=0;
  realtime ltime[128],stime[128],reqtime[128];
@@ -70,20 +71,20 @@ module tb_hbm_accel_loader_installed;
  always @(posedge clk_host) begin
  if(`LD.u_data.in_v&&`LD.u_data.in_rdy)begin ltime[lp%128]=$realtime;lp++;if(lp-lc>lpeak)lpeak=lp-lc;end
  if(`LD.u_data.in_v&&!`LD.u_data.in_rdy)ls++;
- if(`ST.u_data.out_v&&`ST.u_data.out_rdy)begin
+ if(`STI.u_data.out_v&&`STI.u_data.out_rdy)begin
  realtime d;d=$realtime-stime[sc%128];if(d<smin)smin=d;if(d>smax)smax=d;sc++;
  end
  if(mwv&&!mw_ready)wstall++;
  if(mwv&&mw_ready)begin if(firstw==0)firstw=$realtime;lastw=$realtime;end
  if(mbv&&mbr)lastb=$realtime;
- if(`ST.done&&done_time==0)done_time=$realtime;
+ if(`STI.done&&done_time==0)done_time=$realtime;
  end
  always @(posedge clk_mem)begin
  if(`LD.u_data.out_v&&`LD.u_data.out_rdy)begin
  realtime d;d=$realtime-ltime[lc%128];if(d<lmin)lmin=d;if(d>lmax)lmax=d;lc++;
  end
- if(`ST.u_data.in_v&&`ST.u_data.in_rdy)begin stime[sp%128]=$realtime;sp++;if(sp-sc>speak)speak=sp-sc;end
- if(`ST.u_data.in_v&&!`ST.u_data.in_rdy)ss++;
+ if(`STI.u_data.in_v&&`STI.u_data.in_rdy)begin stime[sp%128]=$realtime;sp++;if(sp-sc>speak)speak=sp-sc;end
+ if(`STI.u_data.in_v&&!`STI.u_data.in_rdy)ss++;
  if(`ST.req_v&&!`ST.req_rdy)reqstall++;
  if(`ST.req_v&&`ST.req_rdy)begin reqtime[`ST.req_tag%128]=$realtime;reqs++;if(firstreq==0)firstreq=$realtime;end
  if(`ST.rsp_v&&`ST.rsp_rdy)begin
