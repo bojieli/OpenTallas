@@ -8132,3 +8132,55 @@ def hbm_loader_crc_matrix_geometry_bound(price, *, xor2_max_area_um2,
                 build_gate_pass=slot_ok and corridor_ok,
                 routed_area_fit=False, adopted=False,
                 unresolved='actual top reserved slot and CRC locality/corridor map; additional clock/buffer repair cannot be priced as zero')
+
+
+def hbm_loader_high_address_price(*, byte_address_bits=37, stack_bits=2,
+        service_sector_bits=34, stack_bytes=22500000000, dies=1):
+    """Current per-die ND1 host hierarchy, explicit stack/local byte address.
+
+    ADDR={stack,local_byte}; 32GiB encoded stride is not free storage: per-stack
+    capacity is checked. CSR DADDR_HI exposes every high bit; NBYTES remains32
+    so software explicitly chunks large transfers, never relies on an aperture.
+    """
+    local=byte_address_bits-stack_bits
+    if not 32<=byte_address_bits<=64 or not 0<=stack_bits<=2 or local<5 or service_sector_bits<local-5:
+        raise ValueError('address translation must be lossless')
+    if stack_bytes>(1<<local):raise ValueError('stack capacity exceeds local address')
+    delta=byte_address_bits-32
+    return dict(default_enabled=False, selected=False, adopted=False,
+                per_die_host_instances=1, engine_pairs_per_die=1, dies=dies,
+                byte_address_bits=byte_address_bits, stack_bits=stack_bits,
+                local_byte_bits=local, stack_capacity_bytes=stack_bytes,
+                encoded_stack_stride_bytes=1<<local,
+                flat_encoded_space_bytes=1<<byte_address_bits,
+                translation='stack=ADDR[36:35], sector=zero_extend(ADDR[34:5]); literal bit wiring for37/2/34',
+                address_holes='local offsets >=stack_bytes rejected; descriptor cannot cross a stack',
+                CSR_high_offset=0x2c, CSR_high_bits=delta,
+                reserved_high_CSR_bits='rejected before any DMA/MREQ, never silently discarded',
+                DMA_host_address_bits=64, DMA_host_address_cost_delta_bits=0,
+                DMA_translation='host address remains independent full64; width converter does not translate HBM addresses',
+                tag_bits=16, tag_cost_delta_bits=0,
+                tag_identity='retained LOAD/STORE classbit15, exact STORE lower15 tag/ROB matching',
+                raw_added_descriptor_and_memory_base_bits_per_die=4*delta,
+                raw_added_command_CDC_payload_bits_per_die=2*4*delta,
+                added_address_storage_bits_per_die=12*delta+3,
+                added_service_formatter_fault_flag_bits_per_die=1,
+                added_reserved_HI_validity_flag_bits_per_die=2,
+                request_internal_packet_bits=1+byte_address_bits+256+32+16,
+                request_service_packet_bits=1+service_sector_bits+2+256+32+16,
+                service_boundary_delta_bits_vs_byte32=service_sector_bits+2-32,
+                response_packet_bits=1+16+256,
+                ingress_DMA_payload_bits=64, engine_payload_bits=256,
+                memory_bytes_per_accepted_edge=32, added_memory_ports=0,
+                MACs_per_cycle=0, added_latency_cycles=0,
+                initiation_interval='unchanged accepted request/ACK and W/B flow; no new engine',
+                protection_cost='two widened byte-end and local-end comparisons; capacity/stack-cross, HI reserved-bit, alignment and full64 host-wrap guards; no parity/ECC substitution',
+                mux_and_fanout_cost='widen descriptor/base/address mux+adder5bits perengine; reuse ND1 arbitration, response tags and heldowner',
+                mapping_combinational_cost='wire slices/zero-extension only; no divide/remap/page engine',
+                area_um2=None, area_status='ESTIMATE63 extra stored bits at37 plus widened arithmetic/guards/mux/CDC; mapped cost unknown',
+                FF_area_floor_um2_ESTIMATE=(12*delta+3)*0.2916,
+                corridor_capacity=None, slot_fit=False,
+                clock_targets={'host_ns':1.0,'mem_ns':0.833},
+                SS_setup_ps=60, FF_hold_ps=25, clock_closed=False,
+                composed_decode_gain_percent=None,
+                binding_required='Sagan confirms stack-high/local-byte mapping +service stack/sector ports; Kant actualservice.loader slot/corridor, priorCRCroute does not qualify widened source')
