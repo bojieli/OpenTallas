@@ -2,6 +2,8 @@
 // Bounded CODE-only adapter, not a replacement for the tile's issue/stall logic.
 // Caller owns physical mapping/publication and must gate leaf rd_v by ready.
 // rd_fire is the ACTUAL leaf rd_v && rd_r, not a proposed request.
+// Virtual bank0..4 is only a response tag. The installed-span mapper alone
+// authorizes physical rows; this adapter never translates or guesses a row.
 // Two leaf edges; MEM_EXTRA=1 preserves one further legacy capture edge.
 module ot_qwen_hbm_code_read_align #(
   parameter integer ENABLE=0, MEM_EXTRA=0
@@ -46,15 +48,15 @@ module ot_qwen_hbm_code_read_align #(
       end
       assign held_bad[p]=c.held[p] && (|ue);
       assign consumer_ready[p]=consumer_enable && !c.pending[p] &&
-          (virtual_bank[p*3+:3]<2) && !fault;
+          (virtual_bank[p*3+:3]<5) && !fault;
       // Bank2 and leaf response both become valid AFTER the second edge.
       wire live=c.v2[p] && leaf_rd_rsp_v[p];
       assign rsp_v[p]=!fault && (c.held[p] || ((MEM_EXTRA==0) && live));
       wire [255:0] data=c.held[p] ? held_data[p*256+:256] : leaf_rd_data[p*256+:256];
       for(genvar b=0;b<5;b=b+1) begin : bank
-        // Virtual banks 2..4 remain unsupported even though the bus has 5 slots.
+        // Select the tagged virtual slot, independent of the physical SRAM bank.
         assign rom_rd[(p*5+b)*266+:266]=
-            (b<2 && rsp_v[p] && c.bank2[p*3+:3]==b) ? {10'b0,data} : 266'b0;
+            (rsp_v[p] && c.bank2[p*3+:3]==b) ? {10'b0,data} : 266'b0;
       end
       // MEM_EXTRA capture or an elastic hold; existing W6 is the only codec.
       always @(posedge clk) begin
