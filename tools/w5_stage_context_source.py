@@ -28,7 +28,7 @@ def build():
  pg=pg.replace('endmodule','assign snapshot = {st,idx,cnt,sw_en,iso_n,dom_rst_n,clk_en,pwr_good,fault};\nendmodule')
  sch=kept(renamed(raw[srcs[1]]))
  sch=add_port(sch,'output wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] snapshot')
- sch=sch.replace('    (* keep, dont_touch *) reg [TW-1:0] cnt;', '    wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;\n    reg [TW-1:0] cnt;')
+ sch=sch.replace('    (* keep, dont_touch *) reg [TW-1:0] cnt;', '    wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;\n    (* keep, dont_touch *) reg [TW-1:0] cnt;')
  sch=sch.replace('.clk(clk), .rst_n(rst_n), .req_on(req_on)', '.snapshot(pg_snapshot), .clk(clk), .rst_n(rst_n), .req_on(req_on)')
  sch=sch.replace('endmodule','assign snapshot = {cnt,cnt_v,idle,th,pg_snapshot};\nendmodule')
  # Retain all AO sequential state, not just externally visible status.
