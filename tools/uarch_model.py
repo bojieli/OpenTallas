@@ -9345,6 +9345,34 @@ def hbm_existing_attention_allocation_model():
                 adopted=False,gain_claim=None)
 
 
+
+def hbm_existing_attention_source_cut_model():
+    """Actual after-E/mux boundary of the selected DS engine, not proxy tile chains."""
+    allocation = hbm_existing_attention_allocation_model()
+    p = allocation['selected_parameters']
+    assert (p['H'], p['D'], p['TD'], p['NL']) == (16, 512, 32, 4)
+    slots = p['D'] // p['TD']
+    tiles = p['NL'] * slots
+    return dict(
+        source='rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:g_t/g_ln',
+        selected_parameters=p,
+        cut='after existing E registers and per-SL ld_mode mux; before golden q.k reduction',
+        load_buses=slots, load_bits_per_bus=1024, load_fanout_per_bit=p['NL']*p['H'],
+        operand_buses=tiles, operand_bits_per_bus=576, operand_fanout_per_bit=p['H'],
+        shared_control_bits=18, shared_control_fanout=tiles*p['H'],
+        distinct_data_control_ingress_bits=slots*1024+tiles*576+18,
+        load_data_bytes_per_cycle=slots*128, operand_data_bytes_per_cycle=tiles*72,
+        control_bits_per_cycle=18,
+        clock_reset_nets=2, clock_reset_sink_count_each=tiles*p['H'],
+        tile_outputs_bits=tiles*529, leaf_output_bits=tiles*p['H']*34,
+        unused_leaf_valid_bits=tiles*(p['H']-1),
+        before_cut_mux_bits=slots*1024,
+        before_cut_mux_source='e_p_w[1023:0] or zero-extended 512-bit e_q_w slice; one SL shared across four NL',
+        after_cut_mux_bits=0, added_RTL_cycles=0,
+        golden_reduction='NL*H independent S-leaf trees outside head macros; no neighbour i/iu/id port',
+        measured_port_loads=False, contextual_setup_hold_qualified=False,
+        Qwen=allocation['Qwen'])
+
 def hbm_cp_validate_allocated_sources(root, cp):
     """Bind unchanged CP wiring across the two explicit default-off Jason W2 hooks."""
     import hashlib
