@@ -18,7 +18,7 @@
   "closed_0p9_only": 1,
   "in_progress_other": 2,
   "screen_pass": 1,
-  "closed_variant": 7,
+  "closed_variant": 8,
   "blocked_exactness": 1
  },
  "blocks": [
@@ -818,6 +818,43 @@
    "evidence_kind": null,
    "note": "Retained terminal reports 2 mismatches although exit0; positive routed slack does not permit adoption",
    "closure_owner": "Claude (exactness escalation)"
+  },
+  {
+   "module": "ot_dshbm_spec_state_f_token_edge TOKEN_EDGE_FIX1 route1 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_spec_token_edge_20261005/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 28.41,
+   "ff_hold_slack_ps": 6.86,
+   "evidence_kind": "routed",
+   "note": "same LAT5,0 added cycles; no whole-target adoption",
+   "fmax_mhz_equiv_ss": 1242.9,
+   "closure_owner": "Sagan (Codex item9 ctl); Pauli semantic source",
+   "canonical_module": "ot_dshbm_spec_state_f_token_edge",
+   "parameters": {
+    "AW": 32,
+    "CKMAX": 262144,
+    "NG": 4,
+    "NL": 40,
+    "NSRC": 4,
+    "NST": 3,
+    "PMAX": 8,
+    "RLOG": "16'h7272",
+    "SR": 136,
+    "TR": 16,
+    "TW": 17,
+    "W": 128,
+    "WR": 136,
+    "TOKEN_EDGE_FIX": 1
+   },
+   "source_pins": {
+    "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv": "7ba75538d2ef10775a8a26fb7af15d3a140ee4ffbbcfd43173c3c970437633e8"
+   },
+   "ss_worst_slack_ps": 28.41,
+   "cycle_delta": 0,
+   "complete_accelerator_qualified": false
   }
  ],
  "families": {

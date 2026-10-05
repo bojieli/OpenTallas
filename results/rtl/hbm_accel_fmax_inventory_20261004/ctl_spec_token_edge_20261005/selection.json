@@ -1,0 +1,24 @@
+{
+  "source": "141268380567aebbcb14074cd1dc03b7383cf85f",
+  "parameters": {
+    "AW": 32,
+    "CKMAX": 262144,
+    "NG": 4,
+    "NL": 40,
+    "NSRC": 4,
+    "NST": 3,
+    "PMAX": 8,
+    "RLOG": "16'h7272",
+    "SR": 136,
+    "TR": 16,
+    "TW": 17,
+    "W": 128,
+    "WR": 136,
+    "TOKEN_EDGE_FIX": 1
+  },
+  "exact_source_sha256": "7ba75538d2ef10775a8a26fb7af15d3a140ee4ffbbcfd43173c3c970437633e8",
+  "numerical_gate_reused": "/srv/opentallas/repos/sagan-hbm-ctl-spec-token-edge-r1/results/rtl/ctl_spec_seed8_fix_20261005/terminal.json",
+  "cycle_delta": 0,
+  "ff_delta_estimate": -197,
+  "physical_qualified": false
+}
