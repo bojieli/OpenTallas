@@ -1,0 +1,40 @@
+{
+  "source_commit": "66cac15e3",
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/codex-qwen-interface-context-66cac15e3",
+  "PROTECTED_default": 0,
+  "PCs": 128,
+  "stacks": 4,
+  "channels_per_stack": 16,
+  "exit_codes": {
+    "0": 0,
+    "1": 0
+  },
+  "warnings": {
+    "0": {
+      "PINMISSING": 22,
+      "WIDTHCONCAT": 1
+    },
+    "1": {
+      "PINMISSING": 22,
+      "UNSIGNED": 1,
+      "CMPCONST": 1
+    }
+  },
+  "verdict": "FULL128_SYNTHESIS_LINT_PASS",
+  "functional_exact": "existing bbcb + c625 jobs, not rerun by this lint",
+  "physical_closed": false,
+  "global_service_transport_implemented": false,
+  "clock_policy": "833.333ps free CLK, 1024ps independent HCLK, source ME gate remains outside interface; no phase/insertion fix",
+  "artifact_sha256": {
+    "lint.py": "28ae7d114d06a262e6dc5029342a407b408c751997ca460b0d2238299bc0754b",
+    "command_0.json": "06fafc944dd5e173ab6d822332e38e6bba49898d29b43cfef5ce2e429d1c1121",
+    "supervisor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "lint_0.log": "47534f9ee33ba96e6f2e5cbe282e74e938486b003ec0ec9ca0e98d1a8b5a7a3c",
+    "capacity.jsonl": "331933764a1eeedd64ec4a76b960b72bdbea508c038ef96c56907da65da32596",
+    "lint_1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "command_1.json": "d38e34b3048eb803cb1d0a6645b0c7fb20b59056e4ea6302adb7302b4bfaacbf",
+    "lint_0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "lint_1.log": "a87a71fde714eb85627844622da33924a03ee8b8ee4c58b13e7b0440eeb4b50b"
+  }
+}
