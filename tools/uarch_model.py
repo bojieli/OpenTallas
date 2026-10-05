@@ -9807,3 +9807,70 @@ def hbm_su_finite_provider_tradeoff_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.finite_provider_tradeoff_model()
+
+
+def qwen_hbm_selected_activation_provider_model():
+    """Reconcile the selected addressed-word VM ABI with the result-port model.
+
+    This prices no new architecture. The host's independent word reads and
+    result-port placement budget do not constitute a physical VM provider.
+    """
+    import hashlib
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    binding_path = 'results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json'
+    port_path = 'results/rtl/qwen_hbm_final_tp4_20261005/existing_port_model.json'
+    delta_path = 'results/rtl/qwen_hbm_final_tp4_20261005/model_delta.json'
+    binding = json.loads((root/binding_path).read_text())
+    port = json.loads((root/port_path).read_text())
+    delta = json.loads((root/delta_path).read_text())
+    activation = binding['prebuild_model']['activation']
+    n = activation['independently_enabled_word_ports_per_die']
+    data = n*activation['word_bits']
+    address = n*activation['address_bits']
+    assert (n, data, address, n) == (2048, 65536, 49152, 2048)
+    assert port['source_sha256'] == binding['selected_source']['pins']['rtl/hdc/ot_qwen_me_spine_h_w12.sv']
+    assert delta['once_only_port_cell_reservation_per_die_um2'] == port['area']['all24_port_cell_reservation_um2']
+    inputs = [binding_path, port_path, delta_path]
+    for p, expected in binding['selected_source']['pins'].items():
+        assert hashlib.sha256((root/p).read_bytes()).hexdigest() == expected, p
+        inputs.append(p)
+    return dict(scope='selected Qwen TP4 P8191 ME activation boundary; source reconciliation only',
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in inputs},
+        compiled_SMAX=11, compiled_XVM=1, dies=4,
+        independently_addressed_read_words_per_edge_capacity=n,
+        data_bits_per_edge_capacity=data, data_bytes_per_edge_capacity=data//8,
+        address_bits_per_edge_capacity=address, enable_bits_per_edge_capacity=n,
+        request_signal_bits=address+n, response_signal_bits=data,
+        total_logical_interface_signal_bits_per_die=data+address+n,
+        actual_simultaneous_read_census=None,
+        source_read='one enabled vx_re word reads host m.vm[vx_addr]; raw32 response through XVM1 and unchanged spine selection',
+        native_source_not_physical_VM='std::vector host access has no installed bank grant/request-ready or physical simultaneous-port proof',
+        selected_VM_provider_source=None, physical_VM_capacity_bytes=None,
+        physical_VM_read_ports=None, physical_VM_bytes_per_cycle_guaranteed=None,
+        VM_bank_decode_mux_fanout_area_mm2=None, VM_macro_and_replica_area_mm2=None,
+        activation_channel_capacity_tracks=None, activation_loaded_route_and_CDC_edges=None,
+        read_drain_and_write_publication_service_bound_us=None,
+        result_port_budget=dict(source=port_path, replicas=port['replicas'],
+            scope='24 postscale/result ports, each full64-lane; not activation VM bank/return infrastructure',
+            retained_cell_reservation_per_die_mm2=port['area']['all24_port_cell_reservation_um2']/1e6,
+            placement_reservation_per_die_mm2=24*port['area']['minimum_core_for_reserved_cells_um2']/1e6,
+            retained_cell_reservation_TP4_mm2=delta['once_only_port_cell_reservation_tp4_um2']/1e6,
+            one_port_external_tracks_upper_bound=port['ports_and_tracks']['external_track_demand_upper_bound'],
+            one_port_channel_fit=port['ports_and_tracks']['channel_capacity_and_loaded_cut_fit'],
+            SS_setup_ps=port['address_cone']['measured_SS_ps'],
+            FF_hold_ps=port['address_cone']['measured_FF_ps'],
+            SSFF_qualified=port['SSFF_qualified'],
+            area_rule='retain result-port debit once; neither duplicate it nor treat it as containing unpriced VM/activation routes'),
+        activation_route_accounting='116736 is logical request+response width, not a proven one-channel track allocation; no automatic transfer of result-port5466 tracks',
+        opt3_verdict=binding['verdict'], opt3_enabled=False,
+        opt3_incremental_area_mm2=0, opt3_cycles_saved=0,
+        DS_8_4_3_beats_savings_transfer=False,
+        generic_256bit_payload_only_read_beats_lower_bound=data//256,
+        narrower_service_scope='256 beats is payload-only arithmetic, not an actual serialized service selection or compatible next-edge reply',
+        actual_stage_measurements_retained=binding['retained_measurements']['stage_cycles'],
+        stage_measurement_scope='unchanged representative L5/L20/head outputs; no layout-ON or full36layer token performance',
+        whole_die_fit=None, provider_added_token_latency_us=None,
+        physical_clock_qualified=False, headline_gain_percent=None,
+        new_architecture_selected=False, new_RTL=False)

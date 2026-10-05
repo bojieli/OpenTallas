@@ -41,7 +41,12 @@
         "Owner leaf available; production XMAP forwarding/selected combined exact executable pending"
       ],
       "source_replacements": {},
-      "slot_macro_channel_binding": null
+      "slot_macro_channel_binding": null,
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "qwen_opt3_enabled": false,
+      "qwen_source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json"
     },
     {
       "lever": "partial_wave_packing",

@@ -63,7 +63,20 @@
         "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
       ],
       "binding": null,
-      "missing": "Standalone Pauli leaf positively available at owner source path; Euclid production XMAP forwarding and combined exact executable binding remain pending."
+      "missing": "Standalone Pauli leaf positively available at owner source path; Euclid production XMAP forwarding and combined exact executable binding remain pending.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "target_eligibility": {
+        "ds_1m": "Production SM multi-format activation fragment; joint XMAP gate pending.",
+        "qwen_8k": {
+          "enabled": false,
+          "verdict": "INAPPLICABLE_TO_SELECTED_ME_SPINE",
+          "source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json",
+          "record_sha256": "b02a8d80887371c73234d1ae2d1cf48f10b9469067766623412c832778ccd497",
+          "reason": "Selected ME activation interface is already format-exclusive FP32. It reads enabled addressed 32-bit words directly from VM, not the DS multi-format 3152-bit column fragment. No inactive FP4/FP8/BF16 plane is transported to remove."
+        }
+      }
     },
     "partial_wave_packing": {
       "owner": "Erdos",
@@ -238,7 +251,10 @@
     },
     "qwen_8k": {
       "context_tokens": 8192,
-      "binding": null
+      "binding": null,
+      "forced_off_levers": [
+        "format_masked_activation"
+      ]
     }
   },
   "host_policy": {
