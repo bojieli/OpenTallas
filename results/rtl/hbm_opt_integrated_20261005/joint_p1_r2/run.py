@@ -45,11 +45,13 @@ def main():
         'full_main_source_commit': identity['source_main_commit']})
     results = {}
     for name, negative in [('stress', False), ('ar_l20', False), ('wg', False),
-                           ('other', False), ('stress', True)]:
+                           ('other', False), ('p6_stress', False), ('p6_l20', False),
+                           ('p6_wg', False), ('p6_other', False), ('stress', True)]:
         fixture = JOB / 'fixtures' / f'{name}_haz1_g0'
         key = name + ('_negative_fp4' if negative else '')
+        active = 6 if name.startswith('p6_') else 1
         argv = [sys.executable, str(DRIVER), 'run', '--production-dir', str(PRODUCTION),
-                '--work', str(WORK), '--xmap', '1', '--active', '1', '--jobs', '16',
+                '--work', str(WORK), '--xmap', '1', '--active', str(active), '--jobs', '16',
                 '--fixture', str(fixture)]
         if negative:
             argv.append('--negative-fp4')
@@ -59,7 +61,7 @@ def main():
             save(key + '_running.json', {'pid': process.pid})
             rc = process.wait()
         save(key + '_exit.json', {'exit': rc})
-        record = WORK / ('negative' if negative else 'pq') / 'a1' / fixture.name / 'result.json'
+        record = WORK / ('negative' if negative else 'pq') / f'a{active}' / fixture.name / 'result.json'
         measured = json.loads(record.read_text()) if record.is_file() else None
         results[key] = dict(exit=rc, result=measured)
         if rc:
@@ -70,7 +72,7 @@ def main():
     stable = all(sha(SOURCE / p) == h for p, h in pins.items())
     save('terminal.json', dict(status='pass' if passed and stable else 'fail',
         results=results, source_stable=stable, one_compiled_executable=True,
-        generated_numeric_inputs=False, P6_pending=True, full_token_measured=False,
+        generated_numeric_inputs=False, P6_pending=False, full_token_measured=False,
         SS_FF_admitted=False, composed_model_owner='Maxwell'))
     return 0 if passed and stable else 1
 
