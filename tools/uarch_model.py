@@ -10408,6 +10408,9 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
     """
     if nsm < 1 or nl < 1 or owner_copies < 1 or owner_copies > nl*32:
         raise ValueError('nonempty full-shape owner slices required')
+    executed_ops, _, _ = w19_collective_ops()
+    actual_collectives = len(executed_ops)
+    actual_ARs = sum(op['kind'] == 'all_reduce' for op in executed_ops)
     sb = max(1, (nsm-1).bit_length())
     width = nl*32
     copies = min(owner_copies, width)
@@ -10500,6 +10503,23 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             extra_boundary_bits_per_cycle=0,
             affected_classes=['RX_binary_lane_select','RX_FIFO_select_tag_check',
                 'TX_word_select covered by retained qualified-byte TXmask']),
+        endpoint_TXCTRL_local_successor=dict(default_off=True,
+            evidence='own changed-source route-r1 actual CTS sw[2] -> qualified TXmask bit, -370.23ps; intermediate, not final',
+            local_control_replicas=16, comparator_input_bits=8,
+            compute_MACs_per_cycle=0, memory_bytes_per_cycle_added=0,
+            external_boundary_bits_added=0,
+            local_advance_fanout_bits=8+8*4,
+            added_state_FF_bits=0,
+            comparator_gate_upper_per_replica=48,
+            added_comb_cell_upper_um2=16*48*.2,
+            physical_buffer_delta_um2=None,
+            actual_parent_track_fit=False,
+            new_cycles_per_record=0, new_cycles_per_collective=0,
+            composed_new_token_ns=0,
+            readiness='same-cycle actual FIFO readiness, never tied/predicted',
+            targets={m:dict(applicable=m.endswith('_hbm'),new_token_ns=0)
+                for m in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
+            fullshape_exact=False, contextual_SS_FF=False, adopted=False),
         HA2_zero_cycle_structural_successor=dict(
             default_off=True, NC=8, LANES=16, PFMAX=384, OFMAX=48,
             INJ=2, peer_ports=8, BF16=1, LAT=7, SLOTREG=1,
@@ -10525,6 +10545,14 @@ def hbm_item9_mux_owner_model(nsm=2, nl=128, owner_copies=64):
             new_cycles_per_flit=0, new_cycles_per_collective=0,
             composed_new_token_ns=0,
             retained_reducer_cycles=7*3+1+1,
+            current_unadopted_TU_model_cycles=TU['reducer_cycles'],
+            retained_SLOTREG_delta_vs_TU_model_cycles=7*3+2-TU['reducer_cycles'],
+            current_executed_ARs=actual_ARs,
+            retained_SLOTREG_W19_token_delta_ns=actual_ARs*(7*3+2-TU['reducer_cycles'])/1.2,
+            new_cut_W19_token_delta_ns=0,
+            current_program=W19_PROGRAM,
+            current_program_sha256=hashlib.sha256((ROOT/W19_PROGRAM).read_bytes()).hexdigest(),
+            current_executed_collectives=actual_collectives,
             retained_reducer_hz=1.2e9,
             targets={m:dict(applicable=m.endswith('_hbm'),new_token_ns=0)
                 for m in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
