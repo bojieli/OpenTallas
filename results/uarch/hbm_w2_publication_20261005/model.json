@@ -51,8 +51,10 @@
     ],
     "targeted_new_cases": [
       "sink_control_UE_after_provider_accept",
-      "shared_owner_UE_after_provider_accept"
+      "shared_owner_UE_after_provider_accept",
+      "payload_CE_with_accepted_debt"
     ],
+    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json",
     "warm_hook_in_component": false
   },
   "measured_connected_component": {
@@ -177,11 +179,65 @@
     "source_commit": "a86d3cfd3",
     "whole_token": false
   },
+  "measured_successor_component": {
+    "FP32_words": 32,
+    "artifact_sha256": {
+      "CORRUPT_SHARED_OWNER.log": "0229706a6e9b987d996fb1258b0f49a935b8e599d91b788eabfb9d4eb48a8d42",
+      "CORRUPT_SINK_CONTROL.log": "02c8c911162d774701002e3dd438323555a9c0dea78263c7bf6016e023fc2457",
+      "compile.log": "915b2b782f2807efc9336f029d9e2b92a5e931ac1cef5a0b3a0683290e474d76",
+      "corrupt.log": "9f8524cd780513c4c4627e41677f02f3f900da1437dc103940e682432f20758c",
+      "normal.log": "04bbbd63dffd1cb9a9feea9349f0e0b8cbe45c068a7e0769cc79f0e7273e4b4d",
+      "payload_ce.log": "09aeeba90d57e0d35b97f134ed629b9029690ada57475e4339d29ead7f0f1d52",
+      "run.log": "d7dcd516ff6f0557701cc35f5721f63e57c73621e0324d1e192d62393d8a8081",
+      "runtime.rc": "8d6c81a2117607d9abacfdfdd4cb38794314e8113925d763eea2fafe4b775486",
+      "source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
+      "toolchain.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    "authority_negative_observation_edges": 12,
+    "clock_is_functional_not_signoff": true,
+    "command": "PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH NASH_W2_TRANSACTION_PIPELINE=1 NASH_W2_PROTECTION_CASES=1 bash src/tools/nash_w2_publication_gate.sh JOB",
+    "default_enabled": false,
+    "delivery_stall_edges": 7,
+    "delta_edges_vs_original_162": 34,
+    "delta_edges_vs_rejected_registered_181": 15,
+    "fixture_clock_ns": 10,
+    "full_readbacks": 4,
+    "last_verified_edge": 191,
+    "mode": "PROTECTED_TRANSACTION_PIPELINE=1",
+    "negative_cases": [
+      "CORRUPT_READBACK",
+      "CORRUPT_SINK_CONTROL",
+      "CORRUPT_SHARED_OWNER"
+    ],
+    "parent_condition": "real CP reset/quarantine must keep root POR high and preserve sink, borrower and CDC accepted debt until matched consumption",
+    "parent_warm_reset_tested": false,
+    "payload_CE": {
+      "added_release_edges": 0,
+      "held_owner_debt": true,
+      "injected_codeword": 8,
+      "protected_recheck": true,
+      "release_edge": 196,
+      "scope": "reserved ingress payload with provider accepted debt; not a selected-stage injection",
+      "service_can_overlap_other_reserved_row": true
+    },
+    "physical_admission": false,
+    "physical_binding_complete": false,
+    "release_edge": 196,
+    "request_stall_edges": 2,
+    "route_launched": false,
+    "rows": 4,
+    "shared_releases": 1,
+    "source_commit": "91714b0525e69d6eadb677fdcc3481e61bb3e3c0",
+    "verdict": "PASS_COMPONENT_EXACT",
+    "whole_token": false,
+    "writes": 4
+  },
   "model_bounded": true,
   "parent_binding_complete": false,
   "physical_launch_admitted": false,
   "ports": {
-    "checked_reads_per_publication": 4,
+    "checked_reads_per_numeric_publication": 1,
+    "checked_reads_per_owned_transaction": 4,
     "max_result_accepts_per_cycle": 1,
     "new_memory_ports": 0,
     "provider_capacity_under_refusal": null,
@@ -192,7 +248,8 @@
     "provider_request_bits": 337,
     "provider_return_bits": 273,
     "result_payload_B_per_accept": 32,
-    "writes_per_publication": 4
+    "writes_per_numeric_publication": 1,
+    "writes_per_owned_transaction": 4
   },
   "protection": {
     "CE_bound_scope": "one transient correctable error per selected stripe; repeated faults/refusal have no finite completion bound",
@@ -206,8 +263,9 @@
     "DUE_always_vetoes_handshakes": true,
     "code": "unchanged W6 SECDED64/72, including every stage identity/phase/completion word",
     "completion": "all source cuts valid + matching protected identity + four matched write ACKs + four full payload readbacks + positive verified/completion fences; shared matched release then CP callback/CPL",
-    "exact_gate_passed": false,
-    "implementation_present": false,
+    "exact_gate_passed": true,
+    "exact_gate_scope": "minimum four-row component with real CP/shared owner/finite RAM; enclosing warm reset and physical closure untested",
+    "implementation_present": true,
     "no_ROM_waiver_for_mutable_state": true,
     "no_parity_waiver": true,
     "normal_path": "select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)",
@@ -265,9 +323,12 @@
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/private_alloc.svh": "0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/seq.hex": "1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json": "b3833a7548aec7bd6e4c3f558bd44e81be6055f595f480ae415acebf0958568e",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json": "4829fac869af50bff19585f4aa2be38ef58aca340f103790978d400c90a47b39",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
     "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
     "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e",
     "results/uarch/hbm_w2_publication_20261005/inputs/original_f835_sink.sv": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
     "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv": "1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e",
     "tools/hbm_accel_sm_v_floorplan.py": "44086afc377ac93856e65cc7a32e731b07f40e1e94ea6ea843202e7da4763b73",
     "tools/hubble_w2_connected_runtime.py": "b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f"
@@ -317,8 +378,10 @@
       "original": 162,
       "registered": 181
     },
-    "measured_successor_delta_edges": null,
-    "measured_successor_release_edges": null,
+    "measured_calendar_scope": "same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory",
+    "measured_successor_delta_edges_vs_original": 34,
+    "measured_successor_delta_edges_vs_registered": 15,
+    "measured_successor_release_edges": 196,
     "old_FF_hold_slack_ps": 15.645707,
     "old_REGISTERED_SUBBLOCKS_verdict": "REJECT_SS_SETUP",
     "old_SS_slack_ps": -733.090149,
@@ -333,9 +396,10 @@
       "verified_feedback_positive_fence": 4,
       "write_ACK_positive_fence": 4
     },
-    "planned_added_local_edges_per_publication": 17,
+    "planned_added_local_edges_per_owned_transaction": 17,
+    "planned_selected_recipe_serial_local_delta_at_target_ns": 14.166666666666668,
+    "projection_requires_actual_parent_clock_binding": true,
     "release_181_plus_planned_edges_is_not_a_measurement": true,
-    "selected_recipe_serial_local_delta_ns": 14.166666666666668,
     "target_clock_ps": 833.333,
     "total_fault_stall_bound": null,
     "whole_token_added_latency_ns": null

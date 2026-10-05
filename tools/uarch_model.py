@@ -7901,7 +7901,7 @@ def qwen_w12_lvl7_clock_cut_model(*, gt=6144, lanes=16, aw=24, nw=18,
 
 # W2 publication: separate from Harvey's CP timing and index result storage.
 def hbm_w2_publication_model():
-    """One bounded protected-transaction candidate, before any sink RTL.
+    """One bounded protected-transaction candidate, sized before sink RTL.
 
     Count four numeric row publications inside one connected reservation, not weight descriptors/expert
     slots. The selected component schedule is not a whole-token schedule.
@@ -8032,6 +8032,23 @@ def hbm_w2_publication_model():
              inputs / 'original_f835_sink.sv',
              root / codec_rel, root / 'tools/hbm_accel_sm_v_floorplan.py',
              root / 'results/floorplan/hbm_gpu/v41_hbm_die.json']
+    # Source-pinned minimum component measurement; no connected-parent replay.
+    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS'
+    candidate = json.loads((candidate_dir / 'result.json').read_text())
+    for name, expected in candidate['artifact_sha256'].items():
+        if hashlib.sha256((candidate_dir / name).read_bytes()).hexdigest() != expected:
+            raise ValueError('W2 candidate terminal pin changed: ' + name)
+    candidate_pins = json.loads((candidate_dir / 'source.json').read_text())
+    successor = root / sink_rel
+    if hashlib.sha256(successor.read_bytes()).hexdigest() != candidate_pins['sha256'][sink_rel]:
+        raise ValueError('W2 measured successor source changed')
+    successor_body = successor.read_text().split(' localparam [2:0] IDLE=0,CAPTURE=1,WRITE=2', 1)[1].split(' end endgenerate', 1)[0]
+    if successor_body != original_body:
+        raise ValueError('W2 successor flag-OFF original engine bytes changed')
+    if (candidate['verdict'] != 'PASS_COMPONENT_EXACT' or candidate['release_edge'] != 196
+        or candidate['rows'] != 4 or candidate['FP32_words'] != 32):
+        raise ValueError('W2 minimum actual-shape terminal changed')
+    paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json']
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -8068,7 +8085,8 @@ def hbm_w2_publication_model():
         ports=dict(result_payload_B_per_accept=32, max_result_accepts_per_cycle=1,
             provider_request_bits=337, provider_return_bits=273,
             provider_payload_B_per_accept=32, provider_outstanding=1,
-            writes_per_publication=rows, checked_reads_per_publication=rows,
+            writes_per_numeric_publication=1, checked_reads_per_numeric_publication=1,
+            writes_per_owned_transaction=rows, checked_reads_per_owned_transaction=rows,
             provider_payload_write_bytes=rows*32, provider_payload_read_bytes=rows*32,
             new_memory_ports=0, provider_capacity_under_refusal=None),
         protection=dict(code='unchanged W6 SECDED64/72, including every stage identity/phase/completion word',
@@ -8087,7 +8105,8 @@ def hbm_w2_publication_model():
             DUE_always_vetoes_handshakes=True,
             physical_triplicate_independence_credited=False,
             representation_basis='72-bit SECDED code FF per64bit stripe, not textual triplicate views; successor mapping not measured',
-            implementation_present=False, exact_gate_passed=False),
+            implementation_present=True, exact_gate_passed=True,
+            exact_gate_scope='minimum four-row component with real CP/shared owner/finite RAM; enclosing warm reset and physical closure untested'),
         routing=dict(selected_payload_code_bits=288, identity_code_bits=identity_words*72,
             select_4to1_mux2_bits=288*3, result_4seat_demux_payload_bits=288,
             logical_slot_select_fanout=288, buffer_tree_load_assumption=7,
@@ -8118,16 +8137,21 @@ def hbm_w2_publication_model():
             old_REGISTERED_SUBBLOCKS_verdict='REJECT_SS_SETUP',
             old_SS_slack_ps=-733.090149, old_FF_hold_slack_ps=15.645707,
             inherited_same_fourrow_gate_release_edges=dict(original=162, registered=181, measured_delta=19),
-            planned_added_local_edges_by_cut=cuts, planned_added_local_edges_per_publication=extra,
-            selected_recipe_serial_local_delta_ns=n_transactions*extra/1.2,
+            planned_added_local_edges_by_cut=cuts, planned_added_local_edges_per_owned_transaction=extra,
+            planned_selected_recipe_serial_local_delta_at_target_ns=n_transactions*extra/1.2,
+            projection_requires_actual_parent_clock_binding=True,
             CE_selected_payload_added_edges_bound=20*rows,
             CE_selected_payload_bound_scope='at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection',
             total_fault_stall_bound=None,
-            measured_successor_release_edges=None, measured_successor_delta_edges=None,
+            measured_successor_release_edges=candidate['release_edge'],
+            measured_successor_delta_edges_vs_original=candidate['delta_edges_vs_original_162'],
+            measured_successor_delta_edges_vs_registered=candidate['delta_edges_vs_rejected_registered_181'],
+            measured_calendar_scope='same four-row inputs/stalls; arrival-seat schedule differs; delta is observed calendar, not sum of cut inventory',
             release_181_plus_planned_edges_is_not_a_measurement=True,
             whole_token_added_latency_ns=None, headline_rate_credit=False),
-        gate=dict(existing_fourrow_inputs_unchanged=True,
-            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept'],
+        measured_successor_component=candidate,
+        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json',
+            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt'],
             assertions='accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high',
             warm_hook_in_component=False,
             immutable_parent_source='inputs/immutable_parent.sv (f835c8641)',
