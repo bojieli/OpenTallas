@@ -1,0 +1,2 @@
+SUMMARY wr_lockstep PULLIN=16 AQR=1 REFM=1 PC=1 PH=0 WQ=4 WP=2 seed=1 cycles=400000 mismatches=0 acts=20272 rds=8511 wrs=12050 aqrds=11859 pushes=14906 refpb=2966 busy_starts=9 fault_cycles=0 verdict=PASS
+rtl/test/hbm_fmax_svc/tb_svc_aq_act_cut_lockstep.sv:62: $finish called at 333601668000 (1fs)

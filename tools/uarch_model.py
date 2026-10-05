@@ -47,6 +47,53 @@ FP8_MAC_UM2 = 78.466875       # arch_budget_v41 unit_areas (ot_hdc_blockdot / 32
 BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pipe)
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
+
+def dsrom_recovery_decision_gate():
+    """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
+
+    The timing authority is dsrom_1m_allmeasured.compose. Missing measured SU
+    costs remain missing rather than becoming zero or inheriting fusion floors.
+    """
+    path = ROOT / "results/rtl/dsrom_recovery_20261004/decision_gate/model.json"
+    record = json.loads(path.read_text())
+    return dict(schema=record["schema"], record=str(path.relative_to(ROOT)),
+                scenarios={k:dict(verdict=v["verdict"], adoption=v["adoption"],
+                    composition_complete=v["composition_complete"],
+                    conditional_cost=v["conditional_cost"], missing=v["missing"])
+                    for k,v in record["scenarios"].items()},
+                historical_contrast=record["historical_contrast"],
+                comparison=record["comparison"],
+                hardware_build_admitted=record["hardware_build_admitted"],
+                full_die_trigger=record["full_die_trigger"])
+
+
+def mbist_bira_pipeline_cost(dmax=256, entries=6, sram_banks=2, clock_ns=0.833):
+    """Item8(b) repair-search pipeline; deterministic cycle/bit pricing, no closure claim."""
+    chunks = (dmax + 15) // 16
+    groups = (chunks + 3) // 4
+    partial_bits = chunks * 5 + groups * 7
+    extra_cycles_per_subset = 2
+    extra_cycles_per_analysis = extra_cycles_per_subset * (1 << entries)
+    return dict(schema="opentallas.uarch.mbist-bira-pipeline.v1", enabled_default=False,
+        source="rtl/dft/ot_mbist_bira.sv S_SRCH/S_SRCH2/S_SRCH3; item8(b) prescribed pipeline",
+        geometry=dict(dmax=dmax, entries=entries, sram_banks=sram_banks),
+        search_cycles_per_subset=dict(baseline=3, successor=5),
+        added_cycles_per_analysis=extra_cycles_per_analysis,
+        worst_added_bist_cycles=sram_banks * extra_cycles_per_analysis,
+        worst_added_bist_ns=clock_ns * sram_banks * extra_cycles_per_analysis,
+        clean_bist_added_cycles=0, single_user_token_added_cycles=0,
+        memory_port_bytes_per_cycle_delta=0, external_boundary_bits_per_cycle_delta=0,
+        macs_per_cycle=0, replicas=1, shared_controller=True,
+        pipeline_register_bits=partial_bits, added_state_bits=1,
+        registered_boundaries_bits=[chunks * 5, groups * 7],
+        fanin=dict(chunk_bits=16, group_chunks=4, final_groups=groups),
+        fanout="each cm_r bit to one chunk; each chunk count to one group; no new external fanout",
+        area_estimate_um2=(partial_bits + 1) * DFF_UM2,
+        area_status="ESTIMATE flop-only; adder/mux/clock/routing delta requires measured shell",
+        routing_tracks_status="ESTIMATE internal local tree, no added shell ports; actual route required",
+        floorplan_status="existing shell vehicle; slot fit requires measured total area",
+        clock_status="UNVALIDATED: require routed SS60/FF25 at 0.833ns, DRC/antenna/electrical zero")
+
 # weights delivered by one ROM word, by the node's format (W1 bank map: FP4 two 136-bit 32-blocks per
 # 274-bit word, FP8 one 264-bit block, BF16 16 x 16 bit, FP32 8 x 32 bit)
 WEIGHTS_PER_WORD = {"fp4": 64, "fp8": 32, "bf16": 16, "fp32": 8}
@@ -7817,3 +7864,125 @@ def qwen_combined_sequencer_la(*, fw=512, vwa=16, ntok=8, replicas=4):
                 adopted=False,
                 source_reuse='rtl/rom/ot_qwen_tp_seq_w12_vp.sv LA=1 at 67b9aa4c1',
                 physical_obligation='Original ROM-VP routed SS+4.56ps/FF+14.32ps does not qualify added combined NEAR/tag context')
+
+
+def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
+                                   service_period_fs=833333, ack_tail_edges=0):
+    """Additional alignment around the existing canonical MP commit element.
+
+    A raw lane sampled E0 is decoded after E1 and enters service at E2.
+    Compose the final lane's actual ACK tail with pipeline empty, never sum
+    two edges onto every FILL stage or assume they are unhidden token delay.
+    Canonical decoder/state area belongs to the existing element model.
+    """
+    bits=2*sw*aw+2
+    old_empty=fill_lat+3
+    new_empty=fill_lat+5
+    before=max(old_empty,ack_tail_edges)
+    after=max(new_empty,ack_tail_edges)
+    return dict(default_enabled=False, replicas=replicas, MACs_per_cycle=0,
+                added_register_bits_per_die=bits, total_added_register_bits=replicas*bits,
+                register_cell_area_floor_um2_per_die=bits*0.2916,
+                area_floor_excludes='canonical decoder/state, enable muxes, clock/reset/routing',
+                initiation_interval_service_edges=1, added_lane_service_edges=2,
+                existing_lane_address_bits_per_edge=sw*aw,
+                existing_lane_data_bits_per_edge=sw*32,
+                added_memory_ports=0, new_boundary_bits=0, routing_tracks_added=0,
+                existing_lane_input_bytes_per_edge=sw*4,
+                empty_pipeline_tail_service_edges=new_empty,
+                actual_ack_tail_service_edges=ack_tail_edges,
+                composed_tail_service_edges=after,
+                composed_tail_delta_service_edges=after-before,
+                composed_tail_delta_fs=(after-before)*service_period_fs,
+                token_composition='per-layer max(actual native ACK tail, FILL_LAT+5); serialize only exposed fence tail',
+                service_period_fs=service_period_fs,
+                combined_context_clock_closed=False, floorplan_fit=False, adopted=False,
+                source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')
+
+
+def hbm_loader_install_contract(*, partitions=2, dies=2, queue_depth=4,
+                                reorder_entries=16, cdc_aw=5, host_period_ns=1.0,
+                                service_period_ns=0.833, existing_clients=4, partition_ports=1):
+    """Item8(c) boot/restore/STORE boundaries, before successor RTL/build.
+
+    The adapter distributes an ordered engine request stream to one finite
+    client queue per 128-byte-interleaved partition. It does not invent an
+    NS-fold increase in host bandwidth. STORE waits real AXI B completions.
+    Clock periods are targets, not measured closures; no decode gain claimed.
+    """
+    assert partitions >= 1 and partitions & (partitions-1) == 0
+    assert queue_depth >= 2 and queue_depth & (queue_depth-1) == 0
+    assert cdc_aw >= 2
+    request_bits=1+32+256+32+16
+    response_bits=1+256+16
+    queue_bits=partitions*queue_depth*request_bits
+    reorder_bits=reorder_entries*(256+16+2)
+    cdc_payload_bits=(1<<cdc_aw)*256+4*64+4*68
+    return dict(default_enabled=False, MACs_per_cycle=0,
+                dies=dies, partitions_per_die=partitions,
+                additional_memory_clients_per_die=partition_ports,
+                memory_clients_before=existing_clients,
+                memory_clients_selected=existing_clients+partition_ports,
+                request_bits_per_partition_boundary=request_bits,
+                response_bits_per_partition_boundary=response_bits,
+                peak_memory_payload_bytes_per_edge=32*partitions,
+                ordered_engine_bytes_per_edge=32,
+                host_payload_bits_per_edge=64, engine_payload_bits_per_edge=256,
+                host_AXI_address_bits=64, host_AXI_response_bits=2,
+                host_target_period_ns=host_period_ns,
+                service_target_period_ns=service_period_ns,
+                host_width_ceiling_GBps=8/host_period_ns, engine_width_ceiling_GBps=32/host_period_ns,
+                installed_DMA_serialization="4 actual 64-bit beats per sector; read owner held through RLAST, write owner through B; actual PCIe/AXI response tail must be measured",
+                PCIe5_x16_encoded_ceiling_GBps=32*16*(128/130)/8,
+                PCIe_payload_after_packet_overhead_GBps=None,
+                raw_partition_request_queue_bits_per_die=queue_bits if partition_ports>1 else 0,
+                unselected_partition_recipe_queue_bits_per_die=queue_bits,
+                raw_STORE_reorder_bits_per_die=reorder_bits,
+                raw_STORE_CDC_payload_bits_per_die=cdc_payload_bits,
+                queue_registered_edges=1 if partition_ports>1 else 0, added_CRC_edges=0,
+                reorder_retirement_edges=1,
+                CDC_latency='actual ot_gpu_cdc_fifo two synchronizer edges plus pointer/consumer edges in each direction; measure under both clocks',
+                LOAD_completion='all engine write ACKs, optional ordered readback CRC, then actual completion CDC',
+                STORE_completion='all matched MREQ reads, ordered CDC/W handshakes, all AXI B responses, matching payload/memory CRC',
+                latency_formula='LOAD+STORE measured elapsed host edges*host_period; include finite queue, CDC, memory/refresh, AXI backpressure and B tail',
+                steady_decode_added_cycles=0,
+                steady_decode_clock_or_arbitration_delta='UNKNOWN until selected-context check',
+                mux_demux_cost='installed: one loader client/die at NCL, ND+host AXI arbiter + BAR decoder; optional recipe partition queues are separate until selected',
+                routing_tracks_required='UNKNOWN: boundary bit inventory above; floorplan/channel capacities needed',
+                area_um2='UNKNOWN: queues/reorder/CDC plus control and muxes require actual synthesis',
+                replica_cost='per die; no ROM/ECC changes', floorplan_fit=None,
+                clock_closed=False, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, composed_decode_gain_percent=None,
+                adopted=False,
+                historical_single_client_GBps={'write_only':9.788,'with_readback':4.998},
+                historical_record='results/rtl/tapeout_hbm_loader_20261004/record.json')
+
+
+def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
+    """Exact current-queue bank mask cut for the retained AQ row controller.
+
+    Register the OR of surviving slots plus an accepted push. This equals the
+    current queue's bank set at every edge; the existing prior-cycle hold stays
+    in PRE exclusion. No eligibility or row/column issue edge moves.
+    """
+    if queue_depth < 2 or queue_depth & (queue_depth-1) or pcs < 1:
+        raise ValueError('retained AQ queue needs power-of-two depth >=2 and real PC count')
+    bits = 32
+    return dict(default_enabled=False, MACs_per_cycle=0, pcs=pcs,
+                existing_queue_depth=queue_depth, added_state_bits_per_pc=bits,
+                total_added_state_bits=pcs*bits,
+                register_cell_area_floor_um2_per_pc=bits*0.2916,
+                register_cell_area_floor_um2_total=pcs*bits*0.2916,
+                area_floor_excludes='queue-survivor OR, push decode, enable mux, clock/reset/wires',
+                mask_fanin_per_bank=queue_depth+1, late_pop_mux_bits=32,
+                extra_memory_ports=0, extra_memory_bytes_per_cycle=0,
+                boundary_bits_added=0, external_routing_tracks_added=0,
+                local_registered_mask_bits=32, local_placement_fit='pending selected service route',
+                added_row_command_cycles=0, added_column_command_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                composed_single_user_token_delta_ns=0,
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                refresh_and_DRAM_eligibility='unchanged exact current and prior queue hold masks',
+                interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
+                SSFF_closed=False, adopted=False,
+                source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
