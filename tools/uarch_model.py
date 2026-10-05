@@ -8104,7 +8104,7 @@ def hbm_w2_publication_model():
             historical_component_core_is_not_parent_slot=True,
             parent_instance_path='ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink',
             actual_parent_slot_bbox_um=None, slot_fit=None,
-            binding_owner='Claude HBM floorplan owner',
+            binding_owner='Turing 01a10dba-5786-7d01-b636-797f591b5657 (existing dieplan takeover; Claude limit confirmed)',
             owner_readonly_source_paths=['/home/ubuntu/wt-claude-hbmsm/tools/hbm_accel_sm_v_floorplan.py',
                                         '/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json'],
             inspected_existing_sources=['tools/hbm_accel_sm_v_floorplan.py', 'results/floorplan/hbm_gpu/v41_hbm_die.json'],
