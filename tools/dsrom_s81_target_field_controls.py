@@ -6,6 +6,7 @@ The existing stream emitter's stream-only body and actual phase_cfg are reused.
 import argparse
 import ast
 import hashlib
+import gzip
 import inspect
 import json
 from pathlib import Path
@@ -43,7 +44,7 @@ def native_stream(matrix, *, fp32_output=False, stream_base=0):
     return phrom,beats,hashlib.sha256(source.encode()).hexdigest()
 
 
-def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
+def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14, compact_binding=False):
     """Link ALL resident canonical phases using byte-identical stream bodies.
 
     No weights/activations, CFG remap or arithmetic change. Canonical key/phase
@@ -52,8 +53,10 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
     """
     import re
     from dsrom_stage_program_join import digest
-    if stage not in (37,38) or (phw,saw)!=(10,14):
-        raise ValueError('current selected stages37/38 PHW10 SAW14 required')
+    if stage not in execution.stage_join.by_stage or not execution.stage_join.by_stage[stage]:
+        raise ValueError('occupied canonical field stage required')
+    if not 1<=phw<=10 or saw!=14:
+        raise ValueError('canonical PHW and current SAW14 required')
     if execution.stage_join.stage_map['PHW_required_by_stage'][stage]!=phw:
         raise ValueError('canonical PHW/source mismatch')
     source={}
@@ -100,7 +103,7 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
         body=b''.join(v.to_bytes(6,'little') for v in beats)
         if body not in bodies:
             if len(stream)+len(beats)>1<<saw:
-                raise ValueError('exact interned catalog exceeds SAW14')
+                raise ValueError((stage,row['phase'],row['key'],'exact interned catalog exceeds stream capacity',len(stream)+len(beats),1<<saw))
             bodies[body]=(len(catalog),len(stream))
             catalog.append(dict(body=len(catalog),base=len(stream),words=len(beats),
                                 sha256=hashlib.sha256(body).hexdigest()))
@@ -161,14 +164,94 @@ def emit_native_stage_tables(execution, stage, out, *, phw=10, saw=14):
         descriptor_mutability_rule='Dynamic ME shape refused; all bound templates agree on K/rows/rounding. Input/output VM bases and their dynamic selectors are GO ports, not PHROM. i_np/batch position is a GO port, not a phase_words field. Expert IDs select existing canonical phase/key; all384 alternatives included.',
         source_pins={str(Path('tools')/n):hashlib.sha256((execution.owner/'tools'/n).read_bytes()).hexdigest()
             for n in ('dsrom_s81_target_field_controls.py','v41_die_images_w17w10.py','dsrom_s81_execution_binding.py','dsrom_stage_program_join.py')})
-    (out/'binding.json').write_text(json.dumps(record,indent=2)+'\n')
+    if compact_binding:
+        raw=(json.dumps(record,separators=(',',':'))+'\n').encode()
+        (out/'binding.json.gz').write_bytes(gzip.compress(raw,mtime=0))
+    else:
+        (out/'binding.json').write_text(json.dumps(record,indent=2)+'\n')
     return record
+
+
+def read_stage_binding(image):
+    image=Path(image)
+    candidates=[p for p in (image/'binding.json',image/'binding.json.gz') if p.is_file()]
+    if len(candidates)!=1:
+        raise ValueError('exactly one actual stage binding required')
+    path=candidates[0]
+    return json.loads(gzip.decompress(path.read_bytes()) if path.suffix=='.gz' else path.read_bytes())
+
+
+def emit_native_catalog(execution, out, *, reuse_root=None):
+    """All CURRENT occupied stages; explicit failures never masquerade as images.
+
+    Existing accepted stage37/38 artifacts are referenced without rerunning
+    their bytewise checks. New images use the SAME per-phase linker/codec.
+    Compressed binding JSON avoids duplicating millions of metadata lines.
+    """
+    out=Path(out).resolve()
+    out.mkdir(parents=True,exist_ok=False)
+    join=execution.stage_join
+    occupied=[s for s,rows in join.by_stage.items() if rows]
+    records=[]
+    for stage in occupied:
+        rows=join.by_stage[stage]
+        phw=join.stage_map['PHW_required_by_stage'][stage]
+        entry=dict(stage=stage,PHW=phw,SAW=14,assigned_phases=len(rows),
+                   phase_capacity=1<<phw,PHROM_capacity_words=2<<phw,
+                   stream_capacity_words=1<<14,CFG_word_extent=25*len(rows),
+                   ranks=[dict(rank=r,die_id=4*stage+r,
+                               valid_keys=sum(r in x['owners'] for x in rows)) for r in range(4)])
+        try:
+            reuse=Path(reuse_root)/f'stage{stage}' if reuse_root is not None and stage in (37,38) else None
+            if reuse is not None:
+                record=read_stage_binding(reuse)
+                if (record['stage'],record['PHW'],record['SAW'],record['phase_count'])!=(stage,phw,14,len(rows)) or record['canonical_inputs']!=execution.input_sha256:
+                    raise ValueError('accepted image belongs to a different canonical assignment')
+                image=reuse.resolve()
+                entry['accepted_image_source_commit']='5a92972790e27b4320f81794186a47afb86a11a0'
+                entry['byte_checks_repeated']=False
+            else:
+                image=out/f'stage{stage}'
+                record=emit_native_stage_tables(execution,stage,image,phw=phw,compact_binding=True)
+                entry['byte_checks_repeated']=False
+            binding=image/('binding.json.gz' if (image/'binding.json.gz').exists() else 'binding.json')
+            try:
+                image_path=str(image.relative_to(execution.owner))
+            except ValueError:
+                image_path=str(image)
+            entry.update(status='ready',image_path=image_path,
+                         binding_file=binding.name,binding_sha256=hashlib.sha256(binding.read_bytes()).hexdigest(),
+                         reused_accepted_image=reuse is not None,
+                         phase_count=record['phase_count'],unique_bodies=len(record['catalog']),
+                         unique_stream_words=record['unique_stream_words'],
+                         original_append_stream_words=record['original_append_stream_words'],
+                         files_sha256=record['files_sha256'],descriptor_conflicts=record['descriptor_conflicts'],
+                         key_binding='binding phases[].key/key_word at canonical phases[].phase; rank key frames preserve exact ownership',
+                         actual_phase_decode_checks=record['actual_phase_decode_checks'])
+        except ValueError as error:
+            entry.update(status='blocked',failure_type=type(error).__name__,failure=error.args,
+                         remaining_phase_checks_complete=False,image_path=None)
+        records.append(entry)
+        print('stage',stage,entry['status'],entry.get('unique_stream_words',entry.get('failure')),flush=True)
+        # Incremental usable catalog while later stages are still linking.
+        manifest=dict(schema='opentallas.dsrom.canonical-interned-fullcatalog.v1',
+                      canonical_inputs=execution.input_sha256,occupied_stages=occupied,
+                      empty_stages=[s for s,rows in join.by_stage.items() if not rows],
+                      stages=records,complete=len(records)==len(occupied),
+                      all_occupied_stages_ready=len(records)==len(occupied) and all(r['status']=='ready' for r in records),
+                      phase_key_CFG_remapped=False,hardware_provider_adopted=False,
+                      runtime_array_patching_removed=False,
+                      source_only=True,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())
+        tmp=out/'manifest.json.tmp'
+        tmp.write_text(json.dumps(manifest,indent=2)+'\n')
+        tmp.replace(out/'manifest.json')
+    return manifest
 
 
 def linked_native_stream(matrix, *, fp32_output, stage, phase, key, stage_image):
     """Existing local control bundle using source-bound immutable stage offsets."""
-    image=Path(stage_image); bound=json.loads((image/'binding.json').read_text())
-    if bound['stage']!=stage or (bound['PHW'],bound['SAW'])!=(10,14):
+    image=Path(stage_image); bound=read_stage_binding(image)
+    if bound['stage']!=stage or not 1<=bound['PHW']<=10 or bound['SAW']!=14:
         raise ValueError('selected stage table binding mismatch')
     row=next((r for r in bound['phases'] if r['phase']==phase),None)
     from dsrom_stage_program_join import digest
@@ -185,7 +268,7 @@ def linked_native_stream(matrix, *, fp32_output, stage, phase, key, stage_image)
 
 
 def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
-                               fragment_index=0,expert_ids=None,stage_image=None):
+                               fragment_index=0,expert_ids=None,stage_image=None,static_native_cut=None):
     """Source-exact controls for any selected QE/weight-ME fragment.
 
     Dynamic EIDs must be the caller's captured native tuple. This function
@@ -207,6 +290,12 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
     if not (me or qe) or (matrix['format']=='bf16')!=me:
         raise ValueError('actual weight ME or mode0 QE controls required')
     fp32=not instruction.get('me_round',0) if me else bool(instruction.get('qe_unrounded',0))
+    if static_native_cut is not None:
+        if stage_image is not None:
+            raise ValueError('select one canonical image through the actual static cut enrollment')
+        from dsrom_s81_static_native_cut import selected_image
+        stage_image=selected_image(static_native_cut,canonical_inputs=execution.input_sha256,
+            stage=fragment['stage'],rank=rank)
     if stage_image is None:
         phrom,beats,stream_pin=native_stream(matrix,fp32_output=fp32)
     else:
@@ -236,7 +325,8 @@ def emit_native_phase_controls(execution,node,rank,out,connectivity,*,
         actual_BF_site_IDs=execution.stage_join.stage_map['BF_site_IDs'],
         input_VM_base=instruction['me_xbase'] if me else instruction['qe_xbase'],
         ME=me,FP32_output=fp32,cfg_phase_must_not_be_relabelled=True,
-        native_execution_qualified=False,immutable_stage_image=str(stage_image) if stage_image is not None else None)
+        native_execution_qualified=False,immutable_stage_image=str(stage_image) if stage_image is not None else None,
+        static_native_cut=str(static_native_cut) if static_native_cut is not None else None)
     (out/'binding.json').write_text(json.dumps(info,indent=2)+'\n')
     return info
 
@@ -309,15 +399,22 @@ def main():
     p.add_argument('--layer',type=int,required=True)
     p.add_argument('--rank',type=int,required=True)
     p.add_argument('--out',type=Path,required=True)
-    p.add_argument('--stage-tables',default='',help='opt-in canonical stage37/38 byte-identical stream interning; no payload')
+    p.add_argument('--stage-tables',default='',help='opt-in comma-separated occupied canonical stages, or all; no payload')
+    p.add_argument('--reuse-stage-images',type=Path,help='accepted stage37/38 image root for all-stage catalog; unchanged images referenced')
     a=p.parse_args()
     execution=CanonicalS81Execution(a.owner)
+    if a.stage_tables=='all':
+        r=emit_native_catalog(execution,a.out,reuse_root=a.reuse_stage_images)
+        if not r['all_occupied_stages_ready']:
+            raise SystemExit(1)
+        return
     if a.stage_tables:
         stages=[int(x) for x in a.stage_tables.split(',')]
-        if stages!=sorted(set(stages)) or not set(stages)<=set((37,38)):
-            raise ValueError('selected distinct stages37/38 required')
+        if stages!=sorted(set(stages)) or not set(stages)<={s for s,rows in execution.stage_join.by_stage.items() if rows}:
+            raise ValueError('ordered distinct occupied canonical stages required')
         for stage in stages:
-            r=emit_native_stage_tables(execution,stage,a.out/f'stage{stage}')
+            r=emit_native_stage_tables(execution,stage,a.out/f'stage{stage}',
+                phw=execution.stage_join.stage_map['PHW_required_by_stage'][stage])
             print(stage,r['phase_count'],r['unique_stream_words'],flush=True)
         return
     connectivity=json.loads((a.owner/'results/uarch/dsrom_s81_rd64_connectivity_20261004/canonical_binding_r1/connectivity.json').read_text())
