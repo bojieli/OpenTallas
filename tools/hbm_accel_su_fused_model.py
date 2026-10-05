@@ -28,7 +28,7 @@ def model():
         # norm publishes y, optional ro, and quant payload as distinct events.
         payload_bits = n*32 + n*8 + (n//32)*10 + n*16 + 10
         config_bits = 512 + 128 + 32*3 + max(1, rd//2)*64
-        endpoint_ff = 7*(4*n*32) + 8*(payload_bits+n*32) + config_bits + 150
+        endpoint_ff = 7*(4*n*32) + 8*(payload_bits+n*32) + config_bits + 137
         rows.append(dict(kind=kind, lanes=n, dimension=d, rope_tail=rd,
             replicas=1, input_beats=beats, cold_gain_load_beats=gain_beats,
             reserved_output_events=events if kind!="swiglu" else 2*events, BCAST=7, RET=8, RW=9, BW=9,
@@ -43,7 +43,7 @@ def model():
             VM_output_boundary_bits_per_edge=payload_bits,
             quant_boundary_bits_per_edge=n*8+(n//32)*10+n*16,
             reservation_count_bits=16, output_queue_words=0,
-            VM_adapter_descriptor_FF_bits_ESTIMATE=6*24+64+32+8,
+            VM_adapter_descriptor_FF_bits_ESTIMATE=5*24+32+config_bits+3+16+2+8+8+2,
             VM_adapter_added_read_ports=0, VM_adapter_added_write_ports=0,
             memory_response_latency_edges=1,
             SwiGLU_partial32_quant_allowed=False,
@@ -51,7 +51,7 @@ def model():
             MACs_per_cycle_added=0, existing_engine_arithmetic_unchanged=True,
             compute_intensity="reuse selected engine; no added MACs",
             endpoint_register_bits_upper_bound_ESTIMATE=endpoint_ff,
-            endpoint_DFF_area_floor_um2_ESTIMATE=endpoint_ff*.2916,
+            endpoint_DFF_area_upper_bound_um2_ESTIMATE=endpoint_ff*.2916,
             gain_storage_reused_from_norm=True,
             input_source_mux_clients=1, parent_output_mux_clients=4,
             parent_mux_area_um2=None, clock_fanout_cost_um2=None,
