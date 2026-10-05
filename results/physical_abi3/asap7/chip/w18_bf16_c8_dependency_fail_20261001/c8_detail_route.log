@@ -1,0 +1,845 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_db /work/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_1_grt.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+detailed_route -output_drc /work/reports/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       17
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_v41_rom_elem
+Die area:                 ( 0 0 ) ( 1002890 142560 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     495830
+Number of terminals:      1804
+Number of snets:          2
+Number of nets:           485539
+
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/clk
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/ce_in
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[0]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[1]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[2]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[3]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[4]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[5]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[6]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[7]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[8]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[9]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[10]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/addr_in[11]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[0]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[1]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[2]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[3]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[4]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[5]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[6]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[7]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[8]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[9]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[10]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[11]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[12]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[13]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[14]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[15]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[16]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[17]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[18]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[19]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[20]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[21]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[22]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[23]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[24]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[25]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[26]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[27]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[28]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[29]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[30]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[31]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[32]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[33]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[34]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[35]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[36]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[37]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[38]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[39]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[40]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[41]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[42]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[43]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[44]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[45]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[46]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[47]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[48]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[49]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[50]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[51]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[52]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[53]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[54]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[55]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[56]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[57]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[58]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[59]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[60]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[61]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[62]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[63]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[64]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[65]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[66]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[67]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[68]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[69]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[70]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[71]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[72]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[73]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[74]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[75]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[76]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[77]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[78]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[79]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[80]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[81]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[82]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[83]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[84]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[85]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[86]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[87]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[88]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[89]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[90]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[91]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[92]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[93]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[94]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[95]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[96]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[97]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[98]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[99]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[100]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[101]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[102]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[103]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[104]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[105]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[106]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[107]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[108]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[109]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[110]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[111]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[112]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[113]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[114]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[115]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[116]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[117]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[118]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[119]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[120]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[121]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[122]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[123]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[124]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[125]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[126]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[127]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[128]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[129]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[130]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[131]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[132]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[133]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[134]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[135]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[136]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[137]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[138]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[139]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[140]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[141]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[142]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[143]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[144]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[145]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[146]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[147]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[148]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[149]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[150]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[151]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[152]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[153]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[154]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[155]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[156]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[157]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[158]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[159]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[160]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[161]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[162]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[163]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[164]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[165]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[166]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[167]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[168]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[169]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[170]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[171]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[172]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[173]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[174]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[175]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[176]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[177]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[178]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[179]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[180]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[181]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[182]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[183]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[184]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[185]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[186]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[187]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[188]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[189]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[190]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[191]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[192]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[193]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[194]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[195]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[196]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[197]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[198]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[199]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[200]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[201]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[202]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[203]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[204]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[205]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[206]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[207]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[208]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[209]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[210]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[211]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[212]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[213]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[214]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[215]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[216]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[217]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[218]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[219]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[220]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[221]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[222]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[223]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[224]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[225]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[226]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[227]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[228]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[229]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[230]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[231]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[232]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[233]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[234]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[235]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[236]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[237]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[238]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[239]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[240]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[241]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[242]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[243]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[244]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[245]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[246]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[247]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[248]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[249]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[250]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[251]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[252]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[253]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[254]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[255]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[256]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[257]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[258]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[259]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[260]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[261]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[262]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[263]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[264]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[265]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[266]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[267]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[268]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[269]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[270]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[271]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[272]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[0\].g_pp.u_rom1/rd_out[273]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/clk
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/ce_in
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[0]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[1]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[2]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[3]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[4]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[5]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[6]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[7]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[8]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[9]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[10]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/addr_in[11]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[0]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[1]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[2]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[3]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[4]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[5]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[6]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[7]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[8]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[9]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[10]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[11]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[12]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[13]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[14]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[15]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[16]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[17]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[18]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[19]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[20]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[21]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[22]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[23]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[24]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[25]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[26]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[27]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[28]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[29]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[30]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[31]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[32]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[33]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[34]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[35]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[36]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[37]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[38]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[39]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[40]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[41]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[42]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[43]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[44]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[45]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[46]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[47]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[48]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[49]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[50]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[51]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[52]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[53]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[54]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[55]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[56]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[57]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[58]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[59]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[60]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[61]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[62]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[63]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[64]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[65]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[66]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[67]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[68]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[69]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[70]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[71]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[72]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[73]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[74]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[75]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[76]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[77]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[78]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[79]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[80]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[81]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[82]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[83]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[84]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[85]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[86]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[87]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[88]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[89]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[90]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[91]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[92]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[93]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[94]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[95]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[96]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[97]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[98]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[99]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[100]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[101]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[102]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[103]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[104]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[105]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[106]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[107]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[108]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[109]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[110]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[111]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[112]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[113]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[114]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[115]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[116]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[117]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[118]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[119]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[120]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[121]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[122]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[123]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[124]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[125]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[126]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[127]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[128]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[129]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[130]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[131]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[132]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[133]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[134]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[135]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[136]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[137]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[138]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[139]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[140]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[141]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[142]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[143]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[144]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[145]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[146]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[147]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[148]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[149]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[150]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[151]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[152]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[153]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[154]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[155]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[156]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[157]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[158]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[159]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[160]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[161]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[162]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[163]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[164]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[165]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[166]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[167]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[168]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[169]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[170]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[171]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[172]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[173]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[174]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[175]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[176]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[177]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[178]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[179]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[180]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[181]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[182]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[183]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[184]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[185]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[186]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[187]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[188]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[189]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[190]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[191]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[192]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[193]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[194]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[195]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[196]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[197]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[198]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[199]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[200]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[201]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[202]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[203]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[204]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[205]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[206]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[207]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[208]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[209]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[210]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[211]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[212]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[213]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[214]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[215]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[216]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[217]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[218]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[219]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[220]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[221]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[222]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[223]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[224]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[225]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[226]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[227]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[228]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[229]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[230]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[231]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[232]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[233]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[234]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[235]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[236]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[237]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[238]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[239]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[240]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[241]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[242]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[243]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[244]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[245]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[246]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[247]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[248]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[249]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[250]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[251]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[252]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[253]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[254]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[255]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[256]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[257]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[258]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[259]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[260]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[261]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[262]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[263]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[264]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[265]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[266]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[267]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[268]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[269]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[270]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[271]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[272]
+[WARNING DRT-0419] No routing tracks pass through the center of Term g_mac\[1\].g_pp.u_rom1/rd_out[273]
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+  Complete 100000 instances.
+  Complete 200000 instances.
+  Complete 300000 instances.
+  Complete 400000 instances.
+[INFO DRT-0164] Number of unique instances = 349.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0018]   Complete 100000 insts.
+[INFO DRT-0018]   Complete 200000 insts.
+[INFO DRT-0018]   Complete 300000 insts.
+[INFO DRT-0018]   Complete 400000 insts.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 9600717.
+[INFO DRT-0033] V1 shape region query size = 11515590.
+[INFO DRT-0033] M2 shape region query size = 433612.
+[INFO DRT-0033] V2 shape region query size = 427326.
+[INFO DRT-0033] M3 shape region query size = 427330.
+[INFO DRT-0033] V3 shape region query size = 284884.
+[INFO DRT-0033] M4 shape region query size = 317010.
+[INFO DRT-0033] V4 shape region query size = 345358.
+[INFO DRT-0033] M5 shape region query size = 194542.
+[INFO DRT-0033] V5 shape region query size = 38480.
+[INFO DRT-0033] M6 shape region query size = 24128.
+[INFO DRT-0033] V6 shape region query size = 19344.
+[INFO DRT-0033] M7 shape region query size = 5208.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0076]   Complete 3000 pins.
+[INFO DRT-0078]   Complete 3075 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0079]   Complete 300 unique inst patterns.
+[INFO DRT-0081]   Complete 345 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0082]   Complete 30000 groups.
+[INFO DRT-0082]   Complete 40000 groups.
+[INFO DRT-0082]   Complete 50000 groups.
+[INFO DRT-0082]   Complete 60000 groups.
+[INFO DRT-0082]   Complete 70000 groups.
+[INFO DRT-0082]   Complete 80000 groups.
+[INFO DRT-0082]   Complete 90000 groups.
+[INFO DRT-0082]   Complete 100000 groups.
+[INFO DRT-0082]   Complete 200000 groups.
+[INFO DRT-0082]   Complete 300000 groups.
+[INFO DRT-0084]   Complete 302087 groups.
+#scanned instances     = 495830
+#unique  instances     = 349
+#stdCellGenAp          = 10065
+#stdCellValidPlanarAp  = 33
+#stdCellValidViaAp     = 8294
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 1525796
+#instTermValidViaApCnt = 0
+#macroGenAp            = 6336
+#macroValidPlanarAp    = 576
+#macroValidViaAp       = 576
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 02:26:19, elapsed time = 00:09:13, memory = 4768.80 (MB), peak = 5100.95 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+[INFO DRT-0156] guideIn read 300000 guides.
+[INFO DRT-0156] guideIn read 400000 guides.
+[INFO DRT-0156] guideIn read 500000 guides.
+[INFO DRT-0156] guideIn read 600000 guides.
+[INFO DRT-0156] guideIn read 700000 guides.
+[INFO DRT-0156] guideIn read 800000 guides.
+[INFO DRT-0156] guideIn read 900000 guides.
+[INFO DRT-0156] guideIn read 1000000 guides.
+[INFO DRT-0156] guideIn read 2000000 guides.
+[INFO DRT-0156] guideIn read 3000000 guides.
+[INFO DRT-0156] guideIn read 4000000 guides.
+
+[INFO DRT-0157] Number of guides:     4427941
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 1759 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 250 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0026]   Complete 300000 origin guides.
+[INFO DRT-0026]   Complete 400000 origin guides.
+[INFO DRT-0026]   Complete 500000 origin guides.
+[INFO DRT-0026]   Complete 600000 origin guides.
+[INFO DRT-0026]   Complete 700000 origin guides.
+[INFO DRT-0026]   Complete 800000 origin guides.
+[INFO DRT-0026]   Complete 900000 origin guides.
+[INFO DRT-0027]   Complete 1000000 origin guides.
+[INFO DRT-0027]   Complete 2000000 origin guides.
+[INFO DRT-0027]   Complete 3000000 origin guides.
+[INFO DRT-0027]   Complete 4000000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+  complete 100000 nets.
+  complete 200000 nets.
+  complete 300000 nets.
+  complete 400000 nets.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0029]   Complete 100000 nets (guide).
+[INFO DRT-0029]   Complete 200000 nets (guide).
+[INFO DRT-0029]   Complete 300000 nets (guide).
+[INFO DRT-0029]   Complete 400000 nets (guide).
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 1327716.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 1166354.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 628624.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 185867.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 143996.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 117030.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 45410.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:17, elapsed time = 00:00:04, memory = 6285.31 (MB), peak = 6337.80 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 2145746 vertical wires in 36 frboxes and 1469251 horizontal wires in 5 frboxes.
+[INFO DRT-0186] Done with 199384 vertical wires in 36 frboxes and 399104 horizontal wires in 5 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:05:09, elapsed time = 00:01:11, memory = 9450.34 (MB), peak = 9532.34 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:04, elapsed time = 00:00:04, memory = 10069.88 (MB), peak = 10069.00 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+Failed to find a path between pin g_mac\[0\].g_pp.u_rom1/rd_out[254] and source aps:
+( 386 478 3 ) (Idx) / ( 139650 123564 ) (coords)
+extBBox (xDim, yDim, zDim) = (517, 649, 7)
+Failed to find a path between pin g_mac\[0\].g_pp.u_rom1/rd_out[171] and source aps:
+( 386 508 3 ) (Idx) / ( 139650 131628 ) (coords)
+extBBox (xDim, yDim, zDim) = (517, 670, 7)
+[ERROR DRT-0255] Maze Route cannot find path of net g_mac\[0\].g_pp.rd1\[254\] in worker of routeBox ( 135660 119700 ) ( 139650 123690 ).
+[ERROR DRT-0255] Maze Route cannot find path of net g_mac\[0\].g_pp.rd1\[171\] in worker of routeBox ( 135660 127680 ) ( 139650 131670 ).
+    Completing 10% with 0 violations.
+    elapsed time = 00:01:18, memory = 22062.40 (MB).
+Elapsed time: 12:25.34[h:]min:sec. CPU time: user 10377.41 sys 48.42 (1398%). Peak memory: 23060080KB.

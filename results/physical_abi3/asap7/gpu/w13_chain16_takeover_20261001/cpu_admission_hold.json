@@ -1,0 +1,16 @@
+{
+  "observed_at": "2026-10-01T09:43:31.807804+00:00",
+  "action": "SIGSTOP sole waiting supervisor only; same identity preserved; no child or SM dispatch",
+  "handle": {
+    "pid": 508855,
+    "start_ticks": "305066820",
+    "state": "T"
+  },
+  "reason": "Fresh fleet PVE1/2 load127.91/206.25 against28cores; shared remote_gate explicitly bypasses CPU admission for jobs>30GiB; effective SM worker preflight checks RAM only. User requires CPU fit before SM start.",
+  "columns_preserved": [
+    2089594,
+    1901598
+  ],
+  "do_not_resume_until": "Owned dispatch-boundary CPU guard and fresh eligible CPU+RAM receipt. Do not create another successor or take leases.",
+  "orphan_cancellation": "Parent exclusively stops exact retired jovial_lumiere container after preservation; this stream sends no container signal."
+}

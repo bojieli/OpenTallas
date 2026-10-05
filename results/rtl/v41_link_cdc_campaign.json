@@ -1,0 +1,181 @@
+{
+ "clock_hz": 1087000000.0,
+ "tx_period_fs": 919963,
+ "cases": [
+  {
+   "case": "same_clock",
+   "ppm_rx_vs_tx": 0,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 10000000,
+   "flits_received": 10000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 3.000145658031899,
+    "max": 3.000145658031899,
+    "mean": 3.000145658031899
+   },
+   "latency_ns_max": 2.760023,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 976.5625,
+   "pass": true,
+   "within_cdc_budget": true
+  },
+  {
+   "case": "rx_slow_100ppm",
+   "ppm_rx_vs_tx": 100,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 100000000,
+   "flits_received": 100000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 2.999997826216911,
+    "max": 4.102175413426371,
+    "mean": 3.5510866198216413
+   },
+   "latency_ns_max": 3.774227,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 9.765625,
+   "pass": true,
+   "within_cdc_budget": true
+  },
+  {
+   "case": "rx_fast_100ppm",
+   "ppm_rx_vs_tx": -100,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 100000000,
+   "flits_received": 100000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 2.9999978257820934,
+    "max": 3.9999945644552333,
+    "mean": 3.5000038048813367
+   },
+   "latency_ns_max": 3.679479,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 9.765625,
+   "pass": true,
+   "within_cdc_budget": true
+  },
+  {
+   "case": "rx_slow_200ppm_1e9",
+   "ppm_rx_vs_tx": 200,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 1000000000,
+   "flits_received": 1000000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 2.9999978264342544,
+    "max": 4.204361911738016,
+    "mean": 3.6021776955203895
+   },
+   "latency_ns_max": 3.868631,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 4.8828125,
+   "pass": true,
+   "within_cdc_budget": true
+  },
+  {
+   "case": "rx_fast_200ppm",
+   "ppm_rx_vs_tx": -200,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 100000000,
+   "flits_received": 100000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 2.9999978255646194,
+    "max": 3.999994563911548,
+    "mean": 3.5000016308265356
+   },
+   "latency_ns_max": 3.679111,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 4.8828125,
+   "pass": true,
+   "within_cdc_budget": true
+  },
+  {
+   "case": "rx_slow_200ppm_sync3",
+   "ppm_rx_vs_tx": 200,
+   "skip_every": 1024,
+   "buffer_flits": 16,
+   "sync_stages": 3,
+   "flits_requested": 100000000,
+   "flits_received": 100000000,
+   "mismatches": 0,
+   "overflow": false,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 4.000005433914364,
+    "max": 5.204356477823652,
+    "mean": 4.602163567343044
+   },
+   "latency_ns_max": 4.788773,
+   "expect_overflow": false,
+   "idle_rate_ppm": 976.5625,
+   "margin_vs_offset": 4.8828125,
+   "pass": true,
+   "within_cdc_budget": false
+  },
+  {
+   "case": "negative_rx_slow_200ppm_skip_65536",
+   "ppm_rx_vs_tx": 200,
+   "skip_every": 65536,
+   "buffer_flits": 16,
+   "sync_stages": 2,
+   "flits_requested": 100000000,
+   "flits_received": 54982,
+   "mismatches": 0,
+   "overflow": true,
+   "underflow": false,
+   "latency_rx_cycles": {
+    "min": 3.0032451336579915,
+    "max": 13.997688412829689,
+    "mean": 8.50046677324384
+   },
+   "latency_ns_max": 12.879931,
+   "expect_overflow": true,
+   "idle_rate_ppm": 15.2587890625,
+   "margin_vs_offset": 0.0762939453125,
+   "pass": true
+  }
+ ],
+ "schema": "v41_link_cdc_campaign/1",
+ "tool": "tools/rtl_v41_link_cdc_campaign.py",
+ "gate": "C7 / K3 (results/arch/v41_rack.json demonstration_plan)",
+ "sources": [
+  "rtl/rom/ot_rom_link_cdc.sv",
+  "rtl/test/tb_rom_link_cdc.sv"
+ ],
+ "cdc_budget_cycles": 4,
+ "summary": {
+  "all_pass": true,
+  "worst_latency_rx_cycles": 5.204356477823652,
+  "all_within_cdc_budget": false,
+  "flits_checked": 1410000000
+ },
+ "claim_boundary": "RTL of the digital crossing (async FIFO, Gray pointers, open-loop idle insertion) under two simulated clocks; no PHY, no CDR, no metastability model (synchronisers are ideal flops in simulation)"
+}

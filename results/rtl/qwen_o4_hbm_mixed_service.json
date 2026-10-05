@@ -1,0 +1,34 @@
+{
+  "configuration": {
+    "active_pc": 0,
+    "clients": 6,
+    "controller_accept_period_cycles": 3,
+    "controller_response_delay_cycles": "24+sequence_mod_3",
+    "max_outstanding_per_client_pc": 2,
+    "pcs_per_stack": 32,
+    "sector_bytes": 32,
+    "stacks": 4
+  },
+  "metrics": {
+    "clients": 6,
+    "credit_blocked": 8,
+    "cycles": 74,
+    "max_wait": 33,
+    "pc": 0,
+    "phy_stalls": 16,
+    "requests": 24,
+    "responses": 24,
+    "rsp_blocked": 6
+  },
+  "region_guard": "cross-region embedding to KV rejected",
+  "scope": "synthetic one-PC mixed-owner functional gate",
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_region_guard.sv": "d7f81c042ce669cd8f80ee719c7c2c759f978aa87b5fe264f2d4526d7a0d00ef",
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_regions.sv": "639b8a8e6788685613efec9646cfd6b0abe83bb3d43b04f992d19078f207a678",
+    "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv": "32ecead960801c6b2757aba1a8c6b0c917fef2dbf40388ee86f63c2c1b921197",
+    "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv": "c25c64da2ba01771e5a99745b49bc1407c64a15bdaafeac26af4e88f9da336cf",
+    "rtl/test/tb_hdc_qwen_hbm_mixed_service.sv": "029a07509ec68ae704d19b853a29c4e2e1419c8208da38b8907976b96ecbe2f8"
+  },
+  "status": "pass",
+  "throughput_claim": false
+}

@@ -1,0 +1,60 @@
+
+-- Executing script file `results/uarch/qwen_rom_reset_producer_g0_20261002/tile_census.ys' --
+
+1. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fpu.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fpu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fadd'.
+Generating RTLIL representation for module `\ot_hdc_fmul'.
+Generating RTLIL representation for module `\ot_hdc_bmul'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_mul_pipe.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_pipe'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksa'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows'.
+Generating RTLIL representation for module `\ot_hdc_mul24_sum'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_fast'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_sfu.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_sfu.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_vline'.
+/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Generating RTLIL representation for module `\ot_hdc_exp'.
+Generating RTLIL representation for module `\ot_hdc_recip'.
+Generating RTLIL representation for module `\ot_hdc_rsqrt'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_matvec'.
+Generating RTLIL representation for module `\ot_hdc_matvec_part'.
+Warning: reg '\scale_re' is assigned in a continuous assignment at /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv:698.
+Warning: reg '\scale_gre' is assigned in a continuous assignment at /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv:699.
+Warning: reg '\scale_addr' is assigned in a continuous assignment at /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv:700.
+Warning: Replacing memory \rk with list of registers. See /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_matvec.sv:874
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_qwen_me_array_w12.sv
+Parsing SystemVerilog input from `/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_qwen_me_array_w12.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_me_array_w12'.
+Generating RTLIL representation for module `\ot_qwen_me_spine_w12'.
+Generating RTLIL representation for module `\ot_qwen_me_node_w12'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_add_lat.sv
+/tmp/opentallas-qwen-reset-producer-g0-20261002/rtl/hdc/ot_hdc_fp32_add_lat.sv:223: ERROR: syntax error, unexpected ATTR_END, expecting TOK_ID

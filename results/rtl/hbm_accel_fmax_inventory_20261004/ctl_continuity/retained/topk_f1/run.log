@@ -1,0 +1,49 @@
+FAILED: FlowError: yosys synthesis failed with exit 1:
+ pre-parsed AST for module `\ot_gpu_topk_cs'.
+Parameter \W = 10
+Parameter \KB = 8
+Parameter \J = 1
+Parameter \DESC = 0
+Generating RTLIL representation for module `$paramod$5c114b61f366274bd7b1c6743d535c8ae3c4935d\ot_gpu_topk_cs'.
+Parameter \W = 42
+
+3.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_gpu_topk_merge'.
+Parameter \W = 42
+Generating RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Parameter \W = 42
+Found cached RTLIL representation for module `$paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010'.
+Reprocessing module ot_gpu_router_topk because instantiated module $paramod\ot_gpu_topk_merge\W=s32'00000000000000000000000000101010 has become available.
+Generating RTLIL representation for module `$paramod$46d4d78273e90c5e498aff8688163af032af35a2\ot_gpu_router_topk'.
+Warning: Replacing memory \lane_fin with list of registers. See /home/ubuntu/claude-hbm-fmax-ctl/src/rtl/gpu/ot_gpu_router_topk.sv:187
+Warning: Replacing memory \lane with list of registers. See /home/ubuntu/claude-hbm-fmax-ctl/src/rtl/gpu/ot_gpu_router_topk.sv:176
+Warning: Replacing memory \g_lanes1.x_r with list of registers. See /home/ubuntu/claude-hbm-fmax-ctl/src/rtl/gpu/ot_gpu_router_topk.sv:172
+
+ERROR: Assert `modules_.count(module->name) == 0' failed in /home/ubuntu/.cache/opentallas-build/yosys-0.68/kernel/rtlil.cc:1231.
+
+partial record written to /home/ubuntu/claude-hbm-fmax-ctl/routes/topk_f1/physical.json

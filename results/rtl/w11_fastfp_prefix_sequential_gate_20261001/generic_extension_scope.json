@@ -1,0 +1,417 @@
+{
+  "scope": "Pinned source sites for parent to resolve against intended live compile manifest, not assertion that every syntactic branch is currently elaborated. Separate from this fastfp-only generated-substitution gate.",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_pins": {
+    "rtl/hdc/ot_hdc_fastfp_lat.sv": {
+      "sha256": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+      "git_blob": "1ce43ea7c11103a1056a31f223afb4001ac4e5c1",
+      "live_bytes_match": true
+    },
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": {
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "git_blob": "302d790bd9739b8bf3238d179b14bfb2fd529706",
+      "live_bytes_match": true
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": {
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+      "git_blob": "759f1b024dec8efde6996b6c6fa7e98bb8b0e8d0",
+      "live_bytes_match": true
+    },
+    "rtl/hdc/ot_hdc_prefix.sv": {
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "git_blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+      "live_bytes_match": true
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv": {
+      "sha256": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a",
+      "git_blob": "c235de1b48941c17e4abff86d04f93b7c949f8cd",
+      "live_bytes_match": true
+    }
+  },
+  "direct_generic_sites": [
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_kadd",
+      "instance": "u",
+      "parameters": ".W(W)",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "line": 80
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_kge",
+      "instance": "u",
+      "parameters": ".W(W)",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "line": 92
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_kinc",
+      "instance": "u",
+      "parameters": ".W(W)",
+      "path": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "line": 104
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_cmp",
+      "parameters": ".W(31)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 56
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_dab",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 59
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_dba",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 60
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_sum",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 116
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_dif",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 117
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_esub",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 151
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_eadd",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 152
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_add_lat",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "line": 174
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_mul_lat",
+      "instance": "u_pw",
+      "parameters": ".W(12)",
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "line": 76
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_mul_lat",
+      "instance": "u_cpa",
+      "parameters": ".W(48)",
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "line": 137
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_mul_lat",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "line": 182
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_hstep",
+      "instance": "u_pw",
+      "parameters": ".W(12)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 177
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_hstep",
+      "instance": "u_cpa",
+      "parameters": ".W(48)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 215
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_hstep",
+      "instance": "u_rp",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 250
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_hstep",
+      "instance": "u_add",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 272
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_hstep",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 279
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_mul_x2",
+      "instance": "u_pw",
+      "parameters": ".W(12)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 321
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fp32_mul_x2",
+      "instance": "u_cpa",
+      "parameters": ".W(48)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 358
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_fp32_mul_x2",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 400
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_addpos2",
+      "instance": "u_cmp",
+      "parameters": ".W(31)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 452
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_addpos2",
+      "instance": "u_dab",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 456
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_addpos2",
+      "instance": "u_dba",
+      "parameters": ".W(8)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 457
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_addpos2",
+      "instance": "u_sum",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 492
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_addpos2",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 498
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_exp_s",
+      "instance": "u_dab",
+      "parameters": ".W(51)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 770
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_exp_s",
+      "instance": "u_dba",
+      "parameters": ".W(51)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 773
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_v41x_exp_s",
+      "instance": "u_rnd",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 804
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_exp_s",
+      "instance": "u_ye",
+      "parameters": ".W(9)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 835
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_te",
+      "parameters": ".W(9)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 877
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_mb",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 904
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_mb3",
+      "parameters": ".W(26)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 911
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_d1",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 942
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_d2",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 945
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_d3",
+      "parameters": ".W(28)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 948
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_v41x_spdiv",
+      "instance": "u_code",
+      "parameters": ".W(31)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1007
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_d1",
+      "parameters": ".W(RW+1)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1110
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_d2",
+      "parameters": ".W(RW+1)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1113
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_d3",
+      "parameters": ".W(RW+1)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1116
+    },
+    {
+      "callee": "ot_hdc_ksadd_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_q3m",
+      "parameters": ".W(Q_W+2)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1121
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_q3p",
+      "parameters": ".W(Q_W+2)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1122
+    },
+    {
+      "callee": "ot_hdc_inc_k",
+      "parent": "ot_hdc_fsqrt4",
+      "instance": "u_rq",
+      "parameters": ".W(24)",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv",
+      "line": 1163
+    }
+  ],
+  "resolved_width_notes": {
+    "ksadd_literal_widths": [
+      8,
+      9,
+      12,
+      24,
+      26,
+      28,
+      31,
+      48,
+      51
+    ],
+    "fsqrt4_resolved": {
+      "ND": 13,
+      "Q_W": 26,
+      "RW": 32,
+      "ksadd_RW_plus_1": 33,
+      "ksadd_Q_W_plus_2": 28,
+      "inc_Q_W_plus_2": 28
+    },
+    "inc_literal_widths": [
+      24,
+      31
+    ],
+    "indirect_wrappers": {
+      "ot_hdc_kadd": "W propagated; used with AW/CW and K branches",
+      "ot_hdc_kge": "W propagated; explicit 32 and CW consumers",
+      "ot_hdc_kinc": "W propagated; explicit 16-bit BF16-rounding consumers"
+    },
+    "warning": "Actual active AW/CW/K/LAT values require the eventual isolated elaboration/source-list manifest; defaults or syntactic branches are not evidence of active specializations."
+  },
+  "adoption": false
+}

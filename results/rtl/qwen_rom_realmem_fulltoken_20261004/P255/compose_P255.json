@@ -1,0 +1,1760 @@
+{
+ "all_stages_exact": true,
+ "ar_tok_per_s": 7534.3,
+ "ar_tok_per_s_bound": 7534.3,
+ "chain_links_entry_is_previous_golden_exit": {
+  "L0": true,
+  "L1": true,
+  "L10": true,
+  "L11": true,
+  "L12": true,
+  "L13": true,
+  "L14": true,
+  "L15": true,
+  "L16": true,
+  "L17": true,
+  "L18": true,
+  "L19": true,
+  "L2": true,
+  "L20": true,
+  "L21": true,
+  "L22": true,
+  "L23": true,
+  "L24": true,
+  "L3": true,
+  "L4": true,
+  "L5": true,
+  "L6": true,
+  "L7": true,
+  "L8": true,
+  "L9": true,
+  "head": true
+ },
+ "chained_validation": {
+  "E+L0+L1+L2": {
+   "stages": {
+    "E": {
+     "chained": 98,
+     "chained_exact": true,
+     "isolated": 98,
+     "isolated_minus_chained": 0
+    },
+    "L0": {
+     "chained": 4337,
+     "chained_exact": true,
+     "isolated": 4338,
+     "isolated_minus_chained": 1
+    },
+    "L1": {
+     "chained": 4776,
+     "chained_exact": true,
+     "isolated": 4338,
+     "isolated_minus_chained": -438
+    },
+    "L2": {
+     "chained": 4653,
+     "chained_exact": true,
+     "isolated": 4338,
+     "isolated_minus_chained": -315
+    }
+   },
+   "status": "pass"
+  }
+ },
+ "claim_boundary": "Layer-parallel RTL simulation (Verilator) of the REAL_MEM TP4 runtime; per-stage exactness against the GPU ISA golden; composed cycles. Not a physical sign-off; clock assumed 1.2 GHz.",
+ "clock_ghz": 1.2,
+ "composed_token_cycles": 159272,
+ "composed_token_cycles_bound_max_layer": 159272,
+ "configuration": "REAL_MEM TP4 G6144 SW64, one-stream AR256 all-reduce (ENABLE_AR256=1, collective depth 256), HBM model 36 layer regions, KV history from the GPU golden; async collective OFF",
+ "golden": {
+  "dir": "gold/P255",
+  "head": {
+   "head_die0": {
+    "argmax_local": 7563,
+    "logit_bits": "41d641e8",
+    "row0": 0,
+    "rows": 37984,
+    "xnorm_sha256": "294b2652f3df2eea5f811975a7916585cd3ff7109155648119fd235644307b34"
+   },
+   "head_die1": {
+    "argmax_local": 3227,
+    "logit_bits": "41aec7ab",
+    "row0": 37984,
+    "rows": 37984,
+    "xnorm_sha256": "294b2652f3df2eea5f811975a7916585cd3ff7109155648119fd235644307b34"
+   },
+   "head_die2": {
+    "argmax_local": 22983,
+    "logit_bits": "42098785",
+    "row0": 75968,
+    "rows": 37984,
+    "xnorm_sha256": "294b2652f3df2eea5f811975a7916585cd3ff7109155648119fd235644307b34"
+   },
+   "head_die3": {
+    "argmax_local": 26899,
+    "logit_bits": "41264644",
+    "row0": 113952,
+    "rows": 37984,
+    "xnorm_sha256": "294b2652f3df2eea5f811975a7916585cd3ff7109155648119fd235644307b34"
+   },
+   "logits_sha256": "e04a1330baacbe2cff7480d624b5331f128acd6afd713101de548c15edf71642",
+   "next_logit_bits": "42098785",
+   "next_token": 98951,
+   "top2_margin": 7.600162506103516
+  }
+ },
+ "ideal_ar_tok_per_s_P0": 8303.2,
+ "ideal_memory_reference": {
+  "layer_cycles_P0": 3930,
+  "source": "results/rtl/qwen_rom_TP4_allreduce_oneseg_fulltoken_20261003 (AR256, ideal memory, P0)",
+  "token_cycles_P0": 144522
+ },
+ "jobs": {
+  "E": {
+   "ar256_enabled": true,
+   "binary_sha256": "ea95320521ef731fc023225217443efeced6f0456d98ed3a8ba2e47b2f78d631",
+   "exit": "0",
+   "job": "E",
+   "result_sha256": "9f578a3c8040f7207e26ba7e17ea8753405b0370c28e15ff487f12e8294f6ab2",
+   "simulate_wall_seconds": 16.4,
+   "stages": {
+    "E": {
+     "cycles": 98,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 0,
+      "stall_bridge": 0,
+      "stall_drain": 0,
+      "stall_kv": 0,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 0
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "12593828",
+    "20.89",
+    "15.94",
+    "3.82"
+   ],
+   "x_entry_sha256": "473faa92e871c86444c0ffc55ace5a6a158503510c9f11e227d17130da740e87"
+  },
+  "E+L0+L1+L2": {
+   "ar256_enabled": true,
+   "binary_sha256": "ea95320521ef731fc023225217443efeced6f0456d98ed3a8ba2e47b2f78d631",
+   "exit": "0",
+   "job": "E+L0+L1+L2",
+   "result_sha256": "67dd9d4d21590c134a98d0d876a9e0afd40e7befc83c75a3c504c843e17745bb",
+   "simulate_wall_seconds": 7206.2,
+   "stages": {
+    "E": {
+     "cycles": 98,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 0,
+      "stall_bridge": 0,
+      "stall_drain": 0,
+      "stall_kv": 0,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 0
+     }
+    },
+    "L0": {
+     "cycles": 4337,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    },
+    "L1": {
+     "cycles": 4776,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 830,
+      "stall_bridge": 425,
+      "stall_drain": 808,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 549
+     }
+    },
+    "L2": {
+     "cycles": 4653,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 1161,
+      "stall_bridge": 425,
+      "stall_drain": 685,
+      "stall_kv": 34,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 549
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13354448",
+    "7234.89",
+    "5649.85",
+    "16.17"
+   ],
+   "x_entry_sha256": "473faa92e871c86444c0ffc55ace5a6a158503510c9f11e227d17130da740e87"
+  },
+  "L0": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L0",
+   "result_sha256": "b266a2c247c95b1234a3e543f7d389210132b9df579eb6e8931a48d8909dde18",
+   "simulate_wall_seconds": 1570.6,
+   "stages": {
+    "L0": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13048444",
+    "1577.15",
+    "1534.31",
+    "8.27"
+   ],
+   "x_entry_sha256": "473faa92e871c86444c0ffc55ace5a6a158503510c9f11e227d17130da740e87"
+  },
+  "L1": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L1",
+   "result_sha256": "c4098de88e1bdab8b74b35af1bf06dcf61cc84cf0d787864e5ccd0fe5bf44221",
+   "simulate_wall_seconds": 1584.5,
+   "stages": {
+    "L1": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13048800",
+    "1591.28",
+    "1542.46",
+    "8.03"
+   ],
+   "x_entry_sha256": "181e59895b4acc738f15b08d131bc06685a4a367be7f9b9e311ce2eca2ab79de"
+  },
+  "L10": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L10",
+   "result_sha256": "c6114cfddf32f1b0eded84c29144cce5ad56c30e882c67261e69c2e8629a42a7",
+   "simulate_wall_seconds": 1408.7,
+   "stages": {
+    "L10": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13059072",
+    "1413.87",
+    "1548.72",
+    "7.74"
+   ],
+   "x_entry_sha256": "444a0565b575f2061251a10a71d7ad8515e4e07a3fa292c713dc4dc00c6f548d"
+  },
+  "L11": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L11",
+   "result_sha256": "2a7cf147d91eca4d6bb23fea342b90524688d727acbb6044ecbfcf8c45b8481c",
+   "simulate_wall_seconds": 1442.6,
+   "stages": {
+    "L11": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13050948",
+    "1450.98",
+    "1470.74",
+    "8.60"
+   ],
+   "x_entry_sha256": "b64632a97ba659c0a29e6c9d6ba376dfc7437cbdcebf819148730adbd72b9fa3"
+  },
+  "L12": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L12",
+   "result_sha256": "d2a17700413d77b9afb08e63558808db1276fd00b45f76201da3e4fcd7c6c8b8",
+   "simulate_wall_seconds": 1401.9,
+   "stages": {
+    "L12": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13055596",
+    "1406.03",
+    "1545.70",
+    "7.51"
+   ],
+   "x_entry_sha256": "79a7286b107aec7439263290d4133f45dbc016b9a576ebb2de442d664e1548f7"
+  },
+  "L13": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L13",
+   "result_sha256": "fb8382fe5fc89011e8d5990fa9bd0ec9bc7bb6d9c98c37e6b7aa37a8ea313f81",
+   "simulate_wall_seconds": 1471.3,
+   "stages": {
+    "L13": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13052784",
+    "1484.78",
+    "1476.76",
+    "7.99"
+   ],
+   "x_entry_sha256": "9c8eddae08e8499ccb516f3e5ce69c9350d2f49bcf0c8f4cddff4efe37adad27"
+  },
+  "L14": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L14",
+   "result_sha256": "77c5ddf72ab760835379ae9227d6c985090427eb62b54b378572c70c5ee683a6",
+   "simulate_wall_seconds": 1411.0,
+   "stages": {
+    "L14": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13059452",
+    "1415.21",
+    "1558.66",
+    "7.26"
+   ],
+   "x_entry_sha256": "de63b2beeb0c877126e1a6713a31a94d4be30da709301b58e60fd5340fa9fd93"
+  },
+  "L15": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L15",
+   "result_sha256": "493642eff15d80ef35229df497dff891c1b1c8de593f65fa1b58025c31bb3ee0",
+   "simulate_wall_seconds": 1724.9,
+   "stages": {
+    "L15": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13060628",
+    "1728.90",
+    "1856.26",
+    "7.20"
+   ],
+   "x_entry_sha256": "f641ffdef29f6cce5656d981d520adbe8b97cc9a61b3bd0d6ff850bc28086869"
+  },
+  "L16": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L16",
+   "result_sha256": "911be38eea17f67adef8252117fd8ede6fb08d3ba610f3854031d64d227a5252",
+   "simulate_wall_seconds": 1432.2,
+   "stages": {
+    "L16": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13058388",
+    "1437.83",
+    "1571.43",
+    "7.07"
+   ],
+   "x_entry_sha256": "e4d190e649912d8cab1f76972d3c86a5ccedb28407158761385e27332317b3a2"
+  },
+  "L17": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L17",
+   "result_sha256": "f218c776063dc3c59da8e50549fbf4c731a59be44ff8ae11a7e17a2ab62d19eb",
+   "simulate_wall_seconds": 1423.9,
+   "stages": {
+    "L17": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13057524",
+    "1430.04",
+    "1597.08",
+    "9.84"
+   ],
+   "x_entry_sha256": "55bffe6cf7cebab9811fb4fd7b4c5a597973a986ea8f54a451183513c774d451"
+  },
+  "L18": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L18",
+   "result_sha256": "063491fb65f1f6176b685748d9e95150636b75891164483b2aa5bb3e6fffbebf",
+   "simulate_wall_seconds": 1427.5,
+   "stages": {
+    "L18": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13060940",
+    "1431.66",
+    "1570.22",
+    "6.71"
+   ],
+   "x_entry_sha256": "6f70bc9ac634e294b32c2148fc379c28e15bb681de78e4c582d8c73ca4b6cf60"
+  },
+  "L19": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L19",
+   "result_sha256": "97adb20070f7504b9c058a98956d61fcc7e45e0ababd1bcb6d6f8f5139a39af7",
+   "simulate_wall_seconds": 1477.3,
+   "stages": {
+    "L19": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13057216",
+    "1482.11",
+    "1636.96",
+    "8.28"
+   ],
+   "x_entry_sha256": "f309bc4a3941a548300f6b4fcf35fbc9bfecd875d7ee1ccfb66882ab1cfb0e43"
+  },
+  "L2": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L2",
+   "result_sha256": "82e79c2c7eb082545d48830538517be9d1aec6360ba4c41dbb68880ef3443f31",
+   "simulate_wall_seconds": 1567.8,
+   "stages": {
+    "L2": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13055836",
+    "1578.07",
+    "1537.91",
+    "7.84"
+   ],
+   "x_entry_sha256": "047d6afb98660e9b466238677b0296a884b6d4c1357a47b28e855afae85eed81"
+  },
+  "L20": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L20",
+   "result_sha256": "d42a1af683d84a8155dc6c7f67865bf60547f22f2585aaa44d18f959e3dc9a5e",
+   "simulate_wall_seconds": 1495.5,
+   "stages": {
+    "L20": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13060540",
+    "1500.49",
+    "1651.59",
+    "7.27"
+   ],
+   "x_entry_sha256": "7e4f817dbc38a0f04b011bcfc2f0db9e6e975896e302f87889b7b051346873b4"
+  },
+  "L21": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L21",
+   "result_sha256": "f448a6eb30f72c8271d62f28cbe584572fe9eefe0aa84910d35efb40cfae790a",
+   "simulate_wall_seconds": 1394.0,
+   "stages": {
+    "L21": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13055668",
+    "1399.79",
+    "1562.51",
+    "10.41"
+   ],
+   "x_entry_sha256": "975cf8c483217fd63975a547615838636d8b4e6ead90723491487a97d0424046"
+  },
+  "L22": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L22",
+   "result_sha256": "9fa283de82541e6e004ad380cce2a163e2dfe68cb1846414161448b4005b0f87",
+   "simulate_wall_seconds": 1675.0,
+   "stages": {
+    "L22": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13062968",
+    "1678.88",
+    "1816.49",
+    "8.09"
+   ],
+   "x_entry_sha256": "c3cd4ab8dbe045f5503db78777fb2414dc314ad932afb1b105c05bc34e26f3e7"
+  },
+  "L23": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L23",
+   "result_sha256": "5d417c3e143061bbbf4049b5c710390f0dca4590c587974f4578599ae948f3a2",
+   "simulate_wall_seconds": 1777.9,
+   "stages": {
+    "L23": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13059232",
+    "1782.62",
+    "1912.76",
+    "5.85"
+   ],
+   "x_entry_sha256": "5c3e82ab7c23c5f0ff9f776f65ee3e4e1c6a245ec619e8a4b28c21a8c1b119c2"
+  },
+  "L24": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L24",
+   "result_sha256": "f8fcfdc702a80342726ebd0041982ff805c5689660487922d3dc4f229301265f",
+   "simulate_wall_seconds": 1726.5,
+   "stages": {
+    "L24": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13059544",
+    "1731.95",
+    "1859.13",
+    "7.21"
+   ],
+   "x_entry_sha256": "f4ee8123ae7f9bb678acdf19d036d651056cda1a20e41926c046dc13f91399bf"
+  },
+  "L3": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L3",
+   "result_sha256": "267e19601841ae091319b037c573ee852a6a2ee810eec325bee139713b733153",
+   "simulate_wall_seconds": 1424.5,
+   "stages": {
+    "L3": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13059100",
+    "1428.53",
+    "1562.47",
+    "6.68"
+   ],
+   "x_entry_sha256": "3036dd629fda0a05f30218c6a58073546b8fc431a440a8f378d2548eb4754268"
+  },
+  "L4": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L4",
+   "result_sha256": "968114bc24777b7038bc831952f12c0a3788bef8023352b70873c26118254587",
+   "simulate_wall_seconds": 1417.8,
+   "stages": {
+    "L4": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13058616",
+    "1423.24",
+    "1563.32",
+    "7.10"
+   ],
+   "x_entry_sha256": "1aec51e7a714776d0c873211f6e1f25b3e86f1f50dda9ce7c6045da27bd97323"
+  },
+  "L5": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L5",
+   "result_sha256": "ae6f1d37928fa6526bdf6c56690b7f6b1763e4e8307e29d84e26c62ccc2660a0",
+   "simulate_wall_seconds": 1480.7,
+   "stages": {
+    "L5": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13049704",
+    "1489.03",
+    "1493.75",
+    "8.59"
+   ],
+   "x_entry_sha256": "1efa561d5669908d744993d37ec3dc6d708237fd68245ddeb7d0d1619c969c94"
+  },
+  "L6": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L6",
+   "result_sha256": "3fe9f0c5349425df5e65238acf4168186603159cb7ce43387e9c96d47f46fd05",
+   "simulate_wall_seconds": 1543.1,
+   "stages": {
+    "L6": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13053740",
+    "1549.94",
+    "1526.86",
+    "7.51"
+   ],
+   "x_entry_sha256": "ce90e114f0c443158ea546b66d105bfb13f856914ab7b3ff6cfeca7ca2a9f851"
+  },
+  "L7": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L7",
+   "result_sha256": "e322c45be1ceeec963515b80487a386921fd941c6238fb8746f1ce3061e2ad40",
+   "simulate_wall_seconds": 1754.9,
+   "stages": {
+    "L7": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13058720",
+    "1759.16",
+    "1900.72",
+    "5.65"
+   ],
+   "x_entry_sha256": "7b571b3377971ae0e1294b23a4a663dfff9b3ec303e3710a337164ed22024c4b"
+  },
+  "L8": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L8",
+   "result_sha256": "b97c00dcd4992952b4b8c41914069571de17be586abbdf2ba409af990343d6dc",
+   "simulate_wall_seconds": 1404.3,
+   "stages": {
+    "L8": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13061028",
+    "1408.74",
+    "1552.09",
+    "7.36"
+   ],
+   "x_entry_sha256": "aa9b3a058bf8d85c430d2b6102ca1a453c94a9bd5770cb593fd39d35f4ba252a"
+  },
+  "L9": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "L9",
+   "result_sha256": "861b5719895e9357fbe0f209c4e3f5d851c199b712da77c2bdeb36cf0999b422",
+   "simulate_wall_seconds": 1518.9,
+   "stages": {
+    "L9": {
+     "cycles": 4338,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 373,
+      "stall_bridge": 425,
+      "stall_drain": 369,
+      "stall_kv": 15,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 114
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13054580",
+    "1524.78",
+    "1525.62",
+    "8.52"
+   ],
+   "x_entry_sha256": "b287cc29410021a6a19fbda109aecd7801e4de1aafad0a536b2f52b2d7607ff4"
+  },
+  "head": {
+   "ar256_enabled": true,
+   "binary_sha256": "85df04676c3f317af8b08738c96fd3cb6f50707ca3b50164f98ece9611c222bc",
+   "exit": "0",
+   "job": "head",
+   "result_sha256": "475e526ba2c707aebc9259c163bd1da5c1df0d1cbf8ae06e1bbb03cc3f6683a6",
+   "simulate_wall_seconds": 1694.9,
+   "stages": {
+    "head": {
+     "cycles": 2999,
+     "exact": true,
+     "faults": [
+      0,
+      0,
+      0
+     ],
+     "kv_writeback_exact": true,
+     "memory_max_over_dies": {
+      "fill_cycles": 0,
+      "stall_bridge": 70,
+      "stall_drain": 0,
+      "stall_kv": 0,
+      "stall_mem": 0,
+      "stall_retire": 0,
+      "wr_lat_max": 0
+     }
+    }
+   },
+   "status": "pass",
+   "time_max_rss_kib_wall_user_sys": [
+    "13196776",
+    "1700.64",
+    "1669.70",
+    "8.72"
+   ],
+   "x_entry_sha256": "03a7fc69f8ac08977685f9e3d269a4d5949f351951549122c99208298ca11269"
+  }
+ },
+ "kv_ideal_twins": {},
+ "layer_cycles": {
+  "max": 4338,
+  "mean": 4338.0,
+  "min": 4338,
+  "sum": 108450
+ },
+ "layers_composed_from_representatives": [
+  "L25",
+  "L26",
+  "L27",
+  "L28",
+  "L29",
+  "L30",
+  "L31",
+  "L32",
+  "L33",
+  "L34",
+  "L35"
+ ],
+ "layers_simulated_exact": 25,
+ "missing_stages": [
+  "L25",
+  "L26",
+  "L27",
+  "L28",
+  "L29",
+  "L30",
+  "L31",
+  "L32",
+  "L33",
+  "L34",
+  "L35"
+ ],
+ "per_stage": {
+  "E": {
+   "cycles": 98,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 0,
+    "stall_bridge": 0,
+    "stall_drain": 0,
+    "stall_kv": 0,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 0
+   }
+  },
+  "L0": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L1": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L10": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L11": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L12": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L13": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L14": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L15": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L16": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L17": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L18": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L19": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L2": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L20": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L21": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L22": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L23": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L24": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L3": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L4": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L5": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L6": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L7": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L8": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "L9": {
+   "cycles": 4338,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 373,
+    "stall_bridge": 425,
+    "stall_drain": 369,
+    "stall_kv": 15,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 114
+   }
+  },
+  "head": {
+   "cycles": 2999,
+   "exact": true,
+   "faults": [
+    0,
+    0,
+    0
+   ],
+   "kv_writeback_exact": true,
+   "memory_max_over_dies": {
+    "fill_cycles": 0,
+    "stall_bridge": 70,
+    "stall_drain": 0,
+    "stall_kv": 0,
+    "stall_mem": 0,
+    "stall_retire": 0,
+    "wr_lat_max": 0
+   }
+  }
+ },
+ "position": 255,
+ "real_minus_ideal_layer_cycles": {},
+ "real_over_ideal_token": 1.1021,
+ "schema": "opentallas.qwen-rom-realmem-fulltoken.v1"
+}

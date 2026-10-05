@@ -1,0 +1,67 @@
+{
+  "answer": "Its target.  Tightening the SAME RTL to 3.0 ns closes at 342.0 MHz -- 1.25x the published figure -- with zero max-slew, max-cap, max-fanout and DRC violations and 1.1% more standard-cell area.  No RTL was changed; no pipelining was added.",
+  "effect_on_the_limiter": "None directly -- ``ot_a3_g2_cluster`` at 220.6 MHz is the limiter and this block was already above it.  What changes is the gap: the datapath's second-slowest block is now 342.0 MHz rather than 274.2, so closing G2 is worth more than it looked.",
+  "not_a_claim": [
+    "ASAP7 is a predictive, non-manufacturable academic PDK",
+    "each row is one route, and ORFS is deterministic for a given input, so these are not repeated trials",
+    "the sweep was run in a pinned worktree at one revision, so no source change is mixed into the frequency difference"
+  ],
+  "question": "The fmax inventory's own caveat says a block nobody routed at a tight target will read slow.  ``add_bf16_sram_engine`` sat behind the limiter at 274.2 MHz on a single 3.8 ns route with 153 ps of setup slack left over.  Was that its ceiling or its target?",
+  "schema": "opentallas.result.add_bf16_sram_engine_target_sweep.v1",
+  "sweep": [
+    {
+      "closed": true,
+      "drc_errors": 0,
+      "elapsed_minutes": 5.5,
+      "fmax_mhz": 274.2,
+      "hold_wns_ns": 0.0565766,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "setup_wns_ns": 0.153416,
+      "standard_cell_area_um2": 2049.93,
+      "target_clock_period_ns": 3.8
+    },
+    {
+      "closed": true,
+      "drc_errors": 0,
+      "elapsed_minutes": 5.2,
+      "fmax_mhz": 309.5,
+      "hold_wns_ns": 0.0549023,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "setup_wns_ns": 0.16850800000000002,
+      "standard_cell_area_um2": 2059.08,
+      "target_clock_period_ns": 3.4
+    },
+    {
+      "closed": true,
+      "drc_errors": 0,
+      "elapsed_minutes": 5.9,
+      "fmax_mhz": 342.0,
+      "hold_wns_ns": 0.0562684,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "setup_wns_ns": 0.07611180000000001,
+      "standard_cell_area_um2": 2073.06,
+      "target_clock_period_ns": 3.0
+    },
+    {
+      "closed": false,
+      "drc_errors": 0,
+      "elapsed_minutes": 5.9,
+      "fmax_mhz": 350.5,
+      "hold_wns_ns": 0.0565572,
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0,
+      "setup_wns_ns": -0.253292,
+      "standard_cell_area_um2": 2107.17,
+      "target_clock_period_ns": 2.6
+    }
+  ],
+  "the_ceiling_is_bounded_from_both_sides": "3.0 ns closes with +76 ps of setup slack and 2.6 ns misses by 253 ps, so the block's closed ceiling is between 342.0 and 350.5 MHz.  The bound matters: without a failing point the sweep would only show that tighter targets kept working, which is not the same as finding the ceiling.",
+  "what_it_costs": "2049.9 um2 at 3.8 ns to 2073.1 um2 at 3.0 ns -- 1.1%.  Hold slack is unchanged at about +56 ps across every point."
+}

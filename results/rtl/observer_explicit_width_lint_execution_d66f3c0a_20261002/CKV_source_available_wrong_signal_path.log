@@ -1,0 +1,199 @@
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_req_v'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:69:34: ... Location of port declaration
+   69 |     input  wire                  bank_req_v,
+      |                                  ^~~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_req_ready'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:70:34: ... Location of port declaration
+   70 |     output wire                  bank_req_ready,
+      |                                  ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_req_user'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:71:34: ... Location of port declaration
+   71 |     input  wire [USER_W-1:0]     bank_req_user,
+      |                                  ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_req_first'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:72:34: ... Location of port declaration
+   72 |     input  wire [POS_W-1:0]      bank_req_first,
+      |                                  ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_req_mask'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:73:34: ... Location of port declaration
+   73 |     input  wire [3:0]            bank_req_mask,
+      |                                  ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_v'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:74:34: ... Location of port declaration
+   74 |     output wire                  bank_rsp_v,
+      |                                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_user'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:75:34: ... Location of port declaration
+   75 |     output wire [USER_W-1:0]     bank_rsp_user,
+      |                                  ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_first'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:76:34: ... Location of port declaration
+   76 |     output wire [POS_W-1:0]      bank_rsp_first,
+      |                                  ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_mask'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:77:34: ... Location of port declaration
+   77 |     output wire [3:0]            bank_rsp_mask,
+      |                                  ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_valid_mask'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:78:34: ... Location of port declaration
+   78 |     output wire [3:0]            bank_rsp_valid_mask,
+      |                                  ^~~~~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_rows'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:79:33: ... Location of port declaration
+   79 |     output wire [4*4224-1:0]    bank_rsp_rows,
+      |                                 ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_die.sv:777:73: Instance has missing pin: 'bank_rsp_fault'
+  777 |             .HAW(K_HAW), .TAGW(16), .USER_W(10), .WIN_STACK(WIN_STACK)) u_window (
+      |                                                                         ^~~~~~~~
+                     rtl/chip/ot_chip_v41x_window_kv_prefetch.sv:80:34: ... Location of port declaration
+   80 |     output wire                  bank_rsp_fault,
+      |                                  ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_v'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:373:30: ... Location of port declaration
+  373 |     output reg               m0d_v,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_wbase'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:374:30: ... Location of port declaration
+  374 |     output wire [AW-1:0]     m0d_wbase,
+      |                              ^~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_nout'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:375:30: ... Location of port declaration
+  375 |     output wire [NW-1:0]     m0d_nout, m0d_tiles, m0d_k,
+      |                              ^~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_tiles'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:375:40: ... Location of port declaration
+  375 |     output wire [NW-1:0]     m0d_nout, m0d_tiles, m0d_k,
+      |                                        ^~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_k'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:375:51: ... Location of port declaration
+  375 |     output wire [NW-1:0]     m0d_nout, m0d_tiles, m0d_k,
+      |                                                   ^~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_xjs'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:376:30: ... Location of port declaration
+  376 |     output wire [AW-1:0]     m0d_xjs,
+      |                              ^~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0d_split'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:377:30: ... Location of port declaration
+  377 |     output wire [1:0]        m0d_split,
+      |                              ^~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0_select'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:378:30: ... Location of port declaration
+  378 |     input  wire              m0_select,
+      |                              ^~~~~~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:396:143: Instance has missing pin: 'm0_ok'
+  396 |                        .X_ROM(X_ROM), .ROM_R(ROM_R), .ROM_PHW(ROM_PHW), .ROM_SAW(ROM_SAW), .ROM_BST(ROM_BST), .RANK(RANK), .CKV_SEL(CKV_SEL)) u_core (
+      |                                                                                                                                               ^~~~~~
+                     rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:379:30: ... Location of port declaration
+  379 |     input  wire              m0_ok,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/chip/ckvsel/ot_chip_v41x_tile.sv:476:67: Instance has missing pin: 'qr_issue_ready'
+  476 |                      .NPC(NPC_W), .LENW(6), .BEATW(5), .LAW(LAW)) u_qs (
+      |                                                                   ^~~~
+                     rtl/hdc/hbm/ot_hdc_qstream.sv:87:30: ... Location of port declaration
+   87 |     output wire              qr_issue_ready,  
+      |                              ^~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'i_preloaded'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:45:30: ... Location of port declaration
+   45 |     input  wire              i_preloaded,     
+      |                              ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_wr_v'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:76:34: ... Location of port declaration
+   76 |     output wire                  shared_wr_v,
+      |                                  ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_wr_p'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:77:36: ... Location of port declaration
+   77 |     output wire [$clog2(MP+1)-1:0] shared_wr_p,
+      |                                    ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_wr_e'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:78:38: ... Location of port declaration
+   78 |     output wire [$clog2(KMAX+1)-1:0] shared_wr_e,
+      |                                      ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_wr_d'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:79:34: ... Location of port declaration
+   79 |     output wire [G*16-1:0]       shared_wr_d,
+      |                                  ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_rq_v'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:80:34: ... Location of port declaration
+   80 |     output wire [7:0]            shared_rq_v,
+      |                                  ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_rq_q'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:81:34: ... Location of port declaration
+   81 |     output wire [8*14-1:0]       shared_rq_q,
+      |                                  ^~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_rq_plg'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:82:34: ... Location of port declaration
+   82 |     output wire [8*4-1:0]        shared_rq_plg,
+      |                                  ^~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:934:86: Instance has missing pin: 'shared_xr0'
+  934 |                                  .KMAX(FULL_SHAPE ? 5120 : 512), .XBANK(X_ME_XBANK)) u_mw (
+      |                                                                                      ^~~~
+                     rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv:83:34: ... Location of port declaration
+   83 |     input  wire [8*MG*MP*16-1:0] shared_xr0,
+      |                                  ^~~~~~~~~~
+%Warning-PINMISSING: rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv:1214:42: Instance has missing pin: 'qr_issue_ready'
+ 1214 |                      .QLB(QLB), .MP(MP)) u_qe (
+      |                                          ^~~~
+                     rtl/hdc/v41/ot_hdc_v41_qe.sv:94:29: ... Location of port declaration
+   94 |     input  wire             qr_issue_ready,
+      |                             ^~~~~~~~~~~~~~
+%Error: rtl/test/v41_runtime/ot_v41_rt_die_l20_sim_observe_widths.sv:289:37: Can't find definition of 'observer_missing_step_user' in dotted variable/method: 'dut.observer_missing_step_user'
+  289 | assign sim_obs_raw[131 +: 10] = dut.observer_missing_step_user;
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: Exiting due to 1 error(s)

@@ -1,0 +1,40 @@
+{
+  "approved_next_scope": "additive copied bench reset-qualified first prime with accepted row0 and all128 identities; model exact edges before incremental build",
+  "artifact_hashes_verified": true,
+  "engine_changes_approved": false,
+  "focused_tests_passed": 117,
+  "full_token": false,
+  "observed": {
+    "dbg_fs": 0,
+    "descriptor_fault": 1,
+    "fault_r": 64,
+    "first_prime_internal_rn": 0,
+    "first_prime_rst_s": 1,
+    "missing_row": 0,
+    "other_KV_faults": 0,
+    "pf_fault": 1,
+    "row_active_words": [
+      4294967294,
+      4294967295,
+      4294967295,
+      4294967295
+    ],
+    "row_valid_words": [
+      4294967294,
+      4294967295,
+      4294967295,
+      4294967295
+    ],
+    "schedule_fault": 1,
+    "violations": 0
+  },
+  "original_FAIL_preserved": true,
+  "original_PC24_cause": "UNOBSERVED",
+  "parent_GO_byte_exact": true,
+  "physical_admission": false,
+  "plan_commit": "012be9cf09863f8c6b2d7f7cc274254a317bd246",
+  "raw_log_reproduces_attribution": true,
+  "schema": "opentallas.D1.actual-reset-rowzero.parent-review.v1",
+  "source_capture_commit": "f938424eb781e223e664edc81ca6410480f7ee3c",
+  "source_hashes_verified": 9
+}

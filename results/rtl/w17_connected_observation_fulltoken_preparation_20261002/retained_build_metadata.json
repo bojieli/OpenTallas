@@ -1,0 +1,203 @@
+{
+  "utc": "2026-10-02T02:26:50Z",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "metadata_only": true,
+  "logs": [
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die0.log",
+      "sha256": "55a1292fb84210072d1f26431c894793fc8d95ef91d73f693af94abd8683020b",
+      "bytes": 818691,
+      "metrics_and_command": [
+        "\tCommand being timed: \"make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0 -f Vdie0.mk -j8 Vdie0__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1\"",
+        "\tUser time (seconds): 27882.74",
+        "\tSystem time (seconds): 196.64",
+        "\tPercent of CPU this job got: 797%",
+        "\tElapsed (wall clock) time (h:mm:ss or m:ss): 58:40.74",
+        "\tMaximum resident set size (kbytes): 4185568",
+        "\tExit status: 0"
+      ],
+      "source_provenance": "same retained build root as source-pinned current4e original frontends in observer_frontend_resource_model; make logs consume generated output, not independent regenerated source proof",
+      "maxrss_meaning": "time -v child maximum, not aggregate parallel tree peak"
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die1.log",
+      "sha256": "322487cb3453668abc0921dcf52fb241a59a714a1ea730c97568f430767f5d87",
+      "bytes": 818691,
+      "metrics_and_command": [
+        "\tCommand being timed: \"make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1 -f Vdie1.mk -j7 Vdie1__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1\"",
+        "\tUser time (seconds): 24106.60",
+        "\tSystem time (seconds): 183.06",
+        "\tPercent of CPU this job got: 697%",
+        "\tElapsed (wall clock) time (h:mm:ss or m:ss): 58:00.85",
+        "\tMaximum resident set size (kbytes): 4186372",
+        "\tExit status: 0"
+      ],
+      "source_provenance": "same retained build root as source-pinned current4e original frontends in observer_frontend_resource_model; make logs consume generated output, not independent regenerated source proof",
+      "maxrss_meaning": "time -v child maximum, not aggregate parallel tree peak"
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die2.log",
+      "sha256": "886944bf1d30559f165a8f9f1b6f100e3d4fb346f5d7e80be7e16e81d8548f73",
+      "bytes": 818690,
+      "metrics_and_command": [
+        "\tCommand being timed: \"make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2 -f Vdie2.mk -j8 Vdie2__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1\"",
+        "\tUser time (seconds): 25048.62",
+        "\tSystem time (seconds): 189.85",
+        "\tPercent of CPU this job got: 794%",
+        "\tElapsed (wall clock) time (h:mm:ss or m:ss): 52:57.59",
+        "\tMaximum resident set size (kbytes): 4185784",
+        "\tExit status: 0"
+      ],
+      "source_provenance": "same retained build root as source-pinned current4e original frontends in observer_frontend_resource_model; make logs consume generated output, not independent regenerated source proof",
+      "maxrss_meaning": "time -v child maximum, not aggregate parallel tree peak"
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die3.log",
+      "sha256": "239896ca4434c66daf2201f257dfaa9129299576c17a78e7f78774a12bb479df",
+      "bytes": 818691,
+      "metrics_and_command": [
+        "\tCommand being timed: \"make -C /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3 -f Vdie3.mk -j8 Vdie3__ALL.a OPT_FAST=-O2 OPT_SLOW=-O1 OPT_GLOBAL=-O1\"",
+        "\tUser time (seconds): 24659.53",
+        "\tSystem time (seconds): 184.03",
+        "\tPercent of CPU this job got: 797%",
+        "\tElapsed (wall clock) time (h:mm:ss or m:ss): 51:53.80",
+        "\tMaximum resident set size (kbytes): 4186620",
+        "\tExit status: 0"
+      ],
+      "source_provenance": "same retained build root as source-pinned current4e original frontends in observer_frontend_resource_model; make logs consume generated output, not independent regenerated source proof",
+      "maxrss_meaning": "time -v child maximum, not aggregate parallel tree peak"
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/link.log",
+      "sha256": "5847274dea7fb28c92e706bb5f454ab7fe2a89c9707bdedbae120bf6945acb60",
+      "bytes": 3490,
+      "metrics_and_command": [
+        "\tCommand being timed: \"g++ -std=c++20 -O2 -pthread -DROM_PHW=6 -DCL_PW_BITS=547 -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3 -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn -I/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root -I/home/ubuntu/w17-current-fastpp-l0-cli-r4/rtl/test/qwen_runtime -I/home/ubuntu/w17-current-fastpp-l0-cli-r4/rtl/test/v41_runtime /home/ubuntu/w17-current-fastpp-l0-cli-r4/rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp -Wl,--start-group /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die0/Vdie0__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die1/Vdie1__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die2/Vdie2__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/die3/Vdie3__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pq/Vpq__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/pb/Vpb__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/retn/Vretn__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/root/Vroot__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vattn__ALL.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_qadd/libot_hdc_qadd.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_merge_6/libot_hdc_v41x_attn_merge_6.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_staging_3/libot_hdc_v41x_attn_staging_3.a /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/attn/Vot_hdc_v41x_attn_tile_e/libot_hdc_v41x_attn_tile_e.a -Wl,--end-group /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp -o /home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/v41_die_rt\"",
+        "\tUser time (seconds): 7.35",
+        "\tSystem time (seconds): 0.93",
+        "\tPercent of CPU this job got: 99%",
+        "\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:08.30",
+        "\tMaximum resident set size (kbytes): 906084",
+        "\tExit status: 0"
+      ],
+      "source_provenance": "same retained build root as source-pinned current4e original frontends in observer_frontend_resource_model; make logs consume generated output, not independent regenerated source proof",
+      "maxrss_meaning": "time -v child maximum, not aggregate parallel tree peak"
+    }
+  ],
+  "directory_stat_totals": {
+    "verilate_root.log": {
+      "files": 1,
+      "logical_bytes": 2517
+    },
+    "v41_die_rt": {
+      "files": 1,
+      "logical_bytes": 427955416
+    },
+    "verilate_die3.log": {
+      "files": 1,
+      "logical_bytes": 17763
+    },
+    "build_die1.log": {
+      "files": 1,
+      "logical_bytes": 818691
+    },
+    "build_pb.log": {
+      "files": 1,
+      "logical_bytes": 44282
+    },
+    "build_die3.log": {
+      "files": 1,
+      "logical_bytes": 818691
+    },
+    "link.log": {
+      "files": 1,
+      "logical_bytes": 3490
+    },
+    "verilate_pb.log": {
+      "files": 1,
+      "logical_bytes": 2814
+    },
+    "verilate_retn.log": {
+      "files": 1,
+      "logical_bytes": 2613
+    },
+    "verilate_attn.log": {
+      "files": 1,
+      "logical_bytes": 586500
+    },
+    "verilate_pq.log": {
+      "files": 1,
+      "logical_bytes": 2812
+    },
+    "build_pq.log": {
+      "files": 1,
+      "logical_bytes": 14771
+    },
+    "build_die0.log": {
+      "files": 1,
+      "logical_bytes": 818691
+    },
+    "verilate_die2.log": {
+      "files": 1,
+      "logical_bytes": 17764
+    },
+    "build_root.log": {
+      "files": 1,
+      "logical_bytes": 1945
+    },
+    "verilate_die1.log": {
+      "files": 1,
+      "logical_bytes": 17765
+    },
+    "build_die2.log": {
+      "files": 1,
+      "logical_bytes": 818690
+    },
+    "verilate_die0.log": {
+      "files": 1,
+      "logical_bytes": 17765
+    },
+    "build_retn.log": {
+      "files": 1,
+      "logical_bytes": 1946
+    },
+    "attn": {
+      "files": 2635,
+      "logical_bytes": 2024917582
+    },
+    "pb": {
+      "files": 209,
+      "logical_bytes": 204474666
+    },
+    "pq": {
+      "files": 73,
+      "logical_bytes": 159645076
+    },
+    "die1": {
+      "files": 3677,
+      "logical_bytes": 1948415038
+    },
+    "die2": {
+      "files": 3677,
+      "logical_bytes": 1948415091
+    },
+    "root": {
+      "files": 17,
+      "logical_bytes": 227357
+    },
+    "retn": {
+      "files": 17,
+      "logical_bytes": 259432
+    },
+    "die3": {
+      "files": 3677,
+      "logical_bytes": 1948415015
+    },
+    "die0": {
+      "files": 3677,
+      "logical_bytes": 1948415477
+    }
+  },
+  "retained_build_logical_bytes": 10615149660,
+  "no_binary_or_checkpoint_contents_read": true
+}

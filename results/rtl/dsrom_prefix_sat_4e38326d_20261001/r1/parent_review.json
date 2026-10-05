@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.parent-prefix-sat-review.v1",
+  "recorded_utc": "2026-10-01T22:16:22.760920+00:00",
+  "owner_commit": "29ace40b6f563c980c0b42b7d6eba32c91a2fc93",
+  "intake_commit": "346babdc8",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "independent_tests": {
+    "command": "PYTHONPATH=tools:. python3 -m pytest -o addopts= -q tests/test_dsrom_prefix_sat.py",
+    "result": "24 passed in1.93s",
+    "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+  },
+  "verified": {
+    "all_artifact_hashes": 20,
+    "source_files_and_exact_commit_bytes": 2,
+    "tool_and_test_source_hashes": 2,
+    "all_miter_hashes": 16,
+    "unrestricted_two_state_proofs": 12,
+    "numeric_counterexample_replays": 4,
+    "mutated_single_output_bit_matches": true
+  },
+  "claims": {
+    "combinational_prefix_prerequisite": true,
+    "sequential_FP": false,
+    "actual_sinkhorn_pipeline": false,
+    "full_die_exactness": false,
+    "hardware_timing_or_adoption": false,
+    "simulation_substitution_installed": false
+  },
+  "scope": "All used listed KSA/cadd widths, including entire overflow outputs. No multiplier/CSA/source-list substitution. Census and sequential/full-die acceptance remain required."
+}

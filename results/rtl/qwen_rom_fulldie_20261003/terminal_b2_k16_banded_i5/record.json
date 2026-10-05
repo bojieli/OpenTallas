@@ -1,0 +1,246 @@
+{
+  "case": "b",
+  "exit": 0,
+  "wall": "50:00.78",
+  "peak_rss_mb": 12694,
+  "manifest": {
+    "case": "b",
+    "tag": "k16_banded_i5",
+    "bundle_k": 16,
+    "congestion_iterations": 5,
+    "instances": 3224,
+    "bundle_pins": 5915,
+    "bundle_nets": 167910,
+    "wires": 2681654,
+    "tree_mode": "banded",
+    "adjustment": {
+      "base_M4_M9": 0.1378,
+      "M2_M3": 0.25,
+      "regions": {
+        "tile_field": 0.1378,
+        "corridor": 0.1378,
+        "channel": 0.1378,
+        "hub": 0.1,
+        "strip": 0.37779999999999997,
+        "ctrl": 0.37779999999999997,
+        "io": 0.1,
+        "phy": 0.05
+      }
+    }
+  },
+  "grt": {
+    "layers": {
+      "M1": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M2": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M3": {
+        "resource": 0,
+        "demand": 0,
+        "usage_pct": 0.0,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M4": {
+        "resource": 16715,
+        "demand": 1126,
+        "usage_pct": 6.74,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M5": {
+        "resource": 128449,
+        "demand": 14443,
+        "usage_pct": 11.24,
+        "overflow_h": 0,
+        "overflow_v": 1,
+        "overflow_total": 7
+      },
+      "M6": {
+        "resource": 15298064,
+        "demand": 277041,
+        "usage_pct": 1.81,
+        "overflow_h": 0,
+        "overflow_v": 0,
+        "overflow_total": 0
+      },
+      "M7": {
+        "resource": 14867950,
+        "demand": 6711882,
+        "usage_pct": 45.14,
+        "overflow_h": 0,
+        "overflow_v": 1,
+        "overflow_total": 6
+      },
+      "M8": {
+        "resource": 53568175,
+        "demand": 3657331,
+        "usage_pct": 6.83,
+        "overflow_h": 5,
+        "overflow_v": 0,
+        "overflow_total": 1239
+      },
+      "M9": {
+        "resource": 53481765,
+        "demand": 8136460,
+        "usage_pct": 15.21,
+        "overflow_h": 0,
+        "overflow_v": 5,
+        "overflow_total": 35131
+      }
+    },
+    "total": {
+      "resource": 137361118,
+      "demand": 18798283,
+      "usage_pct": 13.69,
+      "overflow_h": 5,
+      "overflow_v": 7,
+      "overflow_total": 36383
+    },
+    "total_wirelength_bundle_um": 178050937.0,
+    "grt_runtime": "00:45:54",
+    "errors": [],
+    "elapsed_s": null
+  },
+  "grt_s": 2754,
+  "wire_by_class": {
+    "spine_local": {
+      "bundle_nets": 64,
+      "bundle_um": 169877.4,
+      "max_um": 4065.6,
+      "wire_m": 2.7
+    },
+    "tree_spine": {
+      "bundle_nets": 1728,
+      "bundle_um": 28279315.1,
+      "max_um": 30529.0,
+      "wire_m": 452.5
+    },
+    "clock_trunk": {
+      "bundle_nets": 6,
+      "bundle_um": 88584.0,
+      "max_um": 17574.5,
+      "wire_m": 1.4
+    },
+    "io": {
+      "bundle_nets": 224,
+      "bundle_um": 2425019.4,
+      "max_um": 22129.8,
+      "wire_m": 38.8
+    },
+    "corridor": {
+      "bundle_nets": 61440,
+      "bundle_um": 74430685.6,
+      "max_um": 1746.4,
+      "wire_m": 1190.9
+    },
+    "phy_dfi": {
+      "bundle_nets": 2304,
+      "bundle_um": 4342.8,
+      "max_um": 73.9,
+      "wire_m": 0.1
+    },
+    "strip_fan": {
+      "bundle_nets": 1584,
+      "bundle_um": 113531.9,
+      "max_um": 360.4,
+      "wire_m": 1.8
+    },
+    "head_chain": {
+      "bundle_nets": 2560,
+      "bundle_um": 1012177.3,
+      "max_um": 2069.8,
+      "wire_m": 16.2
+    },
+    "hbm_read": {
+      "bundle_nets": 1664,
+      "bundle_um": 25742.6,
+      "max_um": 360.4,
+      "wire_m": 0.4
+    },
+    "link_channel": {
+      "bundle_nets": 1584,
+      "bundle_um": 2829703.8,
+      "max_um": 2614.9,
+      "wire_m": 45.3
+    },
+    "link_spine": {
+      "bundle_nets": 1056,
+      "bundle_um": 1809617.0,
+      "max_um": 2679.6,
+      "wire_m": 29.0
+    },
+    "tree_block": {
+      "bundle_nets": 92160,
+      "bundle_um": 66862340.2,
+      "max_um": 3982.4,
+      "wire_m": 1069.8
+    }
+  },
+  "congestion_windows": null,
+  "gcell_window_usage": {
+    "M2": {
+      "windows": 580752,
+      "over_0p7": 579865,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M3": {
+      "windows": 580752,
+      "over_0p7": 580098,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M4": {
+      "windows": 580752,
+      "over_0p7": 579865,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M5": {
+      "windows": 580752,
+      "over_0p7": 580098,
+      "over_1": 1,
+      "max": 1.005
+    },
+    "M6": {
+      "windows": 580752,
+      "over_0p7": 430200,
+      "over_1": 0,
+      "max": 1.0
+    },
+    "M7": {
+      "windows": 580752,
+      "over_0p7": 513587,
+      "over_1": 2,
+      "max": 1.014
+    },
+    "M8": {
+      "windows": 580752,
+      "over_0p7": 570,
+      "over_1": 0,
+      "max": 0.948
+    },
+    "M9": {
+      "windows": 580752,
+      "over_0p7": 3942,
+      "over_1": 160,
+      "max": 1.293
+    }
+  },
+  "errors": []
+}

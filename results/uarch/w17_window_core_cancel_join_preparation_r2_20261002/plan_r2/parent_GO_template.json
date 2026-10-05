@@ -1,0 +1,31 @@
+{
+  "status": "PENDING_NOT_AUTHORIZATION",
+  "requested_status": "PARENT_ACTUAL_CORE_SU_QE_OWNER_CANCEL_SINGLE_GATE_GO",
+  "plan_sha256": "7ed7908e950409c0f1ff67fc96e60c2539a74ea2057c3f8a80e468b06d265be0",
+  "runner_sha256": "5f846f074adbbbe9b6d398fdc771f3418f2d35b18d3af57047dc945f08468bd9",
+  "model_sha256": "14da21b2b311896dffca79252a7aaea3168479bd274daf259e913ca4cb4d3744",
+  "source_digest": "1b20dd908773cf031135d5b327051fd43cad68f322aa232d60f27cd1ac43a010",
+  "jobs_digest": "a7f0d702b03f45148867aedd3a7c017f1a8951df159c30d24540e9b662ff7917",
+  "caps": {
+    "MemoryMax": 4294967296,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 268435456,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 180,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 130,
+    "runtime_shared_seconds": 26,
+    "reserve_seconds": 24,
+    "whole_seconds": 180,
+    "aggregate_generated_output_bytes": 268435456,
+    "no_retry": true
+  }
+}

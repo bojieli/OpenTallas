@@ -1,0 +1,26 @@
+{
+  "schema": "PARENT_R49_RAW_CLOCK_CONSTRUCTION_REVIEW_R1",
+  "owner_commit": "d4a3deb550aa71afec39e0549adb0e0a7f4c2894",
+  "checks": {
+    "focused_tests_passed": 19,
+    "artifact_hashes_verified": 39,
+    "cold_generator_retained_artifacts_unchanged": true,
+    "clock_site_alternative_selected": false
+  },
+  "verified_findings": {
+    "raw_clock_buffers": 6521,
+    "extra_raw_clock_buffers_vs_prior_floor": 627,
+    "selector_core_clock_buffers": 70406,
+    "selector_transport_clock_buffers_separate": 48007,
+    "raw_clock_capacitance_exceedances": 756
+  },
+  "remaining": [
+    "select one annex/bank alternative with Maxwell without double credit",
+    "actual core sink assignment and named reset/PG union",
+    "resolve priced raw clock capacitance excess",
+    "finite capture credits and accepted consumer deadline",
+    "contextual mapped simulation and SS/FF routing"
+  ],
+  "physical_admission": false,
+  "headline_admission": false
+}

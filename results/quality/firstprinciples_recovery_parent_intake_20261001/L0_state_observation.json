@@ -1,0 +1,28 @@
+{
+  "time": 1790866083.775666,
+  "pid": 1307441,
+  "state": "RUN_STAGE",
+  "stage": "build_attention",
+  "command": [
+    "/usr/bin/python3",
+    "/home/ubuntu/w17-current-fastpp-l0-cli-r4/tools/w17_current_fastpp_die_rt_cli_v4.py",
+    "attn",
+    "--work",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build",
+    "--jobs",
+    "8",
+    "--fast",
+    "1",
+    "--pp",
+    "1"
+  ],
+  "admission": {
+    "mem_GiB": 169.1890106201172,
+    "disk_GiB": 213.2802391052246,
+    "load1": 3.7958984375,
+    "affinity": 32,
+    "compiler_jobs": 8,
+    "memory_floor_GiB": 128,
+    "pass_admission": true
+  }
+}

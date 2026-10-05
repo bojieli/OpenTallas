@@ -1,0 +1,9 @@
+import numpy as np
+F=np.float32
+def _gained(rng, n, width, gain, chunk=1 << 16):
+    """n rows of a unit-RMS normal vector times the layer's own norm gain, BF16 (the scale the golden's RMSNorm
+    outputs have), generated in chunks."""
+    for i in range(0, n, chunk):
+        k = min(chunk, n - i)
+        x = rng.standard_normal((k, width)).astype(F)
+        yield to_bf16(x * gain[None, :])

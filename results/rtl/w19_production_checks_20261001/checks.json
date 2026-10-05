@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.w19.production_checks.v1",
+  "status": "pass",
+  "source_commit": "c5e225546",
+  "checks": {
+    "pytest": 12,
+    "protocol": 8,
+    "archive_cases": 60,
+    "yosys_problems": 0
+  },
+  "logs": {
+    "results/rtl/w19_production_checks_20261001/yosys_check.log": "3120eddd0976156b9fc6522860e758b639422f922e02b0282d0de5fe145f4caf",
+    "results/rtl/w19_production_checks_20261001/preflight_missing_input.log": "dff91958478746c5457864811d1ff330584df8914d35e7f23f2f2d09336d9295",
+    "results/rtl/w19_production_checks_20261001/sparse_import_failure.log": "2fe2891a819038ad8af49c628ed3c2c6a56aaab957546145b0b3905d25e34931"
+  },
+  "failures": "Retained sparse import/preflight prerequisite failures; not numerical verdicts. Remote vvp12 initially rejected v11 bytecode; connected replay instead freshly compiled with remote Icarus12.",
+  "routing": "Analytical SM-local channel fit only; contextual routing-layer/SSFF qualification remains OPEN. No hardware adoption."
+}

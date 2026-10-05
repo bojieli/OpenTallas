@@ -1,0 +1,7089 @@
+{
+  "actual_PP_collision_event_count": null,
+  "actual_bound_stream_words": 2200,
+  "actual_current_image_admission": {
+    "binding": {
+      "BP": 0,
+      "CUT": 379,
+      "FAST": 1,
+      "FRONT_PAR": 0,
+      "PP": 1,
+      "actual_add_LAT": 8,
+      "source": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+      "source_sha256": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79"
+    },
+    "phases": 28,
+    "status": "SOURCE_CONTROL_IMAGES_BOUND_NO_EXECUTION",
+    "stream_words": 2200,
+    "transcription": {
+      "excluded": "ROM word payload and PP payload permutation only; no state/geometry/order/demand reductions",
+      "omitted_payload_sha256": [
+        "ba79af192bd7eeba95269c4e64506ffa5baff455aa05362b03d1c42dfde6a068",
+        "c3f470c45c4c05fc83c14a86e562f38331594f07f7b2502031ca3b319b9397a6"
+      ],
+      "source_sha256": "8cfea7014a7513448455a612230b6e1fdda14f974f66fa4ee999a0d8ce3ba95e",
+      "transformed_ast_sha256": "700d18e83365c7ec5ce42a493a2c03f70c11487ee91ba780f8f23e4cf0e8d4d2"
+    }
+  },
+  "actual_fifo_occupancy": null,
+  "actual_last_leaf_to_root_retire": null,
+  "binding": {
+    "BP": 0,
+    "CUT": 379,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "PP": 1,
+    "actual_add_LAT": 8,
+    "source": "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+    "source_sha256": "76f54d8dc82e1b6369666be873e68957daffb4e0df6d8da4bf2949c88c5e5d79"
+  },
+  "calendar_owner": "Maxwell R0/C1",
+  "delta_schedule_words_per_position": 224,
+  "emitted_program_MTP_positions": null,
+  "metadata_inputs_sha256": {
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images/r0/field.txt": "c2beeec06cad76e8c72a34eee98e0d692e61c13159a3ab91a969548417ff9d78",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images/r0/field_phases.json": "ab6563697a6729a921d4b429844538a63510f801b72f54c7d84058be68af1502",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images/r0/spine_phase.hex": "1770bb0f2b452c5b35188004611046ea89dddd668c0c8cd88d76a8123a1d0c3c",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images/r0/spine_stream.hex": "245810d8693b4716038078b6a87617570de9d1600e78763c6b0792559007a684",
+    "/home/ubuntu/w17-current-L0-fastpp-20261001-r3/images/r0/weights.json": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd",
+    "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/field.txt": "c2beeec06cad76e8c72a34eee98e0d692e61c13159a3ab91a969548417ff9d78",
+    "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/field_phases.json": "683aace8917a94bc0fbe04cd507add3c6802e4842779336e11752eea6c5aba48",
+    "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/spine_phase.hex": "19951462e25b8daa1430b8b1691f5bdb387df257a76b7d63ae5a4e6470893d0d",
+    "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/spine_stream.hex": "f26e505ef20df741939d18c8c2899d8504a42ebc638655fd9a7b0c8130b6245f",
+    "/home/ubuntu/w17work/die/ctx1048576_s20260930/r0/weights.json": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd"
+  },
+  "metadata_stream_words": 2200,
+  "missing": "Join positions, VM availability, credits, bank start state, return/writer service and drain in owner calendar; do not zero-fill",
+  "owner": "Epicurus D2 phase subledger",
+  "params": {
+    "BP": 0,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "PP": 1,
+    "active": 6899,
+    "actual_add_LAT": 8,
+    "depth": 8192,
+    "nbf": 1024,
+    "np": 8192,
+    "phw": 6,
+    "regions": 128
+  },
+  "phase_count": 28,
+  "phases": [
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "01231092790590cd1b200e199781cbcec84313aa2a8ef00158298969fac085c1",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp8"
+      ],
+      "index": 0,
+      "key": 0,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 320,
+      "old_nbeat": 80,
+      "pc": 7,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "84552bcf074e6952087f7d4e035b7a2aaf1fa2a09fb13e847ae8dc4a37b2db72",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "08964c06a75534e2648cc95cb7817bc34af2accd3e8035e0be56d59118211f82",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp8"
+      ],
+      "index": 1,
+      "key": 3840,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 128,
+      "old_nbeat": 80,
+      "pc": 8,
+      "per_pair_words_histogram": {
+        "8": 1280
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 1280,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 1280
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "aba59ef1f8b80c9602615a2c674ad3ccfa121bf26a03b71c56da318eeaec495a",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 1280,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "aacb0115332556ad0875b21a05e7891d1ea5339c02d7c4f7f00e8a220a1b82c5",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp8"
+      ],
+      "index": 2,
+      "key": 5120,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 8192,
+      "old_nbeat": 40,
+      "pc": 14,
+      "per_pair_words_histogram": {
+        "16": 1293,
+        "32": 4096,
+        "8": 1510
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 1510,
+            "2": 1293,
+            "4": 4096
+          },
+          "groups": 3,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "32deeeaeb880b99b9c54e5cdaf5d3e3618870e9bb6a0592a7873be8217acf87d",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 4096,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 128,
+      "config_sha256": "238768f2df09059f1c1e6f4888a1eb2cde4cf84c9fcb7b349fe3272217a87d8b",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "bf16"
+      ],
+      "index": 3,
+      "key": 7680,
+      "kind": "me",
+      "metadata_nbeat": 128,
+      "nrows": 1024,
+      "old_nbeat": 128,
+      "pc": 37,
+      "per_pair_words_histogram": {
+        "128": 1024
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 4096,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 128,
+      "config_sha256": "e22a974430bee8212a2148840ea3bc3a5c8dfcf46371f676b25e027d60563d63",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "bf16"
+      ],
+      "index": 4,
+      "key": 73216,
+      "kind": "me",
+      "metadata_nbeat": 128,
+      "nrows": 1024,
+      "old_nbeat": 128,
+      "pc": 38,
+      "per_pair_words_histogram": {
+        "128": 1024
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        },
+        {
+          "active_pairs": 1024,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "8": 1024
+          },
+          "groups": 4,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 8,
+          "per_pair_demand_sha256": "079cb61b78715f25fa218061976784b6119cf20eb2d47b2bf532e79e7e8478af",
+          "q": 1,
+          "units": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2048,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "dd0174ad8811ec6198bf04cd0efdeee542d520ce6a4bb51f4a83a3e03ab41c95",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp8"
+      ],
+      "index": 5,
+      "key": 25600,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 5120,
+      "old_nbeat": 40,
+      "pc": 40,
+      "per_pair_words_histogram": {
+        "16": 3558,
+        "32": 3341
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "active_pairs": 6899,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "2": 3558,
+            "4": 3341
+          },
+          "groups": 4,
+          "max_demand_words": 4,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "55978f680e13d01f4801380ff2f231226238e7aaee915f40302cfc12544bfe50",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "cd3d10e57e333dc486384ce60b824b258bb765727dc82c8ce3a66a08f288b6d1",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp8"
+      ],
+      "index": 6,
+      "key": 46080,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 53,
+      "per_pair_words_histogram": {
+        "16": 192,
+        "8": 5376
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bc1d321575083cb8574dccb38bf7e2b2ddd9e8e142ed8c513adbd64feddb2a4b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "63b21073d0b20941a9681d323d0395b3666e5ced5d632649a959a7851dd6384d",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp8"
+      ],
+      "index": 7,
+      "key": 52480,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 54,
+      "per_pair_words_histogram": {
+        "16": 192,
+        "8": 5376
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 5568,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 5376,
+            "2": 192
+          },
+          "groups": 10,
+          "max_demand_words": 2,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "3da4a0e4e06c56d1fa732918f00b234806b4a92b26f165adbbb094e2bfac4001",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 88,
+      "config_sha256": "a11d0816c5a433716b73a5f99994f696925717090e30288d6d4ccf05a68ceb03",
+      "delta_schedule_words_per_position": 8,
+      "formats": [
+        "bf16"
+      ],
+      "index": 8,
+      "key": 0,
+      "kind": "me",
+      "metadata_nbeat": 88,
+      "nrows": 96,
+      "old_nbeat": 80,
+      "pc": 55,
+      "per_pair_words_histogram": {
+        "64": 240
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 0,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 1,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 2,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 3,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 4,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 5,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 6,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        },
+        {
+          "active_pairs": 240,
+          "actual_FAST1_bound_round_words": 11,
+          "b": 7,
+          "delta_schedule_words": 1,
+          "demand_words_histogram": {
+            "8": 240
+          },
+          "groups": 10,
+          "max_demand_words": 8,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ab7efe103902a8665f7be70e57bc6eb94331893ab10f0919c744bd7d29f9fd2e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "5594798f18f524d563335e387f372138c75f58d3451a7954a6ad2fcbabc91c8a",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp8"
+      ],
+      "index": 9,
+      "key": 58880,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 58,
+      "per_pair_words_histogram": {
+        "8": 5760
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 5760,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 5760
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "7ca3bd94a4472d831757b4d28ded3e3bba1c10bf33e63b86d3f29acc3b6b1320",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "1d90078e8728e7433b66f4a94ca9dc5af088926cd6764f6aa13a3a207e41e8da",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 10,
+      "key": 455040,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 66,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "bf7ccf66a2c4be459ba893087ec2e5c0b7ade55daddd2a1f001a9ac9aa44c59b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "1641d2e325cc1e7dfab06038b1b6f1ae0ca0d3556b3acb0f13ce09ef814cf997",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 11,
+      "key": 2912640,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 67,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "68ee7be232fa9603d03db899426d90e839b4fecba71df06f0ec18beaaedcc509",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "5d0ceb8d018379a46515c8da4d338447c6dd1fd34a4c6d5fe487cfa5a4a2bf2d",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 12,
+      "key": 506240,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 68,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "ce017e93eacb51205cc790c9b1455e2ba4a5d47cab3d2071961bd0d18e204198",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "ad0e43ad0fb9de4f09e7cc8c71f522c28d5b1b20b110070b5c57459f4c7f3a64",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 13,
+      "key": 2963840,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 69,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "17d833443bc0c419b192e4878a9d6b309121cf584e9a9c9df062917149618f5e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "6ef54c9aaf570bccecde388e33c0292ba9006bc92a9cc9e8774f3a941e7ec808",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 14,
+      "key": 781440,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 72,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "d80d0abd911f7fd794ec0f031f6c7c8757ff9cac122e25024e274485fc015c0e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "430b358ae1b24c5dffda488a52b7ad4136ad0125d4d51fae33f4a9fe42b2f2dc",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 15,
+      "key": 3239040,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 73,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "26dac75b8bb4c7f77b53a5e701b4fd722f167d297319b59e6cdbb21e3de2e857",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "36b80af53ff333bb1ef63f75c7e24b98646f067969397ae3ea354b416f6ec14a",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 16,
+      "key": 5331200,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 79,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "20daac34a9cfcc308f52498893fe7618faf1069967829f87c56f3842625ff06e",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "e03b3e9c6ea706702e8063bac130a7213d26b1f83ea5680269fedea9bc5a0fbb",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 17,
+      "key": 1152640,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 82,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "e200040765cfc6ace63e8e186cf23ef6c614ef30a99326606a80914207e2db32",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "eb072f26a5b3e1d5a9c1d4e4b058949790b020cc62d341a652cf489d3ee89eac",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 18,
+      "key": 3610240,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 83,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "86e031732f89cdf92ea9bf87a60ffb027b9db760ffd41f90dab40791fff8d37b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "1b9f06e1972c8cb56256321ebe4ba7baff620446214660544f4fe05101abd3e1",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 19,
+      "key": 5377280,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 84,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "f5fb519eb6bb5cc80477b913146901f52ca666347b9cc9a8a9010c738ebc94b5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "5b1b0a580f4d43bbec6c548a4e276359646a0b11c29abc2739b1510b319c9925",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 20,
+      "key": 1978240,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 87,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "23bbdab449b96bba62b7c71169a0dd1ae00b22d5a0c67818998845861a6b77e7",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "40ff6869c7d38956f5fb7d930357e05a54688cedd8e0ffc107d26eac6de15f3e",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 21,
+      "key": 4435840,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 88,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "f4e1e9196b3f38cbec0b0d07975b3a614408ccf01f1bd0011cccfc3d511e3ac5",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "9614c8384d003b91ea63084e3663ba4049aa0ab0353cd0b09e5bf5ce86372660",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 22,
+      "key": 5624960,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 89,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "6538d1a79b3b1a9d4299c446759f380eb70f74573a4aa80d66c7d5b1e4709bab",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "0424f21a7c46fe8cb45ff79d85a0d0c7f1854ffbfac02a03e80658ba37e92e07",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 23,
+      "key": 2349440,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 92,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "6eef0dbdf0969c0f09796eb13e15df9a77066cbccf1c69e86a6e4e5c91f6faf4",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 5120,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 80,
+      "config_sha256": "ed619983e2d655503faa662e6f84af3cf7020fefad858e6d10c4687ebdf3132e",
+      "delta_schedule_words_per_position": 0,
+      "formats": [
+        "fp4"
+      ],
+      "index": 24,
+      "key": 4807040,
+      "kind": "qe",
+      "metadata_nbeat": 80,
+      "nrows": 576,
+      "old_nbeat": 80,
+      "pc": 93,
+      "per_pair_words_histogram": {
+        "8": 2880
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 0,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 1,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 2,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 3,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 4,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 5,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 6,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        {
+          "active_pairs": 2880,
+          "actual_FAST1_bound_round_words": 10,
+          "b": 7,
+          "delta_schedule_words": 0,
+          "demand_words_histogram": {
+            "1": 2880
+          },
+          "groups": 10,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 10,
+          "per_pair_demand_sha256": "2d3f2f34e24b0f0f58a32034f739f79e780642773aa46c8b2d0481c59628976b",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "fca634fd6042c5870785c348bc8f16564eeace56da41d5e1e6ca3c739624a194",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 25,
+      "key": 5959040,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 94,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "ade79e68babd82dd457b31a3ad0b5d5e434c2fc74bf9ac675c7103d66f03b8fc",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "0e9dc565c6e328a6f3fd85a46e7f715adb4e2cf28b5b40f9e4de3f461fe2e6a7",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 26,
+      "key": 6702080,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 97,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4d6cd22e2a7bbe4ecbfb1bddbecfe2dd7396ecb9c611ace9fd6fdd3c8ff28202",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "BF16_contract": "BP0 column multiplication, existing FAST grouped-round +1 reserve retained; no BP hold credit or grouped capture equivalence inferred.",
+      "K": 2304,
+      "PP_collision_contract": "Consecutive issue parity alternates. Restart to phase base after odd word count has same bank; actual stall only if consecutive cycles. Hazard gaps may remove collision. Positions/start readiness required for actual event count.",
+      "actual_bound_nbeat": 64,
+      "config_sha256": "4920adc7f560ac95ff10f5bf7ddc2d7376bc5144d07c33c77b43c081db71e76c",
+      "delta_schedule_words_per_position": 24,
+      "formats": [
+        "fp4"
+      ],
+      "index": 27,
+      "key": 7036160,
+      "kind": "qe",
+      "metadata_nbeat": 64,
+      "nrows": 1280,
+      "old_nbeat": 40,
+      "pc": 100,
+      "per_pair_words_histogram": {
+        "8": 3200
+      },
+      "potential_PP_same_bank_MTP_restarts_pairs": 0,
+      "rounds": [
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 0,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 1,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 2,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 3,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 4,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 5,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 6,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "active_pairs": 3200,
+          "actual_FAST1_bound_round_words": 8,
+          "b": 7,
+          "delta_schedule_words": 3,
+          "demand_words_histogram": {
+            "1": 3200
+          },
+          "groups": 5,
+          "max_demand_words": 1,
+          "old_SMIN5_round_words": 5,
+          "per_pair_demand_sha256": "4e47e0ae0e50f727a9e10e19c6d4834c55d16c4f4a80440b0fe9a2f292a7e308",
+          "q": 0,
+          "units": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    }
+  ],
+  "status": "STATIC_PHASE_DEMAND_ENUMERATION_NOT_RTL_OR_FULL_CALENDAR",
+  "transcription": {
+    "excluded": "ROM word payload and PP payload permutation only; no state/geometry/order/demand reductions",
+    "omitted_payload_sha256": [
+      "ba79af192bd7eeba95269c4e64506ffa5baff455aa05362b03d1c42dfde6a068",
+      "c3f470c45c4c05fc83c14a86e562f38331594f07f7b2502031ca3b319b9397a6"
+    ],
+    "source_sha256": "8cfea7014a7513448455a612230b6e1fdda14f974f66fa4ee999a0d8ce3ba95e",
+    "transformed_ast_sha256": "700d18e83365c7ec5ce42a493a2c03f70c11487ee91ba780f8f23e4cf0e8d4d2"
+  }
+}

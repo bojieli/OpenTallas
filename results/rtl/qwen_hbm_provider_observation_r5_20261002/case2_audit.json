@@ -1,0 +1,59 @@
+{
+  "WR_visible_hook_present": false,
+  "events": 31,
+  "findings": [
+    {
+      "earliest_visible_ps": 28274,
+      "key": [
+        0,
+        0
+      ],
+      "rule": "column_to_backing_visibility",
+      "store_ps": 21000,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    },
+    {
+      "earliest_visible_ps": 81274,
+      "key": [
+        1,
+        0
+      ],
+      "rule": "column_to_backing_visibility",
+      "store_ps": 74000,
+      "verdict": "FAIL_AS_WR_VISIBLE_PROVIDER"
+    }
+  ],
+  "hardware_build_ready": false,
+  "logical_reservations_are_actual_command_outputs": false,
+  "reservation_projection": {
+    "PCs": 32,
+    "banks_per_PC": 32,
+    "events": 11,
+    "scope": "actual source logical reservation projection only, no command emitter/PHY closure",
+    "status": "PASS_COMMAND_TIMING_INEQUALITIES"
+  },
+  "source_timing": {
+    "BURST_PS": 1024,
+    "CLK_PS": 1000,
+    "CL_PS": 12500,
+    "CWL_PS": 6250,
+    "FAW_PS": 15000,
+    "RAS_PS": 28125,
+    "RCDRD_PS": 19375,
+    "RCDWR_PS": 9375,
+    "REFI_PS": 3900000,
+    "REQ_PS": 10000,
+    "RFC_PS": 350000,
+    "RP_PS": 16250,
+    "RRDL_PS": 3125,
+    "RRDS_PS": 2500,
+    "RSP_PS": 10000,
+    "RTP_PS": 5625,
+    "RTW_PS": 9948,
+    "TCCDL_PS": 2560,
+    "WR_PS": 20625,
+    "WTRL_PS": 6250,
+    "WTRS_PS": 4375
+  },
+  "status": "SOURCE_JOURNAL_AUDIT_NOT_HARDWARE_QUALIFICATION"
+}

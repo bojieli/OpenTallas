@@ -1,0 +1,33 @@
+{
+  "status": "PASS_PARENT_R45_COMPLETE_PC0_9_WITNESS_AND_SOURCE_CALL_REVIEW",
+  "source_commit": "9762474b590a55a9dc9d1dd354dab72142d5592e",
+  "actual_outputs": 1568,
+  "outputs_by_PC": {
+    "0": 384,
+    "1": 192,
+    "2": 96,
+    "3": 96,
+    "4": 192,
+    "5": 288,
+    "6": 64,
+    "7": 64,
+    "8": 128,
+    "9": 64
+  },
+  "actual_native_calls": 928,
+  "retirement_control_records": 3,
+  "source_reference_sha256": "91c803a93df18e011cd7ee6c5e0a84c8fc091136718ca329e5f2928349b3f342",
+  "PC0_reference_sha256": "d620d990f06cd3db3842cc66e27b9069377e41cfcd2018d1b1e8c832215bfaa4",
+  "journal_bytes": 5441605632,
+  "journal_sha256": "ad04c06b5ea324f300519749ac200829f3fa18524250a3b6bd0f981bbeedbd2c",
+  "output_framed_sha256": "8bb14932210aedfb9f8c1ea89f46e319295bd18c67f2031509ea8407fdee8c5c",
+  "terminal_receipt_sha256": "5391bf3357351170bf3074c5f364ff34ca7c3f9387e888452345ab60b85c8c08",
+  "source_unchanged": true,
+  "actual_payload_recomputed_by_parent": false,
+  "retirement_checks_scope": "Matches actual control records, retained versions and source guards; not independent physical completion proof.",
+  "failed_R43_preserved": true,
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "physical_cycles_qualified": false,
+  "verification_script_sha256": "0593b57391045bdf3bbc1dc55980c23a06286a189510e2f24845767b74bd1ef1"
+}

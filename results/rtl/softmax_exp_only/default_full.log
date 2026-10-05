@@ -1,0 +1,6 @@
+TRANS_SUMMARY cases=4200 exp=2100 sigmoid=2100 accepted=4155 refused=45 stalls=1534 max_cycles=3212 reset_cycles=23
+PASS a3_hc_transcendental checks=6637132
+- rtl/test/tb_a3_hc_transcendental.sv:250: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 66ms; walltime 58.463 s; speed 1.133 ms/s
+- Verilator: cpu 58.342 s on 1 threads; allocated 7 MB

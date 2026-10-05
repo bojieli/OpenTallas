@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.w19.finite-service-calendar-profile.v1",
+  "status": "EXECUTABLE_COMPONENT_CALENDAR_BACKEND_AND_CONSUMER_BINDINGS_PENDING",
+  "source_pins": {
+    "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json": {
+      "commit": "8625c420a",
+      "sha256": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c"
+    },
+    "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json": {
+      "commit": "07a07ec5d",
+      "sha256": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+    },
+    "results/uarch/qwen_hbm_connected_20261001/publication_model_negative_gate.json": {
+      "commit": "66aa67ed1",
+      "sha256": "287d997d2a5aefe6267b58f3f6b4a853067e1df6fb430e29fd67ccaef3c92b19"
+    },
+    "results/rtl/w11_ckv_current_readmode_binding_20261001.json": {
+      "commit": "758d3425c",
+      "sha256": "b9ec0aec40b241da03dfa6b793df1ccb5d2a9ce99ef91dc3395003d84c5bb1b3"
+    }
+  },
+  "calendar_source_sha256": "f36094c77cf0a63c65d796ad2fd3df45f758c3bef8ccfbc5fa196992f879f6df",
+  "clocks": {
+    "fast_hz": 1200000000,
+    "consumer_hz": 900000000,
+    "phase_zero_candidate": true
+  },
+  "route": {
+    "capture_cycle": 0,
+    "local32_mux_cycle": 1,
+    "stack4_merge_cycle": 2,
+    "destination_landing_cycle": 3,
+    "macro_write_ready_cycle": 4,
+    "earliest_credit_cycle": 5,
+    "mandatory_baseline_landing_credits": 2,
+    "credits_include_inflight": true,
+    "ideal_no_stall_grants_per_bank": "2/5 cycles",
+    "corrected36client_ceiling_bytes_per_cycle": "1843.2",
+    "role": "Mandatory finite-resource baseline correction, not optional performance optimization"
+  },
+  "return_budget": {
+    "controllers": 4,
+    "PCs_per_controller": 32,
+    "PC_landing_entries": 2,
+    "client_sector_banks": 4,
+    "whole_sector_bits": 256,
+    "bytes_per_controller_cycle": 750,
+    "whole_sectors_per_cycle": 23,
+    "note": "Conservative no fractional-sector carry; same backend byte budget must include writes in a complete provider."
+  },
+  "cdc": {
+    "destination_sync_stages": 2,
+    "registered_delivery_stages": 1,
+    "priced_both_directions": true,
+    "physical_qualified": false,
+    "note": "Coincident edge conservatively uses next destination edge. Candidate phase/latency, exact rational calendar; no contextual closure."
+  },
+  "writes": {
+    "retained_transactions_per_controller": 4,
+    "ACK_reserved_slots": 4,
+    "actual_WR_schedule_and_visibility_required": true,
+    "CWL_plus_burst_ps": 7274,
+    "request_accept_is_completion": false,
+    "credit_release": "consumer complete followed by reverseCDC",
+    "RMW": "actual read/merge then write on same ingress; sector lock to consumer completion"
+  },
+  "publication_owner": "66aa67ed1; use stored row/epoch/producer commit+consumer reader refs, not echoed request epoch",
+  "crossbar_known_addons": {
+    "frozen_die_mm2": 165.8882032530048,
+    "independent_route_candidate_die_mm2": 166.0891271442048,
+    "floorplan_PASS": false,
+    "timing_PASS": false
+  },
+  "candidate": "Additional4route-entry geometry separate in owner record; not enabled or adopted here.",
+  "shared_controller_calendar_bound": false,
+  "actual_programme_descriptor_trace": null,
+  "DeepSeek_SM_clients": 32,
+  "DeepSeek_total_client_population": null,
+  "DeepSeek_service_endpoint_roles": "32 ordinary SM baseline; additional endpoint roles/ports remain unbound, no silent36-client copy",
+  "graph_integration": "Consumer contracts provide actual backend events and finite readiness. Until complete, wholegraph costs remain missing; component bounds cannot substitute a phase.",
+  "physical_admission": false,
+  "maximum_qualified_clock_hz": null,
+  "full_token_cycles": null,
+  "full_token_rate": null
+}

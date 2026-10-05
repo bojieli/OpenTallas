@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.rtl.v41x_window_kv_absolute.v1",
+  "status": "pass",
+  "claim_scope": "Standalone 16-block QDQ8 handoff; absolute HBM row and local KVT row remain distinct at window saturation. No full die/token or rate claim.",
+  "cases": [
+    {
+      "separate_rows": false,
+      "absolute_hbm_row": 12345,
+      "local_kvt_row": 12345,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 0,
+      "local_kvt_row": 0,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 127,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 128,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 129,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    },
+    {
+      "separate_rows": true,
+      "absolute_hbm_row": 1048575,
+      "local_kvt_row": 127,
+      "blocks": 16,
+      "status": "pass"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+    "rtl/test/tb_hdc_v41x_window_kv_blocks.sv": "fe50846ae7225bd3665639a14f7f196c2d6655ff78880c14ad0886373b1477a4",
+    "tools/rtl_v41x_window_kv_absolute_gate.py": "3942c7ad20d82040e8bcdb17005f83694f7bd00a8df02a317732b517b81afe30"
+  }
+}

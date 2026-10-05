@@ -1,0 +1,36 @@
+test_Qwen_leaf_source_order (__main__.ControlTests) ... ok
+test_RF_source_geometry_and_identity_no_alias (__main__.ControlTests) ... ok
+test_complete_PC_and_family_decode (__main__.ControlTests) ... ok
+test_completion_mirror_ACK_backpressure_and_stale_owner (__main__.ControlTests) ... ERROR
+test_default_off_and_hardware_closed (__main__.ControlTests) ... ok
+test_dependency_gate_and_invisible_output (__main__.ControlTests) ... ok
+test_existing_CPU_primitive_adapter_only (__main__.ControlTests) ... ERROR
+test_scratch64B_single_owner_and_matching_lease (__main__.ControlTests) ... ok
+test_source_consumer_and_reverse_release (__main__.ControlTests) ... ok
+test_source_rank_template_and_buffer_decode (__main__.ControlTests) ... ok
+test_unlowered_shape_and_unsupported_opcode_rejected (__main__.ControlTests) ... ok
+
+======================================================================
+ERROR: test_completion_mirror_ACK_backpressure_and_stale_owner (__main__.ControlTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-C0-bridge-model-20261002/tools/test_h4_c0_bridge.py", line 62, in test_completion_mirror_ACK_backpressure_and_stale_owner
+    b.finish()
+  File "/tmp/opentallas-C0-bridge-model-20261002/tools/h4_c0_bridge.py", line 160, in finish
+    if version not in self.homes or not self.homes[version].visible:raise AdmissionError('PC output not visible at declared home')
+h4_c0_bridge.AdmissionError: PC output not visible at declared home
+
+======================================================================
+ERROR: test_existing_CPU_primitive_adapter_only (__main__.ControlTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/opentallas-C0-bridge-model-20261002/tools/test_h4_c0_bridge.py", line 97, in test_existing_CPU_primitive_adapter_only
+    self.assertEqual(receipt['scope'],'CPU_PRIMITIVE_ONLY');self.assertFalse(receipt['hardware_qualified']);b.finish()
+  File "/tmp/opentallas-C0-bridge-model-20261002/tools/h4_c0_bridge.py", line 160, in finish
+    if version not in self.homes or not self.homes[version].visible:raise AdmissionError('PC output not visible at declared home')
+h4_c0_bridge.AdmissionError: PC output not visible at declared home
+
+----------------------------------------------------------------------
+Ran 11 tests in 9.352s
+
+FAILED (errors=2)

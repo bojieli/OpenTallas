@@ -1,0 +1,92 @@
+{
+  "MUX2_bits_by_purpose": {
+    "gamma_band_select": 262144,
+    "sixteen_bank_select_outputs": 68608,
+    "storage_write_enable": 450826
+  },
+  "NAND2_construction_cells": 3126312,
+  "actual_provider_instantiated": false,
+  "all_state_leakage_upper_W": "0.056788601122968",
+  "characterized_voltage_ceiling_V": "0.77",
+  "clock_depth_hypothesis": 14,
+  "clock_tree_levels_before_padding": [
+    14104,
+    3526,
+    882,
+    221,
+    56,
+    14,
+    4,
+    1
+  ],
+  "cold_gamma_payload_bits_per_rank": 13271040,
+  "complete_CROM_budget_qualified": false,
+  "conditional_50pct_standard_area_mm2": "0.89755564752",
+  "conditional_cell_plus_macro_area_mm2": "1.25221706352",
+  "conditional_clock_buffers": 18814,
+  "construction_scope": "FF-backed two gamma families and finite emit/landing/raw-capture buffers specified by Ram. Mux and write-enable data allocations at worst activity1. Subtotal excludes unbound control, select fanout repairs and extracted wire/glitch.",
+  "data_pin_upper_W": "5.00371256668185672",
+  "distinct_cold_gamma_homes_per_rank": 81,
+  "emit_slots": 2,
+  "frequency_Hz": "1.2E+9",
+  "gamma_all_layer_reuse_credit": 0,
+  "gamma_refill_bits_per_single_5120word_home": 163840,
+  "landing_word_bits": 32,
+  "latency_source_join": "Bank selectors/fill queues/finite credits and wake/reset/drain must be priced by Ram; no parallel-read or cache latency gain is granted here.",
+  "macro_area_mm2": "0.3546614160",
+  "macro_read_bits_per_port": 274,
+  "macro_read_ports": 45,
+  "output_select_ports": 16,
+  "owner_model_specification": "Ram direct handoff:327680 gamma bits/HUB,106496 emit bits,4320landing,12330rawcapture;68608bank+262144gammaMUX2bits;81coldhomes/rank.",
+  "physical_admission": false,
+  "priced_all_output_ceiling_subtotal_W": "147.95216176175320008",
+  "priced_clock_leak_data_pin_subtotal_W": "30.27145912490200008",
+  "remaining": [
+    "exact selector/fill/credit control and decoder cost",
+    "select high fanout driver capacity and local tracks",
+    "registered selector stages and latency",
+    "complete slot footprint/CTS/PG/SSFF/IR",
+    "full source phase/reset/glitch/RC"
+  ],
+  "root_stop_credit": 0,
+  "schema": "w10_crom_finite_buffer_reservation_v1",
+  "selected_data_internal_upper_W": "18.8612061146472",
+  "selected_payload_bits_per_fast_cycle": 512,
+  "source_pins": {
+    "CROM_provider_preflight": {
+      "commit": "9345c1fc0",
+      "path": "results/quality/w16_w17_whole_dsrom_candidate_20261001/candidate.json",
+      "sha256": "20949a45fe65d2fd95ba0791ac249cc633cf006c42d70053b7d8512f9ba875b1"
+    },
+    "cell_palette": {
+      "commit": "6da3c7a60",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "clock": {
+      "commit": "fea811df4",
+      "path": "results/uarch/w10_q_existing_icg_r1/clock.json",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "gamma_protocol": {
+      "commit": "3fdbeb823",
+      "path": "results/uarch/w11_crom_gamma_interleave_20261001/verification.json",
+      "sha256": "34ddfe4c6f2b7615da1bfc50eea94a70c1f4b9a69a914dcc39512e8f6f3eb6c3"
+    },
+    "power": {
+      "commit": "e79394b1c",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    }
+  },
+  "storage_bits_by_purpose": {
+    "bank_word_landing": 4320,
+    "raw_macro_capture": 12330,
+    "two_emit_slots_payload_plus_address": 106496,
+    "two_gamma_families": 327680
+  },
+  "total_storage_bits": 450826,
+  "ungated_clock_W": "6.34975184244997536",
+  "unresolved_all_output_load_ceiling_W": "117.6807026368512",
+  "verdict": "FINITE_CONSTRUCTION_RESERVATION_NOT_ACTUAL_THERMAL_MINIMUM_NO_ADMISSION"
+}

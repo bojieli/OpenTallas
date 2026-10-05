@@ -1,0 +1,43 @@
+{
+  "actual_HBM_bandwidth_known": false,
+  "cold_model_byteidentical": true,
+  "complete_slot_fit": false,
+  "extra_context_macros": 0,
+  "focused_tests_PASS": 87,
+  "hardware_admitted": false,
+  "immutable_originals_verified": 28,
+  "lower_bounds": {
+    "compound_source_12_and_14_not_II1": true,
+    "compute_reference_s": 0.00010703666666666666,
+    "no_compute_overlap_reference_s": 0.002464028666666667,
+    "owned_data_plus_grant_s": 0.002356992,
+    "owner_s": 0.001178496,
+    "perfect_compute_overlap_transport_s": 0.002356992,
+    "scope": "Conditional optimistic source-port capacities. Neither actualHBMBW nor sustainable workload prediction.",
+    "shared_column_s": 0.001178496,
+    "shared_ingress_s": 0.001253502,
+    "single_fill_s": 0.00196224,
+    "three_k_admitted": false
+  },
+  "model_sha256": "92dc5be81daf5dc488e55afaa904a8994729b7455ca0d6ae647410a889112e2e",
+  "model_source_pins_verified": 48,
+  "next_action": "Source-backedminimum command/return/fill lane model with actual32bank ownership, taggedhazards, routing/area/PHYand36layersequentialcalendars. Productionstate/demandjournal independently. No parameter sweep or unchanged3kheadline.",
+  "no_new_decode_position": true,
+  "original_numerical_capture_preserved": true,
+  "owner_commit": "101a084a822dc1f149a8852704648fd317c632c9",
+  "pipeline_scope": "DirectedsoftwareeligibleinterleavedPC II1 with original12edge lookup; productionandphysicalII unknown.",
+  "schema": "parent-Qwen-ROM-joint-pipeline-service-review-v1",
+  "selected_owners_per_stack": 1,
+  "target_feasibility": {
+    "actual_PHY_service_calendar": null,
+    "actual_parallel_PHY_BW": null,
+    "explicit_deficit_factor": 7.070976,
+    "independent_ports_or_PHYs_selected": false,
+    "necessary_transport_period_s": 0.002356992,
+    "necessary_transport_time_over_budget_s": 0.0020236586666666665,
+    "qualification": "Finite protocol fixtures and priced slot demands do not supply the missing actual producer/PHY/window service journal; explicit deficit does not depend on proving perfect overlap.",
+    "required_minima_predecessor": "results/uarch/qwen_rom_kv_rate_risk_20261002/model_r3.json#/three_k_requirement",
+    "target_token_period_s": 0.0003333333333333333,
+    "verdict": "FAIL_3K_EVEN_AT_PERFECT_COMPUTE_OVERLAP_AND_OPTIMISTIC_PORT_CEILINGS"
+  }
+}

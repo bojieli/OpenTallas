@@ -1,0 +1,85 @@
+
+/tmp/hbm-qwen-cold-cxx-parent-20261002-r10-r1/Qwen/obj/Vconnected:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .plt.got:
+
+Disassembly of section .text:
+
+000000000004dd26 <_ZN10VconnectedC1EP16VerilatedContextPKc>:
+       4dd26:	55                   	push   %rbp
+       4dd27:	48 89 e5             	mov    %rsp,%rbp
+       4dd2a:	41 54                	push   %r12
+       4dd2c:	53                   	push   %rbx
+       4dd2d:	48 83 ec 20          	sub    $0x20,%rsp
+       4dd31:	48 89 7d e8          	mov    %rdi,-0x18(%rbp)
+       4dd35:	48 89 75 e0          	mov    %rsi,-0x20(%rbp)
+       4dd39:	48 89 55 d8          	mov    %rdx,-0x28(%rbp)
+       4dd3d:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dd41:	48 8b 55 e0          	mov    -0x20(%rbp),%rdx
+       4dd45:	48 89 d6             	mov    %rdx,%rsi
+       4dd48:	48 89 c7             	mov    %rax,%rdi
+       4dd4b:	e8 9c ee fc ff       	call   1cbec <_ZN14VerilatedModelC1ER16VerilatedContext>
+       4dd50:	48 8d 15 c1 c9 21 6a 	lea    0x6a21c9c1(%rip),%rdx        # 6a26a718 <_ZTV10Vconnected+0x10>
+       4dd57:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dd5b:	48 89 10             	mov    %rdx,(%rax)
+       4dd5e:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dd62:	48 89 c7             	mov    %rax,%rdi
+       4dd65:	e8 a6 03 00 00       	call   4e110 <_ZNK14VerilatedModel8contextpEv>
+       4dd6a:	49 89 c4             	mov    %rax,%r12
+       4dd6d:	be 40 00 00 00       	mov    $0x40,%esi
+       4dd72:	bf 40 5e 31 2c       	mov    $0x2c315e40,%edi
+       4dd77:	e8 b4 89 fb ff       	call   6730 <_ZnwmSt11align_val_t@plt>
+       4dd7c:	48 89 c3             	mov    %rax,%rbx
+       4dd7f:	48 8b 55 e8          	mov    -0x18(%rbp),%rdx
+       4dd83:	48 8b 45 d8          	mov    -0x28(%rbp),%rax
+       4dd87:	48 89 d1             	mov    %rdx,%rcx
+       4dd8a:	48 89 c2             	mov    %rax,%rdx
+       4dd8d:	4c 89 e6             	mov    %r12,%rsi
+       4dd90:	48 89 df             	mov    %rbx,%rdi
+       4dd93:	e8 50 e3 32 35       	call   3537c0e8 <_ZN16Vconnected__SymsC1EP16VerilatedContextPKcP10Vconnected>
+       4dd98:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dd9c:	48 89 58 10          	mov    %rbx,0x10(%rax)
+       4dda0:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dda4:	48 8b 40 10          	mov    0x10(%rax),%rax
+       4dda8:	48 8b 90 c0 00 00 00 	mov    0xc0(%rax),%rdx
+       4ddaf:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4ddb3:	48 89 50 18          	mov    %rdx,0x18(%rax)
+       4ddb7:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4ddbb:	48 8b 40 10          	mov    0x10(%rax),%rax
+       4ddbf:	48 8d 90 c0 00 00 00 	lea    0xc0(%rax),%rdx
+       4ddc6:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4ddca:	48 89 50 20          	mov    %rdx,0x20(%rax)
+       4ddce:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4ddd2:	48 89 c7             	mov    %rax,%rdi
+       4ddd5:	e8 36 03 00 00       	call   4e110 <_ZNK14VerilatedModel8contextpEv>
+       4ddda:	48 89 c2             	mov    %rax,%rdx
+       4dddd:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4dde1:	48 89 c6             	mov    %rax,%rsi
+       4dde4:	48 89 d7             	mov    %rdx,%rdi
+       4dde7:	e8 26 b2 fc ff       	call   19012 <_ZN16VerilatedContext8addModelEPK14VerilatedModel>
+       4ddec:	eb 2f                	jmp    4de1d <_ZN10VconnectedC1EP16VerilatedContextPKc+0xf7>
+       4ddee:	49 89 c4             	mov    %rax,%r12
+       4ddf1:	be 40 00 00 00       	mov    $0x40,%esi
+       4ddf6:	48 89 df             	mov    %rbx,%rdi
+       4ddf9:	e8 82 8b fb ff       	call   6980 <_ZdlPvSt11align_val_t@plt>
+       4ddfe:	4c 89 e3             	mov    %r12,%rbx
+       4de01:	eb 03                	jmp    4de06 <_ZN10VconnectedC1EP16VerilatedContextPKc+0xe0>
+       4de03:	48 89 c3             	mov    %rax,%rbx
+       4de06:	48 8b 45 e8          	mov    -0x18(%rbp),%rax
+       4de0a:	48 89 c7             	mov    %rax,%rdi
+       4de0d:	e8 68 03 00 00       	call   4e17a <_ZN14VerilatedModelD1Ev>
+       4de12:	48 89 d8             	mov    %rbx,%rax
+       4de15:	48 89 c7             	mov    %rax,%rdi
+       4de18:	e8 63 8d fb ff       	call   6b80 <_Unwind_Resume@plt>
+       4de1d:	48 83 c4 20          	add    $0x20,%rsp
+       4de21:	5b                   	pop    %rbx
+       4de22:	41 5c                	pop    %r12
+       4de24:	5d                   	pop    %rbp
+       4de25:	c3                   	ret    
+
+Disassembly of section .fini:

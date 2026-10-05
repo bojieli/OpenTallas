@@ -1,0 +1,27 @@
+{
+  "Maxwell_source": "37cc30db9ebe1e290b4d39df8a122af8dabd1686",
+  "authoritative_model": "model_r2.json",
+  "fresh_CLI_byte_exact": true,
+  "jobs_launched": 0,
+  "model_sha256": "1589f533c2212363c87b1fc286295444ff1b836680ba1daa92f6a5c2c017919e",
+  "new_PVE2_PVE3_jobs": 0,
+  "next_owner_action": "Maxwell/Arch bind explicit clock spatial distribution, reset guard, disjoint sites and source accepted drain to this station/repeater contract before G0. Preserve old46/13,20-wireonly,unbuffered proposals as unqualified records.",
+  "no_hardware_or_timing_admission": true,
+  "parent_source": "09543b1c83502bbe005e25ba01ee8cd98faee970",
+  "proposal_scope": "One source-correct buffered station construction amending conditional Maxwell37cc; no independent cell/geometry variant sweep",
+  "schema": "SOURCE_BUFFERED_STATION_VALIDATION_V1",
+  "source_evidence": [
+    "Actual DFF state IQN next_state !D and output IQN; BUF-only station fails bit polarity; restoring INV necessary unless separate encoding contract admitted",
+    "ASR RESETN low presets IQN high; restored output clears valid. SETN high is required",
+    "Conservative uniform-template RC delay and 2.2RC slew are conditional bounds, not extracted waveform proof",
+    "Hold minima require characterized cap>=0.72fF and slew>=5ps; no subgrid earliest credit",
+    "Source nine calls preserved, original numerical deadlines unknown, blocking successor source order preserved",
+    "Clock pin-only six-level fanout floor cannot cover global corridor at declared wire budget; spatial matched clock route cost still missing"
+  ],
+  "tests_PASS": {
+    "SSFF_regression": 15,
+    "buffered_station": 17,
+    "total": 43,
+    "track_turn_regression": 11
+  }
+}

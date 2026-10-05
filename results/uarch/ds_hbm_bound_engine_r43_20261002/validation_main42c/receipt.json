@@ -1,0 +1,16 @@
+{
+  "status": "PASS_ALL_19_PYTEST_CASES_TERMINAL_LOGS",
+  "tests": {
+    "positive_and_provenance": 9,
+    "artifact_refusals": 3,
+    "memory_refusals": 3,
+    "group_template_provider": 2,
+    "group_writer_rank": 2
+  },
+  "total": 19,
+  "main_base": "42c3abce3",
+  "all_test_processes_terminal": true,
+  "process_exit_codes_not_recorded": true,
+  "evidence": "complete pytest terminal success logs; disjoint selected tests, no numerical execution",
+  "native_PCs_executed": 0
+}

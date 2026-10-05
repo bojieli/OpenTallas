@@ -1,0 +1,824 @@
+{
+ "schema": "opentallas.v41-replay.v1",
+ "tool": "tools/hdc_replay_v41.py",
+ "clock_hz": 1033900000.0,
+ "reduced_shape": {
+  "name": "reduced-v2",
+  "dim": 160,
+  "hc": 4,
+  "heads": 64,
+  "hd": 32,
+  "rd": 4,
+  "ih": 32,
+  "ihd": 32,
+  "q_rank": 32,
+  "o_groups": 8,
+  "o_rank": 32,
+  "n_exp": 12,
+  "k_exp": 6,
+  "moe_ff": 64,
+  "window": 128,
+  "topk": 16,
+  "vocab": 4040,
+  "ehd": 32,
+  "ecols": 24,
+  "cand_b": 8,
+  "cand_k": 64,
+  "scan_cap": 0,
+  "t_max": 144,
+  "pmax": 128,
+  "groups": 4,
+  "tp": 1
+ },
+ "shipped_shape": {
+  "name": "deepseek-v4.1-flash",
+  "dim": 5120,
+  "hc": 4,
+  "heads": 64,
+  "hd": 512,
+  "rd": 64,
+  "ih": 32,
+  "ihd": 128,
+  "q_rank": 1280,
+  "o_groups": 8,
+  "o_rank": 1024,
+  "n_exp": 384,
+  "k_exp": 6,
+  "moe_ff": 2304,
+  "window": 128,
+  "topk": 512,
+  "vocab": 129280,
+  "ehd": 256,
+  "ecols": 24,
+  "cand_b": 8,
+  "cand_k": 2048,
+  "scan_cap": 16384,
+  "t_max": 640,
+  "pmax": 1048576,
+  "groups": 4,
+  "tp": 4
+ },
+ "dag_mac_per_cycle_per_die": 276188.60010891355,
+ "dag_su_lanes": 512,
+ "comm_us_per_token_from_dag": 55.565,
+ "comm_note": "collective latency + collective bytes + pipeline hops of the DAG's option (b) batch-1 path at 200k, added to B and C at every context (link terms do not depend on context)",
+ "validation": [
+  {
+   "pos": 7,
+   "su_lanes": 4,
+   "instructions": 3992,
+   "field_mismatches": 0,
+   "first_mismatches": [],
+   "hdc_timing_v41": 401020,
+   "this_simulate_real_program": 401020,
+   "this_simulate_emitted_program": 401020,
+   "exact": true
+  },
+  {
+   "pos": 7,
+   "su_lanes": 8,
+   "instructions": 3992,
+   "field_mismatches": 0,
+   "first_mismatches": [],
+   "hdc_timing_v41": 344131,
+   "this_simulate_real_program": 344131,
+   "this_simulate_emitted_program": 344131,
+   "exact": true
+  },
+  {
+   "pos": 7,
+   "su_lanes": 16,
+   "instructions": 3992,
+   "field_mismatches": 0,
+   "first_mismatches": [],
+   "hdc_timing_v41": 318928,
+   "this_simulate_real_program": 318928,
+   "this_simulate_emitted_program": 318928,
+   "exact": true
+  },
+  {
+   "pos": 7,
+   "su_lanes": 64,
+   "instructions": 3992,
+   "field_mismatches": 0,
+   "first_mismatches": [],
+   "hdc_timing_v41": 304901,
+   "this_simulate_real_program": 304901,
+   "this_simulate_emitted_program": 304901,
+   "exact": true
+  }
+ ],
+ "three_layer": {
+  "8192": {
+   "A": {
+    "tokens_s_per_user": 4522.388898163883,
+    "us_per_token": 221.12207121461978
+   },
+   "B": {
+    "compute_cycles": 867240,
+    "compute_us": 838.8045265499564,
+    "us_per_token": 894.3695265499564,
+    "tokens_s_per_user": 1118.1060739597365,
+    "instructions": 3837,
+    "busy_cycles": {
+     "ME": 14142,
+     "SU": 652116,
+     "QE": 134952,
+     "XU": 29745,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 698888,
+     "SU class change": 33774,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 72060,
+     "QE drain": 15176,
+     "ME drain": 5835,
+     "XU drain": 5864,
+     "XU busy (own unit)": 78
+    }
+   },
+   "C": {
+    "compute_cycles": 25993362,
+    "compute_us": 25141.079408066544,
+    "us_per_token": 25196.644408066542,
+    "tokens_s_per_user": 39.68782445014212,
+    "instructions": 3841,
+    "busy_cycles": {
+     "ME": 15550055,
+     "SU": 4210761,
+     "QE": 7020760,
+     "XU": 80655,
+     "HE": 1640880
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 4968,
+     "SU drain": 2362161,
+     "SU class change": 64834,
+     "SU busy (own unit)": 1710062,
+     "QE busy (own unit)": 4981173,
+     "QE drain": 1687829,
+     "ME drain": 12534728,
+     "XU drain": 56294,
+     "XU busy (own unit)": 560
+    }
+   }
+  },
+  "200000": {
+   "A": {
+    "tokens_s_per_user": 4450.364554894484,
+    "us_per_token": 224.70069309270542
+   },
+   "B": {
+    "compute_cycles": 883555,
+    "compute_us": 854.5845826482251,
+    "us_per_token": 910.1495826482251,
+    "tokens_s_per_user": 1098.720495031532,
+    "instructions": 3837,
+    "busy_cycles": {
+     "ME": 16038,
+     "SU": 660244,
+     "QE": 134952,
+     "XU": 36036,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 707016,
+     "SU class change": 33774,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 72060,
+     "QE drain": 15176,
+     "ME drain": 7731,
+     "XU drain": 11873,
+     "XU busy (own unit)": 360
+    }
+   },
+   "C": {
+    "compute_cycles": 34845650,
+    "compute_us": 33703.1144211239,
+    "us_per_token": 33758.6794211239,
+    "tokens_s_per_user": 29.622011795113867,
+    "instructions": 3841,
+    "busy_cycles": {
+     "ME": 23748199,
+     "SU": 4729049,
+     "QE": 7020758,
+     "XU": 216513,
+     "HE": 1640880
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 4968,
+     "SU drain": 2880449,
+     "SU class change": 64834,
+     "SU busy (own unit)": 1710062,
+     "QE busy (own unit)": 4981173,
+     "QE drain": 1687827,
+     "ME drain": 20732872,
+     "XU drain": 184366,
+     "XU busy (own unit)": 8346
+    }
+   }
+  },
+  "1048576": {
+   "A": {
+    "tokens_s_per_user": 4248.6644169354795,
+    "us_per_token": 235.3680832060844
+   },
+   "B": {
+    "compute_cycles": 951045,
+    "compute_us": 919.86168875133,
+    "us_per_token": 975.42668875133,
+    "tokens_s_per_user": 1025.1923712279465,
+    "instructions": 3837,
+    "busy_cycles": {
+     "ME": 23903,
+     "SU": 693772,
+     "QE": 134952,
+     "XU": 62133,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 740544,
+     "SU class change": 33774,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 72060,
+     "QE drain": 15176,
+     "ME drain": 15596,
+     "XU drain": 36728,
+     "XU busy (own unit)": 1602
+    }
+   },
+   "C": {
+    "compute_cycles": 71491986,
+    "compute_us": 69147.87310184738,
+    "us_per_token": 69203.43810184738,
+    "tokens_s_per_user": 14.450149117277817,
+    "instructions": 3841,
+    "busy_cycles": {
+     "ME": 57689703,
+     "SU": 6877001,
+     "QE": 7020760,
+     "XU": 773391,
+     "HE": 1640880
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 4968,
+     "SU drain": 5028401,
+     "SU class change": 64834,
+     "SU busy (own unit)": 1710062,
+     "QE busy (own unit)": 4981173,
+     "QE drain": 1687829,
+     "ME drain": 54674376,
+     "XU drain": 714726,
+     "XU busy (own unit)": 34864
+    }
+   }
+  }
+ },
+ "dag_breakdown_us_200k": {
+  "compute_chain": 117.006,
+  "weight_sweep": 42.777,
+  "kv_sweep": 2.144,
+  "collective_latency": 40.337,
+  "collective_bytes": 3.282,
+  "pipeline_hops": 11.946,
+  "control": 7.21
+ },
+ "attribution_200k": {
+  "su_width": {
+   "from_C_fix_this_saves_us": 3518.41957636135,
+   "from_B_break_this_costs_us": 3921.858013347519
+  },
+  "matvec_width": {
+   "from_C_fix_this_saves_us": 13931.289292968373,
+   "from_B_break_this_costs_us": 14205.870006770481
+  },
+  "attention_indexer_mapping": {
+   "from_C_fix_this_saves_us": 14820.775703646388,
+   "from_B_break_this_costs_us": 14820.919818164233
+  },
+  "select": {
+   "from_C_fix_this_saves_us": 174.4385337073218,
+   "from_B_break_this_costs_us": 174.50140245671727
+  },
+  "engram_inline_vs_prefetched": {
+   "from_C_fix_this_saves_us": 129.04923106683432,
+   "from_B_break_this_costs_us": 0.0
+  },
+  "ordered_reductions_vs_lane_parallel": {
+   "in_C_us": 210.47296643775994,
+   "in_B_us": 540.2359996131154
+  },
+  "drains_vs_scoreboard": {
+   "in_C_us": 1204.4182222652094,
+   "in_B_us": 0.42557307283102813
+  },
+  "issue_gap_6_vs_1": {
+   "in_C_us": 0.4100976883644453,
+   "in_B_us": 2.7159299738852885
+  },
+  "sinkhorn_vs_free": {
+   "in_C_us": 0.0,
+   "in_B_us": 0.0
+  }
+ },
+ "attribution_note": "one factor switched at a time; from_C_fix: C with that factor at the DAG's value; from_B_break: B with that factor as built. Non-additive: factors interact through the overlap of units (the slowest unit hides the others). drains/gap/sinkhorn are not DAG-vs-built width factors: they report what an idealised option removes inside each configuration (scoreboard = wait for the producing op's region, not the whole unit's drain).",
+ "per_layer_200k": {
+  "C": {
+   "swa (0)": {
+    "cycles": 361951,
+    "instructions": 90,
+    "skipped": 0,
+    "busy": {
+     "ME": 174204,
+     "SU": 38385,
+     "QE": 169569,
+     "XU": 1034,
+     "HE": 41022
+    }
+   },
+   "swa+engram (1)": {
+    "cycles": 454831,
+    "instructions": 99,
+    "skipped": 0,
+    "busy": {
+     "ME": 174204,
+     "SU": 58957,
+     "QE": 246602,
+     "XU": 1064,
+     "HE": 41022
+    }
+   },
+   "csa2 r2 source+index (2)": {
+    "cycles": 2332975,
+    "instructions": 118,
+    "skipped": 0,
+    "busy": {
+     "ME": 1937656,
+     "SU": 206964,
+     "QE": 180096,
+     "XU": 29202,
+     "HE": 41022
+    }
+   },
+   "r2 reuse (3)": {
+    "cycles": 560615,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 305276,
+     "SU": 105971,
+     "QE": 169565,
+     "XU": 1034,
+     "HE": 41022
+    }
+   },
+   "r2 source+index+engram (14)": {
+    "cycles": 2425855,
+    "instructions": 127,
+    "skipped": 0,
+    "busy": {
+     "ME": 1937656,
+     "SU": 227536,
+     "QE": 257129,
+     "XU": 29232,
+     "HE": 41022
+    }
+   },
+   "r1 source+index+cand (20)": {
+    "cycles": 4061287,
+    "instructions": 116,
+    "skipped": 0,
+    "busy": {
+     "ME": 3526904,
+     "SU": 312818,
+     "QE": 180097,
+     "XU": 62548,
+     "HE": 41022
+    }
+   },
+   "r1 reuse (21)": {
+    "cycles": 560615,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 305276,
+     "SU": 105971,
+     "QE": 169565,
+     "XU": 1034,
+     "HE": 41022
+    }
+   },
+   "r1 reindex (24)": {
+    "cycles": 867231,
+    "instructions": 101,
+    "skipped": 0,
+    "busy": {
+     "ME": 577722,
+     "SU": 122618,
+     "QE": 180036,
+     "XU": 8298,
+     "HE": 41022
+    }
+   }
+  },
+  "B": {
+   "swa (0)": {
+    "cycles": 18247,
+    "instructions": 90,
+    "skipped": 0,
+    "busy": {
+     "ME": 260,
+     "SU": 13126,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "swa+engram (1)": {
+    "cycles": 39222,
+    "instructions": 97,
+    "skipped": 0,
+    "busy": {
+     "ME": 260,
+     "SU": 33698,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "csa2 r2 source+index (2)": {
+    "cycles": 25020,
+    "instructions": 118,
+    "skipped": 0,
+    "busy": {
+     "ME": 977,
+     "SU": 17025,
+     "QE": 3646,
+     "XU": 2081,
+     "HE": 190
+    }
+   },
+   "r2 reuse (3)": {
+    "cycles": 20307,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 290,
+     "SU": 15176,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "r2 source+index+engram (14)": {
+    "cycles": 45995,
+    "instructions": 125,
+    "skipped": 0,
+    "busy": {
+     "ME": 977,
+     "SU": 37597,
+     "QE": 3646,
+     "XU": 2081,
+     "HE": 190
+    }
+   },
+   "r1 source+index+cand (20)": {
+    "cycles": 28435,
+    "instructions": 116,
+    "skipped": 0,
+    "busy": {
+     "ME": 1348,
+     "SU": 18673,
+     "QE": 3646,
+     "XU": 3614,
+     "HE": 190
+    }
+   },
+   "r1 reuse (21)": {
+    "cycles": 20307,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 290,
+     "SU": 15176,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "r1 reindex (24)": {
+    "cycles": 21424,
+    "instructions": 101,
+    "skipped": 0,
+    "busy": {
+     "ME": 477,
+     "SU": 15468,
+     "QE": 3588,
+     "XU": 1100,
+     "HE": 190
+    }
+   }
+  },
+  "B_red_parallel": {
+   "swa (0)": {
+    "cycles": 6393,
+    "instructions": 90,
+    "skipped": 0,
+    "busy": {
+     "ME": 260,
+     "SU": 1232,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "swa+engram (1)": {
+    "cycles": 7048,
+    "instructions": 97,
+    "skipped": 0,
+    "busy": {
+     "ME": 260,
+     "SU": 1484,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "csa2 r2 source+index (2)": {
+    "cycles": 12091,
+    "instructions": 118,
+    "skipped": 0,
+    "busy": {
+     "ME": 977,
+     "SU": 4056,
+     "QE": 3646,
+     "XU": 2081,
+     "HE": 190
+    }
+   },
+   "r2 reuse (3)": {
+    "cycles": 7461,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 290,
+     "SU": 2290,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "r2 source+index+engram (14)": {
+    "cycles": 12746,
+    "instructions": 125,
+    "skipped": 0,
+    "busy": {
+     "ME": 977,
+     "SU": 4308,
+     "QE": 3646,
+     "XU": 2081,
+     "HE": 190
+    }
+   },
+   "r1 source+index+cand (20)": {
+    "cycles": 15494,
+    "instructions": 116,
+    "skipped": 0,
+    "busy": {
+     "ME": 1348,
+     "SU": 5692,
+     "QE": 3646,
+     "XU": 3614,
+     "HE": 190
+    }
+   },
+   "r1 reuse (21)": {
+    "cycles": 7461,
+    "instructions": 92,
+    "skipped": 0,
+    "busy": {
+     "ME": 290,
+     "SU": 2290,
+     "QE": 3313,
+     "XU": 680,
+     "HE": 190
+    }
+   },
+   "r1 reindex (24)": {
+    "cycles": 8578,
+    "instructions": 101,
+    "skipped": 0,
+    "busy": {
+     "ME": 477,
+     "SU": 2582,
+     "QE": 3588,
+     "XU": 1100,
+     "HE": 190
+    }
+   }
+  }
+ },
+ "B_variants": {
+  "8192": {
+   "B_red_parallel": {
+    "compute_us": 298.5956088596576,
+    "us_per_token": 354.1606088596576,
+    "tokens_s_per_user": 2823.577707356686,
+    "busy_cycles": {
+     "ME": 14142,
+     "SU": 91994,
+     "QE": 134952,
+     "XU": 29745,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 147926,
+     "SU class change": 23614,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 74660,
+     "QE drain": 15176,
+     "ME drain": 5835,
+     "XU drain": 5864,
+     "XU busy (own unit)": 78
+    }
+   },
+   "B_red_parallel_scoreboard": {
+    "compute_us": 298.1700357868266,
+    "us_per_token": 353.7350357868266,
+    "tokens_s_per_user": 2826.974709405477,
+    "busy_cycles": {
+     "ME": 14142,
+     "SU": 91994,
+     "QE": 134952,
+     "XU": 29745,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 160329,
+     "SU class change": 43190,
+     "SU busy (own unit)": 29388,
+     "QE busy (own unit)": 74660,
+     "XU busy (own unit)": 78
+    }
+   },
+   "B_red_parallel_scoreboard_gap1": {
+    "compute_us": 295.83131830931427,
+    "us_per_token": 351.39631830931427,
+    "tokens_s_per_user": 2845.7896337996253,
+    "busy_cycles": {
+     "ME": 14142,
+     "SU": 91954,
+     "QE": 134952,
+     "XU": 29745,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 157828,
+     "SU busy (own unit)": 28071,
+     "SU class change": 43590,
+     "QE busy (own unit)": 75660,
+     "XU busy (own unit)": 78
+    }
+   }
+  },
+  "200000": {
+   "B_red_parallel": {
+    "compute_us": 314.34858303510975,
+    "us_per_token": 369.91358303510975,
+    "tokens_s_per_user": 2703.334091695375,
+    "busy_cycles": {
+     "ME": 16038,
+     "SU": 100094,
+     "QE": 134952,
+     "XU": 36036,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 156026,
+     "SU class change": 23614,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 74660,
+     "QE drain": 15176,
+     "ME drain": 7731,
+     "XU drain": 11873,
+     "XU busy (own unit)": 360
+    }
+   },
+   "B_red_parallel_scoreboard": {
+    "compute_us": 313.92300996227874,
+    "us_per_token": 369.48800996227874,
+    "tokens_s_per_user": 2706.4477683649075,
+    "busy_cycles": {
+     "ME": 16038,
+     "SU": 100094,
+     "QE": 134952,
+     "XU": 36036,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 176334,
+     "SU class change": 43190,
+     "SU busy (own unit)": 29388,
+     "QE busy (own unit)": 74660,
+     "XU busy (own unit)": 360
+    }
+   },
+   "B_red_parallel_scoreboard_gap1": {
+    "compute_us": 311.5842924847664,
+    "us_per_token": 367.1492924847664,
+    "tokens_s_per_user": 2723.687667303598,
+    "busy_cycles": {
+     "ME": 16038,
+     "SU": 100054,
+     "QE": 134952,
+     "XU": 36036,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 173833,
+     "SU busy (own unit)": 28071,
+     "SU class change": 43590,
+     "QE busy (own unit)": 75660,
+     "XU busy (own unit)": 360
+    }
+   }
+  },
+  "1048576": {
+   "B_red_parallel": {
+    "compute_us": 379.6566399071477,
+    "us_per_token": 435.2216399071477,
+    "tokens_s_per_user": 2297.679867695331,
+    "busy_cycles": {
+     "ME": 23903,
+     "SU": 133654,
+     "QE": 134952,
+     "XU": 62133,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 5628,
+     "SU drain": 189586,
+     "SU class change": 23614,
+     "SU busy (own unit)": 29304,
+     "QE busy (own unit)": 74660,
+     "QE drain": 15176,
+     "ME drain": 15596,
+     "XU drain": 36728,
+     "XU busy (own unit)": 1602
+    }
+   },
+   "B_red_parallel_scoreboard": {
+    "compute_us": 379.23106683431666,
+    "us_per_token": 434.79606683431666,
+    "tokens_s_per_user": 2299.928808650102,
+    "busy_cycles": {
+     "ME": 23903,
+     "SU": 133654,
+     "QE": 134952,
+     "XU": 62133,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 242614,
+     "SU class change": 43190,
+     "SU busy (own unit)": 29388,
+     "QE busy (own unit)": 74660,
+     "XU busy (own unit)": 1602
+    }
+   },
+   "B_red_parallel_scoreboard_gap1": {
+    "compute_us": 376.89234935680435,
+    "us_per_token": 432.45734935680434,
+    "tokens_s_per_user": 2312.3667605309615,
+    "busy_cycles": {
+     "ME": 23903,
+     "SU": 133614,
+     "QE": 134952,
+     "XU": 62133,
+     "HE": 7600
+    },
+    "sequencer_time_by_binding_cycles": {
+     "issue gap": 240113,
+     "SU busy (own unit)": 28071,
+     "SU class change": 43590,
+     "QE busy (own unit)": 75660,
+     "XU busy (own unit)": 1602
+    }
+   }
+  }
+ },
+ "estimated_ops": [
+  "layer-20 candidate blocks: an SU block-max (RED_MAX over 8) + an XU select of top-2048 of the die's blocks (ot_hdc_tselect_cand is separate RTL; the core program keeps every block at the reduced shape)",
+  "cross-die final index select over tp x 512 on the XU (collective not in the ISA; the all-gather itself is in the DAG's communication term)",
+  "every op's count exceeds the as-built memories (VM 65,536 elements, KV 32,768 words, 16-bit counts): priced by the unit models from their counts, not encodable in the as-built ISA",
+  "per-die wo_a as one block-diagonal ME matrix (2 of 8 o-groups) instead of the one-group-per-slot placement (which would idle 6 of 8 slots on a die)",
+  "KV-sourced head-group ops with 16 heads per die use hg = 1 (H = 2 head groups of G/2 lane groups)",
+  "collectives, hops, and the all-gathered vectors: not in the core ISA; the DAG's per-token communication is added"
+ ]
+}

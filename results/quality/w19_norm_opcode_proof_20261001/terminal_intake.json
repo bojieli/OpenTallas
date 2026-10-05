@@ -1,0 +1,203 @@
+{
+  "schema": "opentallas.w19.norm-opcode.terminal-intake.v1",
+  "time": "2026-10-01T12:34:12.190848+00:00",
+  "source_commit": "809af9e88233453f198e284f36e8f1867b663aca",
+  "observed_exit_code": 0,
+  "CPU_tests_passed": 14,
+  "replay_checks": [
+    {
+      "fixture": 0,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 1,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 2,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 3,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 4,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 5,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 6,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 7,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 8,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    },
+    {
+      "fixture": 9,
+      "four_phase_replay": "PASS",
+      "all89_opcode_hashes": "PASS",
+      "retained_carry_buffers": "PASS"
+    }
+  ],
+  "checked_main": "d9a0bd99bccace8123e18f9420ebca3381321324",
+  "main_calendar_and_golden_pins": {
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "normative_shapes": {
+    "pre": 5120,
+    "post": 20480,
+    "norm_scalar_denominator": 5120,
+    "scale": 5120
+  },
+  "published_phase_calendars": {
+    "pre": {
+      "cycles": 122,
+      "warp_instructions": {
+        "LOAD": 64,
+        "WIDEN": 32,
+        "FMUL": 32,
+        "FADD": 24,
+        "SHR": 8,
+        "AND": 16,
+        "IADD": 16,
+        "STORE16": 8
+      },
+      "shared_issue_cycles": 72,
+      "RF_write_slots": 192,
+      "warps": 8,
+      "peak_live_value_registers": 5,
+      "reserved_address_loop_registers": 8
+    },
+    "post": {
+      "cycles": 530,
+      "warp_instructions": {
+        "LOAD": 320,
+        "WIDEN": 160,
+        "FMUL": 160,
+        "FADD": 128,
+        "SHR": 32,
+        "AND": 64,
+        "IADD": 64,
+        "STORE16": 32
+      },
+      "shared_issue_cycles": 352,
+      "RF_write_slots": 928,
+      "warps": 32,
+      "peak_live_value_registers": 5,
+      "reserved_address_loop_registers": 8
+    },
+    "norm_scalar": {
+      "cycles": 155,
+      "warp_instructions": {
+        "LOAD": 1,
+        "DIV": 1,
+        "FADD": 4,
+        "SHR": 1,
+        "ISUB": 1,
+        "FMUL": 10,
+        "XOR": 3
+      },
+      "shared_issue_cycles": 1,
+      "RF_write_slots": 21,
+      "warps": 1,
+      "peak_live_value_registers": 3,
+      "reserved_address_loop_registers": 8
+    },
+    "scale": {
+      "cycles": 63,
+      "warp_instructions": {
+        "LOAD": 24,
+        "WIDEN": 16,
+        "FMUL": 16,
+        "SHR": 8,
+        "AND": 16,
+        "IADD": 16,
+        "STORE16": 8
+      },
+      "shared_issue_cycles": 32,
+      "RF_write_slots": 96,
+      "warps": 8,
+      "peak_live_value_registers": 3,
+      "reserved_address_loop_registers": 8
+    }
+  },
+  "VM_admission_scope": "calendar(program,1) checks arity/RAW/live value register budget; published warp calendars copied separately, no temporal execution qualification",
+  "negative_controls": [
+    "RF overbudget",
+    "unwritten source",
+    "readonly constant destination",
+    "arity",
+    "STORE16 byte attributes",
+    "WIDEN type",
+    "sum order",
+    "DIV denominator",
+    "scale multiply order",
+    "BF16 even tie parity",
+    "modulo32",
+    "signedzero/gradualunderflow"
+  ],
+  "dependency": "Committed residual producer outputs consumed, no mixes/residual producer campaign rerun; scalar output passed directly to scale LOAD",
+  "model_scope": "ordered norm chunk-tree is provided at declared LOAD; collector/transport/warp issue and physical ports unqualified",
+  "gain": "seeded synthetic BF16 norm gain; eps=source1e-20, no actual model trajectory",
+  "GPU_campaign_launched": false,
+  "physical_qualified": false,
+  "full_token_qualified": false,
+  "rate": null,
+  "adoption": false,
+  "QC_NAM": "unchanged original full FAIL/adoptfalse",
+  "artifacts": {
+    "Turing_coordination.json": "aa1bc871bd030080c4b9f717191c4f8cfba3afde145b3e049d1fe3cf80d64e5a",
+    "calendar_source_record.json": "eb20e7d3e58a1fc75f97f18bbfc6da1aae12307d49ea19514e68803a7a83e49f",
+    "opcodes_0.json": "4bd7f571c029ee4e85554b08c8622c71485135b31e69a02a92047b96108473c5",
+    "opcodes_1.json": "4865d83bbe06a9a0b288074bd955058f62c19a44308872bc4d7c3b7932e36518",
+    "opcodes_2.json": "252a9eb21707735cc3a77544d8843872dbcd77acaa6337714516085b4008a9a2",
+    "opcodes_3.json": "863eb2f6b0c4e49bf385c11411da24c6b3c10d4bd9a2060e2ea168d8d6bb2356",
+    "opcodes_4.json": "17084d03e987a599ae9c821ffdb7675a20d7c4fa08717e59c1220bcae698a60c",
+    "opcodes_5.json": "616d47704547f91fa719476fa2dcaa14662de704ce3ed834c5dd58da36632f26",
+    "opcodes_6.json": "1772d61e72655636280bfc258b3506a6113437a7fb640a427ccbbf0b53284869",
+    "opcodes_7.json": "311147cf08cd09f7e421ce26ba4799a9db02c3679d3b44a09eb4483ee3014bd2",
+    "opcodes_8.json": "dc0f50bb36eaabf1a47bd64fe8b95e511367e9952830de4d1738c0c1e8652d00",
+    "opcodes_9.json": "9e95c467dea91164abafaa1735beecfa1f19f32e6ecba26ee5eb31fee593101c",
+    "outputs_0.npz": "8be6df095b769916b03964a47d098284623c0cc7970855b62193bbdba58da872",
+    "outputs_1.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+    "outputs_2.npz": "782ffb9f67c0a3eab39640d3618278a8adc8c1ef6f236b4570b86c8c283e6bd8",
+    "outputs_3.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+    "outputs_4.npz": "b63e8f22387f908caa0516c55348ad9ed54e95f4b8d38f6fdb373393ac177e60",
+    "outputs_5.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+    "outputs_6.npz": "c42effa540cd016c9e5437326aa3265db7c8903d5c703ef4d009e964946ac671",
+    "outputs_7.npz": "b63e8f22387f908caa0516c55348ad9ed54e95f4b8d38f6fdb373393ac177e60",
+    "outputs_8.npz": "c3189da8fe59dea9ed4e2c01abf226065aadd277779c6bcb6c68b275b0c19e1a",
+    "outputs_9.npz": "7758431fd261f72164d58a1ee622b4f6e3471989c395fe21c8c311a3fd00c6cb",
+    "proof.json": "1761e3467794fbf6afe49682ff11f39a1c7023399b55b2e36afdda571711d538"
+  }
+}

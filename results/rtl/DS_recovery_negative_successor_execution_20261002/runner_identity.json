@@ -1,0 +1,15 @@
+{
+  "pid": 1380428,
+  "command": [
+    "/usr/bin/python3",
+    "/home/ubuntu/ds-recovery-negative-successor-20261002/tools/DS_recovery_negative_successor.py",
+    "execute",
+    "--plan",
+    "/home/ubuntu/ds-recovery-negative-successor-20261002/results/uarch/DS_recovery_negative_successor_20261002/preflight/plan.json",
+    "--review",
+    "/tmp/DS-recovery-negative-successor-reviewed-capacity.json",
+    "--out",
+    "/tmp/DS-recovery-negative-successor-execution-20261002-r1"
+  ],
+  "UTC": "2026-10-02T16:52:47.918833+00:00"
+}

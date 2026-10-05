@@ -1,0 +1,31 @@
+{
+  "AW": 27,
+  "PCs": 2213,
+  "SMs_per_rank": 32,
+  "checkpoint_revision": "exact per immutable view, never merely nonempty",
+  "dispatch_sha256": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f",
+  "families": 30,
+  "hardware_builds": 0,
+  "kernel_execution": "original primitive/forward fullK source kernels; CPU collector scheduling not GPU clock",
+  "provider_costs": "positive declared provider tick costs and causal backing events; hardware costs not inferred",
+  "provider_hooks": [
+    "workspace",
+    "read_views",
+    "scratch_memory",
+    "publish",
+    "release_views",
+    "retire_operation",
+    "release_version",
+    "drain"
+  ],
+  "ranks": 96,
+  "schema": "H3_DS_FULL_SOURCE_PROVIDER_EXECUTION_DRIVER_V1",
+  "scratch_binding": "provider.scratch_memory must map every native scratch read/write to allocated AW27 extent; no logical callback shortcut",
+  "source_program_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "source_sha256": {
+    "tools/h3_deepseek_full_token_driver.py": "2ad057b2117db5f5065da3c2879397e80f18e023926e9b3d44bc31aae84db8cb"
+  },
+  "unified_model_admitted": false,
+  "wall_or_FSIZE_caps": null,
+  "workspace_bytes_per_rank": 33554432
+}

@@ -1,0 +1,17 @@
+{
+  "compiler_invocations": 0,
+  "fresh_parent_GO_required": true,
+  "host_metadata": "READ_ONLY_HOST_TOOL_SUPPORT_HASH_PASS",
+  "launch_authorized": false,
+  "native_invocations": 0,
+  "new_files_only": true,
+  "prior_FAILURE_receipts_modified": false,
+  "protected_sources_modified": false,
+  "review_status": "SOURCE_CLOSURE_NATIVE_ABI_CAP_PROPOSAL_REVIEW_PASS",
+  "runtime_invocations": 0,
+  "tests": {
+    "command": "python -m pytest -q tests/test_w17_D1_current_core_admission.py",
+    "failed": 0,
+    "passed": 42
+  }
+}

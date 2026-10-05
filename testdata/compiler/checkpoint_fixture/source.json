@@ -1,0 +1,32 @@
+{
+  "checkpoint_index": "model.safetensors.index.json",
+  "expected_files": [
+    {
+      "path": "config.json",
+      "sha256": "ab3c36136d2d08955a2fa2fecd7e35d8214f9a261abd337ea7f4bcd0e2daa8b9",
+      "size_bytes": 35
+    },
+    {
+      "path": "model-00001-of-00002.safetensors",
+      "sha256": "c8aa5bd322c109f2996ef4f15079cf42dafcae5a46b9a2809aa427c301dde5cb",
+      "size_bytes": 168
+    },
+    {
+      "path": "model-00002-of-00002.safetensors",
+      "sha256": "d0e4ce8983142e29947d2d049ea72c3699d9bab9609f270b88be8bfa909d0f64",
+      "size_bytes": 78
+    },
+    {
+      "path": "model.safetensors.index.json",
+      "sha256": "75cf432c287a00fc941e5eb794f196a49e32d5368ecaffd8403beb2d5ccfb2f5",
+      "size_bytes": 181
+    }
+  ],
+  "remote_code_policy": "disabled",
+  "repository": "OpenTallas/checkpoint-lock-fixture",
+  "required_files": [
+    "config.json"
+  ],
+  "revision": "0123456789abcdef0123456789abcdef01234567",
+  "schema": "opentallas.checkpoint_source.v1"
+}

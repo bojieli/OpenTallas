@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.parent-generic-prefix-review.v1",
+  "recorded_utc": "2026-10-01T22:37:18.908847+00:00",
+  "owner_commit": "b9ef68334b00ea9609cda40213484c31553d7411",
+  "intake_commit": "3e784d79e",
+  "independent_tests": {
+    "command": "PYTHONPATH=tools:. python3 -m pytest -o addopts= -q tests/test_dsrom_generic_prefix_sat.py tests/test_dsrom_direct_generic_prefix_sat.py",
+    "result": "43 passed in7.49s"
+  },
+  "checks": {
+    "new_artifact_hashes": 31,
+    "first_proof_package_files_unchanged": 25,
+    "all_miter_hashes": 25,
+    "all_mutant_numeric_carry_and_lowbit_witnesses_replayed": 6,
+    "source_bytes_equal_exact_pin": true,
+    "consumer_source_pins_match": true,
+    "Peirce_census_bytes_and_SHA_match": true
+  },
+  "proof_availability": {
+    "ot_hdc_ksadd_k": [
+      8,
+      9,
+      12,
+      24,
+      26,
+      28,
+      31,
+      33,
+      48,
+      51
+    ],
+    "ot_hdc_inc_k": [
+      24,
+      28,
+      31
+    ]
+  },
+  "scope": "Unrestricted2state combinational specialization proofs only; generic pipeline and actual conditional AW/CW/K elaboration unqualified. The fastfp sequential gate substitutes KSA only, so its result does not qualify this generic family.",
+  "standins_installed": false,
+  "full_token_cycles": null,
+  "hardware_admission": false,
+  "remaining_gates": [
+    "Actual intended source/parameter elaboration manifest",
+    "Sequential pipeline acceptance for generic consumers before substitution",
+    "Current full-die exactness, actual service/producer/resource/physical acceptance"
+  ],
+  "verdict": "PASS_COMBINATIONAL_AVAILABILITY_REVIEW"
+}

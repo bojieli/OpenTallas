@@ -1,0 +1,7 @@
+%Warning-WIDTHEXPAND: /tmp/claude-1000/wt/w17-w10-bridge-r1/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv:19:16: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's EQ generates 1 bits.
+                                                                                                               : ... note: In instance 'tb_w17_pp_rom.g_rom[7].u_rom'
+   19 |         parity = (INSTANCE[INSTANCE.len()-1] == "1");
+      |                ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Error: Exiting due to 1 warning(s)

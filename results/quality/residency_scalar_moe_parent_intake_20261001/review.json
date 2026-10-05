@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.residency-scalar-moe-parent-intake.v1",
+  "integer_residency": {
+    "tests": 4,
+    "actual_slice_manifest_sha256": "d35d4868d781bae93e4d1f0b999e4293fc19356312ab97073496feb7eb4c8343",
+    "expected_slices": 184320,
+    "candidate_gzip_summary_regeneration": "BYTE_IDENTICAL",
+    "expert_only_stages": 46,
+    "maximum_expert_phase_entries": 1023,
+    "PHW6_fit": false,
+    "actual_q_footprint_binding": false,
+    "dense_HC_and_fullstage_placement": "unbound",
+    "independent_scalar_template_review": "Godel assigned; pending"
+  },
+  "HC_scalar_RF": {
+    "tests": 11,
+    "fixtures": 4,
+    "numeric_opcodes": 84,
+    "physical_RF_events": 108,
+    "all_source_artifact_pins": "PASS",
+    "all_numeric_rawbits_traces_RF_ownership": "PASS_REPLAY_IDENTICAL",
+    "ordered_sum_and_producer_scalars": "PASS",
+    "IADDR": "six opaque address ownership tokens per fixture, no real address semantics",
+    "scope": "CPU interpreter plus analytical allocation calendar; not target compiler or physical RF"
+  },
+  "MoE_local": {
+    "tests": 5,
+    "exact_cost_reproduction": "PASS",
+    "scenario_priced_nodes": 3292,
+    "remaining_missing_cost_nodes": 10337,
+    "upstream_reads_unpriced": 40,
+    "complete_progress_bound": false,
+    "modified_packed_stores_target_qualified": false
+  },
+  "hop_null_guard": {
+    "source_sha256": "156646b3c2485be1ad32b906e3010b4081660e0267f3159526ff6c654ad68514",
+    "five_null_fields_reject": "PASS",
+    "explicit_serializer_positive": "PASS",
+    "underpriced_width_negative": "PASS",
+    "finite_and_wire_AST_unchanged_from_d343": "PASS",
+    "inherited_360_review_hash": "PASS",
+    "actual_hardware_hop_binding": false
+  },
+  "full_token_cycles": null,
+  "RTL_or_physical_adoption": false,
+  "scientific_jobs_launched": 0
+}

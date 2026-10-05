@@ -1,0 +1,23 @@
+{
+  "PDN_changed": false,
+  "analysis_completed": false,
+  "assumed_screen_basis": "existing tools/signoff_analysis.py uses assumed1mA/um; ASAP7 publishes no EM limit",
+  "authority": "S81 feasibility main21fcf6469 c5_spine original peak raster IR; pre-recovery4706 tree; interior IR selection per committed record",
+  "current_recovery_die_qualified": false,
+  "em_rule_authority": null,
+  "exit_code": 0,
+  "foundry_violation_count": null,
+  "input_receipt_sha256": "789497c838c58e822d7275ff117c6a50c74992cb8926019149e68161434eea24",
+  "log_sha256": "f0668357b7656667eceeefbcea922aa9c44a9d7385f04c6e4792423a99d27c5a",
+  "power_w": 9.233505426,
+  "qualification": "MEASURED_PSM_CURRENTS_ONLY_EM_LIMIT_NOT_AVAILABLE",
+  "rails": {
+    "VDD": {
+      "analysis_completed": false
+    },
+    "VSS": {
+      "analysis_completed": false
+    }
+  },
+  "schema": "opentallas.die_window_em.actual.v1"
+}

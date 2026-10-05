@@ -1,0 +1,26 @@
+{
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "tests/test_dsrom_selector_physical_join.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "static_0.log",
+      "sha256": "fc953ce5e0842c3cbdcb7671386244ce1a053d70d18608eb4f190f71eec83263"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/test_prepare_topk_station_caller_fence.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "static_1.log",
+      "sha256": "22e3f229843ff16e47034a4c12fda5047524df6c67583adf010efa2c36691bb7"
+    }
+  ],
+  "hardware_qualification": false,
+  "scope": "Python source pins/packet mapping/ownership/refusal/static caller event algebra only; no HDL or physical run"
+}

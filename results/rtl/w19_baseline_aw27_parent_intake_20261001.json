@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.w19.baseline_aw27_parent_intake.v1",
+  "status": "pass",
+  "review_main_commit": "4c99d6ca217312cf5294e090c79b261f63eef5cd",
+  "archive_sha256": "31b61ded6c25e7e96707ef4d526445eb79e4b6daa2787b6da2bf1a7546779f38",
+  "indexed_files_verified": 186,
+  "external_sidecars_present": 4,
+  "executable_hashes_verified": 3,
+  "FP32_output_sets_against_retained_golden": 6,
+  "fixture_sets_verified": 6,
+  "fault_control_logs_verified": 9,
+  "historical_model_isolated_helper_reproduces": true,
+  "BF16_scope": "Worker numerical BF16 comparison retained; parent independently checks complete FP32 raw outputs against retained golden.",
+  "claim_boundary": "Three actual rank0 resident routed descriptor fragments at L13/L26/L33 and full K. Real checkpoint weights/fresh golden; retained L0 input activation stimulus. Existing finite fetch and padded512-tag bench join into historical W13 SM. No compact adapter, runtime router, connected activations, all32SM/96rank arithmetic, collectives, attention/KV/SU/SFU or current hardware/SSFF qualification.",
+  "timing_scope": "The inherited output header cycles_start_to_done and result/drain timing fields are integer $time differences in simulation nanoseconds, NOT cycle counts at the833ps bench clock. first_req/first_sector/first_payload counters are sampling-edge indices. No value is a product token metric; input preloads/refresh warmup excluded and500ns loaded/shared service unmodelled.",
+  "full_resident_admitted": false,
+  "adoption": false
+}

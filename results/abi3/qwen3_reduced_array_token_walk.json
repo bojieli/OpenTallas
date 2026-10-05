@@ -1,0 +1,96 @@
+{
+  "agreement": {
+    "rom_array_4": {
+      "agrees_with_oracle": true,
+      "agrees_with_single_chip": true
+    },
+    "rom_single_chip": {
+      "agrees_with_oracle": true,
+      "agrees_with_single_chip": true
+    }
+  },
+  "cases": {
+    "rom_array_4": {
+      "capability": "results/abi3/qwen3_reduced_rom_array_4_capability.json",
+      "deployment": "build/abi3/qwen3-reduced-rom-array-4",
+      "emitted_token_ids": [
+        1073,
+        382,
+        93
+      ],
+      "failure": null,
+      "link_counters": {
+        "engine.link.descriptors": 3,
+        "link.bytes_received": 768,
+        "link.bytes_sent": 768,
+        "link.messages_received": 3,
+        "link.messages_sent": 3,
+        "link.remote_dma_bytes": 768
+      },
+      "retired": 756,
+      "seconds": 0.946,
+      "stop_reason": "eos",
+      "topology": null,
+      "transactions": 3
+    },
+    "rom_single_chip": {
+      "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+      "deployment": "build/abi3/qwen3-reduced-rom",
+      "emitted_token_ids": [
+        1073,
+        382,
+        93
+      ],
+      "failure": null,
+      "link_counters": {},
+      "retired": 744,
+      "seconds": 0.236,
+      "stop_reason": "eos",
+      "topology": null,
+      "transactions": 3
+    }
+  },
+  "not_a_claim": [
+    "not an RTL measurement: the device is runtime.sim",
+    "not a performance statement: a pipeline at batch one has one stage busy at a time, so the array's token rate is the single chip's"
+  ],
+  "obligation": "the array's arithmetic is the single chip's -- LINK.REMOTE_DMA moves bytes under no numeric contract and no collective reduces anything -- so the array must reproduce the single chip's token exactly, not merely land near it",
+  "producer": {
+    "git": {
+      "commit": "885a0142ec51098f6e6ad06c121db21e7f217391"
+    },
+    "tool": "tools/run_qwen3_array_token_walk.py"
+  },
+  "schema": "opentallas.abi3.qwen3_array_token_walk.v1",
+  "workload": {
+    "compared_prefix": [
+      1073,
+      382,
+      93
+    ],
+    "oracle_token_ids": [
+      1073,
+      382,
+      93
+    ],
+    "prompt_token_ids": [
+      92,
+      872,
+      198,
+      361,
+      448,
+      2210,
+      13,
+      93,
+      198,
+      92,
+      3363,
+      198,
+      115,
+      271,
+      116,
+      271
+    ],
+    "workload_id": "TA-QW-REDUCED-EOS-1"
+  }
+}

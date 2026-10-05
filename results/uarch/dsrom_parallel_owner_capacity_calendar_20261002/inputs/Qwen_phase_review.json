@@ -1,0 +1,83 @@
+{
+  "cases": [
+    {
+      "case": 1,
+      "last_ACK_hold_cycles": 2,
+      "segments_cycles": {
+        "activation_last_write_to_matrix_start": 2,
+        "fence_to_first_SIMD_accept": 2,
+        "first_SIMD_pass_including_directed_completion_holds": 32,
+        "inter_pass": 6,
+        "last_SIMD_to_operand_read_visible": 8,
+        "matrix_start_to_first_valid_issue": 14,
+        "operand_read_to_activation_last_write_including_directed_read_hold_and_optional_scratch": 24,
+        "second_SIMD_pass_including_directed_completion_holds": 32
+      },
+      "sum_cycles": 120,
+      "vectors": 2
+    },
+    {
+      "case": 2,
+      "last_ACK_hold_cycles": 2,
+      "segments_cycles": {
+        "activation_last_write_to_matrix_start": 2,
+        "fence_to_first_SIMD_accept": 2,
+        "first_SIMD_pass_including_directed_completion_holds": 32,
+        "inter_pass": 6,
+        "last_SIMD_to_operand_read_visible": 8,
+        "matrix_start_to_first_valid_issue": 14,
+        "operand_read_to_activation_last_write_including_directed_read_hold_and_optional_scratch": 80,
+        "second_SIMD_pass_including_directed_completion_holds": 32
+      },
+      "sum_cycles": 176,
+      "vectors": 2
+    },
+    {
+      "case": 3,
+      "last_ACK_hold_cycles": 2,
+      "segments_cycles": {
+        "activation_last_write_to_matrix_start": 2,
+        "fence_to_first_SIMD_accept": 2,
+        "first_SIMD_pass_including_directed_completion_holds": 9722,
+        "inter_pass": 6,
+        "last_SIMD_to_operand_read_visible": 8,
+        "matrix_start_to_first_valid_issue": 18,
+        "operand_read_to_activation_last_write_including_directed_read_hold_and_optional_scratch": 24,
+        "second_SIMD_pass_including_directed_completion_holds": 9722
+      },
+      "sum_cycles": 19504,
+      "vectors": 512
+    },
+    {
+      "case": 4,
+      "last_ACK_hold_cycles": 242,
+      "segments_cycles": {
+        "activation_last_write_to_matrix_start": 2,
+        "fence_to_first_SIMD_accept": 2,
+        "first_SIMD_pass_including_directed_completion_holds": 9722,
+        "inter_pass": 6,
+        "last_SIMD_to_operand_read_visible": 8,
+        "matrix_start_to_first_valid_issue": 18,
+        "operand_read_to_activation_last_write_including_directed_read_hold_and_optional_scratch": 24,
+        "second_SIMD_pass_including_directed_completion_holds": 9722
+      },
+      "sum_cycles": 19504,
+      "vectors": 512
+    }
+  ],
+  "headline_latency_credit": false,
+  "log_sha256": "68d759c75472148f543ae670e6e131b7f7f9fd821ee870db96808f0c205ed5e7",
+  "model_transfer_rule": "Do not substitute fence-to-next-issue total for launch overhead, or directed held-completion cadence for unconstrained SIMD throughput. Price each protocol/compute phase with actual scheduler and backpressure policy. No conversion of the10ns simulation clock to SS-qualified1.2GHz.",
+  "physical_credit": false,
+  "schema": "opentallas.parent.connected_RF_phase_decomposition.v1",
+  "scope": "Four directed Qwen connected cases, not full token or hardware timing. Segments telescope exactly to independently checked trace totals.",
+  "source_commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+  "terminal_receipt_sha256": "1b4242ded195852cc39fcd3ea17184df3c168fe1eabcf584aac317f4368cbf30",
+  "testbench_policy": {
+    "SIMD_completion_held_cycles_each_vector": 4,
+    "last_ACK_extra_hold_case4": 240,
+    "operand_read_response_held_cycles": 6
+  },
+  "token_credit": false,
+  "verdict": "PASS_EXACT_DIRECTED_TRACE_DECOMPOSITION"
+}

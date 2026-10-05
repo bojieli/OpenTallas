@@ -1,0 +1,1030 @@
+{
+ "schema": "opentallas.hbm_system_inventory.v1",
+ "base_commit": "298ba9d796d1441760359c85f3b909c199ca2495",
+ "origin_main_at_inventory": "6fc0a3954fb3e291bddb102ad9bdb803194ba578",
+ "origin_main_delta_note": "origin/main advanced to 6fc0a3954 (adds rtl/experimental/ds_mtp_accept_20261003 accept leaf + gate); no other rtl/ changes since base (git diff --stat 298ba9d79 6fc0a3954 -- rtl).",
+ "status_legend": {
+  "RTL+tested": "RTL exists and a committed bench/campaign record passes (component or directed scope as noted)",
+  "RTL-untested": "RTL exists but no committed passing record (or RTL not on main/origin)",
+  "tb-only": "exists only inside a testbench / as a bench fixture or simulation-only model",
+  "model-only": "Python/analytical only",
+  "missing": "nothing exists"
+ },
+ "scope_note": "Rows marked with owner containing 'being built by claude/hbm-system-rtl-20261003 (this branch)' are missing today and are planned in rtl/gpu_sys/. The 'RTL+tested' label never implies installed, connected or SS/FF-qualified; see each note.",
+ "comparators": {
+  "Qwen3_8B_HBM": [
+   {
+    "block": "HBM controller + PHY model",
+    "role": "HBM3E stack controller/PHY timing (ACT/PRE/RD/WR, refresh, reorder) behind the shoreline",
+    "status": "tb-only",
+    "files": [
+     "rtl/hdc/kv/ot_hdc_hbm_model.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_fetch_sm.json",
+     "results/rtl/w19_payload_loader_gate_20261001.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ],
+    "owner": "none",
+    "note": "Only a behavioural, simulation-only timing model (header: 'simulation only'); every GPU bench (tb_w19_fetch_sm, tb_gpu_bulk_copy) instantiates it. No synthesizable shoreline HBM controller or PHY boundary exists on main for Qwen. A default-off streaming HBM3E controller (ot_hbm_r14_stream_pc/stack) exists only on unmerged origin/claude/qwen-hbm-sustained-bw-20261003 (8e3ef3923). INTEGRATED_PHYSICAL_PLAN G3 requires a source-matched shoreline controller/PHY boundary. Controller is outside this branch's announced scope (it builds the HBM partition in front of the model)."
+   },
+   {
+    "block": "HBM pseudo-channel service (ot_hdc_qwen_hbm_service / pc_service)",
+    "role": "4 stacks x 32 PCs, 6 clients/PC, finite credits, round-robin",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/hdc/hbm/ot_hdc_qwen_hbm_service.sv",
+     "rtl/hdc/hbm/ot_hdc_qwen_pc_service.sv",
+     "rtl/hdc/hbm/ot_hdc_qwen_hbm_region_guard.sv",
+     "rtl/hdc/hbm/ot_hdc_qwen_hbm_regions.sv",
+     "rtl/test/tb_hdc_qwen_hbm_mixed_service.sv",
+     "rtl/test/tb_hdc_qwen_hbm_service.sv",
+     "rtl/test/tb_hdc_qwen_pc_service.sv"
+    ],
+    "evidence": [
+     "results/rtl/qwen_o4_hbm_mixed_service.json (status pass)",
+     "709db512f"
+    ],
+    "owner": "none",
+    "note": "Not instantiated by any non-bench module. Count-only completion: write completion has no ready and no tag check (owner gaps Z1). PC lane map (ot_hdc_qwen_pc_lane_map.sv) has a bench and tests/test_hdc_qwen_hbm_service.py but no committed record."
+   },
+   {
+    "block": "W2 exact PC completion (NC6 successor + sealed codec)",
+    "role": "per-client outstanding table {tag,gen,we}, wr_done_ready, sticky fault",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv",
+     "rtl/experimental/w2_nc6_protection_20261003/ot_w2_sealed_secded72.sv",
+     "rtl/test/w2_nc6_completion_20261003/tb.sv"
+    ],
+    "evidence": [
+     "results/rtl/w2_nc6_parent_terminal_review_20261003/record.json (PASS_COMPONENT_FUNCTIONAL_ONLY)",
+     "results/rtl/w2_sealed_codec_parent_20261003/parent-review.json (PASS_ACTUAL_CODEC_ONLY)",
+     "bf99ccc86",
+     "82ba8f9c5"
+    ],
+    "owner": "Nash",
+    "note": "Component only, default-off; not connected to ot_hdc_qwen_hbm_service or any route (results/uarch/w2_pc_exact_completion_20261003/handoff.json: CONNECTED_ADMISSION_BLOCKED)."
+   },
+   {
+    "block": "L2 slices",
+    "role": "x/result gather-broadcast, TP-exchange staging, KV-write coalescing (uarch_model.hbm_gpu_design out['l2'])",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "tools/uarch_model.py:1658 (hbm_gpu_design l2 = 4 slices x 2 MB, model-only)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md (L2 row: no common ACK RTL)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "ot_gpu_qwen_gu64_l2 only emits finite L2 write/commit handshakes (results/rtl/qwen_hbm_gu64_l2_20261001/verdict.json PASS) against an external L2; no L2 slice RTL exists. W9 (L2 endpoint + bank fence) has no owner."
+   },
+   {
+    "block": "Crossbar / on-die NoC (SM <-> L2 <-> HBM partitions)",
+    "role": "routes SM bulk-copy/LSU traffic to L2 slices and PC services",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "tools/uarch_model.py:1662 (out['noc'] wire counts only)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "Model gives per-quadrant weight wires only; no crossbar RTL. Qwen ot_hdc_qwen_hbm_service is a PC arbiter, not an SM crossbar."
+   },
+   {
+    "block": "SM tensor core (ot_gpu_sm_q + tc_col/tree/stack/issue/xstore)",
+    "role": "Qwen SM macro: 64 tc_col columns, chunked csum tree, row-slot issue, x store",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_sm_q.sv",
+     "rtl/gpu/ot_gpu_sm.sv",
+     "rtl/gpu/ot_gpu_tc_col.sv",
+     "rtl/gpu/ot_gpu_tree.sv",
+     "rtl/gpu/ot_gpu_stack.sv",
+     "rtl/gpu/ot_gpu_issue.sv",
+     "rtl/gpu/ot_gpu_xstore.sv",
+     "rtl/test/tb_gpu_sm_q.sv",
+     "rtl/test/tb_gpu_sm.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_sm_exact.json (pass, 15 cases exact)",
+     "results/rtl/w19_qwen_hbm_full_qkv_partitions.json (all 64 QKV partitions, pass)",
+     "results/rtl/qwen_hbm_w13_checkpoint_20261001/parent_intake_20261001.json",
+     "f5ca61bfb"
+    ],
+    "owner": "none",
+    "note": "Matvec only with golden operands; not instantiated in any die top. Physical: tc_col/stack/barrier hardened under results/physical_abi3/asap7/gpu/."
+   },
+   {
+    "block": "GU64 pair + L2 commit pipeline (ot_gpu_qwen_gu64_pair / _l2 / row_tiles)",
+    "role": "gate/up INT8 pair with row scale and finite L2 writes",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_qwen_gu64_pair.sv",
+     "rtl/gpu/ot_gpu_qwen_gu64_l2.sv",
+     "rtl/gpu/ot_gpu_qwen_row_tiles.sv"
+    ],
+    "evidence": [
+     "results/rtl/qwen_hbm_gu64_pair_20261001/v2/verdict.json (PASS)",
+     "results/rtl/qwen_hbm_gu64_l2_20261001/verdict.json (PASS)",
+     "results/rtl/qwen_hbm_gu64_pair_20261001/row_sense_protocol.json",
+     "b84a9c29e"
+    ],
+    "owner": "none",
+    "note": "v1 FAIL preserved (qwen_hbm_gu64_pair_20261001/v1_verdict.json). Default-off."
+   },
+   {
+    "block": "Bulk-copy / TMA engine",
+    "role": "HBM -> SMEM staging ring, 128-B lines, outstanding-line window",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_bulk_copy.sv",
+     "rtl/test/tb_gpu_bulk_copy.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_supply_barrier.json",
+     "results/rtl/w19_fetch_sm.json",
+     "results/rtl/w19_qwen_hbm_full_qkv_partitions.json"
+    ],
+    "owner": "none",
+    "note": "Response has no ready and no tag validation (zero_placeholder Z3: justified, slot reserved at issue). Instantiated inside ot_gpu_sm_q/ot_gpu_sm_v."
+   },
+   {
+    "block": "Register file service (ot_gpu_rf_service, inside full SM service)",
+    "role": "RF read/write ports, both-copy write, common ACK",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_rf_service.sv",
+     "rtl/test/full_sm_service/tb_storage.sv",
+     "rtl/test/full_sm_service/tb_full_service_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json (PASS_DIRECTED_FULL128_AND_STORAGE_ONLY)"
+    ],
+    "owner": "none",
+    "note": "Directed scope only; one combined ACK without owner identity (rf_service.sv:46)."
+   },
+   {
+    "block": "W4 identity-bearing common RF ACK",
+    "role": "RF ACK carrying {owner_tag,generation}",
+    "status": "RTL-untested",
+    "files": [
+     "(not on main or any origin branch) /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/{ot_gpu_rf_service.sv,ot_gpu_full_sm_service.sv,w4_identity_codec.svh}"
+    ],
+    "evidence": [
+     "unpushed local commit 721639931 'Freeze admitted defaultoff W4 fullwidth common ACK source'",
+     "Euclid tree results/uarch/Euclid_W4_RFACK_identity_contract_20261003 (status LIVE; one FAIL_ot_gpu_rf_service-lint record; terminal-r4-driver-tool-FAIL)",
+     "/tmp/claude-review-20261003/W4_parent_handshake_review_20261003.json (wrong-owner ACK accepted finding, repair owner Euclid)"
+    ],
+    "owner": "Euclid",
+    "note": "rtl/gpu_w4_euclid_20261003 does NOT exist on main 298ba9d79, origin/main 6fc0a3954 or any origin/* branch; gate still live."
+   },
+   {
+    "block": "SIMD/SIMT vector unit (ot_gpu_full_sm_service)",
+    "role": "elementwise vector ops on RF operands",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_full_sm_service.sv",
+     "rtl/gpu/ot_gpu_fadd.sv",
+     "rtl/test/full_sm_service/tb_full_service_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json",
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/review.json"
+    ],
+    "owner": "none",
+    "note": "FADD/FMUL only (ot_gpu_fadd/ot_gpu_fmul LAT 7); header: no epilogue, gather, reduction or SFU. No ISA, no warp scheduler, no exp/rsqrt/sigmoid, no integer/compare ops: a general SIMT core with a GPU ISA is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "SFU / transcendental + reduction lanes (norm rsqrt, softmax exp, SiLU)",
+    "role": "special functions for norms/softmax/activations",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "rtl/gpu/ot_gpu_full_sm_service.sv:5 ('No ... reduction, SFU')"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (as part of the SIMT SM core)",
+    "note": "Software executors compute these (qwen_hbm_complete / w19_hbm_tp96_isa 'local' ops). ROM-side ot_hdc_sfu*.sv exists but is not in any GPU path."
+   },
+   {
+    "block": "Shared memory (ot_gpu_scratch_service)",
+    "role": "SMEM scratch provider for SIMD/matrix results",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_scratch_service.sv",
+     "rtl/test/full_sm_service/tb_storage.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json"
+    ],
+    "owner": "none",
+    "note": "Directed + exhaustive storage only. A general LSU/shared-memory path for a SIMT ISA is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Connected SM + RF/SIMD/SMEM + fence (directed)",
+    "role": "tb_connected_rf_visibility joining ot_gpu_sm_q with full SM service and fence",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv",
+     "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv"
+    ],
+    "evidence": [
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/raw/verdict.json (PASS_DIRECTED_NATIVE_QWEN_CONNECTED_ONLY)",
+     "results/rtl/hbm_rf_connected_owner_terminal_r1_20261002/verdict.json (FAIL_INCOMPLETE, preserved)"
+    ],
+    "owner": "none",
+    "note": "Four directed cases + reset only; ot_gpu_hbm_rf_shared_context has a bench (tb_h4_hbm_rf_shared_context) but no committed record."
+   },
+   {
+    "block": "RF visibility fence (original + W6 successor)",
+    "role": "matrix-result visibility -> consumer -> reverse retirement",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+     "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv",
+     "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+     "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv",
+     "rtl/test/w6/tb_w6_fullwidth_fence.sv"
+    ],
+    "evidence": [
+     "results/rtl/hbm_W6_local_component_20261003/handoff.json (PASS_W6_LOCAL_COMPONENT_ONLY)",
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/raw/verdict.json",
+     "origin/codex/hbm-w6-fence-contract 9059b8e9b"
+    ],
+    "owner": "Goodall",
+    "note": "W6 component is default-off with no installed caller, CDC queue, RF payload or drain producer (parent_review.json scope)."
+   },
+   {
+    "block": "W5 installed owner gate (ot_gpu_hbm_owner_gate)",
+    "role": "per-SM/per-bank lease entries driving rf/shared owner grants",
+    "status": "model-only",
+    "files": [],
+    "evidence": [
+     "results/uarch/h4_hbm_baseline_bridge_20261003/model.json (FROZEN_DESIGN_FAIL_COMPOSED_CALENDAR_AND_PHYSICAL_ALLOCATION)",
+     "results/uarch/w2_r14_connector_model_20261003/inputs/input_manifest.json (W5/W10 uncommitted peer WIP)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md W5"
+    ],
+    "owner": "Popper",
+    "note": "No ot_gpu_hbm_owner_gate RTL anywhere; tb_h4_hbm_rf_shared_context drives grants externally (ot_gpu_hbm_rf_shared_context.sv header)."
+   },
+   {
+    "block": "KV cache write/read path (FP8 KV, PC adapter, r14 vehicle)",
+    "role": "K/V row write after RoPE/FP8 quantise; attention-time KV read stream",
+    "status": "tb-only",
+    "files": [
+     "rtl/hdc/hbm/ot_hdc_qwen_kv_pc_adapter.sv",
+     "rtl/test/tb_hdc_qwen_kv_pc_adapter.sv",
+     "rtl/test/tb_hdc_qwen_kv_shared_service.sv",
+     "rtl/model_ready_hbm_r14/*.sv",
+     "rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_qwen_hbm_vector_kv_fixture_result.json (status producer_exact: host norm/RoPE/FP8 KV fixtures)",
+     "results/uarch/W1_euclid_provider_hygiene_20261003/terminal-r2/terminal.json (r14 finite stage PASS, ROM-KV vehicle)",
+     "138a15402"
+    ],
+    "owner": "Nash (W2 completion), Popper (W3/W8 deferred), Euclid (W1 r14 hygiene)",
+    "note": "FP8 KV formation exists only as host-side bench fixtures; ot_hdc_qwen_kv_pc_adapter is RTL with benches but no committed record (RTL-untested); r14 is the Qwen ROM persistent-KV vehicle, not the comparator path (hbm_bridge_dependency_and_fields.md). W8 KV-write sector owner is unbuilt."
+   },
+   {
+    "block": "Attention (QK^T, softmax, PV) on SMs",
+    "role": "per-head attention over the HBM KV stream",
+    "status": "model-only",
+    "files": [
+     "tools/qwen_hbm_complete_*.py"
+    ],
+    "evidence": [
+     "results/rtl/qwen_hbm_complete_20261001/ordinary_GPU_lowering_progress_r1.json"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (runs on SIMT core + TC)",
+    "note": "No RTL attention kernel for the GPU design; softmax needs the missing SFU."
+   },
+   {
+    "block": "Qwen DFlash speculative decode on the SM design",
+    "role": "draft + verify on the HBM comparator (memory: mtp-is-required)",
+    "status": "missing",
+    "files": [
+     "rtl/hdc/ot_hdc_qwen_dflash_step_ctrl.sv (ROM/HDC core only)"
+    ],
+    "evidence": [
+     "tools/dflash_step_timing.py"
+    ],
+    "owner": "none",
+    "note": "No GPU-side DFlash RTL or record; HDC step controller is ROM-core. Out of this branch's announced scope."
+   },
+   {
+    "block": "Inter-die link (TP-2 UCIe pair) and collective endpoint",
+    "role": "two all-reduces per layer + argmax gather between the package's two dies",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/link/ot_link_tx.sv",
+     "rtl/link/ot_link_rx.sv",
+     "rtl/link/ot_w15_link_tx.sv",
+     "rtl/link/ot_w15_link_rx.sv",
+     "rtl/link/ot_link_crc32*.sv",
+     "rtl/link/ot_link_afifo.sv",
+     "rtl/link/ot_link_port_harden.sv",
+     "rtl/test/tb_w15_qwen_tp2.sv",
+     "rtl/test/tb_w15b_qwen_tp2.sv"
+    ],
+    "evidence": [
+     "results/rtl/w15_collectives.json (q* configs, Verilator)",
+     "results/rtl/w15_collectives_ss_w15b.json",
+     "2ae3b91de"
+    ],
+    "owner": "none",
+    "note": "Link layer (framing, CRC, credits, Gray CDC) is RTL+tested, but the die-side endpoint in the bench is the ROM one-shot engine ot_rom_oneshot_die, not a GPU SM/L2 endpoint; channel/PHY are timing models (ot_link_chan_model). GPU collective endpoint is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "GPU collective endpoint (SM/L2 <-> link DMA)",
+    "role": "die-side engine that injects SM results into the link and lands gathered data in SMEM/L2",
+    "status": "tb-only",
+    "files": [
+     "rtl/test/tb_w15_v41_hbm_nvls.sv",
+     "rtl/test/tb_w15_tp96_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/w15_hbm_nvls.json"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "Exists only as bench drivers around ot_link_nvls_switch (and the ROM ot_chip_v41x_coll_dma in w15_collectives)."
+   },
+   {
+    "block": "CDC on comparator paths (HBM service <-> SM, W10)",
+    "role": "async FIFOs between core/SM, HBM-service and link clocks",
+    "status": "missing",
+    "files": [
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv",
+     "rtl/link/ot_link_afifo.sv",
+     "rtl/gpu_sys/ot_gpu_cdc_fifo.sv (this branch, untracked)"
+    ],
+    "evidence": [
+     "results/rtl/v41_link_cdc_campaign.json (ot_link_afifo all_pass)",
+     "results/uarch/W1_euclid_provider_hygiene_20261003/terminal-r2/terminal.json (r14 finite stage incl. clock_bridge)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md (CDC column: A for C0/SIMD/matrix/L2)"
+    ],
+    "owner": "Popper (W10); being built by claude/hbm-system-rtl-20261003 (this branch) (ot_gpu_cdc_fifo)",
+    "note": "The only CDC instantiated in a non-bench module is ot_link_afifo inside ot_link_tx/ot_link_rx (link layer). r14 fifo2/clock_bridge are instantiated only by rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv (ROM persistent-KV vehicle). No CDC on any SM/HBM-service boundary."
+   },
+   {
+    "block": "Host command/completion interface (ot_host_if)",
+    "role": "AXI4-Lite BAR + NVMe-style descriptor/completion rings, DMA master",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/host/ot_host_if.sv",
+     "rtl/test/tb_host_hbm.sv",
+     "rtl/test/host_bridge_harness.cpp"
+    ],
+    "evidence": [
+     "results/rtl/host_if_campaign.json (status pass; target qwen3-hbm)",
+     "a8186d183"
+    ],
+    "owner": "none",
+    "note": "Tested only in front of the legacy HDC decode core (tb_host_hbm: ot_hdc_core KV_HBM=1, weights in ROM image), never in front of a GPU-organised SM design. Host bridge to the GPU system is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Kernel launch / command processor",
+    "role": "front end that dispatches kernels/grids to SMs and tracks completion",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "results/uarch/hbm_feasibility_audit.json (6e: 'a persistent hardware-sequenced program, not GPU kernels')",
+     "docs/INTEGRATED_PHYSICAL_PLAN.md:72 (missing dispatch bridge)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "No RTL sequences the token program across SMs; the token program runs only in Python executors."
+   },
+   {
+    "block": "Barrier network (ot_gpu_barrier_node)",
+    "role": "grid-wide barrier between dependent ops (329/181 boundaries per token)",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_barrier_node.sv",
+     "rtl/test/tb_gpu_barrier.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_supply_barrier.json (status pass)",
+     "8a62816ca"
+    ],
+    "owner": "none",
+    "note": "Standalone barrier tree; model uses the measured round trip (uarch_model.py hbm_gpu_design barrier). Not instantiated in any die top."
+   },
+   {
+    "block": "Reset / clock control",
+    "role": "reset sequencing, clock generation/gating, domain crossings of reset",
+    "status": "missing",
+    "files": [
+     "rtl/ot_power_reset_controller.sv (ROM/stage-top only)"
+    ],
+    "evidence": [
+     "rtl/ot_stage_top.sv instantiates ot_power_reset_controller; no rtl/gpu/* instantiation"
+    ],
+    "owner": "none",
+    "note": "No GPU-comparator reset/clock controller; ICG requirement (memory v41-pair-clock-power) unaddressed for HBM. System tops on this branch will need at least reset sequencing."
+   },
+   {
+    "block": "Checkpoint/weight load into HBM",
+    "role": "host -> HBM image upload before decode",
+    "status": "tb-only",
+    "files": [
+     "rtl/test/tb_w19_payload_loader.sv",
+     "results/rtl/w19_payload_fixtures_3b15b18e.tar.gz"
+    ],
+    "evidence": [
+     "results/rtl/w19_payload_loader_gate_20261001.json"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (host bridge/DMA)",
+    "note": "Benches preload ot_hdc_hbm_model memories from fixtures; no host->HBM DMA path for the GPU design."
+   },
+   {
+    "block": "Token program / ISA (Qwen HBM)",
+    "role": "complete decode-token program and its executor",
+    "status": "model-only",
+    "files": [
+     "tools/qwen_hbm_complete_*.py"
+    ],
+    "evidence": [
+     "results/rtl/qwen_hbm_complete_20261001/actual_two_token_terminal_r1/terminal.json (CHECKPOINT_SOFTWARE_COMPLETE, actual_RTL_executed=false)",
+     "results/rtl/qwen_hbm_complete_20261001/smoke_v1.json",
+     "results/rtl/qwen_hbm_complete_20261001/ordinary_GPU_lowering_progress_r1.json"
+    ],
+    "owner": "Dewey (native calendar/control trace join)",
+    "note": "Software executor only. A GPU ISA + assembler for the SIMT core is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Full-token end-to-end RTL simulation (Qwen HBM)",
+    "role": "one decode token through composed RTL",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "results/rtl/qwen_hbm_complete_20261001/actual_two_token_terminal_r1/receipt.json (actual_RTL_executed=false)",
+     "results/rtl/qwen_hbm_complete_20261001/actual_token0_complete_r1/token0_execution.json (SOFTWARE_PROGRAM_COMPLETED, actual_RTL_executed=false)",
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/review.json (directed connected only, 'not ... token')"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (reduced-shape Qwen system top)",
+    "note": "Largest RTL scope: all 64 QKV partitions through SM RTL with golden operands (w19_qwen_hbm_full_qkv_partitions.json, 'no RTL norm, embedding, or complete token'). Legacy hdc_qwen_whbm_split_e2e.json is the HDC core, not the GPU design."
+   }
+  ],
+  "DeepSeek_V41_HBM": [
+   {
+    "block": "HBM controller + PHY model",
+    "role": "HBM3E stack controller/PHY timing (ACT/PRE/RD/WR, refresh, reorder) behind the shoreline",
+    "status": "tb-only",
+    "files": [
+     "rtl/hdc/kv/ot_hdc_hbm_model.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_fetch_sm.json",
+     "results/rtl/w19_payload_loader_gate_20261001.json",
+     "results/rtl/gpu_supply_barrier.json"
+    ],
+    "owner": "none",
+    "note": "Only a behavioural, simulation-only timing model (header: 'simulation only'); every GPU bench (tb_w19_fetch_sm, tb_gpu_bulk_copy) instantiates it. No synthesizable shoreline HBM controller or PHY boundary exists on main for DeepSeek-V4.1. A default-off streaming HBM3E controller (ot_hbm_r14_stream_pc/stack) exists only on unmerged origin/claude/qwen-hbm-sustained-bw-20261003 (8e3ef3923). INTEGRATED_PHYSICAL_PLAN G3 requires a source-matched shoreline controller/PHY boundary. Controller is outside this branch's announced scope (it builds the HBM partition in front of the model)."
+   },
+   {
+    "block": "HBM pseudo-channel service (DS)",
+    "role": "shared multi-client PC service for weights/experts/KV",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md ('There is no shared multi-client PC service RTL for DS')",
+     "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/predecessor_model.json (DS adapter/geometry must be separately matched)"
+    ],
+    "owner": "Popper (route adapters) / being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "W19 benches connect ot_gpu_expert_fetch straight to the HBM model; ot_hdc_v41x_me_bank_hbm_service is the legacy HDC/ROM-hub path (hdc_v41x_me_bank_hbm_service.json)."
+   },
+   {
+    "block": "W2 exact PC completion",
+    "role": "exact read/write completion",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/experimental/w2_nc6_completion_20261003/ot_hdc_qwen_pc_exact_completion.sv"
+    ],
+    "evidence": [
+     "results/rtl/w2_nc6_parent_terminal_review_20261003/record.json (PASS_COMPONENT_FUNCTIONAL_ONLY)"
+    ],
+    "owner": "Nash",
+    "note": "Qwen-geometry component; no DS service to attach it to."
+   },
+   {
+    "block": "L2 slices",
+    "role": "x/result gather-broadcast, TP-exchange staging, KV-write coalescing (uarch_model.hbm_gpu_design out['l2'])",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "tools/uarch_model.py:1658 (hbm_gpu_design l2 = 4 slices x 2 MB, model-only)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md (L2 row: no common ACK RTL)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "No L2 RTL for DS; W9 (generic L2 word endpoint + bank fence) is unassigned/deferred. W9 (L2 endpoint + bank fence) has no owner."
+   },
+   {
+    "block": "Crossbar / on-die NoC (SM <-> L2 <-> HBM partitions)",
+    "role": "routes SM bulk-copy/LSU traffic to L2 slices and PC services",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "tools/uarch_model.py:1662 (out['noc'] wire counts only)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "Model gives per-quadrant weight wires only; no crossbar RTL. Qwen ot_hdc_qwen_hbm_service is a PC arbiter, not an SM crossbar."
+   },
+   {
+    "block": "SM tensor core (ot_gpu_sm_v + tc_col/tree/stack/issue)",
+    "role": "V4.1 SM macro: packed 136-B lines, FP4/FP8 unpack, 8 columns",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_sm_v.sv",
+     "rtl/gpu/ot_gpu_tc_col.sv",
+     "rtl/gpu/ot_gpu_tree.sv",
+     "rtl/gpu/ot_gpu_stack.sv",
+     "rtl/gpu/ot_gpu_issue.sv",
+     "rtl/test/tb_gpu_sm_v.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_sm_real_ops.json (pass, real TP-96 operands of busiest SM)",
+     "results/rtl/w19_sm_real_ops_oreduce.json",
+     "results/rtl/w19_fetch_sm.json",
+     "b56625ca1"
+    ],
+    "owner": "none",
+    "note": "Not instantiated in any die top."
+   },
+   {
+    "block": "Block-dot tensor core (ot_gpu_sm_bd / ot_gpu_bd_col)",
+    "role": "FP8/FP4 block-scaled dot for linear_q etc.",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_sm_bd.sv",
+     "rtl/gpu/ot_gpu_bd_col.sv",
+     "rtl/test/tb_gpu_sm_bd.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_sm_blockdot_exact.json (status pass)",
+     "e374dfdbe"
+    ],
+    "owner": "none",
+    "note": "bd_col hardened (results/physical_abi3/asap7/gpu/ot_gpu_bd_col_lb2_092)."
+   },
+   {
+    "block": "Bulk-copy / TMA engine",
+    "role": "HBM -> SMEM staging ring, 128-B lines, outstanding-line window",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_bulk_copy.sv",
+     "rtl/test/tb_gpu_bulk_copy.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_supply_barrier.json",
+     "results/rtl/w19_fetch_sm.json",
+     "results/rtl/w19_qwen_hbm_full_qkv_partitions.json"
+    ],
+    "owner": "none",
+    "note": "Response has no ready and no tag validation (zero_placeholder Z3: justified, slot reserved at issue). Instantiated inside ot_gpu_sm_q/ot_gpu_sm_v."
+   },
+   {
+    "block": "Register file service (ot_gpu_rf_service, inside full SM service)",
+    "role": "RF read/write ports, both-copy write, common ACK",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_rf_service.sv",
+     "rtl/test/full_sm_service/tb_storage.sv",
+     "rtl/test/full_sm_service/tb_full_service_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json (PASS_DIRECTED_FULL128_AND_STORAGE_ONLY)"
+    ],
+    "owner": "none",
+    "note": "Directed scope only; one combined ACK without owner identity (rf_service.sv:46)."
+   },
+   {
+    "block": "W4 identity-bearing common RF ACK",
+    "role": "RF ACK carrying {owner_tag,generation}",
+    "status": "RTL-untested",
+    "files": [
+     "(not on main or any origin branch) /tmp/opentallas-W4-RFACK-identity-contract-20261003/rtl/gpu_w4_euclid_20261003/{ot_gpu_rf_service.sv,ot_gpu_full_sm_service.sv,w4_identity_codec.svh}"
+    ],
+    "evidence": [
+     "unpushed local commit 721639931 'Freeze admitted defaultoff W4 fullwidth common ACK source'",
+     "Euclid tree results/uarch/Euclid_W4_RFACK_identity_contract_20261003 (status LIVE; one FAIL_ot_gpu_rf_service-lint record; terminal-r4-driver-tool-FAIL)",
+     "/tmp/claude-review-20261003/W4_parent_handshake_review_20261003.json (wrong-owner ACK accepted finding, repair owner Euclid)"
+    ],
+    "owner": "Euclid",
+    "note": "rtl/gpu_w4_euclid_20261003 does NOT exist on main 298ba9d79, origin/main 6fc0a3954 or any origin/* branch; gate still live."
+   },
+   {
+    "block": "SIMD/SIMT vector unit (ot_gpu_full_sm_service)",
+    "role": "elementwise vector ops on RF operands",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_full_sm_service.sv",
+     "rtl/gpu/ot_gpu_fadd.sv",
+     "rtl/test/full_sm_service/tb_full_service_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json",
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/review.json"
+    ],
+    "owner": "none",
+    "note": "FADD/FMUL only (ot_gpu_fadd/ot_gpu_fmul LAT 7); header: no epilogue, gather, reduction or SFU. No ISA, no warp scheduler, no exp/rsqrt/sigmoid, no integer/compare ops: a general SIMT core with a GPU ISA is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "SFU / transcendental + reduction lanes (norm rsqrt, softmax exp, SiLU)",
+    "role": "special functions for norms/softmax/activations",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "rtl/gpu/ot_gpu_full_sm_service.sv:5 ('No ... reduction, SFU')"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (as part of the SIMT SM core)",
+    "note": "Software executors compute these (qwen_hbm_complete / w19_hbm_tp96_isa 'local' ops). ROM-side ot_hdc_sfu*.sv exists but is not in any GPU path."
+   },
+   {
+    "block": "Shared memory (ot_gpu_scratch_service)",
+    "role": "SMEM scratch provider for SIMD/matrix results",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_scratch_service.sv",
+     "rtl/test/full_sm_service/tb_storage.sv"
+    ],
+    "evidence": [
+     "results/rtl/parent_HBM_full128_verilator_execution_20261002_r1/verdict.json"
+    ],
+    "owner": "none",
+    "note": "Directed + exhaustive storage only. A general LSU/shared-memory path for a SIMT ISA is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Connected SM + RF/SIMD/SMEM + fence (directed)",
+    "role": "tb_connected_rf_visibility with ot_gpu_sm_v",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv"
+    ],
+    "evidence": [
+     "results/rtl/hbm_r8_split_terminal_owner_20261002_r2/ds/raw/verdict.json (PASS_DIRECTED_NATIVE_DS_CONNECTED_ONLY)"
+    ],
+    "owner": "none",
+    "note": "Directed DS cases only; owner gaps: 0 production calls closed, 0 SRAM ACK observations for DS."
+   },
+   {
+    "block": "RF visibility fence (original + W6 successor)",
+    "role": "matrix-result visibility -> consumer -> reverse retirement",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+     "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv",
+     "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv",
+     "rtl/test/hbm_rf_visibility/tb_connected_rf_visibility.sv",
+     "rtl/test/w6/tb_w6_fullwidth_fence.sv"
+    ],
+    "evidence": [
+     "results/rtl/hbm_W6_local_component_20261003/handoff.json (PASS_W6_LOCAL_COMPONENT_ONLY)",
+     "results/rtl/hbm_qwen_r11_terminal_owner_20261002_r1/raw/verdict.json",
+     "origin/codex/hbm-w6-fence-contract 9059b8e9b"
+    ],
+    "owner": "Goodall",
+    "note": "W6 component is default-off with no installed caller, CDC queue, RF payload or drain producer (parent_review.json scope)."
+   },
+   {
+    "block": "W5 installed owner gate (ot_gpu_hbm_owner_gate)",
+    "role": "per-SM/per-bank lease entries driving rf/shared owner grants",
+    "status": "model-only",
+    "files": [],
+    "evidence": [
+     "results/uarch/h4_hbm_baseline_bridge_20261003/model.json (FROZEN_DESIGN_FAIL_COMPOSED_CALENDAR_AND_PHYSICAL_ALLOCATION)",
+     "results/uarch/w2_r14_connector_model_20261003/inputs/input_manifest.json (W5/W10 uncommitted peer WIP)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md W5"
+    ],
+    "owner": "Popper",
+    "note": "No ot_gpu_hbm_owner_gate RTL anywhere; tb_h4_hbm_rf_shared_context drives grants externally (ot_gpu_hbm_rf_shared_context.sv header)."
+   },
+   {
+    "block": "KV cache write/read path (compressed KV, sequence-sharded, kv_gather)",
+    "role": "compressed-KV/index-key rows in HBM, owner-die reads, gather to head dies",
+    "status": "model-only",
+    "files": [
+     "tools/w19_hbm_tp96_isa.py"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa.json (STATE: KV sharded by position, ISA-level)",
+     "results/rtl/deepseek_hbm_complete_20261001/index-tagged-producer-consumer-gate-r2.json (DUT_RTL_executed=false)"
+    ],
+    "owner": "Kepler (DS numerical continuation)",
+    "note": "No GPU-design KV RTL; ROM-side ot_hdc_v41x_idx_pool_hbm_bridge is not on this path."
+   },
+   {
+    "block": "MoE router top-K (ot_gpu_router_topk)",
+    "role": "top-6 of 256 routed experts",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_router_topk.sv",
+     "rtl/test/tb_gpu_router_topk.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_expert_fetch.json (router_topk verdict pass: 40 real + 200 adversarial vectors)",
+     "c52ae6d7f"
+    ],
+    "owner": "none",
+    "note": "Dedicated hardware selector; a real GPU does top-k in a SIMT kernel, so GPU-legality is questionable."
+   },
+   {
+    "block": "Routed-expert fetch (ot_gpu_expert_fetch)",
+    "role": "descriptors -> HBM -> SM staging",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_expert_fetch.sv",
+     "rtl/test/tb_gpu_expert_fetch.sv",
+     "rtl/test/tb_w19_fetch_sm.sv",
+     "rtl/test/tb_w19_rank_dispatch.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_expert_fetch.json",
+     "results/rtl/w19_fetch_sm.json",
+     "results/rtl/w19_rank_baseline_dispatch.json",
+     "results/rtl/w19_baseline_aw27.json"
+    ],
+    "owner": "none",
+    "note": ""
+   },
+   {
+    "block": "Payload transport / sector assembly (ot_gpu_payload_assemble)",
+    "role": "HBM sectors -> SM payload lines with tag handshake",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_payload_assemble.sv",
+     "rtl/test/tb_w19_payload_transport.sv",
+     "rtl/test/tb_w19_payload_loader.sv",
+     "rtl/test/tb_w19_payload_protocol.sv",
+     "rtl/test/tb_w19_payload_reset_fault.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_payload_loader_gate_20261001.json",
+     "results/rtl/w19_payload_reset_fault.json",
+     "results/rtl/w19_payload_transport_historical_3b15b18e.json",
+     "1e0769351"
+    ],
+    "owner": "none",
+    "note": "Default-off; exercised with real routed-expert rows at full K against the HBM model."
+   },
+   {
+    "block": "Checkpoint/weight load into HBM",
+    "role": "host -> HBM image upload before decode",
+    "status": "tb-only",
+    "files": [
+     "rtl/test/tb_w19_payload_loader.sv",
+     "results/rtl/w19_payload_fixtures_3b15b18e.tar.gz"
+    ],
+    "evidence": [
+     "results/rtl/w19_payload_loader_gate_20261001.json"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (host bridge/DMA)",
+    "note": "Benches preload ot_hdc_hbm_model memories from fixtures; no host->HBM DMA path for the GPU design."
+   },
+   {
+    "block": "NVLink-class switch with in-switch reduction (NVLS) + links",
+    "role": "TP-96 all-gather/all-reduce over 48 two-die packages",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/link/ot_link_nvls_switch.sv",
+     "rtl/link/ot_link_tx.sv",
+     "rtl/link/ot_link_rx.sv",
+     "rtl/link/ot_w15_link_tx.sv",
+     "rtl/link/ot_w15_link_rx.sv",
+     "rtl/link/ot_link_crc32*.sv",
+     "rtl/link/ot_link_afifo.sv",
+     "rtl/link/ot_link_port_harden.sv",
+     "rtl/test/tb_w15_v41_hbm_nvls.sv",
+     "rtl/test/tb_w15_tp96_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/w15_hbm_nvls.json (hbm_p6/p48 deterministic all_passed)",
+     "results/rtl/w15_collectives_ss_w15b.json",
+     "2ae3b91de"
+    ],
+    "owner": "none",
+    "note": "Switch tier + links RTL+tested; die-side endpoints are bench drivers and the analog PHY/FEC are timing models. GPU-side collective endpoint (SM/L2 <-> link) and multi-tier switch fabric are being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "GPU collective endpoint (SM/L2 <-> link DMA)",
+    "role": "die-side engine that injects SM results into the link and lands gathered data in SMEM/L2",
+    "status": "tb-only",
+    "files": [
+     "rtl/test/tb_w15_v41_hbm_nvls.sv",
+     "rtl/test/tb_w15_tp96_exact.sv"
+    ],
+    "evidence": [
+     "results/rtl/w15_hbm_nvls.json"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "Exists only as bench drivers around ot_link_nvls_switch (and the ROM ot_chip_v41x_coll_dma in w15_collectives)."
+   },
+   {
+    "block": "Top-k merge collective select (ot_coll_topk_merge)",
+    "role": "96 x 512 index merge / layer-20 candidates",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/chip/ot_coll_topk_merge.sv",
+     "rtl/test/tb_w15_topk_merge.sv"
+    ],
+    "evidence": [
+     "results/rtl/w15_topk_merge_hbm96_p64.json (exact)",
+     "results/rtl/w15_topk_merge_hbm96_p1024f256.json (exact)"
+    ],
+    "owner": "none",
+    "note": "Select unit alone (claim boundary); dedicated unit borrowed from the ROM chip namespace."
+   },
+   {
+    "block": "V4.1 dedicated units: HC mixes + Sinkhorn",
+    "role": "hyper-connection mixes and Sinkhorn normalisation per layer",
+    "status": "model-only",
+    "files": [
+     "tools/w19_hbm_tp96_isa.py:149,217 ('local' hc_mixes)"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa.json",
+     "tools/uarch_model.py hbm_gpu_design dedicated_units_mm2 (sinkhorn_select_engram)",
+     "results/rtl/hdc_v41_sinkhorn_campaign.json (ROM-side RTL only)"
+    ],
+    "owner": "none",
+    "note": "NOT GPU-legal as a dedicated unit (AGENTS: HBM comparators take only what a real GPU has); must be a SIMT/SFU kernel on the HBM design. ROM ot_hdc_sinkhorn is not instantiated on any HBM path."
+   },
+   {
+    "block": "V4.1 dedicated units: indexer (index scores + local top-k) and 1-head attention",
+    "role": "sparse-attention indexer and attention on 64 head dies",
+    "status": "model-only",
+    "files": [
+     "tools/w19_hbm_tp96_isa.py"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa.json",
+     "results/uarch/hbm_feasibility_audit.json build_plan B5 (dedicated units on the HBM die: not built)",
+     "results/rtl/deepseek_hbm_complete_20261001/index-blas-production-dispatch-r1.json (software)"
+    ],
+    "owner": "Kepler (DS index/numeric continuation)",
+    "note": "GPU-legal only as TC matmul + SIMT top-k/softmax kernels; ROM ot_hdc_v41x_idx*.sv is a dedicated array (not GPU-legal) and is not on the HBM path."
+   },
+   {
+    "block": "V4.1 dedicated units: SU/SFU (norms, RoPE, quantisers, SwiGLU, expert sum, compressor pooling, engram hash)",
+    "role": "serial-chain vector work",
+    "status": "model-only",
+    "files": [
+     "tools/w19_hbm_tp96_isa.py"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa.json",
+     "tools/uarch_model.py hbm_gpu_design dedicated_units_mm2 (su, sfu, hc_fp32_lanes)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (as SIMT kernels)",
+    "note": "GPU-legal when executed on SIMT/SFU; the model still prices dedicated SU/SFU lanes from the ROM hub proposal."
+   },
+   {
+    "block": "DSpark / MTP (drafter + accept) on DS HBM",
+    "role": "draft block-5 drafter on SMs, verify, greedy accept leaf",
+    "status": "RTL-untested",
+    "files": [
+     "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv (origin/main 6fc0a3954, after base)",
+     "rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_source_holders.sv"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa_mtp.json (ISA-level pass)",
+     "results/rtl/w19_sm_real_ops_mtp.json (SM RTL on MTP operands, pass)",
+     "6fc0a3954 (accept leaf: 43 directed runs PASS, results/rtl/ds_mtp_accept_20261003)",
+     "origin/claude/v41-hbm-speculation-20261003 d2aff19ef (pricing, model-only)"
+    ],
+    "owner": "Russell (accept leaf); none for drafter-on-SM",
+    "note": "origin/claude/dshbm-dspark-rtl-20261003 does NOT exist (git ls-remote empty). Accept leaf is RTL+tested as a component on origin/main but not at base 298ba9d79 and not wired to any HBM path; drafter control/verify sequencing on SMs has no RTL. Classified RTL-untested for the composed MTP function."
+   },
+   {
+    "block": "CDC on comparator paths (HBM service <-> SM, W10)",
+    "role": "async FIFOs between core/SM, HBM-service and link clocks",
+    "status": "missing",
+    "files": [
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv",
+     "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv",
+     "rtl/link/ot_link_afifo.sv",
+     "rtl/gpu_sys/ot_gpu_cdc_fifo.sv (this branch, untracked)"
+    ],
+    "evidence": [
+     "results/rtl/v41_link_cdc_campaign.json (ot_link_afifo all_pass)",
+     "results/uarch/W1_euclid_provider_hygiene_20261003/terminal-r2/terminal.json (r14 finite stage incl. clock_bridge)",
+     "/tmp/claude-review-20261003/hbm_owner_ack_gaps.md (CDC column: A for C0/SIMD/matrix/L2)"
+    ],
+    "owner": "Popper (W10); being built by claude/hbm-system-rtl-20261003 (this branch) (ot_gpu_cdc_fifo)",
+    "note": "The only CDC instantiated in a non-bench module is ot_link_afifo inside ot_link_tx/ot_link_rx (link layer). r14 fifo2/clock_bridge are instantiated only by rtl/test/model_ready_hbm_r14/tb_hbm_finite_stage.sv (ROM persistent-KV vehicle). No CDC on any SM/HBM-service boundary."
+   },
+   {
+    "block": "Host command/completion interface (ot_host_if)",
+    "role": "AXI4-Lite BAR + NVMe-style descriptor/completion rings, DMA master",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/host/ot_host_if.sv",
+     "rtl/test/tb_host_hbm.sv",
+     "rtl/test/host_bridge_harness.cpp"
+    ],
+    "evidence": [
+     "results/rtl/host_if_campaign.json (status pass; target qwen3-hbm)",
+     "a8186d183"
+    ],
+    "owner": "none",
+    "note": "Tested only in front of the legacy HDC decode core (tb_host_hbm: ot_hdc_core KV_HBM=1, weights in ROM image), never in front of a GPU-organised SM design. Host bridge to the GPU system is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Kernel launch / command processor",
+    "role": "front end that dispatches kernels/grids to SMs and tracks completion",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "results/uarch/hbm_feasibility_audit.json (6e: 'a persistent hardware-sequenced program, not GPU kernels')",
+     "docs/INTEGRATED_PHYSICAL_PLAN.md:72 (missing dispatch bridge)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch)",
+    "note": "No RTL sequences the token program across SMs; the token program runs only in Python executors."
+   },
+   {
+    "block": "Barrier network (ot_gpu_barrier_node)",
+    "role": "grid-wide barrier between dependent ops (329/181 boundaries per token)",
+    "status": "RTL+tested",
+    "files": [
+     "rtl/gpu/ot_gpu_barrier_node.sv",
+     "rtl/test/tb_gpu_barrier.sv"
+    ],
+    "evidence": [
+     "results/rtl/gpu_supply_barrier.json (status pass)",
+     "8a62816ca"
+    ],
+    "owner": "none",
+    "note": "Standalone barrier tree; model uses the measured round trip (uarch_model.py hbm_gpu_design barrier). Not instantiated in any die top."
+   },
+   {
+    "block": "Reset / clock control",
+    "role": "reset sequencing, clock generation/gating, domain crossings of reset",
+    "status": "missing",
+    "files": [
+     "rtl/ot_power_reset_controller.sv (ROM/stage-top only)"
+    ],
+    "evidence": [
+     "rtl/ot_stage_top.sv instantiates ot_power_reset_controller; no rtl/gpu/* instantiation"
+    ],
+    "owner": "none",
+    "note": "No GPU-comparator reset/clock controller; ICG requirement (memory v41-pair-clock-power) unaddressed for HBM. System tops on this branch will need at least reset sequencing."
+   },
+   {
+    "block": "Token program / ISA (V4.1 HBM, TP-96)",
+    "role": "TP-96 op program (mv/local/all_gather/all_reduce/topk_merge/kv_gather) and 96-rank executor",
+    "status": "model-only",
+    "files": [
+     "tools/w19_hbm_tp96_isa.py"
+    ],
+    "evidence": [
+     "results/rtl/w19_hbm_tp96_isa.json (status pass, ISA-level)",
+     "results/rtl/w19_hbm_tp96_isa_mtp.json",
+     "results/rtl/w19_hbm_tp96_program_oreduce.json",
+     "results/rtl/deepseek_hbm_complete_20261001/checkpoint-full-40-head-r1.json (DUT_RTL_executed=false)"
+    ],
+    "owner": "Kepler (DS numerical continuation); Dewey (native calendar join)",
+    "note": "Software/ISA-level only; 'local' ops are golden functions, not RTL. A GPU ISA is being built by claude/hbm-system-rtl-20261003 (this branch)."
+   },
+   {
+    "block": "Full-token end-to-end RTL simulation (V4.1 HBM)",
+    "role": "one decode token through composed RTL",
+    "status": "missing",
+    "files": [],
+    "evidence": [
+     "results/rtl/deepseek_hbm_complete_20261001/checkpoint-full-40-head-r1.json (DUT_RTL_executed=false)",
+     "results/rtl/w19_hbm_tp96_isa.json (ISA-level)",
+     "results/rtl/hbm_r8_split_terminal_owner_20261002_r2 (PASS_DIRECTED_NATIVE_DS_CONNECTED_ONLY)"
+    ],
+    "owner": "being built by claude/hbm-system-rtl-20261003 (this branch) (reduced-shape V4.1 system top)",
+    "note": "RTL coverage stops at per-SM real-operand runs (w19_sm_real_ops*.json) and expert-fetch/payload benches; no composed token."
+   }
+  ]
+ },
+ "summary": {
+  "Qwen3_8B_HBM": {
+   "RTL+tested": 13,
+   "RTL-untested": 1,
+   "tb-only": 4,
+   "model-only": 3,
+   "missing": 8
+  },
+  "DeepSeek_V41_HBM": {
+   "RTL+tested": 16,
+   "RTL-untested": 2,
+   "tb-only": 3,
+   "model-only": 6,
+   "missing": 8
+  },
+  "full_token_end_to_end_RTL": {
+   "Qwen3_8B_HBM": false,
+   "DeepSeek_V41_HBM": false
+  },
+  "key_gaps": [
+   "No full-token end-to-end RTL simulation exists for either comparator: every complete-token record has actual_RTL_executed=false / DUT_RTL_executed=false.",
+   "No die/system top: ot_gpu_sm_q, ot_gpu_sm_v, ot_hdc_qwen_hbm_service, ot_link_nvls_switch, barrier, router and expert fetch are instantiated only by benches.",
+   "Missing GPU fabric: L2 slices, SM<->L2<->HBM crossbar, command processor/kernel launch, GPU collective endpoint, and CDC on SM/HBM-service boundaries (only ot_link_afifo is in a non-bench module).",
+   "SIMD unit is FADD/FMUL only, with no ISA, no SFU (exp/rsqrt/sigmoid) and no reductions. Norms, softmax, RoPE, SiLU and attention exist only in Python executors.",
+   "HBM controller/PHY is a simulation-only behavioural model. DS has no multi-client PC service at all.",
+   "Ownership bridge is incomplete: W2 (Nash) and W6 (Goodall) are tested components but unconnected; W4 (Euclid) RTL is only on an unpushed local commit 721639931; W5/W10 (Popper) are model-only.",
+   "V4.1 Sinkhorn/HC, indexer, attention and SU/SFU are model-only on the HBM die, and as dedicated units they are not GPU-legal. DSpark drafter-on-SM has no RTL, and origin/claude/dshbm-dspark-rtl-20261003 does not exist."
+  ]
+ }
+}

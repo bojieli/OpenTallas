@@ -1,0 +1,322 @@
+{
+  "softmax": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "a6113740db44bf1f3ebe7e550ede74d696e68312d8d439d9d0d16de0eb697975",
+      "verilator_content_hash": "phE3QNtEvx8Avn5VDt501pbmgxLY1DnZ0NFt4Otp"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "retained_binding": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "retained_binding": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+      "verilator_content_hash": "2rGeOWqSVyUXofAifExpJZjB9VBo8JJpFRcbJJTg"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+      "verilator_content_hash": "Lw5i3kfOqJHFFnNGAeWXcjWiIcfIn2qEp1uNstDE"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "retained_binding": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "retained_binding": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4"
+    },
+    {
+      "path": "rtl/test/tb_a3_softmax_block.sv",
+      "retained_binding": "rtl/test/tb_a3_softmax_block.sv",
+      "sha256": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181",
+      "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh"
+    }
+  ],
+  "specialized": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "results/rtl/softmax_exp_only/tb_exp_only.sv",
+      "retained_binding": "results/rtl/softmax_exp_only/tb_exp_only.sv",
+      "sha256": "ff562a4b93d0f137ea8252a9a1ac7eaba3e0adff2b30fc2ebe22914694c20c5c",
+      "verilator_content_hash": "B1YqS5PQ8TfqglKpoaxAq6Pgrf8rMPwuviKRRpTC"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "retained_binding": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+      "verilator_content_hash": "2rGeOWqSVyUXofAifExpJZjB9VBo8JJpFRcbJJTg"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+      "verilator_content_hash": "Lw5i3kfOqJHFFnNGAeWXcjWiIcfIn2qEp1uNstDE"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    }
+  ],
+  "default": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "/tmp/exp_only_committed_engine.sv",
+      "retained_binding": "results/rtl/softmax_exp_only/committed_engine.sv",
+      "sha256": "a5585383611c23090022ca8faff2c02e86d24528d3b91ee54eb269fed0faf412",
+      "verilator_content_hash": "pVhTg2EcIwkAIsqPrBLALobSRSjTuR7lTrJpBtD6"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+      "verilator_content_hash": "Lw5i3kfOqJHFFnNGAeWXcjWiIcfIn2qEp1uNstDE"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/test/tb_a3_hc_transcendental.sv",
+      "retained_binding": "rtl/test/tb_a3_hc_transcendental.sv",
+      "sha256": "5a073c6cf80839cf31fc9bdf39231b0af8e1aa84358bb4dc309cf5c4646fe99c",
+      "verilator_content_hash": "Wgc8bPgIOc8xBJvfOSMbCvjhqoQ1i7TcMJz1xGRv"
+    }
+  ],
+  "attention": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+      "verilator_content_hash": "unhashed"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "retained_binding": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_av_walk.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_av_walk.sv",
+      "sha256": "2e5d45f9dcb80303e3b5d46acb37a64a391f429d8c977bf7503101ed4c50e42e",
+      "verilator_content_hash": "Ll1FAdy4AwPjtdRqyzemSjkfQp2Ml3v3UDEB7UxQ"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_denominator.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_denominator.sv",
+      "sha256": "fb46aa837b7d860f6a2cc606406cbc2f7506be84410a44c61b80405e1e891eaa",
+      "verilator_content_hash": "A0aqg3t9hg9qLMYGQGy8L3UGvoRBCkTGG4BAXh6J"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_epilogue.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_epilogue.sv",
+      "sha256": "c961df1134df1f7ffda885388748698ad784a913269eb45bff53c9713c27d421",
+      "verilator_content_hash": "yWHfETTfH3B9qIU4h0hpiteEqRMmnrRbB1PJcTwn"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d",
+      "verilator_content_hash": "WuBh1Ot8PSguyKO1uB35Ww5EC0TVJhhFxrd88Msz"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+      "sha256": "6dd460362c0253cadfade71d6590a4a73d6120fbf56868ca2479d2e5a1cebb8c",
+      "verilator_content_hash": "bdRgNiwCU8rfrecdZZCkpz1hIPv1aGjKJHnS5aHO"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "sha256": "a6113740db44bf1f3ebe7e550ede74d696e68312d8d439d9d0d16de0eb697975",
+      "verilator_content_hash": "phE3QNtEvx8Avn5VDt501pbmgxLY1DnZ0NFt4Otp"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_sparse.sv",
+      "retained_binding": "rtl/abi3/ot_a3_attention_sparse.sv",
+      "sha256": "7d576ff2c3e5c0b7734be29623fa70c32fa8c199bf9de5cd68f71621cc6e8d84",
+      "verilator_content_hash": "fVdv8sPlwLdzSAKWIBpwwyAowZmBneXNaPcWIcxu"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "retained_binding": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_format_pkg.sv",
+      "retained_binding": "rtl/abi3/ot_a3_format_pkg.sv",
+      "sha256": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536",
+      "verilator_content_hash": "BNALtyEUvA2d8pWO6RwxBsvbc3ttHDkMW0bJxfa5"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "retained_binding": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1",
+      "verilator_content_hash": "8yIDEd05mwIYqapYKK0RyeT5Eh0pJLBnjvSzAVpA"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "retained_binding": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117",
+      "verilator_content_hash": "mygfejO9p19ddnbAJyACbkOYmBxvwrRmiiRaERfA"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "retained_binding": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "sha256": "dab19e396a92572517a1ffa27c4c692598c1f55fe8f0926915171b2494e099c7",
+      "verilator_content_hash": "2rGeOWqSVyUXofAifExpJZjB9VBo8JJpFRcbJJTg"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+      "retained_binding": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+      "sha256": "52821cf9dfb2d487cf2de6ccd9ec61d5a4d3bba47b0ab9f9973a79b5523f3279",
+      "verilator_content_hash": "UoIcAdAy1IfPLebM2exh1aTTu6R7Crn5lzp5tVIB"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_seq.sv",
+      "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+      "verilator_content_hash": "O85OwNNFtQ8hkO27wgB812eHjiD90Ar6bVfUDqKG"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_div_small_seq.sv",
+      "sha256": "2f0e62de47cea891c516734601e5977235a221c7c89f6a84a75b8db2d0c4b866",
+      "verilator_content_hash": "Lw5i3kfOqJHFFnNGAeWXcjWiIcfIn2qEp1uNstDE"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "retained_binding": "rtl/lib/ot_wide_mul_seq.sv",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "retained_binding": "rtl/ot_fp32_rne_pkg.sv",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "retained_binding": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "retained_binding": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+      "verilator_content_hash": "HY6MdvK9q3UAjtxBtR70JkwJMtVR8LpSk5LIU8yj"
+    },
+    {
+      "path": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+      "retained_binding": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+      "sha256": "533f82e3f3973ee5c3eadbaa448e55e440fe4f40aa7996814819b8ec041e3949",
+      "verilator_content_hash": "UzAC4BOXPuXD6tuqRI5V5EDAT0CqeZaBSBm47AQe"
+    },
+    {
+      "path": "rtl/test/tb_a3_attention_sparse.sv",
+      "retained_binding": "rtl/test/tb_a3_attention_sparse.sv",
+      "sha256": "ac3f7dc92c3fd534e335aaf71c7308b930e3a3a6e88f3b1b8a16f98cd9862987",
+      "verilator_content_hash": "rD99ySwB1TTjNar3HHMIuTDjo6bojzsbihb5jNmG"
+    }
+  ]
+}

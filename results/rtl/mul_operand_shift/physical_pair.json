@@ -1,0 +1,23 @@
+{
+  "scope": "Matched standalone route pair, pending. Historical tree-module route is supplementary only.",
+  "top": "ot_wide_mul_seq",
+  "parameters": {
+    "WA": 163,
+    "WB": 161,
+    "LOW_BITS": 160,
+    "BITS_PER_STEP": 16
+  },
+  "clock_period_ns": 1,
+  "cts_cluster_size": 12,
+  "max_fanout": 16,
+  "max_transition": "library",
+  "core_utilization_percent": 35,
+  "records": [
+    "results/physical_abi3/asap7/wide_mul_tree/operand_shift_baseline_cts12_1ns.json",
+    "results/physical_abi3/asap7/wide_mul_tree/operand_shift_cts12_1ns.json"
+  ],
+  "source_sha256": {
+    "rtl/lib/ot_wide_mul_seq.sv": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+    "results/rtl/mul_operand_shift/candidate.sv": "2a3e1fba5444b1e82172969630551a46bea0266046f291fa43e3365c3631f1af"
+  }
+}

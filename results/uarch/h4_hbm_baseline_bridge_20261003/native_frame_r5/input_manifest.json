@@ -1,0 +1,62 @@
+[
+  {
+    "archive": "inputs/allocator.json",
+    "bytes": 6400,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/allocator.json",
+    "sha256": "3081fba04e9afbec8d1b6093136fbb921c2546e7a05e9efaac43f24d64c09b8a"
+  },
+  {
+    "archive": "inputs/atomic_owner_contract.json",
+    "bytes": 6121,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/atomic_owner_contract.json",
+    "sha256": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d"
+  },
+  {
+    "archive": "inputs/movement.py",
+    "bytes": 10473,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/h4_c0_provider_movement.py",
+    "sha256": "4ab7c01298d9e6948c3d53a04c833bf0e2f55cf0e664215b88fcb097f4899164"
+  },
+  {
+    "archive": "inputs/owner.py",
+    "bytes": 29566,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/h4_c0_v1_owner_lock_addressed.py",
+    "sha256": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528"
+  },
+  {
+    "archive": "inputs/parent_join.py",
+    "bytes": 18431,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/h4_c0_parent_provider_join.py",
+    "sha256": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a"
+  },
+  {
+    "archive": "inputs/Qwen_tiled.json.gz",
+    "bytes": 3783521,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/Qwen_tiled.json.gz",
+    "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+  },
+  {
+    "archive": "inputs/program_final.json.gz",
+    "bytes": 14322040,
+    "origin": "290d701b986ecafc81e59f5561c9701228f8077d:results/uarch/h4_hbm_source_connector_review_20261003/r3/inputs/program_final.json.gz",
+    "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313"
+  },
+  {
+    "archive": "inputs/bridge_model.json",
+    "bytes": 131919,
+    "origin": "fa8009aefd3ba2c211bff0307022e1e5b21f4bb1:results/uarch/h4_hbm_baseline_bridge_20261003/w5_w10_r4/model.json",
+    "sha256": "fff00ad9ba9e342912143e404beb3f58762ec719c94503d70ae0506231fa4672"
+  },
+  {
+    "archive": "inputs/bridge_source.py",
+    "bytes": 32788,
+    "origin": "fa8009aefd3ba2c211bff0307022e1e5b21f4bb1:tools/h4_hbm_w5_w10_composed_model.py",
+    "sha256": "3c09c3e6e974e1b8ffbea9b7cda465b86ae0293b7c1b589f68508fba243e247f"
+  },
+  {
+    "archive": "inputs/V1_source.py",
+    "bytes": 24416,
+    "origin": "f7fa8e290d419f6de3356385c0b55ded768c2090:tools/h4_v1_g0_model.py",
+    "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884"
+  }
+]

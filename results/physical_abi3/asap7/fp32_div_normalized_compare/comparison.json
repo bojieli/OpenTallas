@@ -1,0 +1,38 @@
+{
+  "scope": "Standalone ASAP7 TT 1 ns synthesis/ideal-clock STA of candidate comparison rewrites; no routed comparison.",
+  "variants": [
+    {
+      "variant": "baseline",
+      "record": "prelayout_baseline_1ns.json",
+      "sha256": "62e7cba9c30bd4ac6965ac61b9d1e967e0c1cee678b8254b0f55a60500b8a004",
+      "area_um2": 1121.627,
+      "setup_wns_ns": -1.290138112612177
+    },
+    {
+      "variant": "normalized",
+      "record": "prelayout_normalized_1ns.json",
+      "sha256": "e8c5b086e316c5a4fd2968af97b889aa5294a1a2d79abfc6dc4cebda3aa30c6f",
+      "area_um2": 1046.669,
+      "setup_wns_ns": -1.928655465268017
+    },
+    {
+      "variant": "balanced",
+      "record": "prelayout_balanced_1ns.json",
+      "sha256": "8fe6c9c08f429ca7af62fbf32c9d002fe5962eda433a0af72663e29e41cbaf09",
+      "area_um2": 1023.577,
+      "setup_wns_ns": -2.3927704358015704
+    }
+  ],
+  "decision": "Retain existing active RTL. Narrow normalization reduces area but worsens pre-layout timing; neither candidate is selected.",
+  "balanced_functional_result": {
+    "cases": 673,
+    "failures": 0,
+    "reference_cycles": 21982,
+    "candidate_cycles": 35335,
+    "bench": "rtl/test/tb_a3_fp32_div_pipe_equiv.sv",
+    "bench_sha256": "853519991a189f3adb963a36de3c03e0621cb59749c92ad2d8995f3b7712d0ac",
+    "candidate": "source_snapshots/balanced.sv",
+    "candidate_sha256": "04396485ee43eeda85b001d5736bd699afbc580f8c76ee888cfec841761253c5"
+  },
+  "limitations": "No full arithmetic contract or containing-block qualification. Sinkhorn Icarus bench could not elaborate its preexisting indefinite-width random-expression concatenation; no Sinkhorn equivalence result claimed."
+}

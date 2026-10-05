@@ -1,0 +1,43 @@
+{
+  "scope": "Current partial-replay scheduler at tested 1 ns ASAP7 TT; does not qualify prefetch or complete G2",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "5c487e4c9cdda627b515b196f3e7062b73a47571e471f7ae86986553a232ad6f",
+      "size_bytes": 9181
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79",
+      "size_bytes": 7555
+    }
+  ],
+  "retained_artifacts_verified": 7,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.051383899999999996,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.0337446,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "area_um2": 1393.78
+}

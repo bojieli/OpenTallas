@@ -1,0 +1,27 @@
+test_current_single_data_port_cannot_accept_heterogeneous_write_burst (test_qwen_rom_kv_causal_join.CausalTests) ... ok
+test_literal_owned_sector_rewrite_burst_and_real_read_state (test_qwen_rom_kv_causal_join.CausalTests) ... ok
+test_unrelated_write_allocation_cannot_join_real_producer (test_qwen_rom_kv_causal_join.CausalTests) ... ok
+test_write_row_requires_backing_reverse_wire_grant_and_retirement (test_qwen_rom_kv_causal_join.CausalTests) ... ok
+test_actual_layer_local_pc_survives_provider_fields (test_qwen_rom_kv_identity_binding.IdentityTests) ... ok
+test_all36_layers_and_four_endpoint_ranks_do_not_alias (test_qwen_rom_kv_identity_binding.IdentityTests) ... ok
+test_bad_endpoint_owner_and_stale_generation_rejected (test_qwen_rom_kv_identity_binding.IdentityTests) ... ok
+test_literal_reverse_wire_and_retained_fields (test_qwen_rom_kv_identity_binding.IdentityTests) ... ok
+test_source_widths_are_literal (test_qwen_rom_kv_identity_binding.IdentityTests) ... ok
+test_current_open_tail_reads_and_actual_provider_recovery (test_qwen_rom_kv_production_join.PolicyTests) ... ok
+test_descriptor_demand_hits_layer_hops_and_no_implicit_zero (test_qwen_rom_kv_production_join.PolicyTests) ... ok
+test_literal_tail_bank_slot_sizing_and_prototype_geometry_join (test_qwen_rom_kv_production_join.PolicyTests) ... ok
+test_open_k_tail_preserved_across_layers_no_overwrite_before_backing (test_qwen_rom_kv_production_join.PolicyTests) ... ok
+test_actual_encoded_shape_addresses_and_accepted_issue (test_qwen_rom_kv_production_join.ProducerTests) ... ok
+test_canonical_inverse_all_source_values (test_qwen_rom_kv_production_join.ProducerTests) ... ok
+test_source_producer_full_sector_plan_has_no_partial_rmw (test_qwen_rom_kv_production_join.ProducerTests) ... ok
+test_wrong_image_and_incomplete_state (test_qwen_rom_kv_production_join.ProducerTests) ... ok
+test_die_part_of_physical_tag_key_and_write_residents_finite (test_qwen_rom_kv_production_join.ReceiptTests) ... ok
+test_owner_stack_pc_identity_and_duplicate_rejection (test_qwen_rom_kv_production_join.ReceiptTests) ... ok
+test_read_requires_allocate_return_drain_credit_and_consumed_grant (test_qwen_rom_kv_production_join.ReceiptTests) ... ok
+test_source_burst_and_assembly_credits_are_finite (test_qwen_rom_kv_production_join.ReceiptTests) ... ok
+test_write_backing_payload_and_source_eight_cycle_visibility (test_qwen_rom_kv_production_join.ReceiptTests) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 0.136s
+
+OK

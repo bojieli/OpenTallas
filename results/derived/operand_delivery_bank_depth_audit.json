@@ -1,0 +1,1480 @@
+{
+  "area_cost": [
+    {
+      "closed": true,
+      "core_um2": 31524.7,
+      "delta_vs_baseline": {
+        "core_fraction": 0.0,
+        "fmax_fraction": 0.0,
+        "occupied_fraction": 0.0,
+        "standard_cell_fraction": 0.0,
+        "weight_sram_fraction": 0.0
+      },
+      "evidence_class": "ROUTED AND CLOSED",
+      "label": "published_lockstep",
+      "macro_count": 2,
+      "occupied_um2": 10190.35,
+      "post_route_check_met": true,
+      "post_route_fmax_hz": 1289720000.0,
+      "refill_decoupled": 0,
+      "setup_wns_ns": 0.0246408,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "standard_cell_count": 60583,
+      "standard_cell_um2": 7381.39,
+      "target_headroom": 0.030801,
+      "weight_banks": 1,
+      "weight_sram_macro_um2": 2808.96,
+      "weight_sram_share_of_occupied": 0.27564902088740817
+    },
+    {
+      "closed": false,
+      "core_um2": 41367.9,
+      "delta_vs_baseline": {
+        "core_fraction": 0.31223770567206044,
+        "fmax_fraction": -0.006466519864776865,
+        "occupied_fraction": 0.30587663819201505,
+        "standard_cell_fraction": 0.04173062255212101,
+        "weight_sram_fraction": 1.0
+      },
+      "evidence_class": "ROUTED, POST-ROUTE CLEAN ON TIMING AND DRC, NOT CLOSED",
+      "label": "decoupled_banks2",
+      "macro_count": 4,
+      "occupied_um2": 13307.34,
+      "post_route_check_met": true,
+      "post_route_fmax_hz": 1281380000.0,
+      "refill_decoupled": 1,
+      "setup_wns_ns": 0.019592400000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 7
+      },
+      "standard_cell_count": 64947,
+      "standard_cell_um2": 7689.42,
+      "target_headroom": 0.024490500000000002,
+      "weight_banks": 2,
+      "weight_sram_macro_um2": 5617.92,
+      "weight_sram_share_of_occupied": 0.42216701459495287
+    },
+    {
+      "closed": false,
+      "core_um2": 60275.6,
+      "delta_vs_baseline": {
+        "core_fraction": 0.9120118510247519,
+        "fmax_fraction": -0.041226002543187645,
+        "occupied_fraction": 0.8911499605018471,
+        "standard_cell_fraction": 0.08864048641245081,
+        "weight_sram_fraction": 2.9999857598541806
+      },
+      "evidence_class": "ROUTED, NOT CLOSED",
+      "label": "decoupled_banks4",
+      "macro_count": 8,
+      "occupied_um2": 19271.48,
+      "post_route_check_met": false,
+      "post_route_fmax_hz": 1236550000.0,
+      "refill_decoupled": 1,
+      "setup_wns_ns": -0.0086996,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "standard_cell_count": 70937,
+      "standard_cell_um2": 8035.68,
+      "target_headroom": -0.010874499999999999,
+      "weight_banks": 4,
+      "weight_sram_macro_um2": 11235.8,
+      "weight_sram_share_of_occupied": 0.5830273544118043
+    }
+  ],
+  "baseline_utilisation_reproduced": {
+    "all_identical": null,
+    "cases": []
+  },
+  "comparator": {
+    "bf16_dense_ops_s": 312000000000000.0,
+    "bf16_source": "configs/hardware/technology_inputs.json :: source_facts.a100_sxm_80gb.bf16_dense_ops_s",
+    "device_level_ops_s_per_mm2": 377723970944.30994,
+    "die_area_grade": "published",
+    "die_area_mm2": 826.0,
+    "logic_area_fraction": 0.6,
+    "logic_area_fraction_grade": "assumed",
+    "logic_area_fraction_source": "configs/hardware/technology.json :: power.gpu_logic_area_fraction",
+    "logic_level_ops_s_per_mm2": 629539951573.85,
+    "logic_mm2": 495.59999999999997,
+    "part": "a100_sxm_80gb",
+    "why_logic_and_not_die": "an array of compute units and its distributor is not a product: no KV cache, no activation buffer, no PHY, no pads. The logic denominator is the narrower and therefore less flattering of the two."
+  },
+  "compute_unit_variants": [
+    {
+      "acceptance_status": "pass",
+      "block": "ot_compute_unit",
+      "closed": true,
+      "core_area_um2": 31524.7,
+      "evidence_class": "ROUTED AND CLOSED",
+      "label": "published_lockstep",
+      "macro_area_um2": 2808.96,
+      "macro_count": 2,
+      "occupied_area_um2": 10190.35,
+      "parameters": {},
+      "post_route_check_met": true,
+      "post_route_fmax_hz": 1289720000.0,
+      "power_total_w_default_activity": 0.0650793,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr.json",
+      "record_sha256": "be46dae888c87373d7767638b6102602e484f654ea1c48755ee33e2c19eaf6b8",
+      "refill_decoupled": 0,
+      "setup_wns_ns": 0.0246408,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 0
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "stages_requested": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7381.39,
+      "standard_cell_count": 60583,
+      "target_clock_period_ns": 0.8,
+      "target_headroom": 0.030801,
+      "target_headroom_suspect": false,
+      "utilization_fraction": 0.32325,
+      "weight_banks": 1
+    },
+    {
+      "acceptance_status": "pass",
+      "block": "ot_compute_unit",
+      "closed": false,
+      "core_area_um2": 41367.9,
+      "evidence_class": "ROUTED, POST-ROUTE CLEAN ON TIMING AND DRC, NOT CLOSED",
+      "label": "decoupled_banks2",
+      "macro_area_um2": 5617.92,
+      "macro_count": 4,
+      "occupied_area_um2": 13307.34,
+      "parameters": {
+        "REFILL_DECOUPLED": 1,
+        "WGT_BANKS": 2
+      },
+      "post_route_check_met": true,
+      "post_route_fmax_hz": 1281380000.0,
+      "power_total_w_default_activity": 0.0598517,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks2_0p8.json",
+      "record_sha256": "fb34df037af80222abdd22b9bb90173ea4bd1401496196803fab41593119492a",
+      "refill_decoupled": 1,
+      "setup_wns_ns": 0.019592400000000003,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 7
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "stages_requested": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 7689.42,
+      "standard_cell_count": 64947,
+      "target_clock_period_ns": 0.8,
+      "target_headroom": 0.024490500000000002,
+      "target_headroom_suspect": false,
+      "utilization_fraction": 0.321683,
+      "weight_banks": 2
+    },
+    {
+      "acceptance_status": "not_met",
+      "block": "ot_compute_unit",
+      "closed": false,
+      "core_area_um2": 60275.6,
+      "evidence_class": "ROUTED, NOT CLOSED",
+      "label": "decoupled_banks4",
+      "macro_area_um2": 11235.8,
+      "macro_count": 8,
+      "occupied_area_um2": 19271.48,
+      "parameters": {
+        "REFILL_DECOUPLED": 1,
+        "WGT_BANKS": 4
+      },
+      "post_route_check_met": false,
+      "post_route_fmax_hz": 1236550000.0,
+      "power_total_w_default_activity": 0.0927735,
+      "record": "results/physical_abi3/asap7/compute_unit/pnr_decoupled_banks4_0p8.json",
+      "record_sha256": "49ec0cfa815a28881b290c35ba5da942620cf8b2946daf5428d119c2ffaa42c9",
+      "refill_decoupled": 1,
+      "setup_wns_ns": -0.0086996,
+      "signal_integrity_violations": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 1
+      },
+      "stages_completed": [
+        "pnr"
+      ],
+      "stages_requested": [
+        "pnr"
+      ],
+      "standard_cell_area_um2": 8035.68,
+      "standard_cell_count": 70937,
+      "target_clock_period_ns": 0.8,
+      "target_headroom": -0.010874499999999999,
+      "target_headroom_suspect": false,
+      "utilization_fraction": 0.319723,
+      "weight_banks": 4
+    }
+  ],
+  "distributor_charged": {
+    "acceptance_status": "pass",
+    "block": "ot_probe_cluster_disp",
+    "closed": true,
+    "core_area_um2": 828.377,
+    "evidence_class": "ROUTED AND CLOSED",
+    "macro_area_um2": 0.0,
+    "macro_count": 0,
+    "occupied_area_um2": 342.178,
+    "parameters": {},
+    "post_route_check_met": true,
+    "post_route_fmax_hz": 1290490000.0,
+    "power_total_w_default_activity": 0.00231118,
+    "record": "results/physical_abi3/asap7/cluster_dispatcher/pnr.json",
+    "record_sha256": "c3ed3e7d14998b4dc32f8a50bd01a675c1261ce2240fdd297b76062c6c5fba30",
+    "setup_wns_ns": 0.0251023,
+    "signal_integrity_violations": {
+      "max_cap_violations": 0,
+      "max_fanout_violations": 0,
+      "max_slew_violations": 0
+    },
+    "stages_completed": [
+      "pnr"
+    ],
+    "stages_requested": [
+      "pnr"
+    ],
+    "standard_cell_area_um2": 342.178,
+    "standard_cell_count": 2734,
+    "target_clock_period_ns": 0.8,
+    "target_headroom": 0.031377875,
+    "target_headroom_suspect": false,
+    "utilization_fraction": 0.41307
+  },
+  "git": {
+    "branch": "token-path-end-to-end",
+    "commit": "3f2fbd5f5c0d34e272b34b182f9d9cd48127867c",
+    "worktree_dirty": true
+  },
+  "headline": {},
+  "question": "Does decoupling weight refill from the MAC tile and double buffering the weight bank close the SKEW-2 operand-delivery gap, and what does it cost in area and frequency?",
+  "ratios": [
+    {
+      "array_area_mm2": 0.662714777,
+      "binding_frequency_hz": 1281380000.0,
+      "binding_term": "compute_unit",
+      "compute_units": 16,
+      "elapsed_cycles": 10094,
+      "kernel_depth_k": 256,
+      "label": "decoupled_banks2",
+      "mac_active_utilisation": 0.9130176342381613,
+      "occupancy_utilisation": 0.9908,
+      "passes_per_descriptor": 3,
+      "peak_bf16_ops_s": 656066560000.0,
+      "peak_ratio_vs_a100_logic": 1.5725264222239743,
+      "refill_decoupled": 1,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "sustained_ratio_vs_a100_logic_mac_active": 1.435744353795933,
+      "sustained_ratio_vs_a100_logic_occupancy": 1.5580591791395138,
+      "weight_banks": 2
+    },
+    {
+      "array_area_mm2": 0.662714777,
+      "binding_frequency_hz": 1281380000.0,
+      "binding_term": "compute_unit",
+      "compute_units": 16,
+      "elapsed_cycles": 10313,
+      "kernel_depth_k": 256,
+      "label": "decoupled_banks2",
+      "mac_active_utilisation": 0.893629399786677,
+      "occupancy_utilisation": 0.9689,
+      "passes_per_descriptor": 3,
+      "peak_bf16_ops_s": 656066560000.0,
+      "peak_ratio_vs_a100_logic": 1.5725264222239743,
+      "refill_decoupled": 1,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "sustained_ratio_vs_a100_logic_mac_active": 1.4052558428407007,
+      "sustained_ratio_vs_a100_logic_occupancy": 1.5236208504928086,
+      "weight_banks": 2
+    },
+    {
+      "array_area_mm2": 0.9652379769999999,
+      "binding_frequency_hz": 1236550000.0,
+      "binding_term": "compute_unit",
+      "compute_units": 16,
+      "elapsed_cycles": 10094,
+      "kernel_depth_k": 256,
+      "label": "decoupled_banks4",
+      "mac_active_utilisation": 0.9130176342381613,
+      "occupancy_utilisation": 0.9908,
+      "passes_per_descriptor": 3,
+      "peak_bf16_ops_s": 633113600000.0,
+      "peak_ratio_vs_a100_logic": 1.0418949803473418,
+      "refill_decoupled": 1,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "sustained_ratio_vs_a100_logic_mac_active": 0.9512684900813456,
+      "sustained_ratio_vs_a100_logic_occupancy": 1.0323095465281462,
+      "weight_banks": 4
+    },
+    {
+      "array_area_mm2": 0.9652379769999999,
+      "binding_frequency_hz": 1236550000.0,
+      "binding_term": "compute_unit",
+      "compute_units": 16,
+      "elapsed_cycles": 10313,
+      "kernel_depth_k": 256,
+      "label": "decoupled_banks4",
+      "mac_active_utilisation": 0.893629399786677,
+      "occupancy_utilisation": 0.9689,
+      "passes_per_descriptor": 3,
+      "peak_bf16_ops_s": 633113600000.0,
+      "peak_ratio_vs_a100_logic": 1.0418949803473418,
+      "refill_decoupled": 1,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "sustained_ratio_vs_a100_logic_mac_active": 0.9310679859285467,
+      "sustained_ratio_vs_a100_logic_occupancy": 1.0094920464585395,
+      "weight_banks": 4
+    }
+  ],
+  "refusals": [
+    "the-second-bank-is-in-the-denominator: a variant's sustained ratio is computed from ITS OWN routed core area and ITS OWN routed frequency. The double buffer's extra macro pair therefore lowers the peak density it is multiplied into, and at SKEW 0 that makes the changed design WORSE than the baseline. Both directions are in the headline block.",
+    "one-pass-descriptors-regress: the fill frontier charges a tile fetch per descriptor, so with one pass per descriptor there is nothing to amortise it over and the changed design loses. That regime is also the one in which every capability's control-path verdict is SHORT (tools/audit_control_path_throughput.py at --passes-per-descriptor 1), so it is not an operating point -- but it is measured and reported rather than omitted.",
+    "skew-is-a-model-not-a-measurement: SKEW 0-4 are duty cycles imposed on refill_valid by a testbench. No memory system, interconnect or DRAM page behaviour produced them, and nothing here says which duty a real operand-delivery network would deliver.",
+    "activation-delivery-not-modelled: the fill frontier covers the WEIGHT path only. Activations are written at full rate through a bench port, so an activation-starved array is out of scope and the 75 % operand-delivery energy share includes paths not touched here.",
+    "fakeram-is-not-characterised-silicon: the weight banks are FakeRAM 2.0 parts -- plausible geometry with a black-box timing model. The AREA of a second bank is read from the same LEF the first one came from, so the RATIO of the two is sound, but no absolute memory energy or array timing figure may be derived from them.",
+    "the-delivery-NETWORK-is-not-designed-or-charged: the fill frontier needs a 256-bit weight column delivered to each unit. The PORT is on the routed block, so its input load and the wiring inside the unit are in the record, but the network that drives 512 of those ports is not designed here and its area, power and achievable duty are not in any number above. The refill duty is an input to this measurement, not an output of it. A design that pays for the buffer and then cannot build the network that fills it has not closed the gap.",
+    "distributor-record-predates-the-new-output: ot_dispatch_tree gained cu_wgt_reload -- one flop and one AND term per leaf -- after results/physical_abi3/asap7/dispatch_tree/pnr_g16_l32_0p8.json was routed, so the distributor area charged here is the version WITHOUT it. Bound on the error: about two cells per leaf on 32 leaves against that record's 54,729, and the whole distributor is under 0.17 % of the array's area, so the array denominator moves by less than one part in 400,000. Stated rather than re-routed.",
+    "logic-area-fraction-is-assumed: the A100's 60 % logic fraction is an assumption, not a published figure, and it sets the denominator of every ratio here.",
+    "core-area-includes-whitespace: the array denominator is the ORFS CORE area at CORE_UTILIZATION=30, which is what results/derived/sustained_array_iso_area_audit.json charges, so the two audits are comparable. The occupied area (standard cells plus macros) is reported alongside it and is the smaller, more flattering denominator -- deliberately not the one used."
+  ],
+  "schema": "opentallas.derived.operand_delivery_double_buffer.v1",
+  "stall_cycles": {
+    "published_baseline_reproduced": true,
+    "record": "results/rtl/refill_stall_campaign.json",
+    "record_sha256": "bb613bda0ed8a8acbecd94568d0f26cc8e77a0c6b3dc531c583364a848682bad",
+    "refill_is_the_only_weight_source": true,
+    "table": [
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 46,
+          "refill_grants": 64,
+          "stall_cycles": 0
+        },
+        "passes_per_descriptor": 1,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 46,
+          "refill_grants": 32,
+          "stall_cycles": 0
+        },
+        "refill_period": 1
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 76,
+          "refill_grants": 63,
+          "stall_cycles": 29
+        },
+        "passes_per_descriptor": 1,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 78,
+          "refill_grants": 32,
+          "stall_cycles": 31
+        },
+        "refill_period": 2
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 142,
+          "refill_grants": 47,
+          "stall_cycles": 95
+        },
+        "passes_per_descriptor": 1,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 142,
+          "refill_grants": 32,
+          "stall_cycles": 95
+        },
+        "refill_period": 4
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 266,
+          "refill_grants": 39,
+          "stall_cycles": 219
+        },
+        "passes_per_descriptor": 1,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 266,
+          "refill_grants": 32,
+          "stall_cycles": 219
+        },
+        "refill_period": 8
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 522,
+          "refill_grants": 35,
+          "stall_cycles": 475
+        },
+        "passes_per_descriptor": 1,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 522,
+          "refill_grants": 32,
+          "stall_cycles": 475
+        },
+        "refill_period": 16
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 92,
+          "refill_grants": 64,
+          "stall_cycles": 0
+        },
+        "passes_per_descriptor": 2,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 92,
+          "refill_grants": 64,
+          "stall_cycles": 0
+        },
+        "refill_period": 1
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 122,
+          "refill_grants": 64,
+          "stall_cycles": 29
+        },
+        "passes_per_descriptor": 2,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 156,
+          "refill_grants": 64,
+          "stall_cycles": 62
+        },
+        "refill_period": 2
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 188,
+          "refill_grants": 59,
+          "stall_cycles": 95
+        },
+        "passes_per_descriptor": 2,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 284,
+          "refill_grants": 64,
+          "stall_cycles": 190
+        },
+        "refill_period": 4
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 312,
+          "refill_grants": 45,
+          "stall_cycles": 219
+        },
+        "passes_per_descriptor": 2,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 536,
+          "refill_grants": 64,
+          "stall_cycles": 442
+        },
+        "refill_period": 8
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 568,
+          "refill_grants": 38,
+          "stall_cycles": 475
+        },
+        "passes_per_descriptor": 2,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 1048,
+          "refill_grants": 64,
+          "stall_cycles": 954
+        },
+        "refill_period": 16
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 138,
+          "refill_grants": 64,
+          "stall_cycles": 0
+        },
+        "passes_per_descriptor": 3,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 138,
+          "refill_grants": 96,
+          "stall_cycles": 0
+        },
+        "refill_period": 1
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 168,
+          "refill_grants": 64,
+          "stall_cycles": 29
+        },
+        "passes_per_descriptor": 3,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 234,
+          "refill_grants": 96,
+          "stall_cycles": 93
+        },
+        "refill_period": 2
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 234,
+          "refill_grants": 64,
+          "stall_cycles": 95
+        },
+        "passes_per_descriptor": 3,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 426,
+          "refill_grants": 96,
+          "stall_cycles": 285
+        },
+        "refill_period": 4
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 358,
+          "refill_grants": 51,
+          "stall_cycles": 219
+        },
+        "passes_per_descriptor": 3,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 806,
+          "refill_grants": 96,
+          "stall_cycles": 665
+        },
+        "refill_period": 8
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 614,
+          "refill_grants": 41,
+          "stall_cycles": 475
+        },
+        "passes_per_descriptor": 3,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 1574,
+          "refill_grants": 96,
+          "stall_cycles": 1433
+        },
+        "refill_period": 16
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 368,
+          "refill_grants": 64,
+          "stall_cycles": 0
+        },
+        "passes_per_descriptor": 8,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 368,
+          "refill_grants": 256,
+          "stall_cycles": 0
+        },
+        "refill_period": 1
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 398,
+          "refill_grants": 64,
+          "stall_cycles": 29
+        },
+        "passes_per_descriptor": 8,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 624,
+          "refill_grants": 256,
+          "stall_cycles": 248
+        },
+        "refill_period": 2
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 464,
+          "refill_grants": 64,
+          "stall_cycles": 95
+        },
+        "passes_per_descriptor": 8,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 1136,
+          "refill_grants": 256,
+          "stall_cycles": 760
+        },
+        "refill_period": 4
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 588,
+          "refill_grants": 64,
+          "stall_cycles": 219
+        },
+        "passes_per_descriptor": 8,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 2156,
+          "refill_grants": 256,
+          "stall_cycles": 1780
+        },
+        "refill_period": 8
+      },
+      {
+        "decoupled_banks2": {
+          "bit_exact": true,
+          "cycles": 844,
+          "refill_grants": 56,
+          "stall_cycles": 475
+        },
+        "passes_per_descriptor": 8,
+        "published_lockstep": {
+          "bit_exact": true,
+          "cycles": 4204,
+          "refill_grants": 256,
+          "stall_cycles": 3828
+        },
+        "refill_period": 16
+      }
+    ]
+  },
+  "unit": "the operand-delivery change to ot_compute_unit and what it buys",
+  "utilisation_measurements": [
+    {
+      "control_model": {
+        "basis": "116.4 control cycles per engine command measured by G1e (results/rtl/abi3_g1e_control_end_to_end.json) at the place-and-routed 265 MHz of ot_a3_microsequencer, seen from the place-and-routed 1,290 MHz of ot_compute_unit",
+        "interval_datapath_cycles": 567
+      },
+      "git_at_measurement": {
+        "branch": "token-path-end-to-end",
+        "commit": "29aa79457fe392a005c171e3bd7234f632b0c08d",
+        "worktree_dirty": true
+      },
+      "record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "record_sha256": "cdfb335338fa70fe045e73f40ef0a60cfa47f3eeda4f251aa8b9a0eafebd60fa",
+      "schema": "opentallas.rtl.dispatch_tree_campaign.v1",
+      "simulator": {
+        "name": "verilator",
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+        "version": "5.050"
+      },
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "15f6e8c7c98b856cb4141e36326d0d9821d59ebae217cc0dd7ccfd34171bba2c",
+          "size_bytes": 7485
+        },
+        {
+          "path": "rtl/proto/ot_mac_lane.sv",
+          "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+          "size_bytes": 4997
+        },
+        {
+          "path": "rtl/proto/ot_mac_tile.sv",
+          "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+          "size_bytes": 8993
+        },
+        {
+          "path": "rtl/proto/ot_compute_unit.sv",
+          "sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
+          "size_bytes": 22117
+        },
+        {
+          "path": "rtl/proto/ot_dispatch_tree.sv",
+          "sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
+          "size_bytes": 32503
+        },
+        {
+          "path": "rtl/proto/ot_cluster_dispatcher.sv",
+          "sha256": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31",
+          "size_bytes": 7889
+        },
+        {
+          "path": "rtl/test/tb_dispatch_tree_throughput.sv",
+          "sha256": "56d8b1385a930161e79b4a6d4717469a4e088d1c2bcc57eeec042586d279d860",
+          "size_bytes": 21667
+        }
+      ],
+      "vectors": [
+        {
+          "path": "testdata/rtl/a3_mac_tile/act.hex",
+          "sha256": "bc891e81ec43d6fad9b092c2493f6cd9edf27c1c7f03a00a4cfc8e1d2fb09c6d"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/wgt.hex",
+          "sha256": "89f334a730383b8f25f8661359a4ab98941d451e4b5059ba58946ead6272b81b"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/expected.hex",
+          "sha256": "52ffc078f41b811e3179ec00ce2634764516c671667b3966ec86b3e68d4ac1fd"
+        }
+      ]
+    },
+    {
+      "control_model": {
+        "basis": "116.4 control cycles per engine command measured by G1e (results/rtl/abi3_g1e_control_end_to_end.json) at the place-and-routed 265 MHz of ot_a3_microsequencer, seen from the place-and-routed 1,290 MHz of ot_compute_unit",
+        "interval_datapath_cycles": 567
+      },
+      "git_at_measurement": {
+        "branch": "token-path-end-to-end",
+        "commit": "3f2fbd5f5c0d34e272b34b182f9d9cd48127867c",
+        "worktree_dirty": true
+      },
+      "record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "record_sha256": "eae35858a44cb5ce456fb279bc681d51eeccf9fd2264342fa771967ec49a20b8",
+      "schema": "opentallas.rtl.dispatch_tree_campaign.v1",
+      "simulator": {
+        "name": "verilator",
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+        "version": "5.050"
+      },
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "15f6e8c7c98b856cb4141e36326d0d9821d59ebae217cc0dd7ccfd34171bba2c",
+          "size_bytes": 7485
+        },
+        {
+          "path": "rtl/proto/ot_mac_lane.sv",
+          "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+          "size_bytes": 4997
+        },
+        {
+          "path": "rtl/proto/ot_mac_tile.sv",
+          "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+          "size_bytes": 8993
+        },
+        {
+          "path": "rtl/proto/ot_compute_unit.sv",
+          "sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
+          "size_bytes": 22117
+        },
+        {
+          "path": "rtl/proto/ot_dispatch_tree.sv",
+          "sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
+          "size_bytes": 32503
+        },
+        {
+          "path": "rtl/proto/ot_cluster_dispatcher.sv",
+          "sha256": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31",
+          "size_bytes": 7889
+        },
+        {
+          "path": "rtl/test/tb_dispatch_tree_throughput.sv",
+          "sha256": "56d8b1385a930161e79b4a6d4717469a4e088d1c2bcc57eeec042586d279d860",
+          "size_bytes": 21667
+        }
+      ],
+      "vectors": [
+        {
+          "path": "testdata/rtl/a3_mac_tile/act.hex",
+          "sha256": "bc891e81ec43d6fad9b092c2493f6cd9edf27c1c7f03a00a4cfc8e1d2fb09c6d"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/wgt.hex",
+          "sha256": "89f334a730383b8f25f8661359a4ab98941d451e4b5059ba58946ead6272b81b"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/expected.hex",
+          "sha256": "52ffc078f41b811e3179ec00ce2634764516c671667b3966ec86b3e68d4ac1fd"
+        }
+      ]
+    },
+    {
+      "control_model": {
+        "basis": "116.4 control cycles per engine command measured by G1e (results/rtl/abi3_g1e_control_end_to_end.json) at the place-and-routed 265 MHz of ot_a3_microsequencer, seen from the place-and-routed 1,290 MHz of ot_compute_unit",
+        "interval_datapath_cycles": 567
+      },
+      "git_at_measurement": {
+        "branch": "token-path-end-to-end",
+        "commit": "3f2fbd5f5c0d34e272b34b182f9d9cd48127867c",
+        "worktree_dirty": true
+      },
+      "record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "record_sha256": "1c80b1be12f7c5e1d387000df7f620a00c88cd8fc424450240a1acd4f591b960",
+      "schema": "opentallas.rtl.dispatch_tree_campaign.v1",
+      "simulator": {
+        "name": "verilator",
+        "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+        "version": "5.050"
+      },
+      "sources": [
+        {
+          "path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+          "sha256": "15f6e8c7c98b856cb4141e36326d0d9821d59ebae217cc0dd7ccfd34171bba2c",
+          "size_bytes": 7485
+        },
+        {
+          "path": "rtl/proto/ot_mac_lane.sv",
+          "sha256": "5139089b285649360ce6e0f15b7b7c72d400a4d0655cc2a3bf60a4f3b080f283",
+          "size_bytes": 4997
+        },
+        {
+          "path": "rtl/proto/ot_mac_tile.sv",
+          "sha256": "4a8dbc7b27b8c3c0b0ff55dab826d266772cba823cc6c08d228ab916e2a15724",
+          "size_bytes": 8993
+        },
+        {
+          "path": "rtl/proto/ot_compute_unit.sv",
+          "sha256": "4f6448ddbd5c188c71d82c987b591b7b076930af5f222bd77a6c01fd297fd255",
+          "size_bytes": 22117
+        },
+        {
+          "path": "rtl/proto/ot_dispatch_tree.sv",
+          "sha256": "e4d624bec0473853bb5edf89c8518e2cfadf532db2f21c143ae7a3a83dc10b3d",
+          "size_bytes": 32503
+        },
+        {
+          "path": "rtl/proto/ot_cluster_dispatcher.sv",
+          "sha256": "fbd1891be4120fc2efdaecb7a5c6cbf1137814e59e856c02343d59ceb7e01c31",
+          "size_bytes": 7889
+        },
+        {
+          "path": "rtl/test/tb_dispatch_tree_throughput.sv",
+          "sha256": "56d8b1385a930161e79b4a6d4717469a4e088d1c2bcc57eeec042586d279d860",
+          "size_bytes": 21667
+        }
+      ],
+      "vectors": [
+        {
+          "path": "testdata/rtl/a3_mac_tile/act.hex",
+          "sha256": "bc891e81ec43d6fad9b092c2493f6cd9edf27c1c7f03a00a4cfc8e1d2fb09c6d"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/wgt.hex",
+          "sha256": "89f334a730383b8f25f8661359a4ab98941d451e4b5059ba58946ead6272b81b"
+        },
+        {
+          "path": "testdata/rtl/a3_mac_tile/expected.hex",
+          "sha256": "52ffc078f41b811e3179ec00ce2634764516c671667b3966ec86b3e68d4ac1fd"
+        }
+      ]
+    }
+  ],
+  "utilisation_rows_all_widths": [
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6519,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.4712379199263691,
+      "occupancy_utilisation": 0.5408,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 53124,
+      "refill_grants_per_consumed_column": 1.080810546875,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6327,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.12138454243717402,
+      "occupancy_utilisation": 0.1591,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 1.0833333333333333,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6830,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.8995607613469986,
+      "occupancy_utilisation": 0.99,
+      "passes_per_descriptor": 2,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.5416666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 384,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 10094,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9130176342381613,
+      "occupancy_utilisation": 0.9908,
+      "passes_per_descriptor": 3,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 576,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 13358,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9198981883515497,
+      "occupancy_utilisation": 0.9913,
+      "passes_per_descriptor": 4,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.2708333333333333,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 768,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 26414,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9304156886499584,
+      "occupancy_utilisation": 0.992,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7763,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.7914466056936751,
+      "occupancy_utilisation": 0.9737,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6519,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.4712379199263691,
+      "occupancy_utilisation": 0.5546,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 53128,
+      "refill_grants_per_consumed_column": 1.0808919270833333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6327,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.12138454243717402,
+      "occupancy_utilisation": 0.15869999999999998,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 13288,
+      "refill_grants_per_consumed_column": 1.0813802083333333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7049,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.8716129947510285,
+      "occupancy_utilisation": 0.9579000000000001,
+      "passes_per_descriptor": 2,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.5416666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 384,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 10313,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.893629399786677,
+      "occupancy_utilisation": 0.9689,
+      "passes_per_descriptor": 3,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 576,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 13577,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9050600279885099,
+      "occupancy_utilisation": 0.9745999999999999,
+      "passes_per_descriptor": 4,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.2708333333333333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 768,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 26633,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9227649908008861,
+      "occupancy_utilisation": 0.9834,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7817,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.7859792759370603,
+      "occupancy_utilisation": 0.9666,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "results/rtl/dispatch_tree_campaign_decoupled_refill.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 2,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6519,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.4712379199263691,
+      "occupancy_utilisation": 0.5408,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 53124,
+      "refill_grants_per_consumed_column": 1.080810546875,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6327,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.12138454243717402,
+      "occupancy_utilisation": 0.1591,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 1.0833333333333333,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6830,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.8995607613469986,
+      "occupancy_utilisation": 0.99,
+      "passes_per_descriptor": 2,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.5416666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 384,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 10094,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9130176342381613,
+      "occupancy_utilisation": 0.9908,
+      "passes_per_descriptor": 3,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 576,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 13358,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9198981883515497,
+      "occupancy_utilisation": 0.9913,
+      "passes_per_descriptor": 4,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.2708333333333333,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 768,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 26414,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9304156886499584,
+      "occupancy_utilisation": 0.992,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7763,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.7914466056936751,
+      "occupancy_utilisation": 0.9737,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 1,
+      "refill_skew_meaning": "every unit slowed a little and by a different amount",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew1.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6519,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.4712379199263691,
+      "occupancy_utilisation": 0.5546,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 53128,
+      "refill_grants_per_consumed_column": 1.0808919270833333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 6327,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.12138454243717402,
+      "occupancy_utilisation": 0.15869999999999998,
+      "passes_per_descriptor": 1,
+      "refill_decoupled": 1,
+      "refill_grants": 13288,
+      "refill_grants_per_consumed_column": 1.0813802083333333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 192,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7049,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.8716129947510285,
+      "occupancy_utilisation": 0.9579000000000001,
+      "passes_per_descriptor": 2,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.5416666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 384,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 10313,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.893629399786677,
+      "occupancy_utilisation": 0.9689,
+      "passes_per_descriptor": 3,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.3611111111111111,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 576,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 13577,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9050600279885099,
+      "occupancy_utilisation": 0.9745999999999999,
+      "passes_per_descriptor": 4,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.2708333333333333,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 768,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 26633,
+      "functional_pass": true,
+      "kernel_depth_k": 256,
+      "mac_active_utilisation": 0.9227649908008861,
+      "occupancy_utilisation": 0.9834,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 53248,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    },
+    {
+      "compute_units": 16,
+      "elapsed_cycles": 7817,
+      "functional_pass": true,
+      "kernel_depth_k": 64,
+      "mac_active_utilisation": 0.7859792759370603,
+      "occupancy_utilisation": 0.9666,
+      "passes_per_descriptor": 8,
+      "refill_decoupled": 1,
+      "refill_grants": 13312,
+      "refill_grants_per_consumed_column": 0.13541666666666666,
+      "refill_skew": 2,
+      "refill_skew_meaning": "STRAGGLERS -- one unit in sixteen at a 50% refill duty",
+      "source_record": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/banks4_skew2.json",
+      "structure": "tree",
+      "unit_completions": 1536,
+      "utilisation_refused": null,
+      "weight_banks": 4,
+      "work_conserved_all_cases": true
+    }
+  ]
+}

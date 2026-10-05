@@ -1,0 +1,49 @@
+{
+ "origin_main_observed_at_utc": "2026-10-01T07:51:42.855436+00:00",
+ "origin_main_commit": "f449a0d9ac9a4b6f227bab636cd8d6156fbd8f0d",
+ "w18_source_commit": "11730262d569a461f05fb8ad5dd0268693f7a162",
+ "baseline_source_differences": [
+  "rtl/chip/ot_chip_v41x_karb_proot.sv",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+  "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+  "tools/rtl_chip_v41x_karb_local.py"
+ ],
+ "baseline_sources_missing": [
+  "rtl/chip/ot_chip_v41x_karb_q2r.sv",
+  "rtl/chip/ot_chip_v41x_keep_dff.sv",
+  "rtl/chip/ot_chip_v41x_stat_ctr32.sv"
+ ],
+ "integration_scope": "gate/tests and historical evidence only; no engine RTL, clocks, PDN or physical verdict changes",
+ "prerequisite_commits": [
+  "70d6afc2",
+  "11730262"
+ ],
+ "optional_legacy_review_commit": "bf680a9a",
+ "prerequisites": [
+  "Apply the provenance fix together with the gate; bare-log v1 reuse must never be the integrated final tool.",
+  "Keep original failures and reconciliations byte-identical and labelled as W18 historical evidence.",
+  "Run focused cache-provenance tests after integration.",
+  "Generate new full transaction/KV baseline evidence from clean pinned candidate sources; existing W18 baselines do not match this origin/main commit.",
+  "Run fresh exhaustive v2 provenance on the clean pinned candidate, then reconcile using its matching full baseline. Do not reuse the W18 source record if any compiler input, gate tool, recipe or tool version differs.",
+  "Retain KSREG rejection, prior clock-tree rejection and DLV pending physical verdict; functional gate integration does not adopt hardware.",
+  "Do not transplant the dirty BF16 codec prototype or silently copy W18 RTL deltas to make old pins match."
+ ],
+ "prepared_only": true,
+ "main_edited": false,
+ "origin_main_gate_claimed": false,
+ "integration_destination": "Parent-owned /home/ubuntu/OpenTallas main; parent updates TASKS.md, commits and pushes. W18 does not edit main/TASKS or push.",
+ "ready_code_commit": "11730262d569a461f05fb8ad5dd0268693f7a162",
+ "fresh_exhaustive_status": "PASS for W18 commit 11730262 only; fresh and source-pinned cached reconciliation PASS; CLI stale-source/changed-log rejection and focused regression PASS",
+ "gate_v2_evidence_paths": [
+  "exhaustive.json",
+  "exhaustive.log",
+  "reconciliation_fresh.json",
+  "reconciliation_cached.json",
+  "cache_cli_rejections.json",
+  "cache_regression.json"
+ ],
+ "historical_evidence_byte_identical": true,
+ "historical_records_verified": 15,
+ "origin_driver_compiler_inputs": 14,
+ "origin_driver_inputs_exist": true
+}

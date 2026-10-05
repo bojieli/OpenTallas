@@ -1,0 +1,101 @@
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:222:34: Expecting expression to be constant, but can't determine constant for FUNCREF 'guard_p'
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+        /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:215:17: ... Location of non-constant LOOP: Loop simulation took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+        /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:222:34: ... Called from 'guard_p()' with parameters:
+           dummy = ?32?h0
+  222 |     localparam integer GUARD_P = guard_p(0);
+      |                                  ^~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:423:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                              : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  423 |         for (gk = 0; gk < NT; gk = gk + 1) begin : g_tr
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:433:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  433 |             for (gs = 0; gs < TD; gs = gs + 1) begin : g_c
+      |             ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:442:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                              : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  442 |         for (gl = 0; gl < NL; gl = gl + 1) begin : g_qkl
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:443:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  443 |             for (gs = 0; gs < S; gs = gs + 1) begin : g_qks
+      |             ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:444:17: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  444 |                 for (gk = 0; gk < TD; gk = gk + 1) begin : g_qke
+      |                 ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:481:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                              : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  481 |         for (gk = 0; gk < NT; gk = gk + 1) begin : g_t
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:504:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                              : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  504 |         for (gl = 0; gl < NL; gl = gl + 1) begin : g_ln
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:505:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  505 |             for (gh = 0; gh < H; gh = gh + 1) begin : g_lh
+      |             ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:508:17: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  508 |                 for (gs = 0; gs < S; gs = gs + 1) begin : g_leaf
+      |                 ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:512:17: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  512 |                 for (gs = 0; gs < S - 1; gs = gs + 1) begin : g_node
+      |                 ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:549:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                              : ... note: In instance 'tb_hdc_v41x_attn.dut'
+  549 |         for (gk = 0; gk < NT; gk = gk + 1) begin : g_m
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv:44:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                     : ... note: In instance 'tb_hdc_v41x_attn.dut.u_stage'
+   44 |         for (l = 0; l < NL; l = l + 1) begin : g_lane
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:384:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t'
+  384 |         for (gk = 0; gk < TD; gk = gk + 1) begin : g_dq
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:401:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t'
+  401 |         for (gk = 0; gk < 8; gk = gk + 1) begin : g_skb
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:405:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t'
+  405 |         for (gk = 0; gk < TD; gk = gk + 1) begin : g_ske
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:413:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t'
+  413 |         for (gh = 0; gh < H; gh = gh + 1) begin : g_h
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:416:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                    : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t'
+  416 |             for (gk = 0; gk < TD; gk = gk + 1) begin : g_w
+      |             ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:91:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                             : ... note: In instance 'tb_hdc_v41x_attn.dut.g_m[0].u_m'
+   91 |         for (gl = 0; gl < MLEV; gl = gl + 1) begin : g_l
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn.sv:107:13: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                               : ... note: In instance 'tb_hdc_v41x_attn.dut.g_m[0].u_m'
+  107 |             for (gh = 0; gh < H; gh = gh + 1) begin : g_h
+      |             ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:295:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t.g_h[0].u_hdp'
+  295 |         for (gk = 0; gk < TD; gk = gk + 1) begin : g_m
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:313:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t.g_h[0].u_hdp'
+  313 |         for (gn = 0; gn < NC; gn = gn + 1) begin : g_c
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:317:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t.g_h[0].u_hdp'
+  317 |         for (gn = 0; gn < NC - 1; gn = gn + 1) begin : g_node
+      |         ^~~
+%Error: /tmp/opentallas-publish-e2e-now/rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv:255:9: Unrolling generate loop took too long; probably this is an infinite loop, otherwise set '--unroll-limit' above 1
+                                                                                   : ... note: In instance 'tb_hdc_v41x_attn.dut.g_t[0].u_t.g_h[0].u_hdp.g_c[0].u_c'
+  255 |         for (gi = 1; gi < 8; gi = gi + 1) begin : g_a
+      |         ^~~
+%Error: Exiting due to 24 error(s)

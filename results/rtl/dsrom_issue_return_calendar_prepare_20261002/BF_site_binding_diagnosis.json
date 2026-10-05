@@ -1,0 +1,60 @@
+{
+  "current_case_scope": "Controlmodel scenarios useactive8192, matchinguniformhardwareBFsites. They do not coveractive6899 historicalimagebinding. No remap/sourcegeometrychange automaticallyadopted.",
+  "effect": "A BFphaseconfiguredonimage_onlysites meetsBF160 hardware; decoder/multiplier elementPASSdoesnotprove thisbinding. Exactfullgeometrydriver/fullfield numericalgate must resolve sourceplacementbinding beforeclaimingactualimage qualification.",
+  "first_hardware_only_pairs": [
+    8,
+    16,
+    24,
+    32,
+    48,
+    56,
+    72,
+    80,
+    88,
+    96,
+    112,
+    120,
+    136,
+    144,
+    152,
+    160
+  ],
+  "first_image_only_pairs": [
+    6,
+    13,
+    20,
+    27,
+    33,
+    47,
+    70,
+    77,
+    84,
+    91,
+    97,
+    111,
+    134,
+    141,
+    148,
+    155
+  ],
+  "full_shape": {
+    "NBF": 1024,
+    "NP": 8192,
+    "R": 128,
+    "image_active": 6899
+  },
+  "hardware_BF_on_inactive_pairs": 128,
+  "hardware_BF_pairs": 1024,
+  "hardware_definition": "ot_v41_field_w17w10.is_bf floor(i*NP/NBF)",
+  "hardware_only_count": 781,
+  "image_BF_pairs": 1024,
+  "image_only_count": 781,
+  "matched_pairs": 243,
+  "runtime_image_definition": "w17_runtime_v41_die_images.Field withactive6899 spreadsBFsites across eachregionsfirst53/54active slots",
+  "source_sha256": {
+    "rtl/v41die/ot_v41_field_w17w10.sv": "addbc9f25389efed1abc5e476c74f96180af8641315e59d1b78955f94adc9811",
+    "tools/v41_die_field.py": "fdf62d1b9ecee3ccb3c8a67137bb75d3399a812f762df3651fffc37041a73d4a",
+    "tools/w17_runtime_v41_die_images.py": "e7c95148569f6743e81f1a4a059c10bdf2f8bdc5342d4de0da15beb059e1b643"
+  },
+  "status": "SOURCE_STATIC_BF_SITE_BINDING_DIFF_NO_HDL_RUN"
+}

@@ -1,0 +1,1594 @@
+{
+  "RF": {
+    "accumulator_and_shuffle": 2,
+    "analytical_macro_outline_area_mm2": 7.96994961408,
+    "candidate_macro_count_die": 2048,
+    "coefficient": 8,
+    "control_reserve": 2,
+    "expanded_activation": 8,
+    "live_projection_registers": 32,
+    "live_scope": "32 resident warps x32 threads x32 registers. Packed source registers may be released after widening; conservative28 value registers +2 accumulator/shuffle +2 control =32. Compiler spills/address64/branch temporaries unqualified; software proof compiled RF cannot be credited to this different kernel.",
+    "logical_bytes_SM": 131072,
+    "macro_claim_boundary": "abstract views from a calibrated analytical model on measured ASAP7 bitcells and ASAP7 standard-cell FO4; no transistor layout, no SPICE of the macro, not silicon; ASAP7 is a predictive PDK and nothing here is a foundry N7 number",
+    "packed_activation": 4,
+    "physical_bytes_SM": 262144,
+    "physical_bytes_die": 8388608,
+    "products": 8,
+    "qualified_macro_area": false,
+    "read_bits_cycle_SM": 8192,
+    "scalar_phase_register_allocation": null,
+    "write_bits_cycle_SM": 4096
+  },
+  "SM_count": 32,
+  "base_commit": "a7e21c35b919ea1f5fd7269609f212d28524af15",
+  "candidate": "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json",
+  "clock_hz": 900000000,
+  "communication": {
+    "DMA_CDC_fence_latency": null,
+    "activation_endpoint_bytes_operator": 1024000,
+    "coefficient_HBM_bytes_operator": 1966080,
+    "grid_barrier_cycles": null,
+    "ownership": "24 row owners SM0..23, norm SM24; all32 retire grid barrier; scalar consumer SM0. Full32SM RF/shared budget retained, no inactive-lane area credit.",
+    "producer_scalar_payload_bytes": 100,
+    "transport_queue_storage_bytes_rank": 2452028,
+    "transport_service_cycles": null,
+    "transport_storage_area_mm2": null,
+    "wire_bytes": null
+  },
+  "composition": {
+    "HC80_conditional_compute_staging_us": 3742.4000000000055,
+    "HC_operators": 80,
+    "additional_transpose_cycles": 35248,
+    "bindings": [
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L0.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 0,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L0.O0.operand_read_credit_wait",
+          "L0.O0.operand_stage",
+          "L0.O0.result_stage",
+          "L0.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 0
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L0.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 0,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L0.O14.operand_read_credit_wait",
+          "L0.O14.operand_stage",
+          "L0.O14.result_stage",
+          "L0.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 14
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L1.O5.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 1,
+        "op": 5,
+        "service_nodes_unpriced": [
+          "L1.O5.operand_read_credit_wait",
+          "L1.O5.operand_stage",
+          "L1.O5.result_stage",
+          "L1.O5.local_drain_barrier"
+        ],
+        "source_operation_index": 58
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L1.O19.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 1,
+        "op": 19,
+        "service_nodes_unpriced": [
+          "L1.O19.operand_read_credit_wait",
+          "L1.O19.operand_stage",
+          "L1.O19.result_stage",
+          "L1.O19.local_drain_barrier"
+        ],
+        "source_operation_index": 72
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L2.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 2,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L2.O0.operand_read_credit_wait",
+          "L2.O0.operand_stage",
+          "L2.O0.result_stage",
+          "L2.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 111
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L2.O24.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 2,
+        "op": 24,
+        "service_nodes_unpriced": [
+          "L2.O24.operand_read_credit_wait",
+          "L2.O24.operand_stage",
+          "L2.O24.result_stage",
+          "L2.O24.local_drain_barrier"
+        ],
+        "source_operation_index": 135
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L3.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 3,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L3.O0.operand_read_credit_wait",
+          "L3.O0.operand_stage",
+          "L3.O0.result_stage",
+          "L3.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 174
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L3.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 3,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L3.O14.operand_read_credit_wait",
+          "L3.O14.operand_stage",
+          "L3.O14.result_stage",
+          "L3.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 188
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L4.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 4,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L4.O0.operand_read_credit_wait",
+          "L4.O0.operand_stage",
+          "L4.O0.result_stage",
+          "L4.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 227
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L4.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 4,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L4.O14.operand_read_credit_wait",
+          "L4.O14.operand_stage",
+          "L4.O14.result_stage",
+          "L4.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 241
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L5.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 5,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L5.O0.operand_read_credit_wait",
+          "L5.O0.operand_stage",
+          "L5.O0.result_stage",
+          "L5.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 280
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L5.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 5,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L5.O14.operand_read_credit_wait",
+          "L5.O14.operand_stage",
+          "L5.O14.result_stage",
+          "L5.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 294
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L6.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 6,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L6.O0.operand_read_credit_wait",
+          "L6.O0.operand_stage",
+          "L6.O0.result_stage",
+          "L6.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 333
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L6.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 6,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L6.O14.operand_read_credit_wait",
+          "L6.O14.operand_stage",
+          "L6.O14.result_stage",
+          "L6.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 347
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L7.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 7,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L7.O0.operand_read_credit_wait",
+          "L7.O0.operand_stage",
+          "L7.O0.result_stage",
+          "L7.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 386
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L7.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 7,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L7.O14.operand_read_credit_wait",
+          "L7.O14.operand_stage",
+          "L7.O14.result_stage",
+          "L7.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 400
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L8.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 8,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L8.O0.operand_read_credit_wait",
+          "L8.O0.operand_stage",
+          "L8.O0.result_stage",
+          "L8.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 439
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L8.O24.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 8,
+        "op": 24,
+        "service_nodes_unpriced": [
+          "L8.O24.operand_read_credit_wait",
+          "L8.O24.operand_stage",
+          "L8.O24.result_stage",
+          "L8.O24.local_drain_barrier"
+        ],
+        "source_operation_index": 463
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L9.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 9,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L9.O0.operand_read_credit_wait",
+          "L9.O0.operand_stage",
+          "L9.O0.result_stage",
+          "L9.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 502
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L9.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 9,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L9.O14.operand_read_credit_wait",
+          "L9.O14.operand_stage",
+          "L9.O14.result_stage",
+          "L9.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 516
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L10.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 10,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L10.O0.operand_read_credit_wait",
+          "L10.O0.operand_stage",
+          "L10.O0.result_stage",
+          "L10.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 555
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L10.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 10,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L10.O14.operand_read_credit_wait",
+          "L10.O14.operand_stage",
+          "L10.O14.result_stage",
+          "L10.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 569
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L11.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 11,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L11.O0.operand_read_credit_wait",
+          "L11.O0.operand_stage",
+          "L11.O0.result_stage",
+          "L11.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 608
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L11.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 11,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L11.O14.operand_read_credit_wait",
+          "L11.O14.operand_stage",
+          "L11.O14.result_stage",
+          "L11.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 622
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L12.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 12,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L12.O0.operand_read_credit_wait",
+          "L12.O0.operand_stage",
+          "L12.O0.result_stage",
+          "L12.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 661
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L12.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 12,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L12.O14.operand_read_credit_wait",
+          "L12.O14.operand_stage",
+          "L12.O14.result_stage",
+          "L12.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 675
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L13.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 13,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L13.O0.operand_read_credit_wait",
+          "L13.O0.operand_stage",
+          "L13.O0.result_stage",
+          "L13.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 714
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L13.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 13,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L13.O14.operand_read_credit_wait",
+          "L13.O14.operand_stage",
+          "L13.O14.result_stage",
+          "L13.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 728
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L14.O5.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 14,
+        "op": 5,
+        "service_nodes_unpriced": [
+          "L14.O5.operand_read_credit_wait",
+          "L14.O5.operand_stage",
+          "L14.O5.result_stage",
+          "L14.O5.local_drain_barrier"
+        ],
+        "source_operation_index": 772
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L14.O29.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 14,
+        "op": 29,
+        "service_nodes_unpriced": [
+          "L14.O29.operand_read_credit_wait",
+          "L14.O29.operand_stage",
+          "L14.O29.result_stage",
+          "L14.O29.local_drain_barrier"
+        ],
+        "source_operation_index": 796
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L15.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 15,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L15.O0.operand_read_credit_wait",
+          "L15.O0.operand_stage",
+          "L15.O0.result_stage",
+          "L15.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 835
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L15.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 15,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L15.O14.operand_read_credit_wait",
+          "L15.O14.operand_stage",
+          "L15.O14.result_stage",
+          "L15.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 849
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L16.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 16,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L16.O0.operand_read_credit_wait",
+          "L16.O0.operand_stage",
+          "L16.O0.result_stage",
+          "L16.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 888
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L16.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 16,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L16.O14.operand_read_credit_wait",
+          "L16.O14.operand_stage",
+          "L16.O14.result_stage",
+          "L16.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 902
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L17.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 17,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L17.O0.operand_read_credit_wait",
+          "L17.O0.operand_stage",
+          "L17.O0.result_stage",
+          "L17.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 941
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L17.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 17,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L17.O14.operand_read_credit_wait",
+          "L17.O14.operand_stage",
+          "L17.O14.result_stage",
+          "L17.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 955
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L18.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 18,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L18.O0.operand_read_credit_wait",
+          "L18.O0.operand_stage",
+          "L18.O0.result_stage",
+          "L18.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 994
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L18.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 18,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L18.O14.operand_read_credit_wait",
+          "L18.O14.operand_stage",
+          "L18.O14.result_stage",
+          "L18.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1008
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L19.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 19,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L19.O0.operand_read_credit_wait",
+          "L19.O0.operand_stage",
+          "L19.O0.result_stage",
+          "L19.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1047
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L19.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 19,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L19.O14.operand_read_credit_wait",
+          "L19.O14.operand_stage",
+          "L19.O14.result_stage",
+          "L19.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1061
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L20.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 20,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L20.O0.operand_read_credit_wait",
+          "L20.O0.operand_stage",
+          "L20.O0.result_stage",
+          "L20.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1100
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L20.O27.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 20,
+        "op": 27,
+        "service_nodes_unpriced": [
+          "L20.O27.operand_read_credit_wait",
+          "L20.O27.operand_stage",
+          "L20.O27.result_stage",
+          "L20.O27.local_drain_barrier"
+        ],
+        "source_operation_index": 1127
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L21.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 21,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L21.O0.operand_read_credit_wait",
+          "L21.O0.operand_stage",
+          "L21.O0.result_stage",
+          "L21.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1166
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L21.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 21,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L21.O14.operand_read_credit_wait",
+          "L21.O14.operand_stage",
+          "L21.O14.result_stage",
+          "L21.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1180
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L22.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 22,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L22.O0.operand_read_credit_wait",
+          "L22.O0.operand_stage",
+          "L22.O0.result_stage",
+          "L22.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1219
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L22.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 22,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L22.O14.operand_read_credit_wait",
+          "L22.O14.operand_stage",
+          "L22.O14.result_stage",
+          "L22.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1233
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L23.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 23,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L23.O0.operand_read_credit_wait",
+          "L23.O0.operand_stage",
+          "L23.O0.result_stage",
+          "L23.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1272
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L23.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 23,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L23.O14.operand_read_credit_wait",
+          "L23.O14.operand_stage",
+          "L23.O14.result_stage",
+          "L23.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1286
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L24.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 24,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L24.O0.operand_read_credit_wait",
+          "L24.O0.operand_stage",
+          "L24.O0.result_stage",
+          "L24.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1325
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L24.O23.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 24,
+        "op": 23,
+        "service_nodes_unpriced": [
+          "L24.O23.operand_read_credit_wait",
+          "L24.O23.operand_stage",
+          "L24.O23.result_stage",
+          "L24.O23.local_drain_barrier"
+        ],
+        "source_operation_index": 1348
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L25.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 25,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L25.O0.operand_read_credit_wait",
+          "L25.O0.operand_stage",
+          "L25.O0.result_stage",
+          "L25.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1387
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L25.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 25,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L25.O14.operand_read_credit_wait",
+          "L25.O14.operand_stage",
+          "L25.O14.result_stage",
+          "L25.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1401
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L26.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 26,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L26.O0.operand_read_credit_wait",
+          "L26.O0.operand_stage",
+          "L26.O0.result_stage",
+          "L26.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1440
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L26.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 26,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L26.O14.operand_read_credit_wait",
+          "L26.O14.operand_stage",
+          "L26.O14.result_stage",
+          "L26.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1454
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L27.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 27,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L27.O0.operand_read_credit_wait",
+          "L27.O0.operand_stage",
+          "L27.O0.result_stage",
+          "L27.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1493
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L27.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 27,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L27.O14.operand_read_credit_wait",
+          "L27.O14.operand_stage",
+          "L27.O14.result_stage",
+          "L27.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1507
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L28.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 28,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L28.O0.operand_read_credit_wait",
+          "L28.O0.operand_stage",
+          "L28.O0.result_stage",
+          "L28.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1546
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L28.O23.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 28,
+        "op": 23,
+        "service_nodes_unpriced": [
+          "L28.O23.operand_read_credit_wait",
+          "L28.O23.operand_stage",
+          "L28.O23.result_stage",
+          "L28.O23.local_drain_barrier"
+        ],
+        "source_operation_index": 1569
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L29.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 29,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L29.O0.operand_read_credit_wait",
+          "L29.O0.operand_stage",
+          "L29.O0.result_stage",
+          "L29.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1608
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L29.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 29,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L29.O14.operand_read_credit_wait",
+          "L29.O14.operand_stage",
+          "L29.O14.result_stage",
+          "L29.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1622
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L30.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 30,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L30.O0.operand_read_credit_wait",
+          "L30.O0.operand_stage",
+          "L30.O0.result_stage",
+          "L30.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1661
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L30.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 30,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L30.O14.operand_read_credit_wait",
+          "L30.O14.operand_stage",
+          "L30.O14.result_stage",
+          "L30.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1675
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L31.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 31,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L31.O0.operand_read_credit_wait",
+          "L31.O0.operand_stage",
+          "L31.O0.result_stage",
+          "L31.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1714
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L31.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 31,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L31.O14.operand_read_credit_wait",
+          "L31.O14.operand_stage",
+          "L31.O14.result_stage",
+          "L31.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1728
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L32.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 32,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L32.O0.operand_read_credit_wait",
+          "L32.O0.operand_stage",
+          "L32.O0.result_stage",
+          "L32.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1767
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L32.O23.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 32,
+        "op": 23,
+        "service_nodes_unpriced": [
+          "L32.O23.operand_read_credit_wait",
+          "L32.O23.operand_stage",
+          "L32.O23.result_stage",
+          "L32.O23.local_drain_barrier"
+        ],
+        "source_operation_index": 1790
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L33.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 33,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L33.O0.operand_read_credit_wait",
+          "L33.O0.operand_stage",
+          "L33.O0.result_stage",
+          "L33.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1829
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L33.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 33,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L33.O14.operand_read_credit_wait",
+          "L33.O14.operand_stage",
+          "L33.O14.result_stage",
+          "L33.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1843
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L34.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 34,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L34.O0.operand_read_credit_wait",
+          "L34.O0.operand_stage",
+          "L34.O0.result_stage",
+          "L34.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1882
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L34.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 34,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L34.O14.operand_read_credit_wait",
+          "L34.O14.operand_stage",
+          "L34.O14.result_stage",
+          "L34.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1896
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L35.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 35,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L35.O0.operand_read_credit_wait",
+          "L35.O0.operand_stage",
+          "L35.O0.result_stage",
+          "L35.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1935
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L35.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 35,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L35.O14.operand_read_credit_wait",
+          "L35.O14.operand_stage",
+          "L35.O14.result_stage",
+          "L35.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 1949
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L36.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 36,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L36.O0.operand_read_credit_wait",
+          "L36.O0.operand_stage",
+          "L36.O0.result_stage",
+          "L36.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 1988
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L36.O23.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 36,
+        "op": 23,
+        "service_nodes_unpriced": [
+          "L36.O23.operand_read_credit_wait",
+          "L36.O23.operand_stage",
+          "L36.O23.result_stage",
+          "L36.O23.local_drain_barrier"
+        ],
+        "source_operation_index": 2011
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L37.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 37,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L37.O0.operand_read_credit_wait",
+          "L37.O0.operand_stage",
+          "L37.O0.result_stage",
+          "L37.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 2050
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L37.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 37,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L37.O14.operand_read_credit_wait",
+          "L37.O14.operand_stage",
+          "L37.O14.result_stage",
+          "L37.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 2064
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L38.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 38,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L38.O0.operand_read_credit_wait",
+          "L38.O0.operand_stage",
+          "L38.O0.result_stage",
+          "L38.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 2103
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L38.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 38,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L38.O14.operand_read_credit_wait",
+          "L38.O14.operand_stage",
+          "L38.O14.result_stage",
+          "L38.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 2117
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L39.O0.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 39,
+        "op": 0,
+        "service_nodes_unpriced": [
+          "L39.O0.operand_read_credit_wait",
+          "L39.O0.operand_stage",
+          "L39.O0.result_stage",
+          "L39.O0.local_drain_barrier"
+        ],
+        "source_operation_index": 2156
+      },
+      {
+        "additional_transpose_cycles": 35248,
+        "compute_node": "L39.O14.gpu_simt_kernel",
+        "conditional_local_cycles": 42102,
+        "layer": 39,
+        "op": 14,
+        "service_nodes_unpriced": [
+          "L39.O14.operand_read_credit_wait",
+          "L39.O14.operand_stage",
+          "L39.O14.result_stage",
+          "L39.O14.local_drain_barrier"
+        ],
+        "source_operation_index": 2170
+      }
+    ],
+    "complete_schedule_admitted": false,
+    "conditional_compute_staging_cycles_operator": 42102,
+    "excludes": "All controller credit/loaded waits, DMA/CDC, physical collector links, grid/fence/reuse service and non-HC operators remain unpriced. Transpose addition includes conservative duplicate final-refill writes; not a complete-kernel measurement.",
+    "full_token_cycles": null,
+    "original_local_cycles": 6854,
+    "source_program_operations": 2213
+  },
+  "coordination": {
+    "Euler_input_consumed": "results/uarch/w19_transport_contract_20261001/contract_r1.json",
+    "QC_input_consumed": "results/quality/w19_hc_simd_proof_20261001/proof.json",
+    "acknowledgement": false,
+    "request": "Euler reconcile ordinary shared/INT transpose assumptions and external buffers with r3 service; QC bind scalar recipes and compiler RF liveness to target lowering. No dedicated HCP or approximate SFU."
+  },
+  "default_enabled": false,
+  "hardware_adopted": false,
+  "headline_rate": null,
+  "inputs": "results/uarch/w16_gpu_hc_simt_contract_20261001/assumptions_r1.json",
+  "lanes_SM": 128,
+  "latency_contract": {
+    "FMA": false,
+    "add_latency": 7,
+    "divider": "one standard IEEE F32 divider/SM,II1 LAT19 candidate; actual wrapper/SSFF not qualified",
+    "fp32_add_lanes_sm": 128,
+    "fp32_mul_lanes_sm": 128,
+    "integer_shift_compare_shuffle": "standard GPU paths proposed; area/routes/opcode/exactness pending",
+    "issue": "one warp opcode/partition/cycle; ADD/MUL share scheduler; RF2cycles+coreLAT7; separate primitives area charged, not128 fusedMAC estimate assumed equivalent",
+    "mul_latency": 7,
+    "rf_to_result_scoreboard_cycles": 9
+  },
+  "model_generator_changed": false,
+  "numerical_scope": {
+    "QC_NAM_adopt": false,
+    "reduction_boundaries": 91,
+    "reference": "Existing13-stage per-fixture semantic proof only; no new campaign. Scalar mapping and exact primitive wrappers remain pending.",
+    "software_fixtures": 7,
+    "target_connected_GPU_kernel_proof": false
+  },
+  "pins": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "results/quality/w19_hc_simd_proof_20261001/proof.json": "06c42b25ca4d32fe75dbabd9ee857457f0308d827a224b6f484c95e2d304cab4",
+    "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json": "c4aad8b9c059536e5f7e5ce9a94619341cb2895c53af0f7b6bba6805bc8d2436",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/uarch/w16_gpu_hc_simt_contract_20261001/assumptions_r1.json": "8e632ca52b641b8a7a541672b6803c1209de1cbc552c768a8c4758f908b1834d",
+    "results/uarch/w19_transport_contract_20261001/contract_r1.json": "7c86ca6d2103dcd859876d33c00f11d319be46f95292e31deaebf71d877bfe6e",
+    "tests/test_w16_gpu_hc_simt_contract.py": "a1ded02136c2c9ddae26b2b60953dae334f1aec4af3741e1db60ce87224aaf95",
+    "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "tools/w16_gpu_hc_simt_contract.py": "69b2b16ea87e580a6a53df722e980e6425fa8c224afa4ae69c76812fa5332aa2",
+    "tools/w19_composed_schedule.py": "818c794e40883b3176867dfe1a5ccd9f6de0c7799a5b58d0bfd78ad5c53d3667",
+    "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+    "tools/w19_hc_simd_proof.py": "187b1a1d7e9d2056f31209824f5a656c097d45907a101a0778c6f029edb17c71",
+    "tools/w19_transport_contract.py": "8f490bb2a197e088f96639f1781a8059576c805e67545a5b0021cc22fd19f02b"
+  },
+  "ports_tracks": {
+    "RF_depth_mux_inputs": 2,
+    "RF_depth_select_mux_bits_SM": 8192,
+    "RF_groups": 16,
+    "RF_mux_demux_area_mm2": null,
+    "RF_read_data_signals_SM": 8192,
+    "RF_write_data_signals_SM": 4096,
+    "RF_write_replica_fanout": 2,
+    "SIMD_ALU_incremental_area_mm2": null,
+    "activation_packed_stride4_conflict": 4,
+    "actual_route_tracks": null,
+    "channel_capacity": null,
+    "coefficient_naive_stride8_conflict": 8,
+    "logical_data_track_demand_SM": 14336,
+    "policy": "Logical data conductor demand excludes control/shuffle/clock. No physical layer/pitch/channel fit claim. Existing model SIMT lane area is not separate ADD/MUL/divider/RF closure.",
+    "shared_data_signals_SM": 2048,
+    "shared_external_buffer_area_mm2": null,
+    "shared_read_bytes_cycle": 128,
+    "shared_word_banks": 32,
+    "shared_write_bytes_cycle": 128,
+    "slot_fit": null,
+    "term_major_operand_conflict": 1
+  },
+  "profile_measured": false,
+  "ready_to_build": false,
+  "scalar_dependency_cycles": {
+    "comb_softmax": 324,
+    "mix_scale": 9,
+    "norm": 153,
+    "pre_post": 262,
+    "sinkhorn": 3393
+  },
+  "scalar_recipes": {
+    "exp": {
+      "clamp": "golden EXP_MIN/MAX",
+      "conservative_fp32_cycles": 171,
+      "fp32_operations": 19,
+      "horner": [
+        "FMUL(p,r)",
+        "FADD(product,coefficient)"
+      ],
+      "horner_iterations": 6,
+      "integer_control_cycles_candidate": 18,
+      "range_reduce": [
+        "FMUL(x,LOG2E)",
+        "FADD(t,MAGIC)",
+        "FADD(u,-MAGIC)",
+        "FMUL(n,LN2_HI)",
+        "FMUL(n,LN2_LO)",
+        "FADD(x,-n_hi)",
+        "FADD(inner,-n_lo)"
+      ],
+      "scale": "integer exponent update from p and n"
+    },
+    "hc_mix_finish": {
+      "comb": "sixteen FMUL(scale)+FADD(base), row softmax and20Sinkhorn iterations",
+      "parallel_branch": "pre/post/comb use disjoint registers; conservative serialize until GPU scheduler price",
+      "post": "four sigmoid *2",
+      "pre": "four sigmoid +eps"
+    },
+    "norm": {
+      "activation_norm_contract": "FUSE=[]: multiply x*r then gain, BF16 at golden point; no nfold adoption",
+      "post_sum_scalar_cycles_candidate": 153,
+      "recipe": "chunk8 FP32 squared-sum tree;DIV(sum,F32(n));FADD(eps);golden rsqrt3Newton;FMUL scaling; BF16 rounding only at source-defined point"
+    },
+    "rsqrt": {
+      "fp32_critical_cycles": 117,
+      "half": "FMUL(v,0.5)",
+      "integer_seed_cycles_candidate": 6,
+      "iteration": [
+        "FMUL(y,y)",
+        "FMUL(half,yy)",
+        "FADD(1.5,-half_yy)",
+        "FMUL(y,correction)"
+      ],
+      "iterations": 3,
+      "seed": "0x5F3759DF-(bits(v)>>1)"
+    },
+    "sigmoid": {
+      "divisor_service": "one standard32b divider/SM; active lanes serialized,II1,LAT19 candidate",
+      "qualification": "divider opcode wrapper/SSFF and full special-value gate pending",
+      "recipe": "DIV(1,FADD(EXP(-x),1))"
+    },
+    "sinkhorn": {
+      "comb_initial_output_eps_adds": 16,
+      "division16_service_cycles_candidate": 36,
+      "epsilon_cycles": 9,
+      "initial": "row max;EXP(comb-max);three ordered FADD per row;DIV16;FADD eps",
+      "iterations": 20,
+      "matrix_shape": [
+        4,
+        4
+      ],
+      "normalization_cycles_candidate": 3393,
+      "normalization_denominator_eps_adds": 156,
+      "normalization_passes": 39,
+      "one_pass": [
+        "four ordered warp operand shuffles",
+        "three ordered FADD per4-vector sum",
+        "FADD(sum,eps)",
+        "broadcast denominator by warp shuffle",
+        "DIV16elements"
+      ],
+      "ordered_sum_cycles": 27,
+      "pass_order": "COL then19*(ROW,COL)",
+      "rounding": "seqsum starts first term; no extra +0; every division is IEEE F32RNE",
+      "shuffle_control_cycles_candidate": 15,
+      "total_comb_divisions": 640,
+      "total_ordered_seq_adds": 480
+    }
+  },
+  "schema": "opentallas.w16.corrected_GPU_HC_resource_composition.v1",
+  "shared": {
+    "external_activation_transpose_bytes": 1024,
+    "external_buffers_charged_separately": true,
+    "external_coefficient_transpose_bytes": 2048,
+    "live_bytes": 53248,
+    "regions": [
+      {
+        "base": 0,
+        "bytes": 32768,
+        "name": "coefficient_tile"
+      },
+      {
+        "base": 32768,
+        "bytes": 16384,
+        "name": "activation_tile"
+      },
+      {
+        "base": 49152,
+        "bytes": 4096,
+        "name": "partials_control"
+      }
+    ],
+    "reuse": "Single buffer. Refill next wave only after chunk/warp partial store retirement and barrier; retain80 F32 warp partials until padded128 final tree completes. Scalar phase follows all25 producers and grid barrier.",
+    "unused_bytes": 12288
+  },
+  "source_instruction_counts_chunk_and_warp_trees_per_operator": {
+    "BF16_WIDEN": 16000,
+    "FADD": 26000,
+    "FMUL": 16000,
+    "LDS32": 15360,
+    "LDS_PACKED_BF16": 8000,
+    "SHFL_PAIR": 10000,
+    "STS_PARTIAL": 2000
+  },
+  "transpose_waves": [
+    {
+      "activation": {
+        "additional_cycles": 4360,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 4,
+        "chunks": 1024,
+        "integer_address_instructions": 768,
+        "raw_read_bytes": 16384,
+        "scatter_write_bytes": 16384,
+        "tiles": 32,
+        "warp_loads": 128,
+        "warp_scatter_stores": 128
+      },
+      "coefficient": {
+        "additional_cycles": 9736,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 8,
+        "chunks": 1024,
+        "integer_address_instructions": 1536,
+        "raw_read_bytes": 32768,
+        "scatter_write_bytes": 32768,
+        "tiles": 32,
+        "warp_loads": 256,
+        "warp_scatter_stores": 256
+      }
+    },
+    {
+      "activation": {
+        "additional_cycles": 4360,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 4,
+        "chunks": 1024,
+        "integer_address_instructions": 768,
+        "raw_read_bytes": 16384,
+        "scatter_write_bytes": 16384,
+        "tiles": 32,
+        "warp_loads": 128,
+        "warp_scatter_stores": 128
+      },
+      "coefficient": {
+        "additional_cycles": 9736,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 8,
+        "chunks": 1024,
+        "integer_address_instructions": 1536,
+        "raw_read_bytes": 32768,
+        "scatter_write_bytes": 32768,
+        "tiles": 32,
+        "warp_loads": 256,
+        "warp_scatter_stores": 256
+      }
+    },
+    {
+      "activation": {
+        "additional_cycles": 2184,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 4,
+        "chunks": 512,
+        "integer_address_instructions": 384,
+        "raw_read_bytes": 8192,
+        "scatter_write_bytes": 8192,
+        "tiles": 16,
+        "warp_loads": 64,
+        "warp_scatter_stores": 64
+      },
+      "coefficient": {
+        "additional_cycles": 4872,
+        "assumption": "Serialized ordinary shared/RF/INT instructions; not measured DMA swizzle. No buffer fill/port/turnaround credit.",
+        "bank_conflict": 8,
+        "chunks": 512,
+        "integer_address_instructions": 768,
+        "raw_read_bytes": 16384,
+        "scatter_write_bytes": 16384,
+        "tiles": 16,
+        "warp_loads": 128,
+        "warp_scatter_stores": 128
+      }
+    }
+  ],
+  "warp_waves": [
+    {
+      "activation_bytes": 16384,
+      "chunks": 1024,
+      "coefficient_bytes": 32768,
+      "norm": {
+        "cycles": 448,
+        "instructions": {
+          "BF16_WIDEN": 256,
+          "FADD": 416,
+          "FMUL": 256,
+          "LDS_PACKED_BF16": 128,
+          "SHFL_PAIR": 160,
+          "STS_PARTIAL": 32
+        },
+        "resident_warps": 32,
+        "rf_write_slots": [
+          304,
+          304,
+          304,
+          304
+        ],
+        "scalar_chunk_adds": 8192,
+        "scalar_products": 8192,
+        "shared_issue_cycles": 160
+      },
+      "projection": {
+        "cycles": 704,
+        "instructions": {
+          "BF16_WIDEN": 256,
+          "FADD": 416,
+          "FMUL": 256,
+          "LDS32": 256,
+          "LDS_PACKED_BF16": 128,
+          "SHFL_PAIR": 160,
+          "STS_PARTIAL": 32
+        },
+        "resident_warps": 32,
+        "rf_write_slots": [
+          368,
+          368,
+          368,
+          368
+        ],
+        "scalar_chunk_adds": 8192,
+        "scalar_products": 8192,
+        "shared_issue_cycles": 416
+      },
+      "shared_refill_cycles": 384
+    },
+    {
+      "activation_bytes": 16384,
+      "chunks": 1024,
+      "coefficient_bytes": 32768,
+      "norm": {
+        "cycles": 448,
+        "instructions": {
+          "BF16_WIDEN": 256,
+          "FADD": 416,
+          "FMUL": 256,
+          "LDS_PACKED_BF16": 128,
+          "SHFL_PAIR": 160,
+          "STS_PARTIAL": 32
+        },
+        "resident_warps": 32,
+        "rf_write_slots": [
+          304,
+          304,
+          304,
+          304
+        ],
+        "scalar_chunk_adds": 8192,
+        "scalar_products": 8192,
+        "shared_issue_cycles": 160
+      },
+      "projection": {
+        "cycles": 704,
+        "instructions": {
+          "BF16_WIDEN": 256,
+          "FADD": 416,
+          "FMUL": 256,
+          "LDS32": 256,
+          "LDS_PACKED_BF16": 128,
+          "SHFL_PAIR": 160,
+          "STS_PARTIAL": 32
+        },
+        "resident_warps": 32,
+        "rf_write_slots": [
+          368,
+          368,
+          368,
+          368
+        ],
+        "scalar_chunk_adds": 8192,
+        "scalar_products": 8192,
+        "shared_issue_cycles": 416
+      },
+      "shared_refill_cycles": 384
+    },
+    {
+      "activation_bytes": 8192,
+      "chunks": 512,
+      "coefficient_bytes": 16384,
+      "norm": {
+        "cycles": 276,
+        "instructions": {
+          "BF16_WIDEN": 128,
+          "FADD": 208,
+          "FMUL": 128,
+          "LDS_PACKED_BF16": 64,
+          "SHFL_PAIR": 80,
+          "STS_PARTIAL": 16
+        },
+        "resident_warps": 16,
+        "rf_write_slots": [
+          152,
+          152,
+          152,
+          152
+        ],
+        "scalar_chunk_adds": 4096,
+        "scalar_products": 4096,
+        "shared_issue_cycles": 80
+      },
+      "projection": {
+        "cycles": 404,
+        "instructions": {
+          "BF16_WIDEN": 128,
+          "FADD": 208,
+          "FMUL": 128,
+          "LDS32": 128,
+          "LDS_PACKED_BF16": 64,
+          "SHFL_PAIR": 80,
+          "STS_PARTIAL": 16
+        },
+        "resident_warps": 16,
+        "rf_write_slots": [
+          184,
+          184,
+          184,
+          184
+        ],
+        "scalar_chunk_adds": 4096,
+        "scalar_products": 4096,
+        "shared_issue_cycles": 208
+      },
+      "shared_refill_cycles": 192
+    }
+  ]
+}

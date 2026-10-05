@@ -1,0 +1,164 @@
+{
+  "verdict": "PASS_EXACT_HOST_CHUNK8_COMPONENT",
+  "scope": "one CPU component fixture; no producer/inference/GPU/hardware/rate qualification",
+  "checks": [
+    {
+      "kind": "finite",
+      "length": 0,
+      "exact_uint32": true,
+      "scalar_adds": 0,
+      "original_calls": 0,
+      "vectorized_calls": 0
+    },
+    {
+      "kind": "finite",
+      "length": 1,
+      "exact_uint32": true,
+      "scalar_adds": 1,
+      "original_calls": 1,
+      "vectorized_calls": 1
+    },
+    {
+      "kind": "finite",
+      "length": 7,
+      "exact_uint32": true,
+      "scalar_adds": 7,
+      "original_calls": 7,
+      "vectorized_calls": 7
+    },
+    {
+      "kind": "finite",
+      "length": 8,
+      "exact_uint32": true,
+      "scalar_adds": 8,
+      "original_calls": 8,
+      "vectorized_calls": 8
+    },
+    {
+      "kind": "finite",
+      "length": 9,
+      "exact_uint32": true,
+      "scalar_adds": 10,
+      "original_calls": 10,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "finite",
+      "length": 15,
+      "exact_uint32": true,
+      "scalar_adds": 16,
+      "original_calls": 16,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "finite",
+      "length": 16,
+      "exact_uint32": true,
+      "scalar_adds": 17,
+      "original_calls": 17,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "finite",
+      "length": 17,
+      "exact_uint32": true,
+      "scalar_adds": 20,
+      "original_calls": 20,
+      "vectorized_calls": 10
+    },
+    {
+      "kind": "finite",
+      "length": 63,
+      "exact_uint32": true,
+      "scalar_adds": 70,
+      "original_calls": 70,
+      "vectorized_calls": 11
+    },
+    {
+      "kind": "finite",
+      "length": 64,
+      "exact_uint32": true,
+      "scalar_adds": 71,
+      "original_calls": 71,
+      "vectorized_calls": 11
+    },
+    {
+      "kind": "finite",
+      "length": 65,
+      "exact_uint32": true,
+      "scalar_adds": 80,
+      "original_calls": 80,
+      "vectorized_calls": 12
+    },
+    {
+      "kind": "finite",
+      "length": 8192,
+      "exact_uint32": true,
+      "scalar_adds": 9215,
+      "original_calls": 9215,
+      "vectorized_calls": 18
+    },
+    {
+      "kind": "subnormal",
+      "length": 9,
+      "exact_uint32": true,
+      "scalar_adds": 10,
+      "original_calls": 10,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "cancellation",
+      "length": 9,
+      "exact_uint32": true,
+      "scalar_adds": 10,
+      "original_calls": 10,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "signed_zero",
+      "length": 9,
+      "exact_uint32": true,
+      "scalar_adds": 10,
+      "original_calls": 10,
+      "vectorized_calls": 9
+    },
+    {
+      "kind": "subnormal",
+      "length": 8192,
+      "exact_uint32": true,
+      "scalar_adds": 9215,
+      "original_calls": 9215,
+      "vectorized_calls": 18
+    },
+    {
+      "kind": "cancellation",
+      "length": 8192,
+      "exact_uint32": true,
+      "scalar_adds": 9215,
+      "original_calls": 9215,
+      "vectorized_calls": 18
+    },
+    {
+      "kind": "signed_zero",
+      "length": 8192,
+      "exact_uint32": true,
+      "scalar_adds": 9215,
+      "original_calls": 9215,
+      "vectorized_calls": 18
+    }
+  ],
+  "default_off_hook_pass": true,
+  "timing": {
+    "length": 8192,
+    "reference_seconds": 0.042422136990353465,
+    "vectorized_seconds": 0.00014368098345585167,
+    "speedup": 295.2522732654343,
+    "exact_uint32": true
+  },
+  "source_sha256": {
+    "hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "hdc_reduce_chunked_vectorized.py": "9979140c437375c7e6041801d6ab089a8828d7fee62c743271378e45784d21da",
+    "hdc_reduce_chunked_vectorized_hook.py": "49e52bb38854335692c543dacd36513fd840e5294333ac63d8a704da25904bc2",
+    "test_hdc_reduce_chunked_vectorized.py": "b6d4b6aee3f8d0ee9e46a6ef8af748a5e06e30dffbebcfd0f3c93d2b3f514a79"
+  }
+}

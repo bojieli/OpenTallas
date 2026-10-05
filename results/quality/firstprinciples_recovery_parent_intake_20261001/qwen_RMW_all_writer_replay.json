@@ -1,0 +1,2191 @@
+{
+  "schema": "opentallas.parent.actual-qwen-kv-rmw-all-writer-replay.v1",
+  "source_pins": {
+    "tools/qwen_hbm_complete_program.py": {
+      "commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+      "sha256": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1"
+    },
+    "tools/qwen_hbm_complete_isa.py": {
+      "commit": "ca7951e49fb04402c87a8c2ada97f4361eff0edf",
+      "sha256": "9b697524744740b3a0562060de96488241955523e42f03404991569b95d6b738"
+    },
+    "tools/w13_qwen_kv_rmw_model.py": {
+      "commit": "212a1bcc3452b93eed832c8474a453300f6385e5",
+      "sha256": "5ff0c2deb82f67f6ab3ae00d2baf9f104a9defd559e29962c5a29096f8d0caf5"
+    }
+  },
+  "writer_instances": 144,
+  "positions": [
+    0,
+    1
+  ],
+  "focused_tests_passed": 10,
+  "test_command": "python3 -m pytest -q tests/test_w13_qwen_kv_rmw_model.py tests/test_qwen_hbm_complete_isa.py",
+  "rows": [
+    {
+      "graph_op": 10,
+      "layer": 0,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 26,
+      "layer": 0,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 58,
+      "layer": 1,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 74,
+      "layer": 1,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 106,
+      "layer": 2,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 122,
+      "layer": 2,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 154,
+      "layer": 3,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 170,
+      "layer": 3,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 202,
+      "layer": 4,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 218,
+      "layer": 4,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 250,
+      "layer": 5,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 266,
+      "layer": 5,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 298,
+      "layer": 6,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 314,
+      "layer": 6,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 346,
+      "layer": 7,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 362,
+      "layer": 7,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 394,
+      "layer": 8,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 410,
+      "layer": 8,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 442,
+      "layer": 9,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 458,
+      "layer": 9,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 490,
+      "layer": 10,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 506,
+      "layer": 10,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 538,
+      "layer": 11,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 554,
+      "layer": 11,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 586,
+      "layer": 12,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 602,
+      "layer": 12,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 634,
+      "layer": 13,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 650,
+      "layer": 13,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 682,
+      "layer": 14,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 698,
+      "layer": 14,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 730,
+      "layer": 15,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 746,
+      "layer": 15,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 778,
+      "layer": 16,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 794,
+      "layer": 16,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 826,
+      "layer": 17,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 842,
+      "layer": 17,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 874,
+      "layer": 18,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 890,
+      "layer": 18,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 922,
+      "layer": 19,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 938,
+      "layer": 19,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 970,
+      "layer": 20,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 986,
+      "layer": 20,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1018,
+      "layer": 21,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1034,
+      "layer": 21,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1066,
+      "layer": 22,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1082,
+      "layer": 22,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1114,
+      "layer": 23,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1130,
+      "layer": 23,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1162,
+      "layer": 24,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1178,
+      "layer": 24,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1210,
+      "layer": 25,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1226,
+      "layer": 25,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1258,
+      "layer": 26,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1274,
+      "layer": 26,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1306,
+      "layer": 27,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1322,
+      "layer": 27,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1354,
+      "layer": 28,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1370,
+      "layer": 28,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1402,
+      "layer": 29,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1418,
+      "layer": 29,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1450,
+      "layer": 30,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1466,
+      "layer": 30,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1498,
+      "layer": 31,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1514,
+      "layer": 31,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1546,
+      "layer": 32,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1562,
+      "layer": 32,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1594,
+      "layer": 33,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1610,
+      "layer": 33,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1642,
+      "layer": 34,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1658,
+      "layer": 34,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1690,
+      "layer": 35,
+      "die": 0,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1706,
+      "layer": 35,
+      "die": 1,
+      "position": 0,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        144,
+        128
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 10,
+      "layer": 0,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 26,
+      "layer": 0,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 58,
+      "layer": 1,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 74,
+      "layer": 1,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 106,
+      "layer": 2,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 122,
+      "layer": 2,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 154,
+      "layer": 3,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 170,
+      "layer": 3,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 202,
+      "layer": 4,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 218,
+      "layer": 4,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 250,
+      "layer": 5,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 266,
+      "layer": 5,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 298,
+      "layer": 6,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 314,
+      "layer": 6,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 346,
+      "layer": 7,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 362,
+      "layer": 7,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 394,
+      "layer": 8,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 410,
+      "layer": 8,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 442,
+      "layer": 9,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 458,
+      "layer": 9,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 490,
+      "layer": 10,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 506,
+      "layer": 10,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 538,
+      "layer": 11,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 554,
+      "layer": 11,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 586,
+      "layer": 12,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 602,
+      "layer": 12,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 634,
+      "layer": 13,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 650,
+      "layer": 13,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 682,
+      "layer": 14,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 698,
+      "layer": 14,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 730,
+      "layer": 15,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 746,
+      "layer": 15,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 778,
+      "layer": 16,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 794,
+      "layer": 16,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 826,
+      "layer": 17,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 842,
+      "layer": 17,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 874,
+      "layer": 18,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 890,
+      "layer": 18,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 922,
+      "layer": 19,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 938,
+      "layer": 19,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 970,
+      "layer": 20,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 986,
+      "layer": 20,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1018,
+      "layer": 21,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1034,
+      "layer": 21,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1066,
+      "layer": 22,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1082,
+      "layer": 22,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1114,
+      "layer": 23,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1130,
+      "layer": 23,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1162,
+      "layer": 24,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1178,
+      "layer": 24,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1210,
+      "layer": 25,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1226,
+      "layer": 25,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1258,
+      "layer": 26,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1274,
+      "layer": 26,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1306,
+      "layer": 27,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1322,
+      "layer": 27,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1354,
+      "layer": 28,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1370,
+      "layer": 28,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1402,
+      "layer": 29,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1418,
+      "layer": 29,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1450,
+      "layer": 30,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1466,
+      "layer": 30,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1498,
+      "layer": 31,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1514,
+      "layer": 31,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1546,
+      "layer": 32,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1562,
+      "layer": 32,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1594,
+      "layer": 33,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1610,
+      "layer": 33,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1642,
+      "layer": 34,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1658,
+      "layer": 34,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1690,
+      "layer": 35,
+      "die": 0,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    },
+    {
+      "graph_op": 1706,
+      "layer": 35,
+      "die": 1,
+      "position": 1,
+      "mixed_read_write_commands_by_stack": [
+        128,
+        128,
+        128,
+        144
+      ],
+      "minimum_shared_stack_command_cycles": 144,
+      "port_payload_bytes": 16896,
+      "write_visible_ACKs": 272
+    }
+  ],
+  "checkpoint_reads": 0,
+  "jobs_launched": 0,
+  "physical_admission": false,
+  "full_token_cycles": null,
+  "scope": "Source-generated addresses/masks and candidate lock pricing; no actual DRAM/RTL or loaded service timeline."
+}

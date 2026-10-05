@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.w19.bank-norm-parent-intake.v1",
+  "landing_model_sha256": "bb29148e2b8bb6aa4be19a961dd0b077ed56bb1d8fde0c656eda37176646a43e",
+  "landing_current_source_reproduction": "PASS build/check",
+  "banked_bytes_per_rank": 5346800,
+  "sector_collision_cycles": 31,
+  "collision_last_delivery_cycle": 38,
+  "norm_calendar_sha256": "eb20e7d3e58a1fc75f97f18bbfc6da1aae12307d49ea19514e68803a7a83e49f",
+  "norm_current_source_reproduction": "exact JSON equality",
+  "norm_source_pins_verified": {
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "results/rtl/w19_checkpoint_production_20261001/gpu-simd-lowering-candidate-r3.json": "c4aad8b9c059536e5f7e5ce9a94619341cb2895c53af0f7b6bba6805bc8d2436",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+  },
+  "focused_tests": {
+    "passed": 41,
+    "command": "PYTHONPATH=tools python3 -m pytest -q tools/test_w19_gpu_norm_calendar.py tests/test_w19_landing_banks.py tests/test_w19_transport_contract.py"
+  },
+  "source_calendar_bindings": 161,
+  "profile": "conditional analytical cycle oracle and instruction calendars; unmeasured",
+  "full_token_qualified": false,
+  "ready_to_build": false,
+  "physical_qualified": false,
+  "hardware_adopted": false,
+  "rate": null
+}

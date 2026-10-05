@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.w19.w17_companion_audit.v1",
+  "status": "pass",
+  "source_commit": "4c7f32e4118d371386592a8e0c639da1a6b5927a",
+  "reviewed_main_commit": "518363bd15436faf64846f2f6ec7a004731151ae",
+  "w17_pin": "a7ee63c37aaa83b6294bcf8e01bd4548740e2967",
+  "w17_base": "b93ee074906a0e9f6b90cdd56848498050de6ee5",
+  "private_tree": "5344766fcae63a82db8a4f9bfc985ab9bdcc7ea8",
+  "patch_sha256": "6aaa87a157ae6145500ec62432758f645867f3103616176ab9c6b2e29392e4e9",
+  "exported_source_bytes": 31334590,
+  "exported_source_files": 2195,
+  "imports": {
+    "tools/rtl_v41_fullshape_layer_campaign.py": {
+      "w19_sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "composed_sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "w17_snapshot_identical": true,
+      "required_definitions_identical": true,
+      "module_globals_imports_identical": true,
+      "reviewed_main_sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+      "main_required_definitions_identical": true,
+      "main_module_globals_imports_identical": true
+    },
+    "tools/w19_sm_real_ops.py": {
+      "w19_sha256": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7",
+      "composed_sha256": "d02a8c8adb0c3d822dabc2966efe82999e50afcad5d19cc44ac588cd4a2ef1b7",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "3197860431c9878a9068b9b4458698b702d1cf8e90b9c6ffc812ba3680634180",
+      "w17_snapshot_identical": false
+    },
+    "tools/rtl_gpu_sm_exact.py": {
+      "w19_sha256": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+      "composed_sha256": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "1356dbfb6f1778f11d7b3e8156342e130d504a5670fa066e93f609ae975579f8",
+      "w17_snapshot_identical": true
+    },
+    "tools/hdc_golden.py": {
+      "w19_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "composed_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "w17_snapshot_identical": true
+    },
+    "tools/hdc_golden_v41.py": {
+      "w19_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "composed_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "w17_snapshot_identical": true
+    },
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": {
+      "w19_sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+      "composed_sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+      "w17_snapshot_identical": true
+    },
+    "rtl/gpu/ot_gpu_payload_assemble.sv": {
+      "w19_sha256": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+      "composed_sha256": "355f01e90ccba32fca58339ea65d0b0bc87b906b7fe9b59d57eb6fc04636baa4",
+      "unchanged_in_composition": true,
+      "w17_snapshot_sha256": null,
+      "w17_snapshot_identical": false
+    }
+  },
+  "regressions": [
+    {
+      "test": "tools/test_w17_runtime_integration.py",
+      "source_sha256": "a164b4231a69202d7da4914bae50828c702b3393e3b13f0c3fae92e1ac6b0081",
+      "returncode": 0,
+      "log_sha256": "8745f37467950cbb1a3fb073f6582fab8c5096f1e1d52f6d75a8d5a299aaaef2"
+    },
+    {
+      "test": "tools/test_w17_l20_build_gate.py",
+      "source_sha256": "8204be5103c83b87f275dfab25e8e8e8930dcc42384c37d451323f318cbae396",
+      "returncode": 0,
+      "log_sha256": "84103bf7e62ae284175484b919fc349159a9b3bbd736deca3046febf399ea961"
+    }
+  ],
+  "w19_helper_caveat": "W17 branch snapshot predates W19 sim_runner injection. Composing only W17 diff preserves W19 helper; do not replace working sources with the W17 whole tree.",
+  "claim_boundary": "Private-index W19 + recovered W17 companion source composition, importer AST comparison, W17 admission/source-list regressions only; no engine builds, 96-rank runtime or physical qualification."
+}

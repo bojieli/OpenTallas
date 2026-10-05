@@ -1,0 +1,150 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/semantic_slice_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_boundary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "dimensions": {
+      "additionalProperties": false,
+      "properties": {
+        "expert_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "hc_multiplier": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "hidden_size": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "model_parallel": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "route_top_k": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "vocabulary_size": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "expert_count",
+        "hc_multiplier",
+        "hidden_size",
+        "model_parallel",
+        "route_top_k",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "numeric_profile": {
+      "const": "deepseek_v4_flash_lookup_bits_v1"
+    },
+    "operations": {
+      "const": [
+        {
+          "id": "token_embed",
+          "input": "token_ids",
+          "kind": "TOKEN_EMBED",
+          "output": "embedding_bf16_codes",
+          "resource": "embed.weight"
+        },
+        {
+          "id": "hc_expand",
+          "input": "embedding_bf16_codes",
+          "kind": "HC_EXPAND",
+          "output": "hc_hidden_bf16_codes",
+          "resource": null
+        },
+        {
+          "id": "hash_route",
+          "input": "token_ids",
+          "kind": "HASH_ROUTE",
+          "output": "expert_ids",
+          "resource": "layers.0.ffn.gate.tid2eid"
+        }
+      ]
+    },
+    "outputs": {
+      "const": [
+        "embedding_bf16_codes",
+        "hc_hidden_bf16_codes",
+        "expert_ids"
+      ]
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_slice.v1"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "application_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "application_status": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "checkpoint_lock_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "evidence_scope": {
+          "enum": [
+            "development_fixture",
+            "official_checkpoint"
+          ]
+        },
+        "repository": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "revision": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "verification_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "application_id",
+        "application_status",
+        "checkpoint_lock_id",
+        "evidence_scope",
+        "repository",
+        "revision",
+        "verification_id"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "claim_boundary",
+    "dimensions",
+    "model_id",
+    "numeric_profile",
+    "operations",
+    "outputs",
+    "schema",
+    "source"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup semantic slice v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

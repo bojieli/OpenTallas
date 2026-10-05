@@ -1,0 +1,115 @@
+{
+  "artifacts": [
+    {
+      "bytes": 570,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/cadence_replay.json",
+      "sha256": "788244eafb66c74fc23125c2913608ea50ea8c4d218670dffbd5330b941e0a5e"
+    },
+    {
+      "bytes": 681,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/cold_replay.json",
+      "sha256": "0bb5a9ee9796626b35434ff101570889742e36d953abfb93525d90d460b4de60"
+    },
+    {
+      "bytes": 4351,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/handoff.json",
+      "sha256": "01085217f12f9ab89a2cabb4cd58392f25c1031847b7ad61b1b7b3ade886e9b7"
+    },
+    {
+      "bytes": 2607,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/input_manifest.json",
+      "sha256": "a7e1c222c182baa3d23449a83ca5f92764b575d80df50a5a33f7c790be5a16a5"
+    },
+    {
+      "bytes": 874,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/bridge.sv",
+      "sha256": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47"
+    },
+    {
+      "bytes": 29996,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/codec.py",
+      "sha256": "1096528c2d16daa5a11c2aa05a30b6a3ede1a48d81931c79541af1c167f65be2"
+    },
+    {
+      "bytes": 3538,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/fence.sv",
+      "sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+    },
+    {
+      "bytes": 1427,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/fifo.sv",
+      "sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903"
+    },
+    {
+      "bytes": 34589,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/model.json",
+      "sha256": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e"
+    },
+    {
+      "bytes": 27845,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/provider.py",
+      "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+    },
+    {
+      "bytes": 2365,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/rf.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+    },
+    {
+      "bytes": 815,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/route.sv",
+      "sha256": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c"
+    },
+    {
+      "bytes": 4588,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/sm.sv",
+      "sha256": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896"
+    },
+    {
+      "bytes": 3623,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/inputs/wrapper.sv",
+      "sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+    },
+    {
+      "bytes": 11651,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/model.json",
+      "sha256": "08d13194e80ac27a5b149b455c5104104badacb9112b8c99d19ad23e3d012528"
+    },
+    {
+      "bytes": 77,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/predecessor_verify.log",
+      "sha256": "c7b4b6ffa334920c47c4e0d0d83969ce4595bd51d3a907ed4d9151647cfc73bf"
+    },
+    {
+      "bytes": 1253,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/tests_connected_r2.log",
+      "sha256": "088b0e0e08df644295daa5ffb0bad759f8316d21bee748e75d87c26a1dc44960"
+    },
+    {
+      "bytes": 1367,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/tests_final_r2.log",
+      "sha256": "b92a08e2a9a7cbbc71cd6646847a0f787bcf4ab335efad2cfe3581106a43b10a"
+    },
+    {
+      "bytes": 1041,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/tests_r1.log",
+      "sha256": "c303e6d27938508a83ab3fb479716c15d5d2eaf751469411912667b130e1179b"
+    },
+    {
+      "bytes": 484,
+      "path": "results/uarch/h4_hbm_baseline_bridge_20261003/pipeline_r2/verification.json",
+      "sha256": "f5b425b0a0609e3a65efa0de4aa7b0cb663af40a13577c08117ab563c4cd0bf2"
+    }
+  ],
+  "schema": "PIPELINE_R2_ARTIFACT_SOURCE_PINS",
+  "source_pins": [
+    {
+      "path": "tools/h4_hbm_bridge_pipeline_r2.py",
+      "sha256": "7a10234ee4258d74222eb41d8a3e9c4b4ef36ccf90662d430b4388aea18a6e92"
+    },
+    {
+      "path": "tests/test_h4_hbm_bridge_pipeline_r2.py",
+      "sha256": "23483d161f99e65fc2db61db4cc0ee81b2b7da6b063ca710f73e522fb06cfa5e"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+ "schema": "opentallas.result.v41_pool_and_decode_path.v1",
+ "question": "the two V4.1 divergences left open by results/abi3/deepseek_v41_rom_join_context_engram.json: (1) ROM vs HBM prefill taps first differing at L24.ffn_norm rows 7-9 at P10; (2) HBM decode vs prefill stepping from 0.99997 to 0.915 at L02.ffn_norm -- what are they, and do the fixes make the cells agree?",
+ "method": "per-operator probes on runtime.sim (every engine issue of chosen kernels: operands, outputs, PHASE/POSITION_START/CONTEXT_LENGTH, loop iterations), first on the reduced V4.1 v2 model (HBM cluster32 comparator, ROM wafer comparator, ROM array 12-node comparator: minutes per run) at the full model's geometry of window 128, block 8, ratios 2/1; decode step at POSITION_START 9 vs the last row of a prefill over the same 10 tokens; then the full model at P10/P12",
+ "root_causes_and_fixes": [
+  {
+   "divergence": 1,
+   "defect": "candidate pool (layer 20 BLOCK_MAX -> block-select INDEX_TOPK -> CANDIDATE_MASK, read by layers 24/28/32/36): the HBM lane did not set RANKS_BLOCKS on the block select, so block IDs were rebased by the context (block 0 at P10 came back as block 10); and in BOTH lanes the engine counted only COMPLETE blocks ((p+1)//8) and relied on CANDIDATE_MASK pinning the PLANE's last block, which at plane capacity (512 HBM, 8192 ROM) is past the context. The release (select_candidate_blocks) pins the block holding each query's newest position at +inf.",
+   "measured": "full-model HBM P10 at HEAD: the pool mask admitted nothing reachable for rows 0-6 and dropped positions 8-9 for rows 8-9; ROM admitted block 0 only; this is the L24 row difference. With the fix: rows 0-7 admit block 0, rows 8-9 blocks 0-1 (all reachable positions, as the release at P10).",
+   "fix": "runtime/sim/engines/route.py (a RANKS_BLOCKS ranking reaches p//block+1 blocks and forces the newest into the selection); compiler/backends/hbm_sram/plan.py sets RANKS_BLOCKS as the ROM lane does",
+   "commit": "911349ff",
+   "tests": [
+    "tests/abi3/test_am_e10_v41_kinds.py::test_prefill_pool_admits_what_the_release_admits",
+    "tests/abi3/test_am_e10_v41_kinds.py::test_decode_pool_admits_what_the_release_admits",
+    "tests/abi3/test_am_e10_v41_kinds.py::test_an_unrebased_block_ranking_is_what_the_pool_needs",
+    "tests/compiler/test_v41_candidate_pool_lowering.py::test_only_the_block_select_ranks_blocks"
+   ]
+  },
+  {
+   "divergence": 2,
+   "defect": "decode rebase of a separated-join selection: V4.1's INDEX_TOPK declares in1 (window) absent and a CONCAT joins behind the 128-row window, so the engine had no window to measure and rebased a DECODE selection by zero -- compressed group j became KV row j (a window row). Every decode query on layers 2-39 attended window rows twice and no compressed row.",
+   "measured": "reduced HBM decode at POSITION_START 9, layer 2: select [0..4] (should be [128..132]); decode/prefill L02.ffn_norm cosine 0.998392 -> 0.999989 after the fix",
+   "fix": "compiler.ir.v3.lowering.separated_join_window states the join's window width above bit 16 of aux_id_1 (runtime.sim.engines.route.DECODE_REBASE_SHIFT) in both lanes; zero keeps every other descriptor",
+   "commit": "4234491e",
+   "tests": [
+    "tests/abi3/test_am_e10_v41_kinds.py::test_a_separated_join_rebases_decode_above_the_window",
+    "tests/abi3/test_am_e10_v41_kinds.py::test_the_decode_rebase_field_leaves_prefill_alone",
+    "tests/compiler/test_v41_candidate_pool_lowering.py::test_every_separated_join_select_states_its_decode_rebase"
+   ]
+  },
+  {
+   "divergence": 2,
+   "defect": "decode compressed RoPE: both lanes rotate a group a decode step completes at p+1-ratio only for a GATHER spelled \"compressed\" (V4); V4.1 states only position_stride, so compressed KV rows and index keys completed in decode on layers 2/8/14 were rotated at p",
+   "measured": "reduced HBM decode at POSITION_START 9: the newest compressed KV row differed from prefill's by up to 1.81; after the fix all 80 decode taps are bit-identical to prefill",
+   "fix": "compiler.ir.v3.lowering.compressed_rope_gather (either spelling) in the HBM lowering, ROM lowering and ROM checker",
+   "commit": "4234491e",
+   "tests": [
+    "tests/compiler/test_v41_decode_compressed_rope.py"
+   ]
+  },
+  {
+   "divergence": 2,
+   "defect": "ROM only, exposed by the rebase fix: ATTENTION.SPARSE consumes the phase-split KV join but also binds the span-led fused-KV plane, so its context loop was opened on the span and the ratio-2 decode KV view resolved to the 128-row window alone; the reduced ROM wafer decode trapped at \"selects KV row 131, outside the 128 valid rows\"",
+   "fix": "compiler/backends/rom/common/program.py opens the CONTEXT_LENGTH loop for a phase-split consumer with a context-bound phase extent in the plane branch too",
+   "commit": "e0e5fe21",
+   "tests": [
+    "tests/compiler/test_v41_rom_kv_join.py::test_decode_sparse_attention_reads_the_whole_join"
+   ]
+  }
+ ],
+ "reduced_v2": {
+  "summary": {
+   "head": "decode vs prefill: HBM min cosine 0.877 over layers 2-5 (first difference L02.ffn_norm 0.998392); HBM vs ROM prefill: 49/80 taps identical, first difference L24.ffn_norm",
+   "fixed": "decode vs prefill: all 80 taps bit-identical on HBM, ROM wafer and ROM array 12; prefill: ROM wafer and ROM array 12 bit-identical to HBM on all 80 taps (10 rows); all three decode [3372, 1239, 3672] (HEAD [3372, 1309, 813])",
+   "not_graded": "the reduced model's own oracle disagrees with every cell from token 0 for the reason recorded in results/abi3/deepseek_v41_v2_divergence_causal_chain.json; this is a consistency measurement"
+  },
+  "record": "deepseek_v41_pool_and_decode_path/reduced_v2_decode_and_prefill_taps.json"
+ },
+ "full_model_tokens_p12": {
+  "hbm_c512_p12": {
+   "device": [
+    983,
+    344,
+    223,
+    21
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "wall_seconds": 5627.226,
+   "before": [
+    983,
+    344,
+    1902,
+    11300
+   ]
+  },
+  "rom_wafer_c8192_p12": {
+   "device": [
+    983,
+    344,
+    223,
+    21
+   ],
+   "oracle": [
+    983,
+    344,
+    11300,
+    304
+   ],
+   "first_divergence_index": 2,
+   "failure": null,
+   "wall_seconds": 5933.598,
+   "before": [
+    983,
+    344,
+    223,
+    23
+   ]
+  },
+  "rom_array64_c8192_p12": {
+   "status": "no record: run_accelerator_tokens on the e0e5fe21 tree was terminated by signal 9 after 15 h 05 min (peak RSS 42.5 GB, shared machine) while producing token 4 of 4; it had admitted (4491 instructions) and produced 3 tokens, whose ids are not logged. Not re-run."
+  }
+ },
+ "full_model_decode_vs_prefill_hbm_context14": {
+  "before": {
+   "L00.attn_norm": 1.0,
+   "L00.ffn_norm": 1.0,
+   "L01.attn_norm": 1.0,
+   "L01.ffn_norm": 0.999999,
+   "L02.attn_norm": 0.999974,
+   "L02.ffn_norm": 0.915405,
+   "L03.attn_norm": 0.935301,
+   "L03.ffn_norm": 0.917991
+  },
+  "before_min_cosine_all_taps": 0.875596,
+  "after": {
+   "L00.attn_norm": 1.0,
+   "L00.ffn_norm": 1.0,
+   "L01.attn_norm": 1.0,
+   "L01.ffn_norm": 0.999999,
+   "L02.attn_norm": 0.999974,
+   "L02.ffn_norm": 0.999915
+  },
+  "after_min_cosine_all_taps": 0.981061,
+  "record": "deepseek_v41_pool_and_decode_path/decode_consistency_hbm_c512_context14.json"
+ },
+ "deployment_digests": {
+  "unchanged": {
+   "v4_hbm_cluster32": "65f3554acd31a7e3034d10b55989bf2a992f1e1f5dadce4181ff491a7c8f3977",
+   "qwen3_hbm_single_chip": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+   "v4_rom_wafer": "59a719de96a9e1453b187a3337beeb5ee9d0912434710ac8f5efee3e7abfc0c7",
+   "v4_rom_array32": "4a56012ce29dfdc3fda45b3f9ec5648ebbf10d67477547111ef9ba1eae1703b1",
+   "qwen3_rom": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+   "checked_after": [
+    "911349ff",
+    "4234491e",
+    "e0e5fe21",
+    "merge of main 1f79daca"
+   ]
+  },
+  "v41_hbm_c512": {
+   "before": "730cc7e0e2a486485bba1cf2b38c99f2226c53ebedfb4b0a8e394a3afbdeba4d",
+   "after": "69e38bd702c9820d1c0d0c568c6124602ae26bbf96424b2535a8dd3600ac7bb8"
+  },
+  "v41_rom_wafer_c8192": {
+   "before": "670eb53124b1f38d5eb7251bf263c47cac314e86ab347f6290c60305ec008789",
+   "after": "351a3a70224fa8f4647c18d3a8b6bc97f815a956efa3ce85b7a4ada7bbdbe879"
+  },
+  "v41_rom_array64_c8192": {
+   "before": "5bd2eca734ef732276242effb5aea71038d6de823329d9503e30f296820d847a",
+   "after": "8ed8365bd256f05c99220d5baee43d55440783892d17d916a091fd7605696cad"
+  },
+  "all_admitted": true
+ },
+ "open": [
+  "P12 index 2: HBM, ROM wafer (and array64 if recorded above) now agree with each other and pick 223 where the oracle picks 11300 (oracle top-3 11300 27.17, 1902 26.76, 223 26.09); the cells no longer disagree, but they still miss the oracle at index 2 -- NOT a pass",
+  "full-model HBM decode vs prefill is no longer a step but a slow drift: first non-identical tap L01.ffn_norm (0.999999, the Engram layer), L02.ffn_norm 0.999915, falling to ~0.981 by L39. The reduced model at the same geometry is bit-identical, so the residue is full-model-specific (not attributed; candidates: the layer-1 Engram at full width, reduction blocking that depends on span)",
+  "the full-model ROM vs HBM prefill taps at P10 were not re-measured after the fixes (a 1 h 45 min / ~40 GB ROM run); the reduced cells are bit-identical and the P12 tokens agree"
+ ],
+ "commands": [
+  "pinned source: git archive e0e5fe21 (HBM P12 started on 4234491e, whose HBM sources are identical) into a scratch tree with build/ symlinked",
+  "python3 tools/run_accelerator_tokens.py --kernel-ir build/ir-v3/deepseek-v4.1-flash-c512-amE10/kernel_ir.v3.json --backend hbm_sram --capability configs/hardware/abi3_capability/hbm_sram_cluster_n_comparator_8_e4096.json --workload build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P12.json --reference results/abi3/deepseek_v41_reference_oracle_p12.json --checkpoint <V4.1 snapshot> --publish <scratch> --expert-numeric-path fp8 --max-new-tokens 4 --output <out> --force",
+  "same with --kernel-ir build/ir-v3/deepseek-v4.1-flash-c8192-amE10/kernel_ir.v3.json --backend rom_deepseek_v41 --capability configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json (and rom_deepseek_v41_array / rom_deepseek_v41_array_64.json)",
+  "decode consistency: scratch decode_consistency.py as in the previous record",
+  "reduced probes: scratch probe.py <hbm|rom|rom_array12> build/ir-v3/deepseek-v4.1-flash-reduced-v2/kernel_ir.v3.json <*_reduced_comparator capability> build/models/deepseek-v4.1-flash-reduced-v2 <TA-DS41-REDUCED-EOS-1 | 10-token prompt> <3|1> <kernel regex> <out.pkl> (rom_array12: node_count 12, domain_size 4, alignment_bytes 256)"
+ ],
+ "not_a_claim": [
+  "runtime.sim, not RTL",
+  "no V4.1 cell is closed against the oracle",
+  "the oracle is self-consistent only at positions 0-7 (results/abi3/deepseek_v41_oracle_nondeterminism.json)"
+ ]
+}

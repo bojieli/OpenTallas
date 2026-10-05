@@ -1,0 +1,406 @@
+{
+  "issues": [
+    "actual_phase_leases_missing",
+    "ordinary_runtime_events_missing"
+  ],
+  "candidate_event_constraints_pass": false,
+  "physical_admission": false,
+  "hardware_launch": false,
+  "rate_credit": 0,
+  "scope": "event validation only; exact arithmetic/branch replay, source provider and contextual SSFF additionally required",
+  "schema": "w13.index-phase-calendar-intake.v2",
+  "actual_software_evidence": {
+    "git": "e5d9ad00a",
+    "path": "results/rtl/deepseek_hbm_complete_20261001/index-tagged-producer-consumer-gate-r2.json",
+    "sha256": "77d7e4ef244fd05b59bbaf49099ce06903f798392d0758e9e19a1ac98232e06a"
+  },
+  "source_defined_tick_units": "3.6GHz commonticks;serial4,fast3; never CPUwall->ticks",
+  "software_row_events": [
+    {
+      "event": "row_payload_accepted",
+      "row": 0,
+      "epoch": 0,
+      "format": 2,
+      "length": 512,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 1,
+      "epoch": 4,
+      "format": 2,
+      "length": 512,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 2,
+      "epoch": 8,
+      "format": 2,
+      "length": 512,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 3,
+      "epoch": 12,
+      "format": 2,
+      "length": 512,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 4,
+      "epoch": 16,
+      "format": 2,
+      "length": 512,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 5,
+      "epoch": 20,
+      "format": 1,
+      "length": 68,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 6,
+      "epoch": 24,
+      "format": 1,
+      "length": 68,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_payload_accepted",
+      "row": 7,
+      "epoch": 28,
+      "format": 1,
+      "length": 68,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_row_payload_visible",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    },
+    {
+      "event": "software_descriptor_visible",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 0,
+      "epoch": 0,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 1,
+      "epoch": 4,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 2,
+      "epoch": 8,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 3,
+      "epoch": 12,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 4,
+      "epoch": 16,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 5,
+      "epoch": 20,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 6,
+      "epoch": 24,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_acquired",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    },
+    {
+      "event": "row_consumer_done",
+      "row": 7,
+      "epoch": 28,
+      "hardware_cycle": null
+    }
+  ],
+  "ordinary_executed_manifest_pin": null,
+  "actual_branch_operand_replay": null,
+  "joint_lifetime_pin": "ba0699538:results/physical_abi3/asap7/gpu/w13_index_f32_consumer_ports_20261001/joint_lifetime_r1.json",
+  "common36client_allocator_ACK_CDC_drain": null,
+  "unknown_opcode_latency": null,
+  "failed_history": "e1d6e4c4f register readiness did not bind exact producer versions; FAIL_MODEL_VALIDATOR_STALE_REGISTER_VERSION",
+  "failed_receipt_preserved": "33b08907d:results/physical_abi3/asap7/gpu/w13_index_f32_consumer_ports_20261001/phase_calendar_intake_r1.json",
+  "tool_source_git": "2913186a3f5965915731f5c6b141914d63f79b48",
+  "tool_sha256": "f5ab4fe493209bdc6827d16b4ceb6f3c436cdd4fcf499301d39094fc4ddae4cd",
+  "focused_tests_passed": 10
+}

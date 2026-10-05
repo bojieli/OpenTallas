@@ -1,0 +1,267 @@
+FFFFFFF...                                                               [100%]
+=================================== FAILURES ===================================
+______________ test_first_layer_program_round_trip_and_die_order _______________
+
+    def test_first_layer_program_round_trip_and_die_order():
+        before = (P.VM, P.GR, P.S_STRIDE)
+>       a, b = F.profile(0), F.profile(1)
+
+tests/test_hdc_qwen_fullshape_program_w12.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+___________ test_vm_regions_do_not_overlap_and_first_layer_kv_window ___________
+
+    def test_vm_regions_do_not_overlap_and_first_layer_kv_window():
+        vm, total = F.vm_map()
+        assert total > I.VM_ELEMS
+        assert vm['S'] + (32 // F.TP) * 8192 <= vm['ATT']
+        assert vm['GU'] + 2 * (12288 // F.TP) <= vm['ATTN']
+>       report = F.profile(0)
+
+tests/test_hdc_qwen_fullshape_program_w12.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+__________ test_lm_head_512_word_chunks_keep_independent_scale_stride __________
+
+    def test_lm_head_512_word_chunks_keep_independent_scale_stride():
+        rows = 151936 // F.TP
+        meta = matrix(0, 'lm_head', rows, 4096)
+        meta['scale_base'] = 0
+>       a, b = F.profile_lm_head(0, meta, 535041), F.profile_lm_head(1, meta, 535041)
+
+tests/test_hdc_qwen_fullshape_program_w12.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:184: in profile_lm_head
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+____________________ test_one_segment_all_reduce_is_opt_in _____________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ad0401e3460>
+
+    def test_one_segment_all_reduce_is_opt_in(monkeypatch):
+        """QWEN_O4_AR_WORDS=256: each 4,096-element all-reduce is ONE 256-word segment (count 0 encodes 256)."""
+        monkeypatch.setattr(F, 'AR_WORDS', 256)
+>       a = F.profile(0)
+
+tests/test_hdc_qwen_fullshape_program_w12.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_______ test_layer_program_encodes_iff_the_kv_window_fits_24_bits[8192] ________
+
+tmax = 8192
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ad03fd6c250>
+
+    @pytest.mark.parametrize("tmax", [8192, 32768, 131072])
+    def test_layer_program_encodes_iff_the_kv_window_fits_24_bits(tmax, monkeypatch):
+        import hdc_qwen_fullshape_program_w12 as FP
+        monkeypatch.setattr(FP, "TMAX", tmax)
+        fits = 2 * (8 // FP.TP) * tmax * 128 <= 1 << 24
+        if fits:
+>           r = FP.profile(0)
+
+tests/test_qwen_context_widths.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+_______ test_layer_program_encodes_iff_the_kv_window_fits_24_bits[32768] _______
+
+tmax = 32768
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ad042868790>
+
+    @pytest.mark.parametrize("tmax", [8192, 32768, 131072])
+    def test_layer_program_encodes_iff_the_kv_window_fits_24_bits(tmax, monkeypatch):
+        import hdc_qwen_fullshape_program_w12 as FP
+        monkeypatch.setattr(FP, "TMAX", tmax)
+        fits = 2 * (8 // FP.TP) * tmax * 128 <= 1 << 24
+        if fits:
+>           r = FP.profile(0)
+
+tests/test_qwen_context_widths.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+______ test_layer_program_encodes_iff_the_kv_window_fits_24_bits[131072] _______
+
+tmax = 131072
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7ad03fd84670>
+
+    @pytest.mark.parametrize("tmax", [8192, 32768, 131072])
+    def test_layer_program_encodes_iff_the_kv_window_fits_24_bits(tmax, monkeypatch):
+        import hdc_qwen_fullshape_program_w12 as FP
+        monkeypatch.setattr(FP, "TMAX", tmax)
+        fits = 2 * (8 // FP.TP) * tmax * 128 <= 1 << 24
+        if fits:
+            r = FP.profile(0)
+            assert r["kv_window_elems"] <= 1 << 24 and r["vm_elems"] <= 1 << 24
+        else:
+            with pytest.raises((AssertionError, ValueError)):
+>               FP.profile(0)
+
+tests/test_qwen_context_widths.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/hdc_qwen_fullshape_program_w12.py:128: in profile
+    place = placement()
+tools/hdc_qwen_fullshape_placement_w12.py:68: in placement
+    config = json.loads(CONFIG.read_text()) if config is None else config
+/usr/lib/python3.10/pathlib.py:1134: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return self._accessor.open(self, mode, buffering, encoding, errors,
+                                   newline)
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/qwen-companion-additive-20261001/compiler/models/qwen3-8b/config.json'
+
+/usr/lib/python3.10/pathlib.py:1119: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_hdc_qwen_fullshape_program_w12.py::test_first_layer_program_round_trip_and_die_order
+FAILED tests/test_hdc_qwen_fullshape_program_w12.py::test_vm_regions_do_not_overlap_and_first_layer_kv_window
+FAILED tests/test_hdc_qwen_fullshape_program_w12.py::test_lm_head_512_word_chunks_keep_independent_scale_stride
+FAILED tests/test_hdc_qwen_fullshape_program_w12.py::test_one_segment_all_reduce_is_opt_in
+FAILED tests/test_qwen_context_widths.py::test_layer_program_encodes_iff_the_kv_window_fits_24_bits[8192]
+FAILED tests/test_qwen_context_widths.py::test_layer_program_encodes_iff_the_kv_window_fits_24_bits[32768]
+FAILED tests/test_qwen_context_widths.py::test_layer_program_encodes_iff_the_kv_window_fits_24_bits[131072]

@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.abi3.v41_divergence_corroboration.v1",
+ "question": "does the nine-cell matrix independently corroborate the measured cause of the V4.1 divergence?",
+ "the_prediction": "the causal chain says the divergence needs BOTH an untrained top-k router (whose 6th-to-7th score gap falls below one BF16 epsilon on 7.2% of decisions) AND the one-fp32-ulp residual difference that flips it. A cell with no router, or with a trained router, should match its oracle despite carrying exactly the same one-ulp difference.",
+ "the_test": "the nine cells were built and run for their own reasons, before this chain was measured. Splitting them by router rather than by topology is a test the matrix was not collected to answer.",
+ "rows": [
+  {"model": "qwen3-8b", "routed_weight_bytes": 0, "router": "none (dense)", "cells": 3, "scales": ["shipped", "shipped", "reduced"], "match_their_oracle": 3},
+  {"model": "deepseek-v4-flash-0731", "routed_weight_bytes": 147169738752, "router": "top-k, TRAINED weights", "cells": 3, "scales": ["shipped", "shipped", "shipped"], "match_their_oracle": 3},
+  {"model": "deepseek-v4.1-flash", "routed_weight_bytes": 288777830400, "router": "top-k, PHILOX-DRAWN weights", "cells": 3, "scales": ["reduced", "reduced", "reduced"], "match_their_oracle": 0}
+ ],
+ "result": "9 for 9. Every cell whose router is absent or trained matches; every cell whose router is untrained does not. The failing set is exactly the reduced-AND-MoE set, which is what the chain predicts and nothing else in the matrix distinguishes.",
+ "why_the_reduced_qwen3_cell_is_the_load_bearing_row": "a reduced DENSE vehicle isolates the variable. It carries the same reduced widths, the same Philox weight construction, the same backends and the same one-ulp summation-order difference as the reduced V4.1 vehicles -- and it matches its oracle exactly, at [1073, 382, 93]. So reduction itself does not break a token; the untrained ROUTER does.",
+ "what_this_does_not_show": [
+  "it does not prove the chain: it shows the matrix is consistent with it, using a split the matrix was not built to test",
+  "the V4-Flash rows are all SHIPPED scale, so trained-router and shipped-scale are not separated by this evidence -- a reduced V4-Flash vehicle would separate them and does not exist",
+  "not an RTL measurement: every device here is runtime.sim"
+ ]
+}

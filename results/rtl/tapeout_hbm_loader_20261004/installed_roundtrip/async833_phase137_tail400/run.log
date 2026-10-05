@@ -1,0 +1,16 @@
+%Warning: die0_p1.hex:0: $readmem file not found
+%Warning: die0_p0.hex:0: $readmem file not found
+INSTALLED LOAD_VERIFY status=0 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=4021 elapsed=4038 bytes=4096
+FEASIBILITY LOAD_VERIFY host_ns=1 mem_ns=0.833000 phase_ns=0.137000 dma_delay=400 LDpush=128 LDpop=128 LDpeak=1 LDstall=0 LDcross_min_ns=1.669 LDcross_max_ns=2.495 STpush=0 STpop=0 STpeak=0 STstall=0 STcross_min_ns=1000000000.000 STcross_max_ns=0.000 req=0 rsp=0 reqstall=0 ack_min_ns=1000000000.000 ack_max_ns=0.000 Wstall=0 first_req_to_W_ns=0.000 last_W_to_B_ns=0.000 B_to_done_ns=0.000
+INSTALLED STORE status=0 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=3776 elapsed=3792 bytes=4096
+FEASIBILITY STORE host_ns=1 mem_ns=0.833000 phase_ns=0.137000 dma_delay=400 LDpush=0 LDpop=0 LDpeak=0 LDstall=0 LDcross_min_ns=1000000000.000 LDcross_max_ns=0.000 STpush=128 STpop=128 STpeak=32 STstall=2788 STcross_min_ns=5.761 STcross_max_ns=942.301 req=128 rsp=128 reqstall=0 ack_min_ns=1.666 ack_max_ns=1.666 Wstall=32 first_req_to_W_ns=5.261 last_W_to_B_ns=401.000 B_to_done_ns=2.000
+ROUNDTRIP words64=512 mismatches=0 reads=512 writes=512 b_acks=8 system_fault=0 steps=0
+INSTALLED STORE_ALIGN status=3 crc=ffffffff vcrc=00000000 sectors=0 host_cycles=0 elapsed=18 bytes=31
+FEASIBILITY STORE_ALIGN host_ns=1 mem_ns=0.833000 phase_ns=0.137000 dma_delay=400 LDpush=0 LDpop=0 LDpeak=0 LDstall=0 LDcross_min_ns=1000000000.000 LDcross_max_ns=0.000 STpush=0 STpop=0 STpeak=0 STstall=0 STcross_min_ns=1000000000.000 STcross_max_ns=0.000 req=0 rsp=0 reqstall=0 ack_min_ns=1000000000.000 ack_max_ns=0.000 Wstall=0 first_req_to_W_ns=0.000 last_W_to_B_ns=0.000 B_to_done_ns=7924.500
+INSTALLED STORE_B_ERROR status=4 crc=77ffc71c vcrc=77ffc71c sectors=128 host_cycles=3777 elapsed=3795 bytes=4096
+FEASIBILITY STORE_B_ERROR host_ns=1 mem_ns=0.833000 phase_ns=0.137000 dma_delay=400 LDpush=0 LDpop=0 LDpeak=0 LDstall=0 LDcross_min_ns=1000000000.000 LDcross_max_ns=0.000 STpush=128 STpop=128 STpeak=32 STstall=2788 STcross_min_ns=5.801 STcross_max_ns=942.262 req=128 rsp=128 reqstall=0 ack_min_ns=1.666 ack_max_ns=1.666 Wstall=32 first_req_to_W_ns=5.300 last_W_to_B_ns=401.000 B_to_done_ns=2.000
+PASS installed_loader_roundtrip
+- /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_observer_corrected/rtl/test/hbm_accel/tb_hbm_accel_loader_installed.sv:138: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.252 s; speed 46.634 us/s
+- Verilator: cpu 0.252 s on 1 threads; allocated 10 MB

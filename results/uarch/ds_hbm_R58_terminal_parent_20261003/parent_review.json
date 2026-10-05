@@ -1,0 +1,36 @@
+{
+  "PC10_executed": false,
+  "checkpoint_captured": false,
+  "failure": "sha(__file__) supplies str to imported sha(p), which calls p.read_bytes()",
+  "next": "Additive path-type repair and cheap checkpoint pipeline regression; assess actual retained state before any numerical prefix repetition.",
+  "no_expected_outputs_as_runtime_inputs": true,
+  "observed_outputs": 1568,
+  "process_restarted": false,
+  "producer_source": "10c7d4ab0189460f823dbfddb46e34a9899d20d4",
+  "recovery_from_actual_journal_proved": false,
+  "recovery_state_audit_owners": [
+    "Kepler",
+    "Peirce",
+    "Sagan"
+  ],
+  "repair_owner": "Kepler",
+  "retired_PCs": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "runtime_receipt_sha256": "51c635a9fc9a754634842c6bac6a394a93140c6504c6d1f990e44e4ace9c136a",
+  "schema": "opentallas.parent.R58.terminal.scope.v1",
+  "source_pins": {
+    "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_checkpointed_prefix_r55.py": "d8afd90b1d9e9ff374c85caf1e55e71a5e5bca6afd1639d077fdeb9f1c51ab39",
+    "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_connected_prepare_r37.py": "94cc0c4c1bb1eb01b6bf76cc6bb96992f4a1c9d9bfca5260fcb054a4d4e58511"
+  },
+  "status": "PREFIX_RETIRED_CHECKPOINT_PREPARATION_FAILED"
+}

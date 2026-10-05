@@ -1,0 +1,24 @@
+test_PC_wait_does_not_lease_entire_shared_command_path (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_actual64slots16cache_and_no_whole_RAM_shift (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_alias_and_registered_final_revalidation_refusal (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_bypass_is_bounded16_then_oldest_required (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_native_deadlines_banks_maintenance_and_shared_command_slots (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_pending_combined64_credits_and_immutable25edge_due (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_ready_calendar_respects_group_lane_pool_and_reverse_credits (test_qwen_rom_kv_successor.SuccessorTests) ... ERROR
+test_request_macro_capture_nextedge_and_whole_record (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+test_return_duplicates_and_payload_provider_refused (test_qwen_rom_kv_successor.SuccessorTests) ... ok
+
+======================================================================
+ERROR: test_ready_calendar_respects_group_lane_pool_and_reverse_credits (test_qwen_rom_kv_successor.SuccessorTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-qwen-kv-g0-next/tests/test_qwen_rom_kv_successor.py", line 88, in test_ready_calendar_respects_group_lane_pool_and_reverse_credits
+    f=S.ready_layer_calendar(0,0,375834,S.PCService())
+  File "/home/ubuntu/OpenTallas-qwen-kv-g0-next/tools/uarch_model_qwen_kv_successor.py", line 281, in ready_layer_calendar
+    if not choices:raise ValueError('finite credit deadlock')
+ValueError: finite credit deadlock
+
+----------------------------------------------------------------------
+Ran 9 tests in 2.021s
+
+FAILED (errors=1)

@@ -1,0 +1,10 @@
+CASES 36
+FAILURES 0
+REF_CYCLES 662489
+PIPE_CYCLES 1129736
+CYCLE_RATIO_PIPE_OVER_REF 1.70
+EQUIVALENT
+- rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv:227: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.585 s; speed 1.930 ms/s
+- Verilator: cpu 0.584 s on 1 threads; allocated 6 MB

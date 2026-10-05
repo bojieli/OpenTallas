@@ -1,0 +1,7 @@
+{
+  "state": "PRESERVED_GENERATOR_FAILURE_NOT_TIMING",
+  "cause": "Generic pin helper required M1 vertical height>100DBU; literal RESETN has tallest M1 rectangle90DBU, causing StopIteration before final model emission. Subsequent tests saw stale interim model and reported two missing-field errors.",
+  "fix": "Choose literal longest M1 rectangle for each actual pin; no footprint/pin/source timing changed.",
+  "failed_test_count": 2,
+  "physical_limitation": false
+}

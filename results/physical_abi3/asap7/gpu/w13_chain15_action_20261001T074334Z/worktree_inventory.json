@@ -1,0 +1,141 @@
+[
+  {
+    "path": "/tmp/claude-1000/wt/w13-hbm",
+    "head": "413b5d096b467f0bdf0d6c6088140bc03c5af11b",
+    "dirty": [
+      "?? results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/",
+      "?? results/physical_abi3/asap7/chip/blocks/ot_gpu_tc_col.json",
+      "?? results/physical_abi3/asap7/chip/boundary/ot_gpu_tc_col.json"
+    ],
+    "size_mib": 4134.7,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/barrier_092.sh",
+      "/tmp/claude-1000/w13jobs/jobs/tccol16_092.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden_tc16.sh",
+      "/tmp/claude-1000/w13jobs/jobs/stack_092.sh",
+      "/tmp/claude-1000/w13jobs/jobs/tccol_091.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain_smv.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden_bd_col.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden2_tc_col.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden2_tc16.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain_smq.sh",
+      "/tmp/claude-1000/w13jobs/jobs/bdcol_092.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden_tccol.sh",
+      "/tmp/claude-1000/w13jobs/jobs/cv2.sh",
+      "/tmp/claude-1000/w13jobs/jobs/tccol_092.sh"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-sm",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [
+      " M results/rtl/gpu_camp_lanes.json"
+    ],
+    "size_mib": 4131.6,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/queue/W13b.manifest",
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/smq_pve3.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+      "/tmp/claude-1000/w13jobs/jobs/smq_pnr.sh",
+      "/tmp/claude-1000/w13jobs/jobs/cq2.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/w13jobs/jobs/camp.sh",
+      "/tmp/claude-1000/w13jobs/jobs/cv2.sh",
+      "/tmp/claude-1000/w13jobs/jobs/smv_pnr.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-smq12",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [],
+    "size_mib": 4130.8,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-smv",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [
+      " M results/rtl/gpu_camp_blockdot.json"
+    ],
+    "size_mib": 4131.8,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/w13jobs/jobs/cv2.sh",
+      "/tmp/claude-1000/w13jobs/jobs/smv_pnr.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-smv12",
+    "head": "a087912804e735affdf6e25273ae842a5f99e622",
+    "dirty": [],
+    "size_mib": 4103.9,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-smv13",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [],
+    "size_mib": 4130.8,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-t16",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [],
+    "size_mib": 4130.9,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain14.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain12v2.sh",
+      "/tmp/claude-1000/queue/W11.recovery-processes.txt",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-tc",
+    "head": "f7b5566e16f99648477f7794dfd0afeda91e15ed",
+    "dirty": [],
+    "size_mib": 4102.5,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/w13jobs/jobs/chain12.sh",
+      "/tmp/claude-1000/w13jobs/jobs/chain13.sh",
+      "/tmp/claude-1000/w13jobs/jobs/harden3_tc_col.sh",
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  },
+  {
+    "path": "/tmp/claude-1000/wt/w13-w19",
+    "head": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "dirty": [
+      "?? results/rtl/gpu_camp_w19.json"
+    ],
+    "size_mib": 4130.7,
+    "queue_or_script_references": [
+      "/tmp/claude-1000/queue/W13b.manifest"
+    ]
+  }
+]

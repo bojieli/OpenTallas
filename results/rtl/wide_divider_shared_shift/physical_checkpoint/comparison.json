@@ -1,0 +1,91 @@
+{
+  "scope": "Matched prelayout synthesis/STA only, not routed timing.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/wide_divider/separate_shift_synth_sta_1ns.json",
+      "record_sha256": "646e130dc9da9e264ea276ecf514f6d42f828c2ad7e930ee166a527e68fe8187",
+      "area_um2": 626.633,
+      "sequential_cells": 829,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.05478314004899727,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 830,
+            "setup_wns_ns": -10.225009324572403,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "sources": [
+        {
+          "path": "results/rtl/wide_divider_shared_shift/before.sv",
+          "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978",
+          "size_bytes": 5560
+        }
+      ],
+      "verified_retained_artifacts": {
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/setup_path.rpt": "ca35f970fa3a0cc0acbfc466ce6d5975f009edb9ad5b9427b5ece1b5fefb1272",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/synth.ys": "eb8d86f4d376d6da28006093651594e90e3d0c44671d636af592c7695c753edd",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/hold_path.rpt": "ad186ea5a0dcdabbf1f0b5e994de95584940ecab73b62bbe52f5fec1bf22c79e",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/stat.txt": "095225e7f1f89cad3d8647f5a6a9b11adac8f10b1f3361c830453256f62e5cf5",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/separate/sta.tcl": "d74969e8cf089c3563cbe676fac6335e974a4c041b343f42c23481a65ca4c646"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/wide_divider/shared_shift_synth_sta_1ns.json",
+      "record_sha256": "ecaeb82895410a4ec1ad51bc5814d30b24d3ae9446d4d218750450f3838bc233",
+      "area_um2": 546.518,
+      "sequential_cells": 667,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.05478239411789961,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 668,
+            "setup_wns_ns": -6.281022393979122,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_div_seq.sv",
+          "sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+          "size_bytes": 6360
+        }
+      ],
+      "verified_retained_artifacts": {
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/setup_path.rpt": "3899e61f74d588891713968667b5e417fb531f512d934d1335a5f6c5de58adcd",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/synth.ys": "561849f1a1061266745db5df0127833288760dc2223c31b035a52cbaf0c79802",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/hold_path.rpt": "d7e0fb19297d02106206666a9ff8a66982505400ac7d15b0dbf5e76485c2bf3d",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/stat.txt": "20a9b5aabf0448c11f559f3a7bdfa49b03c3571dd87650806de2b965407eb3d4",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/constraint.sdc": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+        "results/rtl/wide_divider_shared_shift/physical_checkpoint/shared/sta.tcl": "d88b470606a078bb47e3fbaf8bf5003aed77742495abf81b6a54ae2faed02adf"
+      }
+    }
+  ],
+  "area_reduction_percent": 12.78499536411265,
+  "control_path_note": "Shared-divider prelayout worst path is a control-flop output through NAND and OA222/INV to a register; buffering and extracted implementation remain required.",
+  "shared_control_net_cell_terminals": {
+    "_0021_": 428,
+    "_1433_": 437
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "timestamp_ns": 1791087690135084910,
+  "host": "ubuntu",
+  "source": "2b5e2ea595ae5c77daebac491489e219209d106e",
+  "source_root": "/home/ubuntu/OpenTallas-dsrom-s81-word-service",
+  "memory_available_bytes": 162862317568,
+  "disk_free_bytes": 1372801826816,
+  "reservation_estimate_bytes": 1073741824,
+  "host_memory_reserve_bytes": 25769803776,
+  "measured_provider_startup_peak_bytes": 128299008,
+  "scope": "small source-bound checkpoint byte service, no compiler/simulation; no execution limits",
+  "active_embedding_pid_preserved": 2041348,
+  "socket": "/tmp/dsrom-s81-minimum-field-57e3.sock",
+  "provider_output": "/tmp/dsrom-s81-field-word-57e3-r1",
+  "limits": {
+    "RLIMIT_CPU": [
+      -1,
+      -1
+    ],
+    "RLIMIT_AS": [
+      -1,
+      -1
+    ],
+    "RLIMIT_FSIZE": [
+      -1,
+      -1
+    ]
+  }
+}

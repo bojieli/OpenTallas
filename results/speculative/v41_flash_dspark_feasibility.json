@@ -1,0 +1,656 @@
+{
+ "question": "Can DeepSeek-V4.1-Flash's own DSpark/MTP speculative acceptance be measured on a small agentic sample on this machine in hours?",
+ "answer_short": "YES for the teacher-forced measurement (done: 8 traces, 8,798 tokens; 10.2 min main pass + 1.4 min DSpark; 9.07 GB GPU peak). Measuring on the main model's OWN greedy continuations needs a KV-cached layer-streamed decode that is NOT implemented here (est. 0.5-2.8 h for 8x256 tokens speculatively); the implemented no-cache re-prefill path is untested and would take ~10-12 h.",
+ "inventory": {
+  "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+  "safetensors_total_bytes": 510296708312,
+  "by_group_GB": {
+   "routed_experts_fp4 (40 layers x 384)": 288.78,
+   "engram_tables (layers 1,14; fp8 rows + e8m0 scales; sparse lookup only)": 203.07,
+   "other_backbone (attn, shared expert, gates, hc, compressor/indexer)": 6.88,
+   "mtp.0": 2.65,
+   "mtp.1": 2.57,
+   "mtp.2": 2.71,
+   "embed": 1.32,
+   "head": 1.32,
+   "vision+aligner": 0.97
+  },
+  "bytes_streamed_per_main_pass_GB": 298.7,
+  "mtp": {
+   "tensors": 2401,
+   "bytes": 7932874632,
+   "structure": "NOT V3-style chained per-depth MTP. It is DSpark: the 3 stages mtp.0/1/2 run IN SERIES as one 3-layer block drafter over a block of 5 positions [verified token, noise token 128799 x4]. Input main_hidden = concat of the ATTENTION INPUT (h.mean over the 4 hc copies) of layers 37,38,39 -> mtp.0.main_proj (15360->5120) + main_norm -> main_x. Each stage's DSparkAttention attends a 128-slot window of main_kv (its own wkv of main_x at positions <= p) plus the 5 block tokens; MoE 128 experts top-3. mtp.2 adds final norm, the backbone's tied head, a Markov head (rank-256 embed+head logit bias applied sequentially along the greedy-chained drafts) and a confidence head. One DSpark call drafts 5 tokens. The vendor generate.py never calls forward_spec (the speculative loop is out of scope in the vendor repo).",
+   "tensor_list": "tensor_index.json (all tensors: dtype, shape, bytes, shard)"
+  },
+  "machine": {
+   "ram_GB": 188,
+   "cores": 32,
+   "gpu": "RTX PRO 6000 Blackwell 96 GB (sm_120, 101,376 B smem/block opt-in), shared: 50-75 GB held by other users during this study; this study capped itself at 11.5 GB via set_per_process_memory_fraction; peak 9.07 GB",
+   "disk": "md0 RAID5 of 3 NVMe"
+  },
+  "software": {
+   "vendor_inference": "inference/model.py runs with torch 2.10 + tilelang 0.1.8 (system python) only with nvcc from /usr/local/cuda-12.8 (default /usr/bin/nvcc 11.5 rejects sm_120a). Even then the vendor sparse_attn needs 141,312 B shared memory > 101,376 B (cannot launch at n_heads=64, head_dim=512) and the vendor fp8_gemm returns NaN for most M on sm_120 (M=64,100,128,200,299,300 NaN; M=1,5,256 OK). act_quant, fp4_act_quant and hc_split_sinkhorn launch and were used to validate the torch replacements (bit-exact; sinkhorn <= 1.2e-7).",
+   "vllm_0.23_venv": "no DeepSeek-V4/V4.1 model file",
+   "vllm_0.19_system": "no DeepSeek-V4/V4.1 model file",
+   "sglang_0.5.13": "deepseek_v4.py exists but has no engram and no DSpark (V4, not V4.1); in any case ~300 GB of weights cannot be served within a 12 GB GPU / 40 GB RAM budget, and no CPU-offload path fits",
+   "repo_numpy_oracle": "tools/run_deepseek_v41_reference_oracle.py (wraps the vendor code; ~15 h per 4 tokens per the memory notes); not used. The remote gate is impractical because the 510 GB checkpoint is local."
+  }
+ },
+ "implementation": {
+  "dir": "ref/ (stream_v41.py, vkern.py, driver.py, analyze.py, build_traces.py)",
+  "method": "The vendor model.py modules (Block, Attention, Compressor, Indexer, Engram, MoE, Gate, DSparkBlock, hc_*) are used verbatim. All six tilelang kernels are replaced by torch equivalents written from kernel.py: the quantizers are exact, the GEMMs dequantize their operands exactly to bf16 and accumulate in fp32 (only the summation order differs), and sparse_attn uses the same math including the sink and bf16 P. Layer streaming: one Block at a time is built on GPU, with weights preadv'd into two pinned 7.56 GB host buffers (double-buffered, so the next layer is read while the current one computes) and convert.py's MP=1 transforms applied (wo_a dequant, int8 experts viewed as fp4x2). Engram: only the ~92.5k hashed rows per layer are pread from the 98 GB tables. Attention runs at bsz=1 per trace, with the vendor shared_attn cross-layer state saved and restored per trace; the token-wise MoE runs once per layer over all traces' tokens. posix_fadvise(DONTNEED) after each layer avoids evicting other users' page cache.",
+  "dspark_teacher_forced": "For each (trace, p) the block is [g_p (main greedy at p), noise x4]. Each stage's window is main_kv at positions p-127..p, with rope at the true positions (block at p+1..p+5). The 3 stages run in series, then the vendor forward_head (greedy Markov chaining); rows are batched. Checked against the vendor DSparkBlock decode path (ring cache, start_pos=p, mtp.0->mtp.1, real weights, random inputs): cos 0.988-0.9996 at p=5..293 (check_dspark_equiv*.json). The differences come from rounding of the batched vs M=1 GEMMs, amplified through two MoE stages by random (out-of-distribution) hidden states.",
+  "numerical_noise_floor": "Same rows, different batch composition (row_chunk 7 vs 1024): draft-token agreement at block positions 1..5 = 0.985, 0.957, 0.935, 0.908, 0.897 (dspark_batch_noise.json). Acceptance at the deeper positions therefore carries a few pp of rounding noise; the main-model argmax has analogous, unmeasured noise relative to the vendor fp8 kernels.",
+  "not_run": "driver.py 'spec' mode (greedy DSpark speculative decode, full re-prefill each iteration) is written but was NOT run (~10-12 h, beyond the compute budget) and is untested."
+ },
+ "traces": {
+  "file": "traces.json",
+  "n": 8,
+  "total_tokens": 8798,
+  "assistant_tokens": 1726,
+  "description": "8 code-agent conversations in the vendor chat format (encoding.py, chat mode, 3 tools read_file/run_shell/edit_file, DSML tool calls), 708-1608 tokens each. Tool RESULTS are real read-only outputs from this repo; assistant turns (text + tool calls) are AUTHORED, not model-generated. The main model's greedy agreement with the authored assistant tokens is ~0.65 (per_trace_main_model in acceptance_stats.json)."
+ },
+ "measurements": [
+  {
+   "what": "disk O_DIRECT read, 6.7 GB of shard 25",
+   "cmd": "dd if=<blob of model-00025> of=/dev/null bs=64M iflag=direct count=100",
+   "GBps": 6.6
+  },
+  {
+   "what": "disk O_DIRECT read, full 7.39 GB shard 26",
+   "cmd": "dd if=<blob of model-00026> of=/dev/null bs=256M iflag=direct",
+   "GBps": 9.6
+  },
+  {
+   "what": "in-process pinned preadv streaming during the run (competing with other users' 100%-CPU jobs)",
+   "result": "319.8 GB in 161.6 s of reader time = ~2.0 GB/s, overlapped with compute"
+  },
+  {
+   "what": "H2D pinned copy 2 GiB x3",
+   "GBps": 27.2
+  },
+  {
+   "what": "H2D from pageable safetensors mmap tensors (first attempt)",
+   "result": "7.5-11.4 s per 7.39 GB layer; pinning them took 125 s. Replaced by direct preadv into preallocated pinned buffers: 0.6 s H2D per layer"
+  },
+  {
+   "what": "full teacher-forced main pass: 8 traces / 8,798 tokens, 40 layers + head",
+   "s": 614.6,
+   "breakdown_s": {
+    "compute": 389.3,
+    "weight_build_and_h2d": 49.6,
+    "engram_row_reads (92.5k rows x 2 layers)": 16.9,
+    "head": 0.5
+   },
+   "per_layer_s": "4.4-31 (median ~12)",
+   "gpu_peak_GB": 9.07
+  },
+  {
+   "what": "DSpark teacher-forced drafting, 8,782 rows (every position of every trace)",
+   "s": 84.0
+  },
+  {
+   "what": "DSpark re-run on 600 rows in 7-row chunks (noise check)",
+   "s": 186
+  }
+ ],
+ "results_acceptance": {
+  "file": "acceptance_stats.json",
+  "definitions": "Row (trace,p): verified token g_p; drafts d_1..d_5 target g_{p+1}..g_{p+5} (main greedy argmax at those positions over the TRACE prefix). accepted a = leading matches; tokens/verification = a+1 (bonus). conditional = P(d_k accepted | d_1..d_{k-1} accepted); marginal = P(d_k == target).",
+  "assistant_positions_proxy": {
+   "rows": 1726,
+   "rows_full_depth": 1694,
+   "mean_accepted_drafts": 2.781582054309327,
+   "mean_tokens_per_verification_incl_bonus": 3.781582054309327,
+   "accepted_length_histogram_0..5": [
+    431,
+    229,
+    144,
+    94,
+    67,
+    729
+   ],
+   "per_position_conditional_acceptance": [
+    0.7455726092089728,
+    0.8186856690419636,
+    0.8607350096711799,
+    0.8943820224719101,
+    0.9158291457286433
+   ],
+   "per_position_marginal_match": [
+    0.7455726092089728,
+    0.6334120425029516,
+    0.5625737898465171,
+    0.5182998819362455,
+    0.47992916174734357
+   ]
+  },
+  "assistant_positions_rows_where_trace_equals_greedy": {
+   "rows": 1006,
+   "rows_full_depth": 987,
+   "mean_accepted_drafts": 3.7963525835866263,
+   "mean_tokens_per_verification_incl_bonus": 4.796352583586626,
+   "accepted_length_histogram_0..5": [
+    104,
+    83,
+    67,
+    50,
+    35,
+    648
+   ],
+   "per_position_conditional_acceptance": [
+    0.894630192502533,
+    0.9060022650056625,
+    0.91625,
+    0.931787175989086,
+    0.9487554904831625
+   ],
+   "per_position_marginal_match": [
+    0.894630192502533,
+    0.8338399189463019,
+    0.78419452887538,
+    0.7406281661600811,
+    0.7112462006079028
+   ]
+  },
+  "all_positions_proxy": {
+   "rows": 8782,
+   "rows_full_depth": 8750,
+   "mean_accepted_drafts": 1.3521142857142858,
+   "mean_tokens_per_verification_incl_bonus": 2.352114285714286,
+   "accepted_length_histogram_0..5": [
+    4612,
+    1402,
+    668,
+    453,
+    341,
+    1274
+   ],
+   "per_position_conditional_acceptance": [
+    0.47291428571428573,
+    0.6611889801836636,
+    0.7558479532163743,
+    0.7809477756286267,
+    0.7888544891640867
+   ],
+   "per_position_marginal_match": [
+    0.47291428571428573,
+    0.35851428571428573,
+    0.2946285714285714,
+    0.24514285714285713,
+    0.20502857142857142
+   ]
+  },
+  "non_assistant_positions_proxy": {
+   "rows": 7056,
+   "rows_full_depth": 7056,
+   "mean_accepted_drafts": 1.0089285714285714,
+   "mean_tokens_per_verification_incl_bonus": 2.0089285714285716,
+   "accepted_length_histogram_0..5": [
+    4181,
+    1173,
+    524,
+    359,
+    274,
+    545
+   ],
+   "per_position_conditional_acceptance": [
+    0.4074546485260771,
+    0.592,
+    0.6921269095182139,
+    0.6952461799660441,
+    0.6654456654456654
+   ],
+   "per_position_marginal_match": [
+    0.4074546485260771,
+    0.2925170068027211,
+    0.23030045351473924,
+    0.17956349206349206,
+    0.13903061224489796
+   ]
+  },
+  "walker_over_assistant_spans_proxy": {
+   "steps": 610,
+   "mean_tokens_per_step_incl_bonus": 2.7918032786885245,
+   "exact_steps": 240
+  },
+  "caveats": [
+   "PROXY: the targets are the main model's argmax over the authored trace prefix. A row equals true greedy acceptance only where the trace token equals the model's greedy token for every token the accepted drafts condition on. The 'rows_where_trace_equals_greedy' subset (1,006 assistant rows, 4.80 tokens/verification) is exact acceptance ON THOSE ROWS, but it is selected on a condition correlated with the outcome (predictable text both matches greedy and drafts well), so it is biased upward and is not an unbiased on-policy estimate. The unfiltered assistant proxy (3.78) is likely biased downward, because off-greedy trace tokens make the model's own targets less predictable. On-policy acceptance for this kind of text most plausibly lies between ~3.8 and ~4.8 tokens/verification; that bracket is an inference, not a measurement.",
+   "The assistant text is short, authored, formulaic agent prose and tool calls in chat mode (no <think> reasoning). Tool-result/system/user positions (non_assistant, 2.01 tokens/verification) are prefill in real serving and never decoded.",
+   "The walker (2.79) jumps a+1 through the authored spans and is dominated by off-greedy positions; it is not an acceptance estimate.",
+   "Numerics: torch replacements for the vendor kernels (the vendor fp8_gemm is NaN and the vendor sparse_attn cannot launch on sm_120). Draft-token noise floor is 0.90-0.985 agreement by position under batch recomposition; the batched DSpark path vs the vendor decode path gives cos >= 0.988 on random inputs.",
+   "n = 8 traces and 1,726 assistant tokens: a small sample."
+  ]
+ },
+ "extrapolation": {
+  "teacher_forced": "Pass time ~= max(weight stream, compute) + DSpark. Weight-stream floor: 298.7 GB / 6.6-9.6 GB/s (dd) = 31-45 s; the measured in-process reader at 2.0 GB/s gives 150 s, hidden under compute. Compute was 389 s for 8,798 tokens (~44 ms/token on a shared GPU with dequant-to-bf16 GEMMs), so the pass is compute-bound above ~3k tokens; DSpark adds ~9.6 ms/row. Estimate: T tokens cost ~150 + 0.044*T + 0.0096*T s. For 50 traces x 1k tokens that is ~47 min; 8 traces measured 11.7 min. The activations for 8.8k tokens fit in the 9.07 GB peak; beyond ~20k tokens per pass would need chunking.",
+  "greedy_continuations": {
+   "implemented_no_kv_cache_re_prefill": "Each iteration re-runs the full main pass over prompt+generated (~615 s for 8 x ~1.1k tokens) plus DSpark (~70-90 s including its 7.9 GB stream). 8 traces x 256 new tokens at ~3.8-4.8 tokens/iteration = 53-67 iterations x ~11.5 min = 10-13 h; plain greedy (1 token/pass) = 256 x ~10 min = ~44 h.",
+   "kv_cached_streamed_decode_NOT_implemented": "The vendor modules already carry decode caches (window ring, compressor state, compressed KV, index keys, engram n-gram cache), under 1 GB per trace across all layers. Each verification step would then cost one weight stream of 298.7 GB + 7.9 GB DSpark: 32-46 s at dd rate, ~150 s at the measured in-process 2 GB/s. 8 x 256 tokens speculatively = 53-67 steps = 0.5-2.8 h; non-speculative = 256 steps = 2.3-10.9 h. Implementing this faithfully (multi-token verification writes into ring/compressor caches that the vendor decode path assumes are single-token) is roughly a day of work plus validation."
+  },
+  "numpy_oracle": "Impractical: ~15 h per 4 tokens."
+ },
+ "hardware_needed": "Fast-memory footprint ~300 GB (backbone + experts + DSpark); the 203 GB engram tables can stay in host RAM (sparse row gathers). One 8xH200 (1.13 TB) or 8xB200 node, or 4xB200 (768 GB), runs the vendor reference as shipped (convert.py --model-parallel N; torchrun generate.py); sparse_attn's 141 KB of shared memory fits the 228 KB of H100/H200/B200. A greedy+DSpark acceptance study over hundreds of traces then takes minutes, once the few-dozen-line spec loop around forward_spec is written. None of the installed engines (vLLM 0.19/0.23, SGLang 0.5.13) supports V4.1 (engram + DSpark); SGLang has V4 only.",
+ "verdict": "FEASIBLE and DONE for (a): teacher-forced DSpark agreement over 8 agent traces in ~14 min wall, within 9.1 GB GPU and ~16 GB pinned RAM. On authored assistant spans: 3.78 tokens/verification incl. bonus (proxy); conditional acceptance by draft position 0.75/0.82/0.86/0.89/0.92. On rows where the trace equals the model's greedy text: 4.80 tokens/verification, 0.89/0.91/0.92/0.93/0.95 (outcome-selected, biased). (b) True on-policy greedy acceptance needs the model's own continuations: ~10-13 h with the implemented re-prefill path (untested), 0.5-2.8 h with a KV-cached streamed decode (not implemented). (c) 8xH200/B200 with the vendor code makes it routine.",
+ "public_traces": {
+  "what": "Same teacher-forced DSpark measurement on PUBLIC agentic traces with cited provenance (seed 42). Other models' turns (gpt-4o in tau-bench, SWE-agent-llama-70b/8b in nebius/SWE-agent-trajectories), rendered with V4.1's own encoding/encoding.py in chat (non-thinking) mode. BFCL skipped (budget).",
+  "provenance": {
+   "seed": 42,
+   "cap_tokens": {
+    "tau": 1500,
+    "swe_agent": 600
+   },
+   "encoding": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277/encoding/encoding.py",
+   "encoding_sha256": "502bdaec8a3fd88ebc24c4721a7038fbe42f2063c664638127056107920035c1",
+   "thinking_mode": "chat",
+   "sources": {
+    "tau_retail": {
+     "repo": "https://github.com/sierra-research/tau-bench",
+     "git_head": "59a200c6d575d595120f1cb70fea53cef0632f6b",
+     "file": "historical_trajectories/gpt-4o-retail.json",
+     "sha256": "df01707894836168ff0ec9616b0bf08f66c7e5afcf313e5fe4f7a2f5c2ec938b",
+     "salt": "v41-tau-retail",
+     "picked_list_indices": [
+      332,
+      252,
+      336,
+      374
+     ],
+     "n_items": 460
+    },
+    "tau_airline": {
+     "repo": "https://github.com/sierra-research/tau-bench",
+     "git_head": "59a200c6d575d595120f1cb70fea53cef0632f6b",
+     "file": "historical_trajectories/gpt-4o-airline.json",
+     "sha256": "e9e6c0297660c537f83d4fd9c476ce7a9a86ecd2784874b7bfc13be598e37bfa",
+     "salt": "v41-tau-airline",
+     "picked_list_indices": [
+      107,
+      60,
+      15,
+      61
+     ],
+     "n_items": 200
+    },
+    "swe_agent": {
+     "dataset": "nebius/SWE-agent-trajectories",
+     "revision": "68195a1450865274106246d0d0296a1d6807b88e",
+     "file": "data/train-00000-of-00012.parquet",
+     "sha256": "5a395e8c7bb8ddc4b8f4d268506b3a0e2cf9b5ec3922600117322fe788067a13",
+     "salt": "v41-swe",
+     "picked_row_indices": [
+      1873,
+      915,
+      4651,
+      3798,
+      4893,
+      2788,
+      3753,
+      2513
+     ],
+     "n_rows": 6670
+    }
+   },
+   "items": [
+    {
+     "id": "gpt-4o-retail[332] task_id=102 trial=2",
+     "source": "tau_retail",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 6271,
+     "n_assistant_tokens": 0
+    },
+    {
+     "id": "gpt-4o-retail[252] task_id=22 trial=2",
+     "source": "tau_retail",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 1879,
+     "n_assistant_tokens": 523
+    },
+    {
+     "id": "gpt-4o-retail[336] task_id=106 trial=2",
+     "source": "tau_retail",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 3950,
+     "n_assistant_tokens": 219
+    },
+    {
+     "id": "gpt-4o-retail[374] task_id=29 trial=3",
+     "source": "tau_retail",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 3824,
+     "n_assistant_tokens": 271
+    },
+    {
+     "id": "gpt-4o-airline[107] task_id=7 trial=2",
+     "source": "tau_airline",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 5519,
+     "n_assistant_tokens": 176
+    },
+    {
+     "id": "gpt-4o-airline[60] task_id=10 trial=1",
+     "source": "tau_airline",
+     "n_tokens": 1123,
+     "n_tokens_before_cut": 1123,
+     "n_assistant_tokens": 307
+    },
+    {
+     "id": "gpt-4o-airline[15] task_id=15 trial=0",
+     "source": "tau_airline",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 2541,
+     "n_assistant_tokens": 409
+    },
+    {
+     "id": "gpt-4o-airline[61] task_id=11 trial=1",
+     "source": "tau_airline",
+     "n_tokens": 1500,
+     "n_tokens_before_cut": 4258,
+     "n_assistant_tokens": 135
+    },
+    {
+     "id": "row1873 fatiando__pooch-171 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 6146,
+     "n_assistant_tokens": 83
+    },
+    {
+     "id": "row915 planetlabs__planet-client-python-621 swe-agent-llama-8b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 26595,
+     "n_assistant_tokens": 143
+    },
+    {
+     "id": "row4651 Azure__msrest-for-python-208 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 4765,
+     "n_assistant_tokens": 181
+    },
+    {
+     "id": "row3798 geopandas__geopandas-1336 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 11293,
+     "n_assistant_tokens": 165
+    },
+    {
+     "id": "row4893 alvinwan__TexSoup-140 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 21154,
+     "n_assistant_tokens": 210
+    },
+    {
+     "id": "row2788 devopshq__artifactory-439 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 25490,
+     "n_assistant_tokens": 248
+    },
+    {
+     "id": "row3753 docker__docker-py-1167 swe-agent-llama-70b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 8360,
+     "n_assistant_tokens": 164
+    },
+    {
+     "id": "row2513 NVIDIA__hpc-container-maker-221 swe-agent-llama-8b",
+     "source": "swe_agent",
+     "n_tokens": 600,
+     "n_tokens_before_cut": 9939,
+     "n_assistant_tokens": 146
+    }
+   ]
+  },
+  "rendering_deviations": [
+   "tau: domain policy wiki (system message, ~1.2k tokens) omitted; tool schemas restricted to the tools the trajectory calls; vendor DSML tool-format block kept; cut at 1,500 tokens",
+   "swe_agent: SWE-agent system prompt (~1.1k tokens of command docs) omitted; issue text cut to 200 tokens; cut at 600 tokens",
+   "cuts can fall mid-turn; gpt-4o-retail[332] has 0 assistant tokens inside its 1,500-token window (7 tool schemas + a long first exchange) and contributes only non-assistant rows"
+  ],
+  "per_source": {
+   "swe_agent": {
+    "sequences": 8,
+    "ids": [
+     "row1873 fatiando__pooch-171 swe-agent-llama-70b",
+     "row915 planetlabs__planet-client-python-621 swe-agent-llama-8b",
+     "row4651 Azure__msrest-for-python-208 swe-agent-llama-70b",
+     "row3798 geopandas__geopandas-1336 swe-agent-llama-70b",
+     "row4893 alvinwan__TexSoup-140 swe-agent-llama-70b",
+     "row2788 devopshq__artifactory-439 swe-agent-llama-70b",
+     "row3753 docker__docker-py-1167 swe-agent-llama-70b",
+     "row2513 NVIDIA__hpc-container-maker-221 swe-agent-llama-8b"
+    ],
+    "tokens": 4800,
+    "assistant_tokens": 1340,
+    "greedy_match_rate_assistant_tokens": 0.7313432835820896,
+    "tau_proxy_assistant_spans": 3.038922155688623,
+    "tau_proxy_stderr_rowwise": 0.052414701474577996,
+    "proxy_rows_full_depth": 1336,
+    "proxy_per_position_conditional_acceptance": [
+     0.6841317365269461,
+     0.7341356673960613,
+     0.7406855439642325,
+     0.7404426559356136,
+     0.7445652173913043
+    ],
+    "proxy_per_position_marginal_match": [
+     0.6841317365269461,
+     0.5344311377245509,
+     0.4199101796407186,
+     0.33083832335329344,
+     0.25074850299401197
+    ],
+    "proxy_accepted_length_histogram_0..5": [
+     422,
+     243,
+     174,
+     129,
+     94,
+     274
+    ],
+    "tau_on_greedy_matching_rows": 3.8419452887537995,
+    "greedy_matching_rows_full_depth": 658,
+    "greedy_matching_rows_per_position_conditional_acceptance": [
+     0.8115501519756839,
+     0.8220973782771536,
+     0.8246013667425968,
+     0.8066298342541437,
+     0.8321917808219178
+    ],
+    "non_assistant_rows_tau_proxy": 2.8193793911007026
+   },
+   "tau_airline": {
+    "sequences": 4,
+    "ids": [
+     "gpt-4o-airline[107] task_id=7 trial=2",
+     "gpt-4o-airline[60] task_id=10 trial=1",
+     "gpt-4o-airline[15] task_id=15 trial=0",
+     "gpt-4o-airline[61] task_id=11 trial=1"
+    ],
+    "tokens": 5623,
+    "assistant_tokens": 1027,
+    "greedy_match_rate_assistant_tokens": 0.7789678675754625,
+    "tau_proxy_assistant_spans": 3.3962818003913893,
+    "tau_proxy_stderr_rowwise": 0.06397368133123378,
+    "proxy_rows_full_depth": 1022,
+    "proxy_per_position_conditional_acceptance": [
+     0.7201565557729941,
+     0.7839673913043478,
+     0.7868284228769498,
+     0.8105726872246696,
+     0.8532608695652174
+    ],
+    "proxy_per_position_marginal_match": [
+     0.7201565557729941,
+     0.5998043052837574,
+     0.49021526418786693,
+     0.4187866927592955,
+     0.37084148727984345
+    ],
+    "proxy_accepted_length_histogram_0..5": [
+     286,
+     159,
+     123,
+     86,
+     54,
+     314
+    ],
+    "tau_on_greedy_matching_rows": 4.198412698412699,
+    "greedy_matching_rows_full_depth": 630,
+    "greedy_matching_rows_per_position_conditional_acceptance": [
+     0.8412698412698413,
+     0.8603773584905661,
+     0.8530701754385965,
+     0.8688946015424165,
+     0.893491124260355
+    ],
+    "non_assistant_rows_tau_proxy": 2.594275726458379
+   },
+   "tau_retail": {
+    "sequences": 4,
+    "ids": [
+     "gpt-4o-retail[332] task_id=102 trial=2",
+     "gpt-4o-retail[252] task_id=22 trial=2",
+     "gpt-4o-retail[336] task_id=106 trial=2",
+     "gpt-4o-retail[374] task_id=29 trial=3"
+    ],
+    "tokens": 6000,
+    "assistant_tokens": 1013,
+    "greedy_match_rate_assistant_tokens": 0.8627838104639685,
+    "tau_proxy_assistant_spans": 4.153233830845771,
+    "tau_proxy_stderr_rowwise": 0.06447407767227595,
+    "proxy_rows_full_depth": 1005,
+    "proxy_per_position_conditional_acceptance": [
+     0.8199004975124378,
+     0.8531553398058253,
+     0.871977240398293,
+     0.8743882544861338,
+     0.9197761194029851
+    ],
+    "proxy_per_position_marginal_match": [
+     0.8199004975124378,
+     0.7194029850746269,
+     0.6427860696517413,
+     0.5771144278606966,
+     0.5283582089552239
+    ],
+    "proxy_accepted_length_histogram_0..5": [
+     181,
+     121,
+     90,
+     77,
+     43,
+     493
+    ],
+    "tau_on_greedy_matching_rows": 4.8766756032171585,
+    "greedy_matching_rows_full_depth": 746,
+    "greedy_matching_rows_per_position_conditional_acceptance": [
+     0.920911528150134,
+     0.9068413391557496,
+     0.9165329052969502,
+     0.9124343257443083,
+     0.9404990403071017
+    ],
+    "non_assistant_rows_tau_proxy": 2.227519613759807
+   }
+  },
+  "overall": {
+   "sequences": 16,
+   "ids": [
+    "gpt-4o-retail[332] task_id=102 trial=2",
+    "gpt-4o-retail[252] task_id=22 trial=2",
+    "gpt-4o-retail[336] task_id=106 trial=2",
+    "gpt-4o-retail[374] task_id=29 trial=3",
+    "gpt-4o-airline[107] task_id=7 trial=2",
+    "gpt-4o-airline[60] task_id=10 trial=1",
+    "gpt-4o-airline[15] task_id=15 trial=0",
+    "gpt-4o-airline[61] task_id=11 trial=1",
+    "row1873 fatiando__pooch-171 swe-agent-llama-70b",
+    "row915 planetlabs__planet-client-python-621 swe-agent-llama-8b",
+    "row4651 Azure__msrest-for-python-208 swe-agent-llama-70b",
+    "row3798 geopandas__geopandas-1336 swe-agent-llama-70b",
+    "row4893 alvinwan__TexSoup-140 swe-agent-llama-70b",
+    "row2788 devopshq__artifactory-439 swe-agent-llama-70b",
+    "row3753 docker__docker-py-1167 swe-agent-llama-70b",
+    "row2513 NVIDIA__hpc-container-maker-221 swe-agent-llama-8b"
+   ],
+   "tokens": 16423,
+   "assistant_tokens": 3380,
+   "greedy_match_rate_assistant_tokens": 0.785207100591716,
+   "tau_proxy_assistant_spans": 3.48052334225394,
+   "tau_proxy_stderr_rowwise": 0.03529833982558104,
+   "proxy_rows_full_depth": 3363,
+   "proxy_per_position_conditional_acceptance": [
+    0.735652691049658,
+    0.7886014551333872,
+    0.8016401845207586,
+    0.8132992327365729,
+    0.8498427672955975
+   ],
+   "proxy_per_position_marginal_match": [
+    0.735652691049658,
+    0.6095747844186739,
+    0.5078798691644365,
+    0.4311626523936961,
+    0.3702051739518287
+   ],
+   "proxy_accepted_length_histogram_0..5": [
+    889,
+    523,
+    387,
+    292,
+    191,
+    1081
+   ],
+   "tau_on_greedy_matching_rows": 4.331858407079646,
+   "greedy_matching_rows_full_depth": 2034,
+   "greedy_matching_rows_per_position_conditional_acceptance": [
+    0.86086529006883,
+    0.8669331810394061,
+    0.8708827404479579,
+    0.8706505295007564,
+    0.8992180712423979
+   ],
+   "non_assistant_rows_tau_proxy": 2.512958963282937
+  },
+  "run": {
+   "commands": [
+    "cd /tmp/claude-1000/sp/v41/public",
+    "python3 ../portable/v41_build_public_traces.py --out traces.json --prov provenance.json",
+    "PATH=/usr/local/cuda-12.8/bin:$PATH PYTORCH_ALLOC_CONF=expandable_segments:True python3 ../portable/v41_stream.py --traces traces.json --out main_pass.pt --gpu-cap-gb 11.5",
+    "PYTORCH_ALLOC_CONF=expandable_segments:True python3 ../portable/v41_dspark_tf.py --traces traces.json --main main_pass.pt --out drafts.pt --gpu-cap-gb 11.5",
+    "python3 ../portable/v41_acceptance_stats.py --traces traces.json --main main_pass.pt --drafts drafts.pt --out stats.json"
+   ],
+   "wall_s": {
+    "main_pass_process": 694,
+    "dspark_process": 117,
+    "total": 811
+   },
+   "main_pass_internal_s": 653.4,
+   "dspark_internal_s": 93.5,
+   "tokens": 16423,
+   "dspark_rows": 16391,
+   "gpu_peak_GB": {
+    "main_pass": 9.53,
+    "dspark": 7.15
+   },
+   "note": "the PATH to CUDA 12.8 is not needed by the portable scripts (no tilelang); kept as run"
+  },
+  "portable_scripts": {
+   "v41_acceptance_stats.py": 5456,
+   "v41_build_public_traces.py": 10512,
+   "v41_dspark_tf.py": 9025,
+   "v41_stream.py": 28702
+  },
+  "caveats": [
+   "All caveats of results_acceptance apply (proxy targets over a non-V4.1 prefix; the greedy-matching subset is outcome-selected and biased upward; torch kernel replacements; draft noise floor 0.90-0.985 by position; small n).",
+   "BIAS FROM FOREIGN TURNS: every assistant token here was written by gpt-4o or a SWE-agent llama, not by V4.1. V4.1's own greedy continuation is by definition 100% greedy-matching, and its drafter was trained on V4.1's own distribution; on foreign text the main model's argmax is conditioned on off-policy prefixes (21.5% of assistant tokens differ from V4.1's greedy choice), which makes both the targets and the drafts harder than on-policy. The proxy tau (3.48 overall) should therefore understate on-policy acceptance; the greedy-matching-row tau (4.33) conditions on exactly the rows where the foreign text coincides with V4.1's choice, which are the easy, predictable ones, so it should overstate it. The on-policy value is plausibly bracketed by the two per source, but that bracket is inferred, not measured.",
+   "Budget truncations (omitted system prompts / policy wiki, trimmed tool schema set and issue text) remove context the original agent had -- a further downward bias on the proxy.",
+   "Rows per source are highly autocorrelated within a sequence (overlapping 5-token windows, 4-8 sequences per source); the row-wise stderr understates the real uncertainty. Per-source differences (retail 4.15 vs airline 3.40 vs swe 3.04 proxy) are within what 4-8 conversations can show and should not be over-read."
+  ]
+ }
+}

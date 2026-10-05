@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.parent-finite-service-review.v1",
+  "reviewed_commit": "20e93a52e",
+  "source_profiles": {
+    "finite_service_profile": "5ee9b7baf9fe569aa8dfbe3c2934d9e88600a511e8be7625fce2b40c5559d282",
+    "moe_sum_calendar": "5139c782dd4392e5901309c789d8a581af811407aa058b7dff0af81d1a8f881f",
+    "finite_service_profile.json": "5ee9b7baf9fe569aa8dfbe3c2934d9e88600a511e8be7625fce2b40c5559d282",
+    "graph_summary.json": "159a8c20b401f40e670453114f5d78d29652188e621d8e3a4b134c96b9c576b3",
+    "kernel_binding.json": "f4ad85ac9af459fbb5c7cd714d312c71cb1314d654b9cec69ad6859599d8f5f2",
+    "service_readiness.json": "c35f77713b275eba8c22c080b4611f7c21a9506bfac5a6d9fbd1c74356fda4c6"
+  },
+  "collision_cases": [
+    {
+      "clients": 1,
+      "consumer_bound": 1,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 1,
+      "consumer_bound": 7,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 1,
+      "consumer_bound": 31,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound": 1,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound": 7,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 4,
+      "consumer_bound": 31,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound": 1,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound": 7,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    },
+    {
+      "clients": 32,
+      "consumer_bound": 31,
+      "responses": 256,
+      "conservation": true,
+      "controller_budget": true,
+      "inflight_output_credits": true,
+      "both_clock_crossings": true
+    }
+  ],
+  "focused_tests": 32,
+  "status": "PASS_COMPONENT_REPLAY_AND_RESOURCE_INVARIANTS",
+  "scope": "Independent resource-occupancy and source replay; not numerical execution, RTL or full token",
+  "physical_admission": false,
+  "full_token_cycles": null,
+  "full_token_rate": null,
+  "remaining": "Actual backend event traces, complete consumer contracts, combined read/write port budget and contextual timing/fit remain unbound."
+}

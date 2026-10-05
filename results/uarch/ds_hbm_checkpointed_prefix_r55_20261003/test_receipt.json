@@ -1,0 +1,15 @@
+{
+  "actual_released_checkpoint_prefix_executed": false,
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ds_hbm_checkpointed_prefix_r55.py"
+  ],
+  "elapsed_seconds": 18.184589566197246,
+  "exit_code": 0,
+  "scope": "actual finite source endpoints, coldrestore/scoped journal immutability and source-contract/RAM/phase-budget admission controls",
+  "stderr": "",
+  "stdout": "........                                                                 [100%]\n"
+}

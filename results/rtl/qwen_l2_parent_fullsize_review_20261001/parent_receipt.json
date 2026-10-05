@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.qwen-l2-parent-review.v1",
+  "status": "PASS_FULLSIZE_RETAINED_PAYLOAD_COMPONENT",
+  "actual_parent_run": true,
+  "scope": "256 SRAM behavioral macro instances, banked read/write port component only",
+  "source_pins": {
+    "rtl/gpu/ot_gpu_qwen_l2_macros.sv": {
+      "commit": "8924de5aa",
+      "sha256": "57ddee986f87913560009b1a328a23bea8d50751e5709c2fb805455354ed4b19"
+    }
+  },
+  "checked_payload_words": 3584,
+  "macros": 256,
+  "logical_L2_bytes": 8388608,
+  "stalled_commit_and_readback": true,
+  "wrong_global_row_rejected": true,
+  "writer_drain_160_cycles": true,
+  "producer_executed": false,
+  "epoch_echo_is_stored_publication_proof": false,
+  "publication_reader_lease_and_reuse_fence_verified": false,
+  "connected_HBM_service": false,
+  "full_token": false,
+  "physical_qualified": false,
+  "qualification_note": "Consumer must bind actual write-commit row/epoch/id and reader/reuse fence. Response epoch/id echoes the request and cannot qualify stored generation.",
+  "files": {
+    "compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "verdict.json": "9bfc18cbf9e875d335bbfd6e37917b79e19b30ad76575a1096b4d91ebbf4d882",
+    "checkpoint.hex": "0ab65e21ac50ccabf032df6ee6eb5aa1fac6e586ee725ede909673e209586085",
+    "tb.sv": "7f59d4751b85a835c34208d286825a9b953db6c3e4327acb9131e291b9a86c22",
+    "run.log": "eb1e82430e57dde810b986a9a9cebc148055fd99f63fcff4b790b024554bd559",
+    "macro.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+  }
+}

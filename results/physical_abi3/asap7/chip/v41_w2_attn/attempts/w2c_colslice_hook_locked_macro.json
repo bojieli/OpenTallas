@@ -1,0 +1,188 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T09:46:36.847710+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_attn_col_slice",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41_attn_col_slice.sv",
+        "sha256": "50a6d8ee71279d1c534808bdeec38270e4351b06638ae670fa1bcb1ea000a140",
+        "size_bytes": 7659
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+        "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+        "size_bytes": 661
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+        "sha256": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+        "size_bytes": 661
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+        "sha256": "ba479bdbfe3b4e23dfc17aa5cc31443aa6ffe87a5f112293c23b38212b35e268",
+        "size_bytes": 661
+      }
+    ],
+    "top": "ot_v41_attn_col_slice"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nlace.tcl, stage 2_2_floorplan_macro\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib\nread_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib\nread_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib\nread_db /work/results/asap7/opentallas_ot_v41_attn_col_slice_asap7_w2c_colslice/base/2_1_floorplan.odb\nread_sdc /work/results/asap7/opentallas_ot_v41_attn_col_slice_asap7_w2c_colslice/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n[INFO GPL-0022] Initialize gpl and calculate uniform density.\nPlacement density is 0.3450000113248825, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.30000001192092896\nrtl_macro_placer -max_num_level 2 -halo_width 3 -halo_height 3 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_v41_attn_col_slice_asap7_w2c_colslice/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.3450000113248825\n[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.\nDie Area: (0.00, 0.00) (275.00, 450.00),  Floorplan Area: (5.02, 5.13) (270.00, 444.96)\n\tNumber of std cell instances: 22737\n\tArea of std cell instances: 2705.70\n\tNumber of macros: 9\n\tMacros to be placed: 9\n\tArea of macros: 49103.81\n\tBase halo (L, B, R, T): (3.00, 3.00, 3.00, 3.00)\n\tArea of macros with halos: 51314.26\n\tArea of std cell instances + Area of macros: 51809.51\n\tFloorplan area: 116545.27\n\tDesign Utilization: 0.44\n\tFloorplan Utilization: 0.04\n\tManufacturing Grid: 1\n\n[INFO MPL-0500] Runtime: 184.87s\nTook 185 seconds: rtl_macro_placer -max_num_level 2 -halo_width 3 -halo_height 3 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_v41_attn_col_slice_asap7_w2c_colslice/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.3450000113248825\nsource /work/hooks/post_macro_place_v41_attn_col_slice_place.tcl\n[ERROR ODB-0359] Attempt to change the origin of LOCKED instance g_stg_macro.u_side\nError: macro_place.tcl, 8 ODB-0359\n\nElapsed time: 0:02.13[h:]min:sec. CPU time: user 1.95 sys 0.18 (100%). Peak memory: 255600KB.\nElapsed time: 0:06.74[h:]min:sec. CPU time: user 7.76 sys 2.45 (151%). Peak memory: 319700KB.\nElapsed time: 3:07.26[h:]min:sec. CPU time: user 249.50 sys 298.16 (292%). Peak memory: 403276KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_v41_attn_col_slice_asap7_w2c_colslice/base/2_2_floorplan_macro.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T09:43:03.236806+00:00",
+  "git": {
+    "commit": "0591534c1f62968b2636723ce6e85a4ca7b1c1e4",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--io-delay-fraction",
+      "0.2",
+      "--max-transition-ns",
+      "0.32",
+      "--slew-margin-percent",
+      "40",
+      "--hold-margin-ns",
+      "0.02",
+      "--cts-cluster-size",
+      "16",
+      "--stages",
+      "pnr",
+      "--purpose",
+      "characterization",
+      "--corner",
+      "TT",
+      "--top",
+      "ot_v41_attn_col_slice",
+      "--source",
+      "rtl/chip/physical/ot_v41_attn_col_slice.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+      "--source",
+      "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+      "--macro-view",
+      "ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "--macro-view",
+      "ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "--macro-view",
+      "ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--die-area",
+      "0",
+      "0",
+      "275",
+      "450",
+      "--core-area",
+      "5",
+      "5",
+      "270",
+      "445",
+      "--step-tcl",
+      "POST_MACRO_PLACE=physical/abi3/v41_attn_col_slice_place.tcl",
+      "--step-tcl",
+      "POST_DETAIL_PLACE=physical/abi3/check_pg_before_route.tcl",
+      "--orfs-var",
+      "OT_COL_GAP_UM=8",
+      "--orfs-var",
+      "OT_COL_Y0_UM=14",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/w2c_colslice/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w2c/runs/w2c_colslice/work",
+      "--nickname-tag",
+      "w2c_colslice"
+    ],
+    "driver": {
+      "commit": "0591534c1f62968b2636723ce6e85a4ca7b1c1e4",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w2-attn/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/tmp/claude-1000/wt/w2-attn"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w2-attn"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

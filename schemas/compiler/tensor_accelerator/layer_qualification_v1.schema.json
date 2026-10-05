@@ -1,0 +1,487 @@
+{
+  "$defs": {
+    "bf16_codes_8": {
+      "items": {
+        "maximum": 65535,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array"
+    },
+    "hidden_payload": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "const": [
+            1,
+            4096
+          ]
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "intermediate_payload": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "const": [
+            1,
+            12288
+          ]
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "nonnegative_integer": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "projection_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "$ref": "#/$defs/bf16_codes_8"
+        },
+        "rows": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 8,
+          "minItems": 8,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "codes",
+        "rows"
+      ],
+      "type": "object"
+    },
+    "selected_output": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "$ref": "#/$defs/bf16_codes_8"
+        },
+        "element_indices": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 8,
+          "minItems": 8,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "codes",
+        "element_indices"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "source_rank1": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array"
+        },
+        "tensor": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape",
+        "tensor"
+      ],
+      "type": "object"
+    },
+    "source_rank2": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "tensor": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape",
+        "tensor"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "epsilon_additions": {"minimum": 1, "type": "integer"},
+        "final_weight_multiplications": {"minimum": 1, "type": "integer"},
+        "input_square_multiplications": {"minimum": 1, "type": "integer"},
+        "mean_divisions": {"minimum": 1, "type": "integer"},
+        "normalization_multiplications": {"minimum": 1, "type": "integer"},
+        "projection_accumulation_additions": {"minimum": 1, "type": "integer"},
+        "projection_multiplications": {"minimum": 1, "type": "integer"},
+        "reciprocal_square_roots": {"minimum": 1, "type": "integer"},
+        "reduction_additions": {"minimum": 1, "type": "integer"},
+        "residual_additions": {"minimum": 1, "type": "integer"},
+        "sigmoid_denominator_additions": {"minimum": 1, "type": "integer"},
+        "sigmoid_divisions": {"minimum": 1, "type": "integer"},
+        "sigmoid_exponentials": {"minimum": 1, "type": "integer"},
+        "silu_multiplications": {"minimum": 1, "type": "integer"},
+        "up_gate_multiplications": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "epsilon_additions",
+        "final_weight_multiplications",
+        "input_square_multiplications",
+        "mean_divisions",
+        "normalization_multiplications",
+        "projection_accumulation_additions",
+        "projection_multiplications",
+        "reciprocal_square_roots",
+        "reduction_additions",
+        "residual_additions",
+        "sigmoid_denominator_additions",
+        "sigmoid_divisions",
+        "sigmoid_exponentials",
+        "silu_multiplications",
+        "up_gate_multiplications"
+      ],
+      "type": "object"
+    },
+    "attention_input": {
+      "additionalProperties": false,
+      "properties": {
+        "build_id": {"$ref": "#/$defs/sha256"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "qualification_report_id": {"$ref": "#/$defs/sha256"},
+        "report_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "build_id",
+        "payload_sha256",
+        "qualification_report_id",
+        "report_id"
+      ],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "embedding_row_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "token_id": {"const": 0}
+      },
+      "required": [
+        "embedding_row_payload_sha256",
+        "token_id"
+      ],
+      "type": "object"
+    },
+    "intermediates": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_projected": {"$ref": "#/$defs/hidden_payload"},
+        "down": {"$ref": "#/$defs/hidden_payload"},
+        "gate": {"$ref": "#/$defs/intermediate_payload"},
+        "gated_mlp": {"$ref": "#/$defs/intermediate_payload"},
+        "mlp_norm": {
+          "additionalProperties": false,
+          "properties": {
+            "inverse_rms_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+            "mean_square_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+            "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "shape": {"const": [1, 4096]}
+          },
+          "required": [
+            "inverse_rms_binary32_codes_sha256",
+            "mean_square_binary32_codes_sha256",
+            "normalized_payload_sha256",
+            "payload_sha256",
+            "shape"
+          ],
+          "type": "object"
+        },
+        "post_attention": {"$ref": "#/$defs/hidden_payload"},
+        "silu_activation": {"$ref": "#/$defs/intermediate_payload"},
+        "up": {"$ref": "#/$defs/intermediate_payload"}
+      },
+      "required": [
+        "attention_projected",
+        "down",
+        "gate",
+        "gated_mlp",
+        "mlp_norm",
+        "post_attention",
+        "silu_activation",
+        "up"
+      ],
+      "type": "object"
+    },
+    "numeric_contracts": {
+      "maxItems": 5,
+      "minItems": 5,
+      "prefixItems": [
+        {"const": "bf16_add_rne_v1"},
+        {"const": "bf16_payload_lookup_v1"},
+        {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+        {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
+        {"const": "qwen3_silu_mul_bf16_v1"}
+      ],
+      "type": "array"
+    },
+    "official_source_replay": {
+      "additionalProperties": false,
+      "properties": {
+        "differing_element_count": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_projected": {"$ref": "#/$defs/nonnegative_integer"},
+            "down": {"$ref": "#/$defs/nonnegative_integer"},
+            "gate": {"$ref": "#/$defs/nonnegative_integer"},
+            "gated_mlp": {"$ref": "#/$defs/nonnegative_integer"},
+            "hidden_1": {"$ref": "#/$defs/nonnegative_integer"},
+            "mlp_norm": {"$ref": "#/$defs/nonnegative_integer"},
+            "post_attention": {"$ref": "#/$defs/nonnegative_integer"},
+            "silu_activation": {"$ref": "#/$defs/nonnegative_integer"},
+            "up": {"$ref": "#/$defs/nonnegative_integer"}
+          },
+          "required": [
+            "attention_projected",
+            "down",
+            "gate",
+            "gated_mlp",
+            "hidden_1",
+            "mlp_norm",
+            "post_attention",
+            "silu_activation",
+            "up"
+          ],
+          "type": "object"
+        },
+        "implementation": {"const": "pinned_transformers_qwen3_cpu_bf16"},
+        "known_answer_payload_sha256": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_projected": {"$ref": "#/$defs/sha256"},
+            "down": {"$ref": "#/$defs/sha256"},
+            "gate": {"$ref": "#/$defs/sha256"},
+            "gated_mlp": {"$ref": "#/$defs/sha256"},
+            "hidden_1": {"$ref": "#/$defs/sha256"},
+            "mlp_norm": {"$ref": "#/$defs/sha256"},
+            "post_attention": {"$ref": "#/$defs/sha256"},
+            "silu_activation": {"$ref": "#/$defs/sha256"},
+            "up": {"$ref": "#/$defs/sha256"}
+          },
+          "required": [
+            "attention_projected",
+            "down",
+            "gate",
+            "gated_mlp",
+            "hidden_1",
+            "mlp_norm",
+            "post_attention",
+            "silu_activation",
+            "up"
+          ],
+          "type": "object"
+        },
+        "source_sha256": {"$ref": "#/$defs/sha256"},
+        "status": {"const": "qualified_deterministic_target_adaptation"}
+      },
+      "required": [
+        "differing_element_count",
+        "implementation",
+        "known_answer_payload_sha256",
+        "source_sha256",
+        "status"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "hidden_1": {"$ref": "#/$defs/hidden_payload"}
+      },
+      "required": ["hidden_1"],
+      "type": "object"
+    },
+    "projection_saturated_element_count": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_output": {"$ref": "#/$defs/nonnegative_integer"},
+        "down": {"$ref": "#/$defs/nonnegative_integer"},
+        "gate": {"$ref": "#/$defs/nonnegative_integer"},
+        "up": {"$ref": "#/$defs/nonnegative_integer"}
+      },
+      "required": ["attention_output", "down", "gate", "up"],
+      "type": "object"
+    },
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "rmsnorm_saturated_element_count": {
+      "additionalProperties": false,
+      "properties": {
+        "normalized": {"$ref": "#/$defs/nonnegative_integer"},
+        "output": {"$ref": "#/$defs/nonnegative_integer"}
+      },
+      "required": ["normalized", "output"],
+      "type": "object"
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.layer_qualification.v1"},
+    "selected_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "output": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_projected": {"$ref": "#/$defs/selected_output"},
+            "down": {"$ref": "#/$defs/selected_output"},
+            "gate": {"$ref": "#/$defs/selected_output"},
+            "gated_mlp": {"$ref": "#/$defs/selected_output"},
+            "hidden_0": {"$ref": "#/$defs/selected_output"},
+            "hidden_1": {"$ref": "#/$defs/selected_output"},
+            "mlp_norm": {"$ref": "#/$defs/selected_output"},
+            "post_attention": {"$ref": "#/$defs/selected_output"},
+            "silu_activation": {"$ref": "#/$defs/selected_output"},
+            "up": {"$ref": "#/$defs/selected_output"}
+          },
+          "required": [
+            "attention_projected",
+            "down",
+            "gate",
+            "gated_mlp",
+            "hidden_0",
+            "hidden_1",
+            "mlp_norm",
+            "post_attention",
+            "silu_activation",
+            "up"
+          ],
+          "type": "object"
+        },
+        "projection": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_output": {"$ref": "#/$defs/projection_reference"},
+            "down": {"$ref": "#/$defs/projection_reference"},
+            "gate": {"$ref": "#/$defs/projection_reference"},
+            "up": {"$ref": "#/$defs/projection_reference"}
+          },
+          "required": ["attention_output", "down", "gate", "up"],
+          "type": "object"
+        },
+        "status": {"const": "exact_match"}
+      },
+      "required": ["output", "projection", "status"],
+      "type": "object"
+    },
+    "sources": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_output_weight": {"$ref": "#/$defs/source_rank2"},
+        "down_projection_weight": {"$ref": "#/$defs/source_rank2"},
+        "embedding": {"$ref": "#/$defs/source_rank2"},
+        "gate_projection_weight": {"$ref": "#/$defs/source_rank2"},
+        "post_attention_norm_weight": {"$ref": "#/$defs/source_rank1"},
+        "up_projection_weight": {"$ref": "#/$defs/source_rank2"}
+      },
+      "required": [
+        "attention_output_weight",
+        "down_projection_weight",
+        "embedding",
+        "gate_projection_weight",
+        "post_attention_norm_weight",
+        "up_projection_weight"
+      ],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "vector_saturated_element_count": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_residual": {"$ref": "#/$defs/nonnegative_integer"},
+        "final_residual": {"$ref": "#/$defs/nonnegative_integer"},
+        "silu_activation": {"$ref": "#/$defs/nonnegative_integer"},
+        "silu_output": {"$ref": "#/$defs/nonnegative_integer"}
+      },
+      "required": [
+        "attention_residual",
+        "final_residual",
+        "silu_activation",
+        "silu_output"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "accounting",
+    "attention_input",
+    "checkpoint_lock_id",
+    "input",
+    "intermediates",
+    "numeric_contracts",
+    "official_source_replay",
+    "output",
+    "projection_saturated_element_count",
+    "report_id",
+    "rmsnorm_saturated_element_count",
+    "schema",
+    "selected_reference",
+    "sources",
+    "status",
+    "vector_saturated_element_count"
+  ],
+  "title": "Qwen layer-0 post-attention qualification v1",
+  "type": "object"
+}

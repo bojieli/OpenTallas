@@ -1,0 +1,15 @@
+{
+  "actual_reset_cohort_drain_receipt": null,
+  "common_reset_expression": "wrn&&rrn",
+  "module": "ot_hbm_r14_fifo2",
+  "production_installed": false,
+  "receiver_clock_port": "rc",
+  "receiver_domain": "H1_streaming",
+  "receiver_reset_port": "rrn",
+  "schema": "DIRECTED_CONTROL_SOURCE_PORT_BINDING_ONLY",
+  "sender_clock_port": "wc",
+  "sender_domain": "CORE",
+  "sender_reset_port": "wrn",
+  "source_path": "inputs/fifo2.sv",
+  "source_sha256": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903"
+}

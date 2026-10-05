@@ -1,0 +1,8 @@
+{
+  "files": {
+    "calendar_workspace_metadata.json.gz": "5e3bf4241c357799cdea500219e63dbb2422a3a0f3ac042d694b4c64f69384c3",
+    "native_workspace_metadata.json.gz": "25a960c99136017442aff3489b64b649cf27b783a1ff5caf3da6897b316f313d"
+  },
+  "input_scope": "Pure source metadata projection; no checkpoint payload",
+  "replay": "python3 tools/qwen_native_workspace_capture_r20.py --output /tmp/FRESH --calendar-directory <pinned native_r3 directory>"
+}

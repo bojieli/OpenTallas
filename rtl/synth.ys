@@ -1,0 +1,8 @@
+read_verilog -sv expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv static_timeslot_switch.sv
+hierarchy -check -top opentallas_tile
+proc
+opt
+memory_dff
+memory_collect
+check
+stat

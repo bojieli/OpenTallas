@@ -1,0 +1,4 @@
+Oct 02 12:33:00 vm-xry57mhfyn systemd[71579]: Started hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopping hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py...
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: Stopped hbm-qwen-trained-byte-conversion-20261002-r1.service - [systemd-run] /home/ubuntu/.local/qwen-trained-provider-py310/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-20261002-r1/launcher.py.
+Oct 02 12:33:10 vm-xry57mhfyn systemd[71579]: hbm-qwen-trained-byte-conversion-20261002-r1.service: Consumed 10.300s CPU time over 10.274s wall clock time, 1.1G memory peak.

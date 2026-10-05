@@ -1,0 +1,60 @@
+{
+  "mask": {
+    "named_bits": 80,
+    "unique_FF_endpoints": 30,
+    "errors": [],
+    "duplicate_endpoint_multiplicities": {
+      "5": 5,
+      "1": 5,
+      "2": 10,
+      "3": 10
+    }
+  },
+  "bank_strobe": {
+    "named_bits": 5,
+    "unique_FF_endpoints": 2,
+    "errors": [],
+    "duplicate_endpoint_multiplicities": {
+      "3": 1,
+      "2": 1
+    }
+  },
+  "early_select": {
+    "named_bits": 0,
+    "unique_FF_endpoints": 0,
+    "errors": [],
+    "duplicate_endpoint_multiplicities": {}
+  },
+  "KV_capture": {
+    "named_bits": 512,
+    "unique_FF_endpoints": 64,
+    "errors": [
+      "556642",
+      "556643",
+      "556644"
+    ],
+    "duplicate_endpoint_multiplicities": {
+      "1": 64
+    }
+  },
+  "address": {
+    "named_bits": 24,
+    "unique_FF_endpoints": 12,
+    "errors": [
+      "617884",
+      "617885",
+      "617886"
+    ],
+    "duplicate_endpoint_multiplicities": {
+      "1": 12
+    }
+  },
+  "read": {
+    "named_bits": 1,
+    "unique_FF_endpoints": 1,
+    "errors": [],
+    "duplicate_endpoint_multiplicities": {
+      "1": 1
+    }
+  }
+}

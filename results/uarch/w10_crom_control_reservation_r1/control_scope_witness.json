@@ -1,0 +1,61 @@
+{
+  "additional_tag_FF_bits": 5372,
+  "control_reservation_commit": "ebef36895",
+  "operand_bits_only": 131072,
+  "original_receipts_changed": false,
+  "physical_admission": false,
+  "root_stop_credit": 0,
+  "schema": "w10_crom_control_scope_capacity_witness_v1",
+  "selector_capacity": {
+    "capacity_verdict": "FAIL_WITHOUT_RESTRICTED_INDEX_PROOF",
+    "corrected_candidate_entry_bits": 151,
+    "corrected_candidate_still_fits_one_word": true,
+    "corrected_control_image_built": false,
+    "example_required_index": 134,
+    "landing_values": 135,
+    "macro_word_bits": 274,
+    "recorded_catalog_entry_bits": 135,
+    "reported_index_bits": 7,
+    "representable_indices": 128,
+    "required_index_bits": 8,
+    "truncated_7bit_value": 6
+  },
+  "source_actual_hardware_provider_qualified": false,
+  "source_pin": {
+    "commit": "bc1ec8b8f",
+    "path": "tools/w17_crom_finite_prefetch.py",
+    "sha256": "d2f1160269a4b8c373f1e2846799f9e181304962e7fb721652be9a4bdb473b50"
+  },
+  "tag_count_source_expression": "2 * (256 + 2 + 6 + 8 + 32 + 13 + 1) + 2 * (256 + 2 + 6 + 13 + 10 + 32 + 1) + 4096",
+  "tag_group_model_inventory": {
+    "operand_lane_slot_valid": {
+      "bits": 4096
+    },
+    "two_emit_slot_tags": {
+      "bits": 640,
+      "copies": 2,
+      "per_tag_bits": {
+        "PC": 13,
+        "burst": 10,
+        "epoch": 32,
+        "image_SHA": 256,
+        "layer": 6,
+        "rank": 2,
+        "valid": 1
+      }
+    },
+    "two_gamma_tags": {
+      "bits": 636,
+      "copies": 2,
+      "per_tag_bits": {
+        "epoch": 32,
+        "family": 8,
+        "fill_count": 13,
+        "image_SHA": 256,
+        "layer": 6,
+        "rank": 2,
+        "valid": 1
+      }
+    }
+  }
+}

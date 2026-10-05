@@ -1,0 +1,35 @@
+{
+  "status": "PASS_16_STRICT_ENCODED_OPERAND_TESTS",
+  "previous_generated_templates_commit": "4080bb5fd",
+  "generated_template_hashes_unchanged": true,
+  "prior_validation_limitation": {
+    "reported_by_parent": true,
+    "accepted_mutants": [
+      "norm c_si127 with extent650114",
+      "norm c_srcVM",
+      "norm c_d1"
+    ],
+    "scope": "4080 helper tested address/unit/range-start only; no complete encoded-address mutation claim transfers"
+  },
+  "correction": [
+    "require decoded checkpoint sourceCLO",
+    "reject dynamic counts/operand dynamic/indirect/pair/half flags",
+    "recompute extent from decoded nout/nin/so/si",
+    "require footprint equal authoritative binding and full base+extent<=tensor_end"
+  ],
+  "new_mutants": [
+    "actual norm address",
+    "unit",
+    "extent",
+    "inner stride127",
+    "sourceVM",
+    "operand dynamic1",
+    "outer count/stride",
+    "dynamic inner count",
+    "paired addressing"
+  ],
+  "tests_log_sha256": "7a6c9ba6347885f7725496fa13fdea030fd970598837e12f447b65293f8e4965",
+  "tool_sha256": "949ee95f173945f5c2c0a7155b4f4e8a3bdc654fff31aea5f727ada7feca1eab",
+  "hardware_admission": false,
+  "full_program_executable": false
+}

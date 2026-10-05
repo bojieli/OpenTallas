@@ -1,0 +1,34 @@
+{
+  "status": "ADDITIVE_SOURCE_BINDING_AND_CALENDAR_REPAIR_NO_BUILD",
+  "original_commit": "594b74fefa7ca3de51b01cc9c5eb5dbc35962f11",
+  "parent_intake": "656923efa",
+  "original_runtime_fixture_sha256": "daff1bbb26be25627cd78f249dfdcc303c0f8016c55308f3a77fafecbabbeeaf",
+  "corrected_fixture_sha256": "43d558145ce1301a0daa49f32988e4d413c1b2fef580dd7c56cca839b65985f1",
+  "unchanged_cone_sha256": "cbfa798b6317644eef283800195a35191d23226d6fb875111e4bce8c53fc5a85",
+  "original_fixture_verdict": "FAIL_STATIC_SOURCE_INSPECTION_NOT_EXECUTED",
+  "source_defects": [
+    "Actual QE reads WQR; original actor drove XU WXR, leaving QE zero and poison unreachable",
+    "Original SUaccept44 included extra counted edge; pinned state+idleNBA+rawgo gives43"
+  ],
+  "parent_preflight_verdict": "8FAIL4PASS preserved; first blocker absent SRAM macro checkout file, not same as WQR or SU calendar error",
+  "port_fix": "Synchronous memory actor now core_wqr_re/addr/q, fullAW30 aperture unchanged",
+  "calendar_fix": "FinalAQ38, terminalVM39, QE LOAD->DRAIN post39, DRAIN->IDLE post40, idle1 post41/sample42, waitingSUgo post42, physicalaccept43. No overlaystage or fitted constant.",
+  "parent_hydration_fix": "Read original pinned source bytes from4e383 git blobs, verify declared SHA, materialize only freshowned job/sources path. Sharedcheckout not written.",
+  "old_artifacts_unchanged": true,
+  "prior_594_staticPASS_scope": "local preflight only, no syntax/runtime proof; does not override failed parent intake",
+  "allocation": {
+    "provider": 259,
+    "concrete_adapter": 10,
+    "total": 269,
+    "reserved_total": 278
+  },
+  "fleet": {
+    "owned_pve2_jobs": [],
+    "owned_pve3_jobs": [],
+    "no_new_tasks_on_pve2_pve3": true
+  },
+  "physical_provider": false,
+  "fullprogram_runtime": false,
+  "fulltoken": false,
+  "GO_received": false
+}

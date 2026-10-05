@@ -1,0 +1,479 @@
+{
+ "schema": "opentallas.power-scenarios.v1",
+ "purpose": "Two SEPARATE power scenarios for the ROM designs (Qwen3-8B reticle at 8K; DeepSeek-V4.1 ROM array at 1M and 200K), every input tagged with an evidence class and a measurement boundary. Scenario A (measured implementation) prices the multiply-accumulate at the energy OUR routed lanes report; scenario B (proposed production) prices it at a derived floating-point target lane. Every other input is identical in A and B, because nothing better than the entry below exists for either. Answers docs/ARCHITECTURE_ATLAS_FEASIBILITY_REVIEW_2026_09_27.md finding 3. Computed by tools/power_scenarios.py into results/arch/power_scenarios.json.",
+ "evidence_classes": {
+  "measured-ours": "reported by this repository's own routed ASAP7 sign-off (predictive 7 nm PDK, not foundry silicon)",
+  "published-measured": "a peer-reviewed measurement of fabricated silicon or a shipping system, transferred to our design",
+  "published-spec": "a published specification, vendor figure, or published design/model estimate (not a silicon measurement of the quantity)",
+  "assumed": "no source measures this quantity at our boundary; a stated engineering value"
+ },
+ "conservative_rule": "When sources disagree or a boundary is unclear, take the value that makes the die hotter and the rate cap lower. Die cooling and stack power are each checked at their own conservative end; per-token energy counts every joule once.",
+ "cooling": {
+  "note": "Per-die and per-package thermal limits by COOLING CLASS, from shipping accelerator packages. A vendor rates a PACKAGE (logic dies + HBM stacks); the die's share is the package rating minus the reference's own stacks at their PEAK bandwidth charged at memory.stack_share.stack_high_pj_per_bit (the largest deduction the model admits, so the smallest die share), divided by its logic dies. The limit for a class and a package topology (logic dies per package) is the LEAST favourable matched reference; liquid is never below air (a cold plate removes at least what a heat sink does), and where no liquid reference of the topology exists the air limit is used, not an extrapolation. Two checks per die, both binding: (1) die power <= per-die limit; (2) package power (every die in the package as hot as the hottest, plus its stacks at stack_high) <= the reference package rating. Per-die watts are applied to our 815 mm2 die unscaled by area: conservative whenever the reference die is smaller than 815 mm2 (B200's die area is unpublished).",
+  "die_mm2": 815.0,
+  "references": {
+   "h200_sxm": {
+    "package_w": 700.0,
+    "dies": 1,
+    "die_mm2": 814.0,
+    "hbm_stacks": 6,
+    "hbm_bw_Bps": 4800000000000.0,
+    "cooling": "air",
+    "boundary": "whole SXM module TDP: one GH100 reticle die (814 mm2) + six HBM3E stacks (141 GB), 4.8 TB/s; DGX H200 is an air-cooled chassis",
+    "source": "https://www.nvidia.com/en-us/data-center/h200/ ; https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/ ; https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html",
+    "quote": "H200 SXM 'Max Thermal Design Power (TDP) Up to 700W (configurable)', 'GPU Memory 141GB', 'GPU Memory Bandwidth 4.8TB/s'; Hopper: 'a die size of 814 mm 2'; DGX H100/H200 user guide: 'Airflow 1105 CFM Front-to-Back', '10.2 kW max.'; Micron: 'Micron's 24GB 8-high HBM3E is shipping with NVIDIA H200' (141 GB / 24 GB = 6 stacks)",
+    "evidence_class": "published-spec"
+   },
+   "h100_sxm": {
+    "package_w": 700.0,
+    "dies": 1,
+    "die_mm2": 814.0,
+    "hbm_stacks": 5,
+    "hbm_bw_Bps": 3350000000000.0,
+    "cooling": "air",
+    "boundary": "whole SXM module TDP: one GH100 die + five active HBM3 stacks (80 GB), 3.35 TB/s; air-cooled DGX H100",
+    "source": "https://www.nvidia.com/en-us/data-center/h100/ ; https://docs.nvidia.com/dgx/dgxh100-user-guide/introduction-to-dgxh100.html",
+    "quote": "H100 SXM 'GPU Memory 80GB', 'GPU Memory Bandwidth 3.35TB/s', 'Max Thermal Design Power (TDP) Up to 700W (configurable)'",
+    "evidence_class": "published-spec"
+   },
+   "b200_hgx": {
+    "package_w": 1000.0,
+    "dies": 2,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 8000000000000.0,
+    "cooling": "air",
+    "boundary": "whole B200 module TDP in HGX/DGX B200 (air-cooled): two reticle-limited dies + eight HBM3E stacks, 180 GB, 8 TB/s per GPU; die area unpublished",
+    "source": "NVIDIA Blackwell datasheet (2025-10-28), as quoted in configs/hardware/technology.json power.gpu_reference_power.b200_tdp_nvl72_w ; https://www.nvidia.com/en-us/data-center/dgx-b200/ ; https://docs.nvidia.com/dgx/dgxb200-user-guide/introduction-to-dgxb200.html ; https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+    "quote": "Blackwell datasheet: '1,000 W HGX B200'; DGX B200: '8x NVIDIA Blackwell GPUs', '1,440 GB total, 64 TB/s HBM3e bandwidth', '~14.3 kW max'; user guide: 'Airflow 1,550 CFM'; Blackwell: 'All NVIDIA Blackwell products feature two reticle-limited dies'",
+    "evidence_class": "published-spec"
+   },
+   "gb200_nvl72": {
+    "package_w": 1200.0,
+    "dies": 2,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 8000000000000.0,
+    "cooling": "liquid",
+    "boundary": "one B200 in GB200 NVL72 (direct liquid cooling): two reticle-limited dies + eight HBM3E stacks, 8 TB/s (576 TB/s / 72 GPUs)",
+    "source": "NVIDIA Blackwell datasheet (2025-10-28), as quoted in configs/hardware/technology.json power.gpu_reference_power.b200_tdp_nvl72_w ; https://www.nvidia.com/en-us/data-center/gb200-nvl72/",
+    "quote": "Blackwell datasheet: 'Max Thermal Design Power (TDP) Configurable up to 1,200 W' (GB200 NVL72); GB200 NVL72: 'a rack-scale, liquid-cooled design', 'GPU Memory | Bandwidth 13.4 TB HBM3E | 576 TB/s'",
+    "evidence_class": "published-spec"
+   }
+  },
+  "cross_checks": {
+   "note": "Packages whose logic is not a matched reticle-class topology (chiplets, or unpublished die areas): reported for the class envelopes, not used for a per-die limit.",
+   "gaudi3_oam": {
+    "package_w": 900.0,
+    "dies": 2,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 3700000000000.0,
+    "cooling": "air and liquid",
+    "boundary": "HL-325L OAM: two compute dies + eight HBM2e stacks, 3.7 TB/s; same 900 W rating air and liquid",
+    "source": "Intel Gaudi 3 AI Accelerator White Paper, https://cdrdv2-public.intel.com/817486/gaudi-3-ai-accelerator-white-paper.pdf",
+    "quote": "'supports up to 900W Total Device Power (TDP) with passive cooling and up to 900W TDP with liquid cooling'; 'two compute dies'; '8 HBM2e devices ... providing 3.7 TB/s peak HBM bandwidth'",
+    "evidence_class": "published-spec"
+   },
+   "mi300x_oam": {
+    "package_w": 750.0,
+    "dies": null,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 5300000000000.0,
+    "cooling": "air",
+    "boundary": "OAM: 8 XCD + 4 IOD chiplets (3D), 192 GB HBM3, 5.3 TB/s, passive (air)",
+    "source": "https://www.amd.com/en/products/accelerators/instinct/mi300/mi300x.html",
+    "quote": "'Total Board Power (TBP) 750W Peak'; 'Cooling Passive OAM'; 'Memory Bandwidth 5.3 TB/s'",
+    "evidence_class": "published-spec"
+   },
+   "mi350x_oam": {
+    "package_w": 1000.0,
+    "dies": null,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 8000000000000.0,
+    "cooling": "air",
+    "boundary": "OAM: CDNA4 chiplets (N3 compute on N6 base), 288 GB HBM3E, 8 TB/s, passive (air)",
+    "source": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi350x.html",
+    "quote": "'Total Board Power (TBP) 1000W'; 'Cooling Passive OAM'; 'Memory Bandwidth 8 TB/s'",
+    "evidence_class": "published-spec"
+   },
+   "mi355x_oam": {
+    "package_w": 1400.0,
+    "dies": null,
+    "die_mm2": null,
+    "hbm_stacks": 8,
+    "hbm_bw_Bps": 8000000000000.0,
+    "cooling": "liquid",
+    "boundary": "OAM: CDNA4 chiplets, 288 GB HBM3E, 8 TB/s; the 1,400 W part is the liquid-cooled (active) SKU",
+    "source": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi355x.html",
+    "quote": "'Total Board Power (TBP) 1400W'; 'Cooling Passive & Active'; 'Memory Bandwidth 8 TB/s'",
+    "evidence_class": "published-spec"
+   }
+  },
+  "classes": {
+   "air": {
+    "1": [
+     "h200_sxm",
+     "h100_sxm"
+    ],
+    "2": [
+     "b200_hgx"
+    ]
+   },
+   "liquid": {
+    "1": [],
+    "2": [
+     "gb200_nvl72"
+    ]
+   }
+  },
+  "hot_spot": {
+   "value": null,
+   "unit": "W/mm2",
+   "evidence_class": "assumed",
+   "boundary": "local (sub-die) heat-flux limit of a logic region",
+   "source": "none found: no vendor publishes a sustainable hot-spot W/mm2; the per-die limits are die AVERAGES of shipping parts (reported as reference_die_w_per_mm2). The record reports the logic-region flux of each design at its capped rate so a hot-spot limit can be applied when one is sourced."
+  },
+  "withdrawn": {
+   "w_per_mm2": 0.5,
+   "limit_w": 407.5,
+   "note": "0.5 W/mm2 x 815 mm2 = 407.5 W, from an A100 SXM (400 W over 826 mm2, 2020): a whole-module rating divided by the die area (stacks not deducted), one cooling class, one generation old. Replaced by the class/topology limits above."
+  },
+  "sensitivity_references": {
+   "note": "NOT a class limit: no shipping single-reticle package is rated above 700 W in either cooling class. This asks what the Qwen reticle would reach if a one-die liquid-cooled package were rated at GB200's full per-module 1,200 W (the cold-plate class exists; the single-die rating does not).",
+   "single_die_liquid_1200w": {
+    "package_w": 1200.0,
+    "dies": 1,
+    "die_mm2": 815.0,
+    "hbm_stacks": 6,
+    "hbm_bw_Bps": 4800000000000.0,
+    "cooling": "liquid",
+    "evidence_class": "assumed",
+    "boundary": "hypothetical one-reticle, six-stack package under the GB200 cold-plate rating; its stacks deducted at H200's 4.8 TB/s peak",
+    "source": "GB200 NVL72 per-module rating (cooling.references.gb200_nvl72) applied to the H200 topology; no product"
+   }
+  }
+ },
+ "mac_lane": {
+  "scenario_A": {
+   "note": "The only lanes routed are BF16 x BF16 products into FP32 accumulators. Scenario A charges EVERY multiply-accumulate, whatever its weight format, at the matrix engine's reported pJ per MAC: that is what the implementation that exists would spend. ASAP7 is a 7 nm predictive PDK; no node scaling is applied.",
+   "qwen3": {
+    "value": 3.9743577368555187,
+    "unit": "pJ/MAC",
+    "evidence_class": "measured-ours",
+    "boundary": "routed matrix-engine block (u_me) logic only: dynamic + leakage, TT corner, 0.9 ns clock, activity from the reduced Qwen3 decode step's RTL registers (1,277,952 MACs); excludes the die clock tree, operand delivery, SRAM/ROM reads",
+    "source": "results/physical_abi3/asap7/signoff/energy_per_token.json#architectures.qwen3_8b_rom_reticle.pj_per_mac.matrix_engine_logic_pj_per_mac",
+    "whole_step_pj_per_mac": 16.547206649595186
+   },
+   "v41": {
+    "value": 11.512761880960333,
+    "unit": "pJ/MAC",
+    "evidence_class": "measured-ours",
+    "boundary": "routed V4.1 matrix-engine block (u_me) logic only, TT, 0.9 ns clock, activity from the reduced V4.1 step at position 7 (10,264,576 MACs over 1,088,551 cycles: a low-utilisation vehicle, so idle clock-pin power is amortised over few MACs)",
+    "source": "results/physical_abi3/asap7/signoff/energy_per_token.json#architectures.deepseek_v41_rom_array_die.pj_per_mac.matrix_engine_logic_pj_per_mac",
+    "whole_step_pj_per_mac": 66.54012140038643
+   }
+  },
+  "scenario_B": {
+   "note": "A proposed lane for each weight format, derived as (multiplier) + (one FP32 add per product), because the golden fixes FP32 accumulation of exact products: a k-product tree retires k-1 FP32 adds. Arithmetic datapath only: the lane's pipeline registers and clock pins are charged by the die clock term, operand movement by operand delivery. Component energies are Jouppi et al.'s 7 nm table (published design estimates, NOT silicon measurements); no credit is taken for N6/N5 over 7 nm. Where no entry exists for a format, the next-WIDER multiplier is used (an upper bound).",
+   "components": {
+    "fp32_add": {
+     "value": 0.38,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one IEEE FP32 add at 7 nm, arithmetic only",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "IEEE FP 32 [add] 45 nm 0.900, 7 nm 0.380"
+    },
+    "fp32_mult": {
+     "value": 1.31,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one IEEE FP32 multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "IEEE FP 32 [mult] 3.700 / 1.310"
+    },
+    "bf16_mult": {
+     "value": 0.21,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one BFloat16 multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "BFloat 16 [mult] -- / 0.210"
+    },
+    "int8_mult": {
+     "value": 0.07,
+     "unit": "pJ",
+     "evidence_class": "published-spec",
+     "boundary": "one 8-bit integer multiply at 7 nm",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010",
+     "quote": "Int 8 [mult] 0.200 / 0.070"
+    }
+   },
+   "per_mac": {
+    "w4a8": {
+     "value": 0.45,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "4-bit weight (FP4 E2M1 / 3.5-bit grouped) x FP8 activation, FP32 accumulate: int8_mult (upper bound: a 2-4 bit mantissa product is smaller than 8x8) + fp32_add; group scale applied once per group, not per MAC",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp4": {
+     "value": 0.45,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "as w4a8 (V4.1 FP4 weights and FP4 indexer keys against FP8/BF16 operands)",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp8": {
+     "value": 0.59,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "FP8 x FP8/BF16, FP32 accumulate: bf16_mult (upper bound for an E4M3 product) + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "bf16": {
+     "value": 0.59,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "BF16 x BF16 (and BF16 x FP8 attention), FP32 accumulate: bf16_mult + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    },
+    "fp32": {
+     "value": 1.69,
+     "unit": "pJ/MAC",
+     "evidence_class": "published-spec",
+     "boundary": "FP32 FMA: fp32_mult + fp32_add",
+     "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+    }
+   },
+   "was": {
+    "w4a8_pj_per_mac_in_qwen_production_model": 0.09,
+    "note": "The 2026-09-27 Qwen production model (codex/qwen-* @5e12dc08 _prod_inputs/_rom_step) charged technology.json mac_energy_j_per_op.w4a8 = 9e-14 per MAC; that entry is per OPERATION (the V4.1 budget charges 2 ops per MAC), so the model under-charged its own input 2x, and the input itself is an interpolation between an integer (Keller) and an unmeasured FP8 rung. Replaced by 0.45 (5x)."
+   }
+  },
+  "bounds": {
+   "integer_lower_bound": {
+    "value": 0.021,
+    "unit": "pJ/MAC",
+    "evidence_class": "published-measured",
+    "boundary": "INTEGER 4-bit with per-vector 8-bit scale factors and 24-bit partial sums; whole 0.153 mm2 accelerator incl. 132 KB SRAM; 0.46 V, 50% non-zero inputs, leakage ESTIMATED; 2 ops per MAC",
+    "source": "Keller et al., A 17-95.6 TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization for Transformers in 5nm, 2022 Symposium on VLSI Technology and Circuits, pp. 16-17, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
+    "quote": "Table 2: data formats 'INT4 / INT4 VSQ / INT8'; TOPS/W '91.1† (0.46V)' '95.6† (0.46V)' '39.1† (0.46V)', '† Measured with 50% non-zero input densities. Includes estimated leakage power.'; p.16: '24b partial sums are temporally accumulated in a 16-entry latch array'",
+    "use": "lower bound only: not a floating-point MAC and not our accumulation contract",
+    "int8_pj_per_mac": 0.051
+   },
+   "gpu_tensor_measured": {
+    "value": 1.4,
+    "unit": "pJ/MAC",
+    "evidence_class": "published-measured",
+    "boundary": "A100 Matrix-FP16 tensor core, control 0.37 + datapath 0.33 = 0.70 pJ/FLOP, 2 FLOP per MAC; includes the GPU's instruction/operand control plane",
+    "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, https://escholarship.org/content/qt6189368s/qt6189368s.pdf Table 3",
+    "use": "scenario-B sensitivity: a lane no better than a shipping tensor core"
+   }
+  }
+ },
+ "memory": {
+  "hbm_path_total": {
+   "value": 13.64,
+   "unit": "pJ/bit",
+   "evidence_class": "published-measured",
+   "boundary": "MI250X GCD HBM2e path beyond L2, regressed from board power: DRAM device + TSV + interposer + PHY + memory controller + L2-to-controller movement + control plane. The LARGEST of the four SC'25 parts whose HBM category contains no last-level cache (MI300A's 14.72 carries the 256 MB Infinity Cache on its path and is excluded on boundary, not favourability).",
+   "source": "Antepara, Zhao, Austin, Ding, Oliker, Wright, Williams, Benchmark-driven Models for Energy Analysis and Attribution of GPU-Accelerated Supercomputing, SC'25, doi:10.1145/3712285.3759815, https://escholarship.org/content/qt6189368s/qt6189368s.pdf Table 3 and Fig. 1",
+   "quote": "Fig. 1 caption: 'n.b., memory controller energy is tabulated with HBM energy.'; Table 3 HBM [pJ/bit] control / datapath / total: A100 8.47 / 4.64 / 13.11; GH200 8.69 / 2.99 / 11.68; MI250X GCD 11.82 / 1.82 / 13.64; MI300A 13.47 / 1.25 / 14.72",
+   "control_plane_meaning": "SC'25 s4.1: 'by performing computations on zeros, we exercise only the control plane'. 'Control' is the data-INDEPENDENT energy of a streamed bit: it holds the controller, PHY clocking, command/address and the DRAM's own row activation and column access (none of which toggle with data values); 'datapath' is the data-dependent toggling on TSVs, interposer, PHY and on-die wires. The control/datapath split is therefore NOT a die/stack split.",
+   "measured_parts": {
+    "a100": 13.11,
+    "gh200": 11.68,
+    "mi250x_gcd": 13.64,
+    "mi300a": 14.72
+   },
+   "was": 13.11
+  },
+  "stack_share": {
+   "value": 3.45,
+   "unit": "pJ/bit",
+   "evidence_class": "published-spec",
+   "boundary": "inside the DRAM stack: row activation 1.21 + bank-to-base-layer data movement incl. TSVs 2.24 pJ/bit (HBM2, 28 nm DRAM model after Rambus; application toggle rates); excludes the 0.3 pJ/bit interposer I/O and ECC",
+   "source": "O'Connor et al., Fine-Grained DRAM: Energy-Efficient DRAM for Extreme Bandwidth Systems, MICRO 2017, https://d1qx31qr3h6wln.cloudfront.net/publications/MICRO_2017_Fine_Grained_DRAM.pdf s2 (Fig. 2 discussion)",
+   "quote": "'switching the capacitance on this datapath requires 2.24 pJ/bit of energy on average. In contrast, transferring the data over the I/O wires on the silicon interposer requires an additional 0.3 pJ/bit ... with the average of 1.21 pJ/bit of activation energy, each HBM2 access incurs 3.92 pJ/bit of energy (including ECC overhead)'",
+   "stack_high_pj_per_bit": 3.92,
+   "stack_high_basis": "O'Connor's whole 3.92 pJ/bit charged to the stack (I/O and ECC included): the stack-power check's conservative end"
+  },
+  "die_share": {
+   "value": null,
+   "unit": "pJ/bit",
+   "evidence_class": "published-spec",
+   "boundary": "hbm_path_total - stack_share = 13.64 - 3.45 = 10.19 pJ/bit charged to the LOGIC DIE: memory controller, PHY (both ends' I/O), ECC, on-die movement to the controller and the controller's control plane. The class is the weaker of its two inputs (a silicon measurement minus a DRAM-model share). NO fixed-function credit is taken: no published source measures an HBM controller or PHY on its own (vendor PHY/controller pages for Rambus, Synopsys, Cadence, Micron and SK hynix give no pJ/bit; checked 2026-09-27), so a streaming controller is charged what the least favourable measured GPU path leaves after the DRAM.",
+   "source": "derived: SC'25 Table 3 (MI250X GCD) minus O'Connor MICRO 2017 s2",
+   "range": {
+    "gh200_hbm3": 8.23,
+    "a100_hbm2e": 9.66,
+    "mi250x_hbm2e": 10.19,
+    "phy_io_floor": 0.8,
+    "note": "GH200 (HBM3, the generation nearest HBM3E) leaves 8.23 and the A100 9.66: both more favourable, not taken. The floor is O'Connor's interposer I/O (both ends, 50% activity, a model): what a die with a free controller would still spend."
+   },
+   "cross_checks": {
+    "tpuv4i": "Jouppi et al., ISCA 2021, Table 2: 'DRAM HBM2 -- 250-450' pJ per 64-bit access at 7 nm (3.9-7.0 pJ/bit), footnote 'HBM2 and GDDR6 also list only the I/O energy' (published-spec, device interface)",
+    "sc25_statement": "SC'25 s6 ('Memory and Caches'): 'only 8-35% of total HBM energy is in the data movement itself. Rather, substantial energy is spent in control and interfaces.'"
+   },
+   "was": "9.66 pJ/bit (A100 13.11 - 3.45), tagged assumed; before that 0.8 pJ/bit to the die (O'Connor Table 3 'I/O (pJ/b)* 0.80', an I/O-only boundary) and 12.31 pJ/bit to the stacks: controller and control-plane energy placed in DRAM stacks that do not dissipate it."
+  },
+  "idle_w_per_stack": {
+   "value": 2.8,
+   "unit": "W/stack",
+   "evidence_class": "assumed",
+   "boundary": "traffic-independent DRAM standby + refresh + trained PHY/controller; charged WHOLLY to the die (conservative for die cooling)",
+   "source": "configs/hardware/technology.json power.memory_interface_idle_w_per_stack (band 1.2-6.4 W)"
+  }
+ },
+ "die": {
+  "rom_read_j_per_byte": {
+   "value": 8e-14,
+   "unit": "J/B",
+   "evidence_class": "assumed",
+   "boundary": "mask-ROM macro read to its output latch, N6",
+   "source": "configs/hardware/technology.json energy.rom_read_j_per_byte"
+  },
+  "operand_delivery_j_per_byte": {
+   "value": 2.3e-13,
+   "unit": "J/B",
+   "evidence_class": "assumed",
+   "boundary": "array-to-lane wire + operand register, tile-local floor",
+   "source": "configs/hardware/technology.json energy.operand_delivery_j_per_byte"
+  },
+  "sram_j_per_byte": {
+   "value": 2.6e-12,
+   "unit": "J/B",
+   "evidence_class": "published-measured",
+   "boundary": "A100 L1 access (control 1.26 + datapath 0.33 pJ/bit), transferred to on-die SRAM",
+   "source": "configs/hardware/technology.json energy.sram_read_j_per_byte (SC'25 Table 3)"
+  },
+  "stream_fp32_op_j": {
+   "value": 1.69e-12,
+   "unit": "J",
+   "evidence_class": "published-spec",
+   "boundary": "one FP32 FMA-class stream-unit operation (fp32_mult + fp32_add at 7 nm); no routed stream-unit energy per element exists",
+   "source": "Jouppi et al., Ten Lessons From Three Generations Shaped Google's TPUv4i, ISCA 2021, Table 2 ('Energy per Operation: 45 nm [16] vs 7 nm'), doi:10.1109/ISCA52012.2021.00010"
+  },
+  "clock_j_per_mm2_per_cycle": {
+   "value": 8.5e-11,
+   "unit": "J/mm2/cycle",
+   "evidence_class": "assumed",
+   "boundary": "whole-die clock distribution, fitted to GPU TDP/area/clock tables",
+   "source": "configs/hardware/technology.json power.clock_energy_j_per_mm2_per_cycle"
+  },
+  "clock_region_multiplier": {
+   "logic": 1.0,
+   "rom_array": 0.15,
+   "sram_array": 0.15,
+   "source": "configs/hardware/technology.json power.clock_region_multiplier (assumed)"
+  },
+  "leakage_w_per_mm2": {
+   "logic": {
+    "value": 0.1,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "standard-cell region at operating temperature, N5-N7",
+    "source": "conservative production value (validation record 2026-09-27, whole-chip idle anchor: H100 bare idle 71.8 W over 814 mm2); configs/hardware/technology.json power.static_leakage_w_per_mm2.logic carries the same 0.10 since 2026-09-27 (one value for every model)",
+    "was": 0.06
+   },
+   "rom_array": {
+    "value": 0.0067,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "mask-ROM array",
+    "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.rom_array"
+   },
+   "sram_array": {
+    "value": 0.005,
+    "unit": "W/mm2",
+    "evidence_class": "assumed",
+    "boundary": "SRAM array",
+    "source": "configs/hardware/technology.json power.static_leakage_w_per_mm2.sram_array"
+   }
+  },
+  "link_j_per_bit": {
+   "board": {
+    "value": 6.5e-12,
+    "unit": "J/bit",
+    "evidence_class": "published-measured",
+    "boundary": "112G PAM4 lane incl. DSP",
+    "source": "configs/hardware/technology.json energy.link_j_per_bit.board_serdes_112g"
+   },
+   "ucie": {
+    "value": 5e-13,
+    "unit": "J/bit",
+    "evidence_class": "published-spec",
+    "boundary": "UCIe advanced-package target 0.3-0.6",
+    "source": "configs/hardware/technology.json energy.link_j_per_bit.ucie_advanced"
+   }
+  }
+ },
+ "design_points": {
+  "qwen3": {
+   "source": "tools/arch_budget_qwen3.py qwen_design_point (results/arch/qwen3_budget.json power_production.design_point): the Qwen3-8B ROM package the user chose on 2026-09-28 -- 8-bit weights (INT8 per-channel), two reticles in one package over UCIe with every layer split across both dies, 8 HBM3E stacks, 6,144 MAC groups a die, lane multiplier 5, every layer split across both dies (tensor-parallel 2, FP32 partials; O4 of results/arch/qwen3_8bit_design.json). Areas are PACKAGE totals (both dies); tools/power_scenarios.qwen_point prices each die at half. tests/test_arch_budget_qwen3.py holds this block equal to the budget's design point.",
+   "context": 8192,
+   "kv_format_bytes_per_elem": 1,
+   "clock_hz": 1098640000.0,
+   "hbm_stacks": 8,
+   "dies_per_package": 2,
+   "cooling_class": "liquid",
+   "cooling_class_basis": "user decision 2026-09-28: the Qwen3-8B O4 package is liquid-cooled, a GB200 NVL72-class two-die package (1,200 W less its 8 stacks at peak = 474.6 W a die); the air class (B200 HGX, 374.6 W a die) is reported as a sensitivity in every point's cooling_classes",
+   "weight_bits": 8,
+   "drafter_weight_bits": 8,
+   "weight_scale_bytes": 3105536,
+   "weight_mac_format": "fp8",
+   "ar_batch1": {
+    "step_cycles": 101037,
+    "tokens_per_step": 1,
+    "lane_copies_on": 0,
+    "users": 1,
+    "slots": 1,
+    "drafter": false
+   },
+   "dflash": {
+    "from_record": "results/speculative/dflash_step_timing.json",
+    "select": "rom['<context>/fp8/m<lane_multiplier_m>'].best",
+    "basis": "the serial draft + verify + commit step at the measured per-block acceptance (primary workloads, cycle-weighted tau); block, tokens per step, step cycles (draft phase included) and MAC counts (drafter included) are read from the record by tools/power_scenarios.dflash_point, never restated here.",
+    "users": 1,
+    "drafter": true
+   },
+   "area_mm2": {
+    "compute": 220.04,
+    "interconnect": 130.4,
+    "overhead": 163.0,
+    "hbm_phy": 80.0,
+    "ucie_phy": 20.0,
+    "stream_unit_spill": 25.6,
+    "lane_copy": 103.82,
+    "lane_multiplier_m": 5,
+    "rom": 449.3,
+    "drafter_rom": 57.52,
+    "sram": 12.8
+   },
+   "weight_format": "int8_per_channel: INT8 weight-only, a BF16 scale per output channel (user decision 2026-09-28); weight_scale_bytes are the target's and lm_head's scales, read with every sweep; the MAC lane on scenario B is the 'fp8' entry (BF16 multiplier + FP32 add: an INT8 weight is exact in BF16)"
+  },
+  "v41": {
+   "source": "tools/arch_budget_v41.py, the one V4.1 budget model (token_workload, distinct_experts, fill_machine) and results/arch/arch_budget_v41.json batch rows (rates)",
+   "contexts": [
+    1048576,
+    200000
+   ],
+   "dies": 188,
+   "layer_dies": 112,
+   "stages": 28,
+   "hbm_stacks_per_die": 4,
+   "mtp": {
+    "gamma": 5,
+    "tau": 3.65,
+    "tau_source": "user decision 2026-09-28: the measured V4.1-Flash DSpark tau (results/speculative/v41_flash_dspark_onpolicy_greedy.json headline, gamma 5, greedy, on-policy, 95% CI 3.50-3.84); tools/power_scenarios reads it through tools/arch_budget_v41.TAU_HEADLINE, not from here (this entry is informational); 3.5-4.1 is the published V4.1-Flash band",
+    "draft_overhead": 0.075
+   },
+   "links_formula": "collective bytes x 8 x (board + UCIe) x 4, as tools/arch_budget_v41.energy_per_token",
+   "dies_per_package": 2
+  }
+ }
+}

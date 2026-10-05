@@ -1,0 +1,196 @@
+{
+  "schema": "opentallas.w10.main.prerequisites.v1",
+  "verdict": "PASS_SOURCE_IDENTITY_PENDING_COMPILE",
+  "integration_base": "1be527dbc20e655b26dc4a236c5802aba0b3f710",
+  "preserved_model_sha256": "c85d9588ffd08641af364151bc7e0923324eea3520a63d41451e11716a62312f",
+  "rationale": "Existing main bterm2 is consumed by GPU comparator. Keep main originals byte-identical; add W10 baseline under distinct element, block-term and walker names. New standalone top must be explicitly selected, no existing instance is switched.",
+  "minimal_order": [
+    "additive model with VMC_FUSED product pricing",
+    "16 new runtime/macro prerequisite files under this manifest",
+    "FRONT_PAR default-off patch on new W10 modules",
+    "validation-only helpers/fixtures and exact gates",
+    "committed results; physical signoff remains pending"
+  ],
+  "namespace": {
+    "ot_v41_rom_elem": "ot_v41_rom_elem_w10",
+    "ot_v41_rom_elem_q": "ot_v41_rom_elem_q_w10",
+    "ot_v41_bterm2": "ot_v41_bterm2_w10",
+    "ot_v41_walk2": "ot_v41_walk2_w10",
+    "ot_v41_first": "ot_v41_first_w10",
+    "ot_v41_walk": "ot_v41_walk_w10"
+  },
+  "files": [
+    {
+      "source": "rtl/common/ot_prefix.sv",
+      "destination": "rtl/common/ot_prefix.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "destination_sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "31e454655b1d29f7ced91e344f969a05bc1ad161"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_fadd.sv",
+      "destination": "rtl/v41rom/ot_v41_fadd.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "destination_sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "72f00b8659c6bacdf473f435ca09abddc466f142"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_bterm2.sv",
+      "destination": "rtl/v41rom/ot_v41_bterm2_w10.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "3661ff3504b6f00c80388ee5fedc2d5125ddb1e410a379890cf20c298b915ff6",
+      "destination_sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "664e6ef57b67eb13e24d3235dbae80e23622a896"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_chain2.sv",
+      "destination": "rtl/v41rom/ot_v41_chain2.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "7757625645eeaf2e4895a23a23e869a67accef7d47985281e219b2aa0a594b9c",
+      "destination_sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "972d482d0e7a36d9926be537a0c6b9e10b86417a"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_segtree2.sv",
+      "destination": "rtl/v41rom/ot_v41_segtree2.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "destination_sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "370fc7ce9110080c01209f5808c6fb82ef395d43"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_bmul2.sv",
+      "destination": "rtl/v41rom/ot_v41_bmul2.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "destination_sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "0798d2c09e663b0015dd970cad268b6f80d22f06"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "destination": "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "destination_sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "0798d2c09e663b0015dd970cad268b6f80d22f06"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_rom_elem.sv",
+      "destination": "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "eea2bc24c05745dbfbf2ae49f29988081cd0d18c5d5488ba1cae386454b42284",
+      "destination_sha256": "13d9778699338af96db5e8f700180e797b9cc7edc152ea16818c65efc8ae2488",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "deaa436ddaf1a439b7b06b07205a202faebc73ef"
+    },
+    {
+      "source": "rtl/v41rom/ot_v41_rom_elem_q.sv",
+      "destination": "rtl/v41rom/ot_v41_rom_elem_q_w10.sv",
+      "source_commit": "66b0bee6",
+      "source_sha256": "d75ee48a1656d2d4f2d9dd6e5bb093afdd2fd4983d7788af0d94a1609a5806ed",
+      "destination_sha256": "84518d3f122da525c18fe13a3c7d59a171d25ab3f1b1a3143435c6a95ad48fe5",
+      "transform": "module/instance type identifiers only",
+      "last_source_commit": "972d482d0e7a36d9926be537a0c6b9e10b86417a"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.json",
+      "source_commit": "66b0bee6",
+      "source_sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093",
+      "destination_sha256": "056700d6a2ca3ada7e5ec226604ca8ab19bb446b0c96781ae33acfc49e831093",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+      "source_commit": "66b0bee6",
+      "source_sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+      "destination_sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+      "source_commit": "66b0bee6",
+      "source_sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+      "destination_sha256": "57823a0353236533a2b15a669025480c61930874cde8af6e77f7fca372f6fada",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "source_commit": "66b0bee6",
+      "source_sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+      "destination_sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+      "source_commit": "66b0bee6",
+      "source_sha256": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+      "destination_sha256": "40cc08ccdde7dd3daf88aed4dee67f5656c47164d137afe45753720daf522f32",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+      "source_commit": "66b0bee6",
+      "source_sha256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+      "destination_sha256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    },
+    {
+      "source": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib",
+      "destination": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib",
+      "source_commit": "66b0bee6",
+      "source_sha256": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+      "destination_sha256": "b922c7425f6b3f7cefb69baa121b353cb6084be096cfb69cf7c7ea208c92f941",
+      "transform": "byte-identical",
+      "last_source_commit": "aa5a661029e1ae6165d2a46f77d94a28cef19682"
+    }
+  ],
+  "excluded_from_prerequisites": [
+    "all docs",
+    "TASKS.md",
+    "old main ot_v41_rom_elem.sv and _q.sv",
+    "old main ot_v41_bterm2.sv (GPU dependency)",
+    "old main ot_v41_ret.sv and ot_v41_rom_array.sv",
+    "old main golden/tools/bankmap/physical driver",
+    "W16 model constants and existing functions",
+    "automatic physical tuning or rerun"
+  ],
+  "original_commits_provenance": [
+    "972d482d0",
+    "aa5a66102",
+    "30464ca51",
+    "370fc7ce9",
+    "16175e557",
+    "db06195c8",
+    "8dc308b7b",
+    "5f0c32913",
+    "72f00b865",
+    "31e454655",
+    "664e6ef57",
+    "deaa436dd",
+    "d77013317",
+    "0798d2c09"
+  ],
+  "provenance_note": "These mixed historical commits are provenance, not a cherry-pick instruction. The file-filtered, identifier-only prerequisite commit is the integration unit.",
+  "physical_note": "PID3114045 remains pinned at465a1e205. A source-name migration is functional identity only; do not claim main namespace SS/FF qualification from the pending standalone record."
+}

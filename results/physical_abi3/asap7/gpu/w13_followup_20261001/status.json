@@ -1,0 +1,111 @@
+{
+  "observed_at": "2026-10-01T08:56:06.182556+00:00",
+  "columns": [
+    {
+      "block": "ot_gpu_tc_col",
+      "passed": false,
+      "issues": [
+        "missing_corner_record",
+        "missing_block_record"
+      ],
+      "root": "/home/ubuntu/w13wt/tc",
+      "abstracts": []
+    },
+    {
+      "block": "ot_gpu_tc16",
+      "passed": false,
+      "issues": [
+        "missing_corner_record",
+        "block_boundary_or_clock_not_closed"
+      ],
+      "block_record_sha256": "783cc80205a5765220d527acc0bfc0b1dd1063652ed077552d5e0eae1046f3d3",
+      "root": "/tmp/claude-1000/wt/w13-t16",
+      "abstracts": [
+        {
+          "path": "/tmp/claude-1000/wt/w13-t16/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16.lef",
+          "sha256": "17b8ee49d5c379c720879208cbc12a29693d5e6c90532f724bcc8eaf081c2934"
+        },
+        {
+          "path": "/tmp/claude-1000/wt/w13-t16/results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc16/ot_gpu_tc16_typ.lib",
+          "sha256": "7c3f0585ef5bc983f0cc69e8d583a2ad936cd98231fe6c1baca26beaea2c82c9"
+        }
+      ]
+    },
+    {
+      "block": "ot_gpu_bd_col",
+      "passed": true,
+      "issues": [],
+      "record": "results/physical_abi3/asap7/chip/corners/ot_gpu_bd_col.json",
+      "record_sha256": "cbd6ee22703cb47fd00cefa615e8693793061801489f124e41fda957f80a2199",
+      "timing_model_sha256": {
+        "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ss.lib": "275bb730d70265c741aad318cecff9abb1063795e21674e2ca2a88f12aa65753",
+        "results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ff.lib": "50afd6fd73f717312926be16de37ae0d959c175176593d7825f0491311bb86bf"
+      },
+      "block_record_sha256": "de9ea8998b431452dd20e8b7801c8eb08ee43ec9af8fbc3483d613b00e99da17",
+      "root": "/home/ubuntu/w13wt/bd",
+      "abstracts": [
+        {
+          "path": "/home/ubuntu/w13wt/bd/results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_typ.lib",
+          "sha256": "fa26383214d453bece00d4b9ca23e95ce2f560395353f397462e115a1fa78f8a"
+        },
+        {
+          "path": "/home/ubuntu/w13wt/bd/results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ff.lib",
+          "sha256": "50afd6fd73f717312926be16de37ae0d959c175176593d7825f0491311bb86bf"
+        },
+        {
+          "path": "/home/ubuntu/w13wt/bd/results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col.lef",
+          "sha256": "4b06d8be86d02dd447712f9a07dc8f8ab241c1e7ce09ffa9b7b1abe571b39f70"
+        },
+        {
+          "path": "/home/ubuntu/w13wt/bd/results/physical_abi3/asap7/chip/abstracts/ot_gpu_bd_col/ot_gpu_bd_col_ss.lib",
+          "sha256": "275bb730d70265c741aad318cecff9abb1063795e21674e2ca2a88f12aa65753"
+        }
+      ]
+    }
+  ],
+  "identities": {
+    "2089666": {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    "2089669": {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    "2089670": {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    "3047316": {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "S"
+    },
+    "2089594": {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    "1901598": {
+      "pid": 1901598,
+      "start_ticks": "302086726",
+      "state": "S"
+    }
+  },
+  "bundle_pins_verified": true,
+  "queue_decision": "Reuse chain15 existing corner-gated SM/floorplan queue; no additional column or SM job. Chain14 remains parked. Existing remote_gate floor55GB restricted to pve1/2 is the existing SM lease request, not a new ownership claim.",
+  "critical_path": "TC column and TC16 SS/FF completion -> modeled SM hardening -> actual-LEF full die floorplan; no terminal column PASS yet except bd_col",
+  "w15_protection": [
+    "w15bwt7",
+    "w15bwt8",
+    "w15bwt9",
+    "w15bwt13",
+    "w15bwt14",
+    "w15work/keep",
+    "w15bwork/codex_sram_attempt2"
+  ],
+  "floorplan_caveat": "hbm_gpu_floorplan.py records SRAM/PHY/model pins but INPUTS excludes actual SM LEFs; chain15 qualifies copied SM records and LEF hashes before floorplan. Treat analytical pending fallback as no physical gate pass."
+}

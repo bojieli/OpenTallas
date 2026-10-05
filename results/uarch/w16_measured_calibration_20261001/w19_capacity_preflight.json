@@ -1,0 +1,677 @@
+{
+  "schema": "opentallas.w19.checkpoint_capacity.v1",
+  "ranks": 96,
+  "sm_per_rank": 32,
+  "programmed_layers": 41,
+  "routed_experts_per_layer": 384,
+  "rank_stack_bytes": [
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1395743360,
+      1392551040,
+      878539776,
+      708350080
+    ],
+    [
+      1395830400,
+      1393002240,
+      912439296,
+      708350080
+    ],
+    [
+      1395710720,
+      1392551040,
+      878539776,
+      708308736
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ],
+    [
+      1373428480,
+      1370268800,
+      856257536,
+      686026496
+    ],
+    [
+      1373461120,
+      1370268800,
+      856257536,
+      686067840
+    ],
+    [
+      1373548160,
+      1370720000,
+      890157056,
+      686067840
+    ]
+  ],
+  "all_rank_weight_image_bytes": 418265202688,
+  "max_rank_layer_image_bytes": 111722624,
+  "max_resident_stack_bytes": 1395830400,
+  "required_sector_address_bits": 26,
+  "existing_sector_address_bits": 24,
+  "static_resident_address_fit": false,
+  "max_selected_six_expert_bytes_per_sm": 66048,
+  "staging_bytes_per_sm": 131072,
+  "selected_weights_fit_staging": true,
+  "schedule_budget": {
+    "enabled_default": false,
+    "hardware": "Existing32-SM die, four8-SM fetch endpoints; no new RTL",
+    "producer_host_buffer_bytes": 167,
+    "decode_working_set": "one bounded checkpoint record, at most code+scale mapped shards",
+    "schedule": "sorted expert ID: w1 then w3; SwiGLU; intermediate gather; sorted expert ID: w2; golden sum",
+    "fetch_cfg_change": "only after endpoint idle and adapter/SM drained",
+    "descriptors_per_sm_layer": 18,
+    "loaded_latency_ns_assumed": 500.0,
+    "serial_first_access_ns_layer": 9000.0,
+    "incremental_ns_token_vs_one_fetch_per_layer": 340000.0,
+    "basis": "Conservative serial18 first accesses vs historical one fetch per layer; no overlap credited",
+    "resident_address_port_bits": 24,
+    "resident_bytes_per_stack_aperture": 536870912,
+    "aperture": "Bound resident image first; do not silently rebase/reload weights during decode",
+    "staging_bytes_per_sm": 131072,
+    "adapter": {
+      "schema": "opentallas.uarch.gpu_payload_transport.v1",
+      "enabled_default": false,
+      "scope": "V4.1 HBM candidate only; Qwen/ROM ports unchanged",
+      "payloads": 24,
+      "layout": "136-B records in golden SM issue order; final line padding only",
+      "compute": {
+        "macs_per_cycle": 0,
+        "intensity_macs_per_byte": 0,
+        "arithmetic": "none"
+      },
+      "ports_Bpc": {
+        "fetch_read": 128,
+        "reservoir_write": 128,
+        "reservoir_read": 136,
+        "sm_response_write": 136
+      },
+      "boundaries_bits_pc": {
+        "fetch": 1024,
+        "sm": 1088,
+        "request_tag": 42
+      },
+      "replicas_per_die": 32,
+      "tag_depth": 16,
+      "reservoir_bytes": 512,
+      "sector_window": 16,
+      "assembly": "five 32-B sectors per 136-B record; four 8-B phases; per-sector duplicate/epoch validation",
+      "mux_bit_equivalents": 37696,
+      "storage_bits": 4504,
+      "fanout": "SM-local ready/valid; no new die-wide broadcast",
+      "demux": "one local SM response",
+      "footprint_mm2_per_sm": 0.018729,
+      "footprint_mm2_die": 0.5993,
+      "area_basis": "ASSUMED 0.2 um2 bit mux + DFFHQNx1 0.2916 um2 + 512 um2 control, 50% utilisation",
+      "slot_fit": "reserve this footprint inside existing W13 SM slot; measured contextual fit pending",
+      "routing": {
+        "tracks": 2420,
+        "channel_capacity_tracks": 3200,
+        "fits": true,
+        "basis": "ASSUMED 64 um local channel, four existing signal layers, 80 nm pitch; no hub layer change"
+      },
+      "physical_lines": 26,
+      "transferred_bytes": 3328,
+      "padded_fixture_bytes": 6144,
+      "service_cycles_no_stalls": 27,
+      "ideal_128B_payload_cycles": 24,
+      "extra_service_cycles": 3,
+      "steady_payloads_pc": 0.9411764705882353,
+      "first_payload_after_two_line_landings_cycles": 1,
+      "composed_path": {
+        "layers": 40,
+        "expert_ops_per_layer": 18,
+        "added_supply_cycles_upper_bound": 2160,
+        "added_supply_us_upper_bound": 1.8,
+        "basis": "serial sum for all routed w1/w3/w2 busiest-SM slices; overlap may hide service; excludes HBM wait"
+      },
+      "adoption": "OFF: exact, in-context SS/FF and measured token gain gates required; no token-rate restatement"
+    },
+    "full96_host_profile": "Measure offline packer separately; full32-SM rank compile/run profile remains unmeasured",
+    "contention": "Weights, KV, index, scale/metadata reads share controllers; standalone weights cannot price full token",
+    "adoption": "OFF: exact runtime, SS/FF, routing, composed token/gain required"
+  },
+  "partition": "96 output-row ranks; ceil contiguous chunks across32 actualSMs; eightSMs per placed stack quadrant",
+  "coverage": "All AR-programme SM weight families, all384 routed experts per layer and LM head. Norm/HC constants, embedding/Engram tables and KV/index state need separate non-SM images; no full-token runnable claim.",
+  "runtime": "Aperture fail requires model-sized address/region transport qualification; runtime reload is not credited.",
+  "host_profile": "Offline packing only; no full32-SM/rank compiled simulation memory or96-rank scheduling profile yet",
+  "contention": "Selected weights share controller service with KV/index and metadata. Concurrent service and golden runtime remain open."
+}

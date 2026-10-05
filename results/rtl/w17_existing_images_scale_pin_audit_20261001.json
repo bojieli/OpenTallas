@@ -1,0 +1,167 @@
+{
+  "claim": "Read-only actual existing L0/L20 image audit. No emitter numerical edits. Legacy field images are not certified PP issue-order images; new PP full run must regenerate unique images and bind binaries to new companion sources. Existing HE watchdog lower-bound diagnosis does not prove completion.",
+  "constants_expected": {
+    "value": 0.04419417306780815,
+    "f32_bits": "0x3d3504f3",
+    "source_file": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+    "source_key": "head_dim",
+    "derivation": "F(head_dim ** -0.5) (Model.__init__ self.attn_scale)",
+    "used_by": "softmax score scale (imm1, M1_AIMM)"
+  },
+  "records": [
+    {
+      "layer": 0,
+      "root": "/home/ubuntu/w17work/die/ctx1048576_s20260930",
+      "binder": "results/rtl/hdc_v41x_fullshape_program_bind_rope_hbm.json",
+      "ranks": {
+        "0": {
+          "pins": {
+            "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+            "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+            "crom.hex": "00624168cc5d115e8fd55e165d7e2080c7ff3c8ecb74dd854dcb51867e25a7a5",
+            "weights.json": "b8db5c8be5b5dd1967518db19e1e849f836cc5271c7dde6e3508847d4c4c93cd",
+            "field_phases.json": "683aace8917a94bc0fbe04cd507add3c6802e4842779336e11752eea6c5aba48"
+          },
+          "scale_instructions": [
+            {
+              "pc": 30,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 113,
+          "matched": true
+        },
+        "1": {
+          "pins": {
+            "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+            "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+            "crom.hex": "297012ec20c9e0a41b4b4753df9503b52d8f01f206aecd4753bf0857f1c22c6e",
+            "weights.json": "467a32e2ee0784afb547d051ab806f0eac93fe762dfecdee223d285befb42411",
+            "field_phases.json": "17812f4d0a817fec7ba33b4d96acdb75223f44181e35315a4e48dc34ce272598"
+          },
+          "scale_instructions": [
+            {
+              "pc": 30,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 113,
+          "matched": true
+        },
+        "2": {
+          "pins": {
+            "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+            "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+            "crom.hex": "59a85634d7db638df267c1e5bd5ea95272fc3086ab7a0c48a91d1c46a0ef0b62",
+            "weights.json": "e04e420d42f977ef0ad4c6b4f6b7e86211f589c5d336e5f3770f261ab79b831a",
+            "field_phases.json": "04969be1d9d4291b755f9ee7e673f5ca403b53788db1149106721435352662b6"
+          },
+          "scale_instructions": [
+            {
+              "pc": 30,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 113,
+          "matched": true
+        },
+        "3": {
+          "pins": {
+            "prog.hex": "e3d93b7bd9b74773c109761c41fbe5fcd72503a2513ac420abc5ddfffae9dd4a",
+            "cfg.txt": "037373fa58ea445f701a369dd8df8559e380ebcce069821363270a2e09c59967",
+            "crom.hex": "94932791048130c97261b53f73be148593c7c34962467614a2ecaa6aeb264a10",
+            "weights.json": "95a6818a028a96311a1f3e5eef64651bcea42c777df8ed7b7659efe6abccf455",
+            "field_phases.json": "79bd2ddf5acac6dfe7c18d073670739c80d2c1a6860eab94ab358fd0638c0c6d"
+          },
+          "scale_instructions": [
+            {
+              "pc": 30,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 113,
+          "matched": true
+        }
+      }
+    },
+    {
+      "layer": 20,
+      "root": "/home/ubuntu/w17work/die/ctx1048576_s20260930_L20",
+      "binder": "results/rtl/hdc_v41x_fullshape_1m_s20260930_l20_program_bind_rope_hbm.json",
+      "ranks": {
+        "0": {
+          "pins": {
+            "prog.hex": "77e7a3b184d9b17181ce8d323fae349d227e4ffaffdded617daae5aba7ff4ddf",
+            "cfg.txt": "8dfee74081ea775e20e729a5981b3652cfc5b3e805a685f8cc1bb7fa81a266f2",
+            "crom.hex": "843919beb3c7bca3bc977f8e31e4fbe49bc3821bfc5cd0ccb3f99f155a5b11f1",
+            "weights.json": "f313f7e1b35fb3d42f6747a06fab0c21939789b49f13210abacd00506339e6ba"
+          },
+          "scale_instructions": [
+            {
+              "pc": 61,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 144,
+          "matched": true
+        },
+        "1": {
+          "pins": {
+            "prog.hex": "77e7a3b184d9b17181ce8d323fae349d227e4ffaffdded617daae5aba7ff4ddf",
+            "cfg.txt": "8dfee74081ea775e20e729a5981b3652cfc5b3e805a685f8cc1bb7fa81a266f2",
+            "crom.hex": "c8547213ce5ee827fd0e8cb8ebc45b0637da110ff9e7a61203a73dcddfa61bbd",
+            "weights.json": "b4d1f8909c9263abf5ad4b62ec27e590c1ca2f1842553565cc527e7708478910"
+          },
+          "scale_instructions": [
+            {
+              "pc": 61,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 144,
+          "matched": true
+        },
+        "2": {
+          "pins": {
+            "prog.hex": "77e7a3b184d9b17181ce8d323fae349d227e4ffaffdded617daae5aba7ff4ddf",
+            "cfg.txt": "8dfee74081ea775e20e729a5981b3652cfc5b3e805a685f8cc1bb7fa81a266f2",
+            "crom.hex": "3ff924c01bef41d2f90818d77454c6cd69af83bcb836bde30c849d114b7c0738",
+            "weights.json": "b92beffedd949902768334ae7421272b5d65f54e37b60126f980a75f25db9143"
+          },
+          "scale_instructions": [
+            {
+              "pc": 61,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 144,
+          "matched": true
+        },
+        "3": {
+          "pins": {
+            "prog.hex": "77e7a3b184d9b17181ce8d323fae349d227e4ffaffdded617daae5aba7ff4ddf",
+            "cfg.txt": "8dfee74081ea775e20e729a5981b3652cfc5b3e805a685f8cc1bb7fa81a266f2",
+            "crom.hex": "0686f3d02f69057b64323c289a200cd96f9a6352f278e2e9ba6b5769bcafb901",
+            "weights.json": "6b655ab4d7aa6a44e3e48b39b8020b07d5382a29141c9561bafa10299e38d157"
+          },
+          "scale_instructions": [
+            {
+              "pc": 61,
+              "actual_imm1": 1026884851,
+              "binder_imm1": 1026884851
+            }
+          ],
+          "instructions": 144,
+          "matched": true
+        }
+      }
+    }
+  ]
+}

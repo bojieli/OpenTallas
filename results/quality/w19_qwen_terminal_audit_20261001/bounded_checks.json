@@ -1,0 +1,29 @@
+[
+  {
+    "command": [
+      "python3",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_qwen_hbm_complete_verify_archive.py",
+      "tests/test_qwen_hbm_complete_isa.py",
+      "tests/test_qwen_hbm_complete_verify_terminal.py"
+    ],
+    "actual_returncode": 0,
+    "log": "bounded_check_0.log",
+    "log_sha256": "919cf35c74778931c71782d9db44aa3e44718d4c361b7feaea5a2a249ee49079"
+  },
+  {
+    "command": [
+      "python3",
+      "tools/qwen_hbm_complete_verify_terminal.py",
+      "--archive",
+      "results/rtl/qwen_hbm_complete_20261001/actual_two_token_terminal_r1",
+      "--repo",
+      "."
+    ],
+    "actual_returncode": 0,
+    "log": "bounded_check_1.log",
+    "log_sha256": "c50f976b1c85561e5941605df1a23a426fe7da1e9e9e148bdac4a71cb9b42c6f"
+  }
+]

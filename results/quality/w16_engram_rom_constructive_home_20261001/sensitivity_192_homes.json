@@ -1,0 +1,4775 @@
+{
+  "L1_generated_source": null,
+  "RTL_or_PnR_runs": false,
+  "actual_signal_pin_halo_and_track_phase": false,
+  "all_storage_FF_bits": 2073429886,
+  "checkpoint_reads": 0,
+  "core_grid_vertical_slack_um": 6105.536619838229,
+  "framing_CRC_sharedport_calendar": null,
+  "full_coordinate_tuple_SHA256": "bead0884f61a149e0e4411fcfcbbce8f42cb98fcc8356097145aab0d4aad02da",
+  "full_macro_coordinate_digest": "6e5430fb19790f731a01ad9106d5ca4d5083818949a6e3c4b2784bf23817ae58",
+  "full_table_copies": 1,
+  "full_token_rate": null,
+  "generator_sha256": "40f4ec85a240910fa4c10c98e4f7c7058b5899b65b8fdbd098708b88d059a2f1",
+  "grid_area_mm2": 156.7592550879523,
+  "grid_origin_um": [
+    21377.52,
+    1092.96
+  ],
+  "grid_shape": [
+    64,
+    128
+  ],
+  "grid_size_um": [
+    9041.92,
+    17336.94338016177
+  ],
+  "hold_mux_CTS_IO_controller_PHY_placement": false,
+  "homes": [
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 0,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 0,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 0,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 1,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 0,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 2,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 0,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 3,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 1,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 4,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 1,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 5,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 1,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 6,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 1,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 7,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 2,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 8,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 2,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 9,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 2,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 10,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 2,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 11,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 3,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 12,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 3,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 13,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 3,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 14,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 3,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 15,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 4,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 16,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 4,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 17,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 4,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 18,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 4,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 19,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 5,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 20,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 5,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 21,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 5,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 22,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 5,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 23,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 6,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 24,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 6,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 25,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 6,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 26,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 6,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 27,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 7,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 28,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 7,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 29,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 7,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 30,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 7,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 31,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 8,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 32,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 8,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 33,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 8,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 34,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 8,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 35,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 9,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 36,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 9,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 37,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 9,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 38,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 9,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 39,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 10,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 40,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 10,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 41,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 10,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 42,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 10,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 43,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 11,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 44,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 11,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 45,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 11,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 46,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 11,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 47,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 12,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 48,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 12,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 49,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 12,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 50,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 12,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 51,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 13,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 52,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 13,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 53,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 13,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 54,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 13,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 55,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 14,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 56,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 14,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 57,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 14,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 58,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 14,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 59,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 15,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 60,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 15,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 61,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 15,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 62,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 15,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 63,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 16,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 64,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 16,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 65,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 16,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 66,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 16,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 67,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 17,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 68,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 17,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 69,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 17,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 70,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 17,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 71,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 18,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 72,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 18,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 73,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 18,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 74,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 18,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 75,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 19,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 76,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 19,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 77,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 19,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 78,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 19,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 79,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 20,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 80,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 20,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 81,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 20,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 82,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 20,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 83,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 21,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 84,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 21,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 85,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 21,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 86,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 21,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 87,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 22,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 88,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 22,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 89,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 22,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 90,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 22,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 91,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 23,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 92,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 23,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 93,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 23,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 94,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 23,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 95,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 24,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 96,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 24,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 97,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 24,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 98,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 24,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 99,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 25,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 100,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 25,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 101,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 25,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 102,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 25,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 103,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 26,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 104,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 26,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 105,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 26,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 106,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 26,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 107,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 27,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 108,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 27,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 109,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 27,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 110,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 27,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 111,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 28,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 112,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 28,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 113,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 28,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 114,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6675,
+      "clock_gating_credit": false,
+      "column_ordinal": 28,
+      "empty_grid_slots": 1517,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460035,
+      "home_id": 115,
+      "macro_end_exclusive": 31251,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989150,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460035,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 29,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 116,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 29,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 117,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 29,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 118,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 29,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 119,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 30,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 120,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 30,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 121,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 30,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 122,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 30,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 123,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 31,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 124,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 31,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 125,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 31,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 126,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 31,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 127,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 32,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 128,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 32,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 129,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 32,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 130,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 32,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 131,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 33,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 132,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 33,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 133,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 33,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 134,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 33,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 135,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 34,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 136,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 34,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 137,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 34,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 138,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 34,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 139,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 35,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 140,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 35,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 141,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 35,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 142,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 35,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 143,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 36,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 144,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 36,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 145,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 36,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 146,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 36,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 147,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 37,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 148,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 37,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 149,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 37,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 150,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 37,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 151,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 38,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 152,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 38,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 153,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 38,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 154,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 38,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 155,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 39,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 156,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 39,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 157,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 39,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 158,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 39,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 159,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 40,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 160,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 40,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 161,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 40,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 162,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 40,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 163,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 41,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 164,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 41,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 165,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 41,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 166,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 41,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 167,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 42,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 168,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 42,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 169,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 42,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 170,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 42,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 171,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 43,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 172,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 43,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 173,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 43,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 174,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 43,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 175,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 44,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 176,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 44,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 177,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 44,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 178,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 44,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 179,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 45,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 180,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 45,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 181,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 45,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 182,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 45,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 183,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 46,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 184,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 46,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 185,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 46,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 186,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 46,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 187,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 47,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 188,
+      "macro_end_exclusive": 8192,
+      "macro_start": 0,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 47,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 189,
+      "macro_end_exclusive": 16384,
+      "macro_start": 8192,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 8192,
+      "clock_gating_credit": false,
+      "column_ordinal": 47,
+      "empty_grid_slots": 0,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10912101,
+      "home_id": 190,
+      "macro_end_exclusive": 24576,
+      "macro_start": 16384,
+      "macro_tag_capture_FF_bits": 2441216,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10912101,
+      "tree_wire_FF_bits": 8465957
+    },
+    {
+      "actual_macro_orientation": "R0",
+      "actual_macros": 6676,
+      "clock_gating_credit": false,
+      "column_ordinal": 47,
+      "empty_grid_slots": 1516,
+      "grid_maximum_point_um": [
+        30419.440000000002,
+        18429.90338016177
+      ],
+      "grid_origin_um": [
+        21377.52,
+        1092.96
+      ],
+      "held_state_feedback_MUX2_bits": 10460333,
+      "home_id": 191,
+      "macro_end_exclusive": 31252,
+      "macro_start": 24576,
+      "macro_tag_capture_FF_bits": 1989448,
+      "request_demux_AND2_bits": 835482,
+      "response_MUX2_bits": 2359008,
+      "total_storage_FF_bits": 10460333,
+      "tree_wire_FF_bits": 8465957
+    }
+  ],
+  "homes_count": 192,
+  "interpretation": "Right-strip rectangle avoids retained hub+43.2um halo and remains inside source core at exact stated origin. Existing HBM/IO/macros are NOT retired by this record. A new Engram-role die floorplan must reserve or replace every other obstacle explicitly; this is not a complete legal floorplan.",
+  "macros": 1500067,
+  "mapping": "home=4*column_ordinal+(macro15>>13); local_macro13=macro15&8191; y-first binary partition; macro remains R0",
+  "maximum_home_FF_bits": 10912101,
+  "no_wake_or_idle_power_credit": true,
+  "other_source_floorplan_obstacles_reused_or_removed": false,
+  "owner_authority": "Ram requested this geometry-only sensitivity; whole placement remains his",
+  "physical_admission": false,
+  "power_source_join": null,
+  "prior96candidate_sha256": "b9143a1b1a5215f19e5abf0f9a286cbca1c83d705c71e4aa28201160bb0443eb",
+  "right_core_strip_width_um": 9357.552,
+  "right_strip_grid_horizontal_slack_um": 315.6319999999996,
+  "schema": "opentallas.engram.192-home-retained-hub-sensitivity.v1",
+  "source_pin": {
+    "commit": "541a1d2f18c6c7eeae1577b0cc15eb859f097da2",
+    "path": "results/floorplan/v41_pack_refit_w10_interim.json",
+    "sha256": "b0a2a7d98ba78d4476076b42ff2885bc18709ae907a17ddafc0f5416035306bc"
+  },
+  "status": "PASS_RECTANGLE_CORE_HUB_HALO_ONLY_NOT_LEGAL_FLOORPLAN_OR_ADMISSION",
+  "tree": {
+    "actual_available_layers": null,
+    "assumed16um_four_layer_tracks": 800,
+    "levels": [
+      {
+        "edges": 2,
+        "length_um": 8668.471690080885,
+        "level": 0,
+        "max_edge_um": 4334.235845040443,
+        "max_path_wire_stages": 9,
+        "wire_stages": 18
+      },
+      {
+        "edges": 4,
+        "length_um": 9041.92,
+        "level": 1,
+        "max_edge_um": 2260.48,
+        "max_path_wire_stages": 5,
+        "wire_stages": 20
+      },
+      {
+        "edges": 8,
+        "length_um": 17336.94338016177,
+        "level": 2,
+        "max_edge_um": 2167.1179225202213,
+        "max_path_wire_stages": 5,
+        "wire_stages": 40
+      },
+      {
+        "edges": 16,
+        "length_um": 18083.84,
+        "level": 3,
+        "max_edge_um": 1130.24,
+        "max_path_wire_stages": 3,
+        "wire_stages": 48
+      },
+      {
+        "edges": 32,
+        "length_um": 34673.88676032354,
+        "level": 4,
+        "max_edge_um": 1083.5589612601107,
+        "max_path_wire_stages": 3,
+        "wire_stages": 96
+      },
+      {
+        "edges": 64,
+        "length_um": 36167.68,
+        "level": 5,
+        "max_edge_um": 565.12,
+        "max_path_wire_stages": 2,
+        "wire_stages": 128
+      },
+      {
+        "edges": 128,
+        "length_um": 69347.77352064684,
+        "level": 6,
+        "max_edge_um": 541.7794806300553,
+        "max_path_wire_stages": 2,
+        "wire_stages": 256
+      },
+      {
+        "edges": 256,
+        "length_um": 72335.35999999974,
+        "level": 7,
+        "max_edge_um": 282.56,
+        "max_path_wire_stages": 1,
+        "wire_stages": 256
+      },
+      {
+        "edges": 512,
+        "length_um": 138695.5470412953,
+        "level": 8,
+        "max_edge_um": 270.88974031502767,
+        "max_path_wire_stages": 1,
+        "wire_stages": 512
+      },
+      {
+        "edges": 1024,
+        "length_um": 144670.71999999898,
+        "level": 9,
+        "max_edge_um": 141.28,
+        "max_path_wire_stages": 1,
+        "wire_stages": 1024
+      },
+      {
+        "edges": 2048,
+        "length_um": 277391.09408259304,
+        "level": 10,
+        "max_edge_um": 135.44487015751383,
+        "max_path_wire_stages": 1,
+        "wire_stages": 2048
+      },
+      {
+        "edges": 4096,
+        "length_um": 289341.44000003027,
+        "level": 11,
+        "max_edge_um": 70.64,
+        "max_path_wire_stages": 1,
+        "wire_stages": 4096
+      },
+      {
+        "edges": 8192,
+        "length_um": 554782.1881651612,
+        "level": 12,
+        "max_edge_um": 67.72243507875692,
+        "max_path_wire_stages": 1,
+        "wire_stages": 8192
+      }
+    ],
+    "local_first_beat_cycles_conditional": 97,
+    "local_row_cycles_conditional": 104,
+    "logic_levels": 13,
+    "routing_tracks_per_edge": 341,
+    "tree_wire_FF_bits_per_home": 8465957,
+    "two_child_junction_tracks": 682,
+    "wire_path_cycles": 35
+  }
+}

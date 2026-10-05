@@ -1,0 +1,96 @@
+{
+  "scope": "Retained final-report pin diagnosis for four recent containing-block routes. All fanout failures in this set are CTS buffer outputs, not data/control RTL fanout. Other timing failures remain independent.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_handoff/pnr_baseline_cts12_2p4ns.json",
+      "sha256": "2745660689091e179fd288d9b78f266ea32817404a7b22ef474388222b179679",
+      "pins": [
+        {
+          "pin": "clkbuf_4_5__f_clk/Y",
+          "limit": 16,
+          "fanout": 18,
+          "clock_tree_buffer": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/sinkhorn_handoff/pnr_candidate_cts12_2p4ns.json",
+      "sha256": "3f8e059387b21a291e3de71a34cbccdc9f5670079c2baf1fc4ffe35ccae3b424",
+      "pins": [
+        {
+          "pin": "clkbuf_4_6__f_clk/Y",
+          "limit": 16,
+          "fanout": 21,
+          "clock_tree_buffer": true
+        },
+        {
+          "pin": "clkbuf_4_7__f_clk/Y",
+          "limit": 16,
+          "fanout": 19,
+          "clock_tree_buffer": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_shared_generation_cts12_1ns.json",
+      "sha256": "d1fc895327dc4e8f1d8ddd75e9f252586752915f1fb72107bf62b6256fcfa2d8",
+      "pins": [
+        {
+          "pin": "clkbuf_5_1__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 17,
+          "clock_tree_buffer": true
+        },
+        {
+          "pin": "clkbuf_5_6__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 17,
+          "clock_tree_buffer": true
+        },
+        {
+          "pin": "clkbuf_5_7__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 17,
+          "clock_tree_buffer": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_onehot_head_cts12_1ns.json",
+      "sha256": "5896d84e400199e9b0c9c02990c1c068f71d2996d31f0e67696d790da1d0b989",
+      "pins": [
+        {
+          "pin": "clkbuf_5_16__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 19,
+          "clock_tree_buffer": true
+        },
+        {
+          "pin": "clkbuf_5_23__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 17,
+          "clock_tree_buffer": true
+        },
+        {
+          "pin": "clkbuf_5_26__f_clk_regs/Y",
+          "limit": 16,
+          "fanout": 17,
+          "clock_tree_buffer": true
+        }
+      ]
+    }
+  ],
+  "next_experiment": {
+    "top": "ot_a3_hc_sinkhorn20_rne_pipe",
+    "parameters": {
+      "PIPELINED_DIVIDER": 1
+    },
+    "tested_period_ns": 2,
+    "cts_cluster_size": 8,
+    "max_fanout": 16,
+    "max_transition_ns": 0.32,
+    "output": "results/physical_abi3/asap7/sinkhorn_adder_activity/pnr_current_cts8_2ns.json",
+    "status": "launched; no result yet",
+    "rationale": "Reduce CTS sink clustering rather than relax SDC. Test latest divider/sum handoffs and right-adder activity suppression together at2ns. Existing2.4ns route margins motivate experiment but do not predict closure."
+  }
+}

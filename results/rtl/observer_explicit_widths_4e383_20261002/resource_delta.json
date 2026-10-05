@@ -1,0 +1,26 @@
+{
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "actual_baseline_commit": "8ee4069ba40f4c9feaddeb3771a810a84ba3f1ea",
+  "actual_WINDOW_peak_rss_kib": 33432832,
+  "actual_WINDOW_wall_seconds": 303.445,
+  "changes": "Three explicit zero-width spellings plus new top namespace only; no unrolled count/parent/parameter/observation state change.",
+  "source_bytes_delta": [
+    19,
+    19
+  ],
+  "caps": {
+    "memory_bytes": 68719476736,
+    "cpu_count": 2,
+    "mode_wall_seconds": 600,
+    "mutant_wall_seconds": 30,
+    "version_wall_seconds": 5,
+    "log_bytes": 16777216,
+    "max_children": 1,
+    "serial": true,
+    "total_compiler_wall_budget_seconds": 1325
+  },
+  "model": "Retain reviewed64GiB AS/600s baseline, twoCPU/serial,30s mutants,16MiB logs and existing reserve/readmission. No measured new variant or CKV sufficiency.",
+  "causal_deadlines": "BOUND_MISSING",
+  "full_model_build": false,
+  "no_compile": true
+}

@@ -1,0 +1,164 @@
+--- captured-runtime
+
++++ tools/qwen_rom_rt_token_w12.py
+
+@@ -1,12 +1,12 @@
+
+ #!/usr/bin/env python3
+-"""Qwen3-8B O4 ROM die pair at the W12 design point: connected TP-2 token by runtime composition.
+-
+-Builds (Verilator) the die model (TP sequencer + ot_qwen_rom_core: the production
+-core, vector stream unit SW = 1,024, matrix engine = the W12 array spine), the
++"""Qwen3-8B ROM token on an explicitly selected W12 companion die model.
++
++Builds (Verilator) the companion die model (TP sequencer + ot_qwen_rom_core:
++isolated core, parameterised vector stream unit and W12 array spine), the
+ collective, and ONE tile model (ot_qwen_rom_tile_logic) that the host instantiates
+-G/4 times per die (rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp), then runs the
++G/4 times per die (rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp), then runs the
+ stage list (36 layers + lm_head, or a prefix) and compares every layer's X and
+-the token against the G = 5,120 ISA oracle (tools/qwen_o4_token_oracle.py).
++the token against the supplied ISA oracle (tools/qwen_o4_token_oracle_w12.py).
+ Writes a source-pinned record.  Wire stages (BD, XVM, NWS, TWS, ORD) are
+ parameters, taken from the W12 floorplan.
+ """
+@@ -25,23 +25,35 @@
+
+ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / "tools"))
+ import rtl_hdc_decode_campaign as C  # noqa: E402
+-import qwen_rom_rt_core_emit  # noqa: E402
++import qwen_rom_rt_core_emit_w12  # noqa: E402
++from qwen_rom_rt_token import runtime_claim as base_runtime_claim  # noqa: E402
++
++
++def runtime_claim(design_point: dict) -> str:
++    """Inherit main's parameter-qualified metadata, then state companion scope."""
++    return (base_runtime_claim(design_point) +
++            " This run explicitly selects the isolated W12 companion core, tile and sequencer; "
++            "their exactness and physical gates remain separate from the listed runtime result.")
+ 
+ RT = ROOT / "rtl/test/qwen_runtime"
+ RR = ROOT / "rtl/test/qwen_rom_runtime"
+ HDC = [p for p in C.HDC if p.name != "ot_hdc_core.sv"]
+ DIE_RTL = [*HDC, *C.PIPES,
+            *(ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_dyn_ttiles", "ot_hdc_qwen_int8_arith",
+-                                               "ot_hdc_qwen_int8_embed_decode", "ot_hdc_cg", "ot_qwen_me_array")),
+-           *(ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_tp_seq")),
+-           RR / "ot_qwen_rom_rt_die.sv"]
++                                               "ot_hdc_qwen_int8_embed_decode", "ot_hdc_cg", "ot_qwen_me_array_w12", "ot_hdc_fp32_add_lat", "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith")),
++           *(ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_qwen_tp_seq_w12")),
++           RR / "ot_qwen_rom_rt_die_w12.sv"]
+ TILE_RTL = [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_fastfp", "ot_hdc_delay",
+-                                              "ot_hdc_sfu", "ot_hdc_matvec", "ot_qwen_me_array", "ot_qwen_rom_tile")] \
++                                              "ot_hdc_sfu", "ot_hdc_matvec", "ot_qwen_me_array_w12", "ot_qwen_rom_tile_w12", "ot_hdc_fp32_add_lat", "ot_hdc_prefix", "ot_qwen_w12_matvec", "ot_qwen_w12_arith")] \
+     + [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv"]
+ COLL_RTL = [ROOT / f"rtl/rom/{n}.sv" for n in ("ot_rom_pkg_link", "ot_rom_pkg_ctrl", "ot_rom_oneshot_allreduce")]
+ SOURCES = sorted(set([*DIE_RTL, *TILE_RTL, *COLL_RTL, C.ISA_SVH, ROOT / "rtl/hdc/ot_hdc_core_vector_weight.sv",
+-                      RR / "qwen_rom_rt.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
+-                      Path(__file__), ROOT / "tools/qwen_rom_rt_core_emit.py"]))
++                      RR / "qwen_rom_rt_w12.cpp", RT / "qwen_rt_matvec.hpp", RT / "qwen_rt_memory.hpp",
++                      Path(__file__), ROOT / "tools/qwen_rom_rt_core_emit_w12.py",
++                      ROOT / "tools/qwen_rom_rt_token.py", ROOT / "tools/qwen_rom_arithmetic_contract_w12.py"]))
++
++
++from qwen_rom_arithmetic_contract_w12 import flags as arithmetic_flags
+ 
+ 
+ def sha(p: Path) -> str:
+@@ -77,6 +89,7 @@
+
+                     help="port-local scale ROM (stage dirs from tools/qwen_rom_scale_local.py)")
+     ap.add_argument("--code-banks", type=int, default=10)
+     ap.add_argument("--tp", type=int, choices=(2, 4), default=2, help="dies (tensor-parallel ranks)")
++    ap.add_argument("--enable-ar256", action="store_true", help="opt in to zero-count 256-word all-reduce descriptors")
+     ap.add_argument("--coll-lat", type=int, default=11, help="collective link latency (cycles), ot_rom_oneshot_allreduce LAT")
+     ap.add_argument("--coll-depth", type=int, default=16,
+                     help="collective receive FIFO words per source (a power of two); credits return over the link, "
+@@ -88,7 +101,12 @@
+
+     ap.add_argument("--threads", type=int, default=16)
+     ap.add_argument("--build-only", action="store_true")
+     ap.add_argument("--result", type=Path)
++    ap.add_argument("--physical-arithmetic-successor", action="store_true",
++                    help="reserved opt-in arithmetic chain; blocked until G0 sizing and model/source gates pass")
+     args = ap.parse_args()
++    if args.physical_arithmetic_successor:
++        ap.error("Candidate build blocked: run tools/qwen_rom_arithmetic_contract_w12.py for source-pinned preparation; G0 physical sizing and connected gates remain open")
++    arithmetic = arithmetic_flags(args.physical_arithmetic_successor)
+     G, NW = args.groups, args.count_width
+     out = args.workdir.resolve()
+     out.mkdir(parents=True, exist_ok=True)
+@@ -108,9 +126,9 @@
+
+ 
+     core_sv = out / "gen" / "ot_qwen_rom_core.sv"
+     core_sv.parent.mkdir(exist_ok=True)
+-    core_sv.write_text(qwen_rom_rt_core_emit.emit(qwen_rom_rt_core_emit.CORE.read_text()))
++    core_sv.write_text(qwen_rom_rt_core_emit_w12.emit(qwen_rom_rt_core_emit_w12.CORE.read_text()))
+     vs_sv = out / "gen" / "ot_hdc_vstream_rt.sv"
+-    vs_sv.write_text(qwen_rom_rt_core_emit.emit_vstream(qwen_rom_rt_core_emit.VSTREAM.read_text()))
++    vs_sv.write_text(qwen_rom_rt_core_emit_w12.emit_vstream(qwen_rom_rt_core_emit_w12.VSTREAM.read_text()))
+     hier = out / "gen" / "hier.vlt"
+     hier.write_text('`verilator_config\n' + ''.join(f'hier_block -module "{m}"\n' for m in
+                     ("ot_hdc_vstream_lane", "ot_hdc_fmul", "ot_hdc_qadd")
+@@ -118,14 +136,14 @@
+
+     spine = [f"-GSMIN={args.smin}", f"-GSMAX={args.smax}", f"-GTCUT={args.tcut}", f"-GBD={args.bd}",
+              f"-GXVM={args.xvm}", f"-GNWS={args.nws}", f"-GTWS={args.tws}", f"-GORD={args.ord}"]
+     models = [
+-        ("die", "ot_qwen_rom_rt_die", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
++        ("die", "ot_qwen_rom_rt_die_w12", [str(core_sv), str(vs_sv), *map(str, DIE_RTL)],
+          [f"-GG={G}", f"-GNW={NW}", f"-GSNW={NW}", "-GQWEN_FULLSHAPE=1", "-GME_IDLE_GATE=1", f"-GD={args.tp}",
+-          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", *spine]),
++          f"-GSW={args.su_width}", f"-GLV={args.lv}", f"-GSCALE_LOCAL={args.scale_local}", f"-GMEM_EXTRA={args.mem_extra}", f"-GENABLE_AR256={int(args.enable_ar256)}", *spine, *arithmetic]),
+         ("coll", "ot_rom_oneshot_allreduce", [*map(str, COLL_RTL), *map(str, C.PIPES), *map(str, TILE_RTL[:5])],
+          [f"-GN={args.tp}", "-GLANES=16", "-GTAGW=32", f"-GDEPTH={args.coll_depth}", f"-GLAT={args.coll_lat}", "-GBPC_NUM=3600"]),
+-        ("tile", "ot_qwen_rom_tile_logic", [*map(str, TILE_RTL)],
++        ("tile", "ot_qwen_rom_tile_logic_w12", [*map(str, TILE_RTL)],
+          [f"-GGT={G}", f"-GNW={NW}", f"-GSMIN={args.smin}", f"-GCODE_BANKS={args.code_banks}", "-GIREG=1", f"-GMEM_EXTRA={args.mem_extra}",
+-          f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0"]),
++          f"-GNREG={1 if args.nws > 0 else 0}", "-GKV_LOCAL=0", *arithmetic]),
+     ]
+     bp = out / "build_params.json"
+     prior = json.loads(bp.read_text()) if bp.exists() else {}
+@@ -151,7 +169,7 @@
+
+     binary = out / "qwen_rom_rt"
+     run("link", ["g++", "-std=c++20", "-O2", "-pthread", f"-DGROUPS={G}", f"-DCOUNTWIDTH={NW}",
+                  f"-DSWIDTH={args.su_width}", f"-DSMAXB={args.smax}", f"-DTCUTL={args.tcut}", f"-DNWSD={args.nws}",
+-                 f"-DXVMD={args.xvm}", f"-DTPD={args.tp}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt.cpp", "-Wl,--start-group", *archives,
++                 f"-DXVMD={args.xvm}", f"-DTPD={args.tp}", f"-DCBANKS={args.code_banks}", f"-DSMINV={args.smin}", *sorted(includes), RR / "qwen_rom_rt_w12.cpp", "-Wl,--start-group", *archives,
+                  "-Wl,--end-group", f"{vroot}/include/verilated.cpp", f"{vroot}/include/verilated_threads.cpp",
+                  f"{vroot}/include/verilated_dpi.cpp",
+                  "-o", binary])
+@@ -194,10 +212,11 @@
+
+     stable = end_pins == start_pins
+     good = p.returncode == 0 and bool(m) and token_ok and stable and all(c["mismatches"] == 0 for c in checks.values())
+     result = {
+-        "schema": "opentallas.qwen-rom-rt-token-tp2.v1", "status": "pass" if good else "fail",
++        "schema": "opentallas.qwen-rom-rt-token-companion.v1", "status": "pass" if good else "fail",
+         "design_point": {"tp": args.tp, "collective_lat_cycles": args.coll_lat, "groups_per_die": G, "tiles_per_die": G // 4, "count_width": NW, "su_width": args.su_width,
+                          "su_reducer_time_levels": args.lv, "smin": args.smin, "smax": args.smax, "tree_cut": args.tcut,
+-                         "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local)},
++                         "pruned": True, "kv_fp8": True, "scale_local": bool(args.scale_local),
++                         "ar256_enabled": bool(args.enable_ar256)},
+         "wire_stages": {"broadcast_and_x_network_bd": args.bd, "vm_conflict_register_xvm": args.xvm,
+                         "upper_tree_level_nws": args.nws, "tree_to_spine_tws": args.tws, "result_write_ord": args.ord,
+                         "mem_extra": args.mem_extra,
+@@ -209,12 +228,8 @@
+
+         "simulate_wall_seconds": round(wall, 1), "source_sha256": start_pins, "source_stable": stable,
+         "stage_image_sha256": stage_pins, "oracle_sha256": sha(args.token_oracle / "oracle.json"),
+         "binary_sha256": sha(binary), "generated_core_sha256": sha(core_sv), "steps": steps,
+-        "claim_boundary": ("Connected Qwen3-8B token 0 at position 0 (or the listed stage prefix) on the W12 ROM die "
+-                           "design point: G=5,120 TP-2 dies, the production core with the vector stream unit and the "
+-                           "array spine, 1,280 tile elements a die composed by the host from one compiled tile model, "
+-                           "real checkpoint images. Embedding preloaded; stage sequencing (image-bank select, per-layer "
+-                           "zero KV window) is the host's. Wire stages are parameters; physical timing is not simulated."),
+     }
++    result["claim_boundary"] = runtime_claim(result["design_point"])
+     target = args.result or (out / "token_result.json")
+     target.parent.mkdir(parents=True, exist_ok=True)
+     target.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

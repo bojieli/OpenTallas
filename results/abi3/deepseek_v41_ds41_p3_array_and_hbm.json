@@ -1,0 +1,370 @@
+{
+ "capability_digest_movement": {
+  "binding_worked": "the certificate refused the deployment compiled against the pre-candidate-bound capability until it was rebuilt, which is the reason to trust the rest",
+  "rom_deepseek_v41_array_64": {
+   "after_candidate_bound": "1cbad0031feb90b5",
+   "after_event_board": "db51450fa3fa89ae",
+   "before_at_HEAD": "f96a4257d1a89d48",
+   "check": "tools/publish_abi3_capabilities.py --check reports every record current, exit 0",
+   "published_by": "PYTHONPATH=. python3 tools/publish_abi3_capabilities.py"
+  },
+  "shipped_records_untouched": [
+   "rom_qwen3 5b5770fa766cd89d",
+   "rom_deepseek_v4 5abf26b4ef235d60",
+   "rom_deepseek_v4_array_32 414793fdd02d60d5",
+   "rom_deepseek_v4_pro_array_32 680dba5c1025840b",
+   "rom_deepseek_v41_wafer cfca88d4ce9f5713",
+   "hbm_sram_single_chip fa70dd44a1b532a9",
+   "hbm_sram_cluster_32 1eb2e92dac1d9fb8",
+   "hbm_sram_cluster_32_speculative 9e959d6f649cea47"
+  ]
+ },
+ "claim": "the DeepSeek-V4.1-Flash ROM ARRAY deployment builds, verifies, inverse-proves, certificates and rebuilds byte-identically at a 131,072-position deployment context; the HBM comparator refuses, and the refusal is attributed to the byte",
+ "claim_boundary": {
+  "does_not_establish": [
+   "any V4.1 HBM deployment: none was built, no digest exists, and the DS41-P3 descriptor-multiset equality array = HBM therefore could not be run",
+   "a V4.1 array deployment at the shipped 262,144-position context: that one is refused, measured",
+   "anything about execution, numerics, tokens or rate on either target: nothing here ran a cycle or a token.  This is the compiled level only",
+   "any iso-area or frequency claim: the array's own notes['array_placement'] price the implied per-node ROM area and say it is not an iso-area statement"
+  ],
+  "establishes": [
+   "a V4.1 ROM array deployment exists: digest, verifier admission, inverse proof over 93,938 placed tensors, 146/146 schedule-certificate rules, two builds into separate directories byte-identical",
+   "the largest 8,192-rung deployment context the 64-node array admits is 131,072; 139,264 and the shipped 262,144 are refused, both quoted",
+   "the V4.1 HBM comparator's remaining refusal is a measured capacity refusal whose whole gap is the two Engram row tables held node-resident and replicated, and that neither node count nor context length is a lever for it",
+   "both shipped ROM digests rebuild bit-identically after every change in this unit"
+  ]
+ },
+ "context_ladder_measured": {
+  "precedent": "the same lever and the same refusal shape are already shipped for DeepSeek-V4-Pro on this array class: tools/build_rom_deployment.py's own docstring records 'at the shipped 262,144-position IR the array build is refused -- hbm_and_state objects need 259,278,995,592 bytes but the capability declares 180,000,000,000 -- and at 8,192 it admits'",
+  "rule": "the array's per-node HBM is the activation working set; span_tokens is bounded by the deployment context, and two arena slots grow as context^2",
+  "rungs": [
+   {
+    "context_tokens": 8192,
+    "declared": 180000000000,
+    "hbm_and_state_bytes": 9438988420,
+    "verdict": "admits"
+   },
+   {
+    "context_tokens": 131072,
+    "declared": 180000000000,
+    "hbm_and_state_bytes": 166368168068,
+    "percent_of_declared": 92.4,
+    "verdict": "admits"
+   },
+   {
+    "context_tokens": 139264,
+    "refusal": "compiler.backends.rom.common.program.RomLoweringError: hbm_and_state objects need 181378910340 bytes but the capability declares 180000000000; the placement does not fit the target",
+    "verdict": "REFUSED"
+   },
+   {
+    "context_tokens": 262144,
+    "largest_activation_buffers": [
+     {
+      "bytes": 137438953472,
+      "shape": "span_tokens x context_length, bf16",
+      "tensor": "main.layer24.attention.indexer.score.scores"
+     },
+     {
+      "bytes": 68719476736,
+      "shape": "span_tokens x context_groups_ratio2, bf16",
+      "tensor": "main.layer14.attention.indexer.score.scores"
+     },
+     {
+      "bytes": 68719476736,
+      "shape": "span_tokens x context_length, u8",
+      "tensor": "main.layer24.attention.indexer.pool_read.admission"
+     }
+    ],
+    "refusal": "compiler.backends.rom.common.program.RomLoweringError: hbm_and_state objects need 457812265092 bytes but the capability declares 180000000000; the placement does not fit the target",
+    "verdict": "REFUSED"
+   }
+  ]
+ },
+ "descriptor_multiset_equality": {
+  "array_side_recorded": {
+   "distinct_shapes": 8906,
+   "helper": "compiler.backends.rom.deepseek_v41_array.compare_descriptor_multisets",
+   "total_descriptors": 9612
+  },
+  "how_to_run_it_when_the_hbm_cell_lands": "build both from one IR at a context both admit (8,192 admits on the array) and call compare_descriptor_multisets",
+  "reason": "it needs two deployments of the same IR and the HBM one does not exist",
+  "required_by": "gate DS41-P3: 'the descriptor multiset of the array equals the HBM cluster's'",
+  "status": "NOT RUN"
+ },
+ "gate": "DS41-P3 (docs/DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 4.2)",
+ "hbm_cell": {
+  "attribution": {
+   "at_context_131072_nodes_64": {
+    "activation_arena_bytes": 115021312008,
+    "hbm_bytes_per_node": 342275391488,
+    "per_node_bytes_if_the_engram_set_were_not_node_resident": 133373176288,
+    "reading": "at the context the array admits, moving the Engram set alone still leaves 133,373,176,288 B against 103,079,215,104: the 115,021,312,008 B activation arena is then the binding term.  So a matched-IR array/HBM pair for the DS41-P3 multiset equality has to be built at a context where BOTH admit, and 8,192 is such a context for the array (9,438,988,420 B of 180,000,000,000)"
+   },
+   "at_context_8192_nodes_64": {
+    "activation_arena_bytes": 8825401352,
+    "engram_groups": 6,
+    "engram_materialized_bytes_per_node": 208902215200,
+    "engram_tensors": [
+     "layers.1.engram.embed.scale",
+     "layers.1.engram.embed.weight",
+     "layers.14.engram.embed.scale",
+     "layers.14.engram.embed.weight"
+    ],
+    "hbm_available_per_node": 103079215104,
+    "hbm_bytes_per_node": 234234560512,
+    "node_sharded_weight_bytes": 291980812288,
+    "per_node_bytes_if_the_engram_set_were_not_node_resident": 25332345312,
+    "reading": "208,902,215,200 B of the 234,234,560,512 B the node needs -- 89.2% -- is six weight groups holding four tensors: layers.{1,14}.engram.embed.{weight,scale}, replicated on every node.  Remove them and the node needs 25,332,345,312 B, 24.6% of the 103,079,215,104 B the shipped node has.  This is arithmetic on the planner's own group sizes, NOT a build",
+    "replicated_weight_bytes": 215545920480,
+    "state_bytes": 119812096
+   },
+   "context_is_not_a_lever": "weights do not depend on context, so the 215.5 GB replicated term is identical at 8,192 and at 262,144; only the arena moves",
+   "node_count_is_not_a_lever": {
+    "at_nodes_384_context_8192": {
+     "hbm_bytes_per_node": 240540762112,
+     "node_sharded_weight_bytes": 288777830400,
+     "replicated_weight_bytes": 218748902368
+    },
+    "reading": "raising the cluster from 64 to 384 nodes makes it WORSE, 234,234,560,512 -> 240,540,762,112 B per node: the replicated term is node-invariant by construction and its per-node materialisation overhead grows, while the sharded term it divides is the small half"
+   }
+  },
+  "command": "PYTHONPATH=. python3 tools/build_hbm_sram_deployment.py --ir <v41 ir> --profile cluster-n-comparator --nodes 64 --json",
+  "current_refusal": "PlanError: physical HBM plan requires 234234560512 bytes per node, capability provides 103079215104",
+  "node_local_row_sharding_also_refused": {
+   "modules": [
+    {
+     "layer": 1,
+     "remainder_rows": 24,
+     "rows": 384006168,
+     "rows_a_node": 6000096
+    },
+    {
+     "layer": 14,
+     "remainder_rows": 42,
+     "rows": 384016682,
+     "rows_a_node": 6000260
+    }
+   ],
+   "refusal": "64 nodes leave {1: 24, 14: 42} rows over, so no symmetric whole-row node image exists, and ABI 3.0's A28 node map cannot state an asymmetric one.  384,016,682 is 2 mod 4, so no multiple of the declared 8-device NVLink domain divides it at any admissible count",
+   "source": "the array lane's measured feasibility, reproduced in this unit's array build notes"
+  },
+  "numeric_contract_gate": {
+   "after": "all 39 resolve; compiler.ir.v3.numeric.implementation_of returns a site for every one, measured in this unit by re-resolving each name",
+   "before": "build failed: capability does not implement the numeric contracts [39 names]; ADR-003 section 14 forbids silent emulation",
+   "reused_entirely": "the five new references (runtime/reference/{candidate_pool.candidate_mask_view, lookup.compressed_token_ids, lookup.engram_row_fp8_e4m3_row_read, lookup.engram_row_fp8_e4m3_reconstruct, selection.shared_index_view}) and the sixteen reuse mappings onto runtime/reference/{fp4_kv,candidate_pool,engram,hyper_connection,compressed_kv,sampling,selection}.py are the concurrent HBM lane's uncommitted work in this tree (compiler/ir/v3/numeric.py FROZEN_CONTRACT_IMPLEMENTATIONS, results/abi3/deepseek_v41_hbm_contract_and_dtype_landing.json).  This unit wrote no reference and added no mapping; it reused all of them and re-measured the resolution",
+   "unimplemented_remaining": 0,
+   "verdict": "CLEARED, and not by this unit"
+  },
+  "status": "REFUSED",
+  "why_it_is_left_refused": {
+   "not_a_numeric_gap": "no contract is unimplemented and no stub was written: the 39-name refusal is gone and the remaining refusal is capacity, quoted",
+   "the_plan_names_the_fix": "section 3.3: TA-DS41-HBM is the cluster profile 'with the node count raised until 307.5 GB of weights plus the session KV fit, and the Engram tables in HOST MEMORY as DeepSeek serves them'.  The 307.5 GB already excludes the Engram set, so the plan's own comparator presumes a host-resident weight store",
+   "what_is_missing": "compiler/backends/hbm_sram has no host-resident WEIGHT store.  'host' residence exists there only for host input/output windows (plan.py line 673 and _place_activations); a weight group is replicated or node_sharded and nothing else, and every weight object is emitted with StorageClass.HBM (lower.py line 841)",
+   "why_not_added_here": "the backend is model-blind by design: residency is derived from whether an operand's tensor view carries the 'node' selector (plan.py _assign_weight_residency), and nothing in it may know which tensor is an Engram table.  The only model-blind rules available are (a) a greedy 'move the largest replicated groups to host until the node fits', which silently puts arbitrary weights behind a 1-2 us PCIe/RDMA round trip the backend cannot know is hideable -- section 3.4 prices exactly that hop and says the layer-1 Engram module can hide it behind only about 1.8 us of work -- and (b) a capability field naming a role, which is model knowledge in the capability.  The ROM array can decide it because deepseek_v41_array.py is a MODEL-AWARE backend and reads V41_FLASH_PROFILE; engram_residency prices all three placements there and host wins.  Choosing (a) here would let any oversized model 'fit' by pushing weights off-node, which is a placement claim the deployment cannot support"
+  }
+ },
+ "provenance": {
+  "branch": "token-path-end-to-end",
+  "changed_by_this_unit": {
+   "compiler/backends/rom/deepseek_v41_array.py": "aaf7e9deac134525412158202902f4564850931cadc2b100138660cc471188bb",
+   "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json": "1cbad0031feb90b5ad224fb028a10a836a441fd6aab23d17aacfc4c6dd24d0e9"
+  },
+  "git_commit": "b24b4e303297826134b5816711448e040dba723b",
+  "pinned_verilator_not_used": "this unit compiled deployments only; no RTL was elaborated",
+  "worktree_dirty": true,
+  "worktree_note": "the tree carries concurrent work from other sessions, including the HBM lane's uncommitted numeric-contract landing (compiler/ir/v3/numeric.py, compiler/backends/hbm_sram/{capability,plan,lower}.py) and the AM-E10 fp4 dtype amendment.  This unit changed exactly two files: compiler/backends/rom/deepseek_v41_array.py and the capability record it publishes",
+  "worktree_porcelain_entries": 92
+ },
+ "refusals_cleared_in_this_unit": [
+  {
+   "evidence_class": "tool_refusal_absent",
+   "id": "compressor-state-contract",
+   "now": "cleared by the wafer lane's landed fix; the array's first build in this unit reached the capacity proof instead, so nothing was needed here",
+   "was": "the array stopped where the wafer used to, on the rolling-compression state_reads contract"
+  },
+  {
+   "evidence_class": "tool_refusal_then_pass",
+   "fix": "compiler/backends/rom/deepseek_v41_array.py declares max_events 2048 / max_event_id 2047",
+   "id": "array-event-board-inherited-from-v4",
+   "measured_program": {
+    "events": 1544,
+    "instructions": 4429,
+    "top_event_id": 1543
+   },
+   "refusal": [
+    "program signals 1544 distinct events, capability admits 1024",
+    "program names event ID 1543, capability admits IDs up to 1023"
+   ],
+   "why_2048": "rtl/abi3/ot_a3_event_scoreboard.sv's entry count and index width follow ot_a3_pkg.sv's A3_EVENT_COUNT = 2048, so 2,048 is the largest board the implemented hardware expresses.  The two-wafer record reached the same number by the same argument at a measured 1,490 events.  Reasoning from the 8,192-instruction store instead would give 8,191, a bound nothing expresses, which makes the check unfailable rather than satisfied"
+  },
+  {
+   "evidence_class": "certificate_refusal_then_pass",
+   "fix": "max_candidate_positions = V41_FLASH_PROFILE.candidate_pool_entries = candidate_topk_blocks x candidate_block_size = 2048 x 8 = 16384, derived from the released profile rather than typed",
+   "id": "array-capability-declares-no-candidate-pool-bound",
+   "note": "an absent limit read as zero is a bound no admissible program satisfies; the two-wafer record declares the same 16,384 for the same model, and deriving it means a released change moves both",
+   "refusal": [
+    "the graph publishes a candidate pool and the capability declares no max_candidate_positions to bound it",
+    "candidate mask 'main.layer20.attention.indexer.pool.admission' declares a population of 1, over the capability's 0"
+   ]
+  }
+ ],
+ "rom_array_cell": {
+  "build_command": "PYTHONPATH=. python3 tools/build_rom_deployment.py deepseek-v4.1-flash-array --ir build/ir-v3/deepseek-v4.1-flash-c131072/kernel_ir.v3.json --output build/abi3/deepseek-v41-flash-rom-array-64 --checkpoint-root $DEEPSEEK_V41_SNAPSHOT --verify --inverse --determinism --json",
+  "byte_identical_rebuild": {
+   "file_sha256": {
+    "deployment.json": "c4ea5e6582502f8fbf9feb5afd0f670f4505ee46d58131d3e0cc8a18b30db798",
+    "descriptors.bin": "38b5103b2912343c6f724048b70cbe00a964b7fd21f0911622a3833c59f5c6d3",
+    "program.bin": "404daf3b46be5c3b571067123423549842d8097df9ef79b50ae1c8c94fc77d86"
+   },
+   "identical": true,
+   "method": "two builds into separate output directories, diff -r -q"
+  },
+  "capability_digest": "1cbad0031feb90b5ad224fb028a10a836a441fd6aab23d17aacfc4c6dd24d0e9",
+  "deployment_sha256": "c3cee997f27aa3e88a7a653aebe75a2f7f020aed894a42d328c92a786180288f",
+  "descriptor_multiset": {
+   "distinct_shapes": 8906,
+   "recorded_at": "/tmp/claude-1000/-home-ubuntu-OpenTallas/ab3ca2fa-9fc4-4b10-a488-2763d0029546/scratchpad/v41cells/array_descriptor_multiset.json",
+   "total": 9612
+  },
+  "descriptors_by_type": {
+   "COMMUNICATION": 56,
+   "COUNTER_CLASS": 9,
+   "ENTRYPOINT_TABLE": 1,
+   "EVENT_WAIT_SET": 1221,
+   "GENERATION_POLICY": 1,
+   "LOOP_CONTROL": 1365,
+   "MEMORY_OBJECT": 1209,
+   "NUMERIC": 75,
+   "OPERATOR": 1467,
+   "PREDICATE": 5,
+   "SCHEDULE": 81,
+   "STATE": 3,
+   "TENSOR_VIEW": 4118,
+   "TOPOLOGY": 1
+  },
+  "determinism_in_process": {
+   "descriptor_table_identical": true,
+   "manifest_identical": true,
+   "plan_identical": true,
+   "program_identical": true
+  },
+  "engram_placement": "host",
+  "inverse_proof": {
+   "all_padding_zero": true,
+   "bit_identical": true,
+   "generated_bytes": 176678748,
+   "generated_object_count": 16,
+   "host_bytes": 202758032400,
+   "host_region_count": 4,
+   "model_id": "deepseek-v4.1-flash",
+   "padding_bytes": 633408,
+   "payload_bytes": 298624517568,
+   "placed_tensor_count": 93938,
+   "plan_id": "0feef6484b1b1ecdaf7662e7518e6f24c46284bc251f08d475da0f2d2943e7d3",
+   "product": "deepseek-v4.1-flash-rom",
+   "reconstructed_content_sha256": "36cf8aece7174f2ecdaa119963080be2a2407bb8b0cd0ecdabea9fb9e2f76acc",
+   "region_count": 821,
+   "resident_bytes": 202758032400,
+   "resident_padding_bytes": 0,
+   "resident_payload_bytes": 202758032400,
+   "resident_region_count": 4,
+   "rom_bytes": 298625150976,
+   "schema": "opentallas.rom.inverse_report.v1",
+   "status": "pass"
+  },
+  "kernel_ir": {
+   "built_by": "PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash --context-tokens 131072 --verify-bindings 0 --output <ir>/kernel_ir.v3.json",
+   "context_tokens": 131072,
+   "graph_id": "2afd5f3df7f73253638c0a8cce87f9c2cce63a1cc551dc6b35e835d2e441716a",
+   "path": "build/ir-v3/deepseek-v4.1-flash-c131072/kernel_ir.v3.json",
+   "sha256": "1df1f09c5aaf336e3e662826b9933c3ce169e98e08dedcc4652acd8ae8141f2b"
+  },
+  "memory_footprint": {
+   "declared": {
+    "hbm": 180000000000,
+    "rom": 19327352832,
+    "sram": 268435456
+   },
+   "session_bytes_in_hbm": 166368168068,
+   "used": {
+    "hbm": 166366816388,
+    "host": 202762750992,
+    "rom": 14536152924,
+    "sram": 268183560,
+    "state": 1351680
+   }
+  },
+  "output": "build/abi3/deepseek-v41-flash-rom-array-64",
+  "plan_id": "0feef6484b1b1ecdaf7662e7518e6f24c46284bc251f08d475da0f2d2943e7d3",
+  "product": "deepseek-v4.1-flash-array",
+  "schedule_certificate": {
+   "check_count": 146,
+   "command": "PYTHONPATH=. python3 tools/check_rom_schedules.py --case deepseek-v41-flash-rom-array-64 build/ir-v3/deepseek-v4.1-flash-c131072/kernel_ir.v3.json build/abi3/deepseek-v41-flash-rom-array-64 configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json --jobs 1",
+   "errors": [],
+   "instructions": 4429,
+   "ok": true,
+   "passed_check_count": 146,
+   "plan_named_rules": {
+    "candidate_pool_bound": true,
+    "expert_capacity": true,
+    "resident_hbm_region": true,
+    "rolling_no_state_descriptors": true,
+    "rom_region_fully_sharded": true,
+    "shared_state_locality": true
+   },
+   "rolling_rules_passing": 34,
+   "schedules": 81
+  },
+  "status": "BUILT",
+  "target_id": "deepseek-v4.1-flash-rom-array-64",
+  "topology": {
+   "class": 3,
+   "epoch": 1,
+   "link_count": 512,
+   "node_count": 64,
+   "reticle_count": 0,
+   "tiles_per_reticle": 0
+  },
+  "verifier": {
+   "admitted": true,
+   "declared_retired_work": 3906385,
+   "descriptor_count": 9612,
+   "errors": [],
+   "event_count": 1544,
+   "instruction_count": 4429,
+   "proved_retired_work": 3906385
+  }
+ },
+ "schema": "opentallas.abi3.deployment_cell_report.v1",
+ "shipped_digests": {
+  "command": "PYTHONPATH=. python3 tools/build_rom_deployment.py <product> --ir <ir> --json",
+  "deepseek-v4-flash": {
+   "expected": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9",
+   "measured": "3a24098691ec4ccb7e6ebc0732d787b6c1ec766840275b990a23bea32502e8b9"
+  },
+  "qwen3-8b": {
+   "expected": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a",
+   "measured": "233784898066e8d2ab85143657a1a975feef5cba6de46dc6b008c4a8b35e352a"
+  },
+  "rebuilt_after_every_change_in_this_unit": true
+ },
+ "v41_store_inventory_after_this_unit": {
+  "hbm_cluster_n": {
+   "refusal": "PlanError: physical HBM plan requires 234234560512 bytes per node, capability provides 103079215104",
+   "status": "refused"
+  },
+  "note": "the two ROM cells are built at DIFFERENT deployment contexts and are not a matched pair",
+  "rom_array_x64": {
+   "context_tokens": 131072,
+   "deployment_sha256": "c3cee997f27aa3e88a7a653aebe75a2f7f020aed894a42d328c92a786180288f",
+   "path": "build/abi3/deepseek-v41-flash-rom-array-64",
+   "status": "built"
+  },
+  "rom_wafer_x2": {
+   "context_tokens": 262144,
+   "deployment_sha256": "c5fef27a963193d760b12aa5e55e2de48f15d8e8478a496c061b066e7cb01ee6",
+   "path": "build/abi3/deepseek-v41-flash-rom-wafer-2",
+   "status": "built"
+  }
+ }
+}

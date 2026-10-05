@@ -1,0 +1,57 @@
+{
+  "authoritative_record": "results/uarch/qwen_rom_control_closure_cause_20261002/model-r3.json",
+  "candidate": "QROM_HOLD_DIRECT_CAPTURE_BANK5_CONTROL",
+  "conditional_token_added_cycles": 0,
+  "declaration": "Source-cell NLDM interpolation at20ps clock slew and1fF/net is a scenario, not guaranteed actual physical load. FF cell-path number is not endpoint hold closure. No bound extrapolation.",
+  "default_off": true,
+  "exact_remaining_gates": [
+    "bank5 sameedge equivalence",
+    "actual parent mapped input and reset-release ownership",
+    "wire/CTS/setup/hold and slot bounds",
+    "full loaded cone SSFF",
+    "full tile SSFF"
+  ],
+  "model_area_and_latency": {
+    "BUF_cell_um2": 0.10206,
+    "async_reset_FF_cell_um2": 0.37908,
+    "incremental_control_slot_um2": 23.182199999999998,
+    "incremental_die_slot_mm2": 0.0356078592,
+    "mapped_failed_logic_and_existing_endpoint_um2": 1202.50008,
+    "new_control_cell_area_um2": 9.272879999999999,
+    "new_reservation_is_overlay_not_doublecount_claim_or_measured_slot": true,
+    "positive_clear_wire_PG_policy_um2": 2.3182199999999997,
+    "prior645_control_wire_clock_buffer_allowance_not_subtracted": true,
+    "root_clock_tree_load_and_skew_unmeasured": true
+  },
+  "next_actions": [
+    "Euclid: prove five bank read-strobe registers equivalent on clk/reset to the old shared strobe; preserve captured-data/mask timing, all80 selectors and MEM_EXTRA1.",
+    "Euclid/parent: bind registered wrom_re/wrom_addr actual mapped cell CLKQ, min/max arrivals and upstream clock. Bind rst_n assertion/release owner and phase; preserve60/25ps uncertainty.",
+    "Archimedes: evaluate the one declared buffer/load tree, both polarities, reset recovery/removal and real input arrivals in the complete10-ROM cone. Include all capture/endpoints and physical pin loads. Reject on own measured failure.",
+    "Tile context: establish actual bank placement, wire cap/delay, reset/CTS skew, hold repair and macro capture path. Macro ideal+11.03ps does not transfer to physical closure."
+  ],
+  "no_admission": [
+    "no hardware adoption",
+    "no tile P&R",
+    "no clock qualification",
+    "no measured token-rate credit"
+  ],
+  "observed_tests": {
+    "entrypoint": "python3 -m unittest discover -s tests -p test_qwen_rom_control_closure_cause.py -v",
+    "tests": 10,
+    "verdict": "PASS"
+  },
+  "prior_control_reservation_retained": true,
+  "replay": "python3 tools/qwen_rom_control_closure_cause.py --output /tmp/qrom-control-cause-fresh.json; compare bytes with model-r3.json",
+  "schema": "opentallas.qrom.control-cause-handoff.v1",
+  "source_failure_commit": "f28f30496d5489a76b90c3bc45fc479e4fcc5881",
+  "source_failure_preserved": true,
+  "source_originals_untouched": true,
+  "source_preparation": "One bank-local same-edge successor; Euclid owns RTL/equivalence, Archimedes owns loaded characterization. This model authorizes neither a retry of f28 nor tile P&R.",
+  "unmeasured_cost_not_zero": [
+    "wire/CTS delay",
+    "reset release phase",
+    "parent CLKQ/input arrival",
+    "macro pin wire/skew",
+    "actual hold repair"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "scope": "NATIVE_OBJECT_JOIN_ARCHIVE_LINK_NO_ENGINE_OR_FRONTEND_CHANGE",
+  "node_source": "a93ac5a8c2312266213cc4f119aa2bd99175f52a",
+  "prerequisite_launch_archive": "7ff157e684e21018da9e78e43f97f75d6a8adc2d",
+  "engine_source": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "canonical_classes_SHA256": "f826bab35aa0cc346b1e3e6242fda40813f491ca2a8875cba0690eb10e3dec72",
+  "local_targets": 1286,
+  "VM_targets": 2543,
+  "total_targets": 3829,
+  "stage_on_each_terminal": "Require PASS_OBJECT_SHARD_ONLY, real unit MainPID0 and empty live compiler cgroup; VM Docker absent. Preserve/ELF+hash every owned object and dep, exactsource/flags/compiler/PCH; transport completed set only to fresh incoming namespace, rehash every file. Never read partial outputs into archive.",
+  "join": "Original VM_CLASSES_FAST,VM_SUPPORT_FAST,VM_CLASSES_SLOW,VM_SUPPORT_SLOW order from retained classes; 3829 objects exactly, disjoint owner sets. Existing252 objects/twoPCH immutable. Copy dep mtimes; archive make-n rejects any compiler/PCH command before real archive. Verify ar t exact ordered list, link original5TUs once.",
+  "compile_continuations": false,
+  "frontend_repeat": false,
+  "runtime_automatic": false,
+  "limits": {
+    "wall": null,
+    "per_file": null,
+    "per_process_AS": null,
+    "local_job_memory_bytes": 103079215104,
+    "host_memory_reserve_bytes": 34359738368,
+    "inventory_disk_allowance_bytes": 34359738368,
+    "host_disk_reserve_bytes": 17179869184,
+    "CPU_affinity": "8-31 existingallocation transferred after localCXXterminal; linkingdriver/runtimeTUs sequential",
+    "swap_bytes": 0,
+    "capacity_basis": "Reuses original96GiB allocation only after local jobterminal; prior generated5.5GB plus remainingobjects/archive/ELF, measuredhost>1TB free. Monitor/reprice actual inventory; no artificialfile/bodytime/AS restriction."
+  },
+  "native_driver_SHA256": "8dcea86e5e2774e1990c26b672ea4125340f58b5ff96a8de825383bc2a6220d1",
+  "source_files_SHA256": {
+    "ot_v41_rt_die_D1_scope.sv": "be35b5ccf0d258677b11bc9cd6b0ee2869b5023b21651a3b39099413bdb4487d",
+    "native_main_scope.cpp": "8dcea86e5e2774e1990c26b672ea4125340f58b5ff96a8de825383bc2a6220d1",
+    "tb_D1_scope_core.sv": "7eb722d71722fc48d10bacdc0964020e8e101533f94108dfa1fcd86b3b4aeac9"
+  },
+  "numerical_scope": {
+    "full_geometry": true,
+    "full_program_qualification": false,
+    "current_plan_program": "Controlled two-instruction prefix; wrapper can load +DIR programimages, but does not establish suppliedfullprogram identity",
+    "bench_finish": "diag_cycle>=512 independent of operationcompletion",
+    "numerical_compare": "NONE; native main returns0 on gotFinish, no golden comparison",
+    "priming": "128 synthetic zero rows, same reset epoch",
+    "providers": "Actual attention16head endpoint; ROM/collective inputs tiedzero in pinned bench",
+    "future_full_program_requirements": [
+      "Sourcebound complete program/input/provider enrollment",
+      "A successor bench/driver run-to-completion contract preserving realclock/reset/eval and sourceowners",
+      "Actual golden output capture/bitcomparison and stickyfault/noearlyDONE checks",
+      "No treating512cycle benchfinish or PC/busy as fullcompletion; finitecausalservicebounds unavailable"
+    ]
+  },
+  "compiler_or_model_audit_dependency": "NONE beyond real current source/ABI/ownerclosure; externalH4audit doesnotgate nativejoin."
+}

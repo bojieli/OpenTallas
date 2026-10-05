@@ -1,0 +1,91 @@
+{
+  "actual_hardware_memory_provider": false,
+  "actual_process_returncode": 0,
+  "artifact_root": "/home/ubuntu/qwen-hbm-complete-runs-20261001/checkpoint_full36_two_tokens_defc45332_r1",
+  "artifacts": {
+    "admission.json": {
+      "bytes": 1653,
+      "sha256": "6aa99cfe7cc48790aa80d8be69ddaee94a0dbcb52ee9a00cfb2764f4506ab4f2"
+    },
+    "execution/checkpoint_reader_provenance.json": {
+      "bytes": 4852535,
+      "sha256": "49965bde9e2f27cdb6c5c1e02180063497573ff284294a9a9711588212eed9d8"
+    },
+    "execution/instruction_output_hashes.json": {
+      "bytes": 898925,
+      "sha256": "f85ec86923232d4e6d63a2166df4c3b5eb6466720e93df1041b13ab287c9d71d"
+    },
+    "execution/post_execution_comparisons.json": {
+      "bytes": 10561,
+      "sha256": "d024c40376e1c010d3d2e8c895965b83ad77e44404b8007dd7efe248fe97a8db"
+    },
+    "execution/terminal.json": {
+      "bytes": 377,
+      "sha256": "ae71da8b3d7f7dcca340fe1422641ec9cab7b5d14865ec8b719bcbc5368a67f6"
+    },
+    "execution/token0_execution.json": {
+      "bytes": 398775,
+      "sha256": "a6b05229734fbe1bd4fc82b80e6d432b282d21694765e33c5e7d83aed5d37fe3"
+    },
+    "execution/token1_execution.json": {
+      "bytes": 473419,
+      "sha256": "460bea0fa47955f6ee63cab80d3cbc48957f97ddfce5011eca7611b12119bda8"
+    },
+    "execution_rc.json": {
+      "bytes": 283,
+      "sha256": "2ad66be3faa5f226c2c74e0e2a4a96ac7ae3fe07a39b334b22b13723ff3a2ea0"
+    }
+  },
+  "bit_mismatches": 0,
+  "exact_comparison_boundaries": 78,
+  "full_token_RTL": false,
+  "guard_breach": null,
+  "hardware_admission": false,
+  "nonfinite": 0,
+  "peak_owned_RSS_bytes": 2123182080,
+  "physical_qualification": false,
+  "reader_full_constant_vectors_checked": 361,
+  "reader_matrix_row_ranges_checked": 14440,
+  "reader_verified_shards_match_source_lock": true,
+  "review_scope": "Source/terminal provenance, all retained layer/head output bytes against trace hashes, independent head argmax, and actual software publication/lease order. No arithmetic rerun or full shard-byte reread; independent Torch comparison results from source-pinned harness.",
+  "schema": "opentallas.parent.qwen-hbm-two-token-terminal-review.v1",
+  "software_memory_event_order_verified": {
+    "committed_publications": 144,
+    "context1_reads": 72,
+    "context2_reads": 72,
+    "events": 1008,
+    "outstanding_leases": 0,
+    "outstanding_writes": 0
+  },
+  "source_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+  "source_pins_verified": {
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "compiler/models/qwen3-8b/config.json": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_checkpoint.py": "d59615948a326fc28d26d629ba2a5c77c029c8da580a1dfd630081267783a97d",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_launch.py": "01caaf71d440515879c1e6b8564aeab72c46874ab3498d21c778e53033b0f3f2",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8"
+  },
+  "source_reader_final_flush": true,
+  "token_cycles": null,
+  "token_rate": null,
+  "tokens": [
+    {
+      "head_fp32_sha256": "331609e9e82a62d474797124c9f83e2311f8c3ef73216a356bb863351fcc97d7",
+      "input_token": 9707,
+      "instructions_retired": 1737,
+      "next_token": 11,
+      "position": 0
+    },
+    {
+      "head_fp32_sha256": "d4ffd5bc5921dcd968e6f41a049184290f06b8b32ae855e884aaa2fb620f117b",
+      "input_token": 11,
+      "instructions_retired": 1737,
+      "next_token": 358,
+      "position": 1
+    }
+  ],
+  "verdict": "PASS_actual_checkpoint_two_token_software_execution"
+}

@@ -1,0 +1,333 @@
+{
+  "adoption": false,
+  "arithmetic_chain": {
+    "ACC_LAT": {
+      "die_declared": true,
+      "die_forwarded": true,
+      "driver_die_flag": false,
+      "driver_tile_flag": false,
+      "generated_core_forwarded": true,
+      "spine_declared": true,
+      "spine_forwarded": true,
+      "target": 7,
+      "tile_declared": true,
+      "tile_forwarded": true
+    },
+    "FAST_ISSUE": {
+      "die_declared": true,
+      "die_forwarded": true,
+      "driver_die_flag": false,
+      "driver_tile_flag": false,
+      "generated_core_forwarded": true,
+      "spine_declared": true,
+      "spine_forwarded": true,
+      "target": 1,
+      "tile_declared": true,
+      "tile_forwarded": true
+    },
+    "KV_PREP": {
+      "die_declared": true,
+      "die_forwarded": true,
+      "driver_die_flag": false,
+      "driver_tile_flag": false,
+      "generated_core_forwarded": true,
+      "spine_declared": true,
+      "spine_forwarded": true,
+      "target": 3,
+      "tile_declared": true,
+      "tile_forwarded": true
+    },
+    "MUL_LAT": {
+      "die_declared": true,
+      "die_forwarded": true,
+      "driver_die_flag": false,
+      "driver_tile_flag": false,
+      "generated_core_forwarded": true,
+      "spine_declared": true,
+      "spine_forwarded": true,
+      "target": 6,
+      "tile_declared": true,
+      "tile_forwarded": true
+    },
+    "TREE_LAT": {
+      "die_declared": true,
+      "die_forwarded": true,
+      "driver_die_flag": false,
+      "driver_tile_flag": false,
+      "generated_core_forwarded": true,
+      "spine_declared": true,
+      "spine_forwarded": true,
+      "target": 7,
+      "tile_declared": true,
+      "tile_forwarded": true
+    }
+  },
+  "at": "2026-10-02T08:18:32.995990+00:00",
+  "blocklist": [
+    {
+      "gate": "G0",
+      "reason": "Missing current source/configuration coverage and whole arithmetic parameter chain; same emitted program and service calendar remain to join.",
+      "task": "Q2/R0"
+    },
+    {
+      "gate": "G0/G3",
+      "reason": "Hub/fill routing demand/capacity, mux/demux/fanout, slot fit, macro SS clk-to-q and composed service latency remain unbound.",
+      "task": "Q2/P1"
+    },
+    {
+      "gate": "G2",
+      "reason": "Macro-local KV fill/read/mask/collision and matching capture pipeline require connected numerical checks.",
+      "task": "Q2"
+    },
+    {
+      "gate": "G2",
+      "reason": "After original terminal, integrate independently reviewed diffs and validate current-source full TP4 token; unchanged identities alone permit reuse.",
+      "task": "Q3"
+    },
+    {
+      "gate": "G3",
+      "reason": "Actual full-goal tile/spine/macro interfaces need SS setup/FF hold and contextual routing/clock/power feasibility; historical TT/errors do not pass.",
+      "task": "P2"
+    },
+    {
+      "gate": "G4",
+      "reason": "Analytical +55 is separate from measured latency. Reconcile emitted-program body, waits, service, collectives and physical crossings without double counting.",
+      "task": "C1"
+    }
+  ],
+  "claim_boundary": "Read-only source comparison and dependency preparation. Sparse committed blobs give read-only diff evidence, not an executable filesystem join. No runtime exactness transfer, source integration, model-price replay or physical qualification.",
+  "heavy_jobs_launched": 0,
+  "measured_latency_ready": false,
+  "missing_arithmetic_paths": {
+    "ACC_LAT": [
+      "driver_tile_flag",
+      "driver_die_flag"
+    ],
+    "FAST_ISSUE": [
+      "driver_tile_flag",
+      "driver_die_flag"
+    ],
+    "KV_PREP": [
+      "driver_tile_flag",
+      "driver_die_flag"
+    ],
+    "MUL_LAT": [
+      "driver_tile_flag",
+      "driver_die_flag"
+    ],
+    "TREE_LAT": [
+      "driver_tile_flag",
+      "driver_die_flag"
+    ]
+  },
+  "missing_paths": [],
+  "model_successor_function_present": false,
+  "model_successor_replayed": false,
+  "mutation_requires_original_terminal": true,
+  "package_sha256": "83a9b06f4730bdd4cc5e80fc8fcc91bb4f1ce86da2e964b71dcd3f1ec7d0fd0a",
+  "physical_build_ready": false,
+  "processes_signalled": [],
+  "review_can_proceed_before_terminal": true,
+  "rows": {
+    "rtl/hdc/ot_hdc_matvec.sv": {
+      "candidate": {
+        "diff_file": "ot_hdc_matvec.sv.candidate.diff",
+        "diff_sha256": "d0294bbc14f86cda6ba1570cbac1778315c5acc2b4baeb7324266b2d428f2ac9",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+        "present": true,
+        "sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb"
+      },
+      "captured_sha256": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18",
+      "exactness_transfer": false,
+      "integration_obligation": "Join MEM_EXTRA operand/tag capture and GOUT/GL/GI/GR port sizing with physical arithmetic paths; preserve shared clients.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "ot_hdc_matvec.sv.shared.diff",
+        "diff_sha256": "61a6f49dc36b3bc0d6b66ca800513bb62c1f5adadd7fc22be7cacb42e55cda45",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_hdc_matvec.sv",
+        "present": true,
+        "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+      },
+      "whole_file_copy": false
+    },
+    "rtl/hdc/ot_qwen_me_array.sv": {
+      "candidate": {
+        "diff_file": "ot_qwen_me_array.sv.candidate.diff",
+        "diff_sha256": "ef1fefaa78102b062295c8d11861994a9c286c2af17b23bc39d7485ff2b87a4b",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+        "present": true,
+        "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+      },
+      "captured_sha256": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218",
+      "exactness_transfer": false,
+      "integration_obligation": "Join MEM_EXTRA/XD and dense result/scale ports with zero extension; forward every arithmetic control through the spine.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "ot_qwen_me_array.sv.shared.diff",
+        "diff_sha256": "b08824d71b0615a028afbf7e024e78c5d8ebd0b4d13e803b2c9e41a5191bb7b5",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_qwen_me_array.sv",
+        "present": true,
+        "sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388"
+      },
+      "whole_file_copy": false
+    },
+    "rtl/hdc/ot_qwen_rom_tile.sv": {
+      "candidate": {
+        "diff_file": "ot_qwen_rom_tile.sv.candidate.diff",
+        "diff_sha256": "2913b1cc45b17ba368f03c0733a208b71ad8ab426df08f099daa41ae1f817af3",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+        "present": true,
+        "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+      },
+      "captured_sha256": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b",
+      "exactness_transfer": false,
+      "integration_obligation": "Join ROM/KV/x capture, arithmetic controls and selected bank geometry; prove macro-local fill/read/mask and collision semantics.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "ot_qwen_rom_tile.sv.shared.diff",
+        "diff_sha256": "8055bfb90e86e8879922c90464625ce7df3bb0dfa833ccf5b78f416e16fe5b2b",
+        "equals_captured": false,
+        "path": "rtl/hdc/ot_qwen_rom_tile.sv",
+        "present": true,
+        "sha256": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e"
+      },
+      "whole_file_copy": false
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": {
+      "candidate": {
+        "diff_file": "ot_qwen_rom_rt_die.sv.candidate.diff",
+        "diff_sha256": "72c194dfb39f795b7ed53856455d40fde83d0c66a7eb4d73a277fbf3b87a5c27",
+        "equals_captured": false,
+        "path": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv",
+        "present": true,
+        "sha256": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf"
+      },
+      "captured_sha256": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec",
+      "exactness_transfer": false,
+      "integration_obligation": "Join D-rank/dense ports and MEM_EXTRA; declare and forward all arithmetic controls to generated core.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "ot_qwen_rom_rt_die.sv.shared.diff",
+        "diff_sha256": "77bcca51a4672c1d1e069c6d816eaeb8244cf7caae24e1395938918280e29c96",
+        "equals_captured": false,
+        "path": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv",
+        "present": true,
+        "sha256": "0e1305252163ed4e03bfa598f55a44e186526d4cacdad2e0de279875b69ec3a3"
+      },
+      "whole_file_copy": false
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": {
+      "candidate": {
+        "diff_file": "qwen_rom_rt.cpp.candidate.diff",
+        "diff_sha256": "4e5a528c4d0c6fa2332fa38474826176ccc574b13c0404a6306750d8138b2914",
+        "equals_captured": false,
+        "path": "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp",
+        "present": true,
+        "sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea"
+      },
+      "captured_sha256": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b",
+      "exactness_transfer": false,
+      "integration_obligation": "Join all-rank loading/settling/fault checks; global KV host service is distinct from macro-local execution.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "qwen_rom_rt.cpp.shared.diff",
+        "diff_sha256": "232a08d9b19add009831ebb5e719a810d079ec11177363c26499b06d350b77cf",
+        "equals_captured": false,
+        "path": "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp",
+        "present": true,
+        "sha256": "b591d49f7a6986de93852a31dd91712c5b44ff3f629c8ac0397580c432ba0d46"
+      },
+      "whole_file_copy": false
+    },
+    "tools/qwen_rom_rt_core_emit.py": {
+      "candidate": {
+        "diff_file": "qwen_rom_rt_core_emit.py.candidate.diff",
+        "diff_sha256": "cb9b310722c6af6900e94152a100f8144d565e98df08cdef89573b9bcc6e9669",
+        "equals_captured": false,
+        "path": "tools/qwen_rom_rt_core_emit_w12.py",
+        "present": true,
+        "sha256": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea"
+      },
+      "captured_sha256": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f",
+      "exactness_transfer": false,
+      "integration_obligation": "Join dense-port generation and SU activity; propagate the whole arithmetic parameter set through generated core to spine.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "qwen_rom_rt_core_emit.py.shared.diff",
+        "diff_sha256": "7a1b3ab0fd31126a4bb151f31f913fcb8f5ac1a4f75e030627bc43b77e96735e",
+        "equals_captured": false,
+        "path": "tools/qwen_rom_rt_core_emit.py",
+        "present": true,
+        "sha256": "a50996906e3ae7981e59d2dac200abaa330f7f6505f5bbfbf8beb77c8164b801"
+      },
+      "whole_file_copy": false
+    },
+    "tools/qwen_rom_rt_token.py": {
+      "candidate": {
+        "diff_file": "qwen_rom_rt_token.py.candidate.diff",
+        "diff_sha256": "960af4dd992aabe0a4d91e706bef8b5e3990daed1828b3933c5674bf1e5c76a1",
+        "equals_captured": false,
+        "path": "tools/qwen_rom_rt_token_w12.py",
+        "present": true,
+        "sha256": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1"
+      },
+      "captured_sha256": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f",
+      "exactness_transfer": false,
+      "integration_obligation": "Join TP/configuration, all-rank images/oracle/checks and build metadata; add explicit selected arithmetic flags as one reviewed successor.",
+      "integration_ready": false,
+      "shared": {
+        "diff_file": "qwen_rom_rt_token.py.shared.diff",
+        "diff_sha256": "fd47336166657cd3d3fbaaad8d8f02b51f6687a1bfa6acfc1098f24c8475a814",
+        "equals_captured": false,
+        "path": "tools/qwen_rom_rt_token.py",
+        "present": true,
+        "sha256": "e96f25fee5794ab28a7e0c9feda78fcd88e91c1940a1ce0bef1be425a85f7652"
+      },
+      "whole_file_copy": false
+    }
+  },
+  "schema": "opentallas.qwen-rom-seven-source-join-prep.v1",
+  "source_origin": {
+    "rtl/hdc/ot_hdc_matvec.sv": "working_tree",
+    "rtl/hdc/ot_qwen_me_array.sv": "working_tree",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "working_tree",
+    "rtl/hdc/ot_qwen_rom_tile.sv": "working_tree",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "working_tree",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "working_tree",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": "working_tree",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "working_tree",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": "working_tree",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "working_tree",
+    "tools/qwen_rom_rt_core_emit.py": "working_tree",
+    "tools/qwen_rom_rt_core_emit_w12.py": "working_tree",
+    "tools/qwen_rom_rt_token.py": "working_tree",
+    "tools/qwen_rom_rt_token_w12.py": "working_tree",
+    "tools/uarch_model.py": "working_tree"
+  },
+  "source_ref": "4d7933caef35bd73794d9d945298cd1c0c585d16",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+    "rtl/hdc/ot_qwen_me_array.sv": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388",
+    "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "rtl/hdc/ot_qwen_rom_tile.sv": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e",
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+    "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": "0e1305252163ed4e03bfa598f55a44e186526d4cacdad2e0de279875b69ec3a3",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": "b591d49f7a6986de93852a31dd91712c5b44ff3f629c8ac0397580c432ba0d46",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tools/qwen_rom_rt_core_emit.py": "a50996906e3ae7981e59d2dac200abaa330f7f6505f5bbfbf8beb77c8164b801",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+    "tools/qwen_rom_rt_token.py": "e96f25fee5794ab28a7e0c9feda78fcd88e91c1940a1ce0bef1be425a85f7652",
+    "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "sparse_unmaterialized_paths": [],
+  "status": "blocked",
+  "verifier_sha256": "b53e86a6e32d2caca55636f42dce78900424bb65c39ada5e89de613a29e536b3"
+}

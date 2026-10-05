@@ -1,0 +1,131 @@
+{
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/wide_mul_tree/pnr_current_cts12_1ns.json",
+      "audit": "results/physical_abi3/asap7/wide_mul_tree/pnr_current_cts12_1ns_audit.json",
+      "area_um2": 1714.48,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0499142,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": true,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 0.0,
+          "setup_wns_ns": 0.117856,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/wide_mul_chain/pnr_current_cts12_1ns.json",
+      "audit": "results/physical_abi3/asap7/wide_mul_chain/pnr_current_cts12_1ns_audit.json",
+      "area_um2": 1745.66,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0515371,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 323.0,
+          "setup_wns_ns": -0.312287,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns.json",
+      "audit": "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns_audit.json",
+      "area_um2": 827.809,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0412938,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 1.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": false,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 0.0,
+          "setup_wns_ns": 0.048414900000000004,
+          "signal_integrity_clean": false,
+          "stage": "place_and_route",
+          "timing_met": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/small_divider/captured_divisor_step3_cts12_1ns.json",
+      "audit": "results/physical_abi3/asap7/small_divider/captured_divisor_step3_cts12_1ns_audit.json",
+      "area_um2": 313.834,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0515423,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": true,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 0.0,
+          "setup_wns_ns": 0.0411121,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": true
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/small_divider/idle_advance_step4_cts12_1ns.json",
+      "audit": "results/physical_abi3/asap7/small_divider/idle_advance_step4_cts12_1ns_audit.json",
+      "area_um2": 295.58,
+      "checks": [
+        {
+          "antenna_violating_nets": 0.0,
+          "antenna_violating_pins": 0.0,
+          "drc_errors": 0.0,
+          "hold_violations": 0.0,
+          "hold_wns_ns": 0.0487389,
+          "max_cap_violations": 0.0,
+          "max_fanout_violations": 0.0,
+          "max_slew_violations": 0.0,
+          "met": false,
+          "physically_clean": true,
+          "scope": "post-route, extracted parasitics",
+          "setup_violations": 9.0,
+          "setup_wns_ns": -0.08918670000000001,
+          "signal_integrity_clean": true,
+          "stage": "place_and_route",
+          "timing_met": false
+        }
+      ]
+    }
+  ],
+  "decision": "Integrate balanced tree at unchanged sixteen-bit chunk: passes 1 ns vs chain failure and saves routed area. Three-step divider passes but has measured consumer cycle penalty; four-step idle-advance saves area but fails timing. Wide-divider route meets timing but fails one fanout check.",
+  "tree16_area_reduction_percent": 1.786143922642447
+}

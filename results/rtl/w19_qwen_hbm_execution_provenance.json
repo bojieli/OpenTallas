@@ -1,0 +1,530 @@
+{
+  "claim_boundary": "64 arithmetic/finite-completion artifacts PASS; aggregate driver and three recovery shell RCs directly retained. Five cached and56fresh childRCs are inferred from checked subprocess control flow, not independently stored. No production shared-runtime/full-token admission. No reruns and no invented RCs.",
+  "direct_recovery_sessions": {
+    "d0_sm0": 46747,
+    "d0_sm21": 62600,
+    "d1_sm31": 23854
+  },
+  "driver": {
+    "observed_exit_code": 0,
+    "session_id": 9695,
+    "source_commit": "a8a1a79c83bf1a1c9c9697c530498591e05cc427",
+    "terminal_output_chunk": "2520d1"
+  },
+  "fresh_cases": {
+    "count": 56,
+    "direct_per_case_rc_receipts": false,
+    "evidence": "Immutable runner uses subprocess.run(check=True), catches process failures as exact=False; complete PASS plus driverRC0 retains checked-control-flow evidence, not separately logged childRCs."
+  },
+  "logs": {
+    "d0_sm0": {
+      "original": "/tmp/w19-qwen-first-recovery.log",
+      "sha256": "89c86a8033343db2683f1d8d2dfc378998e47714a0441cf8ffcb10d04f2dea56"
+    },
+    "d0_sm21": {
+      "original": "/tmp/w19-qwen-sm-retry21.log",
+      "sha256": "d4c2e45b9bd4f088ec6bcb6c02e305ac008bc34329bb22472b83b75b723e5fd0"
+    },
+    "d0_sm26": {
+      "original": "/tmp/w19-qwen-sm-parallel/d0_sm26/sim.log",
+      "sha256": "b138186a1784f58a40a841844d164d298dd54ed79f6d52b14880c4ebcf91f668"
+    },
+    "d0_sm31": {
+      "original": "/tmp/w19-qwen-sm-parallel/d0_sm31/sim.log",
+      "sha256": "bfd8d7ce9eacbfc8c30fd43c81489415627e6c38a8a51c5aa1222e495187da2a"
+    },
+    "d1_sm0": {
+      "original": "/tmp/w19-qwen-sm-parallel/d1_sm0/sim.log",
+      "sha256": "31b52e19410e09e0e18689c8d6e07aa3592b4012071715f62414b7f96d4a44dc"
+    },
+    "d1_sm21": {
+      "original": "/tmp/w19-qwen-sm-parallel/d1_sm21/sim.log",
+      "sha256": "8cf6d384a9efd0ee1e9c8c5ffa9bd147a2c5dceac865e119ce32efeaf2691118"
+    },
+    "d1_sm26": {
+      "original": "/tmp/w19-qwen-sm-parallel/d1_sm26/sim.log",
+      "sha256": "47ba0e2e96eb2b1fb1ccc434c6ec494630477fb5cb276d772c02caf6843ac229"
+    },
+    "d1_sm31": {
+      "original": "/tmp/w19-qwen-sm-recovery-d1-sm31.log",
+      "sha256": "a446df76fd05a79f0f673f025262d333284d3c5cd68e9de276e090b5826db845"
+    }
+  },
+  "retained_tool_events": [
+    {
+      "payload": {
+        "call_id": "call_NQGBIwzfIad4re1SPqgD38sD",
+        "id": "ctc_050bae5f6b22a284016abe1ee7e7e887d0aea97135dacca510",
+        "input": "text(await tools.exec_command({cmd:\"ps -p 398332,443144,443149,443150 -o pid,etime,time,rss; wc -c /tmp/w19-qwen-sm-2f781e517/d0_sm0/out.txt; vvp -n /tmp/w19-qwen-sm-2f781e517/build/sim.vvp +DIR=/tmp/w19-qwen-sm-2f781e517/d0_sm0 +GAP=0 > /tmp/w19-qwen-first-recovery.log 2>&1\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",yield_time_ms:1000,max_output_tokens:500}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790844603.925312,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 429,
+      "sha256": "a965f575182c20e7eee6c14fcad1247abb6114b0f1cb0f72ab7a1a5a4485cddc",
+      "timestamp": "2026-10-01T08:50:51.882Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_NQGBIwzfIad4re1SPqgD38sD",
+        "id": "ctco_01a0f6a8-cdf9-73d0-b675-f47ee0d480bd",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790844653.049615,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 1.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"7fd347\",\"wall_time_seconds\":1.000264911,\"session_id\":46747,\"original_token_count\":47,\"output\":\"    PID     ELAPSED     TIME   RSS\\n 443144       01:27 00:01:20 188508\\n 443149       01:27 00:01:18 188572\\n 443150       01:27 00:01:21 188532\\n0 /tmp/w19-qwen-sm-2f781e517/d0_sm0/out.txt\\n\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 431,
+      "sha256": "8c0153fddf8b34f5bda77fdb7cb1663fae25942dcf09899d86ce0c6c3b5f305c",
+      "timestamp": "2026-10-01T08:50:53.049Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_3qkANLb7YyoGvTCU2vh5IMAI",
+        "id": "ctc_050bae5f6b22a284016abe1fa15a6887d0934f587e7ce60a4a",
+        "input": "text(await tools.exec_command({cmd:\"python3 - <<'PY'\\nfrom pathlib import Path\\nimport shutil,sys,json,hashlib\\nsys.path.insert(0,'tools')\\nimport w19_qwen_hbm_checkpoint as C\\np=Path('/tmp/w19-qwen-sm-parallel/d0_sm21/sim.log')\\nC.save_json(Path('/tmp/w19-qwen-debug-attempt.json'),dict(status='fail',stage='diagnostic instrumentation',pid=443149,reason='GDB invoked vpi_handle_by_name outside VPI callback; simulator asserted vpi_mode_flag != VPI_MODE_NONE. Debugger-induced abort, no RTL numerical verdict.',log_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),recovery='Same pinned executable and operands in fresh retry directory; all original material preserved'))\\nd=Path('/tmp/w19-qwen-sm-retry21');d.mkdir()\\nfor name in ('cfg.hex','lines.hex','x.hex','scale.hex'):shutil.copyfile(Path('/tmp/w19-qwen-sm-parallel/d0_sm21')/name,d/name)\\nPY\\nvvp -n /tmp/w19-qwen-sm-2f781e517/build/sim.vvp +DIR=/tmp/w19-qwen-sm-retry21 +GAP=0 > /tmp/w19-qwen-sm-retry21.log 2>&1\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",yield_time_ms:1000,max_output_tokens:500}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790844804.149227,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 476,
+      "sha256": "cd9887b7968a90f1e1cf8a3143baae1e204df5fcdc1a4d99528a8755b1d17380",
+      "timestamp": "2026-10-01T08:54:06.160Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_3qkANLb7YyoGvTCU2vh5IMAI",
+        "id": "ctco_01a0f6ab-c4dd-7b61-a54b-5ab8e0dc9252",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790844847.325619,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 1.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"081945\",\"wall_time_seconds\":1.000213352,\"session_id\":62600,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 478,
+      "sha256": "b3247f9b186cd0c04cd011b21e92019ac786804edd7b9f195d34bffb3b23a186",
+      "timestamp": "2026-10-01T08:54:07.325Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_j6jmGQkevbKppDtbaLi5TCP8",
+        "id": "ctc_050bae5f6b22a284016abe2488c15487d097f66bfd8773323d",
+        "input": "text(await tools.exec_command({cmd:\"python3 - <<'PY'\\nfrom pathlib import Path\\nimport json,sys,numpy as np\\nsys.path.insert(0,'tools')\\nimport w19_qwen_hbm_checkpoint as C\\nm=json.load(open('/tmp/w19-qwen-operands-w13/manifest.json'))\\ncase=next(c for c in m['cases'] if c['die']==0 and c['sm']==21)\\nd=Path('/tmp/w19-qwen-sm-retry21');res={};meta={}\\nfor line in (d/'out.txt').read_text().splitlines():\\n if line.startswith('#'):\\n  toks=line[1:].split()\\n  for i in range(0,len(toks)-1,2):meta[toks[i]]=int(toks[i+1])\\n else:\\n  r,h=line.split()\\n  if int(r) in res:raise ValueError('duplicate result row')\\n  res[int(r)]=h\\nwith np.load(Path('/tmp/w19-qwen-operands-w13')/case['file']) as data:\\n mism,exact=C.verify(res,meta,data['expected'],1,3072)\\n post=sum(int(int(C.G.bits(C.G.mul(C.G.from_bits(np.uint32(int(h,16))),C.G.from_bits(data['rstd']))))!=int(data['post_norm_expected'][r])) for r,h in res.items())\\n result=dict(case,exact=exact and post==0,mismatches=mism,host_epilogue_mismatches=post,rows=96,K=4096,split=256,cols=1,weight_lines=3072,rtl=meta,output_sha256=C.sha(d/'out.txt'),retry_reason='Debugger-induced simulator abort; same binary and operands, original failed log preserved')\\nC.save_json(d/'verdict.json',result)\\nprint(result['exact'],mism,post,meta)\\nPY\\nps -eo pid,etime,time,rss,args | rg 'vvp -n /tmp/w19-qwen-sm' | tail -5\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",max_output_tokens:700}));\ntext(await tools.write_stdin({session_id:62600,chars:\"\",yield_time_ms:1000,max_output_tokens:200}));\ntext(await tools.write_stdin({session_id:46747,chars:\"\",yield_time_ms:1000,max_output_tokens:200}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790845973.772988,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 637,
+      "sha256": "0322b637fe5714d29a4c1bd287c0fede86394abd5b0fb05740c93215abd96b43",
+      "timestamp": "2026-10-01T09:15:07.576Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_j6jmGQkevbKppDtbaLi5TCP8",
+        "id": "ctco_01a0f6bf-07d0-7f21-ae3b-74f618956173",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790846109.6484776,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 2.1 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"e050a5\",\"wall_time_seconds\":1.899040652,\"exit_code\":0,\"original_token_count\":464,\"output\":\"True 0 0 {'cycles_start_to_done': 4785, 'first_result': 1023, 'last_result': 4782, 'lines': 3072, 'consumed': 3072, 'fault': 0, 'released': 1, 'drain_last_line_to_last_result': 82}\\n 494735       09:26 00:09:12 188492 vvp -n /tmp/w19-qwen-sm-2f781e517/build/sim.vvp +DIR=/tmp/w19-qwen-sm-parallel/d1_sm21 +GAP=0\\n 497594       08:31 00:08:26 188548 vvp -n /tmp/w19-qwen-sm-2f781e517/build/sim.vvp +DIR=/tmp/w19-qwen-sm-parallel/d1_sm26 +GAP=0\\n 525057       00:02 00:00:00  3604 /bin/bash -lc python3 - <<'PY' from pathlib import Path import json,sys,numpy as np sys.path.insert(0,'tools') import w19_qwen_hbm_checkpoint as C m=json.load(open('/tmp/w19-qwen-operands-w13/manifest.json')) case=next(c for c in m['cases'] if c['die']==0 and c['sm']==21) d=Path('/tmp/w19-qwen-sm-retry21');res={};meta={} for line in (d/'out.txt').read_text().splitlines():  if line.startswith('#'):   toks=line[1:].split()   for i in range(0,len(toks)-1,2):meta[toks[i]]=int(toks[i+1])  else:   r,h=line.split()   if int(r) in res:raise ValueError('duplicate result row')   res[int(r)]=h with np.load(Path('/tmp/w19-qwen-operands-w13')/case['file']) as data:  mism,exact=C.verify(res,meta,data['expected'],1,3072)  post=sum(int(int(C.G.bits(C.G.mul(C.G.from_bits(np.uint32(int(h,16))),C.G.from_bits(data['rstd']))))!=int(data['post_norm_expected'][r])) for r,h in res.items())  result=dict(case,exact=exact and post==0,mismatches=mism,host_epilogue_mismatches=post,rows=96,K=4096,split=256,cols=1,weight_lines=3072,rtl=meta,output_sha256=C.sha(d/'out.txt'),retry_reason='Debugger-induced simulator abort; same binary and operands, original failed log preserved') C.save_json(d/'verdict.json',result) print(result['exact'],mism,post,meta) PY ps -eo pid,etime,time,rss,args | rg 'vvp -n /tmp/w19-qwen-sm' | tail -5\\n 525140       00:00 00:00:00  4644 rg vvp -n /tmp/w19-qwen-sm\\n\"}",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"f54a3d\",\"wall_time_seconds\":0.000007759,\"exit_code\":0,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"9a33b5\",\"wall_time_seconds\":0.000006294,\"exit_code\":0,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 640,
+      "sha256": "616e9cd6f55198765a1ca9f6fb7c32c2e7c01ba1027621132118a927bd45953e",
+      "timestamp": "2026-10-01T09:15:09.648Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_2lKIt8z9vGXllgGH9edN3lBO",
+        "id": "ctc_050bae5f6b22a284016abe24bd913c87d0a3650a7196fddfa2",
+        "input": "text(await tools.exec_command({cmd:\"python3 - <<'PY'\\nfrom pathlib import Path\\nimport sys,numpy as np\\nsys.path.insert(0,'tools')\\nimport w19_qwen_hbm_checkpoint as C\\nd=Path('/tmp/w19-qwen-sm-recovery-d1-sm31');d.mkdir()\\nwith np.load('/tmp/w19-qwen-operands-w13/d1_sm31.npz') as data:\\n print(C.pack(d,data['codes'],data['scale'],data['x'],1))\\nPY\\nvvp -n /tmp/w19-qwen-sm-2f781e517/build/sim.vvp +DIR=/tmp/w19-qwen-sm-recovery-d1-sm31 +GAP=0 > /tmp/w19-qwen-sm-recovery-d1-sm31.log 2>&1\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",yield_time_ms:1000,max_output_tokens:500}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790846110.064707,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 644,
+      "sha256": "2260607c03d656f33e7716e9a3471a6f70ae698f0910eb4b53587f7baedb0ff0",
+      "timestamp": "2026-10-01T09:15:48.819Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_2lKIt8z9vGXllgGH9edN3lBO",
+        "id": "ctco_01a0f6bf-a563-75d1-91ed-5635cd4cfad9",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790846149.9879723,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 1.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"bca9e7\",\"wall_time_seconds\":1.001301562,\"session_id\":23854,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 646,
+      "sha256": "829f40c6c05f353107c9b3791c5629679a8cd96958c935ea5229eb9eb2f7459c",
+      "timestamp": "2026-10-01T09:15:49.988Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_wCNZlDFPvFfsdVAeoMPiTKW4",
+        "id": "ctc_050bae5f6b22a284016abe2871165c87d08ec4082d8eb61d37",
+        "input": "text(await tools.exec_command({cmd:\"python3 - <<'PY'\\nimport sys,json,numpy as np\\nfrom pathlib import Path\\nsys.path.insert(0,'tools')\\nimport w19_qwen_hbm_checkpoint as C\\nimport w19_qwen_hbm_qkv_stage as S\\nmanifest=json.load(open('/tmp/w19-qwen-operands-w13/manifest.json'))\\ncase=next(c for c in manifest['cases'] if c['die']==1 and c['sm']==31)\\nd=Path('/tmp/w19-qwen-sm-recovery-d1-sm31');res,meta=S.parse_output(d/'out.txt')\\nwith np.load(Path('/tmp/w19-qwen-operands-w13')/case['file']) as data:\\n mism,exact=C.verify(res,meta,data['expected'],1,3072)\\n post=sum(int(int(C.G.bits(C.G.mul(C.G.from_bits(np.uint32(int(h,16))),C.G.from_bits(data['rstd']))))!=int(data['post_norm_expected'][r])) for r,h in res.items())\\n C.save_json(d/'verdict.json',dict(case,exact=exact and post==0,mismatches=mism,host_epilogue_mismatches=post,rows=96,K=4096,split=256,cols=1,weight_lines=3072,rtl=meta,output_sha256=C.sha(d/'out.txt')))\\ncases=[]\\nfor c in manifest['cases']:\\n root=Path('/tmp/w19-qwen-sm-parallel')/Path(c['file']).stem\\n if (c['die'],c['sm'])==(0,21):root=Path('/tmp/w19-qwen-sm-retry21')\\n if (c['die'],c['sm'])==(1,31):root=d\\n r=json.load(open(root/'verdict.json'));assert r['exact'];r['evidence_dir']=str(root);cases.append(r)\\nmodel=json.load(open('results/uarch/w19_qwen_hbm_checkpoint_preflight_w13.json'))\\nC.save_json(Path('results/rtl/w19_qwen_hbm_checkpoint_windows.json'),dict(schema='opentallas.w19-qwen-hbm-checkpoint-rtl.v1',status='pass',source_commit='2612c6282',compile_receipt=json.load(open('results/rtl/w19_qwen_hbm_compile_receipt.json')),sm_snapshot=model['sm_snapshot'],operand_manifest=manifest,cases=cases,outputs_checked=768,full_rtl_token=False,adoption=False,model_feedback=dict(partition_start_to_done_cycles=4785,drain_cycles=82,full_token_cycles=None),remaining_full_token_exit=model['remaining_full_token_exit'],claim_boundary='Eight real-checkpoint complete-K QKV SM windows on both TP2 dies, GPU bulk copy/SRAM/MMA/row scale RTL, host embedding/norm/rstd and behavioral HBM/release. Not a complete QKV stage, RTL layer or token. All-64 model partitions are the next gate.'))\\nPY\\ncp /tmp/w19-qwen-debug-attempt.json results/rtl/w19_qwen_hbm_debug_attempt.json\\ngit add results/rtl/w19_qwen_hbm_checkpoint_windows.json results/rtl/w19_qwen_hbm_debug_attempt.json\\ngit commit -m 'W19 Qwen HBM: record eight real checkpoint SM windows bit-exact at full K'\\ngit status --short\\npython3 tools/w19_qwen_hbm_qkv_stage.py --receipt results/rtl/w19_qwen_hbm_compile_receipt.json --bundle /tmp/w19-qwen-operands-full-qkv --work /tmp/w19-qwen-qkv-stage-all64 --out /tmp/w19-qwen-qkv-stage-all64.json --reuse-dir /tmp/w19-qwen-sm-parallel /tmp/w19-qwen-sm-retry21 /tmp/w19-qwen-sm-recovery-d1-sm31 --jobs 24 > /tmp/w19-qwen-qkv-stage-all64.log 2>&1\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",yield_time_ms:1000,max_output_tokens:1000}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790847028.967928,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 738,
+      "sha256": "72b3de668b9c03f5f5559a34a44ae239d41b408c441f374c35cfe735756875f9",
+      "timestamp": "2026-10-01T09:31:57.582Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_wCNZlDFPvFfsdVAeoMPiTKW4",
+        "id": "ctco_01a0f6ce-6da0-7d53-a23a-66f3e44da2fd",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790847118.7521343,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 1.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"89e739\",\"wall_time_seconds\":1.001274458,\"session_id\":9695,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 740,
+      "sha256": "6f2ff2d44b25296c8079c5168632703fe3ca281298033b80dfca82f0d569dd4e",
+      "timestamp": "2026-10-01T09:31:58.752Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_80hhSW4l56MzsMMPNrJfjf9P",
+        "id": "ctc_050bae5f6b22a284016abe2932bc6c87d091d5fd002d668857",
+        "input": "text(await tools.write_stdin({session_id:9695,chars:\"\",yield_time_ms:1000,max_output_tokens:1200}));\ntext(await tools.exec_command({cmd:\"tail -5 /tmp/w19-qwen-qkv-stage-all64.log; python3 - <<'PY'\\nfrom pathlib import Path\\nimport json\\nroot=Path('/tmp/w19-qwen-qkv-stage-all64')\\nvs=[json.loads(p.read_text()) for p in root.glob('*/verdict.json')]\\nprint('complete',len(vs),'pass',sum(x.get('exact',False) for x in vs),'reused',sum(bool(x.get('reused_from')) for x in vs))\\nPY\\nps -eo args | rg '^nice -n 10 vvp|^vvp -n /tmp/w19-qwen' | wc -l; git log -2 --oneline\",workdir:\"/tmp/claude-1000/wt/w19-qwen-hbm\",max_output_tokens:800}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790847119.48438,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 750,
+      "sha256": "7318135d783c3662ed0e3ec05a91b7b72aac2431a136a54bfef1062aaff9f3a8",
+      "timestamp": "2026-10-01T09:34:48.712Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_80hhSW4l56MzsMMPNrJfjf9P",
+        "id": "ctco_01a0f6d1-19b1-76d0-9205-f6c72db75f83",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790847293.873706,
+          "turn_id": "01a0f692-c954-7521-bace-16717e5fd0f0"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 5.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"4f5d98\",\"wall_time_seconds\":5.001021208,\"session_id\":9695,\"original_token_count\":69,\"output\":\"[codex/w19-qwen-hbm a8a1a79c8] W19 Qwen HBM: record eight real checkpoint SM windows bit-exact at full K\\n 2 files changed, 680 insertions(+)\\n create mode 100644 results/rtl/w19_qwen_hbm_checkpoint_windows.json\\n create mode 100644 results/rtl/w19_qwen_hbm_debug_attempt.json\\n\"}",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"e8bd4d\",\"wall_time_seconds\":0.000014178,\"exit_code\":0,\"original_token_count\":49,\"output\":\"complete 2 pass 2 reused 2\\n24\\na8a1a79c8 W19 Qwen HBM: record eight real checkpoint SM windows bit-exact at full K\\n702ab1277 W19 Qwen HBM: compose full TP2 32-SM QKV partition gate on pinned build\\n\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 753,
+      "sha256": "824a7876e62d415869207ae6594c2897fd496ef792e8858378edb40f2fb9e5c0",
+      "timestamp": "2026-10-01T09:34:53.873Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_3nmVKIFYo5G62CNCZUuSu9VC",
+        "id": "ctc_050bae5f6b22a284016abe3d0515e487d09b1dcea2fd2590a8",
+        "input": "text(await tools.write_stdin({session_id:9695,chars:\"\",yield_time_ms:1000,max_output_tokens:1000}));\ntext(await tools.exec_command({cmd:\"python3 - <<'PY'\\nimport json,hashlib,pathlib,numpy as np,subprocess\\np=pathlib.Path('/tmp/w19-qwen-qkv-stage-all64.json'); r=json.loads(p.read_text())\\nassert r['status']=='pass' and len(r['cases'])==64\\nassert all(c['exact'] and c['mismatches']==0 and c['host_epilogue_mismatches']==0 for c in r['cases'])\\nassert {(c['die'],c['sm']) for c in r['cases']}=={(d,s) for d in (0,1) for s in range(32)}\\nfor die in (0,1):\\n f=pathlib.Path('/tmp/w19-qwen-qkv-stage-all64')/f'd{die}_qkv_fp32.hex'\\n assert hashlib.sha256(f.read_bytes()).hexdigest()==r['stage_outputs'][f.name]\\n bits=np.array([int(x,16) for x in f.read_text().split()],dtype=np.uint32)\\n expected=[]\\n for sm in range(32):\\n  with np.load(f'/tmp/w19-qwen-operands-full-qkv/d{die}_sm{sm}.npz',allow_pickle=False) as operand:\\n   expected.append(operand['expected'])\\n assert bits.shape==(3072,) and np.array_equal(bits,np.concatenate(expected))\\n print(f.name, r['stage_outputs'][f.name], '3072 rows bit-exact')\\nprint(json.dumps({'status':r['status'],'source_commit':r['source_commit'],'rows':sum(c['rows'] for c in r['cases']),'fresh':sum(c['reused_from'] is None for c in r['cases']),'reused':sum(c['reused_from'] is not None for c in r['cases']),'cycles':sorted(set(c['rtl']['cycles_start_to_done'] for c in r['cases'])),'drain':sorted(set(c['rtl']['drain_last_line_to_last_result'] for c in r['cases'])),'source_sha256':r['source_sha256'],'model_feedback':r['model_feedback']}))\\nprint('aggregate_sha256',hashlib.sha256(p.read_bytes()).hexdigest())\\nprint(subprocess.run(['ps','-p','573261','-o','pid,stat,args'],capture_output=True,text=True).stdout)\\nPY\",\"workdir\":\"/tmp/claude-1000/wt/w19-qwen-hbm\",\"max_output_tokens\":1500}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790852346.290781,
+          "turn_id": "01a0f6f9-bdda-73a2-83d7-47e478d6990e"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 1678,
+      "sha256": "f68562b25a4123ea09ed5b1c684713867ab5dfcb8b5282408160cc697969712e",
+      "timestamp": "2026-10-01T10:59:31.894Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_3nmVKIFYo5G62CNCZUuSu9VC",
+        "id": "ctco_01a0f71e-9682-70a0-a86e-856aa3bc1b52",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790852372.0987935,
+          "turn_id": "01a0f6f9-bdda-73a2-83d7-47e478d6990e"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 0.2 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"2520d1\",\"wall_time_seconds\":0.000009991,\"exit_code\":0,\"original_token_count\":0,\"output\":\"\"}",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"376768\",\"wall_time_seconds\":0.032640773,\"exit_code\":0,\"original_token_count\":205,\"output\":\"d0_qkv_fp32.hex 0ab65e21ac50ccabf032df6ee6eb5aa1fac6e586ee725ede909673e209586085 3072 rows bit-exact\\nd1_qkv_fp32.hex 0c879a99d1476b00517ba105a1e3091c3ed86d94abfba9fafcf8a06356e6da01 3072 rows bit-exact\\n{\\\"status\\\": \\\"pass\\\", \\\"source_commit\\\": \\\"a8a1a79c83bf1a1c9c9697c530498591e05cc427\\\", \\\"rows\\\": 6144, \\\"fresh\\\": 56, \\\"reused\\\": 8, \\\"cycles\\\": [4785], \\\"drain\\\": [82], \\\"source_sha256\\\": {\\\"tools/w19_qwen_hbm_checkpoint.py\\\": \\\"b9994814e23f1ddb99f3bc2b775d1bfcca893123b6de7ada59dfa5aab9239e39\\\", \\\"tools/w19_qwen_hbm_qkv_stage.py\\\": \\\"4fad3fc93c0e5d17fed3218edf44906d82ab9c80d6ef3126e74ee32ac33406a6\\\"}, \\\"model_feedback\\\": {\\\"adoption\\\": false, \\\"connected_die_stage_cycles\\\": null, \\\"full_token_cycles\\\": null, \\\"max_partition_cycles\\\": 4785}}\\naggregate_sha256 4deba55c0285345809fd744e061a2db36cf69c4f473080e7c67b328935da43a4\\n    PID STAT COMMAND\\n\\n\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 1681,
+      "sha256": "2400f80e3bc5babdad60bf93fbbbc74d54580a04bc6abfd50a79596ae9672925",
+      "timestamp": "2026-10-01T10:59:32.098Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_zD5BKzMFdgHWnPAUZb8MkIL4",
+        "id": "ctc_050bae5f6b22a284016abe3ef9e1f887d0b5dab5861ae7d297",
+        "input": "text(await tools.write_stdin({session_id:23854,chars:\"\",yield_time_ms:1000,max_output_tokens:800}));\ntext(await tools.exec_command({cmd:\"python3 - <<'PY'\\nimport json\\nfrom pathlib import Path\\np=Path('/home/ubuntu/.codex/sessions/2026/10/01/rollout-2026-10-01T08-26-50-01a0f692-c938-7db1-972d-44c777c0d7fe.jsonl')\\nfor i,line in enumerate(p.open(),1):\\n o=json.loads(line); q=o.get('payload',{})\\n if q.get('type')=='custom_tool_call_output' and q.get('call_id')=='call_j6jmGQkevbKppDtbaLi5TCP8':\\n  print('retained_output_line',i)\\n  for b in q['output']:\\n   try:r=json.loads(b.get('text',''))\\n   except (ValueError,TypeError):continue\\n   print(r if len(r.get('output',''))<500 else {k:v for k,v in r.items() if k!='output'})\\nPY\",\"max_output_tokens\":1000}));\n",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790852849.192099,
+          "turn_id": "01a0f6f9-bdda-73a2-83d7-47e478d6990e"
+        },
+        "name": "exec",
+        "status": "completed",
+        "type": "custom_tool_call"
+      },
+      "rollout_line": 1776,
+      "sha256": "2339fd8ce06648c79df25861950d28ea78d09e44c39ee1c0b22fbee0641f40e1",
+      "timestamp": "2026-10-01T11:07:45.269Z"
+    },
+    {
+      "payload": {
+        "call_id": "call_zD5BKzMFdgHWnPAUZb8MkIL4",
+        "id": "ctco_01a0f726-1d4e-7a52-988b-1ca1243e9e28",
+        "internal_chat_message_metadata_passthrough": {
+          "create_time": 1790852865.3587985,
+          "turn_id": "01a0f6f9-bdda-73a2-83d7-47e478d6990e"
+        },
+        "output": [
+          {
+            "text": "Script completed\nWall time 0.1 seconds\nOutput:\n",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"8a47ff\",\"wall_time_seconds\":0.000010836,\"exit_code\":0,\"original_token_count\":2,\"output\":\"3072\\n\"}",
+            "type": "input_text"
+          },
+          {
+            "text": "{\"chunk_id\":\"877900\",\"wall_time_seconds\":0.000011704,\"exit_code\":0,\"original_token_count\":88,\"output\":\"retained_output_line 640\\n{'chunk_id': 'e050a5', 'wall_time_seconds': 1.899040652, 'exit_code': 0, 'original_token_count': 464}\\n{'chunk_id': 'f54a3d', 'wall_time_seconds': 7.759e-06, 'exit_code': 0, 'original_token_count': 0, 'output': ''}\\n{'chunk_id': '9a33b5', 'wall_time_seconds': 6.294e-06, 'exit_code': 0, 'original_token_count': 0, 'output': ''}\\n\"}",
+            "type": "input_text"
+          }
+        ],
+        "type": "custom_tool_call_output"
+      },
+      "rollout_line": 1779,
+      "sha256": "c052a0fa1c1bcc89b8587b6b8d2e77179a5d74d1ec7c8c7de4db8ade83e1a8d6",
+      "timestamp": "2026-10-01T11:07:45.358Z"
+    }
+  ],
+  "reused": [
+    {
+      "direct_child_exit_code": 0,
+      "direct_session_id": 46747,
+      "directory": "/tmp/w19-qwen-sm-parallel/d0_sm0",
+      "file": "d0_sm0.npz",
+      "inference": null,
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "d5687e3a128edfa20029c1c5cf39676e91332efb3a46048468f94b5db8a14d1c",
+        "out.txt": "a6227ccb6219d08e38eb932867f460ba57d3c761fe046c9b9415b2fe4ea430ed",
+        "scale.hex": "e351ee59bcdfdd5071faf928360e1dc4c42fc90d5aadb75d1d2d37a600e9fa2b",
+        "verdict.json": "c5d882063a55f2b16355f6fd97692875710078b1d4a409d69415fd33ca482c4b",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": 0,
+      "direct_session_id": 62600,
+      "directory": "/tmp/w19-qwen-sm-retry21",
+      "file": "d0_sm21.npz",
+      "inference": null,
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "124b47f5fe9290ac16313aef6087521cc28b0d1b311db9bd4519eae50660cedd",
+        "out.txt": "498a4ddd88bc307b96adfedfd3d4fef87bb38c0896d0a1138f6c888fd2ff4f2b",
+        "scale.hex": "c00ede4583deebb7b284fa5db835dd16a8b7f462eaf6d4f6c17c9b505b27cc4b",
+        "verdict.json": "1f430ed97857ce07f03f1925e2aa14da758217fea27980a1b0dff65c3cbc3c8a",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": null,
+      "direct_session_id": null,
+      "directory": "/tmp/w19-qwen-sm-parallel/d0_sm26",
+      "file": "d0_sm26.npz",
+      "inference": "Pinned resume runner writes this positive verdict only after subprocess.run(check=True); separate child-RC receipt absent.",
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "c2711ba0c02aaf060f3c3f44629e531e0177bca5855f705a2088b8193f0e5ee6",
+        "out.txt": "a8b9434d985ae5f5f610418d7f65265c4f5f482ee914b3753412f9b712957023",
+        "scale.hex": "e681c1d73104b249d1b8b2d4581f6154aa2288551c3467a50a84aadb58fa9ba6",
+        "verdict.json": "edf568bef6118e6b241f2006a1afff158713c8aaf6f293b55d77467b3364f807",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": null,
+      "direct_session_id": null,
+      "directory": "/tmp/w19-qwen-sm-parallel/d0_sm31",
+      "file": "d0_sm31.npz",
+      "inference": "Pinned resume runner writes this positive verdict only after subprocess.run(check=True); separate child-RC receipt absent.",
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "685511a388cb5e39b57e18c73f146a3929576343a6a7b0a8cbca0f693ab673a3",
+        "out.txt": "5c86f1cbff9c454ddc6b607d7ce16ab68426c7c472e12d2e09596c245eb4cb4e",
+        "scale.hex": "72f039f7e3957bb381af8073964d79453282449f0e47f6703df9b4262499782f",
+        "verdict.json": "358a5d93034546325ea90aa3ed76790bd81b42b8b7231afc7b8986c7bbd07ce5",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": null,
+      "direct_session_id": null,
+      "directory": "/tmp/w19-qwen-sm-parallel/d1_sm0",
+      "file": "d1_sm0.npz",
+      "inference": "Pinned resume runner writes this positive verdict only after subprocess.run(check=True); separate child-RC receipt absent.",
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "d9a16f4ea357fc96c2c5eb9554eb775b1b88f522f973ff2118556e1135a4c60a",
+        "out.txt": "401289810606276ba9fc9cd6a00373b15febb18632ebc369f40fe26b43cddf43",
+        "scale.hex": "3f121b7ccc0276fb033590b9035508d08d691acb32e309f1d75832d4c64159b5",
+        "verdict.json": "d7f66a6dd4c2b21ddfeb20e232180e176291182c56b897bbd059ed8488113d38",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": null,
+      "direct_session_id": null,
+      "directory": "/tmp/w19-qwen-sm-parallel/d1_sm21",
+      "file": "d1_sm21.npz",
+      "inference": "Pinned resume runner writes this positive verdict only after subprocess.run(check=True); separate child-RC receipt absent.",
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "89c2cd13fe15a9057cdfcda1e3fc5440ba3b3fb26b902dd9a651682bb26d435c",
+        "out.txt": "44b430ef6683270178e8670ce49bbe0ccc950cfb7d761f8bacfff73c084f65e1",
+        "scale.hex": "59ace713a698299b42eca8c66eda39ff309a01276a15c0b5996af8b252416187",
+        "verdict.json": "64e1356735e58b25e1b4ea1a27a3b78bcd70b1d03e21d51045421abfe103ffa6",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": null,
+      "direct_session_id": null,
+      "directory": "/tmp/w19-qwen-sm-parallel/d1_sm26",
+      "file": "d1_sm26.npz",
+      "inference": "Pinned resume runner writes this positive verdict only after subprocess.run(check=True); separate child-RC receipt absent.",
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "ac6727bb71dd173e243cfb97fb939f3f47c0d0ed10a0a47ddca68a371cd8182a",
+        "out.txt": "a045709c3d9a1989bd102eb36f39fec7b228a866efb511e0da354966e684919e",
+        "scale.hex": "6393a28d1e2db532a107eb63bc9e937f0e8242f3b9dacdd9e2805a3ad7efada8",
+        "verdict.json": "fefc376181668d8b8a7fd3067605432b8a35ab9334175ec255b44d23614dbadc",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    },
+    {
+      "direct_child_exit_code": 0,
+      "direct_session_id": 23854,
+      "directory": "/tmp/w19-qwen-sm-recovery-d1-sm31",
+      "file": "d1_sm31.npz",
+      "inference": null,
+      "source_files_sha256": {
+        "cfg.hex": "ed2ef238521253f260743d79bb895382cf0f9109fb65452fe58b789d6793a244",
+        "lines.hex": "82a5a7a5d25454df0c4d6a3e3b47f3664098e3ddbbd872c793b5bf27047ea8ad",
+        "out.txt": "7f7c00f10004e067a97f4091623e87a8a80825dbaef48aef7e2aa4496bb80a48",
+        "scale.hex": "827e1ef27f2a28d75c9fc3523c7176ce05c69f4afce85c7228607b4e6799f9cd",
+        "verdict.json": "f00b44deb102b160f5de85e82fa33d1f9f5011aea4257b5915426ff0b53ce8ba",
+        "x.hex": "d506acc5722210a3c903af7bf7a52ae434eed7b404724042f3c37dec8b70321c"
+      }
+    }
+  ],
+  "rollout_source": "/home/ubuntu/.codex/sessions/2026/10/01/rollout-2026-10-01T08-26-50-01a0f692-c938-7db1-972d-44c777c0d7fe.jsonl",
+  "schema": "opentallas.w19-qwen-hbm-execution-provenance.v1",
+  "status": "arithmetic_pass_runtime_provenance_partially_explicit",
+  "strict_explicit_per_case_rc_admission": false,
+  "terminal_result_sha256": "4deba55c0285345809fd744e061a2db36cf69c4f473080e7c67b328935da43a4"
+}

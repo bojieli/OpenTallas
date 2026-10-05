@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.qwen-o4-head-rom.v1",
+  "die": 1,
+  "rows": 75968,
+  "row0": 75968,
+  "geometry": {
+    "name": "lm_head",
+    "base": 0,
+    "end": 3168,
+    "words": 3168,
+    "rows": 75968,
+    "columns": 4096,
+    "split": 1024,
+    "k_per_split": 4,
+    "tiles_per_round": 6,
+    "rounds": 99,
+    "scale_rows": 75968,
+    "scale_words": 4748
+  },
+  "code_words": 3168,
+  "scale_words": 4752,
+  "code_base": 0,
+  "scale_base": 0,
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+  "config_sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb",
+  "source_sha256": {
+    "tools/qwen_o4_head_rom.py": "59af3ad8ecf8bacebb40012bcd4a76cbcebea6e0ae1512b68dbbe81e4b060d1e",
+    "tools/hdc_qwen_int8_image.py": "eeb9cbfff631194e987c1120d58ea618158288c1acfec98abdcb602fe0defa5d",
+    "tools/hdc_qwen_layer0_rom.py": "97e530278f273bcfebaa8346aedaa3d73652554906abf7700f32dd88b6ef97c7",
+    "tools/hdc_qwen_fullshape_placement.py": "f4004430468f4946d19ac8073960b72884c2b5abc97e9bb706e47a42458a7660",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715"
+  },
+  "image_sha256": {
+    "matrix_int8.hex": "8c70bdc045f0df58c6942db26bbdcd1cacce25f5837be801086095301376ff3e",
+    "matrix_scale_bf16.hex": "f1c95494e7abeb4ec6dda21133e3f4e8b544017acca6cf4f9a0bdbd13aaf53ec"
+  },
+  "claim_boundary": "Complete checkpoint-quantized lm_head TP-2 die image; no RTL result by itself."
+}

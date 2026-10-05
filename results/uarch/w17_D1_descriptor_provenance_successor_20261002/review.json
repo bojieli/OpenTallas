@@ -1,0 +1,108 @@
+{
+  "status": "ACTUAL_PENDING_SNAPSHOT_REVIEW_DESCRIPTOR_PROVENANCE_UNBOUND",
+  "prerequisite_commits": [
+    "a11a038255a76d1eff011383677fbfbfeb5e82d0",
+    "77c5712821c7f9abb894d8d0b256338f9bdd5ccc"
+  ],
+  "engine_source": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "actual_capture_path": "/tmp/w17-D1-terminal-owner-capture-20261002-r1/gdb.log",
+  "raw_SHA256": "718c8da6cd3bd5e4e671192c9027d0d65c4aec9ec1623c5915f1a8fc2ce90bb8",
+  "actual_binary_SHA256": "dcbb334df6bd62990f7731c2254cd59aa33aeff0c20b61641edf8345d81e2482",
+  "capture_PID": 1682805,
+  "capture_terminal": {
+    "evals": 587,
+    "time_ps": 196501,
+    "cycles": 193,
+    "GDB_exit": 0,
+    "inferior_exit": 0
+  },
+  "live_job": null,
+  "new_legacy_validation": {
+    "status": "UNBOUND_DESCRIPTOR_CAUSAL_PROVENANCE",
+    "missing": [
+      "rn/pre-NBA phase",
+      "life_state/last_gen",
+      "service_start_ready/busy",
+      "lifecycle fault/shape priority",
+      "descriptor user/position identity"
+    ],
+    "core_ME_admission": "NOT_OBSERVED",
+    "service_bound": "BOUND_MISSING",
+    "fulltoken": false
+  },
+  "old_claim_not_reissued": "Prior verifier allows any earlier gate; historical receipt preserved byte-identical. New descriptor provenance must use validate_descriptor same-phase packet. Retained markers cannot provide its missing fields.",
+  "source_descriptor_guard": "desc_accept = life_state==IDLE && desc_v; desc_v=kvd_v && (!WINDOW_RETAIN_L0 || !WINDOW_HBM_ATTENTION || win_service_start_ready || win_service_busy). Sequential fault/wrap/shape checks also required.",
+  "core_issue_distinct": "me_ready && kv_ok && !kvd_v && win_idle plus waited/q_gate/m0_gate; descriptor acceptance is not ME issue.",
+  "actual_first_descriptor": "Same-edge marker141500ps: kv_ok0 kvd_v1; not core ME admission. generation1/rows128 are observed, not same-phase generation provenance proof.",
+  "actual_final_core": {
+    "pc": 0,
+    "st": 6,
+    "idles": 31,
+    "waited": 1,
+    "q_gate": 1,
+    "me_ready": 1,
+    "me_go": 0,
+    "d_unit": 1,
+    "win_admit": 1
+  },
+  "actual_final_provider": {
+    "kv_ok": 0,
+    "kvd_v": 0,
+    "coll_busy": 0,
+    "lifecycle": "STAGE",
+    "generation": 1,
+    "window": "FR row0 sector1",
+    "staged_rows": 0,
+    "query_valid": 0,
+    "KV_valid": 0,
+    "score_valid": 0,
+    "PV_valid": 0
+  },
+  "actual_ledger": {
+    "reads": 1,
+    "returns": 1,
+    "writes": 0,
+    "ACKs": 0,
+    "pending": 0,
+    "first_reply_delta_cycles": 53
+  },
+  "conditional_stage_lower_bound": {
+    "kind": "SOURCE_TIMING_LOWER_BOUND_NOT_DEADLINE",
+    "assumptions": "Pinned1000ps clock, one-credit sequential FR/FR_DONE, no retained/staged row; selected original provider timing parameters",
+    "minimum_request_to_due_ps": 33524,
+    "minimum_later_reply_cycles": 34,
+    "next_request_edge_cycles": 1,
+    "actual_first_reply_cycles": 53,
+    "row0_minimum_cycles_from_first_request": 613,
+    "all128_minimum_cycles_from_first_request": 76178,
+    "upper_bound": null,
+    "score_completion_deadline": null,
+    "provider_arbitration_upper_bound": null,
+    "fulltoken": false,
+    "single_case_not_universal_liveness": true
+  },
+  "BOUND_MISSING": true,
+  "fulltoken": false,
+  "original_PC24_cause": "UNOBSERVED",
+  "I66_wholeprogram_origin": null,
+  "X_ROM": 0,
+  "scope": "EXPERIMENTAL_HAND_PAIRED_NATIVE_FIXTURE_ONLY; no regenerated RTL qualification",
+  "next_missing_observation": "Pre-NBA lifecycle state,last_gen,rn,desc_v source gates and descriptor user/pos/shape; same-phase read owner generation is not exported. No new run authorized or launched by this correction.",
+  "protected_SHA256": {
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/test/w17_D1_scope_corrected_probe/ot_v41_rt_die_D1_scope.sv": "be35b5ccf0d258677b11bc9cd6b0ee2869b5023b21651a3b39099413bdb4487d",
+    "rtl/test/w17_D1_reset_qualified_fixture/Vtb_D1_scope_core___024root__0.cpp": "eb942b844fae233a96b1d746bf905222abc705bb303735e3f88a76c111ca4c4d",
+    "tools/w17_D1_reset_qualified_runtime_verify.py": "ae70e636c63bd2443ffeb4778a2dd6f0765a650668efd56ea5f9ade0de160111",
+    "tools/w17_D1_terminal_owner_receipt.py": "be1e482310429491cde0394609b17fab3b49d5abb99e84a2cac4eefe6bdcb767",
+    "results/uarch/w17_D1_terminal_owner_actual_20261002_r1/attribution.json": "a432cb7dc27dff9cb24d3677c923de83bf3e24d222473e2d1343e9e8de53cbcf"
+  },
+  "validation": {
+    "new_tests": 38,
+    "focused_tests": 104,
+    "protected_files_byte_identical": 7,
+    "execution": "NO_NEW_RUN_NO_BUILD",
+    "strict_entrypoint": "tools.w17_D1_descriptor_provenance.verify_causal_first_return",
+    "new_packets": "MODEL_ONLY_NOT_ACTUALLY_EXPORTED"
+  }
+}

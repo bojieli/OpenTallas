@@ -1,0 +1,19 @@
+{
+  "CPU_fixture_bits_and_provider_receipts_match_existing_worker": true,
+  "full_parent_PC_shape_run_executed": false,
+  "full_program_movement_qualified": false,
+  "hardware_qualified": false,
+  "integration_scope": "Opt-in trace hook for a fresh owner-prepared execution only; do not attach to any running worker",
+  "leaf_to_parent_provider_refill_ACK_reverse_join": "UNKNOWN",
+  "parent_observer_context_required": [
+    "immutable program/dispatch SHA",
+    "actual PC/rank/template call",
+    "SM/generation",
+    "same fresh worker owner"
+  ],
+  "previous_movement_commit": "c9fc8df14fb5b6f13f8d38f0ce99113759565011",
+  "schema": "H4_C0_DYNAMIC_LEAF_CHECKPOINT_V1",
+  "source_order_observed_leaves": 11,
+  "terminology": "Released checkpoint/memory images; no training",
+  "tests_passed": 3
+}

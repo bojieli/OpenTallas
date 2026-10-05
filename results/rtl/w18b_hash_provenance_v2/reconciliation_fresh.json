@@ -1,0 +1,223 @@
+{
+ "schema": "opentallas.w18b.parallel_hash_reconciliation.v2",
+ "baselines": [
+  {
+   "path": "/tmp/claude-1000/wt/w18/results/rtl/w18b_hash_diagnosis/karb21_equiv_final_fail.json",
+   "sha256": "d8de1a290c5b8ed1b8f472d7860d262e92b91c55cb9e8d6bab8f068f80895ea9",
+   "original_pass": false,
+   "stale_sources": [],
+   "transaction_cases": 54,
+   "kv_cases": 5,
+   "reusable": true,
+   "original_hash": {
+    "summary": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=25364 ingress_stalls=0",
+    "pass": false
+   }
+  },
+  {
+   "path": "/tmp/claude-1000/wt/w18/results/rtl/w18b_hash_diagnosis/karb22_equiv_final_fail.json",
+   "sha256": "3dfabfd40ea957e422ac53bc4aabd2c9dfa0d0308088ea255fd0f99ca5011959",
+   "original_pass": false,
+   "stale_sources": [],
+   "transaction_cases": 54,
+   "kv_cases": 5,
+   "reusable": true,
+   "original_hash": {
+    "summary": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=25364 ingress_stalls=0",
+    "pass": false
+   }
+  }
+ ],
+ "runs": {
+  "exhaustive": {
+   "stdout": "KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=0 ingress_stalls=0\nPASS\n",
+   "stderr": "",
+   "returncode": 0,
+   "compile_returncode": 0,
+   "compile_stdout": "",
+   "compile_stderr": "/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n",
+   "executable_sha256": "c526591a12e0d5be015f9272c63507222d2499faa4d2aa1ca42532edd8cfae59",
+   "variant_sha256": "1744424bfb96dd1a6db9e601d615838e5b612c1efa5cdc1fa4150e5994c3e32b",
+   "pass_": true,
+   "record_path": "/tmp/claude-1000/wt/w18/results/rtl/w18b_hash_provenance_v2/exhaustive.json",
+   "record_sha256": "2aa5a718f5646cdd1a3674b9b26da2258c8776a295c71c288196555652293963",
+   "log_sha256": "84776310ad712d325a198370b0b6539f0d42f92ab719e427e83e9190e20a2ca6",
+   "reused": false,
+   "expected_pass": true
+  },
+  "small_control": {
+   "stdout": "KARB_HASH n=128 got=128 pipe_got=128 bad=0 multi=0 ingress_stalls=0\nPASS\n",
+   "stderr": "",
+   "returncode": 0,
+   "compile_returncode": 0,
+   "compile_stdout": "",
+   "compile_stderr": "/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n",
+   "executable_sha256": "f5da859616228887c81269cd39a40c576cec815096eea33ad30c744a3ce5cf7b",
+   "variant_sha256": "07ebed8231f251f63e94156ec63e315abe99aad489d2b109f536891a70f820de",
+   "pass_": true,
+   "expected_pass": true
+  },
+  "wrong_tag": {
+   "stdout": "KARB_HASH n=128 got=128 pipe_got=128 bad=128 multi=0 ingress_stalls=0\nFAIL\n",
+   "stderr": "",
+   "returncode": 0,
+   "compile_returncode": 0,
+   "compile_stdout": "",
+   "compile_stderr": "/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n",
+   "executable_sha256": "a738519ef003e7bcdc1272f31272e49f4bb85366a791603cf5f7105d8b24d32e",
+   "variant_sha256": "46737dd76272548f8191201af595b19b8a8ae071098d2c2fa27862cce37d853d",
+   "pass_": false,
+   "expected_pass": false
+  },
+  "duplicate": {
+   "stdout": "KARB_HASH n=128 got=128 pipe_got=128 bad=128 multi=0 ingress_stalls=0\nFAIL\n",
+   "stderr": "",
+   "returncode": 0,
+   "compile_returncode": 0,
+   "compile_stdout": "",
+   "compile_stderr": "/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n",
+   "executable_sha256": "96655b752323fe2e14d9f97d1a0cd30de21760f25998522df515206c9d071014",
+   "variant_sha256": "7d347d6889c9d079d1f8d55a2dc33312087a6ef0c98e4e7dcdd302d3213c51e5",
+   "pass_": false,
+   "expected_pass": false
+  },
+  "missing_pc0": {
+   "stdout": "KARB_HASH n=128 got=128 pipe_got=124 bad=4 multi=0 ingress_stalls=0\nFAIL\n",
+   "stderr": "",
+   "returncode": 0,
+   "compile_returncode": 0,
+   "compile_stdout": "",
+   "compile_stderr": "/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n/home/ubuntu/w18work/hash_gate_v2_src/rtl/chip/ot_chip_v41x_karb_pregion.sv:126: warning: @* found no sensitivities so it will never trigger.\n",
+   "executable_sha256": "51cdeea36692fd56bc07b42ff16fbaf289a2b580b59305596b624c94aa8467ee",
+   "variant_sha256": "a0576c115f7c4e06f5bad9c22005d005c1b826df1b9b26282273c61dd5801b22",
+   "pass_": false,
+   "expected_pass": false
+  }
+ },
+ "sources": {
+  "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv": "8e3ee1fba61f867dac2a8ad83abe703962c1902913bafe99c40e63e7905f0b84",
+  "rtl/chip/ot_chip_v41x_karb_proot.sv": "8a564eb09a2a893d669093b00210d81ac718a77f7dbbde4dc28453d5879141a8",
+  "rtl/chip/ot_chip_v41x_karb_pregion.sv": "f6ae368b997e12600d6ddeb447aa85db8f317960714dc6c131ae2d6ac979f8e3",
+  "rtl/chip/ot_chip_v41x_karb_pslice.sv": "4a71ed3580129b3106e44b8d0c59a2ffe2f14c4d00b673221e669a98c95d8e97",
+  "rtl/chip/ot_chip_v41x_karb_pipe.sv": "378fd81d0de101435aa662bb59d2aa18ec19585adb6c8e0bd570dab9da9ae0f0",
+  "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
+  "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+  "rtl/chip/ot_chip_v41x_karb_region.sv": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477",
+  "rtl/chip/ot_chip_v41x_karb_region_kq.sv": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+  "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+  "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+  "rtl/chip/ot_chip_v41x_karb_q2r.sv": "f135590bf0e8f4deab3e1dc9257647aff4ce1a3e9e129758ad00184114a68757",
+  "rtl/chip/ot_chip_v41x_keep_dff.sv": "065ae298c38e138495cb0065b033fa6ab47daf7aa11604bad0df1120f050e9de",
+  "rtl/chip/ot_chip_v41x_stat_ctr32.sv": "b56a51e11cab0f35ff23398d638948e461ab3f2e3e321ca58a92caa7398251e8",
+  "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+  "rtl/chip/ot_chip_v41x_karb_qh.sv": "4e1df73be39514a48481613810f2956aae8de2149e972127879f1b87156e0860",
+  "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+  "rtl/test/tb_chip_v41x_karb_local_equiv.sv": "121af2a3e4694ebff7332dd30057d461f9895bf23035f38cdcaf3f66d25ff007",
+  "tools/rtl_chip_v41x_karb_local.py": "3984f35b501b934f784df6c43efe7f9801f7b7755b472ed2e867be9fddef824c",
+  "rtl/test/tb_chip_v41x_kv_prefetch.sv": "c0f7f72a968bd15e17f56db355748a17c468722d673ab493dc9483207d881eff",
+  "rtl/test/tb_chip_v41x_karb_local_hash.sv": "3d25404d926ff489054b21db8bb6ace08b0004a2a66b6a391f9074098c57985e",
+  "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+  "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+  "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+  "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv": "1744424bfb96dd1a6db9e601d615838e5b612c1efa5cdc1fa4150e5994c3e32b",
+  "tools/w18/hash_parallel_gate.py": "970bd282d7957c3f416fda78400cb628cb9b321b6a78017dd02d0dd66d70a0fd"
+ },
+ "context": {
+  "sources": {
+   "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv": "1744424bfb96dd1a6db9e601d615838e5b612c1efa5cdc1fa4150e5994c3e32b",
+   "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv": "8e3ee1fba61f867dac2a8ad83abe703962c1902913bafe99c40e63e7905f0b84",
+   "rtl/chip/ot_chip_v41x_karb_proot.sv": "8a564eb09a2a893d669093b00210d81ac718a77f7dbbde4dc28453d5879141a8",
+   "rtl/chip/ot_chip_v41x_karb_pregion.sv": "f6ae368b997e12600d6ddeb447aa85db8f317960714dc6c131ae2d6ac979f8e3",
+   "rtl/chip/ot_chip_v41x_karb_pslice.sv": "4a71ed3580129b3106e44b8d0c59a2ffe2f14c4d00b673221e669a98c95d8e97",
+   "rtl/chip/ot_chip_v41x_karb_pipe.sv": "378fd81d0de101435aa662bb59d2aa18ec19585adb6c8e0bd570dab9da9ae0f0",
+   "rtl/chip/ot_chip_v41x_hbm_karb_local.sv": "73a9c0ea0eeb49d286a6e964e2f0f4ba5704a347be5c1ff67003059cc57dd558",
+   "rtl/chip/ot_chip_v41x_karb_stack_ep.sv": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+   "rtl/chip/ot_chip_v41x_karb_region.sv": "9a4b691956eac1dd272ccb5f357d835c6e4c9a87a24546d832e8561db1c98477",
+   "rtl/chip/ot_chip_v41x_karb_region_kq.sv": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+   "rtl/chip/ot_chip_v41x_karb_slice.sv": "4b72f689c543f9d35cf8bd6a88b34e1737f36ac7419e72dbf746959fef7a614b",
+   "rtl/chip/ot_chip_v41x_karb_q2.sv": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+   "rtl/chip/ot_chip_v41x_karb_q2r.sv": "f135590bf0e8f4deab3e1dc9257647aff4ce1a3e9e129758ad00184114a68757",
+   "rtl/chip/ot_chip_v41x_keep_dff.sv": "065ae298c38e138495cb0065b033fa6ab47daf7aa11604bad0df1120f050e9de",
+   "rtl/chip/ot_chip_v41x_stat_ctr32.sv": "b56a51e11cab0f35ff23398d638948e461ab3f2e3e321ca58a92caa7398251e8",
+   "rtl/chip/ot_chip_v41x_karb_qn.sv": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+   "rtl/chip/ot_chip_v41x_karb_qh.sv": "4e1df73be39514a48481613810f2956aae8de2149e972127879f1b87156e0860",
+   "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+   "tools/rtl_chip_v41x_karb_local.py": "3984f35b501b934f784df6c43efe7f9801f7b7755b472ed2e867be9fddef824c",
+   "tools/w18/hash_parallel_gate.py": "970bd282d7957c3f416fda78400cb628cb9b321b6a78017dd02d0dd66d70a0fd"
+  },
+  "compiler_inputs": [
+   "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv",
+   "rtl/chip/ot_chip_v41x_karb_proot.sv",
+   "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+   "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+   "rtl/chip/ot_chip_v41x_karb_pipe.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+   "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+   "rtl/chip/ot_chip_v41x_karb_region.sv",
+   "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+   "rtl/chip/ot_chip_v41x_karb_slice.sv",
+   "rtl/chip/ot_chip_v41x_karb_q2.sv",
+   "rtl/chip/ot_chip_v41x_karb_q2r.sv",
+   "rtl/chip/ot_chip_v41x_keep_dff.sv",
+   "rtl/chip/ot_chip_v41x_stat_ctr32.sv",
+   "rtl/chip/ot_chip_v41x_karb_qn.sv",
+   "rtl/chip/ot_chip_v41x_karb_qh.sv",
+   "rtl/chip/ot_chip_v41x_hbm_karb.sv"
+  ],
+  "recipe": {
+   "compiler_args": [
+    "-g2012",
+    "-s",
+    "tb_chip_v41x_karb_local_hash_parallel",
+    "-o",
+    "{exe}",
+    "rtl/test/tb_chip_v41x_karb_local_hash_parallel.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb_pipe.sv",
+    "rtl/chip/ot_chip_v41x_karb_proot.sv",
+    "rtl/chip/ot_chip_v41x_karb_pregion.sv",
+    "rtl/chip/ot_chip_v41x_karb_pslice.sv",
+    "rtl/chip/ot_chip_v41x_karb_pipe.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb_local.sv",
+    "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+    "rtl/chip/ot_chip_v41x_karb_region.sv",
+    "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+    "rtl/chip/ot_chip_v41x_karb_slice.sv",
+    "rtl/chip/ot_chip_v41x_karb_q2.sv",
+    "rtl/chip/ot_chip_v41x_karb_q2r.sv",
+    "rtl/chip/ot_chip_v41x_keep_dff.sv",
+    "rtl/chip/ot_chip_v41x_stat_ctr32.sv",
+    "rtl/chip/ot_chip_v41x_karb_qn.sv",
+    "rtl/chip/ot_chip_v41x_karb_qh.sv",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv"
+   ],
+   "simulator_args": [
+    "-n",
+    "{exe}"
+   ]
+  },
+  "tools": {
+   "compiler": {
+    "path": "/usr/bin/iverilog",
+    "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+    "version_stdout": "Icarus Verilog version 11.0 (stable) ()\n\nCopyright 1998-2020 Stephen Williams\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Preprocessor version 11.0 (stable) ()\n\nCopyright (c) 1999-2020 Stephen Williams (steve@icarus.com)\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\nIcarus Verilog Parser/Elaborator version 11.0 (stable) ()\n\nCopyright (c) 1998-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n FLAGS DLL vvp.tgt\nvvp.tgt: Icarus Verilog VVP Code Generator 11.0 (stable) ()\n\nCopyright (c) 2001-2020 Stephen Williams (steve@icarus.com)\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n",
+    "version_stderr": ""
+   },
+   "simulator": {
+    "path": "/usr/bin/vvp",
+    "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+    "version_stdout": "",
+    "version_stderr": "Icarus Verilog runtime version 11.0 (stable) ()\n\nCopyright 1998-2020 Stephen Williams\n\n  This program is free software; you can redistribute it and/or modify\n  it under the terms of the GNU General Public License as published by\n  the Free Software Foundation; either version 2 of the License, or\n  (at your option) any later version.\n\n  This program is distributed in the hope that it will be useful,\n  but WITHOUT ANY WARRANTY; without even the implied warranty of\n  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n  GNU General Public License for more details.\n\n  You should have received a copy of the GNU General Public License along\n  with this program; if not, write to the Free Software Foundation, Inc.,\n  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n\n"
+   },
+   "python": {
+    "version": "3.10.12",
+    "sha256": "a2f33a6e006989270f4340528eb61f8f97366e00a5d1b602ac8672ea44fc56ae"
+   }
+  }
+ },
+ "sources_unchanged": true,
+ "pass_": true,
+ "adoption": false,
+ "claim": "W18 stream-source functional reconciliation only; not a current origin/main gate. Physical signoff and model gain remain separate gates."
+}

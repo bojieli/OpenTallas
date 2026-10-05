@@ -1,0 +1,35 @@
+{
+  "base_main": "bf99ccc864cb02579ae6637b629bef660a386722",
+  "reviewed_commits": ["9ffc7a30c", "6b8f3affa5a11e44eb7d84c42061aabf792f22ad", "59a4051f57535ed0ab31568b6948c12cf06105f7", "70ee620dcb85cdd209f1590e8db5fd893b177483", "cc4d800ac8c031449c56bea2c3c643c0a4a1320d"],
+  "VM": {
+    "selected_profile": "DS4096-TP4-S58-PAR2-NP2048, VM_AW19",
+    "independent_parent_and_VM_tests_passed": 34,
+    "regenerated_model_hashes_equal_frozen_records": true,
+    "parent_found_duplicate_read_identity_collapsing_replies": "Reproduced on original reference; fixed with explicit refusal and distinct-identity fanout coverage",
+    "source_order": "Pre-edge reads, literal last-write-wins ordering; superseded writes get no owner-visible ACK",
+    "conditional_read_elements": 1520,
+    "conditional_write_elements": 593,
+    "VM_bits": 16777216,
+    "physical_multiport_memory_claim": false,
+    "finite_bank_service_admitted": false,
+    "new_engine_RTL_admitted": false
+  },
+  "MTP": {
+    "source_pins_verified": 47,
+    "artifact_hashes_verified": 52,
+    "independent_inventory_replay": "BYTE_IDENTICAL",
+    "anchored_findings": 14,
+    "current_complete_native_program": "2213-PC AR program, not an actual MTP drafter/verification/rollback schedule",
+    "existing_six_position_verification": "Fixed draft inputs; actual drafter not established",
+    "full_core_token_interface": "NW21; existing NW16 accept route cannot hold all vocabulary IDs",
+    "whole_MTP_qualified": false
+  },
+  "restart": {
+    "R66_atomic_wrapper_intake": "HELD for serialized boundary-PC consistency and actual current-PID guard fixes",
+    "actual_PC0_1_checkpoint_and_cold_restore": "NOT_RUN",
+    "physical_resource_receipt": "cc4d800ac8c031449c56bea2c3c643c0a4a1320d",
+    "remote_resources_admitted": false
+  },
+  "check_figures": "PASS, terminal_ready=False",
+  "headline_qualification": false
+}

@@ -1,0 +1,43 @@
+{
+  "ME_wrapper_commit": "90d8cf4b0c75fcaad0c78b67172702255bf4e53e",
+  "SS_FF_pass": false,
+  "artifact_manifest": {
+    "r1_FAIL/launch.json": "57eb3336e0e573416a540c1ea0df1be8bb3db4ac952db5083dfcf960d31084e0",
+    "r1_FAIL/stage0.log": "04ad03cd36c007255cb6e98451d5e624ce10ed6fdbbe7617ece1cbec9f734b92",
+    "r1_FAIL/stage1.log": "47cf2e48a0e1e8248beb4f0c4fa079c48b63f8d76b78d103c607751deb071d73",
+    "r1_FAIL/stage2.log": "62b309aa49900b6368dfb953a18439ba4bbcf046d9015b97e8593005f2c77f33",
+    "r1_FAIL/terminal.json": "24c7ea6405ca7b85625d2ee247c0b8b5823a1a7c162f9d1be940948d446dd06f",
+    "r2_old_layout_compile/command.json": "6f1fab31530581f8a3a2b88a03a5ee5d16f3f3301f742bf07a3d2f108c8fa8b6",
+    "r2_old_layout_compile/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r2_old_layout_compile/terminal.json": "4fa4209c1a4b90381a97bdb3da70b9bad801fc08503da1d0dab089174df5ae3e",
+    "r3_canonical_compile/command.json": "85b47b99a51f8978cb229bca125377ed8870c04c6bad7ffcd2d71f68dafd961d",
+    "r3_canonical_compile/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r3_canonical_compile/terminal.json": "fc3cc6a155355bb4d6222a0f18265c3863baf7d39134ee20a9b5cba8a691f290"
+  },
+  "canonical_header_actual_snapshot_commit": "dcf422b852a722ffffd341cac9c4dbe3cb1e6587",
+  "canonical_header_prerequisite": "8c32ae59bd667b5d6c1012003c4c0f5ac5adf6cc",
+  "canonical_header_upstream_commit": "c6cbe617780cf64bce4fdb3dedc560901c67f4ef",
+  "current_provider_object": "/srv/opentallas-scratch/jobs/dsrom-s81-xu-c6cbe6177-wrapper-r3/s81_minimum_xu.o",
+  "current_provider_object_sha256": "6ae726a1341187e3d6f5ca53349413c8bc25a05426304eb2019cae099c352823",
+  "current_r3_wrapper_compile_returncode": 0,
+  "one_native_generation_and_archive_build_only": true,
+  "original_SV_retained_57e3_matches": {
+    "rtl/hdc/v41/ot_hdc_engram_hash.sv": true,
+    "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": true,
+    "rtl/hdc/v41/ot_hdc_select.sv": true,
+    "rtl/hdc/v41/ot_hdc_sinkhorn.sv": true,
+    "rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv": true,
+    "rtl/hdc/v41/ot_hdc_sk_arith.sv": true,
+    "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": true,
+    "rtl/hdc/v41/ot_hdc_v41_xu.sv": true
+  },
+  "provider_commit": "4a4017a9bbef65ecea98ef48d47dac46c95a2c0c",
+  "r1_overall_verdict": "FAIL",
+  "r2_superseded_for_inline_layout_mismatch": true,
+  "remaining_integration": "Cicero sole token factory link; Arch exact unit4/literal publication routing. ME pending actual Noether WINDOW packed-KV participant and native attention/cut instantiation.",
+  "required_host_header_match": "Every host/provider TU must use the same canonical inline PrefixPublication layout; r2 object must not be linked",
+  "runtime_pass": false,
+  "token_pass": false,
+  "unchanged_native_archive": "/srv/opentallas-scratch/jobs/dsrom-s81-xu-4a4017a9b-r1/obj/VDsromXu__ALL.a",
+  "unchanged_native_archive_sha256": "2846f6435fc4d6ddaa339a76da2979032df5317679085df3c5a6ae578260b441"
+}

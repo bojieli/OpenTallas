@@ -1,0 +1,401 @@
+F....FFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+____ test_actual_provider_native_operators_continuous_vs_restored_byteexact ____
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_actual_provider_native_op0')
+
+    def test_actual_provider_native_operators_continuous_vs_restored_byteexact(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path)
+
+tests/test_ds_producer_checkpoint_resume.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c8ea6620>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+__________ test_pending_reverse_partial_append_and_retired_gap_refuse __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_pending_reverse_partial_a0')
+
+    def test_pending_reverse_partial_append_and_retired_gap_refuse(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path);p.rf[0].queue.append('accepted')
+
+tests/test_ds_producer_checkpoint_resume.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c51afaf0>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+__ test_tampered_checkpoint_refuses_before_constructor_mutation[payload.bin] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_tampered_checkpoint_refus0')
+file = 'payload.bin'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c51c78e0>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+___ test_tampered_checkpoint_refuses_before_constructor_mutation[state.json] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_tampered_checkpoint_refus1')
+file = 'state.json'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c51dc640>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+_ test_tampered_checkpoint_refuses_before_constructor_mutation[actual_observations.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_tampered_checkpoint_refus2')
+file = 'actual_observations.json'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:88: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c51c2da0>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+__________ test_stale_generation_source_and_partial_checkpoint_refuse __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_stale_generation_source_a0')
+
+    def test_stale_generation_source_and_partial_checkpoint_refuse(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path);p2,e2,w2=constructor(tmp_path,'cold')
+
+tests/test_ds_producer_checkpoint_resume.py:93: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c7af0c40>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+_____________ test_resume_loop_defaultoff_and_no_expected_stimulus _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6971/test_resume_loop_defaultoff_an0')
+
+    def test_resume_loop_defaultoff_and_no_expected_stimulus(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path)
+
+tests/test_ds_producer_checkpoint_resume.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:51: in captured
+    receipt=C.capture_quiescent(e,p,w,boundary_pc=0,destination=dest,source_contract=contract)
+tools/ds_producer_checkpoint_resume.py:280: in capture_quiescent
+    seal=save(provider,engine,destination,enabled=True)
+tools/ds_producer_checkpoint_resume.py:181: in save
+    closure={'schema':SCHEMA,'identity':identity(p,engine),'inventory':model,'state':writer.tree(snapshot)}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in tree
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+tools/ds_producer_checkpoint_resume.py:117: in <listcomp>
+    if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <ds_producer_checkpoint_resume.Writer object at 0x78e7c7b6ca00>
+v = dtype('float32')
+
+    def tree(self, v):
+        if isinstance(v, np.ndarray):
+            if v.dtype.hasobject: raise ValueError('object payload forbidden')
+            a = np.ascontiguousarray(v); offset = self.bytes
+            raw = memoryview(a).cast('B')
+            for first in range(0, len(raw), 1048576): self.f.write(raw[first:first+1048576])
+            self.bytes += len(raw); self.arrays += 1
+            return {'array': [offset, len(raw), a.dtype.str, list(a.shape), bool(v.flags.writeable)]}
+        if isinstance(v, (bytes, bytearray)):
+            offset = self.bytes; self.f.write(v); self.bytes += len(v)
+            return {'bytes': [offset, len(v), isinstance(v, bytearray)]}
+        if isinstance(v, np.generic): return self.tree(v.item())
+        if isinstance(v, dict): return {'dict': [[self.tree(k), self.tree(x)] for k, x in v.items()]}
+        if isinstance(v, (tuple, list, set)): return {type(v).__name__: [self.tree(x) for x in v]}
+        if v is None or type(v) in (str, int, float, bool): return v
+>       raise ValueError('unpriced/untyped state: ' + type(v).__name__)
+E       ValueError: unpriced/untyped state: Float32DType
+
+tools/ds_producer_checkpoint_resume.py:120: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_actual_provider_native_operators_continuous_vs_restored_byteexact
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_pending_reverse_partial_append_and_retired_gap_refuse
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[payload.bin]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[state.json]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[actual_observations.json]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_stale_generation_source_and_partial_checkpoint_refuse
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_resume_loop_defaultoff_and_no_expected_stimulus

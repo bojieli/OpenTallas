@@ -1,0 +1,66 @@
+W15CFG seed=19 relay=0 depth=512 det=0 U(T=1.0000 dly=2.000 js=0.500 wire=32 enc=0 dec=0 drel=4000) X(T=0.93405 dly=56.868 js=3.000 wire=32 enc=4 dec=59 drel=4000)
+OP op=0 die=0 mode=1 words=10 issue=65 first_tx=68 last_tx=78 first_vm=298 last_vm=310 done=314 writes=40 expect=40
+OP op=0 die=1 mode=1 words=10 issue=65 first_tx=68 last_tx=78 first_vm=298 last_vm=310 done=314 writes=40 expect=40
+OP op=0 die=2 mode=1 words=10 issue=65 first_tx=68 last_tx=78 first_vm=299 last_vm=311 done=315 writes=40 expect=40
+OP op=0 die=3 mode=1 words=10 issue=65 first_tx=68 last_tx=78 first_vm=300 last_vm=312 done=316 writes=40 expect=40
+OP op=1 die=0 mode=1 words=4 issue=318 first_tx=321 last_tx=324 first_vm=553 last_vm=556 done=560 writes=16 expect=16
+OP op=1 die=1 mode=1 words=4 issue=318 first_tx=321 last_tx=324 first_vm=554 last_vm=557 done=561 writes=16 expect=16
+OP op=1 die=2 mode=1 words=4 issue=319 first_tx=322 last_tx=325 first_vm=552 last_vm=555 done=559 writes=16 expect=16
+OP op=1 die=3 mode=1 words=4 issue=320 first_tx=323 last_tx=326 first_vm=553 last_vm=556 done=560 writes=16 expect=16
+OP op=2 die=0 mode=0 words=160 issue=564 first_tx=567 last_tx=748 first_vm=804 last_vm=986 done=987 writes=160 expect=160
+OP op=2 die=1 mode=0 words=160 issue=565 first_tx=568 last_tx=749 first_vm=805 last_vm=986 done=987 writes=160 expect=160
+OP op=2 die=2 mode=0 words=160 issue=563 first_tx=566 last_tx=747 first_vm=805 last_vm=986 done=987 writes=160 expect=160
+OP op=2 die=3 mode=0 words=160 issue=564 first_tx=567 last_tx=748 first_vm=805 last_vm=987 done=988 writes=160 expect=160
+OP op=3 die=0 mode=1 words=18 issue=991 first_tx=994 last_tx=1013 first_vm=1225 last_vm=1247 done=1251 writes=72 expect=72
+OP op=3 die=1 mode=1 words=18 issue=991 first_tx=994 last_tx=1013 first_vm=1226 last_vm=1246 done=1250 writes=72 expect=72
+OP op=3 die=2 mode=1 words=18 issue=991 first_tx=994 last_tx=1013 first_vm=1225 last_vm=1247 done=1251 writes=72 expect=72
+OP op=3 die=3 mode=1 words=18 issue=992 first_tx=995 last_tx=1014 first_vm=1227 last_vm=1247 done=1251 writes=72 expect=72
+OP op=4 die=0 mode=1 words=3 issue=1255 first_tx=1258 last_tx=1260 first_vm=1487 last_vm=1490 done=1494 writes=12 expect=12
+OP op=4 die=1 mode=1 words=3 issue=1254 first_tx=1257 last_tx=1259 first_vm=1488 last_vm=1491 done=1495 writes=12 expect=12
+OP op=4 die=2 mode=1 words=3 issue=1255 first_tx=1258 last_tx=1260 first_vm=1487 last_vm=1490 done=1494 writes=12 expect=12
+OP op=4 die=3 mode=1 words=3 issue=1255 first_tx=1258 last_tx=1260 first_vm=1489 last_vm=1492 done=1496 writes=12 expect=12
+OP op=5 die=0 mode=1 words=18 issue=1498 first_tx=1501 last_tx=1520 first_vm=1733 last_vm=1754 done=1758 writes=72 expect=72
+OP op=5 die=1 mode=1 words=18 issue=1499 first_tx=1502 last_tx=1521 first_vm=1733 last_vm=1755 done=1759 writes=72 expect=72
+OP op=5 die=2 mode=1 words=18 issue=1498 first_tx=1501 last_tx=1520 first_vm=1732 last_vm=1754 done=1758 writes=72 expect=72
+OP op=5 die=3 mode=1 words=18 issue=1500 first_tx=1503 last_tx=1522 first_vm=1733 last_vm=1754 done=1758 writes=72 expect=72
+OP op=6 die=0 mode=1 words=18 issue=1762 first_tx=1765 last_tx=1784 first_vm=1995 last_vm=2016 done=2020 writes=72 expect=72
+OP op=6 die=1 mode=1 words=18 issue=1763 first_tx=1766 last_tx=1785 first_vm=1995 last_vm=2017 done=2021 writes=72 expect=72
+OP op=6 die=2 mode=1 words=18 issue=1762 first_tx=1765 last_tx=1784 first_vm=1997 last_vm=2017 done=2021 writes=72 expect=72
+OP op=6 die=3 mode=1 words=18 issue=1762 first_tx=1765 last_tx=1784 first_vm=1997 last_vm=2017 done=2021 writes=72 expect=72
+OP op=7 die=0 mode=1 words=18 issue=2024 first_tx=2027 last_tx=2046 first_vm=2258 last_vm=2279 done=2283 writes=72 expect=72
+OP op=7 die=1 mode=1 words=18 issue=2025 first_tx=2028 last_tx=2047 first_vm=2258 last_vm=2279 done=2283 writes=72 expect=72
+OP op=7 die=2 mode=1 words=18 issue=2025 first_tx=2028 last_tx=2047 first_vm=2259 last_vm=2279 done=2283 writes=72 expect=72
+OP op=7 die=3 mode=1 words=18 issue=2025 first_tx=2028 last_tx=2047 first_vm=2259 last_vm=2280 done=2284 writes=72 expect=72
+OP op=8 die=0 mode=1 words=18 issue=2287 first_tx=2290 last_tx=2309 first_vm=2521 last_vm=2542 done=2546 writes=72 expect=72
+OP op=8 die=1 mode=1 words=18 issue=2287 first_tx=2290 last_tx=2309 first_vm=2522 last_vm=2542 done=2546 writes=72 expect=72
+OP op=8 die=2 mode=1 words=18 issue=2287 first_tx=2290 last_tx=2309 first_vm=2521 last_vm=2542 done=2546 writes=72 expect=72
+OP op=8 die=3 mode=1 words=18 issue=2288 first_tx=2291 last_tx=2310 first_vm=2522 last_vm=2543 done=2547 writes=72 expect=72
+OP op=9 die=0 mode=1 words=18 issue=2550 first_tx=2553 last_tx=2572 first_vm=2784 last_vm=2805 done=2809 writes=72 expect=72
+OP op=9 die=1 mode=1 words=18 issue=2550 first_tx=2553 last_tx=2572 first_vm=2785 last_vm=2806 done=2810 writes=72 expect=72
+OP op=9 die=2 mode=1 words=18 issue=2550 first_tx=2553 last_tx=2572 first_vm=2784 last_vm=2805 done=2809 writes=72 expect=72
+OP op=9 die=3 mode=1 words=18 issue=2551 first_tx=2554 last_tx=2573 first_vm=2785 last_vm=2806 done=2810 writes=72 expect=72
+OP op=10 die=0 mode=1 words=18 issue=2813 first_tx=2816 last_tx=2835 first_vm=3048 last_vm=3068 done=3072 writes=72 expect=72
+OP op=10 die=1 mode=1 words=18 issue=2814 first_tx=2817 last_tx=2836 first_vm=3048 last_vm=3069 done=3073 writes=72 expect=72
+OP op=10 die=2 mode=1 words=18 issue=2813 first_tx=2816 last_tx=2835 first_vm=3047 last_vm=3068 done=3072 writes=72 expect=72
+OP op=10 die=3 mode=1 words=18 issue=2814 first_tx=2817 last_tx=2836 first_vm=3049 last_vm=3069 done=3073 writes=72 expect=72
+OP op=11 die=0 mode=1 words=40 issue=3076 first_tx=3079 last_tx=3123 first_vm=3311 last_vm=3355 done=3359 writes=160 expect=160
+OP op=11 die=1 mode=1 words=40 issue=3077 first_tx=3080 last_tx=3124 first_vm=3311 last_vm=3355 done=3359 writes=160 expect=160
+OP op=11 die=2 mode=1 words=40 issue=3076 first_tx=3079 last_tx=3123 first_vm=3310 last_vm=3356 done=3360 writes=160 expect=160
+OP op=11 die=3 mode=1 words=40 issue=3077 first_tx=3080 last_tx=3124 first_vm=3311 last_vm=3355 done=3359 writes=160 expect=160
+LINK src=0 dst=2 class=board age_min=187 age_max=189 wait_max=1 wire=32 faults=0000
+LINK src=0 dst=3 class=board age_min=188 age_max=190 wait_max=1 wire=32 faults=0000
+LINK src=1 dst=2 class=board age_min=186 age_max=188 wait_max=1 wire=32 faults=0000
+LINK src=1 dst=3 class=board age_min=187 age_max=188 wait_max=1 wire=32 faults=0000
+LINK src=2 dst=0 class=board age_min=184 age_max=186 wait_max=1 wire=32 faults=0000
+LINK src=2 dst=1 class=board age_min=185 age_max=186 wait_max=1 wire=32 faults=0000
+LINK src=3 dst=0 class=board age_min=186 age_max=188 wait_max=1 wire=32 faults=0000
+LINK src=3 dst=1 class=board age_min=187 age_max=189 wait_max=1 wire=32 faults=0000
+LINK src=0 dst=1 class=ucie age_min=48 age_max=49 wait_max=2 wire=32 faults=0000
+LINK src=1 dst=0 class=ucie age_min=47 age_max=48 wait_max=2 wire=32 faults=0000
+LINK src=2 dst=3 class=ucie age_min=48 age_max=49 wait_max=2 wire=32 faults=0000
+LINK src=3 dst=2 class=ucie age_min=47 age_max=48 wait_max=2 wire=32 faults=0000
+W15DONE seed=19 det=0 u_drel=4000 x_drel=4000 faults=0
+- rtl/test/tb_w15b_v41_tp4.sv:345: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 23.731 s; speed 120.528 ns/s
+- Verilator: cpu 23.545 s on 1 threads; allocated 93 MB

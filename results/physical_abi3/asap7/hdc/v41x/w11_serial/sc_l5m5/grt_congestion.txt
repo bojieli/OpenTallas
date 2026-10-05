@@ -1,0 +1,16 @@
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              876679        226294           25.81%             4 /  0 / 186
+M3             1060427        267956           25.27%             0 /  4 / 284
+M4              813957         54242            6.66%             6 /  0 / 631
+M5              784091         50229            6.41%             0 /  3 / 203
+---------------------------------------------------------------------------------------
+Total          3535154        598721           16.94%            10 /  7 / 1304
+
+[INFO GRT-0018] Total wirelength: 461316 um
+[INFO GRT-0014] Routed nets: 81108
+[WARNING GRT-0704] Try reduce the layer adjustment from 25% to 0%
+[ERROR GRT-0116] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.

@@ -1,0 +1,112 @@
+{
+ "campaign": "rtl3_a3_link_endpoint_physical",
+ "canonical_timestamp_policy": "no timestamp in canonical artifact",
+ "claim_boundary": {
+  "activity_derived_power": false,
+  "contains_rom_or_sram_macro": false,
+  "establishes_hop_latency_s": false,
+  "feature_size_scaling_permitted": false,
+  "foundry_drc": false,
+  "gds_generated": false,
+  "measures_reticle_boundary_delay": false,
+  "open_pdk_rtl_to_routed_feasibility": false,
+  "routed_not_only_synthesised": false,
+  "signoff_drc_or_lvs": false,
+  "target_node_area_or_delay": false,
+  "timing_closed_at_target_period": false
+ },
+ "design": {
+  "parameter_overrides": [
+   "MY_X=1",
+   "MY_Y=1"
+  ],
+  "sources": [
+   "rtl/lib/ot_crc_pkg.sv",
+   "rtl/ot_fp32_rne_pkg.sv",
+   "rtl/abi3/ot_a3_link_pkg.sv",
+   "rtl/abi3/ot_a3_link_channel.sv",
+   "rtl/abi3/ot_a3_mesh_router.sv",
+   "rtl/abi3/ot_a3_collective_engine.sv",
+   "rtl/abi3/ot_a3_link_node.sv"
+  ],
+  "top": "ot_a3_link_node",
+  "yosys_statistics": {
+   "cell_area_um2": 1034069.085,
+   "cells": 60483,
+   "module": "$paramod$e320be385cbd1cdefb4aa11352ba37920cdcea31\\ot_a3_link_node",
+   "sequential_cells": 10558
+  }
+ },
+ "evidence_class": "open_foundry_pdk_digital_implementation",
+ "flow": {
+  "corner": "typ_1p20V_25C",
+  "floorplan_utilization_percent": 35.0,
+  "global_placement_density": 0.6,
+  "maximum_routing_layer": "Metal5",
+  "node_nm": 130,
+  "platform": "ihp-sg13g2",
+  "steps": [
+   "yosys synth + dfflibmap + abc + hilomap",
+   "openroad initialize_floorplan + make_tracks + place_pins",
+   "openroad pdngen (Metal1 followpins, Metal4/Metal5 straps)",
+   "openroad global_placement + repair_design + detailed_placement",
+   "openroad clock_tree_synthesis + repair_clock_nets",
+   "openroad global_route + detailed_route (TritonRoute)",
+   "openroad filler_placement + check_placement"
+  ],
+  "target_clock_period_ns": 10.0
+ },
+ "implementation": {
+  "command": "/usr/bin/openroad -exit /tmp/a3link-phys-qmhz0tnd/pnr.tcl",
+  "detailed_route_drc_violations": null,
+  "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "log_tail": "",
+  "returncode": 0,
+  "routed": false,
+  "routed_def_written": false,
+  "timing_closed_at_target_period": false
+ },
+ "limitations": [
+  "IHP SG13G2 is a 130-nm open foundry PDK. Neither the area nor the timing here may be scaled to N6, N5, N7 or N4 by any feature-size, gate-pitch, or density ratio. docs/METHODOLOGY.md section 9 makes that a rule.",
+  "The block is the endpoint of ONE directed hop: sender with credit window, CRC32C and bounded replay, plus receiver. It contains no collective engine, no router, no ROM and no SRAM macro; its buffers are standard-cell flip-flops.",
+  "The clock period is a constraint chosen for this run, not a characterised maximum frequency. A closed period says the tool met the constraint, not that the block cannot go faster or that it would at any other node.",
+  "No parasitic-extracted (SPEF) timing, no signoff DRC against a foundry deck, no LVS, no GDS, and no activity-derived power.",
+  "Nothing here measures the wire between two endpoints, which is where a hop's latency actually lives."
+ ],
+ "metrics": {},
+ "pdk_collateral_sha256": {
+  "libs.ref/sg13g2_stdcell/lef/sg13g2_stdcell.lef": "c9bbc02d0c2cba3b15cd89a208750d25de882f02a2927ae78ba6422109fb01d0",
+  "libs.ref/sg13g2_stdcell/lef/sg13g2_tech.lef": "a12fecdead5721dc3bd14fb75bd0915c61afba064e38af8c7b69d59d9da05080",
+  "libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib": "1ac6a0301184b3a8aa1a4a01910967f624c8e869517777f529985f11f04588c3",
+  "libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib": "7677a8918689f452e80405ad16a83e744709342574f2aedcc507c2758986b396"
+ },
+ "schema": "opentallas.rtl.a3_link_physical.v1",
+ "source_sha256": {
+  "rtl/abi3/ot_a3_collective_engine.sv": "0230339aa6ea0d37e4266523863f15431d02f871643ce1e067d8d8872ca007d5",
+  "rtl/abi3/ot_a3_link_channel.sv": "c8856fce3b899cced1d8991f3354b0cc1249f6ee0150dbf6a90635b1f7bdc9da",
+  "rtl/abi3/ot_a3_link_node.sv": "2a1d8e6fbfc22fb310bb76b89e6e92de30adf32b596c38e019b79f5129779309",
+  "rtl/abi3/ot_a3_link_pkg.sv": "a45b95523f60a1d803233c81b80b96e0351b6280c27ca686fb5dbfc45ea67c91",
+  "rtl/abi3/ot_a3_mesh_router.sv": "641857a9f51868feba1438e2589b68d673cd969df1981effeddfda86e92ddb29",
+  "rtl/lib/ot_crc_pkg.sv": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b",
+  "rtl/ot_fp32_rne_pkg.sv": "3f892e737057cdfb651c0022c913d00f5e1be02b960f9afe9f57b202f1d57fa9",
+  "tools/run_a3_link_physical.py": "72d1fbdc94376d78979b5dc057fe4ea9144855543efd73e34c81383e9c4f6d09"
+ },
+ "status": "synthesis_only",
+ "synthesis": {
+  "command": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys -q /tmp/a3link-phys-qmhz0tnd/synth.ys",
+  "log": "k_node.sv:261\nWarning: Replacing memory \\GEN_PIPE.s with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:260\nWarning: Replacing memory \\GEN_PIPE.f with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:259\nWarning: Replacing memory \\GEN_PIPE.v with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:258\nWarning: Replacing memory \\GEN_PIPE.ns with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:315\nWarning: Replacing memory \\GEN_PIPE.nk with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:315\nWarning: Replacing memory \\GEN_PIPE.cr with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:314\nWarning: Replacing memory \\GEN_PIPE.as with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:313\nWarning: Replacing memory \\GEN_PIPE.ak with list of registers. See <ROOT>/rtl/abi3/ot_a3_link_node.sv:313\nWarning: Drivers conflicting with a constant 1'0 driver:\n    port Q[1] of cell $procdff$24774 ($dff)\n    port Q[3] of cell $procdff$24774 ($dff)\n    port Q[4] of cell $procdff$24774 ($dff)\n    port Q[5] of cell $procdff$24774 ($dff)\n    port Q[6] of cell $procdff$24774 ($dff)\n    port Q[7] of cell $procdff$24774 ($dff)\n    port Q[8] of cell $procdff$24774 ($dff)\n    port Q[9] of cell $procdff$24774 ($dff)\n    port Q[10] of cell $procdff$24774 ($dff)\n    port Q[11] of cell $procdff$24774 ($dff)\n    port Q[12] of cell $procdff$24774 ($dff)\n    port Q[13] of cell $procdff$24774 ($dff)\n    port Q[14] of cell $procdff$24774 ($dff)\n    port Q[15] of cell $procdff$24774 ($dff)\n    port Q[16] of cell $procdff$24774 ($dff)\n    port Q[17] of cell $procdff$24774 ($dff)\n    port Q[18] of cell $procdff$24774 ($dff)\n    port Q[19] of cell $procdff$24774 ($dff)\n    port Q[20] of cell $procdff$24774 ($dff)\n    port Q[21] of cell $procdff$24774 ($dff)\n    port Q[22] of cell $procdff$24774 ($dff)\n    port Q[23] of cell $procdff$24774 ($dff)\n    port Q[24] of cell $procdff$24774 ($dff)\n    port Q[25] of cell $procdff$24774 ($dff)\n    port Q[26] of cell $procdff$24774 ($dff)\n    port Q[27] of cell $procdff$24774 ($dff)\n    port Q[28] of cell $procdff$24774 ($dff)\n    port Q[29] of cell $procdff$24774 ($dff)\n    port Q[30] of cell $procdff$24774 ($dff)\n    port Q[31] of cell $procdff$24774 ($dff)\n    port Q[1] of cell $procdff$24779 ($adff)\n    port Q[3] of cell $procdff$24779 ($adff)\n    port Q[4] of cell $procdff$24779 ($adff)\n    port Q[5] of cell $procdff$24779 ($adff)\n    port Q[6] of cell $procdff$24779 ($adff)\n    port Q[7] of cell $procdff$24779 ($adff)\n    port Q[8] of cell $procdff$24779 ($adff)\n    port Q[9] of cell $procdff$24779 ($adff)\n    port Q[10] of cell $procdff$24779 ($adff)\n    port Q[11] of cell $procdff$24779 ($adff)\n    port Q[12] of cell $procdff$24779 ($adff)\n    port Q[13] of cell $procdff$24779 ($adff)\n    port Q[14] of cell $procdff$24779 ($adff)\n    port Q[15] of cell $procdff$24779 ($adff)\n    port Q[16] of cell $procdff$24779 ($adff)\n    port Q[17] of cell $procdff$24779 ($adff)\n    port Q[18] of cell $procdff$24779 ($adff)\n    port Q[19] of cell $procdff$24779 ($adff)\n    port Q[20] of cell $procdff$24779 ($adff)\n    port Q[21] of cell $procdff$24779 ($adff)\n    port Q[22] of cell $procdff$24779 ($adff)\n    port Q[23] of cell $procdff$24779 ($adff)\n    port Q[24] of cell $procdff$24779 ($adff)\n    port Q[25] of cell $procdff$24779 ($adff)\n    port Q[26] of cell $procdff$24779 ($adff)\n    port Q[27] of cell $procdff$24779 ($adff)\n    port Q[28] of cell $procdff$24779 ($adff)\n    port Q[29] of cell $procdff$24779 ($adff)\n    port Q[30] of cell $procdff$24779 ($adff)\n    port Q[31] of cell $procdff$24779 ($adff)\nWarning: Drivers conflicting with a constant 1'1 driver:\n    port Q[0] of cell $procdff$24774 ($dff)\n    port Q[2] of cell $procdff$24774 ($dff)\n    port Q[0] of cell $procdff$24779 ($adff)\n    port Q[2] of cell $procdff$24779 ($adff)",
+  "returncode": 0
+ },
+ "toolchain": {
+  "openroad": {
+   "executable": "/usr/bin/openroad",
+   "executable_sha256": "93fe61454a52b927602fd6c798c4402214c19e80e7d614636345f0f427ea2f46",
+   "version": "v2.0-17598-ga008522d8"
+  },
+  "yosys": {
+   "executable": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+   "executable_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+   "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  }
+ }
+}

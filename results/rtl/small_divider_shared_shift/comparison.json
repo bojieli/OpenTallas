@@ -1,0 +1,80 @@
+{
+  "scope": "163-bit small-divisor storage reuse; same restoring steps, quotient/remainder and transaction cycles. Synthesis/STA only, not routed closure.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/small_divider/separate_shift_synth_sta_1ns.json",
+      "sha256": "2db3382f41cfc96de2ea87ac251c3e913fe1b0e929d29e511b8fb4dd53c21679",
+      "mapped_cell_area_um2": 330.457,
+      "sequential_cell_count": 500,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.05430261123589074,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 501,
+            "setup_wns_ns": -2.478771864346358,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/small_divider/shared_shift_synth_sta_1ns.json",
+      "sha256": "d11a26dbb1dceeb95acc6b470a16e20abe685dbe9563d0c518dc6349e6689f88",
+      "mapped_cell_area_um2": 251.898,
+      "sequential_cell_count": 347,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.05764317865526838,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 348,
+            "setup_wns_ns": -1.7225183570607367,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 23.77283580011923,
+  "verification": {
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ],
+    "arguments": 354,
+    "bits_per_step": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "comparisons_per_simulator": 2124,
+    "softmax": "9 exp_cr32 reference cases plus 2 refusals pass; exactly 767158 cycles, 276 physical evaluations and 121 reuse hits, matching before."
+  },
+  "sources": {
+    "rtl/lib/ot_wide_div_small_seq.sv": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81",
+    "results/rtl/small_divider_shared_shift/before.sv": "f92bced582178da0302aa2d92524f71dbf55fe11889bffc081ad8c9ae251bcff",
+    "rtl/test/tb_wide_div_small_seq_equiv.sv": "a0c7e043d81b807be773670b4a2aee5ea3d90d123fa3c47a7a43a06f87f1b4a1",
+    "rtl/abi3/ot_a3_attention_softmax_block.sv": "28cd94acb244a7388a89b3abcce2099f3109d5e8aa6f8bac9349cc89baceda37"
+  },
+  "physical_next": "Four-bit-per-step shared-shift route active at 1 ns; ten-bit configurations miss pre-layout timing. Reducing step width adds cycles and is not yet selected for consumers."
+}

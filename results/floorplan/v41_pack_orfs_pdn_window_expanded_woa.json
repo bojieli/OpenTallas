@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.v41.floorplan_orfs_check.v1",
+ "variant": "expanded_woa",
+ "pdn_exclude": "",
+ "pdn_tcl": "/src/tools/chip_assembly/tcl/pdn_v41_rom_die.tcl",
+ "window": [
+  23800.0,
+  12000.0,
+  25500.0,
+  13700.0
+ ],
+ "tapcell": true,
+ "tapcell_result": "status=PASS taps=185805 rows=52968",
+ "image": "openroad/orfs:latest",
+ "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+ "openroad": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+ "wall_s": 1823.9,
+ "peak_rss_kb": "56369056",
+ "docker_rc": 0,
+ "stdout_tail": "rc=0\n",
+ "inputs_sha256": {
+  "check.tcl": "d2d587cd9d86313bc798fff3f14fb6d4c680f21d305dd1bd77aa1815644949ec",
+  "macros.tcl": "c28ce744ed8b24703aa04254618e3c45bca80db83599a9fdffe72cae810b849f",
+  "top.def": "f19b52ae4133ad0377ef52aa25012997fe1d7dffa8ee8d2ccd9a19c4fcf1921e"
+ },
+ "source_sha256": {
+  "tools/v41_floorplan_orfs_check.py": "d2ed2122b6630a3a6b65c101aebbfa578fbeb8dc2d673c5424be805fffc0f7f5",
+  "tools/v41_floorplan_pack.py": "787c4b5765c4574eef2ac222b87956a118d824fcd21e0db8a538f9ceacbb9d07"
+ },
+ "check": {
+  "insts": 104,
+  "outside_die": 0,
+  "not_firm": 0,
+  "off_site_grid": 0,
+  "overlaps": 0
+ },
+ "overlaps_listed": [],
+ "pins": "classes=2 checked=578 off_track=0 by_master=",
+ "pdn": "status=PASS special_wire_shapes=11051784",
+ "psm": [
+  "net=VDD status=PASS",
+  "net=VSS status=PASS"
+ ],
+ "stats": [
+  "dbu=1000 insts=104 rows=6216",
+  "row_origin=10800 10800 site=54x270"
+ ],
+ "times": [
+  "check_s=0",
+  "pdn_s=118",
+  "psm_s=1815"
+ ],
+ "errors": [],
+ "scope": "floorplan-only: macros, rows, tracks, platform macro PDN; no std cells, tapcells, route",
+ "placement_legal": true,
+ "dpl_check": "status=PASS",
+ "cut_rows": "status=PASS rows=52968",
+ "pdn_generated": true,
+ "power_grid_connected": true,
+ "verdict": "PASS (window only): 104 macros in a 1.7 mm ROM/MAC window, tapcell + check_placement + pdngen (pdn_v41_rom_die.tcl) + check_power_grid VDD and VSS connected; HBM PHY and assumed link abstracts excluded; no std cells/route/IR"
+}

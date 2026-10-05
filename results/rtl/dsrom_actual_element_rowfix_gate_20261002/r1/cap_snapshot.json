@@ -1,0 +1,55 @@
+{
+  "affinity_caps_confirmed": true,
+  "cpu_cap_basis": "Inherited two-CPU affinity plus requested CPUQuota200%; cpu.max is not delegated on this user service hierarchy",
+  "kernel_metrics": {
+    "cgroup.procs": "2677424\n2677642\n2677645\n2677698\n2677699\n2677892\n2677894",
+    "cpu.max": null,
+    "cpuset.cpus.effective": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "1129246720",
+    "memory.swap.max": "0"
+  },
+  "memory_caps_confirmed": true,
+  "process_affinities": {
+    "2677424": [
+      0,
+      1
+    ],
+    "2677642": [
+      0,
+      1
+    ],
+    "2677645": [
+      0,
+      1
+    ],
+    "2677698": [
+      0,
+      1
+    ],
+    "2677699": [
+      0,
+      1
+    ],
+    "2677892": [
+      0,
+      1
+    ],
+    "2677894": [
+      0,
+      1
+    ]
+  },
+  "systemd_properties": {
+    "CPUQuotaPerSecUSec": "2s",
+    "ControlGroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-actual-element-rowfix-bounded-2677272.service",
+    "KillMode": "control-group",
+    "MemoryMax": "4294967296",
+    "MemorySwapMax": "0",
+    "OOMPolicy": "kill",
+    "RuntimeMaxUSec": "11min",
+    "TimeoutStopUSec": "1s"
+  },
+  "unit": "dsrom-actual-element-rowfix-bounded-2677272.service"
+}

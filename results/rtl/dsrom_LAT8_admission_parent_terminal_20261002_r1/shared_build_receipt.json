@@ -1,0 +1,94 @@
+{
+  "argv": [
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "--binary",
+    "--timing",
+    "--build",
+    "-j",
+    "2",
+    "-Wno-fatal",
+    "-MAKEFLAGS",
+    "VM_PARALLEL_BUILDS=0",
+    "--top-module",
+    "tb_dsrom_upstream_pair_cadence",
+    "--Mdir",
+    "obj",
+    "ot_fp32_add_rne_pipe.sv",
+    "ot_hdc_actquant.sv",
+    "ot_hdc_cg.sv",
+    "ot_hdc_delay.sv",
+    "ot_hdc_fp32_mul_pipe.sv",
+    "ot_hdc_fpu.sv",
+    "ot_prefix.sv",
+    "ot_rom_4096x274_m8_rt.sv",
+    "ot_rom_8192x274_m8_rt.sv",
+    "ot_v41_bf16_lanes.sv",
+    "ot_v41_bf16_lanes2.sv",
+    "ot_v41_bmul2.sv",
+    "ot_v41_bmul2_rne_prepare.sv",
+    "ot_v41_bmul_subnormal_rne_prepare.sv",
+    "ot_v41_bterm.sv",
+    "ot_v41_bterm2_w10.sv",
+    "ot_v41_chain.sv",
+    "ot_v41_chain2.sv",
+    "ot_v41_fadd.sv",
+    "ot_v41_pair_w17w10.sv",
+    "ot_v41_rom_adapt.sv",
+    "ot_v41_rom_elem_w10.sv",
+    "ot_v41_segtree.sv",
+    "ot_v41_segtree2.sv",
+    "ot_v41_spine_w17w10.sv",
+    "tb_dsrom_upstream_pair_cadence.sv",
+    "dsrom_upstream_pair_ROM.cpp"
+  ],
+  "caps": {
+    "CPUQuota_property_is_enforced": false,
+    "cgroup.procs": "3905341",
+    "cgroup.threads": "3905341\n3905342\n3906375",
+    "cpu.max": null,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_bound_policy": "KERNEL_INHERITED_TASK_AFFINITY_CPUS_0_1",
+    "cpu_quota_proof_accepted": false,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.oom.group": "1",
+    "memory.peak": "647495680",
+    "memory.swap.max": "0",
+    "metric_read_errors": {
+      "cpu.max": {
+        "errno": 2,
+        "message": "[Errno 2] No such file or directory: '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-lat8-image-admission-3904315.service/cpu.max'",
+        "type": "FileNotFoundError"
+      }
+    },
+    "task_affinity_audit": {
+      "errors": [],
+      "gone_threads": [],
+      "tasks": {
+        "3905341": [
+          0,
+          1
+        ],
+        "3905342": [
+          0,
+          1
+        ],
+        "3906375": [
+          0,
+          1
+        ]
+      },
+      "valid": true,
+      "verification": "Every enumerated live thread, including descendants; background observations sampled0.1s. Kernel clone/exec inherit parent affinity; vanished short-lived threads are recorded, not falsely reported observed."
+    }
+  },
+  "case": "shared",
+  "elapsed_seconds": 19.251776793040335,
+  "log_sha256": "ab72e74e79d78a9fc6fefb3ff1e5a3cfe012c1f2d55e84f186bf97a6aad2f4b3",
+  "phase": "build",
+  "remaining_seconds_at_start": 600.0,
+  "returncode": 0
+}

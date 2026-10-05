@@ -1,0 +1,47 @@
+REDUCED rank=1 word=0 cyc=189
+REDUCED rank=0 word=0 cyc=189
+REDUCED rank=1 word=1 cyc=190
+REDUCED rank=0 word=1 cyc=190
+REDUCED rank=2 word=0 cyc=212
+REDUCED rank=3 word=0 cyc=212
+REDUCED rank=2 word=1 cyc=213
+REDUCED rank=3 word=1 cyc=213
+CONSUMED word=0 cyc=228
+CONSUMED word=1 cyc=267
+REDUCED rank=1 word=2 cyc=475
+REDUCED rank=0 word=2 cyc=475
+REDUCED rank=1 word=3 cyc=476
+REDUCED rank=0 word=3 cyc=476
+REDUCED rank=2 word=2 cyc=498
+REDUCED rank=3 word=2 cyc=498
+REDUCED rank=2 word=3 cyc=499
+REDUCED rank=3 word=3 cyc=499
+CONSUMED word=2 cyc=514
+CONSUMED word=3 cyc=553
+REDUCED rank=1 word=4 cyc=761
+REDUCED rank=0 word=4 cyc=761
+REDUCED rank=1 word=5 cyc=762
+REDUCED rank=0 word=5 cyc=762
+REDUCED rank=2 word=4 cyc=784
+REDUCED rank=3 word=4 cyc=784
+REDUCED rank=2 word=5 cyc=785
+REDUCED rank=3 word=5 cyc=785
+CONSUMED word=4 cyc=800
+CONSUMED word=5 cyc=839
+REDUCED rank=1 word=6 cyc=1047
+REDUCED rank=0 word=6 cyc=1047
+REDUCED rank=1 word=7 cyc=1048
+REDUCED rank=0 word=7 cyc=1048
+REDUCED rank=2 word=6 cyc=1070
+REDUCED rank=3 word=6 cyc=1070
+REDUCED rank=2 word=7 cyc=1071
+REDUCED rank=3 word=7 cyc=1071
+CONSUMED word=6 cyc=1086
+CONSUMED word=7 cyc=1125
+REAL_STAGE_SUMMARY cyc=1126 produced=8 reduced=8 consumed=8 bad=0 rbw=0 core_fault=0 collective_fault=0000 timeout=0
+RANK rank=0 accepted=8 delivered=8 stall=568 hold=852 qmax=2 fault=0 code=0
+RANK rank=1 accepted=8 delivered=8 stall=597 hold=881 qmax=2 fault=0 code=0
+RANK rank=2 accepted=8 delivered=8 stall=571 hold=855 qmax=2 fault=0 code=0
+RANK rank=3 accepted=8 delivered=8 stall=568 hold=852 qmax=2 fault=0 code=0
+REAL_STAGE PASS
+- /work/rtl/test/tb_v41x_real_core_collective.sv:188: Verilog $finish

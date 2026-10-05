@@ -1,0 +1,37 @@
+{
+  "P_and_R_launched": false,
+  "SS_FF_closed": false,
+  "artifact_hashes_verified": 23,
+  "model_replay_byte_identical": true,
+  "old_collector_failure_preserved": true,
+  "physical_G0": false,
+  "raw_mapped_counts_independent": {
+    "bfcolumn": {
+      "FF": 91374,
+      "ICG": 8,
+      "distinct_WAKE_outputs": 1,
+      "hardware_cells": 447785,
+      "mapped_json_entries": 449029,
+      "nonhardware_scopeinfo_entries": 1244,
+      "physical4096x274": 4
+    },
+    "q": {
+      "FF": 28942,
+      "ICG": 8,
+      "distinct_WAKE_outputs": 1,
+      "hardware_cells": 150714,
+      "mapped_json_entries": 150886,
+      "nonhardware_scopeinfo_entries": 172,
+      "physical4096x274": 4
+    }
+  },
+  "required_next": [
+    "retain all8 intendedlocalWAKE outputs in actualmappedcellflow",
+    "compose qpair height151.2um +3310.2432um2 once, preserve priorBFgrowth",
+    "qualify full branchCTS/pinload/skew,PGOBS,vias,pinescape and parentIO"
+  ],
+  "schema": "opentallas.DS.complete-element-mapping.parent-review.v1",
+  "source_form": "complete NB2/PP1 pair, four4096x274physicalmacros, actual q/BF mappednetlists",
+  "tests_PASS": 5,
+  "worker_commit": "a91078135ddaeedbb76be3535ab91b849fbf9ad4"
+}

@@ -1,0 +1,72 @@
+{
+  "eos_token_ids": [
+    151645,
+    151643
+  ],
+  "maximum_new_tokens": 8000,
+  "questions": [
+    {
+      "enable_thinking": false,
+      "id": "arithmetic",
+      "messages": [
+        {
+          "content": "What is 17 multiplied by 23? Give only the number.",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "enable_thinking": false,
+      "id": "geography",
+      "messages": [
+        {
+          "content": "What is the capital of Japan? Answer in one short sentence.",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "enable_thinking": false,
+      "id": "science",
+      "messages": [
+        {
+          "content": "Why does ice float on liquid water? Answer in exactly two concise sentences.",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "enable_thinking": false,
+      "id": "computer_science",
+      "messages": [
+        {
+          "content": "What condition must be true before binary search can be used correctly? Answer in one concise paragraph.",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "enable_thinking": false,
+      "id": "practical_advice",
+      "messages": [
+        {
+          "content": "List three safe, practical ways to reduce household electricity use.",
+          "role": "user"
+        }
+      ]
+    },
+    {
+      "enable_thinking": true,
+      "id": "reasoning",
+      "messages": [
+        {
+          "content": "A train travels 120 kilometers in 90 minutes. What is its average speed in kilometers per hour? Explain your calculation briefly.",
+          "role": "user"
+        }
+      ]
+    }
+  ],
+  "schema": "opentallas.qwen3.eos_question_suite.v1",
+  "suite_id": "aad074c9fa50a92f58f48706455398f2b221652777aa8b49a7c90651663c6965",
+  "warning_token_threshold": 800
+}

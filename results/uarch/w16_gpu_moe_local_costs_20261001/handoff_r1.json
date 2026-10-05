@@ -1,0 +1,31 @@
+{
+  "source_commit": "c5550860bf44a7c1017c550a812c868db491ed67",
+  "graph_sha256": "ba0d17e0af29a02ba892d7a50f56cf45a07c82bb1adc6aef3204006ae467f9a6",
+  "phase_cycles": {
+    "operand_stage": 25,
+    "gpu_simt_kernel": 617,
+    "result_stage": 7,
+    "local_drain_barrier": 10
+  },
+  "local_MoE_40_scenario_us": 29.288888888888888,
+  "modeled_nodes": 3292,
+  "missing_nodes": 10337,
+  "progress_bound": "REFUSED_NO_SOURCE_DESTINATION_PROGRESS_DEADLINES",
+  "upstream_read_phases_pending": 40,
+  "physical_admission": false,
+  "tests": "5 PASS; no owner proof/campaign rerun",
+  "source_pins": {
+    "tools/w16_gpu_moe_local_costs.py": "98056d929f94b8aa6277ef70b6d79da4ff25ae809ee81a8b9ec7c8a2a4a23b04",
+    "tools/w19_composed_schedule_r2.py": "4dc2cdc56c438ab316ad9ec10e158ad0485cc3ecfd989ea20bc1866d6b94e5ec",
+    "tools/w19_gpu_elementwise_calendar.py": "0c358614f49421fbb4abca8ed3dfd3fe27a742f47aa37f55eb9cfb3595e86e11",
+    "tools/w16_gpu_hc_vector_costs.py": "91a2887de126cbf0d5fb83ad502cafb8f5c2eabf53f05a83a1870ffece988959",
+    "tools/w16_gpu_hc_dot_schedule.py": "822a43210764a5df3d872558a5b51d0f5215bb6f672bf5d7280b7391e6c40222",
+    "results/uarch/w16_gpu_hc_vector_costs_20261001/inputs_r1.json": "a815705375cb091d16169b99846fb93702077b04f67122fb858d0e60cd20225d",
+    "results/uarch/w16_gpu_hc_dot_schedule_20261001/cost_r1.json": "f8d5a9ab72bbbe57806f341defaff4210b3e1aaaf353033f31d422b649e29414",
+    "results/uarch/w16_gpu_hc_vector_costs_20261001/cost_r1.json": "0753348faf9ea0873690a089f073c6a7322def1cd5293f73ef2c159538ae2406",
+    "results/quality/w19_moe_opcode_proof_20261001/proof.json": "b556676f37c16a9f96862f64e57f101630d6b7dc2a64c250da60cd5303a9569b",
+    "results/quality/w16_w19_composed_schedule_20261001/moe_sum_calendar.json": "5139c782dd4392e5901309c789d8a581af811407aa058b7dff0af81d1a8f881f"
+  },
+  "coordination": "Consumes existing MoE arithmetic proof and recipe; no Ram residency, Halley compare/COSSIN or Godel WAIT changes.",
+  "source_scope": "CPU ordered-arithmetic proof does not qualify modified RMW/masking target; staging ready/port latencies are scenario assumptions. No producer placement or progress deadline invented."
+}

@@ -1,0 +1,28 @@
+{
+  "original_map_sha256": "92b6cf36af938f89468c6ce07d7bd5624239172eecd914de3eb750ff435802a0",
+  "sinks": [
+    {
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "connections": {
+        "CLK": [
+          2
+        ],
+        "D": [
+          20
+        ],
+        "QN": [
+          146035
+        ],
+        "RESETN": [
+          3
+        ],
+        "SETN": [
+          "1"
+        ]
+      },
+      "instance": "$auto$ff.cc:337:slice$659080",
+      "pin": "D",
+      "src": "/tmp/opentallas-qwen-fulltile-map-smin6-r1-20261002/rtl/hdc/ot_qwen_rom_tile_context_candidate_r2.sv:108.5-111.8"
+    }
+  ]
+}

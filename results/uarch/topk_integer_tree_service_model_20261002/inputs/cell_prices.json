@@ -1,0 +1,25 @@
+{
+  "cells_um2": {
+    "AND2x2_ASAP7_75t_R": 0.08748,
+    "BUFx4_ASAP7_75t_R": 0.10206,
+    "DFFHQNx1_ASAP7_75t_R": 0.2916,
+    "INVx1_ASAP7_75t_R": 0.04374,
+    "OR2x2_ASAP7_75t_R": 0.08748,
+    "XOR2x1_ASAP7_75t_R": 0.17496
+  },
+  "sources": [
+    {
+      "path": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+      "sha256": "71e55ce94cde9d10ad726cf7131e7356501aa1c380ae4e138f47c2f8ca7ca7db"
+    },
+    {
+      "path": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+      "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78"
+    },
+    {
+      "path": "/tmp/opentallas-topk-existing-grt-extraction-20261002/runtime/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+      "sha256": "339371d339fc0e3f4f50fa493ce82b984743af46d26823263dcca7a391e64408"
+    }
+  ],
+  "timing_area_scope": "master cell areas; not mapped cell totals or postroute stage delay"
+}

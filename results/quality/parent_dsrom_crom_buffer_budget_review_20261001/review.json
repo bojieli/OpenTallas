@@ -1,0 +1,27 @@
+{
+  "actual_provider_instantiated": false,
+  "artifact_byte_equal_replay": true,
+  "artifact_sha256": "425cc5c48e3e73d336655ee781ee2ca61bef9d7e52465375826cf89bf61c49ca",
+  "cold_gamma_bits": 13271040,
+  "cold_gamma_homes": 81,
+  "construction_cell_macro_area_mm2": "1.25221706352",
+  "focused_tests": {
+    "passed": 3,
+    "seconds": 0.09
+  },
+  "gamma_ideal16port_issue_floor_fast_cycles": 25920,
+  "gamma_ideal16port_issue_floor_ns": 21600,
+  "hardware_admission": false,
+  "ideal_floor_excludes": "capture/select pipeline, finite135wordlanding drain/credit, emit slots, CDC, routing, stalls andcoldfill dependencies",
+  "macro_read_ports": 45,
+  "owner_commit": "cb50c5850ac9c8ac7297b7bdce1c80477fde29c4",
+  "schema": "opentallas.parent.dsrom-CROM-finite-buffer-reservation-review.v1",
+  "scope": "Source-pinned FF/mux construction reservation independently replayed.45macroports do not imply135delivered coefficients/cycle: only16selected outputs priced; wholemodel must charge finite coldrefill and pipeline/ports/CDC/power before implementation.",
+  "selected_FP32_words_per_fast_cycle": 16,
+  "single_gamma_home_ideal_issue_cycles": 320,
+  "storage_bits": 450826,
+  "token_latency": null,
+  "ungated_clock_W": "6.34975184244997536",
+  "unresolved_output_load_ceiling_not_physical_minimum_W": "117.6807026368512",
+  "verdict": "PASS_CONDITIONAL_RESOURCE_RESERVATION_NO_PHYSICAL_ADMISSION"
+}

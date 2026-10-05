@@ -1,0 +1,1108 @@
+{
+  "schema_version": 1,
+  "campaign_id": "FC-PUBLIC-RTL-1",
+  "claim_scope": "Deterministic activation, observation, containment, and stated recovery for the enumerated public behavioral RTL sites only.",
+  "planned_site_count": 87,
+  "required_simulators": [
+    "iverilog_vvp",
+    "verilator_5_050_timed_binary"
+  ],
+  "toolchain": {
+    "verilator_version": "5.050",
+    "verilator_source_repository": "https://github.com/verilator/verilator.git",
+    "verilator_source_commit": "848d926ebd4addacacd294dc84e35d9d4ae8078c",
+    "bootstrap": "tools/bootstrap_verilator_5_050.sh"
+  },
+  "warning_policy": {
+    "unexpected_warnings_are_fatal": true,
+    "iverilog_suppressions": [
+      {
+        "warning_class": "sensitivity-entire-array",
+        "scope": "Icarus elaboration diagnostic for IEEE always-@* dynamic array sensitivity",
+        "rationale": "The entire array is intentionally in the combinational sensitivity set; simulation behavior is required and cross-checked by Verilator."
+      }
+    ],
+    "verilator_suppressions": [
+      {
+        "warning_class": "PROCASSINIT",
+        "scope": "timed verification benches only",
+        "rationale": "Bench stimulus variables use declaration initialization and procedural assignment."
+      },
+      {
+        "warning_class": "UNUSEDSIGNAL",
+        "scope": "timed verification benches only",
+        "rationale": "Directed benches expose diagnostic pins that are intentionally not sampled at every site."
+      },
+      {
+        "warning_class": "PINCONNECTEMPTY",
+        "scope": "timed verification benches only",
+        "rationale": "Reduced harness instances intentionally leave unrelated observation-only pins open."
+      }
+    ]
+  },
+  "sites": [
+    {
+      "id": "FC-ROUTE-CRC",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "transient_data_integrity",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-001"
+      ],
+      "expected_observation": "Corrupt route-record CRC sets poison and the sticky CRC diagnostic.",
+      "containment": "The decoded mask cannot be consumed as an unpoisoned context.",
+      "recovery": "Discard the poisoned context; a later legal record remains independently decodable."
+    },
+    {
+      "id": "FC-ROUTE-RANGE",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "configuration_range",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An expert ID outside the configured population sets bad-field, poison, and no enable bit.",
+      "containment": "No out-of-range wordline or expert enable is asserted.",
+      "recovery": "Discard the record and accept a subsequent legal record after normal queue drain."
+    },
+    {
+      "id": "FC-ROUTE-DUPLICATE",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "duplicate_record",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A repeated expert ID is reported in the duplicate-slot bitmap while the first occurrence is retained.",
+      "containment": "Only one wordline enable is produced for the repeated expert.",
+      "recovery": "The deduplicated legal route proceeds without transaction poison."
+    },
+    {
+      "id": "FC-ROUTE-RESERVED",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "configuration_identity",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A nonzero reserved field sets bad-field and poisons the context.",
+      "containment": "Reserved encodings cannot alter the decoded service mask silently.",
+      "recovery": "Discard the poisoned record; later legal records are unaffected."
+    },
+    {
+      "id": "FC-ROUTE-TOPK",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "configuration_range",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An illegal top-k count is classified as bad-field and poisoned.",
+      "containment": "No service launch is authorized from the malformed count.",
+      "recovery": "Discard the record and continue with a legal route record."
+    },
+    {
+      "id": "FC-ROM-SINGLE-BIT",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "transient_data_integrity",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A single-bit injected event returns the original architectural word with correctable syndrome and no poison.",
+      "containment": "Corrupt injected data is never exposed at the architectural response.",
+      "recovery": "Consume corrected data and record/scrub through the external macro policy."
+    },
+    {
+      "id": "FC-ROM-MULTI-BIT",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "uncorrectable_data_integrity",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A representative multi-bit injection returns an uncorrectable syndrome with poison.",
+      "containment": "The affected read is prevented from committing as valid data.",
+      "recovery": "Abort/poison the owning transaction; macro repair or quarantine is an external gate."
+    },
+    {
+      "id": "FC-ROM-REPAIR-VALID",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "permanent_data_repair",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-REPAIR-001"
+      ],
+      "expected_observation": "A legal logical-to-spare remap returns the spare-row word without poison.",
+      "containment": "The defective logical row is bypassed without changing logical content semantics.",
+      "recovery": "Continue service using the frozen repair map."
+    },
+    {
+      "id": "FC-ROM-REPAIR-RANGE",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "repair_map_integrity",
+      "verification_requirements": [
+        "DV-REPAIR-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A repair target outside physical depth produces a poisoned response.",
+      "containment": "No out-of-range physical array access can become architectural data.",
+      "recovery": "Reject the repair/read; load a valid quiescent repair map before service."
+    },
+    {
+      "id": "FC-ROM-ADDRESS-RANGE",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "address_protocol",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An out-of-range logical address returns zero data with poison.",
+      "containment": "No physical word is aliased into the illegal logical address.",
+      "recovery": "Abort the request; valid later addresses remain usable."
+    },
+    {
+      "id": "FC-HBM-CRC",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "transient_data_integrity",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A response CRC error completes the matching tag with integrity error and poison.",
+      "containment": "Only the matching tag/session is terminated and its outstanding reservation is released.",
+      "recovery": "Retry or abort by policy; unrelated tags remain serviceable."
+    },
+    {
+      "id": "FC-HBM-RECOVERY",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "fault_recovery",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A legal response after a prior CRC failure completes cleanly for its own session.",
+      "containment": "Historical sticky protocol evidence does not poison a later unrelated tag.",
+      "recovery": "Continue normal service on the healthy tag/channel."
+    },
+    {
+      "id": "FC-HBM-WRONG-TAG",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "control_protocol",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A response for an inactive/unallocated tag is reported as a poisoned protocol completion.",
+      "containment": "No active request reservation or session state is consumed by the unexpected response.",
+      "recovery": "Drop the response, retain active tags, and escalate repeated channel protocol faults."
+    },
+    {
+      "id": "FC-HBM-EARLY-LAST",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "framing_protocol",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A terminal beat before the declared count poisons the same completion and sets protocol error.",
+      "containment": "Partial burst data cannot commit as a successful request.",
+      "recovery": "Release the tag and retry/abort the owning transaction."
+    },
+    {
+      "id": "FC-HBM-LATE-LAST",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "framing_protocol",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A missing terminal marker at the declared final beat poisons the same completion and sets protocol error.",
+      "containment": "The overlong burst cannot overwrite or remain attached to the completed tag.",
+      "recovery": "Release the tag and retry/abort; a late extra beat is treated as unexpected."
+    },
+    {
+      "id": "FC-HBM-ERROR-STATUS",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "external_macro_status",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A nonzero vendor-normalized response status is returned on the matching poisoned completion.",
+      "containment": "The error is contained to the owning tag/session with no successful commit.",
+      "recovery": "Apply corrected/retry/abort/channel-recovery policy for the classified status."
+    },
+    {
+      "id": "FC-HBM-MAX-BURST",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "capacity_boundary",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-STATIC-001"
+      ],
+      "expected_observation": "The all-ones 16-bit minus-one encoding reserves exactly 65,536 beats in a 17-bit internal count.",
+      "containment": "The architectural maximum cannot wrap to zero and terminate or recycle the tag prematurely.",
+      "recovery": "Complete or explicitly abort the full request under the normal tag lifecycle."
+    },
+    {
+      "id": "FC-HBM-SAME-CYCLE-RECYCLE",
+      "bench": "rtl/test/tb_fault_data.sv",
+      "fault_class": "reservation_conservation",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A different-tag admission concurrent with a terminal response preserves one outstanding reservation and both completions retain their sessions.",
+      "containment": "Neither the increment nor decrement is lost, and tag ownership cannot underflow, leak, or cross sessions.",
+      "recovery": "The newly admitted tag completes normally and returns the outstanding count to zero."
+    },
+    {
+      "id": "FC-LINK-RX-FLIT-CRC",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "transient_link_integrity",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A bad flit CRC produces one negative acknowledgement, protocol error, and no delivery.",
+      "containment": "No corrupt flit escapes the complete-packet receive buffer.",
+      "recovery": "Sender retries the retained packet or aborts after the retry limit."
+    },
+    {
+      "id": "FC-LINK-RX-PACKET-CRC",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "transient_link_integrity",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A bad terminal packet CRC produces one negative acknowledgement and no delivery.",
+      "containment": "No packet with inconsistent accumulated CRC reaches the service plane.",
+      "recovery": "Sender retries the complete retained packet."
+    },
+    {
+      "id": "FC-LINK-RX-NO-PARTIAL",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "partial_packet_integrity",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A later corrupt flit rejects the packet without exposing its earlier valid flit.",
+      "containment": "Complete-packet buffering prevents partial architectural delivery.",
+      "recovery": "Discard the receive buffer and accept a clean retry."
+    },
+    {
+      "id": "FC-LINK-RX-GOOD",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "fault_free_control",
+      "verification_requirements": [
+        "DV-LINK-001"
+      ],
+      "expected_observation": "A valid packet is delivered once and positively acknowledged without poison.",
+      "containment": "Delivery and acknowledgement refer to the same complete packet sequence.",
+      "recovery": "Advance the expected sequence and continue."
+    },
+    {
+      "id": "FC-LINK-RX-DUPLICATE",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "duplicate_packet",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A replay of the last accepted sequence is positively acknowledged but not redelivered.",
+      "containment": "Idempotence prevents duplicate state commit.",
+      "recovery": "Sender treats the acknowledgement as terminal and advances."
+    },
+    {
+      "id": "FC-LINK-RX-OUT-OF-ORDER",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "sequence_protocol",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An unexpected first-flit sequence is negatively acknowledged with no delivery.",
+      "containment": "The out-of-order packet cannot alter service state.",
+      "recovery": "Discard and retry the required sequence or abort."
+    },
+    {
+      "id": "FC-LINK-RX-MIXED-SEQUENCE",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "sequence_protocol",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A packet whose flits carry different sequence IDs is negatively acknowledged with no delivery.",
+      "containment": "All flits in the receive buffer remain uncommitted.",
+      "recovery": "Discard the mixed packet and accept a clean retransmission."
+    },
+    {
+      "id": "FC-LINK-RX-RECOVERY",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "fault_recovery",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A legal packet following rejected sequence traffic is delivered and acknowledged once.",
+      "containment": "Prior CRC/sequence state does not contaminate the new packet.",
+      "recovery": "Advance expected sequence and resume service."
+    },
+    {
+      "id": "FC-LINK-TX-NAK-RETRY",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "retry_protocol",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A matching negative acknowledgement causes exactly one complete-packet retransmission and increments retry count.",
+      "containment": "The sender retains packet bits and sequence until terminal acknowledgement.",
+      "recovery": "Await a positive acknowledgement or exhaust the bounded retry policy."
+    },
+    {
+      "id": "FC-LINK-TX-CREDIT-ONCE",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "credit_conservation",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "The original packet consumes one remote packet credit and its retry consumes none.",
+      "containment": "Retries cannot leak receive-buffer credits.",
+      "recovery": "Credit is returned only by the endpoint-level completion policy."
+    },
+    {
+      "id": "FC-LINK-TX-TIMEOUT-RETRY",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "watchdog_timeout",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Acknowledgement timeout emits a timeout indication and retransmits once.",
+      "containment": "The retained packet is replayed without a second credit debit or partial replacement.",
+      "recovery": "Accept a later matching ACK or terminally abort at the retry bound."
+    },
+    {
+      "id": "FC-LINK-TX-RETRY-EXHAUST",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "retry_exhaustion",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A further NAK after the allowed retry sets terminal error, preserves retry diagnostics, and clears busy.",
+      "containment": "No additional unbounded transmission or successful completion occurs.",
+      "recovery": "Abort/poison the transaction and requalify the link before reuse if policy requires."
+    },
+    {
+      "id": "FC-LINK-TX-WRONG-ACK",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "sequence_protocol",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An acknowledgement for another sequence is ignored while the sender remains busy.",
+      "containment": "The wrong ACK cannot retire or mutate the retained packet.",
+      "recovery": "Continue waiting for the matching ACK or timeout."
+    },
+    {
+      "id": "FC-LINK-TX-CREDIT-GUARD",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "credit_conservation",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A packet cannot be accepted when no remote complete-packet credit is available.",
+      "containment": "No packet state or credit counter changes without admission.",
+      "recovery": "Retry admission after credit is advertised."
+    },
+    {
+      "id": "FC-LINK-TX-ACK-WAIT-ABORT",
+      "bench": "rtl/test/tb_fault_link.sv",
+      "fault_class": "abort_protocol",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Host/control abort while waiting for ACK terminates the sender with error and no busy state.",
+      "containment": "The packet cannot later complete successfully from a stale ACK.",
+      "recovery": "Poison/abort owning state and start a new packet only after abort deasserts."
+    },
+    {
+      "id": "FC-RAS-CORRECTABLE",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "correctable_event",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A correctable event increments its saturating counter and captures first error without transaction poison or SAFE.",
+      "containment": "The active transaction remains usable because the event is classified correctable.",
+      "recovery": "Continue with corrected data and service policy."
+    },
+    {
+      "id": "FC-RAS-TELEMETRY-INTEGRITY",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "telemetry_integrity",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ],
+      "expected_observation": "Telemetry fields and CRC16 reproduce the injected source, severity, epoch, transaction, and syndrome.",
+      "containment": "Diagnostic evidence is bound to one lossless record.",
+      "recovery": "Drain/acknowledge the record through the telemetry interface."
+    },
+    {
+      "id": "FC-RAS-UNCORRECTABLE",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "uncorrectable_event",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An uncorrectable event increments its counter and poisons the active transaction without forcing global SAFE.",
+      "containment": "No successful commit is allowed for the affected transaction.",
+      "recovery": "Abort the affected transaction while unrelated service may continue."
+    },
+    {
+      "id": "FC-RAS-FIRST-STICKY",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "diagnostic_state",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A later event does not overwrite the captured first-error severity, source, or transaction.",
+      "containment": "Root-cause evidence survives subsequent faults.",
+      "recovery": "Software explicitly clears first-error state after collection."
+    },
+    {
+      "id": "FC-RAS-FIRST-CLEAR",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "diagnostic_state",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ],
+      "expected_observation": "The explicit clear operation removes first-error valid state.",
+      "containment": "Only the defined clear control can release the sticky record.",
+      "recovery": "The next event becomes the new first error."
+    },
+    {
+      "id": "FC-RAS-POISON-LIFETIME",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "transaction_isolation",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Transaction poison clears at an idle transaction boundary while sticky diagnostic history remains separate.",
+      "containment": "Poison cannot leak into an unrelated later transaction.",
+      "recovery": "Admit a new clean transaction after the boundary."
+    },
+    {
+      "id": "FC-RAS-FATAL",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "fatal_event",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-POWER-001"
+      ],
+      "expected_observation": "A fatal event increments the fatal counter, poisons active work, asserts SAFE request, and blocks admission immediately.",
+      "containment": "No one-cycle post-fatal admission leak or successful affected commit is allowed.",
+      "recovery": "Drain/isolate and require explicit platform requalification."
+    },
+    {
+      "id": "FC-RAS-EXTERNAL-POISON",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "poison_propagation",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "An asserted upstream poison input becomes monotonic poison for the active transaction.",
+      "containment": "Downstream logic cannot silently clear the propagated error during the transaction.",
+      "recovery": "Clear only at the idle transaction boundary after abort/retire."
+    },
+    {
+      "id": "FC-RAS-COUNTER-SATURATION",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "counter_overflow",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ],
+      "expected_observation": "A counter at all ones remains saturated after another matching event.",
+      "containment": "Diagnostic counts never wrap to a misleading low value.",
+      "recovery": "Retain saturation indication and service according to policy."
+    },
+    {
+      "id": "FC-RAS-TELEMETRY-RESERVE",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "telemetry_capacity",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Admission blocks at the reserved-entry threshold while queued telemetry remains valid.",
+      "containment": "Capacity is preserved for a terminal/fatal event instead of being consumed by new work.",
+      "recovery": "Drain telemetry below threshold before reopening admission."
+    },
+    {
+      "id": "FC-RAS-TELEMETRY-FULL",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "telemetry_capacity",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "The reserved fatal event fills the queue and asserts SAFE/admission block.",
+      "containment": "Lossless terminal evidence is retained and no further work is admitted.",
+      "recovery": "Drain records under SAFE control and requalify."
+    },
+    {
+      "id": "FC-RAS-WATCHDOG",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "watchdog_timeout",
+      "verification_requirements": [
+        "DV-RAS-002",
+        "DV-POWER-001"
+      ],
+      "expected_observation": "Watchdog expiry asserts timeout, SAFE request, and admission block in the expiry cycle.",
+      "containment": "Hung work cannot admit successors or remain silently active.",
+      "recovery": "Abort/drain and require watchdog/platform recovery."
+    },
+    {
+      "id": "FC-BIST-PASS",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "fault_free_control",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "A complete legal BIST run returns pass, a nonzero signature, done state, and releases ownership.",
+      "containment": "Functional service cannot overlap BIST ownership.",
+      "recovery": "Publish the pass signature and return the resource to service."
+    },
+    {
+      "id": "FC-BIST-MISMATCH",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_compare_failure",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A data mismatch returns fail and captures the first reduced-test failing address.",
+      "containment": "The tested resource remains owned until the failure result is finalized.",
+      "recovery": "Repair/quarantine and rerun BIST before service."
+    },
+    {
+      "id": "FC-BIST-INJECT",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_fault_injection",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "The explicit BIST injection hook forces a failing result without timeout.",
+      "containment": "The failure cannot be reported as a passing signature.",
+      "recovery": "Use the injected result to qualify the diagnostic path; clear before real BIST."
+    },
+    {
+      "id": "FC-BIST-ABORT",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_abort",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Abort terminates a running BIST as non-pass, non-timeout, and releases busy ownership.",
+      "containment": "No partial test is promoted to a pass.",
+      "recovery": "Restart a complete test before enabling the resource."
+    },
+    {
+      "id": "FC-BIST-OWNERSHIP",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Start is ignored while the resource is unavailable; busy, done, and test ownership remain deasserted.",
+      "containment": "BIST cannot contend with active functional ownership.",
+      "recovery": "Quiesce the resource and issue a new start."
+    },
+    {
+      "id": "FC-BIST-TIMEOUT",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_timeout",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A deliberately short timeout returns done, timeout, fail, and no busy state.",
+      "containment": "A hung macro/test callback cannot hold ownership indefinitely or report pass.",
+      "recovery": "Quarantine or reset the resource and rerun diagnostics."
+    },
+    {
+      "id": "FC-DFT-IDCODE-BYPASS",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_access_identity",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Reset functional state exposes the configured IDCODE and legal BYPASS without entering test mode.",
+      "containment": "Identity/bypass access does not isolate live service by itself.",
+      "recovery": "Continue functional operation or request controlled test entry."
+    },
+    {
+      "id": "FC-DFT-SERVICE-INTERLOCK",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "A test request during active service receives no grant, no test mode, and no isolation.",
+      "containment": "Test clocks/scan cannot seize a nonquiescent service resource.",
+      "recovery": "Quiesce service before reissuing the request."
+    },
+    {
+      "id": "FC-DFT-QUIESCENT-GRANT",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "After quiescence, the armed request grants test mode and asserts service isolation.",
+      "containment": "Functional traffic is blocked before test controls become active.",
+      "recovery": "Complete diagnostics and follow the controlled exit sequence."
+    },
+    {
+      "id": "FC-DFT-SCAN-ISOLATION",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "scan_isolation",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Scan enable is asserted only with test grant and functional isolation.",
+      "containment": "Shift/capture activity cannot reach an unisolated service interface.",
+      "recovery": "Drop scan request before exiting test mode."
+    },
+    {
+      "id": "FC-DFT-BIST-START",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "A BIST request in granted test mode emits the bounded BIST start pulse.",
+      "containment": "BIST start cannot occur in functional ownership.",
+      "recovery": "Hold isolation until BIST completion."
+    },
+    {
+      "id": "FC-DFT-BIST-OWNERSHIP",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "bist_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Test grant and isolation remain asserted while BIST reports busy even after requests drop.",
+      "containment": "Functional service cannot race a still-running BIST.",
+      "recovery": "Release test mode only after BIST done and not busy."
+    },
+    {
+      "id": "FC-DFT-TEST-EXIT",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_exit",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "After BIST completion and request release, test mode, grant, and isolation deassert.",
+      "containment": "No stale test ownership remains after the controlled exit.",
+      "recovery": "Requalify and return the resource to functional service."
+    },
+    {
+      "id": "FC-DFT-ARM-RACE",
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "fault_class": "test_ownership",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Service becoming active while test entry is armed cancels grant and test mode.",
+      "containment": "A quiescence race fails closed to functional ownership without mixed mode.",
+      "recovery": "Quiesce again and issue a fresh test request."
+    },
+    {
+      "id": "FC-POWER-BOOT-QUALIFICATION",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "reset_power_sequence",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RESET-001"
+      ],
+      "expected_observation": "Qualified reset/power inputs reach standby with core reset released but service disabled.",
+      "containment": "Inference cannot begin before explicit service request and qualification.",
+      "recovery": "Request service only after boot diagnostics complete."
+    },
+    {
+      "id": "FC-POWER-SERVICE-ENABLE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "power_state_control",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ],
+      "expected_observation": "A legal service request enters active service with isolation removed.",
+      "containment": "Service enable is coupled to the legal state and qualified supplies/clocks.",
+      "recovery": "Continue service until throttle, quiesce, or fault."
+    },
+    {
+      "id": "FC-POWER-THERMAL-THROTTLE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "thermal_warning",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Thermal warning enters throttled state while preserving qualified service.",
+      "containment": "The response reduces service without corrupting protocol state.",
+      "recovery": "Return to active state after the warning clears."
+    },
+    {
+      "id": "FC-POWER-THROTTLE-RECOVERY",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fault_recovery",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ],
+      "expected_observation": "Clearing thermal warning removes throttle and restores active service.",
+      "containment": "Recovery does not bypass qualification or isolation guards.",
+      "recovery": "Continue at the unthrottled operating point."
+    },
+    {
+      "id": "FC-POWER-TEST-INTERLOCK",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "test_power_interlock",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-DFT-001"
+      ],
+      "expected_observation": "Asserting test enable during service forces SAFE, isolation, service disable, and a classified reset cause.",
+      "containment": "Functional and test modes cannot overlap.",
+      "recovery": "Drop service/test requests and execute explicit requalification."
+    },
+    {
+      "id": "FC-POWER-REQUALIFY",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fault_recovery",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ],
+      "expected_observation": "Explicit requalification after the interlock returns to standby and clears SAFE.",
+      "containment": "Service remains disabled until separately requested.",
+      "recovery": "Rerun required diagnostics, then request service."
+    },
+    {
+      "id": "FC-POWER-THERMAL-FATAL",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fatal_thermal",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Fatal thermal input enters SAFE, records the thermal cause, and asserts core reset.",
+      "containment": "No new or continuing functional service is exposed through the fatal condition.",
+      "recovery": "Cool/isolate, diagnose, and explicitly requalify."
+    },
+    {
+      "id": "FC-POWER-CLOCK-LOSS",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "clock_failure",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RESET-001"
+      ],
+      "expected_observation": "Clock qualification loss enters SAFE, records the clock cause, and asserts core reset.",
+      "containment": "State cannot continue under an unqualified clock.",
+      "recovery": "Restore/qualify the clock and explicitly requalify."
+    },
+    {
+      "id": "FC-POWER-QUIESCE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "quiesce_protocol",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-CMD-002"
+      ],
+      "expected_observation": "Once the core reports quiescent, the controller acknowledges quiesce, returns to standby, and disables service.",
+      "containment": "No new work enters while the state drains.",
+      "recovery": "Remove quiesce or power-transition according to policy."
+    },
+    {
+      "id": "FC-SCHEDULE-PARTIAL",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "schedule_integrity",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ],
+      "expected_observation": "Commit of an incompletely loaded schedule bank is rejected without valid activation.",
+      "containment": "A partial schedule never reaches the service datapath.",
+      "recovery": "Finish all required entries and recommit."
+    },
+    {
+      "id": "FC-SCHEDULE-ILLEGAL-SOURCE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "schedule_integrity",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A slot encoding an illegal source produces an error and no commit-pending state.",
+      "containment": "No invalid route source can become active.",
+      "recovery": "Correct the shadow entry and rerun schedule validation."
+    },
+    {
+      "id": "FC-SCHEDULE-BAD-MANIFEST",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "configuration_identity",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ],
+      "expected_observation": "A schedule commit with bad manifest identity is rejected without activation.",
+      "containment": "Schedule data cannot be paired with the wrong image/manifest.",
+      "recovery": "Supply the matching identity and recommit."
+    },
+    {
+      "id": "FC-SCHEDULE-QUIESCENCE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "schedule_epoch_control",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-CMD-002"
+      ],
+      "expected_observation": "A valid commit remains pending while traffic is not quiescent and no epoch changes.",
+      "containment": "The active bank cannot change under in-flight traffic.",
+      "recovery": "Reach quiescent epoch boundary to activate atomically."
+    },
+    {
+      "id": "FC-SCHEDULE-IDENTITY",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "schedule_epoch_control",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ],
+      "expected_observation": "At the legal boundary, commit acknowledges, publishes the requested ID, marks valid, and increments epoch.",
+      "containment": "All consumers observe one coherent bank/identity/epoch transition.",
+      "recovery": "Use the new bank for subsequent admitted work."
+    },
+    {
+      "id": "FC-SCHEDULE-LEGAL-SOURCE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fault_free_control",
+      "verification_requirements": [
+        "DV-NOC-001"
+      ],
+      "expected_observation": "An active legal slot exposes the validated source and expected-valid metadata.",
+      "containment": "Only the committed bank drives service selection.",
+      "recovery": "Advance through the deterministic schedule."
+    },
+    {
+      "id": "FC-SESSION-CONFIGURE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fault_free_control",
+      "verification_requirements": [
+        "DV-SESSION-001"
+      ],
+      "expected_observation": "A legal configure allocates the session, returns success/hit, and assigns a nonzero generation.",
+      "containment": "The entry is uniquely owned by its session and generation.",
+      "recovery": "Proceed to ordered lookup/retire operations."
+    },
+    {
+      "id": "FC-SESSION-DUPLICATE",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "duplicate_record",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A duplicate configure of an existing session is rejected as busy.",
+      "containment": "The original session allocation is not overwritten.",
+      "recovery": "Use the existing session or free it before reconfiguration."
+    },
+    {
+      "id": "FC-SESSION-CAPACITY",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "capacity_exhaustion",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Configuration beyond table capacity returns capacity error without corrupting busy state or integrity.",
+      "containment": "No existing session is evicted or aliased silently.",
+      "recovery": "Free capacity or reject admission upstream."
+    },
+    {
+      "id": "FC-SESSION-EPOCH",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "stale_epoch",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Lookup with the wrong epoch returns epoch error and does not set busy.",
+      "containment": "Stale work cannot attach to current session state.",
+      "recovery": "Issue work with the active epoch or reconfigure."
+    },
+    {
+      "id": "FC-SESSION-LOOKUP",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "fault_free_control",
+      "verification_requirements": [
+        "DV-SESSION-001"
+      ],
+      "expected_observation": "A legal lookup succeeds, hits the expected entry, and marks it busy.",
+      "containment": "One transaction owns the session mutation window.",
+      "recovery": "Retire or abort with the matching transaction."
+    },
+    {
+      "id": "FC-SESSION-LATE-TRANSACTION",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "stale_transaction",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A nonmatching retire/operation returns an epoch/transaction error and preserves current position/busy ownership.",
+      "containment": "Late traffic cannot mutate the current owner.",
+      "recovery": "Discard the stale operation and complete the matching transaction."
+    },
+    {
+      "id": "FC-SESSION-POISON",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "poison_propagation",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Matching abort records session poison, succeeds, and releases busy ownership.",
+      "containment": "Failed work cannot advance position or remain busy.",
+      "recovery": "Future lookup observes poison until explicit session free/reconfigure policy."
+    },
+    {
+      "id": "FC-SESSION-POISON-OBSERVED",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "poison_propagation",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "A later legal lookup reports the sticky session poison state.",
+      "containment": "Downstream control cannot mistake a poisoned session for clean state.",
+      "recovery": "Abort/free the poisoned session before reuse."
+    },
+    {
+      "id": "FC-SESSION-REUSE-GENERATION",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "allocation_generation",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "After free and reallocation, the entry receives a generation different from its earlier owner.",
+      "containment": "Late traffic from the prior allocation cannot match the reused slot.",
+      "recovery": "Use the new generation in all downstream ownership records."
+    },
+    {
+      "id": "FC-STAGE-NO-CREDIT",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "credit_conservation",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Post-lookup credit denial produces no-credit completion through session abort, with no service start/commit and with cleanup.",
+      "containment": "The busy session and any partial reservation cannot leak or retire successfully.",
+      "recovery": "Release cleanup ownership and allow a later command after terminal response."
+    },
+    {
+      "id": "FC-STAGE-SERVICE-ERROR",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "service_error",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Service error returns internal status/source/syndrome, poison, session abort, no commit, and credit release.",
+      "containment": "No failed service result can reach the commit path or leave reserved capacity.",
+      "recovery": "Complete poisoned terminal cleanup; unrelated sessions remain serviceable."
+    },
+    {
+      "id": "FC-STAGE-WATCHDOG",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "watchdog_timeout",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ],
+      "expected_observation": "Stage watchdog produces timeout completion, poison, session abort, no commit, and credit release.",
+      "containment": "Hung service cannot retain session/credit ownership or commit later.",
+      "recovery": "Abort the transaction and requalify the failing service path."
+    },
+    {
+      "id": "FC-STAGE-HOST-ABORT",
+      "bench": "rtl/test/tb_fault_control.sv",
+      "fault_class": "abort_protocol",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-CMD-002"
+      ],
+      "expected_observation": "Matching host abort produces aborted completion, poison, session abort, no commit, and credit release.",
+      "containment": "No post-abort service completion can commit architectural state.",
+      "recovery": "Finish common abort cleanup and admit new work after terminal response."
+    }
+  ],
+  "external_gates": [
+    {
+      "id": "EXT-MACRO-ECC",
+      "status": "external_not_modeled",
+      "scope": "Foundry ROM/SRAM ECC implementation, sense margin, retention, coupling, aging, and repair qualification."
+    },
+    {
+      "id": "EXT-HBM-PHY",
+      "status": "external_not_modeled",
+      "scope": "HBM controller/PHY vendor behavior, lane repair, calibration, analog timing, and macro ECC qualification."
+    },
+    {
+      "id": "EXT-LINK-PHY",
+      "status": "external_not_modeled",
+      "scope": "Stage-link SerDes/PHY BER, equalization, clock recovery, lane repair, and package channel behavior."
+    },
+    {
+      "id": "EXT-ATPG",
+      "status": "external_not_modeled",
+      "scope": "Target scan insertion, compression, stuck-at/transition ATPG coverage, diagnosis, and tester correlation."
+    },
+    {
+      "id": "EXT-PHYSICAL-FAULTS",
+      "status": "external_not_modeled",
+      "scope": "Delay, bridging, open, crosstalk, power-integrity, thermal, radiation, and physical-layout fault coverage."
+    },
+    {
+      "id": "EXT-PDK-SIGNOFF",
+      "status": "external_not_modeled",
+      "scope": "Target PDK timing/power/noise/reliability models and commercial signoff-tool qualification."
+    },
+    {
+      "id": "EXT-MANUFACTURING",
+      "status": "external_not_modeled",
+      "scope": "Defect density, yield, wafer probe, burn-in, repair exhaustion, package test, and production quality limits."
+    },
+    {
+      "id": "EXT-MODEL-QUALITY",
+      "status": "external_not_modeled",
+      "scope": "Target numerical-format qualification and end-to-end model quality under production workloads."
+    }
+  ]
+}

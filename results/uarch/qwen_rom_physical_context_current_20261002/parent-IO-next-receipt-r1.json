@@ -1,0 +1,73 @@
+{
+  "child_source_sha256": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0",
+  "current_mapped_receipt_required": [
+    "full source bundle hash and explicit parameters",
+    "each surviving cell clock/reset sink and domain; 10ROM2KV clocks included once",
+    "SS/FF registered wrom_addr/re CLKQ min/max and loaded buffer/wire min/max",
+    "root-to-all-reset recovery/removal/pulse/slew with clock skew and 60ps/25ps uncertainties",
+    "complete CTS/reset/distribution/CDC area and current slot LEF/PGOBS/corridor join"
+  ],
+  "external_ports": [
+    "clk_stream",
+    "reset_stream_n",
+    "ib_go",
+    "ib[378:0]",
+    "xl[127:0]",
+    "kvw_ce",
+    "kvw_addr[6:0]",
+    "kvw_data[511:0]",
+    "kvw_mask[511:0]"
+  ],
+  "hardware_admission": false,
+  "launch_contract": "Tile ready()/idle() are unconnected. No ready handshake or request queue exists at ib_go. Parent must hold/schedule ib_go and ib/x through first acceptance; never silently add a queue.",
+  "next_owner": "Euclid root/provider and mapping context; Russell actual production receipt/calendar; Maxwell composition",
+  "ordered_acceptance": "Release after edge 2; first downstream acceptance edge 3. IREG captures ib/x/go then; engine accepts at edge 4; first ROM producer re/address after edge 5; macro accepts edge 6; MEM_EXTRA capture edge 7.",
+  "required_root_fields": [
+    "provider_source_sha256",
+    "instantiated_source_sha256",
+    "scope=physical_external_root_pins",
+    "bench_schedule=false",
+    "pins[2].instance_pin",
+    "pins[2].deassert_min_ps_after_previous_root_posedge",
+    "pins[2].deassert_max_ps_after_previous_root_posedge",
+    "pins[2].reset_low_pulse_min_ps",
+    "pins[2].reset_slew_min_ps",
+    "pins[2].reset_slew_max_ps",
+    "pins[2].clock_slew_min_ps",
+    "pins[2].clock_slew_max_ps"
+  ],
+  "root_bounds": {
+    "characterized_clock_and_reset_slew_ps": [
+      5,
+      320
+    ],
+    "deassert_max_ps_after_previous_root_posedge": 791.5025333333334,
+    "deassert_min_ps_after_previous_root_posedge": 92.5064,
+    "reset_low_pulse_min_ps": 321.045,
+    "scope": "Conservative external-root pin requirement across Liberty grids, before wire/skew. Both root FFs must meet it. This is not an observed provider phase, internal closure, or recovery/removal waiver."
+  },
+  "root_receipt_schema": "QWEN_ROOT_PROVIDER_PIN_INTERVALS_V1",
+  "schema": "QWEN_PARENT_IO_NEXT_RECEIPT_REQUEST_V1",
+  "source_census_transfer_allowed": false,
+  "status": "REQUIRED_NOT_OBSERVED",
+  "target_SMIN": 6,
+  "target_parameters": {
+    "ACC_LAT": 7,
+    "AW": 24,
+    "CODE_BANKS": 5,
+    "FAST_ISSUE": 1,
+    "GT": 6144,
+    "KV_AW": 7,
+    "KV_NH": 2,
+    "KV_PREP": 3,
+    "KV_VB": 131072,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "NW": 18,
+    "TG": 4,
+    "TREE_LAT": 7,
+    "W": 16,
+    "arithmetic_extra": 55
+  },
+  "target_source_sha256": "6f1f5118f97afe4b02494c60b5b1f9aec6ca227dd2e539d9bc6e7d60730f5a22"
+}

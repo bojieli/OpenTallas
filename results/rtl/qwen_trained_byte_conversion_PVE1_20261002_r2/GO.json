@@ -1,0 +1,855 @@
+{
+  "CPU_sharing": true,
+  "FSIZE": "unlimited",
+  "Nice": 10,
+  "RLIMIT_AS": "unlimited",
+  "actual_RTL": false,
+  "actual_capacity": {
+    "disk_available_bytes": 36379099136,
+    "mem_available_bytes": 197650460672
+  },
+  "admission_record_path": "results/rtl/qwen_trained_byte_conversion_PVE1_20261002_r2/GO.json",
+  "admitted": true,
+  "aggregate_output_bytes": 10609295360,
+  "authorization": "User explicitly authorizes fresh sole baseline conversion with verified64page continuation and capacity-qualified inactive-build retirement; disclosed8worker CPUsharing Nice10; no permission wait",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+  "cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "disk_headroom_bytes": 25769803776,
+  "expected_image_bytes": 8824912128,
+  "expected_source_bytes": 16381550382,
+  "fleet_lease": {
+    "CPU_sharing": true,
+    "Nice": 10,
+    "admission": "Parent-directed CPU sharing; exact memory/disk reservations remain enforced",
+    "capacity_basis": "PVE1 fresh199GiB available; existing finite row-stream source model, retain80GiB fleet-capacity reservation, no smaller guessed process cap. This is fleet capacity protection, not an estimated workload peak.",
+    "held_lock_files": [
+      "/tmp/claude-1000/agd_slots/ot-pve1.9",
+      "/tmp/claude-1000/agd_slots/ot-pve1.10",
+      "/tmp/claude-1000/agd_slots/ot-pve1.11",
+      "/tmp/claude-1000/agd_slots/ot-pve1.12",
+      "/tmp/claude-1000/agd_slots/ot-pve1.13",
+      "/tmp/claude-1000/agd_slots/ot-pve1.14",
+      "/tmp/claude-1000/agd_slots/ot-pve1.15",
+      "/tmp/claude-1000/agd_slots/ot-pve1.16",
+      "/tmp/claude-1000/agd_slots/ot-pve1.17",
+      "/tmp/claude-1000/agd_slots/ot-pve1.18",
+      "/tmp/claude-1000/agd_slots/ot-pve1.wt.168d630d4c33",
+      "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/ot-pve1.966922"
+    ],
+    "host": "ot-pve1",
+    "lease_keeper_pid": 966922,
+    "memory_reservation_GiB": 80,
+    "no_AS_cap": true,
+    "no_FSIZE_cap": true,
+    "no_wall_cap": true,
+    "source_commit": "4c0828691a61ce30402f5b26044e6ca2aebb45ad",
+    "source_model": "18ff7ccc5",
+    "threads": 8
+  },
+  "fresh_host_headroom_bytes": 111669149696,
+  "full_native_execution_admitted": false,
+  "historical_page_continuation": {
+    "complete_extents": [
+      "Qwen.rank0.extent.L0.down.codes",
+      "Qwen.rank0.extent.L0.down.scales"
+    ],
+    "matching_byte_recipe": true,
+    "matching_checkpoint_native_library_identity": true,
+    "old_GO_commit": "50673ec4c4a56b9adf2fe0ed4331186599f26be5",
+    "old_GO_sha256": "10a6e22adc57ecbe3e7d19f4afc74398417d37f23a790d9449d199304fe2699c",
+    "old_artifacts_mutated": false,
+    "old_identity": {
+      "checkpoint_files_sha256": {
+        "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+        "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+        "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+        "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+        "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+      },
+      "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+      "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "native_sha256": "ab3fe8d6469d6a1552e2eeaa9efe945c025cc35a567f0d8161e3c2a02fc59354",
+      "runtime_package_versions": {
+        "numpy": "1.26.4",
+        "safetensors": "0.8.0",
+        "torch": "2.14.0+cpu"
+      },
+      "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+      "source_sha256": {
+        "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+        "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+        "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+        "tools/qwen_trained_byte_provider.py": "48c3453cfd84edaeb9a609fb9915834ac475ffe25023609fe9b754f28e7849ff"
+      }
+    },
+    "old_identity_sha256": "aed7a649cdbb827b8f5d7a51395af7610d408a6393be6c52d539185827e047f9",
+    "old_job": "/home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r1",
+    "old_source_commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+    "old_terminal_sha256": "903b541206b4225c315e79fc8e1ea4c4548fda2763886e98f5187c1e3b3a3ff9",
+    "pages": [
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "b5c79b40499cfbd9cdce459ad93e160089225bf4b06287dbb7e19a382a1cde86",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_0.bin",
+          "sha256": "5a04547d9c69a052bf52bd56cab9daa47cc1235fc67719f4ecb41ddfdc7b1e03",
+          "start": 0
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "2c6435c2b0b38c4b86be749ec4d49a94311750145529f4c2fb231c65a3da967a",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_10223616.bin",
+          "sha256": "f323e28bddec725b15beb14d3bdc57a13dba054ac64697d25dee0812c17b4ed3",
+          "start": 10223616
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "2960e320963ab6534badfefe8c2a1113b0accf7520cb5a0ffd71964760ba68ec",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_11010048.bin",
+          "sha256": "e86098380fb6026acc85d6b97415d447cbe1e26ebf56723f876ea7b37ed1c1f5",
+          "start": 11010048
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "0f7c8488c57d3e64dbadbd28046365579dd999df5269f995c64664dca8bd3596",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_11796480.bin",
+          "sha256": "55641989455fe4f425bad694d3763a704547c6c300d10f2523d8dc69b6b1b137",
+          "start": 11796480
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "84acd4d3e730c3eed221d3f3b371ee85440e5dbb917bdc1f5a1f9fd2f3ce4cf4",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_12582912.bin",
+          "sha256": "7ed284119a6ef56bce7f2eecacf7ce93c9572a9d2b12b84e6ff6158e2b2a1134",
+          "start": 12582912
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "2e04da4af24b652a382a7e68847b21e20c7dd83fb76ce375ab2971c14a465a2b",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_13369344.bin",
+          "sha256": "5b6ec766aa91787b09920453c493af172bee2835f31d04656e2327619fa8949a",
+          "start": 13369344
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "3123e60a39f81c20afc52b48a96965df7c07a25ca746069246c1b770c2eb29c9",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_14155776.bin",
+          "sha256": "0c65f36d8621de4440e4efc4d0ce306e2f62de1221c03c6c9d40fa425ca778d7",
+          "start": 14155776
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "6cdfeb9453918250de7088a6cd50b0db2fcbe3acf1e55073547c61370ade5847",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_14942208.bin",
+          "sha256": "ef339a91c15cf867a56cab7af2ec446b4fb99d207015e6038822d957a23f03f9",
+          "start": 14942208
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "c61002d067662b8e00d83dfceef4e1f4d9e430431c10d492a70012402b1fe7b0",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_1572864.bin",
+          "sha256": "932c1928c82de93d79dcd664fcfe1197396e3a8252c216a9a3ebaa118804c37f",
+          "start": 1572864
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "88e9f4835d75c8b33e53a97d6072dac7afa50730d630d826d22c4518b820fb97",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_15728640.bin",
+          "sha256": "2c792bb0d1d3927d82f4c8c713d527e52780bd17bec3c83359ac2fb86312e4ef",
+          "start": 15728640
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "e88004b169cb398674ea0e3cf07f03ad47b7b0d2e51187a3d9033a33cc1d2e8d",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_16515072.bin",
+          "sha256": "478c3a255420e1775b2e342cd11d9909faeb7a2637a4a1b5d31c5099916b1212",
+          "start": 16515072
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "a24fc61485b5ced46c97226beacd71a9ea3a087cfb14e9323764927851816ae6",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_17301504.bin",
+          "sha256": "090ae3e4992bad8dbef8e16dd3acaa734901f4d087acdb3269d74d85e8f428c9",
+          "start": 17301504
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "940fcb65c6be6e7277d116cb6d16871814d96afa6062f7cc50589c39cdaefecf",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_18087936.bin",
+          "sha256": "867b04e5de951f6ff8c5770a9a731c6edb107d00ffe168068ebb88335fe995a9",
+          "start": 18087936
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "ccbc3a7aa7e72d98e6321c77b5b6b5f1063491996b3b02dcc5f6c38bc516c3d5",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_18874368.bin",
+          "sha256": "1bd9ba0c45dbd1fd9b9e401462d068922bbb6c617945e4879e0fd193209b4ca4",
+          "start": 18874368
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "ddaab0d2c1b99c22a7977bb3938ecc47161b29a4b5e637dbe52e82c4a6b76b15",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_19660800.bin",
+          "sha256": "93bd5f6ca08483125d0c40c157d0ec8b7ce9ebb892f556f6db0a758ee536d59a",
+          "start": 19660800
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "0ff5b0c30962ef49a53afa0606ddb77315d09f61d395f005fe4bc8877171fb59",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_20447232.bin",
+          "sha256": "18916a607e5ccd69d6f3b5384ef166b42382fa31c64812629f1e88d2f7aceef6",
+          "start": 20447232
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "7891c83093d623ca9567beef7d80f02c23466e700d6499354c486d5616caabd9",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_21233664.bin",
+          "sha256": "2bbea07b9309ec103507fb8d2c20868aeaf92cbcbd650d0512e8d9e1fb3e3385",
+          "start": 21233664
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "7001771cb15d0ec72b8a5a7e64ca1f92afe3dd980b4fbf2733c46131a3eadc8b",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_22020096.bin",
+          "sha256": "2b34d35d6a2c35935cadacdc6e7446b23437c3ca6dd31fcbc905350e971047c2",
+          "start": 22020096
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "b9866ae8e538c80f348256be564c99774764ad0bef9157f0ad77a6239a8c0136",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_22806528.bin",
+          "sha256": "a5069c70dfe7bc2c8f29b90d7cb40076cba48f4fbc0b6aa2c89f485f8345c165",
+          "start": 22806528
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "adb4d499cae238989780efb6e63525f6a86de0c440a570968abf7d1f72931dc0",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_2359296.bin",
+          "sha256": "f901904ed923151b45f382360acf1234ecb2b3a4bd82b66e83c5ce840dbf5eda",
+          "start": 2359296
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "c5009d0dd990eb838a8b2406939093979f570f0bc2e00e2c8bef36e480d0c045",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_23592960.bin",
+          "sha256": "f21bc6bd2aea7cc0b3218ee1199bc741e2a1d30bcc5cca6973681f533970c2c0",
+          "start": 23592960
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "aa702d2c5bb14553216ab69ac29270ff9c525ae8ee79d4ebcceb58d59bda0470",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_24379392.bin",
+          "sha256": "cfc8960559ffb4d36942b2f01c046c76287d1dd5a177a8bb140d9c3d3f8206aa",
+          "start": 24379392
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "dacc074caffdf6e807ab0d2972895a3ef94c5603174793628713423d13f4eed5",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_3145728.bin",
+          "sha256": "cf17d9c9574301cb93085afd7082df14cbf86f27623966a9ea410dee244b5d7b",
+          "start": 3145728
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "3e1ce5c9df62de2bd0c8ab9498e8941c102e537afc8a4bda6cf75b213105fe44",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_3932160.bin",
+          "sha256": "936ce46dd967646504079fc643fb39fd2bf6622259fe3bf8cc153ec959117707",
+          "start": 3932160
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "c66fb333342547486bddb3d408d14756ab07ab6e188cd9f5d44e1591164f4907",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_4718592.bin",
+          "sha256": "63ef1c9f249e596d634d241defcb30b7bef59cd0785655541373d144f5f81a9c",
+          "start": 4718592
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "b5536dfc77072aa98481c49c09613fa1d743ed0c6a0354f660ea7eb947af08e4",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_5505024.bin",
+          "sha256": "3cb119fcc3b13ba4e97774fe5f7de0bb0941bfe7b9cff5849f8f83424f0f9192",
+          "start": 5505024
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "a2ed98a7fbaf5b5e89eb83e0d22b2d0db54bcd17c06bf8e8137b54c7766982f9",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_6291456.bin",
+          "sha256": "d768afbd39419bd4bac04bf61e7c9599bf9c6b4a3cde09e4714a17a672462aaa",
+          "start": 6291456
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "a91aab334d7853ffeb82039c1c3610f25088d6b97d35df8b45b9f8b4048e087b",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_7077888.bin",
+          "sha256": "78c385e2ea4488aa9ee4b41a69a06d8589acfcaad785cc051ed79ab38599cb84",
+          "start": 7077888
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "4dbac91a65f99a966bf6737001aa3344516b6b31c912fcb5dce3c3ae283052b0",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_786432.bin",
+          "sha256": "4d640ad78105d95af7b8e9738d9c20cad042329025f6f31efb62426c68b54221",
+          "start": 786432
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "b4701c709f0a979dc8d707ecd506441ac6a466b0bc5b04420660a988367152bc",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_7864320.bin",
+          "sha256": "0a49b9e68875db990870c9c3205ce53c346d2c69aefddab76dc296b93d5d5933",
+          "start": 7864320
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "d7aa0ac0d30f6012dccee144a7916ae60a1bdf4b89d9a09e6d6f62cbbf601aac",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_8650752.bin",
+          "sha256": "3af5796a44c88ad0350cbd143a076f335aa72f5a828dbc35de93dd265fc2713a",
+          "start": 8650752
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.codes",
+        "receipt_sha256": "f3bec1d11975613b0370010c6bc8f84b4b5bfa99a131fc926a187a4c237d563a",
+        "record": {
+          "bytes": 786432,
+          "file": "Qwen_rank0_extent_L0_down_codes_9437184.bin",
+          "sha256": "0e6f3ebcc7ca45f7a29c5b996fef3153cbddc414ab9b45348ee932b3be61107d",
+          "start": 9437184
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "bcd5c21b7264ffdc81faf2c2af6076e96682e845767744e59c4ad0c89f064538",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_0.bin",
+          "sha256": "f846a398278d4cefea48b173057bfb1b1b2a4ac4e7ce863eac55d45c76af4b13",
+          "start": 0
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "44f8f7fc58afa9e990d05703fbb94f4866f96d67fdc0572270802bda46b26e65",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_1024.bin",
+          "sha256": "a3f2fcfcc528a5105e0c79c541079141c06d4a7f0e64f1f4ca57223902262bae",
+          "start": 1024
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "ae5919de6aefdf10d8691dc14325ed536a75190be597d42efdf3750692cf7829",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_1280.bin",
+          "sha256": "6456f6d1301f86e9aa2a219eb26cf6e7291b5ca39fbf187a89516b19ab135b2f",
+          "start": 1280
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "56036f1cd9eb3d26d36a2dc95a447d398b6831b03ebc13559d56a53f14d20db1",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_1536.bin",
+          "sha256": "a7278c95bac4b5dc4d14b9417d89af190b9d46a70f38128f642008e3409b0894",
+          "start": 1536
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "04b4a80a500100c79ee5e0d1c47aa0c708a3402dddf58f25ec4773e1763e07e9",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_1792.bin",
+          "sha256": "a7ed65d23f51dfa0cb1a06aa0c00db9de6dcfe72bba087ace67e8b59585c2925",
+          "start": 1792
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "7ab67cd5f446899b4d14defcc9f137becfc75536c8d753c13fed78036ecc176f",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_2048.bin",
+          "sha256": "b70417e9ccf2e9de8350c8fb0c3148582b091e0cff90b6006b4aa84e2d7999b8",
+          "start": 2048
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "13d8cb64370109c95b93c96816728da9bb5b7e02ba9587d2b42e6558d5038306",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_2304.bin",
+          "sha256": "ba887757834bb212b818b001c0bd0a4b38b4960427671ae35fc7515177b901cd",
+          "start": 2304
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "007d19e3ad7aff2edc98f7df04708ea0746aeab89098b956d84a81bf560df9d7",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_256.bin",
+          "sha256": "9c3452dfa81d66ef15a871dedfa027e019e2c73cfb0e4fe1a2332ca094aad8df",
+          "start": 256
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "34741f398147f60faf618943a1ddc06678f3dc350ee7fe09c7e5a10326a22b7a",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_2560.bin",
+          "sha256": "d868129af8aef21735f77949e6f339130a53bb7f165af2fe7cbe4c7945ec1cd4",
+          "start": 2560
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "adfd4d3f8628e16d71980cb2decb1e3aa7e42def4bd08bcf62753a489c16690b",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_2816.bin",
+          "sha256": "fd14062338e947ad0ea0911882a041126167da4fd016514ed487aa90c3799eae",
+          "start": 2816
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "63100e2f3ab86e2757eb3e046033d38eae98901bd7449c224f2151a8f1f91a39",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_3072.bin",
+          "sha256": "c5d3242e58927727628523b588b1bfca62927b42716325f7aa389aa774dd3b05",
+          "start": 3072
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "1ed369b72045ad593fe9a1ed03b4e3408f0e8bc5aa38b13350ebdb18561f3f85",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_3328.bin",
+          "sha256": "9daa349ed10da6532a759087c37f9b12d61909ff4e9b3e07c054a48ad38a3613",
+          "start": 3328
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "830b1b6a80d08137b02fa3081bec069173e98c2af6dfdd73489b9fdadbe919b5",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_3584.bin",
+          "sha256": "4bb88361fb4bae9f14edf2f32637dac57e37ccf333ea6bfcca6fc2cae7a03fd1",
+          "start": 3584
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "ebf6da7081f3971188f9d24b21bf7ddd8fb9d879e96dcc72f9548e4629a6a76a",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_3840.bin",
+          "sha256": "81042ec44cf497ba949087cd728a587033f4fad6060e05ffba0be4aa7ef81697",
+          "start": 3840
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "088d2fe11be0952cd676d660637a8bc2885938f24b7a6ebe8b5e5d5fdcdbee55",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_4096.bin",
+          "sha256": "07cb9695c259d8a6970691edc0ebc1625e568e01f6dfe1f7c9dc5ca30a12304b",
+          "start": 4096
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "d9dde311fd542a57ef01c65c85e15269cbd59d2bcdc3b74da466ce106c0f37c1",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_4352.bin",
+          "sha256": "7e9549b31f0e6408dd4a15403390bac69e9bc01229b68f8ee188074e851248de",
+          "start": 4352
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "0b76d8b14d54523c9aa9fc5b14347ab549901e7c542be7d4b45a2b1cc4b9403e",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_4608.bin",
+          "sha256": "3a7bb141e2b7e8dc81c6744c917625136afb36abfb936d125b0d78df533f37a6",
+          "start": 4608
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "39f4b468a7d2e69ba57429f7d6968bd877b73276626e638d492f5f76254d6b44",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_4864.bin",
+          "sha256": "f00277d3c9d5fdea22a57d3696777245bdcd7f946a45966e3d38008822851c6e",
+          "start": 4864
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "3f4499566d9c61008a3eb00dd62e4fca987b9690aa6e35c67b8ad39cee73e5d5",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_512.bin",
+          "sha256": "def0ac3d924639c584d62b5fa3698682af1ead2b1b27d8918487f0b1b362b3d7",
+          "start": 512
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "cb9fa1ecb6e18f518a7bd7205b2ed59193bbba1fb9b02a89e714058a0f8c9ea0",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_5120.bin",
+          "sha256": "5aa22d15cf16d8a330ac22dc40afa37da509fbeec766e8cef9a35a650ec33550",
+          "start": 5120
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "baa43d0f8f3738c303da9b158487b60981547abcc44460c84ef27d941a006e36",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_5376.bin",
+          "sha256": "5cc181073f1fdd6432597a97466066f717f84df5f08a2c20a3844503ef8b3bfc",
+          "start": 5376
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "53bd87238542e5875f94f5651ddb24ca14e6ce983edc2d69f31b2bd5ce1410d5",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_5632.bin",
+          "sha256": "4fdf00168ab0621239a41a3449261668bb401a32f20cabdf141e78e999227647",
+          "start": 5632
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "087ecc7d5e40e5ee3ef7bf18cbace81cf3024cdb2e22a93d41232a6d82df7466",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_5888.bin",
+          "sha256": "1ecc879e7a4ace583f7e6ce1eeec5dd4989e0e783cab22d0a81d759c4716edf5",
+          "start": 5888
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "b9e5dc0c2ea7bcf70e7ec4f4f7faea2bb03750555e247f100472e34c87648452",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_6144.bin",
+          "sha256": "f81638d6f18bd7c99814f7ab2628bc96e82d59fc28c1e62ac662e8277759e166",
+          "start": 6144
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "e8ef2902d6aa4b7f7a324ae70d54146f8870afc8a98d4ae710abf7e3a6b298a1",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_6400.bin",
+          "sha256": "9c87221d80980fac1b843b48a6cd650b2aca915d742eae36f12186e137c86697",
+          "start": 6400
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "7b78519895fd007db65169d905b96b164cfc1e88f0303f46096bf45935c073f3",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_6656.bin",
+          "sha256": "858f889234460b8b8f0ac69a12aaf141ae1045900abbababffb1179b0fcaead1",
+          "start": 6656
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "b26d72619480c4e443fc9c489161990af185791b3174f0696e416f87c8e3e33d",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_6912.bin",
+          "sha256": "740776e30fd7eaf16b12d19f36236d3a238f65a012cb246e858a4d5df472bc2c",
+          "start": 6912
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "0e6c02cae53ff3fe262e442034580ce7136e15849bad63bde064414a154ae3ce",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_7168.bin",
+          "sha256": "2c82e4e287509d6277e7a1f9f3a3b330676ebdb2c55f6d1555dd71530f1e3d1e",
+          "start": 7168
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "51dfd399769cbd5ca00745ef79c06d5185582d2288a266add63de24b9f2c1243",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_7424.bin",
+          "sha256": "9b07d583043909e0e04a4881cfe9c823aec55615cf9c3ab74520bdc149164aa8",
+          "start": 7424
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "2512ffed275db85f992cdda60e295bad5a68ed15ebd9eec7e9b5eb0eabac3e8c",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_768.bin",
+          "sha256": "903e51de1a732996661630ab26aa309958fe9df30c3e42af11a480c90283be13",
+          "start": 768
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "32c20b90fb3a50c5064f8522a3b619aaa3a93f7cd7be9854886c599f12ba17a2",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_7680.bin",
+          "sha256": "055b317230badf091a8d33675baf174e8674622960d8d08c6a0c0abfd4c2de42",
+          "start": 7680
+        }
+      },
+      {
+        "provider_ref": "Qwen.rank0.extent.L0.down.scales",
+        "receipt_sha256": "f5961cd32db36a89263078aecef83f45438256c62a8944f557e5f8871ac5a5d5",
+        "record": {
+          "bytes": 256,
+          "file": "Qwen_rank0_extent_L0_down_scales_7936.bin",
+          "sha256": "161c622c1dd35b42f928b8e8dc2758805f864ba2642e88a8e1f480c2bcf8869d",
+          "start": 7936
+        }
+      }
+    ],
+    "schema": "opentallas.Qwen.trained-page-continuation.v1",
+    "source_inventory_change_explicit": true,
+    "target_identity": {
+      "checkpoint_files_sha256": {
+        "model-00001-of-00005.safetensors": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f",
+        "model-00002-of-00005.safetensors": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282",
+        "model-00003-of-00005.safetensors": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836",
+        "model-00004-of-00005.safetensors": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a",
+        "model-00005-of-00005.safetensors": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+      },
+      "checkpoint_lock_sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+      "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "native_sha256": "ab3fe8d6469d6a1552e2eeaa9efe945c025cc35a567f0d8161e3c2a02fc59354",
+      "runtime_package_versions": {
+        "numpy": "1.26.4",
+        "safetensors": "0.8.0",
+        "torch": "2.14.0+cpu"
+      },
+      "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+      "source_sha256": {
+        "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+        "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+        "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+        "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+        "tools/qwen_trained_byte_provider.py": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250",
+        "tools/qwen_trained_page_continuation.py": "24e197600223089bd69ddc67717cd79957835c19c05f693c3e1925ea9c3a6201"
+      }
+    },
+    "verified_page_bytes": 25174016
+  },
+  "historical_page_continuation_sha256": "2de340f91ed3eb74d9554383ebf15f98fb0319ff00253ae130c80f3d50830674",
+  "memory_bytes": 85899345920,
+  "oracle_callbacks": 0,
+  "schema": "opentallas.Qwen.trained-native.admission.v1",
+  "shared_CPU_admission": {
+    "CPU_model": {
+      "Nice": 10,
+      "configured_peak_ratio": 1.2857142857142858,
+      "conservative_guard_doublecount_workers": 64,
+      "conversion_workers": 8,
+      "exclusive_CPUs": false,
+      "observed_load": 5.0712890625,
+      "performance_credit": false,
+      "physical_CPUs": 28,
+      "protected_configured_workers": 28,
+      "wall_deadline": null
+    },
+    "authorized_peak_thread_exception_only": true,
+    "existing_leases": [
+      {
+        "kind": "legacy",
+        "known": true,
+        "pid": 2491424,
+        "start_ticks": 310210959,
+        "threads": 28
+      }
+    ],
+    "lease": {
+      "CPU_sharing": true,
+      "authorization": "Parent explicitly directs sole PVE1 conversion after disclosed protected28worker W11 demand; memory/disk remain capacity-priced; no global guard modification.",
+      "cwd": "/home/ubuntu/OpenTallas-qwen-trained-provider-repair",
+      "host": "ot-pve1",
+      "pid": 966922,
+      "slot_gib": 80,
+      "source_head": "4c0828691a61ce30402f5b26044e6ca2aebb45ad",
+      "threads": 8,
+      "time": 1790949644.5002596
+    },
+    "observed": {
+      "compute_threads": 28,
+      "cpus": 28,
+      "free_gib": 184.0716209411621,
+      "load": 5.0712890625,
+      "observed_at": 1790949644.4353514,
+      "total_gib": 235.94449615478516
+    },
+    "pricing": {
+      "admit": false,
+      "aggregate_peak_ram_gib": 144,
+      "conservative_aggregate_threads": 64,
+      "effective_ram_budget_gib": 208,
+      "live_free_after_peak_gib": 40.07162094116211,
+      "observed_compute_threads": 28,
+      "reasons": [
+        "AGGREGATE_THREADS"
+      ],
+      "request_threads": 8,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 28,
+      "slot_request_gib": 80,
+      "thread_cap": 28
+    }
+  },
+  "source_commit": "4c0828691a61ce30402f5b26044e6ca2aebb45ad",
+  "source_sha256": {
+    "/home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r2/launcher.py": "d1f3901f4b11e7d9a14c1d36b7c06dca6be14c596c89be4817dfe33f917262a5",
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "tests/test_qwen_trained_byte_provider.py": "6192c4684ee2778b852106d4b45fc26c4c21fed1588a1d827020fa33a768fc8b",
+    "tools/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+    "tools/model_qwen_trained_byte_provider.py": "73d5a6ae8ff6c0624064a86bd015cfb18e69432a9c1be8c34db44d5424e1ee77",
+    "tools/prepare_qwen_trained_native.py": "02f10cad9f2e4c4d53650b6be14e250b1bacc949c033b99860b9ce5e03ef9804",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8",
+    "tools/qwen_trained_byte_provider.py": "f507b8d1093ca496c1c0aceb83d6f8e2b10824a097cb31339aa1da06698b1250",
+    "tools/qwen_trained_native_run.py": "807f2bfb643e313872ec0431d999a74f6a70755e502d7b9562daf3ed40a84711",
+    "tools/qwen_trained_page_continuation.py": "24e197600223089bd69ddc67717cd79957835c19c05f693c3e1925ea9c3a6201"
+  },
+  "unit": "hbm-qwen-trained-byte-conversion-pve1-20261002-r2.service",
+  "wall_limit_s": null,
+  "worker_threads": 8
+}

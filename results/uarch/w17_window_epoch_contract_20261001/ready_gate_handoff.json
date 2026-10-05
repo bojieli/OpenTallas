@@ -1,0 +1,47 @@
+{
+  "scope": "STATIC_PATTERN_POISON_PREREQUISITE_NO_RTL_RUN",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543"
+  },
+  "pattern_MEM_MODE1": {
+    "first_row_base": 262144,
+    "first_poison_sector": 1,
+    "address_hex": "0x40001",
+    "byte_offset": 8,
+    "value_hex": "0x7f",
+    "poison_predicate": "codebyte[6:0]==0x7f; originalprefetch rejects",
+    "expected_scope": "Raw patterncannotpassfull128rowstagegate; preserve an expectedpoisonnegative, not timingdeadlock or epochcollision."
+  },
+  "baseline_owner": "Parent; no duplicatebench or baseline run by thisagent",
+  "gate_data_requirement": "Full128row sourcegate requires nonpoison syntheticdata. Minimalunchangedbackend option MEM_MODE0,MEM_WORDS2176, benchgenerated legal sectors indexedaddr%2176; ~69,632B and nocheckpointread. Otherwise explicitlymodelany patternadaptation; never silentlysanitize.",
+  "epoch512_negative": {
+    "initial_condition": "Quiescent originalmulti-credit source with epoch511; nextacceptedprefetch advances512; firstsector0tag0x4000.",
+    "expected": [
+      "outermuxbad_tag=1 stickyfault",
+      "WINDOWready=0 andno backendadmission",
+      "no rowscalepublication"
+    ],
+    "qualifications": "Readmuxfault explicitly; prefetchfaultneednotassert byitself. Do not substituteownerCKV or truncateclienttag. Credit1continuessectortagsregardlessunusedepochregister."
+  },
+  "safe_wrap_gate": {
+    "candidate": "Proposed9bitencoding only; notimplemented",
+    "seeds": [
+      510,
+      511,
+      0
+    ],
+    "requirements": "Rows admittedwithimmutableepoch, beforeeachadvance all17receivedandpending0, no WINDOWentries in backend/heldreturns/pipes. Natural511->0 preserves owner00 and17bitbackend100prefix.",
+    "stale": "Inject wrong-epoch/duplicate/unknownsector/poison as distinctexpectedfaults. Sameepoch post512rowreplay cannotberejected byfiniteencoding; forbidden by certifieddrain/exactlyoncecontract."
+  },
+  "next_gate": "Parent unchangedcredit1full128x17actualnestedKV/RoPEmux+directKARB+idx_hbm REF3 NPC32 TAG17 CLK_PS1000; perPCadmission/response/heldreturn/rowpublish conservation. Preserve rawpatternpoison and oldmulti-creditepoch512 as separateexpectednegativecases.",
+  "bounds": {
+    "parent_caps": {
+      "CPUs": 2,
+      "memory_limit_bytes": 4294967296,
+      "wall_seconds": 180
+    },
+    "no_engine_or_fullfield": true
+  },
+  "no_run_or_payload_read": true
+}

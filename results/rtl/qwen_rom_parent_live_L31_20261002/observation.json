@@ -1,0 +1,25 @@
+{
+  "scope": "LIVE_PROCESS_AND_LOG_OBSERVATION_ONLY_NOT_ORACLE_OR_TERMINAL_PASS",
+  "observed_UTC": "2026-10-02T06:18:26.764412+00:00",
+  "command": [
+    "ssh",
+    "-o",
+    "BatchMode=yes",
+    "-o",
+    "ConnectTimeout=8",
+    "ot-pve1",
+    "ps -p 1220907 -o pid,etime,%cpu,%mem,args; readlink /proc/1220907/fd/1; tail -10 /home/ubuntu/w12/rt_tp4d/token.log"
+  ],
+  "return_code": 0,
+  "raw_stdout": "    PID     ELAPSED %CPU %MEM COMMAND\n1220907  1-09:36:15  105  0.5 /home/ubuntu/w12/rt_tp4d/qwen_rom_rt --stages /home/ubuntu/w12/st_tp4_sw64/stages.txt /home/ubuntu/w12/rt_tp4d /tmp/qwen-vocab-embed-token0/vm_x_fp32.hex\n/home/ubuntu/w12/rt_tp4d/token.log\nstage L29 loaded: code_words=1056 scale_words=50112 crom_words=541953\nprogress tick=139264 cyc=139265 pc_base=19/19 me_busy=60816/60816 wall=116078s passes=369923\nSTAGE L29 done cycles=4668 start_cyc=135409 end_cyc=140077 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=46080 su_writes=907080 wall=116106s\nstage L30 loaded: code_words=1056 scale_words=50112 crom_words=541953\nprogress tick=143360 cyc=143361 pc_base=19/19 me_busy=62671/62671 wall=118025s passes=380832\nSTAGE L30 done cycles=4668 start_cyc=140078 end_cyc=144746 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=47616 su_writes=937316 wall=118241s\nstage L31 loaded: code_words=1056 scale_words=50112 crom_words=541953\nprogress tick=147456 cyc=147457 pc_base=19/19 me_busy=64244/64244 wall=119694s passes=391630\nSTAGE L31 done cycles=4668 start_cyc=144747 end_cyc=149415 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=49152 su_writes=967552 wall=120369s\nstage L32 loaded: code_words=1056 scale_words=50112 crom_words=541953\n",
+  "live_pid": 1220907,
+  "active_log": "/home/ubuntu/w12/rt_tp4d/token.log",
+  "latest_observed_completed_layer": 31,
+  "latest_observed_end_cycle": 149415,
+  "next_loaded_layer": 32,
+  "numerical_rank_checkpoint_verification": "PENDING_OWNER_REVIEW",
+  "full_token_pass": false,
+  "physical_qualification": false,
+  "source_join_qualification": false,
+  "historical_TP2_log_excluded": "/home/ubuntu/w12/rt64/token.log"
+}

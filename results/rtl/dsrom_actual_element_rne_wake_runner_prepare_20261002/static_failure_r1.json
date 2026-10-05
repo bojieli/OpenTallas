@@ -1,0 +1,8 @@
+{
+  "HDL_executed": false,
+  "exact": "Negative mutated package was correctly rejected earlier by joined preparer as ValueError: package changed; inherited test expected package mismatch from runner. Adjusted test to accept either exact package rejection; no runner/source/oracle/caps change.",
+  "failures": 1,
+  "log_sha256": "fa320e5b2c43de20c6a69167b1940ebcb71732c3569816e703b0c721011d02e0",
+  "status": "STATIC_TEST_EXPECTED_EXCEPTION_DIAGNOSTIC_ONLY",
+  "tests": 16
+}

@@ -1,0 +1,105 @@
+{
+  "record": "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns.json",
+  "record_sha256": "dde8dcb0be33d1f5cf4245bcf3be6e07d5db9db73e5c610fd753e2b2bfc4f438",
+  "sources": [
+    {
+      "launch_path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+      "matching_source": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+      "sha256": "2aa72c331a7ee62d2876b51e133ae575e80391d808308698ea502769b5bf9ba3"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+      "matching_source": "rtl/abi3/ot_a3_lq8_operand_admission.sv",
+      "sha256": "9f9e35b0e071ab8fbae08f4d43309d65868f5fc2327f43b90370b986c4f0ea10"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "matching_source": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "sha256": "f877b618a11ed5cd8bf79f763419bb8e82349110158e6c8482d0213227b7141c"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+      "matching_source": "rtl/abi3/ot_a3_lq8_auxiliary_prefetch.sv",
+      "sha256": "afd0c4982547cce2b6fa7dc0d23d9bf663d96c52228ae5f6ce3ea8319a564f67"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+      "matching_source": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+      "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "matching_source": "rtl/abi3/ot_a3_weight_tile_scheduler.sv",
+      "sha256": "5c487e4c9cdda627b515b196f3e7062b73a47571e471f7ae86986553a232ad6f"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+      "matching_source": "rtl/abi3/ot_a3_weight_tile_prefetch.sv",
+      "sha256": "02d17765059b71c26dd6d1be88b216b802dcb720dae43e1e787c98a1633b6837"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+      "matching_source": "rtl/abi3/ot_a3_runtime_weight_banks.sv",
+      "sha256": "3eb74a16582e5e6da9d176639724eb1a40d2fe63d875ed5f8ea0f7985386f24e"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "matching_source": "rtl/abi3/ot_a3_operand_bank_owner.sv",
+      "sha256": "df2ea86be06b8009d9a9fde2a5e9f8957dc0292d03f8365b794c4df60bed3086"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+      "matching_source": "rtl/abi3/ot_a3_asap7_fakeram_blackbox.sv",
+      "sha256": "c8cde8d71525bdba642b045910b47d46ca68f0db9d454c6eba82bb5239a53d53"
+    },
+    {
+      "launch_path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "matching_source": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79"
+    }
+  ],
+  "artifacts": {
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/1_2_yosys.v": "ed923d71cdcedfb39e8dfef192a7a00860637ea1787da1cf6884fc931fc08373",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/6_final.v": "71de774245b599dcf674b24874b6fe79ffb7157f21231ef882dfa4af0f8baf57",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/6_finish.rpt": "fcb10e51609ef712c1264d37331fc991a19ae326a93a061c17a963fa7c92052e",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/config.mk": "d31c5b6a9a74de1fd19905af43fd0856c8cfa290de2bfa88c175595ce64ea5de",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d",
+    "results/physical_abi3/asap7/runtime_operand_service/pnr_partial_pass2_cts8_1ns_artifacts/metadata.json": "2dac20bccd30e4fbbcbf4c44bbccce63b8c7d476355903be1a0d01cd48629499"
+  },
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 1.0,
+        "hold_wns_ns": -0.000369649,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": false,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.00657485,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": false
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: place_and_route",
+    "status": "not_met"
+  },
+  "area_um2": 4694.63,
+  "parameters": {
+    "INTERLEAVE": 2,
+    "PASS_FIRST": 1,
+    "REUSE_WEIGHT_ROWS": 1
+  },
+  "scope": "Final extracted ASAP7 TT, tested 1 ns, current-source runtime operand service with two-column pass scheduling and retained weight SRAM. Not a full G2 route.",
+  "remaining_path": "weight_response_data[37] -> prefetch.banks.bank[0].memory; hold -0.000369649 ns",
+  "next_action": "Retry same source/configuration with 0.02 ns hold repair margin; preserve clock target and all SDC interface constraints."
+}

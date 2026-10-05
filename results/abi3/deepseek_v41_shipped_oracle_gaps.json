@@ -1,0 +1,38 @@
+{
+ "schema": "opentallas.abi3.v41_shipped_oracle_gaps.v1",
+ "question": "the shipped V4.1 oracle is blocked on 'a streaming engine'. How much of one is actually missing?",
+ "answer": "much less than the prerequisite implies. The V4 streaming engine already drives the V4.1 snapshot far enough to CONSTRUCT the 96,085-tensor model on meta. Three named adaptations remain.",
+ "method": "tools/probes/probe_v41_shipped_oracle_gaps.py -- point runtime/reference/deepseek_v4_oracle.py::StreamingDeepSeekV4 at the V4.1 snapshot, substituting only the vendor-source table and the encoding module name, and record where it stops. Each stop is a named, reproducible gap rather than an estimate.",
+ "what_already_works": [
+  "the vendor sources hash and import: model.py, kernel.py, convert.py, engram.py, encoding/encoding.py",
+  "the TileLang kernels COMPILE, once /usr/local/cuda/bin (CUDA 12.8) is ahead of /usr/bin (CUDA 11.5) on PATH. The system nvcc does not know sm_120a and the GPU is sm_120, so the whole path is dead without it -- the oracle tool's own recorded command already carries that prefix",
+  "the sparse-attention head split verifies BITWISE identical at V4.1's shipped dimensions, which is the adaptation that let the V4 oracle run on this GPU at all",
+  "the V4.1 Transformer CONSTRUCTS: 96,085 tensors on the meta device, Engram layout built, NgramHashState built"
+ ],
+ "the_gaps_that_remain": [
+  {
+   "id": "materialise_buffers_helper_names",
+   "where": "runtime/reference/deepseek_v4_oracle.py::_materialise_buffers",
+   "what": "it clears three lru_caches by name. V4 has precompute_freqs_cis, get_window_topk_idxs, get_compress_topk_idxs; V4.1 has precompute_freqs_cis, get_window_topk_idxs, get_dspark_topk_idxs. The third name does not exist in V4.1 and the call raises.",
+   "size": "small: a per-release helper list, plus whatever of the buffer set differs"
+  },
+  {
+   "id": "verify_fp4_gemm_expert_scale_shape",
+   "where": "runtime/reference/deepseek_v4_oracle.py::verify_fp4_gemm",
+   "what": "V4.1's kernel.fp8_gemm asserts a different b_s (expert scale) shape than V4's, so the V4 probe cannot build its test operand and trips an assert inside the vendor kernel.",
+   "size": "contained: the probe must build its operand to V4.1's scale layout. Until it does, the expert path has to be the documented fp8 recast rather than a verified fp4 one."
+  },
+  {
+   "id": "engram_table_residency",
+   "where": "not written",
+   "what": "the two Engram tables are 202.76 GB and ParallelEngramEmbedding.forward runs F.embedding over the whole table. F.embedding reads only the rows it indexes, so a row-gather against the memory-mapped shards is the shape of the answer.",
+   "size": "the real work of the three"
+  }
+ ],
+ "tokenizer_note": "the vendor's build_compressed_token_map needs exactly two things from a tokenizer -- .backend_tokenizer and len() -- and the committed load_verified_deepseek_v41_tokenizer supplies the backend. A two-method shim bridges them; no tokenizer behaviour is reimplemented.",
+ "not_a_claim": [
+  "that the shipped oracle works. It does not: the probe stops at the first gap above, and no token has been produced.",
+  "that closing these three gaps closes the nine-cell matrix. A trained router should have decisive margins -- that is why the V4-Flash cells close -- but it is an expectation until measured.",
+  "the fp4 probe was BYPASSED to reach the constructor, so the fp4-versus-fp8 expert verdict for V4.1 is untested here."
+ ]
+}

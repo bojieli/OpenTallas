@@ -1,0 +1,27 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+UPF_IMPORT_LIMITATION: supply commands unavailable; VDD/VSS/VDD_ELEM references only, no physical switched-grid claim
+Signal 11 received
+Stack trace:
+ 0# 0x0000000000F1C787 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 1# 0x0000000000042520 in /lib/x86_64-linux-gnu/libc.so.6
+ 2# upf::UPFWriter::writePowerSwitchPortMap(odb::dbPowerSwitch*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 3# upf::UPFWriter::writePowerSwitch(odb::dbPowerSwitch*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 4# upf::UPFWriter::write(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 5# upf::write_upf(utl::Logger*, odb::dbBlock*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 6# write_upf_cmd(char const*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 7# 0x00000000015E7D0F in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+ 8# TclNRRunCallbacks in /lib/x86_64-linux-gnu/libtcl8.6.so
+ 9# 0x000000000003E028 in /lib/x86_64-linux-gnu/libtcl8.6.so
+10# Tcl_EvalEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+11# Tcl_Eval in /lib/x86_64-linux-gnu/libtcl8.6.so
+12# sta::sourceTclFile(char const*, bool, bool, Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+13# 0x0000000003E22810 in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+14# ord::tclAppInit(Tcl_Interp*) in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+15# Tcl_MainEx in /lib/x86_64-linux-gnu/libtcl8.6.so
+16# main in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad
+17# 0x0000000000029D90 in /lib/x86_64-linux-gnu/libc.so.6
+18# __libc_start_main in /lib/x86_64-linux-gnu/libc.so.6
+19# _start in /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad

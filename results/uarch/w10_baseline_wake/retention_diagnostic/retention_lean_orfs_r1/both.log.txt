@@ -1,0 +1,713 @@
+
+-- Executing script file `/work/retention_lean_orfs_r1/both.ys' --
+
+1. Executing Verilog-2005 frontend: /work/retention_lean_orfs_r1/wake.sv
+Parsing SystemVerilog input from `/work/retention_lean_orfs_r1/wake.sv' to AST representation.
+Generating RTLIL representation for module `\wake_diag'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \wake_diag
+
+2.2. Analyzing design hierarchy..
+Top module:  \wake_diag
+Removed 0 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$43 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$37 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$31 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$25 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$19 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$13 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$7 in module wake_diag.
+Marked 1 switch rules as full_case in process $proc$/work/retention_lean_orfs_r1/wake.sv:5$1 in module wake_diag.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 8 redundant assignments.
+Promoted 0 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$43'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$37'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$31'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$25'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$19'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$13'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$7'.
+Found async reset \rst_n in `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$1'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$43'.
+     1/1: $0\g_wake.g_leaf[7].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$37'.
+     1/1: $0\g_wake.g_leaf[6].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$31'.
+     1/1: $0\g_wake.g_leaf[5].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$25'.
+     1/1: $0\g_wake.g_leaf[4].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$19'.
+     1/1: $0\g_wake.g_leaf[3].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$13'.
+     1/1: $0\g_wake.g_leaf[2].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$7'.
+     1/1: $0\g_wake.g_leaf[1].wake[0:0]
+Creating decoders for process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$1'.
+     1/1: $0\g_wake.g_leaf[0].wake[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\wake_diag.\g_wake.g_leaf[7].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$43'.
+  created $adff cell `$procdff$53' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[6].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$37'.
+  created $adff cell `$procdff$58' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[5].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$31'.
+  created $adff cell `$procdff$63' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[4].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$25'.
+  created $adff cell `$procdff$68' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[3].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$19'.
+  created $adff cell `$procdff$73' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[2].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$13'.
+  created $adff cell `$procdff$78' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[1].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$7'.
+  created $adff cell `$procdff$83' with positive edge clock and positive level reset.
+Creating register for signal `\wake_diag.\g_wake.g_leaf[0].wake' using process `\wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$1'.
+  created $adff cell `$procdff$88' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$43'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$37'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$31'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$25'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$19'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$13'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$7'.
+Removing empty process `wake_diag.$proc$/work/retention_lean_orfs_r1/wake.sv:5$1'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+<suppressed ~24 debug messages>
+
+4. Executing JSON backend.
+
+5. Executing SYNTH pass.
+
+5.1. Executing PROC pass (convert processes to netlists).
+
+5.1.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.1.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+5.1.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+5.1.4. Executing PROC_INIT pass (extract init attributes).
+
+5.1.5. Executing PROC_ARST pass (detect async resets in processes).
+
+5.1.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+5.1.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+5.1.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+5.1.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+5.1.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+5.1.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+5.1.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.2. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+Removed 16 unused cells and 32 unused wires.
+<suppressed ~17 debug messages>
+
+5.4. Executing CHECK pass (checking for obvious problems).
+Checking module wake_diag...
+Found and reported 0 problems.
+
+5.5. Executing OPT pass (performing simple optimizations).
+
+5.5.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.5.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 40 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Computing hashes of 26 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Computing hashes of 19 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+<suppressed ~84 debug messages>
+Removed a total of 28 cells.
+
+5.5.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \wake_diag..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.5.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \wake_diag.
+Performed a total of 0 changes.
+
+5.5.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.5.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.5.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+Removed 0 unused cells and 28 unused wires.
+<suppressed ~1 debug messages>
+
+5.5.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.5.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+5.5.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \wake_diag..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.5.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \wake_diag.
+Performed a total of 0 changes.
+
+5.5.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.5.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.5.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.5.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.5.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5.6. Executing FSM pass (extract and optimize FSM).
+
+5.6.1. Executing FSM_DETECT pass (finding FSMs in design).
+
+5.6.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+
+5.6.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.6.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.6.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+
+5.6.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+
+5.6.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+
+5.6.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+
+5.7. Executing OPT pass (performing simple optimizations).
+
+5.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \wake_diag..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \wake_diag.
+Performed a total of 0 changes.
+
+5.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.7.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.7.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.7.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.7.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.8. Executing WREDUCE pass (reducing word size of cells).
+
+5.9. Executing PEEPOPT pass (run peephole optimizers).
+
+5.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.11. Executing ALUMACC pass (create $alu and $macc cells).
+Extracting $alu and $macc cells in module wake_diag:
+  created 0 $alu and 0 $macc cells.
+
+5.12. Executing SHARE pass (SAT-based resource sharing).
+
+5.13. Executing OPT pass (performing simple optimizations).
+
+5.13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \wake_diag..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+5.13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \wake_diag.
+Performed a total of 0 changes.
+
+5.13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+5.13.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+5.13.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.13.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+5.13.9. Finished fast OPT passes. (There is nothing left to do.)
+
+5.14. Executing MEMORY pass.
+
+5.14.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.14.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.14.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.14.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.14.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.14.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.14.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.14.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.14.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+5.14.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.15. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+6. Executing JSON backend.
+
+7. Executing OPT pass (performing simple optimizations).
+
+7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+7.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+7.5. Finished fast OPT passes.
+
+8. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+9. Executing OPT pass (performing simple optimizations).
+
+9.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+9.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+9.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \wake_diag..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+9.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \wake_diag.
+Performed a total of 0 changes.
+
+9.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 12 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+9.6. Executing OPT_SHARE pass.
+
+9.7. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+9.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+9.10. Finished fast OPT passes. (There is nothing left to do.)
+
+10. Executing TECHMAP pass (map to technology primitives).
+
+10.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $logic_or.
+Using extmapper simplemap for cells of type $reduce_bool.
+Using extmapper simplemap for cells of type $adff.
+No more expansions possible.
+<suppressed ~89 debug messages>
+
+11. Executing JSON backend.
+
+12. Executing OPT pass (performing simple optimizations).
+
+12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 18 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+12.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+12.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+Removed 0 unused cells and 1 unused wires.
+<suppressed ~1 debug messages>
+
+12.5. Finished fast OPT passes.
+
+13. Executing DFFLIBMAP pass (mapping DFF cells to sequential cells from liberty file).
+  cell DFFLQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_N_.
+  cell DFFHQNx1_ASAP7_75t_R (inv, pins=3, area=0.29) is a direct match for cell type $_DFF_P_.
+  cell DFFASRHQNx1_ASAP7_75t_R (inv, pins=5, area=0.38) is a direct match for cell type $_DFFSR_PNN_.
+  final dff cell mappings:
+    \DFFLQNx1_ASAP7_75t_R _DFF_N_ (.CLK( C), .D( D), .QN(~Q));
+    \DFFHQNx1_ASAP7_75t_R _DFF_P_ (.CLK( C), .D( D), .QN(~Q));
+    unmapped dff cell: $_DFF_NN0_
+    unmapped dff cell: $_DFF_NN1_
+    unmapped dff cell: $_DFF_NP0_
+    unmapped dff cell: $_DFF_NP1_
+    unmapped dff cell: $_DFF_PN0_
+    unmapped dff cell: $_DFF_PN1_
+    unmapped dff cell: $_DFF_PP0_
+    unmapped dff cell: $_DFF_PP1_
+    unmapped dff cell: $_DFFE_NN_
+    unmapped dff cell: $_DFFE_NP_
+    unmapped dff cell: $_DFFE_PN_
+    unmapped dff cell: $_DFFE_PP_
+    unmapped dff cell: $_DFFSR_NNN_
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+
+13.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+<suppressed ~8 debug messages>
+Mapping DFF cells in module `\wake_diag':
+  mapped 8 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+
+14. Executing OPT pass (performing simple optimizations).
+
+14.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module wake_diag.
+
+14.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\wake_diag'.
+Computing hashes of 26 cells of `\wake_diag'.
+Finding duplicate cells in `\wake_diag'.
+Removed a total of 0 cells.
+
+14.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+14.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \wake_diag..
+
+14.5. Finished fast OPT passes.
+
+15. Executing ABC pass (technology mapping using ABC).
+
+Syntax error in command `abc -fast':
+
+    abc [options] [selection]
+
+This pass uses the ABC tool [1] for technology mapping of yosys's internal gate
+library to a target architecture.
+
+    -exe <command>
+        use the specified command instead of "<yosys-bindir>/yosys-abc" to execute ABC.
+        This can e.g. be used to call a specific version of ABC or a wrapper.
+
+    -script <file>
+        use the specified ABC script file instead of the default script.
+
+        if <file> starts with a plus sign (+), then the rest of the filename
+        string is interpreted as the command string to be passed to ABC. The
+        leading plus sign is removed and all commas (,) in the string are
+        replaced with blanks before the string is passed to ABC.
+
+        if no -script parameter is given, the following scripts are used:
+
+        for -liberty/-genlib without -constr:
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               &get -n; &dch -f; &nf {D}; &put
+
+        for -liberty/-genlib with -constr:
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               &get -n; &dch -f; &nf {D}; &put; buffer; upsize {D};
+               dnsize {D}; stime -p
+
+        for -lut/-luts (only one LUT size):
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               dch -f; if; mfs2; lutpack -S 1
+
+        for -lut/-luts (different LUT sizes):
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               dch -f; if; mfs2
+
+        for -sop:
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               dch -f; cover {I} {P}
+
+        otherwise:
+          strash; &get -n; &fraig -x; &put; scorr; dc2; dretime; strash;
+               &get -n; &dch -f; &nf {D}; &put
+
+    -liberty <file>
+        generate netlists for the specified cell library (using the liberty
+        file format).
+
+    -dont_use <cell_name>
+        avoid usage of the technology cell <cell_name> when mapping the design.
+        this option can be used multiple times with different cell names and
+        supports simple glob patterns in the cell name.
+        only supported with Liberty cell libraries.
+
+    -genlib <file>
+        generate netlists for the specified cell library (using the SIS Genlib
+        file format).
+
+    -constr <file>
+        pass this file with timing constraints to ABC.
+        use with -liberty/-genlib.
+
+        a constr file contains two lines:
+            set_driving_cell <cell_name>
+            set_load <floating_point_number>
+
+        the set_driving_cell statement defines which cell type is assumed to
+        drive the primary inputs and the set_load statement sets the load in
+        femtofarads for each primary output.
+
+    -D <picoseconds>
+        set delay target. the string {D} in the default scripts above is
+        replaced by this option when used, and an empty string otherwise.
+        this also replaces 'dretime' with 'dretime; retime -o {D}' in the
+        default scripts above.
+
+    -I <num>
+        maximum number of SOP inputs.
+        (replaces {I} in the default scripts above)
+
+    -P <num>
+        maximum number of SOP products.
+        (replaces {P} in the default scripts above)
+
+    -lut <width>
+        generate netlist using luts of (max) the specified width.
+
+    -lut <w1>:<w2>
+        generate netlist using luts of (max) the specified width <w2>. All
+        luts with width <= <w1> have constant cost. for luts larger than <w1>
+        the area cost doubles with each additional input bit. the delay cost
+        is still constant for all lut widths.
+
+    -luts <cost1>,<cost2>,<cost3>,<sizeN>:<cost4-N>,..
+        generate netlist using luts. Use the specified costs for luts with 1,
+        2, 3, .. inputs.
+
+    -sop
+        map to sum-of-product cells and inverters
+
+    -g type1,type2,...
+        Map to the specified list of gate types. Supported gates types are:
+           AND, NAND, OR, NOR, XOR, XNOR, ANDNOT, ORNOT, MUX,
+           NMUX, AOI3, OAI3, AOI4, OAI4.
+        (The NOT gate is always added to this list automatically.)
+
+        The following aliases can be used to reference common sets of gate
+        types:
+          simple: AND OR XOR MUX
+          cmos2:  NAND NOR
+          cmos3:  NAND NOR AOI3 OAI3
+          cmos4:  NAND NOR AOI3 OAI3 AOI4 OAI4
+          cmos:   NAND NOR AOI3 OAI3 AOI4 OAI4 NMUX MUX XOR XNOR
+          gates:  AND NAND OR NOR XOR XNOR ANDNOT ORNOT
+          aig:    AND NAND OR NOR ANDNOT ORNOT
+
+        The alias 'all' represent the full set of all gate types.
+
+        Prefix a gate type with a '-' to remove it from the list. For example
+        the arguments 'AND,OR,XOR' and 'simple,-MUX' are equivalent.
+
+        The default is 'all,-NMUX,-AOI3,-OAI3,-AOI4,-OAI4'.
+
+    -dff
+        also pass $_DFF_?_ and $_DFFE_??_ cells through ABC. modules with many
+        clock domains are automatically partitioned in clock domains and each
+        domain is passed through ABC independently.
+
+    -clk [!]<clock-signal-name>[,[!]<enable-signal-name>]
+        use only the specified clock domain. this is like -dff, but only FF
+        cells that belong to the specified clock domain are used.
+
+    -keepff
+        set the "keep" attribute on flip-flop output wires. (and thus preserve
+        them, for example for equivalence checking.)
+
+    -nocleanup
+        when this option is used, the temporary files created by this pass
+        are not removed. this is useful for debugging.
+
+    -showtmp
+        print the temp dir name in log. usually this is suppressed so that the
+        command output is identical across runs.
+
+    -markgroups
+        set a 'abcgroup' attribute on all objects created by ABC. The value of
+        this attribute is a unique integer for each ABC process started. This
+        is useful for debugging the partitioning of clock domains.
+
+    -dress
+        run the 'dress' command after all other ABC commands. This aims to
+        preserve naming by an equivalence check between the original and
+        post-ABC netlists (experimental).
+
+    -liberty_args <string>
+        when -liberty is used, also pass the specified arguments to ABC
+        command "read_lib". Example: -liberty_args "-G 250"
+
+When no target cell library is specified the Yosys standard cell library is
+loaded into ABC before the ABC script is executed.
+
+Note that this is a logic optimization pass within Yosys that is calling ABC
+internally. This is not going to "run ABC on your design". It will instead run
+ABC on logic snippets extracted from your design. You will not get any useful
+output when passing an ABC script that writes a file. Instead write your full
+design as BLIF file with write_blif and then load that into ABC externally if
+you want to use ABC to convert your design into another format.
+
+[1] http://www.eecs.berkeley.edu/~alanmi/abc/
+
+ERROR: Command syntax error: Unknown option or option in arguments.
+> abc -fast
+>     ^

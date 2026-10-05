@@ -1,0 +1,22 @@
+{
+  "active_RMW_locks": 1,
+  "dependent_instruction": 11,
+  "dependent_instruction_issued": true,
+  "dependent_opcode": "KV_FENCE",
+  "generator_sha256": "6f9b55376f54c4ed8a31ba12abc8c228d92eacead6cceaa7ddf149fa90e630d2",
+  "hardware_failure_claim": false,
+  "mask": 65537,
+  "merge_visible": null,
+  "other_pending_dependencies": [],
+  "owned_entries": 0,
+  "read_import_retired": "160000/9",
+  "read_sector": 5618364,
+  "requests_read": 1,
+  "requests_write": 0,
+  "scope": "Supplied source-shaped protocol callbacks only; no DUT, checkpoint or arithmetic execution. Writer retirement must include persistent RMW lock and complete addressed sector obligations.",
+  "source_commit": "637975292",
+  "status": "FAIL_MODEL_RMW_WRITER_RETIREMENT_BEFORE_MERGE_AND_WRITE",
+  "writer_id": 10,
+  "writer_opcode": "KV_WRITE",
+  "writer_retired": true
+}

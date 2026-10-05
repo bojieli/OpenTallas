@@ -1,0 +1,614 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING IFP-0028] Core area lower left (15.000, 15.000) snapped to (15.012, 15.120).
+[INFO IFP-0001] Added 777 rows of 3888 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 240.000 240.000 ) um
+[INFO IFP-0101] Core BBox: ( 15.012 15.120 ) ( 224.964 224.910 ) um
+[INFO IFP-0102] Core area:                        44045.830 um^2
+[INFO IFP-0103] Total instances area:             19167.305 um^2
+[INFO IFP-0104] Effective utilization:                0.435
+[INFO IFP-0105] Number of instances:                  38621
+[INFO MPL-0035] Macro g_rom_u_scale_rom placed. Bounding box (35.000um, 60.000um), (157.256um, 179.340um). Orientation R0
+Found 1 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 9936
+[INFO PPL-0002] Number of I/O             1299
+[INFO PPL-0003] Number of I/O w/sink      1043
+[INFO PPL-0004] Number of I/O w/o sink    256
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 132157.34 um.
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: ( 15.012 15.120 ) ( 224.964 224.910 ) um
+[INFO GPL-0016] Core area:                   44045.830 um^2
+[INFO GPL-0036] Movable instances area:       4577.274 um^2
+[INFO GPL-0037] Total instances area:        19206.773 um^2
+[INFO GPL-0035] Pin density area adjust:       472.604 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             38621
+[INFO GPL-0007] Movable instances:               38620
+[INFO GPL-0008] Fixed instances:                     1
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  40070
+[INFO GPL-0011] Number of pins:                 139709
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 240.000 240.000 ) um
+[INFO GPL-0013] Placement BBox: ( 15.012 15.120 ) ( 224.964 224.910 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                 44045.830 um^2
+[INFO GPL-0017] Fixed instances area:        14629.499 um^2
+[INFO GPL-0018] Movable instances area:       5049.878 um^2
+[INFO GPL-0019] Utilization:                    17.167 %
+[INFO GPL-0020] Standard cells area:          5049.878 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 38620	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00056861 HPWL: 397652228
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00022520 HPWL: 236896639
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00009541 HPWL: 234992444
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00010104 HPWL: 233519324
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00016251 HPWL: 232241174
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00011893 HPWL: 231938662
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00008496 HPWL: 231286393
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00007825 HPWL: 231036100
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00007030 HPWL: 230446403
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00006510 HPWL: 230165285
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00006480 HPWL: 229698472
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00005792 HPWL: 229703396
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00005154 HPWL: 229465835
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00004932 HPWL: 229525024
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00004087 HPWL: 229342401
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00015110 HPWL: 229406642
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00001902 HPWL: 229212302
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00001370 HPWL: 229260296
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00001492 HPWL: 229064353
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00001278 HPWL: 229176698
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4500
+[INFO GPL-0024] Movable insts average area:      0.131 um^2
+[INFO GPL-0025] Ideal bin area:                  0.291 um^2
+[INFO GPL-0026] Ideal bin count:                151582
+[INFO GPL-0027] Total bin area:              44045.830 um^2
+[INFO GPL-0028] Bin count (X, Y):         128 ,    128
+[INFO GPL-0029] Bin size (W * H):       1.640 *  1.639 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9496 |  1.578500e+05 |   +0.00% |  4.24e-13 |      
+       10 |   0.8662 |  2.015013e+05 |  +27.65% |  6.87e-13 |      
+       20 |   0.8240 |  2.183613e+05 |   +8.37% |  1.12e-12 |      
+       30 |   0.7948 |  2.267464e+05 |   +3.84% |  1.82e-12 |      
+       40 |   0.7716 |  2.290955e+05 |   +1.04% |  2.96e-12 |      
+       50 |   0.7627 |  2.292770e+05 |   +0.08% |  4.82e-12 |      
+       60 |   0.7535 |  2.307098e+05 |   +0.62% |  7.85e-12 |      
+       70 |   0.7449 |  2.321022e+05 |   +0.60% |  1.28e-11 |      
+       80 |   0.7452 |  2.321853e+05 |   +0.04% |  2.08e-11 |      
+       90 |   0.7448 |  2.312025e+05 |   -0.42% |  3.39e-11 |      
+      100 |   0.7466 |  2.302963e+05 |   -0.39% |  5.53e-11 |      
+      110 |   0.7429 |  2.300644e+05 |   -0.10% |  9.00e-11 |      
+      120 |   0.7396 |  2.301831e+05 |   +0.05% |  1.47e-10 |      
+      130 |   0.7370 |  2.304967e+05 |   +0.14% |  2.39e-10 |      
+      140 |   0.7351 |  2.311616e+05 |   +0.29% |  3.89e-10 |      
+      150 |   0.7317 |  2.322165e+05 |   +0.46% |  6.34e-10 |      
+      160 |   0.7264 |  2.336797e+05 |   +0.63% |  1.03e-09 |      
+      170 |   0.7195 |  2.356961e+05 |   +0.86% |  1.68e-09 |      
+      180 |   0.7105 |  2.387548e+05 |   +1.30% |  2.74e-09 |      
+      190 |   0.6992 |  2.426604e+05 |   +1.64% |  4.46e-09 |      
+      200 |   0.6817 |  2.451542e+05 |   +1.03% |  7.26e-09 |      
+      210 |   0.6610 |  2.438888e+05 |   -0.52% |  1.18e-08 |      
+      220 |   0.6347 |  2.467878e+05 |   +1.19% |  1.92e-08 |      
+      230 |   0.5971 |  2.481250e+05 |   +0.54% |  3.13e-08 |      
+      240 |   0.5734 |  2.414574e+05 |   -2.69% |  5.10e-08 |      
+      250 |   0.5326 |  2.448614e+05 |   +1.41% |  8.31e-08 |      
+      260 |   0.4761 |  2.426169e+05 |   -0.92% |  1.35e-07 |      
+      270 |   0.4411 |  2.362752e+05 |   -2.61% |  2.21e-07 |      
+      280 |   0.3996 |  2.309078e+05 |   -2.27% |  3.59e-07 |      
+      290 |   0.3570 |  2.289783e+05 |   -0.84% |  5.85e-07 |      
+      300 |   0.3282 |  2.253856e+05 |   -1.57% |  8.88e-07 |      
+      310 |   0.2967 |  2.224107e+05 |   -1.32% |  1.31e-06 |      
+      320 |   0.2675 |  2.203034e+05 |   -0.95% |  1.93e-06 |      
+      330 |   0.2332 |  2.181721e+05 |   -0.97% |  2.84e-06 |      
+      340 |   0.2058 |  2.159088e+05 |   -1.04% |  4.18e-06 |      
+      350 |   0.1708 |  2.141576e+05 |   -0.81% |  6.16e-06 |      
+      360 |   0.1432 |  2.128406e+05 |   -0.61% |  9.08e-06 |      
+      370 |   0.1177 |  2.119425e+05 |   -0.42% |  1.34e-05 |      
+      379 |   0.0984 |  2.111795e+05 |          |  1.97e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 379
+[INFO GPL-1002] Placed Cell Area             5049.8781
+[INFO GPL-1003] Available Free Area         29416.3310
+[INFO GPL-1004] Minimum Feasible Density        0.1800 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.1907
+[INFO GPL-1008]     - For 80% usage of free space: 0.2146
+[INFO GPL-1009]     - For 50% usage of free space: 0.3433
+[INFO GPL-1014] Final placement area: 5049.88 (+0.00%)
+[INFO DPL-0006] Core area: 44045.83 um^2
+[INFO DPL-0007] Movable instances area: 4577.27 um^2
+[INFO DPL-0008] Fixed instances area within core: 14590.03 um^2
+[INFO DPL-0009] Utilization: 43.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 38620 cells
+[INFO DPL-0393]   height 442 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        798 |       178 |       469
+        1 |        327 |        25 |       151
+        2 |        327 |        25 |       151
+        3 |        327 |        25 |       151
+        4 |        327 |        25 |       151
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 327 for 3 consecutive iterations.
+Using old diamond search for 25 remaining illegal cells.
+diamond recovery: recovered 25/25 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 4.35s
+Placement Analysis
+---------------------------------
+total displacement      12728.4 u
+average displacement        0.3 u
+max displacement           22.2 u
+original HPWL          211502.7 u
+legalized HPWL         219706.9 u
+delta HPWL                    4 %
+
+POST_PLACE_SETUP
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _71544_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ rst_n (in)
+6948.81 7132.81 ^ _71544_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        7132.81   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+   0.00  920.00   clock network delay (ideal)
+   0.00  920.00   clock reconvergence pessimism
+         920.00 ^ _71544_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 317.14 1237.14   library recovery time
+        1237.14   data required time
+---------------------------------------------------------
+        1237.14   data required time
+        -7132.81   data arrival time
+---------------------------------------------------------
+        -5895.67   slack (VIOLATED)
+
+
+Startpoint: scale_group_re (input port clocked by core_clk)
+Endpoint: _68996_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (ideal)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v scale_group_re (in)
+2130.16 2314.16 ^ _68212_/Y (NAND2xp33_ASAP7_75t_R)
+ 114.67 2428.84 v _68213_/Y (OAI21xp33_ASAP7_75t_R)
+   0.05 2428.88 v _68996_/D (DFFHQNx1_ASAP7_75t_R)
+        2428.88   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+   0.00  920.00   clock network delay (ideal)
+   0.00  920.00   clock reconvergence pessimism
+         920.00 ^ _68996_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -45.93  874.07   library setup time
+         874.07   data required time
+---------------------------------------------------------
+         874.07   data required time
+        -2428.88   data arrival time
+---------------------------------------------------------
+        -1554.81   slack (VIOLATED)
+
+
+[INFO CTS-0050] Root buffer is BUFx2_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx2_ASAP7_75t_R
+                    BUFx4_ASAP7_75t_R
+                    BUFx10_ASAP7_75t_R
+                    BUFx16f_ASAP7_75t_R
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0011]  Clock net "clk" for macros has 1 sinks.
+[INFO CTS-0011]  Clock net "clk_regs" for registers has 4918 sinks.
+[INFO CTS-0008] TritonCTS found 2 clock nets.
+[INFO CTS-0097] Characterization used 5 buffer(s) types.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 1.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(35012, 60780), (35012, 60780)].
+[INFO CTS-0024]  Normalized sink region: [(25.9348, 45.0222), (25.9348, 45.0222)].
+[INFO CTS-0025]     Width:  0.0000.
+[INFO CTS-0026]     Height: 0.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1
+    Sub-region size: 0.0000 X 0.0000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 1.
+[INFO CTS-0201] 1 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk_regs.
+[INFO CTS-0028]  Total number of sinks: 4918.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(15970, 20385), (214204, 223738)].
+[INFO CTS-0024]  Normalized sink region: [(11.8296, 15.1), (158.67, 165.732)].
+[INFO CTS-0025]     Width:  146.8400.
+[INFO CTS-0026]     Height: 150.6319.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 2459
+    Sub-region size: 146.8400 X 75.3159
+[INFO CTS-0034]     Segment length (rounded): 38.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 1230
+    Sub-region size: 73.4200 X 75.3159
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 615
+    Sub-region size: 73.4200 X 37.6580
+[INFO CTS-0034]     Segment length (rounded): 18.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 308
+    Sub-region size: 36.7100 X 37.6580
+[INFO CTS-0034]     Segment length (rounded): 18.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 154
+    Sub-region size: 36.7100 X 18.8290
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 77
+    Sub-region size: 18.3550 X 18.8290
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 39
+    Sub-region size: 18.3550 X 9.4145
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 8
+    Direction: Horizontal
+    Sinks per sub-region: 20
+    Sub-region size: 9.1775 X 9.4145
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 9
+    Direction: Vertical
+    Sinks per sub-region: 10
+    Sub-region size: 9.1775 X 4.7072
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (183.934 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 4918.
+[INFO CTS-0018]     Created 2 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 2 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 607 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 607 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1, 2:3, 3:15, 4:29, 5:41, 6:50, 7:48, 8:54, 9:39, 10:47, 11:28, 12:38, 13:30, 14:15, 15:21, 16:17, 17:7, 18:7, 19:9, 20:2, 21:6, 22:1, 23:1, 25:1, 26:1, 27:1..
+[INFO CTS-0017]     Max level of the clock tree: 9.
+[INFO CTS-0124] Clock net "clk"
+[INFO CTS-0125]  Sinks 1
+[INFO CTS-0098] Clock net "clk_regs"
+[INFO CTS-0099]  Sinks 5359
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 222.72 um
+[INFO CTS-0102]  Path depth 7 - 7
+[INFO CTS-0207]  Dummy loads inserted 441
+[INFO CTS-0033] Balancing latency for clock core_clk
+[INFO CTS-0036]  inserted 14 delay buffers
+[INFO CTS-0037] Total number of delay buffers: 14
+[INFO CTS-0500] Runtime: 56.27s
+[INFO DPL-0006] Core area: 44045.83 um^2
+[INFO DPL-0007] Movable instances area: 4730.93 um^2
+[INFO DPL-0008] Fixed instances area within core: 14590.03 um^2
+[INFO DPL-0009] Utilization: 43.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 39685 cells
+[INFO DPL-0393]   height 442 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         52 |        10 |        37
+        1 |         11 |         1 |         5
+        2 |         11 |         1 |         5
+        3 |         11 |         1 |         5
+        4 |         11 |         1 |         5
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 11 for 3 consecutive iterations.
+Using old diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |         11 |         1 |         5
+      403 |         11 |         1 |         5
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 11 for 3 consecutive iterations. Using diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 1
+[INFO DPL-0500] Runtime: 4.20s
+Placement Analysis
+---------------------------------
+total displacement        533.5 u
+average displacement        0.0 u
+max displacement           12.7 u
+original HPWL          236151.1 u
+legalized HPWL         236285.3 u
+delta HPWL                    0 %
+
+POST_CTS_SETUP
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _71594_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ rst_n (in)
+6811.64 6995.64 ^ _71594_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        6995.64   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+ 327.57 1247.57   clock network delay (propagated)
+   0.00 1247.57   clock reconvergence pessimism
+        1247.57 ^ _71594_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 686.19 1933.77   library recovery time
+        1933.77   data required time
+---------------------------------------------------------
+        1933.77   data required time
+        -6995.64   data arrival time
+---------------------------------------------------------
+        -5061.87   slack (VIOLATED)
+
+
+Startpoint: scale_group_re (input port clocked by core_clk)
+Endpoint: _68996_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v scale_group_re (in)
+2129.88 2313.88 ^ _68212_/Y (NAND2xp33_ASAP7_75t_R)
+ 114.67 2428.55 v _68213_/Y (OAI21xp33_ASAP7_75t_R)
+   0.05 2428.59 v _68996_/D (DFFHQNx1_ASAP7_75t_R)
+        2428.59   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+ 313.47 1233.47   clock network delay (propagated)
+   0.00 1233.47   clock reconvergence pessimism
+        1233.47 ^ _68996_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -29.31 1204.17   library setup time
+        1204.17   data required time
+---------------------------------------------------------
+        1204.17   data required time
+        -2428.59   data arrival time
+---------------------------------------------------------
+        -1224.43   slack (VIOLATED)
+
+
+POST_CTS_HOLD
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _72661_ (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ rst_n (in)
+1038.77 1222.77 ^ _72661_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        1222.77   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 332.60  332.60   clock network delay (propagated)
+   0.00  332.60   clock reconvergence pessimism
+         332.60 ^ _72661_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 355.44  688.05   library removal time
+         688.05   data required time
+---------------------------------------------------------
+         688.05   data required time
+        -1222.77   data arrival time
+---------------------------------------------------------
+         534.72   slack (MET)
+
+
+Startpoint: valid (input port clocked by core_clk)
+Endpoint: _69024_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v valid (in)
+   0.64  184.64 v _69024_/D (DFFASRHQNx1_ASAP7_75t_R)
+         184.64   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 427.92  427.92   clock network delay (propagated)
+   0.00  427.92   clock reconvergence pessimism
+         427.92 ^ _69024_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  46.18  474.10   library hold time
+         474.10   data required time
+---------------------------------------------------------
+         474.10   data required time
+        -184.64   data arrival time
+---------------------------------------------------------
+        -289.46   slack (VIOLATED)
+
+
+[WARNING GRT-0281] Net one_ has a large fanout of 4150 terminals.
+[WARNING GRT-0281] Net rst_n has a large fanout of 4151 terminals.
+POST_GRT_SETUP
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _71594_ (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ rst_n (in)
+12036.38 12220.38 ^ _71594_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        12220.38   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+ 341.21 1261.21   clock network delay (propagated)
+   0.00 1261.21   clock reconvergence pessimism
+        1261.21 ^ _71594_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+1234.86 2496.07   library recovery time
+        2496.07   data required time
+---------------------------------------------------------
+        2496.07   data required time
+        -12220.38   data arrival time
+---------------------------------------------------------
+        -9724.31   slack (VIOLATED)
+
+
+Startpoint: scale_group_re (input port clocked by core_clk)
+Endpoint: _68996_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v scale_group_re (in)
+2509.76 2693.76 ^ _68212_/Y (NAND2xp33_ASAP7_75t_R)
+ 108.45 2802.21 v _68213_/Y (OAI21xp33_ASAP7_75t_R)
+   0.10 2802.32 v _68996_/D (DFFHQNx1_ASAP7_75t_R)
+        2802.32   data arrival time
+
+ 920.00  920.00   clock core_clk (rise edge)
+ 327.21 1247.21   clock network delay (propagated)
+   0.00 1247.21   clock reconvergence pessimism
+        1247.21 ^ _68996_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -35.24 1211.98   library setup time
+        1211.98   data required time
+---------------------------------------------------------
+        1211.98   data required time
+        -2802.32   data arrival time
+---------------------------------------------------------
+        -1590.34   slack (VIOLATED)
+
+
+POST_GRT_HOLD
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: _72657_ (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 ^ input external delay
+   0.00  184.00 ^ rst_n (in)
+1224.37 1408.37 ^ _72657_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        1408.37   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 348.09  348.09   clock network delay (propagated)
+   0.00  348.09   clock reconvergence pessimism
+         348.09 ^ _72657_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 422.47  770.56   library removal time
+         770.56   data required time
+---------------------------------------------------------
+         770.56   data required time
+        -1408.37   data arrival time
+---------------------------------------------------------
+         637.81   slack (MET)
+
+
+Startpoint: valid (input port clocked by core_clk)
+Endpoint: _69024_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock network delay (propagated)
+ 184.00  184.00 v input external delay
+   0.00  184.00 v valid (in)
+   0.77  184.77 v _69024_/D (DFFASRHQNx1_ASAP7_75t_R)
+         184.77   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 445.10  445.10   clock network delay (propagated)
+   0.00  445.10   clock reconvergence pessimism
+         445.10 ^ _69024_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  48.34  493.44   library hold time
+         493.44   data required time
+---------------------------------------------------------
+         493.44   data required time
+        -184.77   data arrival time
+---------------------------------------------------------
+        -308.67   slack (VIOLATED)
+
+

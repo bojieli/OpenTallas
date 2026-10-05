@@ -1,0 +1,114 @@
+{
+  "scope": "synthetic issued trace only; no full program or physical timing claim",
+  "cycles": 5208,
+  "candidates": [
+    {
+      "banks": 4,
+      "fold": 0,
+      "lane_banks": false,
+      "read_replicas": 1,
+      "logical_single_read_single_write_slices": 4,
+      "storage_replication": 1,
+      "max_distinct_reads_per_bank": 2,
+      "max_distinct_writes_per_bank": 4,
+      "events": {
+        "read_conflict_cycles": 64,
+        "write_conflict_cycles": 128,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 320,
+      "unchanged_trace_ports_fit": false
+    },
+    {
+      "banks": 4,
+      "fold": 0,
+      "lane_banks": true,
+      "read_replicas": 1,
+      "logical_single_read_single_write_slices": 64,
+      "storage_replication": 1,
+      "max_distinct_reads_per_bank": 1,
+      "max_distinct_writes_per_bank": 4,
+      "events": {
+        "read_conflict_cycles": 0,
+        "write_conflict_cycles": 128,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 256,
+      "unchanged_trace_ports_fit": false
+    },
+    {
+      "banks": 4,
+      "fold": 3,
+      "lane_banks": false,
+      "read_replicas": 1,
+      "logical_single_read_single_write_slices": 4,
+      "storage_replication": 1,
+      "max_distinct_reads_per_bank": 2,
+      "max_distinct_writes_per_bank": 1,
+      "events": {
+        "read_conflict_cycles": 64,
+        "write_conflict_cycles": 0,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 64,
+      "unchanged_trace_ports_fit": false
+    },
+    {
+      "banks": 4,
+      "fold": 3,
+      "lane_banks": false,
+      "read_replicas": 2,
+      "logical_single_read_single_write_slices": 8,
+      "storage_replication": 2,
+      "max_distinct_reads_per_bank": 2,
+      "max_distinct_writes_per_bank": 1,
+      "events": {
+        "read_conflict_cycles": 0,
+        "write_conflict_cycles": 0,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 0,
+      "unchanged_trace_ports_fit": true
+    },
+    {
+      "banks": 8,
+      "fold": 2,
+      "lane_banks": false,
+      "read_replicas": 1,
+      "logical_single_read_single_write_slices": 8,
+      "storage_replication": 1,
+      "max_distinct_reads_per_bank": 1,
+      "max_distinct_writes_per_bank": 1,
+      "events": {
+        "read_conflict_cycles": 0,
+        "write_conflict_cycles": 0,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 0,
+      "unchanged_trace_ports_fit": true
+    },
+    {
+      "banks": 8,
+      "fold": 2,
+      "lane_banks": true,
+      "read_replicas": 1,
+      "logical_single_read_single_write_slices": 128,
+      "storage_replication": 1,
+      "max_distinct_reads_per_bank": 1,
+      "max_distinct_writes_per_bank": 1,
+      "events": {
+        "read_conflict_cycles": 0,
+        "write_conflict_cycles": 0,
+        "read_write_same_address_unqualified": 0
+      },
+      "same_word_merges": 0,
+      "isolated_replay_extra_service_cycles": 0,
+      "unchanged_trace_ports_fit": true
+    }
+  ]
+}

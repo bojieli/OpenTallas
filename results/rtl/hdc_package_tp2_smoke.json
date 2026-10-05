@@ -1,0 +1,236 @@
+{
+  "claim_boundary": "Reduced Qwen scalar-core two-die package; behavioural memories and UCIe delay model. This is a topology and exact-state gate, not an O4 INT8/vector/physical-rate gate.",
+  "configuration": {
+    "dies": 2,
+    "packages": 1,
+    "users": 1,
+    "wrom_words_per_die": 32768
+  },
+  "golden": {
+    "allreduces_per_token": 8,
+    "crom_words": 1985,
+    "end_to_end": {
+      "generated": [
+        1073,
+        382,
+        93
+      ],
+      "logits_bit_exact": true,
+      "oracle": [
+        1073,
+        382,
+        93
+      ],
+      "steps": [
+        {
+          "logit_bits": 1062677650,
+          "token_in": 92,
+          "token_out": 3978
+        },
+        {
+          "logit_bits": 1061804329,
+          "token_in": 872,
+          "token_out": 3978
+        },
+        {
+          "logit_bits": 1064023848,
+          "token_in": 198,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1065668738,
+          "token_in": 361,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1064689688,
+          "token_in": 448,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1063412644,
+          "token_in": 2210,
+          "token_out": 3932
+        },
+        {
+          "logit_bits": 1063628119,
+          "token_in": 13,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1065919333,
+          "token_in": 93,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1065384283,
+          "token_in": 198,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1063391608,
+          "token_in": 92,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1062754931,
+          "token_in": 3363,
+          "token_out": 3837
+        },
+        {
+          "logit_bits": 1063064686,
+          "token_in": 198,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1064356520,
+          "token_in": 115,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1062891614,
+          "token_in": 271,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1063885826,
+          "token_in": 116,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1063086805,
+          "token_in": 271,
+          "token_out": 1073
+        },
+        {
+          "logit_bits": 1063390761,
+          "token_in": 1073,
+          "token_out": 382
+        },
+        {
+          "logit_bits": 1063674886,
+          "token_in": 382,
+          "token_out": 93
+        }
+      ]
+    },
+    "kv_elems": 8192,
+    "prog_words": 117,
+    "segments": 9,
+    "single_step": {
+      "argmax": 1073,
+      "logits_bit_exact": true,
+      "oracle": 1073,
+      "pos": 15,
+      "token": 271
+    },
+    "tp": 2,
+    "wrom_words": 18432
+  },
+  "input_sha256": {
+    "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+    "rtl/hdc/ot_hdc_core.sv": "4c7251434c8f1de9e46d8bfb823e492c370cda70ebd234bb6b0c60bfe54207b0",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_isa.svh": "3b26786e5f2942cf398c275736670d483ee9520468144db774a64207ebb6a3b4",
+    "rtl/hdc/ot_hdc_matvec.sv": "83c7b48b9031b8107611d825cac43d9dfb0be93b6573fcb806747595bfd5867f",
+    "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+    "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+    "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+    "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+    "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+    "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
+    "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+    "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+    "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+    "rtl/rom/ot_rom_tp_seq.sv": "dee434197ff25553a41ba7acf5f439c88c174a2b265ad5f1f29de544b8427f57",
+    "rtl/test/hdc_array_harness.cpp": "b4c272a6903d459265d13b82e020437be32a884bfb707d572d4262742160e685",
+    "rtl/test/hdc_package_tp_harness.cpp": "344759383aac0d4a6ffb7df9ba7872a744f546714cc10e975ee129e791dc81b2",
+    "rtl/test/tb_hdc_array.sv": "f55f9d77c59807b06ac5d20f0a9f469c5f94c7a0fb02bc99183017fbc4a7996f",
+    "rtl/test/tb_hdc_package_tp.sv": "2022c44a7bd55ad1c66007e77f24d99d47a00a5d828bd285152c175c16bbb84b",
+    "rtl/test/tb_rom_oneshot_allreduce.sv": "085525e22554d905f2715f674b24b18682a323455b6b38b94e4ccb6d7bfddd17",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_isa.py": "4a478eb2357e1a32436dc1d4151ec5648ef6805e07c8e1fac5412b8422c6c541",
+    "tools/hdc_program.py": "a7cf701c89fa0cf3ecc709dbeaf37d84bd8a440993da9918e622267e11112768",
+    "tools/rtl_hdc_package_tp2_smoke.py": "311675ec738c5c8ceb12262653cefd6d1b7be21516d1e44eaa28b85e43ad2913",
+    "tools/rtl_hdc_package_tp_campaign.py": "57ee265643a665fc51dad9abb987450a266aeae0d416612ef25d4b1dc56098c8"
+  },
+  "package": {
+    "board_link_credit_stalls": 0,
+    "collective_cycles_per_step_per_die": 249.0,
+    "collective_hold_cycles": 0,
+    "collective_share_of_die_busy": 0.0143,
+    "cycles_per_token_step": 17525.8,
+    "cycles_per_user_step": 17525.8,
+    "die_busy_cycles": 628420,
+    "die_collective_cycles": 8964,
+    "dies": [
+      {
+        "busy_cycles": 314210,
+        "collective_cycles": 4482,
+        "die": 1,
+        "kv_mismatches": 0,
+        "package": 0,
+        "vm_mismatches": 0
+      },
+      {
+        "busy_cycles": 314210,
+        "collective_cycles": 4482,
+        "die": 0,
+        "kv_mismatches": 0,
+        "package": 0,
+        "vm_mismatches": 0
+      }
+    ],
+    "dies_per_package": 2,
+    "generated": [
+      {
+        "cycle": 279850,
+        "position": 15,
+        "token": 1073,
+        "user": 0
+      },
+      {
+        "cycle": 297648,
+        "position": 16,
+        "token": 382,
+        "user": 0
+      },
+      {
+        "cycle": 315462,
+        "position": 17,
+        "token": 93,
+        "user": 0
+      }
+    ],
+    "generated_ids_per_user": [
+      [
+        1073,
+        382,
+        93
+      ]
+    ],
+    "generated_tokens": 3,
+    "kv_mismatches": 0,
+    "mismatches": 0,
+    "packages": 1,
+    "pass": true,
+    "steps_checked_bit_exact": 18,
+    "token_steps": 18,
+    "total_cycles": 315465,
+    "ucie_lat_cycles": 12,
+    "ucie_lat_setting": "nominal",
+    "users": 1,
+    "vector_memory_checked": true,
+    "vector_memory_mismatches": 0
+  },
+  "schema": "opentallas.hdc-package-tp2-smoke.v1",
+  "status": "pass"
+}

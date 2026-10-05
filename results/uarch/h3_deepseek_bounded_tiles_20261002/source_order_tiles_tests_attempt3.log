@@ -1,0 +1,46 @@
+..................................F
+=================================== FAILURES ===================================
+_____ test_selected_row_identity_guard_is_not_skipped_by_demand_scheduling _____
+
+    def test_selected_row_identity_guard_is_not_skipped_by_demand_scheduling():
+        p=N.recipe('kv_gather',F.TOY,F.ATTR);m=F.fixture(p);m['selected_row_ids'][0]+=1
+>       with pytest.raises(ValueError,match='selected row'):T.TileExecutor(p,T.ArrayProvider(p,m,(0,'v',0,0,0))).run()
+
+tests/test_h3_deepseek_bounded_tiles.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/h3_deepseek_bounded_tiles.py:229: in run
+    for j in range(size(ins['shape'])):self.value(ins['dst'],j)
+tools/h3_deepseek_bounded_tiles.py:211: in value
+    v=self._primitive(ins,key[1],f['args']);self.counts[ins['op']]+=1
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_deepseek_bounded_tiles.TileExecutor object at 0x7ce4a0b32230>
+ins = {'attrs': {'reason': 'selected KV row descriptor identity'}, 'dst': 'v3', 'op': 'ASSERT', 'rf_scalar_slot': 3, ...}
+index = 0, args = [np.uint32(0)]
+
+    def _primitive(self,ins,index,args):
+        op=ins['op'];at=ins['attrs']
+        if op=='LOAD':return self.provider.read(at['name'],index)
+        if op=='CONST':return np.asarray(at['bits'],np.uint32).view(np.float32).reshape(-1)[index] if at['dtype']=='F32' else np.asarray(at['value'],dtype=DTYPES[at['dtype']]).reshape(-1)[index]
+        if op=='IOTA':return np.int64(index)
+        if op in ('RESHAPE','SLICE','TRANSPOSE','CONCAT','BROADCAST'):return args[0]
+        if op in ('TAKE','SCATTER'):return args[-1]
+        if op=='ASSERT':
+>           if not args[0]:raise ValueError('native assertion '+at.get('reason',''))
+E           ValueError: native assertion selected KV row descriptor identity
+
+tools/h3_deepseek_bounded_tiles.py:155: ValueError
+
+During handling of the above exception, another exception occurred:
+
+    def test_selected_row_identity_guard_is_not_skipped_by_demand_scheduling():
+        p=N.recipe('kv_gather',F.TOY,F.ATTR);m=F.fixture(p);m['selected_row_ids'][0]+=1
+>       with pytest.raises(ValueError,match='selected row'):T.TileExecutor(p,T.ArrayProvider(p,m,(0,'v',0,0,0))).run()
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'selected row'
+E         Actual message: 'native assertion selected KV row descriptor identity'
+
+tests/test_h3_deepseek_bounded_tiles.py:53: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_h3_deepseek_bounded_tiles.py::test_selected_row_identity_guard_is_not_skipped_by_demand_scheduling
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!

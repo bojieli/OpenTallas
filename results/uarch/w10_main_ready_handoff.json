@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.w10.main.ready.handoff.v1",
+  "owner": "W10 frontend companion prerequisites only",
+  "worktree": "/home/ubuntu/w10b-prereq-review",
+  "base": "1be527dbc20e655b26dc4a236c5802aba0b3f710",
+  "ordered_commits": [
+    "f357cb3ee",
+    "6eaf62130",
+    "4556daba6",
+    "16f5efee8",
+    "75ee35247"
+  ],
+  "bindings": {
+    "ot_v41_rom_elem": "ot_v41_rom_elem_w10",
+    "ot_v41_rom_elem_q": "ot_v41_rom_elem_q_w10"
+  },
+  "source_manifest": "results/uarch/w10_main_prerequisite_manifest.json",
+  "compile_sources": [
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+    "rtl/v41rom/ot_v41_rom_elem_q_w10.sv",
+    "rtl/v41rom/ot_v41_bterm.sv",
+    "rtl/v41rom/ot_v41_bterm2_w10.sv",
+    "rtl/v41rom/ot_v41_chain.sv",
+    "rtl/v41rom/ot_v41_chain2.sv",
+    "rtl/v41rom/ot_v41_segtree.sv",
+    "rtl/v41rom/ot_v41_segtree2.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes.sv",
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+    "rtl/v41rom/ot_v41_bmul2.sv",
+    "rtl/v41rom/ot_v41_fadd.sv",
+    "rtl/common/ot_prefix.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "rtl/hdc/ot_hdc_fpu.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_cg.sv"
+  ],
+  "macros": [
+    "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v"
+  ],
+  "W17_owned": [
+    "runtime consumer bind changes",
+    "ret/pair/spine/fieldtop companions as needed",
+    "runtime L0/L20 exact gates"
+  ],
+  "W10_does_not_supply": "Production ret/spine/fieldtop replacements; rtl/test/w10_validation helpers are validation only, do not bind runtime to them.",
+  "frontend_policy": "FRONT_PAR=0 mandatory. Physical probe failed placement; rejected, no retry/tuning. FAST/PP/BP are retained prerequisite interfaces, not newly declared physically qualified.",
+  "physical_failure_evidence_commit": "540d07273",
+  "passed": [
+    "frontend complete same-cycle exact + address mutant",
+    "13 product golden cases MTP6 FAST/PP",
+    "two multiphase sequences including 6 empty-to-work transitions",
+    "BP1 BF16 exact",
+    "BP2 BF16 exact",
+    "12 legacy default-path golden cases",
+    "legacy/GPU/newtop coexistence lint r2",
+    "13 companion default golden cases; 12 shared legacy cases identical completion cycles",
+    "W16 model exact reconstruction c85d9588 SHA-256; pytest 8 passed 1 skipped"
+  ],
+  "pending": [
+    "SS setup and FF hold in context",
+    "routed hub layer audit",
+    ">=1% measured gain",
+    "W17 composed runtime exact gate"
+  ],
+  "communication": "Cross-task send was rejected as unavailable; this artifact is shared for W17 and parent, delivery acknowledgment not claimed.",
+  "qualification_summary": "results/uarch/w10_main_qualification/summary.json",
+  "physical_record": "results/physical_abi3/asap7/chip/v41_w10_elem/ss_route_failures/frontpar_r1.json",
+  "physical_rejection_archive_commit_main_compatible": "75ee35247",
+  "integration_instructions": [
+    "Parent integrates ordered main-based commits only, followed by this evidence commit. Do not replay historical 8/14 engine chains over pinned originals.",
+    "Baseline prerequisite-only consumers may use new _w10 tops with FRONT_PAR=0. Candidate commit4556daba6 is default-off rejected experiment evidence; do not enable.",
+    "W17 owns runtime binding and production ret companions. W10 validation ret/array fixtures are not runtime sources.",
+    "Existing main RTL, golden and original failed records remain byte-identical. Model change adds isolated function/CLI only; no replacement of W16 model.",
+    "Physical closure remains on original c8 FAST/PP stream, no duplicate probe or tuning of rejected FRONT_PAR."
+  ],
+  "live_handles": {
+    "frontend_probe": {
+      "pid": 3114045,
+      "state": "TERMINAL_ERROR",
+      "source": "465a1e205d6f5de00a0e353edcf8190466e9b273",
+      "terminal_output": "/tmp/codex-w10b-front-physical-r1/frontpar"
+    },
+    "c8": {
+      "pid": 2897072,
+      "state": "LIVE",
+      "remote": "155.103.253.39",
+      "container": "otjob-9ebfa35966",
+      "log": "/tmp/claude-1000/w10pnr/c8.log",
+      "output": "/tmp/claude-1000/w10pnr/rec/c8"
+    },
+    "product_bankmap": {
+      "pid": 2711389,
+      "state": "LIVE",
+      "source": "4b4b12e29",
+      "cwd": "/home/ubuntu/w10s",
+      "output": "/tmp/claude-1000/w10out/prod_4b4b/v41_rom_ksplit_bankmap_product.json"
+    }
+  },
+  "observed_at": "2026-10-01T08:39:32.662752+00:00"
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/tokens_v1.schema.json",
+  "title": "OpenTallas Qwen3 tokenizer output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "token_ids"
+  ],
+  "properties": {
+    "schema": {
+      "const": "opentallas.qwen3.tokens.v1"
+    },
+    "token_ids": {
+      "items": {
+        "maximum": 151668,
+        "minimum": 0,
+        "type": "integer"
+      },
+      "maxItems": 8000,
+      "type": "array"
+    }
+  }
+}

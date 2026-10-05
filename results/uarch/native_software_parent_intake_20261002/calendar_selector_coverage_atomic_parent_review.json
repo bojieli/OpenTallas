@@ -1,0 +1,58 @@
+{
+  "HBM_atomic_source": {
+    "DS_result_buffer_bytes_per_SM": 262144,
+    "SMs": 32,
+    "area_and_constructive_cut_screens_pass": true,
+    "fresh_replay_byte_identical": true,
+    "hardware_admission": false,
+    "installed_endpoint": false,
+    "whole_event_latency_composition_open": true
+  },
+  "Qwen_terminal_coverage": {
+    "FP8_KV_payload_comparison_missing": true,
+    "PCs_in_source_map": 1737,
+    "actual_KV_lifecycle_events_missing": 432,
+    "actual_terminal_pending": true,
+    "independent_comparisons": 39,
+    "no_static_PC_order_substitute": true,
+    "values_compared": 303488
+  },
+  "all_targets_qualified": false,
+  "calendar": {
+    "PCs": 2213,
+    "archive_inputs_independently_hashed": 72,
+    "changed_PCs": 40,
+    "changed_rank_calls": 3840,
+    "four_generators_replayed_with_Git_forbidden": true,
+    "known_partial_software_ticks": 432334666417,
+    "physical_shared_bytes_per_SM": 65536,
+    "r34_substantive_records_byte_identical": true,
+    "shared_movement_calls_unbound": 193316,
+    "software_tick_delta": 321498880,
+    "whole_token_latency": null,
+    "workspace_bytes_per_call": 524288
+  },
+  "focused_tests_passed": {
+    "HBM_atomic_source": 50,
+    "Qwen_terminal_coverage": 14,
+    "calendar": 63,
+    "selector": 23
+  },
+  "schema": "opentallas.calendar-selector-coverage-atomic.parent-intake.v1",
+  "selector": {
+    "artifact_hashes_verified": 15,
+    "fresh_CLI_byte_exact": true,
+    "horizontal_tracks_remaining": 30,
+    "physical_admission": false,
+    "vertical_tracks_remaining": 40,
+    "wire_only_segments_per_direction": 20,
+    "wire_screen_not_timing_qualified": true
+  },
+  "source_intakes": {
+    "HBM_atomic_source": "27d0a8116",
+    "Qwen_terminal_coverage": "930d5ff16",
+    "calendar": "ba0c1ba06",
+    "selector_source": "077a44ffa",
+    "selector_tracks": "a2d08e1c9"
+  }
+}

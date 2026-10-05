@@ -1,0 +1,19 @@
+* Schematic contract for the IHP SG13G2 two-column physical ROM slice.
+* Official wrapper pin order is D G S B.
+.subckt ihp_sg13g2_rom_slice VGND VPWR WL_PRESENT EN_PRESENT PRE_PRESENT Q_PRESENT WL_ABSENT EN_ABSENT PRE_ABSENT Q_ABSENT
+
+* Programmed column: the row transistor drain is connected to BL_PRESENT.
+XROW_PRESENT BL_PRESENT WL_PRESENT MID_PRESENT VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XMASK_PRESENT MID_PRESENT EN_PRESENT VGND VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XPRE_PRESENT BL_PRESENT PRE_PRESENT VPWR VPWR sg13_lv_pmos w=1.0u l=0.13u ng=1 m=1
+XNSENSE_PRESENT Q_PRESENT BL_PRESENT VGND VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XPSENSE_PRESENT Q_PRESENT BL_PRESENT VPWR VPWR sg13_lv_pmos w=1.0u l=0.13u ng=1 m=1
+
+* Unprogrammed column: ROM_DRAIN_ABSENT has no via to BL_ABSENT.
+XROW_ABSENT ROM_DRAIN_ABSENT WL_ABSENT MID_ABSENT VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XMASK_ABSENT MID_ABSENT EN_ABSENT VGND VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XPRE_ABSENT BL_ABSENT PRE_ABSENT VPWR VPWR sg13_lv_pmos w=1.0u l=0.13u ng=1 m=1
+XNSENSE_ABSENT Q_ABSENT BL_ABSENT VGND VGND sg13_lv_nmos w=1.0u l=0.13u ng=1 m=1
+XPSENSE_ABSENT Q_ABSENT BL_ABSENT VPWR VPWR sg13_lv_pmos w=1.0u l=0.13u ng=1 m=1
+
+.ends ihp_sg13g2_rom_slice

@@ -1,0 +1,34 @@
+{
+  "admission_record_path": "results/uarch/hbm_rf_visibility_fence_20261002/parent_connected_GO_r1.json",
+  "admitted": true,
+  "proposal_sha256": "83c1328c2bb5e4a93bac17fd2c7b6e3e617578b589b9d23ef4270a7a86eac499",
+  "review": {
+    "CPU_policy": "kernel affinity24-27; no delegated CPU quota claim",
+    "no_retry": true,
+    "physical_credit": false,
+    "preparation_tests": 9,
+    "runner_tests": 12,
+    "token_credit": false
+  },
+  "runner_caps": {
+    "aggregate_output_bytes": 8589934592,
+    "build_jobs": 4,
+    "cpus": [
+      24,
+      25,
+      26,
+      27
+    ],
+    "disk_headroom_bytes": 12884901888,
+    "kill_grace_s": 5,
+    "memory_bytes": 34359738368,
+    "per_file_bytes": 1073741824,
+    "poll_s": 1,
+    "sequential_targets": true,
+    "swap_bytes": 0,
+    "whole_wall_s": 2220
+  },
+  "schema": "opentallas.hbm-RF-connected.GO.v1",
+  "source_commit": "a207908e2b7a7872f608163ddeeb997cd40907ba",
+  "unit": "hbm-native-connected-parent-20261002-r1.service"
+}

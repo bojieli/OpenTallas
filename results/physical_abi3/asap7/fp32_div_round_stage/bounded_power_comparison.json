@@ -1,0 +1,50 @@
+{
+  "scope": "ASAP7 TT 1 ns matched standalone synthesis and ideal clock STA; both fail timing. Matched 2 ns route pending.",
+  "records": [
+    {
+      "record": "prelayout_1ns.json",
+      "sha256": "9e0f31b14f345960a67f7efa53218af67ec6483cd1226f309a6dcda468e57bb7",
+      "area_um2": 1163.456,
+      "sequential_area_um2": 128.566,
+      "setup_wns_ns": -1.2228604844302062
+    },
+    {
+      "record": "prelayout_bounded_power_1ns.json",
+      "sha256": "a48065a438d649aff510368ad6bf4e8d0602f1aee6b9e05511104b21710179fa",
+      "area_um2": 1117.644,
+      "sequential_area_um2": 120.226,
+      "setup_wns_ns": -1.129060627284685
+    }
+  ],
+  "range_argument": {
+    "finite_operand_power": [
+      -149,
+      104
+    ],
+    "rounding_midpoint_power": [
+      -150,
+      103
+    ],
+    "product_power_bound": [
+      -299,
+      208
+    ],
+    "signed_operand_and_midpoint_bits": 9,
+    "signed_product_bits": 10
+  },
+  "verification": {
+    "command": "python3 -m pytest -q tests/test_divider_pipeline_equivalence.py",
+    "exit_code": 0,
+    "passed": 2,
+    "divider_cases": 673,
+    "sinkhorn_matrices": 35,
+    "scope": "Exact outputs/errors against certifying reference, not full deployment qualification."
+  },
+  "source_hashes": {
+    "rtl/abi3/ot_a3_fp32_div_rne_pipe.sv": "c777c37d1e5d7fc5d595cc3f441b940e6e12b61ba666b51f2ab191add1e02ce9",
+    "tests/test_divider_pipeline_equivalence.py": "2d11d85911b8321843ea1618141b6885a832738b0ca7a1dfc9fc9a4b8354f3a9",
+    "rtl/test/tb_a3_fp32_div_pipe_equiv.sv": "853519991a189f3adb963a36de3c03e0621cb59749c92ad2d8995f3b7712d0ac",
+    "rtl/test/tb_a3_hc_sinkhorn20_pipe_equiv.sv": "888d3b8dfb1dee312483fc1dd4b2c710ca857753966cb6547ec28d58941b87d4"
+  },
+  "lint": "No errors. Intentional signed widening into integer comparison-function arguments; preexisting package truncation warning."
+}

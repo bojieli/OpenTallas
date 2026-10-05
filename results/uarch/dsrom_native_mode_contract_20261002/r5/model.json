@@ -1,0 +1,430 @@
+{
+  "composition_cost": {
+    "FF_all58x4_adapters": 3944,
+    "adapter_boundaries": {
+      "VM_EID_response": 32,
+      "VM_request_sequence": 10,
+      "VM_response_credit_max": 1,
+      "VM_response_era_and_poison_bits": 2,
+      "VM_response_sequence": 10,
+      "checked_EID": 9,
+      "expert_stride": 30,
+      "input_proof_era": 1,
+      "lease_era": 1,
+      "logical_cfg_addr": 15,
+      "owner_request_credit_max": 1,
+      "owner_terminal_era": 1,
+      "pair": 12,
+      "phase": 10,
+      "phase_input_proof": 1,
+      "selected_owner_stage": 6,
+      "word": 5
+    },
+    "conditional_guard_register_total_cycles_no_overlap": 720,
+    "critical_event_formula": "owner_accept=max(validated index terminal or direct descriptor acceptance, producer VM visibility, phase-policy lease, selected owner ready); cfg_accept follows actual owner_accept; fieldgo=max(all25actual cfg-delivery fences, operand-visibility fence, authenticated phase policy); unchanged field/reduction/result calendar thereafter",
+    "exact_phase_whitelist_entries": 6,
+    "existing_sticky_fault_and3bitFSM_andregistered_go_reused_not_recharged": true,
+    "fanout": "new fault/freeze admission gates local VM valid and actual owner valid; do not replicate to4096pairs without pricing clock/routes; phase whitelist adds no compared key bits but one authenticated policy output",
+    "full32bit_EID_range_guard": "OR(vi_q[31:9])==0 && !(vi_q[8]&&vi_q[7]); do not truncate before compare",
+    "healthy_added_compressor_cycles_if_producer_and_cfg_fences_already_satisfied": 0,
+    "healthy_added_index_cycles_if_guard_combinational_closes_SS_FF": 0,
+    "healthy_extra_inputscan_or_VMtraffic": 0,
+    "if_SS_FF_requires_guard_register_cycles_per_indexed_descriptor": 1,
+    "indexed_descriptors_per_token": 720,
+    "new_FF_allocation": {
+      "VM_outstanding": 1,
+      "VM_request_sequence": 10,
+      "alternating_era": 1,
+      "dedicated_head_route_latched": 1,
+      "input_proof_latched": 1,
+      "owner_outstanding": 1,
+      "sequence_wrap_pending": 1,
+      "sticky_cancel": 1
+    },
+    "new_FF_bits_per_adapter": 17,
+    "optional_ledger_allocation": "9previousID+3count+1valid if actual selector/generation completion cannot be reused; not required per indexed descriptor and not doublecounted",
+    "phase_R0_policy_bits_per_stage_rank": 1024,
+    "physical_area_tracks_fanout_adoption": false,
+    "policy_hard_macro_ports_ECC_not_qualified": true,
+    "scope": "ADAPTER_INCREMENT_ONLY, excludes Peirce producer278/19+10 and cfg/ECC-owner ledgers",
+    "six_EID_order_ledger_optional_increment_bits": 13,
+    "uniform_policy_bits_all58x4": 237568
+  },
+  "compressor_input_proofs": [
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L2.I24",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L2.I7",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L2.I6",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 2
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    },
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L2.I25",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L2.I7",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L2.I6",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 2
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    },
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L8.I24",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L8.I7",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L8.I6",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 8
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    },
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L8.I25",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L8.I7",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L8.I6",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 7,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 8
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    },
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L14.I34",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L14.I17",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L14.I16",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 17,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 14
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    },
+    {
+      "VM_elements": [
+        46464,
+        51584
+      ],
+      "consumer": "L14.I35",
+      "descriptor_round_bit_unchanged": 0,
+      "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+      "first_actual_SU_wait_fence": "L14.I17",
+      "input_RNE_idempotent": true,
+      "intervening_vector_writer": false,
+      "logical_SU_idle_not_general_physical_visibility": true,
+      "physical_VM_delivery_visibility_and_same_generation_required": true,
+      "producer": "L14.I16",
+      "producer_VM_write_acceptance_calendar_bound": false,
+      "producer_rnd": 1,
+      "result_format": "FP32",
+      "runtime_action_region_provider_alias_guard_required": true,
+      "runtime_actions_in_span": [
+        {
+          "before_instruction": 17,
+          "candidate_source": null,
+          "hardware_binding": null,
+          "kind": "restore_position_selection",
+          "region": "SELG",
+          "required": false,
+          "source": 14
+        }
+      ],
+      "single_copy_only": true,
+      "write_footprints_must_fit19bit_source_spine_aperture": true
+    }
+  ],
+  "compressor_resolution": {
+    "BF16_pattern_disposition": {
+      "NaN_payload_patterns": 254,
+      "all65536_RNE_fixedpoints": true,
+      "finite_normals": 65024,
+      "infinities": 2,
+      "raw_bit_identity_is_not_nonfinite_acceptance": true,
+      "signed_zeros": 2,
+      "source_nonfinite": "ot_hdc_bmul/s1_nf flags expFF; repaired bmul preserves this fault behavior. Keep producer/arithmetic poison and stickyfault, no zero/NaN normalization credit from input waiver.",
+      "subnormals": 254
+    },
+    "FP32_projection_outputs_not_BF16": "keep s_fmt1; no to_bf16 on CP_KVL/CP_SCL, slot pooling max/exp/div/weighted terms retained until pooled final to_bf16",
+    "accept_rule": "existing contiguity predicates && !amax && !mmode && (m_round || authenticated allowR0 phase with same-generation whole-vector BF16 producer fault-free delivery fence)",
+    "descriptor_me_round_stays0": true,
+    "golden_K_tree_unchanged": "chunk8 sequential from+0 each8products then padded power-of-two tree; K5120 =>640leaves padded1024; existing physicalfield numeric/order gate still required",
+    "no_new_FP32_activation_multiplier": "Existing BF16 buffer rounding is idempotent on source-produced BF16 words. Do not generalize round0 to arbitrary FP32 inputs.",
+    "phase_policy": "lookup key hit and unique phase before authorization; six exact phase/descriptor tuples, no blanket m_round removal"
+  },
+  "dedicated_head": {
+    "K": 5120,
+    "TP": 4,
+    "activation": "all5120 XN words BF16 from exact head normalizer; round0 eligibility input only, output all32320 FP32 logits if oen1",
+    "argmax": "compare finite FP32 values, exact ties choose smallest global vocab ID=rank*32320+localrow; +/-0 ties canonically equal; NaN/Inf poison/fault before final token publication",
+    "descriptor_round0_and_amax1_and_oen1_retained": true,
+    "existing_source_tree_price": {
+      "G": 4,
+      "MP": 1,
+      "NL": 64,
+      "NW": 21,
+      "W": 16,
+      "idle_registered_edge_after_last_tv_retire": 1,
+      "increment_if_reused": 0,
+      "levels": 6,
+      "registered_tree_bits": 6858,
+      "return_sample_to_best_update_edges": 8,
+      "running_state_bits": 86,
+      "terminal_rule": "wait for native idle containing tv and output writes, matching terminal and external delivery fence; ready=!active alone can clear prior best before final compare",
+      "total_owned_source_argmax_bits": 6951,
+      "tv_bits": 7
+    },
+    "global_collective": "four finite(value32,globalID32) pairs -> deterministic compare/tie tree, not arithmetic allreduce.256inputbits,64outputbits; at2registeredlevels latency>=2localcomparecycles plus actual link/CDC/acceptance calendar UNBOUND",
+    "golden_order": "per row640 sequential8-term chunk leaves padded1024 then golden tree; no sums across TP ranks (rows sharded), no transfer from differently partitioned field subtree",
+    "head_compute_placement_provider_ECC_and_full_latency_ready": false,
+    "ideal_pairs_per_rank_ceiling": 632,
+    "native_ME_WROM_port_layout_adapter_implemented": false,
+    "ordered_provider_implementation_spec": {
+      "CDC_and_delivery_not_in_that_tail": true,
+      "FP32_pair_request_bits": 64,
+      "K_grains": [
+        [
+          0,
+          4096
+        ],
+        [
+          4096,
+          5120
+        ]
+      ],
+      "actual_required_unmatched_slots": "UNBOUND: bound using accepted root-return calendar; cannot assume128slots with nonbackpressurable returns",
+      "chunk8_leaves": [
+        512,
+        128
+      ],
+      "conditional_LAT3_serial_cycles_per_row_tail": 9,
+      "conditional_merge_tail_ns": 10,
+      "drained_era_bits": 1,
+      "extra_merge_FP32_adds_per_row": 3,
+      "global_vocabID_bits": 17,
+      "golden_total_leaf_slots": 1024,
+      "if_all32320rows_unmatched_conservative_storage_bits_per_rank": 2779520,
+      "required_merge": "root4096 + ((root1024 + +0) + +0), retaining golden padded levels for all FP32 semantics; qualified chunk8 subtree producers only",
+      "reuse_adjacent_BF16_compute": "only actual complete-slot ordered subtree/header/ECC provider bindings; new compute count/placement and SS/FF remain Maxwell budget inputs",
+      "root_slot_allocation": "2FP32roots64 +globalID17 +era1 +2received +poison1 +live1",
+      "root_slot_bits": 86,
+      "serial_clock_GHz": 0.9
+    },
+    "preserved_native_ME_arithmetic_failure": {
+      "mode_support_not_arithmetic_support": true,
+      "source": "ot_hdc_v41_matvec.u_add circulating fb_pre, reset only first-element; sequential per chunk instead of csum chunk8",
+      "verdict": "FAIL_ORDER_TRANSFER"
+    },
+    "route": "Dedicated head provider with native ME descriptor/FP32-logit/argmax ABI; mode decoder and argmax may be reused, but legacy ME sequential accumulator fails retained chunk8 order. Never pretend a622field phase or remap head into compressor whitelist",
+    "rows_global": 129280,
+    "rows_per_rank": 32320,
+    "storage_API": "head_address(rank,row,K): exact existing dedicated global head word after embed reservation -> complete4096pair/MB/parity/code/ECC coordinates; capacity charge already dedicated closure, no layer-field doublecharge",
+    "tensor": "head.weight",
+    "weight_storage_macros_global": 10100,
+    "weight_storage_pairs_global": 2525,
+    "weight_storage_words_global": 41369600
+  },
+  "expert_spatial_split": {
+    "activation_TP_allgather_output_bits_per_rank_per_expert": 73728,
+    "activation_XN_bits_per_rank": 163840,
+    "candidate_owner": "Maxwell; no independent NP/stage/count chosen",
+    "config_ECC_headers": "reserve immutable HE/CROM/ECC first per new owner; all compiled padding/sites, PHW/keytables and stage service replication charged; head/embed separate and fully conserved",
+    "critical_formula": "Tparallel=max_i(Tbroadcast_i+Tcfg_i+Tw1w3_i+TweightedSiLU_i+TTPactgather_i+TcfgW2_i+Tw2_i+Treturn_i)+Torderedmerge_and_finalTPgather; prove <= current full conditional token calendar, not <= coldrefill alone",
+    "dense_grain_constraint": "Engram layer projection currently3200 activepairs, so simply shrinking compiledNP below that cannot hold unchanged wholeoperator. Golden-aligned row ownership or ordered subtrees/provider routing needed; no bit loss or free partial template.",
+    "gate_up_local_BF16_in32_output_bits_per_rank_per_expert": 36864,
+    "golden_merge": "ascending six runtimeEIDs, weighted activation rounding before w2, each TP act gather, w2 BF16 result, sequential six experts then sharedlast; preserve full source collectives and rounding boundaries",
+    "if_all_six_out_of_order_results_buffered_bits_per_rank": 245760,
+    "implementability": "source QE front-end currently serial single-field dispatch; new parallel owners require actual multi-owner admission slots/credits and operands/results transport. Model capacity, fanout, muxes and links before claiming parallelism.",
+    "retain_TP4_and_complete_expert_triples": true,
+    "row_stream_reorder_alternative": "6owner FIFO head/tag/credit records plus bounded row FIFOs, capacities/fault drain must be separately derived; cannot just sum arrival order",
+    "row_striped_collective_demand": "6independent576/rank ->2304/rank TP allgathers still contend on same link/service; extra owners are not free extra TP bandwidth",
+    "selected_result_header_min_bits_each": {
+      "era": 1,
+      "expertID": 9,
+      "good_poison_terminal": 2,
+      "rank": 2,
+      "row": 11,
+      "slot": 3,
+      "stage": 6
+    },
+    "selected_result_header_total_bits_each": 34,
+    "shared_result_bits_per_rank": 40960,
+    "single_token_no_loss_proved": false,
+    "six_complete_result_reorder_headers_bits_per_rank": 204,
+    "six_selected_result_bits_per_rank": 245760,
+    "w2_result_bits_per_rank_per_expert": 40960
+  },
+  "head_input_proof": {
+    "VM_elements": [
+      46464,
+      51584
+    ],
+    "consumer": "Lhead.I5",
+    "descriptor_round_bit_unchanged": 0,
+    "dynamic_predicate_copy_and_reducer_alias_waivers": false,
+    "first_actual_SU_wait_fence": "Lhead.I5",
+    "input_RNE_idempotent": true,
+    "intervening_vector_writer": false,
+    "logical_SU_idle_not_general_physical_visibility": true,
+    "physical_VM_delivery_visibility_and_same_generation_required": true,
+    "producer": "Lhead.I4",
+    "producer_VM_write_acceptance_calendar_bound": false,
+    "producer_rnd": 1,
+    "result_format": "FP32",
+    "runtime_action_region_provider_alias_guard_required": true,
+    "runtime_actions_in_span": [],
+    "single_copy_only": true,
+    "write_footprints_must_fit19bit_source_spine_aperture": true
+  },
+  "invalid_EID_and_cancel": {
+    "accepted_owner_obligations": "VM terminal done or localACK cannot delete accepted cfg/ECC/field/writer/return credits; owner retire/delivery/causalvisibility/provenance remain mandatory",
+    "future_external_ports": [
+      "freeze/cancel",
+      "source_cancel_ack",
+      "VM_req_valid/ready",
+      "VM_rsp_valid/terminal/era/requestseq10",
+      "owner_req_valid/ready",
+      "owner_retire",
+      "delivery_fence",
+      "causal_visibility",
+      "provenance_lease"
+    ],
+    "guard": "check complete32bit vi_q range0..383 before stride multiply and lookup; phasehit must match ME/QE kind and own lease",
+    "local_cancel_ack": "newadmission frozen plus all matching accepted VM terminals drained/discarded; independent of selected-owner EMPTY/readiness",
+    "native_source_guard_cancel_handshake_currently_implemented": false,
+    "onebit_era_legal_only_drained_wrap": "rearm after localACK+ownerretire+deliveryfence+causalvisibility+provenance and zero outstanding requests. Stale generation never retires matching debt; no timer/reset-everytoken substitute.",
+    "owner_terminal_authentication": "owner_retire is only matching selected-stage/phase/era authenticated terminal; external Peirce ledger validates it, not an unauthenticated done pulse",
+    "preserved_alias_negatives": {
+      "EID262144": "30bit multiply/add wraps to exp0.w1; fullwidth range check forbids",
+      "EID512": "exp0.w1 base +512*4096 aliases exp0.w3 family"
+    },
+    "registered_go_edge": "source S_GO registers s_go at e, actual spine samples at e+1. Hold request/identity until actual valid&&ready; state transition or s_go assignment is not acceptance.",
+    "request_identity": "selected provider/stage +era1 +VMrequestseq10 echoed with terminal. Counter holds while VM read outstanding; matching terminal increments. Old same-era sequence cannot retire later debt. Original untagged vi_q ABI needs this adapter or a proved fixed-latency exactly-once capture protocol; no free identity transfer.",
+    "request_sequence_wrap": "1024 accepted VMreads perera; count bound is not reset-per-token. Hold new descriptors on wrap, allow last matching indexed op to finish its pending owner acceptance, then fence all source/owner obligations before era toggle/reuse.",
+    "response_refusal": "accept/discard matching good or poison return under cancel without downstream ready; permanently held provider reply keeps debt and blocks ACK, watchdog only reports",
+    "same_edge_priority": "knownfault/freeze/cancel blocks descriptor, VMrequest and owner acceptance before edge; invalid matching terminal faults before lookup/config/fieldgo"
+  },
+  "next_gate": "Maxwell selected-owner cfg/ECC/VM-visible event calendar + Peirce shared cancellation fence binding; bounded defaultoff copied-adapter correctness fixture for six round0 BF16 proofs, invalid/stale/held returns and head provider mode only after composition review. No original RTL edit.",
+  "opt_in_default": false,
+  "proposed_parameter": "OPT_NATIVE_MODE_CONTRACT=0",
+  "readiness": {
+    "RTL_builds": 0,
+    "RTL_ready_before_provider_event_calendar": false,
+    "payload_reads": 0,
+    "physical_or_full_token_or_rate_credit": false,
+    "source_semantic_model_complete": true
+  },
+  "schema": "opentallas.dsrom.native-mode-contract.v1",
+  "source_tool_sha256": "ed9575694a98826cfd4152a5dc506a764dec84664d38ef5ef337291e894fa1e5",
+  "verdict": "PASS_SOURCE_SEMANTICS_AND_DEFAULT_OFF_IMPLEMENTATION_SPEC_NOT_RUNTIME_ADMISSION"
+}

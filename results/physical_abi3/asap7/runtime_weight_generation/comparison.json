@@ -1,0 +1,22 @@
+{
+  "scope": "ASAP7 TT 1 ns same-source synthesis/STA, absolute stream addresses, FIFO depth4, SINGLE_GENERATION=0/1. Both fail prelayout; SRAM-inclusive route needed.",
+  "records": [
+    {
+      "record": "prelayout_shared0_1ns.json",
+      "sha256": "d59caa86944547db6260afb38d5003ac5622ac0b8a0dad3c8320d427bd8e5d50",
+      "area_um2": 885.703,
+      "setup_wns_ns": -0.9348390987591089
+    },
+    {
+      "record": "prelayout_shared1_1ns.json",
+      "sha256": "948e835b90ac1c368de873e0f33f239ca9ca223a08b3ffa0f3add36d1b118421",
+      "area_um2": 805.631,
+      "setup_wns_ns": -0.6096476681196422
+    }
+  ],
+  "fifo_payload_identity_bits_before": 812,
+  "fifo_payload_identity_bits_after_including_shared_generation": 716,
+  "contract": "Every acquired tile and queued word belongs to the same generation until reset. Generic default0 retains per-entry generation; runtime owns one operation until clear and selects1.",
+  "area_reduction_percent": 9.04050229027112,
+  "functional": "29 prefetch/replay tests pass; loaded G2 remains 25013 cycles with1352 matching outputs, first weight/activation fills560/720. Lint only reports existing unused signals."
+}

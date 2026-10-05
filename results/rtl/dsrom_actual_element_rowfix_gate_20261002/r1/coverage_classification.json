@@ -1,0 +1,195 @@
+{
+  "CSA_unchanged": true,
+  "DIFF_predicates_per_compare_all": 72,
+  "adoption": false,
+  "arithmetic_scope": "Connected original structural helper arithmetic versus qualified behavioral ksadd/inc candidate; mandatory decoder correction identical on both sides; immutable synthetic ROM and identical driven FP4/FP8/BF16 words. Existing72 DIFF predicates all retained, sampled without mismatches. Finite two-state cases only.",
+  "candidate": "Only pinned common ksadd/inc body substitution, same opt-in mandatory decoder fix",
+  "cases": {
+    "bfcolumn": {
+      "compare_all_samples_derived": 91496,
+      "comparison_count_basis": "Three settled/entry comparisons per completed tick, plus two asynchronous reset assertions; derived from pinned bench control flow and PASS cycles, not instrumented counters",
+      "control_assertions": {
+        "ROM_pin_ce_address_capture_comparisons": true,
+        "all_public_outputs_and_flags_compared": true,
+        "clock_period_ps": 833,
+        "empty_go_checked": true,
+        "falling_sample_settle_ps": 1,
+        "gating_open_and_closed_counts_nonzero": true,
+        "independent_gate_latch_equation": true,
+        "initial_and_inflight_reset_checked": true,
+        "legal_drain_fault_quiet_checked": true,
+        "reset_assert_settle_ps": 1,
+        "rising_sample_settle_ps": 1,
+        "tag_and_walker_internal_comparisons": true
+      },
+      "existing_score_scope": "Valid primary output row in0x100..0x107, segment0, nseg1, position<np; primary phase count8*np; secondary idle atphase4; ref/candidate public row/tag/data equality every sample. No independently predicted numerical pval golden.",
+      "explicit_DIFF": false,
+      "independent_config_oracle": {
+        "individual_row_values_checked": 256,
+        "load_phase_calls": 8,
+        "row_pair_assertions": 128,
+        "rows_per_namespace_per_load": 16,
+        "scope": "All first/second macro row entries checked against independent semantic macro/segment/phase formula after gap32; does not independently oracle class fields, arithmetic or complete tag sequence",
+        "status": "PASS_BY_REACHED_FINAL_PASS_AND_NO_FATAL"
+      },
+      "phases": [
+        {
+          "checked": "go suppressed, no outputs/issues",
+          "family": "empty",
+          "phase": 0,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP8",
+          "phase": 1,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP4",
+          "phase": 2,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "BF16",
+          "phase": 3,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP8",
+          "phase": 4,
+          "positions": 1,
+          "secondary": "idle-bit15 rows; no second-macro partial"
+        },
+        {
+          "expected_primary_partials": 48,
+          "family": "FP8",
+          "phase": 5,
+          "positions": 6
+        },
+        {
+          "completed_arithmetic_partials": false,
+          "family": "FP4",
+          "phase": 2,
+          "positions": 1,
+          "purpose": "cancel in-flight walker/captured data/arithmetic/tags with asynchronous reset"
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "BF16",
+          "phase": 3,
+          "positions": 1,
+          "purpose": "restart after reset"
+        }
+      ],
+      "runtime_coverage": {
+        "BF": 1,
+        "cycles": 30498,
+        "gated": 1726,
+        "issues": 1216,
+        "loads": 200,
+        "opened": 28768,
+        "partials": 88
+      },
+      "simulation_returncode": 0
+    },
+    "q": {
+      "compare_all_samples_derived": 82934,
+      "comparison_count_basis": "Three settled/entry comparisons per completed tick, plus two asynchronous reset assertions; derived from pinned bench control flow and PASS cycles, not instrumented counters",
+      "control_assertions": {
+        "ROM_pin_ce_address_capture_comparisons": true,
+        "all_public_outputs_and_flags_compared": true,
+        "clock_period_ps": 833,
+        "empty_go_checked": true,
+        "falling_sample_settle_ps": 1,
+        "gating_open_and_closed_counts_nonzero": true,
+        "independent_gate_latch_equation": true,
+        "initial_and_inflight_reset_checked": true,
+        "legal_drain_fault_quiet_checked": true,
+        "reset_assert_settle_ps": 1,
+        "rising_sample_settle_ps": 1,
+        "tag_and_walker_internal_comparisons": true
+      },
+      "existing_score_scope": "Valid primary output row in0x100..0x107, segment0, nseg1, position<np; primary phase count8*np; secondary idle atphase4; ref/candidate public row/tag/data equality every sample. No independently predicted numerical pval golden.",
+      "explicit_DIFF": false,
+      "independent_config_oracle": {
+        "individual_row_values_checked": 224,
+        "load_phase_calls": 7,
+        "row_pair_assertions": 112,
+        "rows_per_namespace_per_load": 16,
+        "scope": "All first/second macro row entries checked against independent semantic macro/segment/phase formula after gap32; does not independently oracle class fields, arithmetic or complete tag sequence",
+        "status": "PASS_BY_REACHED_FINAL_PASS_AND_NO_FATAL"
+      },
+      "phases": [
+        {
+          "checked": "go suppressed, no outputs/issues",
+          "family": "empty",
+          "phase": 0,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP8",
+          "phase": 1,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP4",
+          "phase": 2,
+          "positions": 1
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP8",
+          "phase": 4,
+          "positions": 1,
+          "secondary": "idle-bit15 rows; no second-macro partial"
+        },
+        {
+          "expected_primary_partials": 48,
+          "family": "FP8",
+          "phase": 5,
+          "positions": 6
+        },
+        {
+          "completed_arithmetic_partials": false,
+          "family": "FP4",
+          "phase": 2,
+          "positions": 1,
+          "purpose": "cancel in-flight walker/captured data/arithmetic/tags with asynchronous reset"
+        },
+        {
+          "expected_primary_partials": 8,
+          "family": "FP8",
+          "phase": 1,
+          "positions": 1,
+          "purpose": "restart after reset"
+        }
+      ],
+      "runtime_coverage": {
+        "BF": 0,
+        "cycles": 27644,
+        "gated": 1530,
+        "issues": 1216,
+        "loads": 175,
+        "opened": 26110,
+        "partials": 80
+      },
+      "simulation_returncode": 0
+    }
+  },
+  "classification": "PASS_BOUNDED_REFERENCE_CANDIDATE_DIFFERENTIAL_AND_INDEPENDENT_CONFIGURATION_ROW_ORACLE",
+  "full_token": false,
+  "hardware_clock": false,
+  "independent_numeric_golden": false,
+  "limits": "No all-input element proof, independent full arithmetic-golden check, real-image/field equivalence, contextual SS/FF closure or rate measurement.",
+  "negative_control": "No new compiled mutant; prior committed static truncation/offbyone/boundary mutants and original decoder negative witness preserved. No negative adder mutation run in this attempt.",
+  "physical_timing": false,
+  "reference": "Original arithmetic functions, same opt-in mandatory decoder fix as candidate",
+  "total_individual_config_row_checks": 480,
+  "total_samples_derived": 174430
+}

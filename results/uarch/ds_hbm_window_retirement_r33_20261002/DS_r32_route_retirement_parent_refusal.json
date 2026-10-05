@@ -1,0 +1,20 @@
+{
+  "directed_tests_insufficient_for_atomic_refusal": true,
+  "directed_tests_passed": 11,
+  "full_token_GO": false,
+  "main_provider_merge_withheld": true,
+  "next_test": "negative actual backing/journal preservation, and portable ROOT-relative program fixture",
+  "observed_after_refusal": {
+    "fence_calls": 1,
+    "journal_closed": true,
+    "memories_remaining": 0,
+    "retired_journals": 1
+  },
+  "owner": "Kepler",
+  "refusal": "all source expert-fetch ranks must finish before route acceptance",
+  "reproducer": "object.__new__(Provider) with generation1, emptyviews, one operation20 fake memory/journal and pending route rank0; native expert_fetch requires ranks0,1. Call retire_operation(20,1). Fake fence increments counter, fake journal close sets flag. No checkpoint numerical operations invoked.",
+  "required_behavior": "Prevalidate complete source rankset, route equality and generations before any base fence/close/delete or route publication. Failed validation must retain backing/journals as well as pending routes.",
+  "reviewed_commit": "f63d1324a16097b445613bca7801010c235d0315",
+  "source_archive_ref": "codex/hbm-r32-parent-review-20261002",
+  "status": "REFUSED_PROVIDER_RETIREMENT_VALIDATION_ORDER"
+}

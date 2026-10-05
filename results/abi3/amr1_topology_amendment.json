@@ -1,0 +1,999 @@
+{
+ "admission": {
+  "bundles": [
+   {
+    "bundle": "deepseek-v4-flash-hbm-cluster32-c192k-speculative",
+    "capability_digest": "9e959d6f649cea47fdeee382697e15f19575a19b8a12b327091d0d78989a7bcd",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_cluster_32_speculative.json",
+    "checks": 58,
+    "checks_failed": [
+     "event_count_bound",
+     "event_id_bound",
+     "instruction_legality"
+    ],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-hbm-dspark-draft-speculative",
+    "capability_digest": "9e959d6f649cea47fdeee382697e15f19575a19b8a12b327091d0d78989a7bcd",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_cluster_32_speculative.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-hbm-e9",
+    "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-hbm-tokens",
+    "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-hbm-tokens-p8",
+    "capability_digest": "61d90451ca8c4f9faf68d7225dab6c79c5bd11fc98681c28d4afc870d757d4cb",
+    "capability_record": null,
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-hbm-tokens-pre-am-e9",
+    "capability_digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom",
+    "capability_digest": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+    "checks": 63,
+    "checks_failed": [],
+    "topology_class": "WAFER_LOGICAL_DEVICE"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-dspark-draft",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-e9",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-p32",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-p32-re",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-pre-am-e9",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-array-32-tokens",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-pre-am-e9",
+    "capability_digest": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+    "checks": 63,
+    "checks_failed": [],
+    "topology_class": "WAFER_LOGICAL_DEVICE"
+   },
+   {
+    "bundle": "deepseek-v4-flash-rom-tokens",
+    "capability_digest": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+    "checks": 63,
+    "checks_failed": [],
+    "topology_class": "WAFER_LOGICAL_DEVICE"
+   },
+   {
+    "bundle": "ds-array-block512",
+    "capability_digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "capability_record": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "checks": 58,
+    "checks_failed": [],
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-e9",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-exact8k-b1-lane0",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-tokens",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-tokens-pre-am-e9",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-natural-a",
+    "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-natural-b",
+    "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-natural-current-a",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-natural-current-a-aborted-precommit-20260903T1211Z",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-natural-current-a-r1",
+    "capability_digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "capability_record": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-hbm-w10-stress",
+    "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom",
+    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "capability_record": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom-degraded",
+    "capability_digest": "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom-e9",
+    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "capability_record": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom-pre-am-e9",
+    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "capability_record": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom-rowfold-v1",
+    "capability_digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "capability_record": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "checks": 55,
+    "checks_failed": [],
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-rom-tokens",
+    "capability_digest": "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-single-chip",
+    "capability_digest": "b2a1af210247029af2fd239bcf693ccb630aa1c468311392b312c61d7201a98f",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "bundle": "qwen3-8b-single-chip-w95",
+    "capability_digest": "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
+    "capability_record": null,
+    "topology_class": "SINGLE_CHIP"
+   }
+  ],
+  "bundles_bound_to_a_committed_capability": 27,
+  "bundles_present": 35,
+  "bundles_with_failing_checks": [
+   "deepseek-v4-flash-hbm-cluster32-c192k-speculative"
+  ],
+  "checks_compared": 1548
+ },
+ "amendment": "AM-R1",
+ "blast_radius": {
+  "artifacts": [
+   "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+   "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+   "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+   "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+   "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+   "results/abi3/asap7_comparison_readiness.json",
+   "results/abi3/comparison_deepseek_rom_array_vs_hbm.json",
+   "results/abi3/cycle/qwen3_exact8k_decode_batch_rowfold_diagnostic_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8001.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8001_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8002.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_asap7_decode_pos8002_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8000.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8000_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8001.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8001_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8002.json",
+   "results/abi3/cycle/qwen3_hbm_exact8k_b1_sky130_decode_pos8002_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_depthfix_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8000_rowfold_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8001.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8001_rowfold_depthfix_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8002.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_asap7_decode_pos8002_rowfold_depthfix_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8000.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8000_rowfold_depthfix_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8001.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8001_rowfold_depthfix_v1.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8002.json",
+   "results/abi3/cycle/qwen3_rom_exact8k_b1_sky130_decode_pos8002_rowfold_depthfix_v1.json",
+   "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json",
+   "results/abi3/deepseek_hbm_hc_pre_t512_rtl_blockers.json",
+   "results/abi3/deepseek_v4_activation_liveness_capacity.json",
+   "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+   "results/abi3/hbm_deepseek_deployment_certificate.json",
+   "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+   "results/abi3/hbm_qwen_deployment_certificate.json",
+   "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+   "results/abi3/rom_schedule_checks.json",
+   "results/abi3/rom_schedule_checks_deepseek_e9.json",
+   "results/abi3/rom_schedule_checks_e9.json",
+   "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_deployment_audit.json",
+   "results/derived/deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_machine_pair.json",
+   "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_deployment_audit.json",
+   "results/derived/deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_machine_pair.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_deployment_audit.json",
+   "results/derived/qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_machine_pair.json",
+   "results/derived/qwen3_e9_deployment_audit.json",
+   "results/derived/qwen3_n5_design_target_deployment_audit.json",
+   "results/derived/qwen3_n5_design_target_machine_pair.json",
+   "results/rtl/a3_wafer_multicast_campaign.json",
+   "results/rtl/abi3_g1e_control_end_to_end.json"
+  ],
+  "capability_digests_in_use": [
+   "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+   "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+   "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+   "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+   "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d"
+  ],
+  "capability_records": 41,
+  "committed_artifacts_quoting_those_digests": 65,
+  "note": "nothing here is re-emitted by the landed half; this is the bill for the re-lowering step that follows it",
+  "source_bound_evidence_now_stale": {
+   "distinct_artifact_count": 35,
+   "distinct_artifacts": [
+    "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+    "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+    "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+    "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+    "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
+    "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+    "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+    "results/abi3/asap7_comparison_readiness.json",
+    "results/abi3/comparison_deepseek_rom_array_vs_hbm.json",
+    "results/abi3/comparison_deepseek_rom_vs_hbm.json",
+    "results/abi3/deepseek_v4_context_gate.json",
+    "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+    "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+    "results/abi3/hbm_deepseek_deployment_certificate.json",
+    "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+    "results/abi3/hbm_qwen_deployment_certificate.json",
+    "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+    "results/abi3/restart_exactness_deepseek_hbm_p32.json",
+    "results/abi3/restart_exactness_deepseek_rom_p32.json",
+    "results/abi3/restart_exactness_qwen3_hbm.json",
+    "results/abi3/restart_exactness_qwen3_rom.json",
+    "results/derived/n5_design_target_cycle/qwen3_n5_design_target_hbm_run.json",
+    "results/derived/n5_design_target_cycle/qwen3_n5_design_target_rom_run.json",
+    "results/rtl/a3_link_campaign.json",
+    "results/rtl/a3_wafer_multicast_campaign.json",
+    "results/rtl/abi3_campaign.json",
+    "results/rtl/abi3_deployment_campaign.json",
+    "results/rtl/abi3_engine_campaign.json",
+    "results/rtl/abi3_g1e_control_end_to_end.json",
+    "results/rtl/abi3_lq8.json",
+    "results/rtl/abi3_pipelined_lane.json",
+    "results/rtl/abi3_pipelined_lane_groups.json",
+    "results/rtl/abi3_re8.json",
+    "results/rtl/abi3_tile64.json",
+    "results/rtl/rom_service_campaign.json"
+   ],
+   "sources": {
+    "runtime/abi3/capability.py": {
+     "artifacts": [
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+      "results/abi3/asap7_comparison_readiness.json",
+      "results/abi3/comparison_deepseek_rom_array_vs_hbm.json",
+      "results/abi3/comparison_deepseek_rom_vs_hbm.json",
+      "results/abi3/deepseek_v4_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+      "results/abi3/hbm_deepseek_deployment_certificate.json",
+      "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+      "results/abi3/hbm_qwen_deployment_certificate.json",
+      "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+      "results/abi3/restart_exactness_deepseek_hbm_p32.json",
+      "results/abi3/restart_exactness_deepseek_rom_p32.json",
+      "results/abi3/restart_exactness_qwen3_hbm.json",
+      "results/abi3/restart_exactness_qwen3_rom.json",
+      "results/rtl/rom_service_campaign.json"
+     ],
+     "recorded_in": 22,
+     "stale_now": 22
+    },
+    "runtime/abi3/constants.py": {
+     "artifacts": [
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+      "results/abi3/deepseek_v4_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+      "results/abi3/hbm_deepseek_deployment_certificate.json",
+      "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+      "results/abi3/hbm_qwen_deployment_certificate.json",
+      "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+      "results/abi3/restart_exactness_deepseek_hbm_p32.json",
+      "results/abi3/restart_exactness_deepseek_rom_p32.json",
+      "results/abi3/restart_exactness_qwen3_hbm.json",
+      "results/abi3/restart_exactness_qwen3_rom.json",
+      "results/rtl/a3_link_campaign.json",
+      "results/rtl/a3_wafer_multicast_campaign.json",
+      "results/rtl/abi3_campaign.json",
+      "results/rtl/abi3_deployment_campaign.json",
+      "results/rtl/abi3_engine_campaign.json",
+      "results/rtl/abi3_lq8.json",
+      "results/rtl/abi3_pipelined_lane.json",
+      "results/rtl/abi3_pipelined_lane_groups.json",
+      "results/rtl/abi3_re8.json",
+      "results/rtl/abi3_tile64.json",
+      "results/rtl/rom_service_campaign.json"
+     ],
+     "recorded_in": 29,
+     "stale_now": 29
+    },
+    "runtime/abi3/verifier.py": {
+     "artifacts": [
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+      "results/abi3/deepseek_v4_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+      "results/abi3/hbm_deepseek_deployment_certificate.json",
+      "results/abi3/hbm_deepseek_e9_deployment_certificate.json",
+      "results/abi3/hbm_qwen_deployment_certificate.json",
+      "results/abi3/hbm_qwen_e9_deployment_certificate.json",
+      "results/abi3/restart_exactness_deepseek_hbm_p32.json",
+      "results/abi3/restart_exactness_deepseek_rom_p32.json",
+      "results/abi3/restart_exactness_qwen3_hbm.json",
+      "results/abi3/restart_exactness_qwen3_rom.json",
+      "results/rtl/abi3_campaign.json",
+      "results/rtl/abi3_deployment_campaign.json",
+      "results/rtl/abi3_g1e_control_end_to_end.json",
+      "results/rtl/rom_service_campaign.json"
+     ],
+     "recorded_in": 22,
+     "stale_now": 22
+    },
+    "runtime/sim/engines/link.py": {
+     "artifacts": [
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_array_p32.json",
+      "results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_hbm_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_8b_rom_chat1.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_hbm_e9.json",
+      "results/abi3/accelerator_tokens/qwen3_eos_rom_e9.json",
+      "results/abi3/deepseek_v4_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_p32_context_gate.json",
+      "results/abi3/deepseek_v4_rom_array_ta-ds-ctx-129_refusal.json",
+      "results/abi3/restart_exactness_deepseek_hbm_p32.json",
+      "results/abi3/restart_exactness_deepseek_rom_p32.json",
+      "results/abi3/restart_exactness_qwen3_hbm.json",
+      "results/abi3/restart_exactness_qwen3_rom.json",
+      "results/derived/n5_design_target_cycle/qwen3_n5_design_target_hbm_run.json",
+      "results/derived/n5_design_target_cycle/qwen3_n5_design_target_rom_run.json",
+      "results/rtl/a3_link_campaign.json",
+      "results/rtl/a3_wafer_multicast_campaign.json",
+      "results/rtl/rom_service_campaign.json"
+     ],
+     "recorded_in": 19,
+     "stale_now": 19
+    }
+   }
+  },
+  "tools": {
+   "runtime/abi3/capability.py": [
+    "tools/audit_abi3_asap7_comparison_readiness.py",
+    "tools/build_comparison_report.py",
+    "tools/build_rom_service_vectors.py",
+    "tools/check_deepseek_v4_200k_accelerator_acceptance.py",
+    "tools/check_deepseek_v4_context_gate.py",
+    "tools/check_hbm_deployments.py",
+    "tools/check_qwen3_w10_acceptance.py",
+    "tools/rtl_rom_service_campaign.py",
+    "tools/run_abi3_agent_episode.py",
+    "tools/run_abi3_heterogeneous_batch.py",
+    "tools/run_accelerator_tokens.py"
+   ],
+   "runtime/abi3/constants.py": [
+    "tools/audit_abi3_asap7_comparison_readiness.py",
+    "tools/build_comparison_report.py",
+    "tools/build_rom_service_vectors.py",
+    "tools/check_deepseek_v4_200k_accelerator_acceptance.py",
+    "tools/check_deepseek_v4_context_gate.py",
+    "tools/check_hbm_deployments.py",
+    "tools/check_qwen3_w10_acceptance.py",
+    "tools/rtl_a3_link_campaign.py",
+    "tools/rtl_a3_wafer_multicast_campaign.py",
+    "tools/rtl_abi3_campaign.py",
+    "tools/rtl_abi3_deployment_campaign.py",
+    "tools/rtl_abi3_engine_campaign.py",
+    "tools/rtl_abi3_lane_campaign.py",
+    "tools/rtl_abi3_lq8_campaign.py",
+    "tools/rtl_abi3_re8_campaign.py",
+    "tools/rtl_abi3_shipped_prefix_campaign.py",
+    "tools/rtl_abi3_tile64_campaign.py",
+    "tools/rtl_rom_service_campaign.py",
+    "tools/run_abi3_agent_episode.py",
+    "tools/run_abi3_heterogeneous_batch.py",
+    "tools/run_accelerator_tokens.py"
+   ],
+   "runtime/abi3/verifier.py": [
+    "tools/audit_abi3_asap7_comparison_readiness.py",
+    "tools/build_abi3_g1e_control_vectors.py",
+    "tools/build_abi3_g1e_pass_decomposition.py",
+    "tools/build_comparison_report.py",
+    "tools/build_rom_service_vectors.py",
+    "tools/check_abi3_deployment.py",
+    "tools/check_deepseek_v4_200k_accelerator_acceptance.py",
+    "tools/check_deepseek_v4_context_gate.py",
+    "tools/check_hbm_deployments.py",
+    "tools/check_qwen3_w10_acceptance.py",
+    "tools/derive_cycle_machine.py",
+    "tools/rtl_abi3_campaign.py",
+    "tools/rtl_abi3_deployment_campaign.py",
+    "tools/rtl_abi3_g1e_control_campaign.py",
+    "tools/rtl_rom_service_campaign.py",
+    "tools/run_abi3_agent_episode.py",
+    "tools/run_abi3_heterogeneous_batch.py",
+    "tools/run_accelerator_tokens.py"
+   ],
+   "runtime/sim/engines/link.py": [
+    "tools/build_comparison_report.py",
+    "tools/check_deepseek_v4_context_gate.py",
+    "tools/rtl_a3_link_campaign.py",
+    "tools/rtl_a3_wafer_multicast_campaign.py"
+   ]
+  },
+  "tools_listing_an_amended_source": {
+   "runtime/abi3/capability.py": 11,
+   "runtime/abi3/constants.py": 21,
+   "runtime/abi3/verifier.py": 18,
+   "runtime/sim/engines/link.py": 4
+  }
+ },
+ "defined_in": "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md section 12.21",
+ "digest_stability": {
+  "holds": true,
+  "records": [
+   {
+    "digest": "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+    "digests_committed_artifacts_recorded": [
+     "1eb2e92dac1d9fb8937b7724953d2f65993bd56e342e9058569442eb61d74bad",
+     "61d90451ca8c4f9faf68d7225dab6c79c5bd11fc98681c28d4afc870d757d4cb"
+    ],
+    "max_nodes": 32,
+    "path": "configs/hardware/abi3_capability/hbm_sram_cluster_32.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": true,
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "digest": "9e959d6f649cea47fdeee382697e15f19575a19b8a12b327091d0d78989a7bcd",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 32,
+    "path": "configs/hardware/abi3_capability/hbm_sram_cluster_32_speculative.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "digest": "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d",
+    "digests_committed_artifacts_recorded": [
+     "dd6500681f334bdb55715b000accd495be7ed927d91d1ed24b54565a0cd57aee",
+     "fa70dd44a1b532a99d103968b31b743bbed324d002fbe0214c9541fb1687e23d"
+    ],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": true,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "5acf1c6fe71d0f1b8599a648a16a6226faf3cf0e070b5f5e426ddb241e76820f",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "90381cd9fb9469f24f46bda47d49b46eb96ca8a2a6f9a570323467293da5ce7a",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_cluster_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "0ce871d2c2b58746b9e0dcbcc31b5b5dde8eba903584d53cf3c2e7b4aba99df1",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "0ce871d2c2b58746b9e0dcbcc31b5b5dde8eba903584d53cf3c2e7b4aba99df1",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "cfda3035f059ee0e80268aca00635303ece34ce7a04a4d083dde668b616631af",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "cfda3035f059ee0e80268aca00635303ece34ce7a04a4d083dde668b616631af",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "e02735c0ed2c27b71f156d7cd51a311a7ad32358fa78abc204a9a6be875a6c5c",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "cfda3035f059ee0e80268aca00635303ece34ce7a04a4d083dde668b616631af",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "a65760fd5f344e1d80b5fa36bc7e04c2ba13406281477262bb1b500683881690",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "21763ca1ab0e7a1d2fcc163b77184d83f15523557c84312427a9bb412046d953",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "a1ededd0d4a44cd904c540d85dd0cc9e31059debc3a57af1e82e2bab85f13204",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "294108307a3af3b58e00c8e18a53ba29bcc2ba2b20208f7f1e24569df011f961",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "294108307a3af3b58e00c8e18a53ba29bcc2ba2b20208f7f1e24569df011f961",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "21763ca1ab0e7a1d2fcc163b77184d83f15523557c84312427a9bb412046d953",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "a1ededd0d4a44cd904c540d85dd0cc9e31059debc3a57af1e82e2bab85f13204",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/hbm_sram_single_chip_n5_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "bd403f93bdf31ab3ecffd5accf57bc4dc53c174dee9ec4a1e43616d95b54a69d",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-array-hybrid-x32__b200-sxm-x16-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "f7fdd4978b7bda9ca55a490696fa099202d2c8f1665d1c6239641ba642b9af8f",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-array-hybrid-x30__b200-sxm-x15-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "1047fecaa7efddfe78fd01e2c293387a74b09ea97f6d2727357844a4723dba7c",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "57dda8f3c1bc2f3c0c170bcfa9b631e43da05cc8927bf693f796d17560e96844",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "f7a5dd1d2fbc90ee746429cbcd03add029f01cc29591a92dc40455cc7bdbc73e",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "13e1bcf27d8dd74e7d6ec14e45240382c994a3e0d9de74f6168f7f5fb343e9aa",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-flash-0731__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "f7a5dd1d2fbc90ee746429cbcd03add029f01cc29591a92dc40455cc7bdbc73e",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "76be461003c7749a33ef10d411f444ffb9c7dc43ca2564896c9e7da04ee8636c",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "7866727cc5914000e7c674d234516378323b8afa2590844280bbd021b6c3f979",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-array-tensor-x170__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "8defc2514d8ff1f9eff42a5b01468988907d97b5c542746788e11e43deb6c7fa",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-hbmkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "72e7af874f2dbbb8d9bfe537d5ce877861007271379e46e6b652eba6b3594511",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-array-tensor-x155__b200-sxm-x79-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "326191af893998e87a67ecf34f610595a14ce4f8054f5ccd9b386d8e17b7357c",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_deepseek_v4_pro_array_32_n5_design_target_deepseek-v4-pro-0813__rom-n5-native-sramkv-wafer-hybrid-x3__b200-sxm-x87-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "33926014ebe4f2ef8f7e1dbc5d37889fefe9527bbcc99cb5fbaf8505dbc8522d",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-array-tensor-x4__b200-sxm-x2-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "84f5e3412b1bae0c864f976081d5df2c4aeed7deaa384cf04dd87e24d12f6c05",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-hbmkv-wafer-tensor-x1__b200-sxm-x29-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "9eb0aabafd80e232f97c5c3cf4e151f6b581f049d8662b2d736768a3c25a6146",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x6-romfill__b200-sxm-x3-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "25c7b136006de2ba4b4ca9dc626f653f76b56d283fe3853789a73834948156f1",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x7-romfill__b200-sxm-x4-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "16337d164aa77da0abc758a224232c2bbfbc293a419c96fb8b45f82b86cd76a7",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-array-pipeline-x8-romfill__b200-sxm-x4-tensor_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "84fe51e3394342cfcf362759fcee6467bbf2f926deddeb37597a0e862ec3dd85",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_design_target_qwen3-8b__rom-n5-native-sramkv-wafer-tensor-x1-romfill__b200-sxm-x29-hybrid_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "644582d84ade923043cbc67de1c8306a10b12a4dde174dc3d757204c94f89ad4",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/n5_design_target/rom_qwen3_n5_v1.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "SINGLE_CHIP"
+   },
+   {
+    "digest": "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6",
+    "digests_committed_artifacts_recorded": [
+     "5abf26b4ef235d6083c6f6dbe48d7021068c59ecb451238569a2f660303d26b6"
+    ],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": true,
+    "topology_class": "WAFER_LOGICAL_DEVICE"
+   },
+   {
+    "digest": "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84",
+    "digests_committed_artifacts_recorded": [
+     "414793fdd02d60d5cf60d11dfde3a0b656f3bb76af4a5ab4f63b7b1d4148bb84"
+    ],
+    "max_nodes": 32,
+    "path": "configs/hardware/abi3_capability/rom_deepseek_v4_array_32.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": true,
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "digest": "680dba5c1025840bac8f85413080ab724e9e58258ea2462b12afdb5c0efd1bd4",
+    "digests_committed_artifacts_recorded": [],
+    "max_nodes": 32,
+    "path": "configs/hardware/abi3_capability/rom_deepseek_v4_pro_array_32.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": false,
+    "topology_class": "CLUSTER_32"
+   },
+   {
+    "digest": "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+    "digests_committed_artifacts_recorded": [
+     "38234d6cccbd9c017efa286b67f66b1c21572e206ba71aca874e4f912eb6adbf",
+     "5b5770fa766cd89d7a236a62722ef33d1db9f87be7403a8f8c55fc9ec8c8458e",
+     "f109651defbd04655cd5603c4f118a8c428651f470baada1f2d2b70912eb06d5"
+    ],
+    "max_nodes": 1,
+    "path": "configs/hardware/abi3_capability/rom_qwen3.json",
+    "publishes_fabric_key": false,
+    "quoted_by_committed_artifact": true,
+    "topology_class": "SINGLE_CHIP"
+   }
+  ],
+  "records_checked": 41,
+  "records_quoted_by_committed_evidence": 5,
+  "rule": "a capability that declares no fabric publishes no fabric key, so its canonical bytes and therefore its digest do not move"
+ },
+ "registry": {
+  "node_classes": {
+   "DIE": 0,
+   "WAFER": 1
+  },
+  "participant_scopes": {
+   "NODE": 0,
+   "RETICLE": 1,
+   "TILE": 2,
+   "WAFER": 3
+  },
+  "topology_classes": {
+   "CLUSTER_32": 1,
+   "CLUSTER_N": 3,
+   "SINGLE_CHIP": 0,
+   "WAFER_LOGICAL_DEVICE": 2
+  }
+ },
+ "schema": "opentallas.abi3.amr1_topology_amendment.v1"
+}

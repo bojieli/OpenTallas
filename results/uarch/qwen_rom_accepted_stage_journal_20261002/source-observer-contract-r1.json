@@ -1,0 +1,68 @@
+{
+  "RTL_changed": false,
+  "actual_observations_required": [
+    {
+      "event": "segment_start",
+      "meaning": "core.pc restarts0; stage image pc=program_base+core.pc; source start, not fetch",
+      "source": "ot_qwen_rom_rt_die_w12.core_start, seq.seg, prog_base; descriptor ROM word at dispatch"
+    },
+    {
+      "event": "accepted_issue",
+      "meaning": "PC/ticket/owner, exact379 bits and ordered stage program; current ROM word identity from immutable bank image",
+      "source": "core.issue, core.pc, core.me_go/core.su_go and all24 DYN-adjusted ME fields"
+    },
+    {
+      "event": "kv_lane_write",
+      "meaning": "accepted producer PC/ticket and canonical e4m3 value; exactly512 actualbytes/layer/rank, no zeros filled",
+      "source": "preedge kv_we/kv_waddr/kv_wdata lane; committed mutable KV state"
+    },
+    {
+      "event": "segment_done",
+      "meaning": "all nonzero-unit instructions in that descriptor accepted before completion",
+      "source": "core_done and seq.seg"
+    },
+    {
+      "event": "KV_state_snapshot",
+      "meaning": "both256byteK/V snapshots equal actual accepted producer writes; HBM backing not implied",
+      "source": "committed mutable KV array after last segment"
+    }
+  ],
+  "cold_replay_optional": "bbee6b58a70f6d09f9bd5df3bf6cbdd19f3b23ac",
+  "generated_core_sha256": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+  "model_changed": false,
+  "new_heavy_jobs": 0,
+  "next_calendar_join": "Feed all144 source-dispatched stage records with real mutable KV row bytes and accepted instruction edges into Russell finite calendar; source-consistent demand only is insufficient for service adoption.",
+  "nonclaims": [
+    "No actual root initialized/provider ready owner instantiation yet",
+    "Fixture event/value exports are not source ownership",
+    "No accepted provider command/return/fill/write-visible/window calendar receipt",
+    "No transfer of retained SMIN7/BD41 numerical capture to SMIN6/+55 physical source",
+    "No pricing/parameter search by Euclid; Russell resolves retained7.070976x service-period deficit"
+  ],
+  "owner": "Euclid source binding; Russell owns service sizing/calendar",
+  "predecessor_required": "26a8c9e8bbf8b8bba1524963cd6eb6b3f166d907",
+  "runtime_reexecuted": false,
+  "scope": {
+    "full_actual_journal": null,
+    "layers": 36,
+    "new_numerical_position": false,
+    "position": 0,
+    "program_bundle": "results/uarch/qwen_rom_program_identity_20261002/current-SU1024-AR256-programs-final.json.gz",
+    "ranks": 4,
+    "source_KV_consumers_per_stage": 2
+  },
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+    "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+    "tools/qwen_rom_accepted_stage_journal.py": "27c7e6fdf6e4f2ae723b1a13f3cf62351c468a91cb1c1528c3d8c0b24b898d3b",
+    "tools/qwen_rom_arithmetic_contract_w12.py": "8a1a3cd678e1e31da246b76489e8fa4461e79ddc6cc683fd71f43b316cb5a54d",
+    "tools/qwen_rom_kv_production_join.py": "2cf13c419d3056af10be64f9c687318ea6d5506cf1d0755f1be890130a999eaa",
+    "tools/qwen_rom_program_kv_journal.py": "d5c26866f37ad7a7b616d36b2b6dc2ccb5d56632028731139b513889abadfa69",
+    "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea"
+  },
+  "status": "BLOCKED_ACTUAL_EXPORT_ABSENT",
+  "tests": 26
+}

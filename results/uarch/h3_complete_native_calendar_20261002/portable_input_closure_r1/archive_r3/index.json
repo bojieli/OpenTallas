@@ -1,0 +1,528 @@
+{
+  "archived_bytes": 1827205,
+  "canonical_native_duplicated": false,
+  "hardware_admitted": false,
+  "historical_models_altered": false,
+  "inputs": [
+    {
+      "bytes": 15013,
+      "commit": "0b4ab421b",
+      "path": "results/uarch/ds_hbm_source_inputs_views_r34_20261002/prepared_join.json",
+      "sha256": "1f1d705ff736f486f9ea88331da7e86ac72740bfb014c607d4acb275b1e5a311",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 4926,
+      "commit": "0b4ab421b",
+      "path": "tools/ds_hbm_group_provider_r34.py",
+      "sha256": "3650aeaec460723a29ca1d5fdff8295c2bc14ba4c8418135b33a9538400b4fb1",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 9731,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "results/floorplan/hbm_gpu/v41_hbm_die.json",
+      "sha256": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 7771,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "results/rtl/w15_tp96_w19_prerequisites_input_20261001.json",
+      "sha256": "7229fe83f1dd636409e070bb3975dd614656e084998eeb2977902e0e30573ff8",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 44454,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "results/uarch/economics.json",
+      "sha256": "07256be6c89123a660f0ffa3fa309a6557ef35b885b52f5ac9d829e5e6c35fc2",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 30808,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "results/uarch/economics_levers.json",
+      "sha256": "812e1126438f6afc1defbee4a6237504866811b087e8f04a6ee7d514ff3ef16f",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 19069,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 4344,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_link_afifo.sv",
+      "sha256": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 4448,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_link_chan_model.sv",
+      "sha256": "78591c5d4f60a1559f088263c163eb363a5193d226091a0fe3d70e7dc8ee7446",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 2690,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_link_crc32.sv",
+      "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 3170,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_link_crc32_pipe.sv",
+      "sha256": "c117c3008b950b371cccded0581a647606f55e49b608129cbab3b3aec844d8bb",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 8808,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_link_nvls_switch.sv",
+      "sha256": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 15205,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_w15_link_rx.sv",
+      "sha256": "5f089b28bd4b2966b3a98e0f7fb3b3cdd755268eda844caf899b8df7a596efaa",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 15346,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/link/ot_w15_link_tx.sv",
+      "sha256": "ccee74339f743012aed3de51fe0a085f1d9b04e54d6343f5ced37fc49cdc9bc0",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 22857,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "rtl/test/tb_w15_tp96_exact.sv",
+      "sha256": "ac766bea13a3a74024a4ed3d83fcd103a16a70fbeefd7eec4a2563f8aeb72b40",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 25416,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/hdc_golden.py",
+      "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 400797,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/uarch_model.py",
+      "sha256": "64ca62c298cac78c9ea241544d455fbe73217f315aaa550b7b59a24e57c89187",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 60645,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/w15_collectives.py",
+      "sha256": "314f6aee76d233bbb074ed5fde77e08079f0250e3ef8ac6e15e41cc09849ad2a",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 7646,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/w15_tp96_exact.py",
+      "sha256": "19e5df3036d9ac0f814a76a3a1f448b273d630d0af34ed204f65044bb8b9c004",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 5806,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/w15_tp96_preflight.py",
+      "sha256": "43dd83d5452f5fc03d01d16b6151f59186b9619f6744ec0199ba4e3d7f99a587",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 64275,
+      "commit": "250dfa5a92575f77f5bdb98d60b65c27d3932a7f",
+      "path": "tools/w19_hbm_tp96_isa.py",
+      "sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 4379,
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/manifest.json",
+      "sha256": "88d516b0a844c58226d2f3e92869ae9f38a6fb74a1a3cb3e4791320d6ced1fa2",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 3452043,
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_current_catalog.json.gz",
+      "sha256": "32549052a636a2cb0ca0205186a8d540723f97d30ab4e1c5fc76f8e2eb9d4e4c",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 249918,
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_source_overlay.json.gz",
+      "sha256": "c1f50827fc95911911396101b718944ace12b2ab69420436ecdc5f25a64f848e",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 54852,
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/r33_window_provider_join.json.gz",
+      "sha256": "5f4946ca704fca130c64a5ad25385be4b361fdfca3cdd9b06051d8598215337d",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 25005,
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/source_count_adapter.json.gz",
+      "sha256": "04b83bc02e8883b9a02f2618b1a076c0ab541869f4e63a820d6f59b611f8470d",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 1937066,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json",
+      "sha256": "b8a380e2eb8836c57dbb6bc2a90b6e09f83f7ba652a945a94b9caae4539dafef",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 11490,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/bridge.json",
+      "sha256": "09a45837a779ac3d96c72903ace51245f2b5091f13af6a83ce64aa69b430c21c",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 38588,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/initial_window_homes.json.gz",
+      "sha256": "81ddd2ebd460ab1c3320dd2ff066b767a576a8973ffd82a3e5fae2a5445e1f80",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 256,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_cos.npy",
+      "sha256": "43a5b18dad9d98a6c9eb362535717cc79ce28f9cb9fd0931fd815fc7daf5f707",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 256,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/0_1048575_rope_sin.npy",
+      "sha256": "c02a430d5fbf0d2dd2e9fcdf4d7e32ae88fb071f9252a5ddd43101de4d12f945",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 256,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_cos.npy",
+      "sha256": "e7d28d1038624a5ff826c99a7744a0e87f024bd6872778e5ec18fff23e22c717",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 256,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/rope_images/1_1048575_rope_sin.npy",
+      "sha256": "70a5691591cd2e7cd0c43220a2b98d15c5ab6c03e317cd9be5ef2fe3a5cd1bc6",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 6163,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/ds_hbm_window_retirement_r33_20261002/source_owned_rope_bindings.json.gz",
+      "sha256": "6c50077cd77dff8f80bc8fea44b422cdcac4a881a5e36757b86b0d326d6666ae",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 11556069,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz",
+      "sha256": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 14322040,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 4911,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "tools/ds_hbm_window_contract_r33.py",
+      "sha256": "8d84e01a4be85e3abe5307ed4193251814770286d583c5b0bcfd0414f72b004a",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 6430,
+      "commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+      "path": "tools/ds_hbm_window_rope_prepare_r33.py",
+      "sha256": "609298dfa1ba9a58d1131b25f8269312e70ebf6789b610570dea9ca03aedb4f1",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 2973,
+      "commit": "4e8f517fc",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/manifest.json",
+      "sha256": "56304241f6d1b3e1fe3beba911d5a4dfecabaa3822bfc873db27b1e36333a864",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 51109,
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "path": "results/uarch/qwen_hbm_interface_geometry_20261002/deepseek_floorplan_r11.json",
+      "sha256": "6ec1792b3abba1ee23ece46b46b0f3b4e4ae96b8118d27d9829bd04df4ed0cca",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 179217,
+      "commit": "56506fb5bacb993107ff11f7df45f6f03363f667",
+      "path": "results/uarch/qwen_hbm_interface_geometry_20261002/qwen_floorplan_r11.json",
+      "sha256": "97a6d79ee1ba22fbc89f70f90745d3799a64b3e45ed651312da540e91539e3ab",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 27725,
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "path": "results/speculative/v41_flash_dspark_onpolicy_greedy.json",
+      "sha256": "6fdf2ff2f3e74910e485ea326f61446f8818e455d4c6dd86f5addb277873636d",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 10977,
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "path": "tools/build_dspark_draft_graph.py",
+      "sha256": "4c41737f4ad15d3ef15da2e580aa7e27a91ea31c1eae23786f70fd6618561718",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 428737,
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 64275,
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "path": "tools/w19_hbm_tp96_isa.py",
+      "sha256": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 6312,
+      "commit": "5b71cd17cebe109a1dab6141aa2812bd6f02b2a8",
+      "path": "tools/w19_v41_mtp_golden.py",
+      "sha256": "76eb65ab3692693acf680981523581e1c37393620e98f53191061d1c835aedad",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 393030,
+      "commit": "620c078de78cc55ddb5562b1d5d7171d8ef944ca",
+      "path": "results/uarch/h4_v1_g0_model_20261002/physical_join_r1/final/model.json",
+      "sha256": "0bfc2397f1c7d48390a67c0b62504007e266ccdebb093f5481d1711f27288d94",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 14482,
+      "commit": "620c078de78cc55ddb5562b1d5d7171d8ef944ca",
+      "path": "tools/h4_v1_physical_join.py",
+      "sha256": "bcbc01538348a37609451307816471a702482dc551b6917fc66ae8ef3ccc2cda",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 551845,
+      "commit": "655f22b2b",
+      "path": "results/uarch/h4_c0_bridge_model_20261002/model.json",
+      "sha256": "96a64c5f7f17bac9498c7101a0004791820a84d681c1651d518177109de20a1e",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 22323,
+      "commit": "655f22b2b",
+      "path": "tools/h4_c0_bridge.py",
+      "sha256": "19904b9fa7481e5ba0e27e9d4f17b1308abf3ee2df20a553f5c5ae5b0add996c",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 428737,
+      "commit": "655f22b2b",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 9920,
+      "commit": "6ce60f8ea4a8eb7ce809d90840415bddc5cd0cd8",
+      "path": "results/uarch/full_sm_rf_service_20261002/model_final.json",
+      "sha256": "6707df368b3fde7bb8e481efd5a0d7f35051cc569562dd3af7e3e8534b4fc2c9",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 184142,
+      "commit": "6e28f1a8b48ea0182aed59a09d65540a1b0b96b3",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/h4_actual_config_e844/run_r3/repriced_intervals.json.gz",
+      "sha256": "cb190e8dccb456e4f352d1c8332440c0f0ff894797dfb756e357700fa8d1577a",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 2598,
+      "commit": "781046c9",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/summary.json",
+      "sha256": "7a83e719e7bdb99df7e07af8bfa86fc7575015bc6e4d4a8642fec3d30dbbaa97",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 3783521,
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/bounded_provider_milestone/Qwen_tiled.json.gz",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 3211049,
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/G0_both_program_interface.json.gz",
+      "sha256": "4b5608d86845c732e9602c19ffec4b0efcf22784b38d6ed994f8739bf5f6c387",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 3450813,
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/forward_leaf_catalog.json.gz",
+      "sha256": "b916cbb8084482df35360e6efea59df94f85256157590ed1128d77c4801bb809",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 6123860,
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_forward_leaf_join_r3/review/full_program_costs.json.gz",
+      "sha256": "b22b329c20d184ec335448dbd7385f1439752f3ee81b7e2a0868fd8a2e4b2eaf",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 799542,
+      "commit": "781046c9775880183bd7f45a06ab101e98c66cac",
+      "path": "results/uarch/h3_versioned_lowering_20261002/DeepSeek.json.gz",
+      "sha256": "51d51e87556335e6e73fe8e98c41c1cef313ee05d9f5de6d31c6691c6528076e",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 14322040,
+      "commit": "91e3b8cc2791fa3fe1322df3d72b3f76dbd184f6",
+      "path": "results/uarch/h3_deepseek_complete_native_20261002/program_final.json.gz",
+      "sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 2365,
+      "commit": "992c14a70f812028f9de5e46eb79d5688db9482b",
+      "path": "rtl/gpu/ot_gpu_rf_service.sv",
+      "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 289285,
+      "commit": "a67150839",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/V1_native_component_successor.json.gz",
+      "sha256": "c4407012d640966413431c48e9c8d6eac86a583ec32d157a6999ea562107f10c",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 4698,
+      "commit": "a67150839",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/manifest.json",
+      "sha256": "b52b06fe95d21081384aa14facb4f18c2fcdee4076c35c726f3a0295dc3d5df8",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 668,
+      "commit": "a67150839",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/summary.json",
+      "sha256": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 254022,
+      "commit": "a67150839",
+      "path": "tools/h3_complete_native_calendar.py",
+      "sha256": "f878c84e7ec57c8f5b32aff43b22e370d714d481f62ba4acc1d08b2ee2e33628",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 1952,
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "path": "results/uarch/h4_c0_r33_source_adapter_20261002/r1/model/source_adapter.json",
+      "sha256": "e1e72c421ca990bfbf7de4b33bd999c57feaa94892bb0670d483a0789ba9c878",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 2670446,
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "path": "results/uarch/h4_c0_r33_source_adapter_20261002/r1/model/source_catalog.json.gz",
+      "sha256": "6d666abb02debea7bc802244f56ffec7b71fce6e43ed811f7866b605bba2d50d",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 1276,
+      "commit": "ce132ffea40cf31f1af9d8c7af696d5e57125213",
+      "path": "results/uarch/native_software_parent_intake_20261002/Qwen_reset_source_parent_review.json",
+      "sha256": "3d6a9c0f2bf82ddb28301d0302ad0ffed02ee5a9b58f3964f6ddf4723e4cc371",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 1937066,
+      "commit": "f240f42fbeb67e402e922b4a4aae30b8a8873ce1",
+      "path": "results/uarch/ds_hbm_checkpoint_finite_homes_r30_20261002/finite_state_homes.json",
+      "sha256": "b8a380e2eb8836c57dbb6bc2a90b6e09f83f7ba652a945a94b9caae4539dafef",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 4033,
+      "commit": "f240f42fbeb67e402e922b4a4aae30b8a8873ce1",
+      "path": "tools/ds_hbm_finite_state_homes_r30.py",
+      "sha256": "1c1f61f3a7ff45e076ccacd99ecc6049db4436117ea5e327e09fba1bdb784823",
+      "storage": "hash_blob_gzip"
+    },
+    {
+      "bytes": 2972620,
+      "commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+      "path": "results/uarch/h4_v1_g0_model_20261002/intake/run/model.json",
+      "sha256": "9538e72448ad2ddd438faf483dfc6a8f5a76decb31a6057647f4daed033c27b0",
+      "storage": "canonical_tracked_path"
+    },
+    {
+      "bytes": 24416,
+      "commit": "f7fa8e290d419f6de3356385c0b55ded768c2090",
+      "path": "tools/h4_v1_g0_model.py",
+      "sha256": "a41262dec4fa827a4ecccd32cfee55ccfc14c612e6f8a528e99585d2cf59c884",
+      "storage": "hash_blob_gzip"
+    }
+  ],
+  "roots": [
+    {
+      "commit": "a67150839",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/manifest.json"
+    },
+    {
+      "commit": "2e76d4f96",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_calendar_adapter_r1/provider_final/manifest.json"
+    },
+    {
+      "commit": "4e8f517fc",
+      "path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/manifest.json"
+    }
+  ],
+  "schema": "H4_CALENDAR_PORTABLE_EXACT_INPUT_CLOSURE_V1",
+  "unique_archived_blobs": 58
+}

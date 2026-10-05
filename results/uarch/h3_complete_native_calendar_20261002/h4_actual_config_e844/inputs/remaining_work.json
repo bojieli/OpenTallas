@@ -1,0 +1,53 @@
+{
+  "items": {
+    "C0": {
+      "deliverable": "Source-pinned command decode for all PCs, loop/template calls, predicates, dynamic EID/index and rank/SM assignment; map declared versions to RF/scratch/spill; accept/completion/ACK/reverse-release distinction.",
+      "priority": 0,
+      "validation": "Replay all native PCs and source order; no host opcode results injected. Price fetch, issue, RF arbitration, broadcasts and32SM replication in unified model before RTL.",
+      "work": "Native PC/micro-op dispatch and operand/version scoreboard"
+    },
+    "G1": {
+      "deliverable": "Compose actual checkpoint/program/providers and all family implementations through hardware command paths; token verdict plus model latency and actual context SS setup/FF hold.",
+      "priority": 2,
+      "validation": "No host numerical replacement, no dead PCs or unbounded workspace; source-pinned complete token and stalls/reset/alias retirement; no SS/FF credit from10ns bench.",
+      "work": "Full connected token composition and physical qualification"
+    },
+    "M1": {
+      "deliverable": "TAKE/SCATTER/transpose/slice/concat/reshape, typed index addressing, fragment pack/unpack, finite RF/scratch spill and64B physical scratch transactions.",
+      "priority": 1,
+      "validation": "Golden index order and I64 ABI; no implied zero-cost view, broadcast or gather. Reuse provider-owner interface rather than create competing providers.",
+      "work": "Addressed vector movement and format boundaries"
+    },
+    "N1": {
+      "deliverable": "2Qwen/96DS ranks,32SM each; all-reduce/all-gather/top-k rendezvous, version visibility, KV/state read-write-fence and exact-once retire/reverse grants.",
+      "priority": 1,
+      "validation": "Finite common-fabric credits, accept versus completion, selected expert identity and full-context leases; link existing provider-owner work, do not claim it from CPU PACKET_COMMIT.",
+      "work": "Distributed collectives and persistent state boundaries"
+    },
+    "R1": {
+      "deliverable": "General chunk8/adjacent-carry golden trees and padding, RSTD/head norm/softmax sums, argmax tie-break and top-k merge; arriving-stream reduction and scalar broadcast.",
+      "priority": 1,
+      "validation": "Bit-exact source trees, including source +0 leaves. Matrix stack/tree is not a generic reduction endpoint; model serial clock and broadcast latency.",
+      "work": "Ordered reductions and scalar result broadcast"
+    },
+    "S1": {
+      "deliverable": "exp/reciprocal/rsqrt plus DS DIV/SQRT contracts, separately rounded Newton steps and source saturation; lane-local composed chains.",
+      "priority": 1,
+      "validation": "CPU golden approximate DIV is not IEEE division; Qwen reciprocal seed0x7ef311c7 and3Newton steps; RSTD FMUL(1/4096), not substitution by DIV. Existing RTL candidates require exact-contract proof.",
+      "work": "Source-exact SFU chains"
+    },
+    "T1": {
+      "deliverable": "Bind all native matrix/dot shapes, tiled long-K/row loops, compressed formats and Qwen row scales; real consumer rounding, fragment ingress and ACK output address/version; replace audit capture with model-priced macro storage.",
+      "priority": 1,
+      "validation": "Each shape/config and source reduction exact; test FP4/FP8/group-slot and enabled row scale separately; reconcile DS model/RTL configuration. Directed H1 matrix fixture alone is insufficient.",
+      "work": "Full-shape matrix descriptor and output adapter"
+    },
+    "V1": {
+      "deliverable": "128-lane integer arithmetic, shifts/logic, I64 paired32-bit lanes, conversions, comparison/select and native pack/unpack/ldexp; register/mask wiring for constants, bitcasts and views.",
+      "priority": 1,
+      "validation": "Exact signedness, NaN/tie and rounding contracts per pinned CPU primitive; ADD/MUL reuse still needs opcode mapping and masking.",
+      "work": "Missing vector integer/predicate/format datapaths"
+    }
+  },
+  "scope": "H4 consumers/control/data paths, independent of current provider implementations; no engine/P&R performed"
+}

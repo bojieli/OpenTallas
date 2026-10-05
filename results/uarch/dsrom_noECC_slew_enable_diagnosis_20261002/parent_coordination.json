@@ -1,0 +1,27 @@
+{
+  "Maxwell_observed_HEAD": "37cc30db9ebe1e290b4d39df8a122af8dabd1686",
+  "PnR_admitted": false,
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "observed_files": [
+    {
+      "copy": "results/uarch/dsrom_noECC_slew_enable_diagnosis_20261002/inputs/ot_v41_field_w17w10_rne_wake_prepare.sv",
+      "origin": "/home/ubuntu/dsrom-current4096-field-receipts-20261002/rtl/v41die/ot_v41_field_w17w10_rne_wake_prepare.sv",
+      "sha256": "eb7128516bb0bda1f3225e7683c569559d3c0a08a9502a1ed027c3adbc1015a0",
+      "untracked_preparation_not_admitted": true
+    },
+    {
+      "copy": "results/uarch/dsrom_noECC_slew_enable_diagnosis_20261002/inputs/ot_v41_fieldtop_w17w10_rne_wake_prepare.sv",
+      "origin": "/home/ubuntu/dsrom-current4096-field-receipts-20261002/rtl/v41die/ot_v41_fieldtop_w17w10_rne_wake_prepare.sv",
+      "sha256": "f97ef56d59cb378e6fbfc3b34c7e7b8a09f833ce55972c0b7c0ce7ccb3a7ca60",
+      "untracked_preparation_not_admitted": true
+    }
+  ],
+  "observed_passthrough": "Prepared fieldtop->field->pair passes all3; pinned original field remains unchanged. Current prepared files untracked, no qualification transfer.",
+  "remaining": "Freeze source-owned selected caller/site parameters and actual cfg c_v/c_a/c_d plus GO/act drivers. Bind internal capture-enable tree finite area/route/delay and physical clock/reset/load envelopes before context admission.",
+  "required_selected_values": {
+    "FIX_SECOND_ROW_INDEX": 1,
+    "GRADUAL_RNE": 1,
+    "WAKE_REG": 1
+  },
+  "source_defaults": 0
+}

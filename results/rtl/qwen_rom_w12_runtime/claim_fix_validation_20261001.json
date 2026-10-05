@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-01T09:01:08.182260+00:00",
+  "driver_sha256": "e1fc9934e13903e3159f0c460c77fb7cfeafc9aca753b79d2894b99e6e26d317",
+  "integration_prerequisite": "Original TP2 terminal record from 5373db9b exists on parent main; generator diff applies to checked parent without requiring the historical TP4 driver changes. No runtime job source snapshot updated.",
+  "metadata_tests": "2 passed",
+  "original_record_preserved": true,
+  "original_record_sha256": "db89c60dc472d91cc0f45810b723023305b0dbe50d9cecb7d75cbb2772e8f2a0",
+  "parent_claim_generator_patch_apply_check": "pass",
+  "parent_head_checked": "97f2b0e5379f7f04ebde4bdb11e3f034eb07aad9",
+  "suite_status": "Original pytest still live; watcher preserves terminal verdict when available.",
+  "test_sha256": "ab768d0e5cbcad1e71505ccd5e91ebf265d33170f48660b3b31938632a10352d"
+}

@@ -1,0 +1,248 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_tensor_contract_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adaptations": {
+      "items": {
+        "$ref": "#/$defs/adaptation"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "contract_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "dtype_summary": {
+      "items": {
+        "$ref": "#/$defs/dtype_summary"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "index_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "operator_graph_status": {
+      "const": "not_yet_executable"
+    },
+    "pattern_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "repository": {
+      "const": "deepseek-ai/DeepSeek-V4-Flash-0731"
+    },
+    "revision": {
+      "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+    },
+    "role_summary": {
+      "items": {
+        "$ref": "#/$defs/role_summary"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_tensor_contract.v1"
+    },
+    "scope_summary": {
+      "items": {
+        "$ref": "#/$defs/scope_summary"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "tensor_structure_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "adaptations",
+    "config_sha256",
+    "contract_id",
+    "coverage",
+    "dtype_summary",
+    "index_sha256",
+    "model_id",
+    "operator_graph_status",
+    "pattern_count",
+    "repository",
+    "revision",
+    "role_summary",
+    "schema",
+    "scope_summary",
+    "tensor_structure_sha256"
+  ],
+  "title": "OpenTallas DeepSeek V4 Flash tensor contract v1",
+  "type": "object",
+  "$defs": {
+    "adaptation": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "resolved_value": {
+          "additionalProperties": false,
+          "properties": {
+            "dspark_stage_count": {
+              "const": 3
+            }
+          },
+          "required": [
+            "dspark_stage_count"
+          ],
+          "type": "object"
+        },
+        "root_config_value": {
+          "additionalProperties": false,
+          "properties": {
+            "num_nextn_predict_layers": {
+              "const": 1
+            }
+          },
+          "required": [
+            "num_nextn_predict_layers"
+          ],
+          "type": "object"
+        },
+        "status": {
+          "const": "explicit_release_source_reconciliation"
+        }
+      },
+      "required": [
+        "decision",
+        "resolved_value",
+        "root_config_value",
+        "status"
+      ],
+      "type": "object"
+    },
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_payload_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "expected_tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "extra_tensor_count": {
+          "type": "null"
+        },
+        "missing_tensor_count": {
+          "type": "null"
+        },
+        "observed_tensor_count": {
+          "type": "null"
+        },
+        "unknown_role_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "validation_status": {
+          "const": "expected_contract_only"
+        }
+      },
+      "required": [
+        "expected_payload_bytes",
+        "expected_tensor_count",
+        "extra_tensor_count",
+        "missing_tensor_count",
+        "observed_tensor_count",
+        "unknown_role_count",
+        "validation_status"
+      ],
+      "type": "object"
+    },
+    "dtype_summary": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "payload_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "payload_bytes",
+        "tensor_count"
+      ],
+      "type": "object"
+    },
+    "role_summary": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "role": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "payload_bytes",
+        "role",
+        "tensor_count"
+      ],
+      "type": "object"
+    },
+    "scope_summary": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "scope": {
+          "enum": [
+            "dspark",
+            "global",
+            "main"
+          ]
+        },
+        "tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "payload_bytes",
+        "scope",
+        "tensor_count"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

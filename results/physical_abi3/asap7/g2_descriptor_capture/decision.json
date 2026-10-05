@@ -1,0 +1,29 @@
+{
+  "reason": "Both capture candidates worsen pre-layout setup timing and cell area; restore baseline unchanged.",
+  "variants": [
+    {
+      "snapshot": "baseline.sv",
+      "sha256": "2868ead67d98f48805efb91368f76b1aededb3afa79df2a80b0b0069f1b67eb2",
+      "record": "results/physical_abi3/asap7/g2_issue_adapter_view_payload/baseline.json",
+      "decision": "retained",
+      "area_um2": 562.278,
+      "setup_wns_ns": -0.2164691767826344
+    },
+    {
+      "snapshot": "all_payload_candidate.sv",
+      "sha256": "12b7f143f0ba476901af51175c20e5a4e61e21fdcd010a2f73d8b7bb8641411e",
+      "record": "results/physical_abi3/asap7/g2_descriptor_capture/candidate.json",
+      "decision": "rejected",
+      "area_um2": 564.655,
+      "setup_wns_ns": -0.3734770285747989
+    },
+    {
+      "snapshot": "object_only.sv",
+      "sha256": "ea37cf6ff4f564e5ef537306277a8af327eba7b9411644e764bc55a040a77742",
+      "record": "results/physical_abi3/asap7/g2_descriptor_capture/object_only.json",
+      "decision": "rejected",
+      "area_um2": 562.743,
+      "setup_wns_ns": -0.39530090470166446
+    }
+  ]
+}

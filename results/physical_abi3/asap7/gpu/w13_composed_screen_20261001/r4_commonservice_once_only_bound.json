@@ -1,0 +1,149 @@
+{
+  "utc": "2026-10-01T14:03:50.234963+00:00",
+  "source_git": "577d195ba2ed090f609e751d80809b957ba38a1a",
+  "path": "results/uarch/common_gpu_sector_crossbar_20261001/model_before_RTL_r4.json",
+  "sha256": "7e26cc254610bd400c4d083d67a1c6370aa61dba1884e69637350e3279a5d60c",
+  "supersedes_ambiguous_service_cost_labels": true,
+  "actual_queue_ports": {
+    "request_bits_each": 256,
+    "return_bits_each": 256,
+    "aggregate_read_write_bits": 512,
+    "no_widening": true,
+    "PC_route_bits": 312,
+    "client_route_bits": 320
+  },
+  "once_only_composition": {
+    "prior_storage_corrected_die_total_mm2": 162.2839675218048,
+    "new_crossbar_mux_control_ACK_CDC_increment_mm2": 2.8398330944000003,
+    "publication_metadata_storage_increment_mm2": 0.2177155584,
+    "publication_lookup_control_increment_mm2": 0.5466870784,
+    "new_complete_known_increment_mm2": 3.604235731199992,
+    "complete_known_composed_die_total_mm2": 165.8882032530048,
+    "total_is_not_a_component_addon": true,
+    "RF_10_440634_scope": "additional candidate assigned byHalley/Ram once; not silently included or duplicated",
+    "banked_shared_memory_and_complete_GPU_area": null,
+    "independent_route_candidate": "separateunadopted candidate; not selected"
+  },
+  "geometry": {
+    "stacks": 4,
+    "PCs_per_stack": 32,
+    "Qwen_clients": 36,
+    "sector_banks_per_client": 4,
+    "arbiters": 144,
+    "candidates_per_arbiter": 128,
+    "PC_landing_entries": 2,
+    "PC_landing_entry_bits": 312,
+    "client_sector_landing_entries": 2,
+    "client_sector_entry_bits": 320,
+    "macro_writes_per_bank_cycle": 1,
+    "write_credits_per_controller": 4,
+    "ACK_reserved_entries_per_controller": 4,
+    "transaction_entry_bits": 512,
+    "ACK_entry_bits": 80,
+    "transaction_layout": "384 request/state bits including data256 mask32 AW34 tag16 client6 epoch16; two64bit scheduled/visible timestamps",
+    "PC_layout": "data256+AW34+tag16+client6=312; no publication proof in echoed tag",
+    "client_layout": "data256+tag16+client6+epoch16+row9+sector2+control15=320",
+    "DeepSeek_scope": "Only reusable service topology; actual client population and global publication map require owner composition"
+  },
+  "physical_corridor_screen": {
+    "one_stack_PC_to_local_mux": {
+      "signal_tracks": 10880,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 4,
+      "single_corridor_fit": false
+    },
+    "all_stack_local_mux_to_merge": {
+      "signal_tracks": 180288,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 57,
+      "single_corridor_fit": false
+    },
+    "merge_to_all_client_sector_landing": {
+      "signal_tracks": 46224,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 15,
+      "single_corridor_fit": false
+    },
+    "all_client_full_line_reads": {
+      "signal_tracks": 39240,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 13,
+      "single_corridor_fit": false
+    },
+    "client_patch_inputs": {
+      "signal_tracks": 13896,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 5,
+      "single_corridor_fit": false
+    },
+    "controller_ACK_to_client_branches": {
+      "signal_tracks": 11808,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 4,
+      "single_corridor_fit": false
+    },
+    "all_bank_request_grant_reservation_controls": {
+      "signal_tracks": 36864,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 12,
+      "single_corridor_fit": false
+    }
+  },
+  "publication_port_screen": {
+    "banks": 32,
+    "readers_per_bank": 36,
+    "physical_lookup_ports_per_bank": 1,
+    "aggregate_physical_lookup_ports": 32,
+    "latency": "registeredrequest decode1 + parallel row/reader equality1 + tuple/ticket mux2 + publication/reader update1 =5fast cycles before read admission; producer drain and consumer completion fences additional",
+    "serialized_port": "One lookup transaction/bank per5cycles in this conservative model; 32banks/5=6.4transactions/cycle. Pipelining needs separately priced hazard/forwarding and reservation qualification.",
+    "tracks_per_bank": 11742,
+    "parallel_64um_corridors_per_bank": 4,
+    "bounded_lookup_wait_cycles_if_ready": 180
+  },
+  "finite_service_screen": {
+    "stack_shared_byte_budget_Bpc": 750,
+    "mixed_command_constraint": "read_bytes/1024+write_bytes/32<=1 per stack; every read/write/RMW sector also consumes the same750B/cycle bucket",
+    "destination_two_credit_ceiling_Bpc": 1843.2,
+    "composed_upper_Bpc": 1843.2,
+    "single_conflicted_bank_upper_Bpc": 12.8,
+    "full_Qwen_transfer_only_lower_cycles": 2217821,
+    "prior_transfer_only_lower_cycles": 1479486,
+    "ACK_credit_bound": "Per controller writes/cycle <=min(1,750/32,4/Lack). Lack starts at reservation and includes scheduler/CWL/burst/visibility, forwardCDC, ready stall and completionCDC. RMW charges one read plus one write and holds same lock/credit. Infinite Lack gives zero guaranteed rate.",
+    "speed_credit": 0
+  },
+  "gate_summary": {
+    "calendar_invariants_PASS": true,
+    "source_bound": true,
+    "routing_single_corridor_PASS": false,
+    "full_floorplan_PASS": false,
+    "controller_publication_and_consumer_calendars_PASS": false,
+    "contextual_SS_FF_PASS": false,
+    "exact_RTL_PASS": false
+  },
+  "complete32_SM_real_LEF_physical_map": "NOTQUALIFIED; wholeactualmap+fanout+CDC/wiredepth+bankedshared+SIMT/RF/HC-SU integrationrequired",
+  "physical_admission": "FAIL_CLOSED",
+  "adopt": false,
+  "new_routes": 0,
+  "existing_tc_col_untouched": true
+}

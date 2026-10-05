@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.D1.disjoint_native_actual_runtime.v1",
+  "epoch": 1790958249.6182516,
+  "milestone": "OBJECT_SHARDS_TRANSPORT_ARCHIVE_LINK_PASS_ACTUAL_RUNTIME_FAIL_PRESERVED",
+  "source_pins": {
+    "engine": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "frontend": "6b94aa3088dfeaa8284e66615fbd8b948f8c65c2",
+    "node": "a93ac5a8c2312266213cc4f119aa2bd99175f52a",
+    "join": "ffd319b7acf75aabb3c88b45bb5343f95f80bdc5",
+    "runtime_runner": "9289dccd6997b2d2ab67c63a7a72ddd99c14f08f"
+  },
+  "ownership": {
+    "local": 1286,
+    "VM": 2543,
+    "union": 3829,
+    "intersection": 0,
+    "retained_objects": 252,
+    "retained_PCH": 2,
+    "immutable_input_files_verified_each_node": 3846,
+    "transferred_selected_files": 5091,
+    "archive_generated_compiler_commands": 0
+  },
+  "actual_compile_wall_s": {
+    "local": 11167.085860032123,
+    "VM": 11431.566150838
+  },
+  "archive_SHA256": "d724823df4d6f142d097601f4d551f52f0fdbb332a0cd52671eb3a67b3cf12a3",
+  "binary_SHA256": "b7d605fa323444f14fbc60b8912b9fd894f257f36b137f78fbab882407c60153",
+  "runtime": {
+    "verdict": "FAIL_DIAGNOSTIC_RUNTIME",
+    "exit_code": 1,
+    "wall_s": 57.45125558786094,
+    "postcheck": true,
+    "assertion": "D1_SOURCE_OR_LEDGER_FAULT",
+    "last_logged_sim_time_ps": 142000,
+    "actual_gate_records": 3,
+    "actual_descriptor_records": 1,
+    "actual_read_accept_records": 0,
+    "actual_read_response_records": 0,
+    "qualified_first_return_witness": false,
+    "last_gate": {
+      "PC": 0,
+      "me_ready": 1,
+      "kv_ok": 0,
+      "kvd_v": 0,
+      "win_idle": 1,
+      "waited": 1,
+      "q_gate": 1,
+      "m0_gate": 1
+    },
+    "fault_component": "UNRESOLVED: union of fault, dbg_fs and observer violations; individual masks absent from log",
+    "scope": "Synthetic same-reset two-instruction prefix, full geometry; not original program replay"
+  },
+  "claims": {
+    "full_token": false,
+    "numerical": false,
+    "hardware_or_SSFF": false,
+    "original_PC24_cause": "UNOBSERVED",
+    "finite_causal_service_bound": "BOUND_MISSING",
+    "no_ECC_successor_selected": false
+  },
+  "resources": {
+    "wall_limit": null,
+    "per_file_limit": null,
+    "per_process_AS_limit": null,
+    "frontend_repeat": false,
+    "runtime_retry": false,
+    "VM_lease_released_after_terminal_and_transport": true
+  },
+  "authorization": "Latest explicit user directs autonomous terminal/hash transport/archive/link/runtime once both complete; supersedes prior native-only runtime hold for this controlled diagnostic only",
+  "retained_outputs": {
+    "local": "/tmp/w17-D1-disjoint-local-20261002-r1",
+    "VM": "ot-agidock128:/home/ubuntu/w17-D1-disjoint-20261002-r1",
+    "incoming": "/tmp/w17-D1-VM-terminal-incoming-20261002-r1",
+    "join": "/tmp/w17-D1-native-joined-20261002-r1",
+    "runtime": "/tmp/w17-D1-native-diagnostic-result-20261002-r1"
+  },
+  "next_review": "Preserve failure. Source-bound fault-mask and selected-owner review before corrected successor; keep current engines/bench/driver byte-identical. No-ECC source/geometry binding is separate.",
+  "supervisor_exit0_means_receipt_collection_not_runtime_pass": true,
+  "no_ECC_successor_baseline_commit": "843729bb949f9b73996ec7655a35baf36cd46621"
+}

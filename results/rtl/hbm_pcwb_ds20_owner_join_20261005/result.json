@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.pcwb.ds20_owner_join_component.v1",
+  "source_commit": "e882f5524",
+  "host": "ot-epyc1tb",
+  "job": "/srv/opentallas-scratch/jobs/sagan-ds20-pcwb-owner-e882f5524-r1",
+  "supervisor": 1758518,
+  "exit": 0,
+  "verdict": "PASS_DS20_ACTUAL_CP_OWNER_JOIN",
+  "source_pins": {
+    "rtl/hbm_accel/integration/ot_ds_hbm_pcwb_owner_join.sv": "abe88d97c7f48ecea7b1ffd239fb98625fd1fb8e4ff9e033a33a47dfa92dac5a",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20_pcwb.sv": "7c376099381fd401be023efab955ef4d1b26073fe5f3db9f1e3d46ee8fa6bc72",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cluster20.sv": "a645259efa9b605d5be5edccd3135bfb8587c22641af84018fa5bd604c286f61",
+    "rtl/gpu_sys/ot_gpu_reset_ctrl.sv": "a1a8221698457376ac0eadfcb9e80e0a7a8683ef27e244c39b6ae78b9e53da2d",
+    "rtl/test/hbm_accel/tb_ds_hbm_pcwb_owner_join.sv": "64db57fcb8f32aacf354e00485d5f5f8b8254d7fc2fd8db33d0d8518af509552",
+    "results/uarch/hbm_pcwb_ds20_owner_join_20261005/model.json": "17b152c752bf605c80671e6844cff8c5c8544376308ad090f841ec403da5472e"
+  },
+  "scope": "Actual CP command-list launch/END and original CP lockstep, two-stack CDC handshake using explicit parent stimuli. No actual SM/memory/PCWB parent instantiated in this test.",
+  "cases": [
+    "job32/gen4/pos20 fullwidth",
+    "accept gap with immediate-ready source",
+    "initial empty fence before CP done cannot release",
+    "CP completion alone cannot release debt",
+    "one stack release cannot admit next doorbell",
+    "owner backpressure retains frame",
+    "original command-processor completions identical",
+    "wrong position and wrong die sticky failclosed"
+  ],
+  "cluster_control_elaboration": {
+    "exit": 0,
+    "command": "iverilog -g2012 -i -s ot_ds_hbm_cluster20_pcwb -P ENABLE=1 -P PCWB_ENABLE=1 -P ND=1 -P NSM=1 -P NL=1 (fully qualified parameter names used)",
+    "scope": "Actual successor control hierarchy elaborated with real CP/reset/join. -i ignores absent datapath modules; not fullsystem compilation or functional proof."
+  },
+  "parent_binding": {
+    "successor": "ot_hbm_accel_pcwb_service_stack_frame_ds20",
+    "owner": "Euclid",
+    "mapping": {
+      "owner_v": "owner_v",
+      "owner_r": "owner_r",
+      "owner_job": "owner_job",
+      "owner_gen": "owner_gen",
+      "owner_pos": "owner_pos",
+      "rank": "owner_rank",
+      "stack": "owner_stack",
+      "owner_held": "owner_held",
+      "owner_released": "owner_fenced",
+      "row_acc": "row_v && row_r; service clock",
+      "row_die": "actual DS row die7",
+      "row_pos": "actual DS row pos20"
+    },
+    "legacy_identity": "No upcast/relabel; FRAME_DS20 legacy fields ignored, use exact native ports",
+    "remaining": "Euclid native parent connection/changed-source minimal component gate; actual row producer and physical PHY/clock contexts remain separate"
+  },
+  "source_cost": "Own68FF/join positive prebuild price; Euclid DS20 parent delta separate, immutable7aac plus3610 legacy delta never rewritten",
+  "full_token_qualified": false,
+  "physical_adopted": false,
+  "SS_FF_in_context": false
+}

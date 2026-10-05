@@ -1,0 +1,883 @@
+{
+ "schema": "opentallas.qwen-o4-die-inventory.v1",
+ "status": "rtl_inventory_extrapolated_with_holdout",
+ "tool": "tools/qwen_o4_die_inventory.py",
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+  "rtl/hdc/ot_hdc_matvec.sv": "8d2b8fe92887e1b7475ea9a31ef24dbd49d76856f7dbfd5d8af81cb802241a53",
+  "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+  "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+  "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+  "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+  "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+  "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+  "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+  "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+  "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+  "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+  "rtl/test/tb_hdc_qwen_layer0_tp2.sv": "a3f0b98249aab1aa5a5db849812511b948b7668d26b6e38fe14280512bde3df3",
+  "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+  "results/arch/qwen3_budget.json": "769c8d046d1e3a4a21857f19bd9a5ca02f2bd7a2ed7e4be71e33beb94bc615c3",
+  "results/arch/qwen3_o4_rtl_gaps.json": "4af3057dd6df35239af3718f021fd9a63839abd65e72060bfb5787d0f3d1dcf6",
+  "results/floorplan/qwen_o4_unit_areas.json": "3805d42b5eaf79491eb8d72879d4e5deae717bd4c815284a807af2439b3bdf41"
+ },
+ "tool_sha256": "90c650a4c31f47b71892b1e9e850cf0cda314cbfb35ac22bdf3c9cf173c0caa1",
+ "die_rtl": {
+  "top": "ot_hdc_core_vector_weight",
+  "parameters": {
+   "G": 6144,
+   "W": 16,
+   "IL": 8,
+   "INT8_WEIGHT": 1,
+   "INT8_SCALE_WCS_BASE": 1,
+   "SU_VEC": 0,
+   "SW": 1,
+   "KV_HBM": 0,
+   "W_HBM": 0,
+   "INT8_EMBED": 0
+  },
+  "package": [
+   "ot_rom_tp_seq per die",
+   "ot_rom_oneshot_allreduce N=2 per package (2 die engines, 2 ot_rom_ucie_link models, 16 FP32 adders a die)"
+  ],
+  "basis": "rtl/test/tb_hdc_qwen_layer0_tp2.sv"
+ },
+ "method": {
+  "fit_g": [
+   8,
+   16,
+   32
+  ],
+  "holdout_g": 64,
+  "basis": "{G*clog2(G), G, 1}",
+  "note": "elaborated without optimisation: counts are what the RTL instantiates"
+ },
+ "counts": {
+  "ff_bits": {
+   "samples": {
+    "8": 351200,
+    "16": 677288,
+    "32": 1360888,
+    "64": 2792280
+   },
+   "fit": [
+    "1964",
+    "30941",
+    "56536"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "ffbits:ot_fp32_add_rne_pipe": {
+   "samples": {
+    "8": 65408,
+    "16": 130816,
+    "32": 261632,
+    "64": 523264
+   },
+   "fit": [
+    "0",
+    "8176",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 50233344
+  },
+  "ffbits:ot_hdc_bmul": {
+   "samples": {
+    "8": 21376,
+    "16": 42752,
+    "32": 85504,
+    "64": 171008
+   },
+   "fit": [
+    "0",
+    "2672",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 16416768
+  },
+  "ffbits:ot_hdc_core_vector_weight": {
+   "samples": {
+    "8": 6821,
+    "16": 6821,
+    "32": 6821,
+    "64": 6821
+   },
+   "fit": [
+    "0",
+    "0",
+    "6821"
+   ],
+   "holdout_ok": true,
+   "at_6144": 6821
+  },
+  "ffbits:ot_hdc_delay": {
+   "samples": {
+    "8": 59900,
+    "16": 130861,
+    "32": 296030,
+    "64": 674191
+   },
+   "fit": [
+    "23247/16",
+    "25687/16",
+    "12186"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "ffbits:ot_hdc_dyn_ttiles": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_exp_q": {
+   "samples": {
+    "8": 209,
+    "16": 209,
+    "32": 209,
+    "64": 209
+   },
+   "fit": [
+    "0",
+    "0",
+    "209"
+   ],
+   "holdout_ok": true,
+   "at_6144": 209
+  },
+  "ffbits:ot_hdc_fadd": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_fmul": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_fp32_add_fast": {
+   "samples": {
+    "8": 28016,
+    "16": 54384,
+    "32": 107120,
+    "64": 212592
+   },
+   "fit": [
+    "0",
+    "3296",
+    "1648"
+   ],
+   "holdout_ok": true,
+   "at_6144": 20252272
+  },
+  "ffbits:ot_hdc_fp32_mul_fast": {
+   "samples": {
+    "8": 17276,
+    "16": 17276,
+    "32": 17276,
+    "64": 17276
+   },
+   "fit": [
+    "0",
+    "0",
+    "17276"
+   ],
+   "holdout_ok": true,
+   "at_6144": 17276
+  },
+  "ffbits:ot_hdc_fp32_mul_pipe": {
+   "samples": {
+    "8": 63488,
+    "16": 126976,
+    "32": 253952,
+    "64": 507904
+   },
+   "fit": [
+    "0",
+    "7936",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 48758784
+  },
+  "ffbits:ot_hdc_ksa": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_lzc32": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_matvec": {
+   "samples": {
+    "8": 74121,
+    "16": 152598,
+    "32": 317739,
+    "64": 664400
+   },
+   "fit": [
+    "8187/16",
+    "116019/16",
+    "3831"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "ffbits:ot_hdc_mul24_rows": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_mul24_sum": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_qadd": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_qmul": {
+   "samples": {
+    "8": 0,
+    "16": 0,
+    "32": 0,
+    "64": 0
+   },
+   "fit": [
+    "0",
+    "0",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 0
+  },
+  "ffbits:ot_hdc_recip_q": {
+   "samples": {
+    "8": 64,
+    "16": 64,
+    "32": 64,
+    "64": 64
+   },
+   "fit": [
+    "0",
+    "0",
+    "64"
+   ],
+   "holdout_ok": true,
+   "at_6144": 64
+  },
+  "ffbits:ot_hdc_reduce_q": {
+   "samples": {
+    "8": 748,
+    "16": 748,
+    "32": 748,
+    "64": 748
+   },
+   "fit": [
+    "0",
+    "0",
+    "748"
+   ],
+   "holdout_ok": true,
+   "at_6144": 748
+  },
+  "ffbits:ot_hdc_rsqrt_q": {
+   "samples": {
+    "8": 32,
+    "16": 32,
+    "32": 32,
+    "64": 32
+   },
+   "fit": [
+    "0",
+    "0",
+    "32"
+   ],
+   "holdout_ok": true,
+   "at_6144": 32
+  },
+  "ffbits:ot_hdc_stream": {
+   "samples": {
+    "8": 13530,
+    "16": 13532,
+    "32": 13534,
+    "64": 13536
+   },
+   "fit": [
+    "-1/8",
+    "7/8",
+    "13526"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "ffbits:ot_hdc_vline": {
+   "samples": {
+    "8": 211,
+    "16": 219,
+    "32": 227,
+    "64": 235
+   },
+   "fit": [
+    "-1/2",
+    "7/2",
+    "195"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "inst:ot_fp32_add_rne_pipe": {
+   "samples": {
+    "8": 128,
+    "16": 256,
+    "32": 512,
+    "64": 1024
+   },
+   "fit": [
+    "0",
+    "16",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98304
+  },
+  "inst:ot_hdc_bmul": {
+   "samples": {
+    "8": 128,
+    "16": 256,
+    "32": 512,
+    "64": 1024
+   },
+   "fit": [
+    "0",
+    "16",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98304
+  },
+  "inst:ot_hdc_delay": {
+   "samples": {
+    "8": 167,
+    "16": 297,
+    "32": 555,
+    "64": 1069
+   },
+   "fit": [
+    "-1/8",
+    "135/8",
+    "35"
+   ],
+   "holdout_ok": false,
+   "at_6144": null
+  },
+  "inst:ot_hdc_dyn_ttiles": {
+   "samples": {
+    "8": 2,
+    "16": 2,
+    "32": 2,
+    "64": 2
+   },
+   "fit": [
+    "0",
+    "0",
+    "2"
+   ],
+   "holdout_ok": true,
+   "at_6144": 2
+  },
+  "inst:ot_hdc_exp_q": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_fadd": {
+   "samples": {
+    "8": 128,
+    "16": 256,
+    "32": 512,
+    "64": 1024
+   },
+   "fit": [
+    "0",
+    "16",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98304
+  },
+  "inst:ot_hdc_fmul": {
+   "samples": {
+    "8": 128,
+    "16": 256,
+    "32": 512,
+    "64": 1024
+   },
+   "fit": [
+    "0",
+    "16",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98304
+  },
+  "inst:ot_hdc_fp32_add_fast": {
+   "samples": {
+    "8": 136,
+    "16": 264,
+    "32": 520,
+    "64": 1032
+   },
+   "fit": [
+    "0",
+    "16",
+    "8"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98312
+  },
+  "inst:ot_hdc_fp32_mul_fast": {
+   "samples": {
+    "8": 28,
+    "16": 28,
+    "32": 28,
+    "64": 28
+   },
+   "fit": [
+    "0",
+    "0",
+    "28"
+   ],
+   "holdout_ok": true,
+   "at_6144": 28
+  },
+  "inst:ot_hdc_fp32_mul_pipe": {
+   "samples": {
+    "8": 128,
+    "16": 256,
+    "32": 512,
+    "64": 1024
+   },
+   "fit": [
+    "0",
+    "16",
+    "0"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98304
+  },
+  "inst:ot_hdc_ksa": {
+   "samples": {
+    "8": 1172,
+    "16": 2196,
+    "32": 4244,
+    "64": 8340
+   },
+   "fit": [
+    "0",
+    "128",
+    "148"
+   ],
+   "holdout_ok": true,
+   "at_6144": 786580
+  },
+  "inst:ot_hdc_lzc32": {
+   "samples": {
+    "8": 192,
+    "16": 320,
+    "32": 576,
+    "64": 1088
+   },
+   "fit": [
+    "0",
+    "16",
+    "64"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98368
+  },
+  "inst:ot_hdc_matvec": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_mul24_rows": {
+   "samples": {
+    "8": 28,
+    "16": 28,
+    "32": 28,
+    "64": 28
+   },
+   "fit": [
+    "0",
+    "0",
+    "28"
+   ],
+   "holdout_ok": true,
+   "at_6144": 28
+  },
+  "inst:ot_hdc_mul24_sum": {
+   "samples": {
+    "8": 28,
+    "16": 28,
+    "32": 28,
+    "64": 28
+   },
+   "fit": [
+    "0",
+    "0",
+    "28"
+   ],
+   "holdout_ok": true,
+   "at_6144": 28
+  },
+  "inst:ot_hdc_qadd": {
+   "samples": {
+    "8": 136,
+    "16": 264,
+    "32": 520,
+    "64": 1032
+   },
+   "fit": [
+    "0",
+    "16",
+    "8"
+   ],
+   "holdout_ok": true,
+   "at_6144": 98312
+  },
+  "inst:ot_hdc_qmul": {
+   "samples": {
+    "8": 28,
+    "16": 28,
+    "32": 28,
+    "64": 28
+   },
+   "fit": [
+    "0",
+    "0",
+    "28"
+   ],
+   "holdout_ok": true,
+   "at_6144": 28
+  },
+  "inst:ot_hdc_recip_q": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_reduce_q": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_rsqrt_q": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_stream": {
+   "samples": {
+    "8": 1,
+    "16": 1,
+    "32": 1,
+    "64": 1
+   },
+   "fit": [
+    "0",
+    "0",
+    "1"
+   ],
+   "holdout_ok": true,
+   "at_6144": 1
+  },
+  "inst:ot_hdc_vline": {
+   "samples": {
+    "8": 16,
+    "16": 16,
+    "32": 16,
+    "64": 16
+   },
+   "fit": [
+    "0",
+    "0",
+    "16"
+   ],
+   "holdout_ok": true,
+   "at_6144": 16
+  },
+  "mem_bits": {
+   "samples": {
+    "8": 16384,
+    "16": 16384,
+    "32": 16384,
+    "64": 16384
+   },
+   "fit": [
+    "0",
+    "0",
+    "16384"
+   ],
+   "holdout_ok": true,
+   "at_6144": 16384
+  }
+ },
+ "at_6144": {
+  "ffbits:ot_fp32_add_rne_pipe": 50233344,
+  "ffbits:ot_hdc_bmul": 16416768,
+  "ffbits:ot_hdc_core_vector_weight": 6821,
+  "ffbits:ot_hdc_dyn_ttiles": 0,
+  "ffbits:ot_hdc_exp_q": 209,
+  "ffbits:ot_hdc_fadd": 0,
+  "ffbits:ot_hdc_fmul": 0,
+  "ffbits:ot_hdc_fp32_add_fast": 20252272,
+  "ffbits:ot_hdc_fp32_mul_fast": 17276,
+  "ffbits:ot_hdc_fp32_mul_pipe": 48758784,
+  "ffbits:ot_hdc_ksa": 0,
+  "ffbits:ot_hdc_lzc32": 0,
+  "ffbits:ot_hdc_mul24_rows": 0,
+  "ffbits:ot_hdc_mul24_sum": 0,
+  "ffbits:ot_hdc_qadd": 0,
+  "ffbits:ot_hdc_qmul": 0,
+  "ffbits:ot_hdc_recip_q": 64,
+  "ffbits:ot_hdc_reduce_q": 748,
+  "ffbits:ot_hdc_rsqrt_q": 32,
+  "inst:ot_fp32_add_rne_pipe": 98304,
+  "inst:ot_hdc_bmul": 98304,
+  "inst:ot_hdc_dyn_ttiles": 2,
+  "inst:ot_hdc_exp_q": 1,
+  "inst:ot_hdc_fadd": 98304,
+  "inst:ot_hdc_fmul": 98304,
+  "inst:ot_hdc_fp32_add_fast": 98312,
+  "inst:ot_hdc_fp32_mul_fast": 28,
+  "inst:ot_hdc_fp32_mul_pipe": 98304,
+  "inst:ot_hdc_ksa": 786580,
+  "inst:ot_hdc_lzc32": 98368,
+  "inst:ot_hdc_matvec": 1,
+  "inst:ot_hdc_mul24_rows": 28,
+  "inst:ot_hdc_mul24_sum": 28,
+  "inst:ot_hdc_qadd": 98312,
+  "inst:ot_hdc_qmul": 28,
+  "inst:ot_hdc_recip_q": 1,
+  "inst:ot_hdc_reduce_q": 1,
+  "inst:ot_hdc_rsqrt_q": 1,
+  "inst:ot_hdc_stream": 1,
+  "inst:ot_hdc_vline": 16,
+  "mem_bits": 16384
+ },
+ "reachability": {
+  "result_port_groups": 96,
+  "fmul_instantiated": 98304,
+  "fmul_reachable": 1536,
+  "argmax_leaves_instantiated": 98304,
+  "argmax_leaves_reachable": 1536,
+  "basis": "ot_hdc_matvec: tile q of a round lands on group q after the split tree; scale_gre, the fmul valid and o_we all require group < G >> split; every G = 6144 matrix has split >= 64"
+ },
+ "split_tree_registers": {
+  "levels": 13,
+  "registers_per_level_per_word": 4,
+  "word_bits": 512,
+  "flop_bits_instantiated": 163577856,
+  "flop_bits_reachable": 13762560,
+  "basis": "rtl/hdc/ot_hdc_matvec.sv g_lvl: lq and u_hold (ot_hdc_delay W = G*W*32, D = TA) per level"
+ },
+ "priced": {
+  "bmul_mm2": 10.7352096768,
+  "fadd_mm2": 25.632642170879997,
+  "qadd_mm2": 17.74822210272,
+  "fmul_instantiated_mm2": 50.5658474496,
+  "fmul_reachable_mm2": 0.7900913664,
+  "split_tree_flop_mm2_instantiated": 47.699302809600006,
+  "split_tree_flop_mm2_reachable": 4.0131624960000005,
+  "basis": "results/floorplan/qwen_o4_unit_areas.json (yosys 0.68 + ABC -D 910 on ASAP7 RVT TT, pre-layout); flop bits from the elaborated netlist, including the units' internal flops"
+ },
+ "ledger_gaps": [
+  {
+   "item": "lane copies m = 5",
+   "ledger": "51.91 mm2 x 4 copies",
+   "rtl": "0 instances (ot_hdc_lane_copy only in ot_hdc_qwen_m5_mac_array unit benches)"
+  },
+  {
+   "item": "stream unit width",
+   "ledger": "SW = 1,024 (spill 12.8 mm2)",
+   "rtl": "SU_VEC = 0: scalar ot_hdc_stream, SW = 1"
+  },
+  {
+   "item": "KV service",
+   "ledger": "4 HBM3E stacks, KV prefetch 6.4 mm2",
+   "rtl": "KV_HBM = 0: G behavioural KV read ports in the TB; ot_hdc_qwen_kv_system and ot_hdc_qwen_hbm_service are instantiated only by unit benches"
+  },
+  {
+   "item": "HBM PHY / controllers",
+   "ledger": "40.0 mm2",
+   "rtl": "none"
+  },
+  {
+   "item": "UCIe PHY",
+   "ledger": "10.0 mm2",
+   "rtl": "ot_rom_ucie_link behavioural delay-line model inside ot_rom_oneshot_allreduce"
+  },
+  {
+   "item": "DFlash drafter / accept",
+   "ledger": "drafter ROM 28.76 mm2",
+   "rtl": "no Qwen drafter program; ot_hdc_qwen_dflash_step_ctrl only in unit benches"
+  },
+  {
+   "item": "INT8 embedding path",
+   "ledger": "INT8 rows + BF16 scale (spec C5)",
+   "rtl": "INT8_EMBED = 0 in the TP-2 TB: the stream unit reads BF16 embedding words"
+  },
+  {
+   "item": "memories",
+   "ledger": "code/scale ROM, VM, KV ring, constants",
+   "rtl": "behavioural arrays in the TB with G read ports; no macro instance"
+  },
+  {
+   "item": "physical partition",
+   "ledger": "6,144 groups a die",
+   "rtl": "one monolithic ot_hdc_matvec: a single issue FSM and one wrom_addr broadcast; the neighbourhood cut replicates the FSM per 4 groups, which needs a global group offset the module does not have (its split masks use the local group index)"
+  }
+ ]
+}

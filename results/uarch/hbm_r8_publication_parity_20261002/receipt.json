@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.H1.r8.publication-parity.v1",
+  "scope": "Exact cross-tree proposal bytes and pure frozen-runner validate_go only; candidate admission in memory, no committed GO or execution",
+  "targets": {
+    "DS": {
+      "bytes": 36162,
+      "execution": false,
+      "gate_tool_pins_all_equal": true,
+      "main_worker_bytes_equal": true,
+      "proposal_sha256": "28e31b0143115e7d19989b4226d999813378a9ed13d62965387954316ad0e388",
+      "pure_validate_go": "PASS",
+      "source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954",
+      "target": "DS"
+    },
+    "Qwen": {
+      "bytes": 38574,
+      "execution": false,
+      "gate_tool_pins_all_equal": true,
+      "main_worker_bytes_equal": true,
+      "proposal_sha256": "e29e6e2c847164686409185770c3fe3c593b95c26229c3b60eec79d1eb6759da",
+      "pure_validate_go": "PASS",
+      "source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954",
+      "target": "Qwen"
+    }
+  },
+  "worker_clean_after": true,
+  "worker_root": "/home/ubuntu/OpenTallas-hbm-rf-service",
+  "worker_source_commit": "10e6bcde11e2f0790f6c153d768a6fa0c1be2954"
+}

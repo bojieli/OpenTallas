@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.abi3.v41_causal_chain_refutation.v1",
+ "question": "does the measured one-fp32-ulp hyper-connection difference actually explain the V4.1 token divergence?",
+ "answer": "NO. It is real, it is where the first divergence appears, and it does not matter. A perturbation of that size does not move the oracle's output at all.",
+ "what_was_committed": "results/abi3/deepseek_v41_v2_divergence_causal_chain.json, commit 78b21d1: a chain from one fp32 ulp in a 640-term dot product, through sub-ulp BF16 rounding of the residual, a flipped expert at layer 2, and compounding to a different token. Each link was measured; the LINKAGE was not.",
+ "the_two_experiments_that_refute_it": [
+  {
+   "experiment": "feed the ORACLE's own mixes through the DEVICE's Sinkhorn split",
+   "why": "same input, so any output difference is the split's arithmetic alone, with the 640-term projection held fixed",
+   "result": {"pre": "1.010 fp32 ulp, 15 of 32 elements differ", "post": "0.993 ulp, 13 of 32", "comb": "1.973 ulp, 70 of 128"},
+   "consequence": "the divergence is in the SPLIT, not in the projection. The committed chain attributed it to the projection's summation order, which it called 'the ONLY remaining explanation' without demonstrating it. That attribution was wrong."
+  },
+  {
+   "experiment": "run the oracle with the hyper-connection split computed in FLOAT64",
+   "why": "float64 is unambiguously more accurate than either fp32 implementation and is fitted to neither, so it says which of them is closer to the true value -- and whether the difference matters",
+   "result": {
+    "vendor_fp32_kernel": {"token": 3118, "top1": 0.97163987159729, "margin": 0.1726670265197754},
+    "float64_split": {"token": 3118, "top1": 0.97163987159729, "margin": 0.1726670265197754},
+    "logits": "BIT-IDENTICAL to fifteen digits"
+   },
+   "consequence": "a perturbation of the hyper-connection coefficients of this size changes NOTHING in the oracle's output. So it cannot be what turns 3118 into 1126 on the device either."
+  }
+ ],
+ "and_neither_implementation_is_wrong": {
+  "basis": "maximum relative difference against the float64 split, in fp32 ulps",
+  "pre": {"vendor": 0.745, "device": 0.721},
+  "post": {"vendor": 0.719, "device": 0.486},
+  "comb": {"vendor": 1.894, "device": 2.016},
+  "reading": "both sit at the fp32 noise floor and the device is slightly CLOSER to the true value on pre and post. There is no defect to repair here, and no accuracy argument that favours either side."
+ },
+ "what_this_reopens": [
+  "the V4.1 divergence does NOT have a demonstrated cause. 'Irreducible fp32 rounding' was my conclusion and it is not supported by these measurements.",
+  "the exact-row localisation stands as far as it goes -- embedding 8/8 exact, layer-0 attention output 8/8 exact, hc_post's output differing on tokens 0-4, ffn_norm on 2,3,4 -- but those are sub-BF16-ulp differences of the same order the float64 experiment just showed to be inconsequential.",
+  "so either those differences amplify through a path the float64 experiment did not perturb, or there is a LARGER difference the exact-row localiser never scored, because it only ranks device tensors of matching element count and an operator the device holds in another shape is invisible to it.",
+  "the next measurement is to inject the device's own layer-0 residual into the oracle and see whether the oracle then emits 1126. If it does, the sub-ulp differences really do amplify; if it does not, the cause is deeper and unfound."
+ ],
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "this refutes the committed chain's EXPLANATORY step; it does not identify the real cause",
+  "the float64 split reproduces the released kernel's own sequence of operations in double precision. It is not a proof that the released sequence is the intended arithmetic, only that computing THAT sequence more precisely changes nothing."
+ ]
+}

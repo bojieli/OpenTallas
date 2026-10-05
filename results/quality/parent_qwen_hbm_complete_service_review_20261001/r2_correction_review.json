@@ -1,0 +1,12 @@
+{
+  "owner_commits": [
+    "d93488856",
+    "dc615ec47"
+  ],
+  "focused_tests_passed": 10,
+  "independent_model_json_replay_equal": true,
+  "prior_counterexample_now_rejected": "mandatory encoded KV_READ lease not yet acquired/completed",
+  "mandatory_read_can_acquire_after_rejected_release": true,
+  "sector_transaction_retirement_stays_separate": true,
+  "actual_provider_and_hardware_admission": false
+}

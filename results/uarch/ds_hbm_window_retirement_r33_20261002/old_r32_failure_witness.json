@@ -1,0 +1,9 @@
+{
+  "independent_source_test": "test_original_r32_failure_remains_reproducible",
+  "old_verdict_not_overwritten": true,
+  "parent_receipt": "DS_r32_route_retirement_parent_refusal.json",
+  "parent_receipt_sha256": "0d00e16cdc378633c3250dde8e813d13bf84698e3bb1e95ba70a28c59cdd194a",
+  "source_commit": "f63d1324a16097b445613bca7801010c235d0315",
+  "source_file_sha256": "6ffc6fc04abac60ed6f654edbc624d0fdc28d7c1895aab2ed1fcf25b75bb2831",
+  "status": "FAIL_PRESERVED_PREMATURE_FENCE_CLOSE_DELETE"
+}

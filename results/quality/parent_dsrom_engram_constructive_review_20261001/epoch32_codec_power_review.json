@@ -1,0 +1,37 @@
+{
+  "aggregate_FF_bits": 4361491198,
+  "all192_clock_W": "69546.81207661084905840",
+  "all192_leakage_W": "308.048510146277196",
+  "all_macros": 1500067,
+  "busiest_clock_leak_W": "369.11544919969251600",
+  "checks": {
+    "all_192_inventory_and_per_hop_state_recount": true,
+    "codec_fresh_byte_equal": true,
+    "power_fresh_byte_equal": true,
+    "random_full_word27_all_shards_full_epoch32_all_leases_cases": 5000,
+    "random_seed": 20261001,
+    "typed_power_and_scoped_credit_tests_passed": 11
+  },
+  "endpoint_count_per_home": 24928,
+  "physical_admission": false,
+  "preserved_FF_bits": 2073625150,
+  "schema": "parent_independent_engram_e32_codec_power_review.v1",
+  "scope": "Software codec, adversarial identities and exact state recount only; expected drain/image booleans are assumptions, not actual provider proof. No power minimum or feasibility claim.",
+  "source_commits": {
+    "codec": "9ef36f6542cc91b1a48ff274101372d063c580ef",
+    "typed_power": "e3a1a53dbae434f6b7186757421bae20cee10e02"
+  },
+  "source_records": {
+    "codec_sha256": "4776cbe6d90d4c1d68b0f9b91fb45b776042414e0fc3fb376486dd717ab2a163",
+    "power_sha256": "ec3ee79c411d0cd8b5de14502ab6cfedce3ad31f0f4bea6ec9a86dc9f0fafc20"
+  },
+  "unclosed": [
+    "L1 actual q*k producer and physical ports/scratch/CDC",
+    "immutable home image and source-produced full generation context",
+    "ordered lossless four-phase ACK actual source/provider and all-hop/backend/consumer drain",
+    "comparator serializer and reset/control cells and selected serialized data activity",
+    "complete token finite calendar and physical endpoint placement/contextual SS/FF",
+    "whole die/package power IR and routing including PHY"
+  ],
+  "whole_token_latency": null
+}

@@ -1,0 +1,110 @@
+FFFFFFFFFFFFF.F...F.........                                             [100%]
+=================================== FAILURES ===================================
+_______________ test_reference_identity[rtl/common/ot_prefix.sv] _______________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_______________ test_reference_identity[rtl/hdc/ot_hdc_delay.sv] _______________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+______________ test_reference_identity[rtl/v41rom/ot_v41_fadd.sv] ______________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_____________ test_reference_identity[rtl/v41rom/ot_v41_bmul2.sv] ______________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_____________ test_reference_identity[rtl/v41rom/ot_v41_chain2.sv] _____________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+____________ test_reference_identity[rtl/v41rom/ot_v41_segtree2.sv] ____________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+__________ test_reference_identity[rtl/v41rom/ot_v41_bf16_lanes2.sv] ___________
+tests/test_prepare_field_common_wrapper_gate.py:27: in test_reference_identity
+    assert undo(M.generate(sources)['ref_'+Path(path).name], 'ref_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_________ test_candidate_consumers_byte_exact[rtl/hdc/ot_hdc_delay.sv] _________
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+________ test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_fadd.sv] ________
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_______ test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_bmul2.sv] ________
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+_______ test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_chain2.sv] _______
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+______ test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_segtree2.sv] ______
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+____ test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_bf16_lanes2.sv] _____
+tests/test_prepare_field_common_wrapper_gate.py:32: in test_candidate_consumers_byte_exact
+    assert undo(M.generate(sources)['cand_'+Path(path).name], 'cand_') == sources[path]
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+____________________ test_actual_mutant_only_changes_helper ____________________
+tests/test_prepare_field_common_wrapper_gate.py:46: in test_actual_mutant_only_changes_helper
+    positive=M.generate(sources)
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+________________________ test_prepare_and_no_overwrite _________________________
+tests/test_prepare_field_common_wrapper_gate.py:73: in test_prepare_and_no_overwrite
+    record=M.prepare(out)
+tools/prepare_field_common_wrapper_gate.py:94: in prepare
+    generated = generate(sources, negative_control)
+tools/prepare_field_common_wrapper_gate.py:59: in generate
+    raise ValueError('unexpected dependency module set')
+E   ValueError: unexpected dependency module set
+=========================== short test summary info ============================
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/common/ot_prefix.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/hdc/ot_hdc_delay.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/v41rom/ot_v41_fadd.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/v41rom/ot_v41_bmul2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/v41rom/ot_v41_chain2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/v41rom/ot_v41_segtree2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_reference_identity[rtl/v41rom/ot_v41_bf16_lanes2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/hdc/ot_hdc_delay.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_fadd.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_bmul2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_chain2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_segtree2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_candidate_consumers_byte_exact[rtl/v41rom/ot_v41_bf16_lanes2.sv]
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_actual_mutant_only_changes_helper
+FAILED tests/test_prepare_field_common_wrapper_gate.py::test_prepare_and_no_overwrite

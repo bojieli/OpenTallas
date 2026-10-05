@@ -1,0 +1,351 @@
+{
+  "schema": "opentallas.window.recovery_connected_gate.v1",
+  "reviewed_source_commit": "69dedf4afd7e2994de57549df8d0c609403d9050",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "runner_sha256": "9af0b927f1b543c303fb35545174ea7582372110a25faff1a6e060ffdbe10577",
+  "model_sha256": "1b7fb7a6173107d2f94093b4d4dcd9c0e8fb93d64bec4cf3c899f02e5992b8c8",
+  "record_sha256": "c73c9a38387ea3bb6628699141747fa47e894bd29f444debc76bdf62608f804f",
+  "manifest": {
+    "rtl/test/w17_window_recovery_candidate_prepared/accepted_WS_intent_dropped.patch": "76d9440b5f14537d2f2102f1dba378105b7adadbedddfd9552e52fe7aad7e3e4",
+    "rtl/test/w17_window_recovery_candidate_prepared/discard_retirement_omitted.patch": "028dd3291b0495e220cb1ce333619c90950d366a72c2825342f7912a6f869602",
+    "rtl/test/w17_window_recovery_candidate_prepared/hbm_karb_recovery.sv": "3130283007da9df5002debdf5c4434d8daa8b6d87b0fee30c0253382d1bdb8f8",
+    "rtl/test/w17_window_recovery_candidate_prepared/hbm_karb_recovery.sv.diff": "3387734362c9a18226d7297a31966ee373b410cbc75df5d94308ef4857d103b3",
+    "rtl/test/w17_window_recovery_candidate_prepared/idx_hbm_recovery.sv": "0ca7752f23094788eb7ef6e161ce18662dc4e324c290413a4908ba38cfc8ec3c",
+    "rtl/test/w17_window_recovery_candidate_prepared/idx_hbm_recovery.sv.diff": "ff92b7a49b4bed8269dfee774118f0180ae514704b753420d0be80aad7eddb49",
+    "rtl/test/w17_window_recovery_candidate_prepared/issue_ACK_as_visibility.patch": "79595ee81e98358ea8a12349593b478baeb524471ea8f0629609dedb9cf48159",
+    "rtl/test/w17_window_recovery_candidate_prepared/kv_reqmux_recovery.sv": "d9a56fdb501df889d7a1a47c2d1debd9fcb2ee08250433c336733da0b4dcfe35",
+    "rtl/test/w17_window_recovery_candidate_prepared/kv_reqmux_recovery.sv.diff": "7e6a1ed5f06e054b52852cd07d4fe547d985a3a7d925eab5206ff2a060fbd780",
+    "rtl/test/w17_window_recovery_candidate_prepared/kv_rope_reqmux_recovery.sv": "ade91a5418b9feca302dedb8b066516293892857f5c3fed2ea5ae16a179f65cd",
+    "rtl/test/w17_window_recovery_candidate_prepared/kv_rope_reqmux_recovery.sv.diff": "d4db139458e9399ee9d0222c8fc8ad9df93c066e20c83a1ed00a21b608cf2264",
+    "rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_hbm_rsp_pipe.sv": "95444837195a93568f2680624a2c6b5a96b0fc4aa00ae523fbd686c74f5b773a",
+    "rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/test/w17_window_recovery_candidate_prepared/pinned_ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/test/w17_window_recovery_candidate_prepared/tb.sv": "7598df9c4c0a7a04abb4d0c8a0ec8c2251db5f94057ab3066195a885c7f580ac",
+    "rtl/test/w17_window_recovery_candidate_prepared/tb_provider_fence_ghost.sv": "6791f7b4bb2e2867030f226472242f8f5428125a6f2457c7c1e6d14b76e76d07",
+    "rtl/test/w17_window_recovery_candidate_prepared/window_prefetch_recovery.sv": "cb4d37b0a722b4cc4226779eaa5cdf9dd83d4bf104f74947ae3ad0b240538ea9",
+    "rtl/test/w17_window_recovery_candidate_prepared/window_prefetch_recovery.sv.diff": "b5c6da81e66e52e1e11313fa766e5f9463f885ff0f62390b16bfb1a3b997ba67",
+    "rtl/test/w17_window_recovery_gate/tb.sv": "80a1cf6e50ff2c0023472b067f1a5190c6a21d9384e597564a8f6fcc4ebd7950",
+    "tools/w17_window_recovery_prepare.py": "dabf9e502159ae78a1651375b189416f75b252d6e79f07401df59123f701ac66",
+    "rtl/test/w17_window_recovery_gate/tb.sv.diff": "e12382a3b2c6eb2ffe307eb85c8aca93ec297915f2f0f7a7578ab6e9e632ce2a",
+    "rtl/test/w17_window_recovery_gate/tb_provider_fence_ghost.sv": "5313503167cf9759476d8a9220fabe0daf80a32f5e5c0dc688ec9c2edb6aab22"
+  },
+  "manifest_sha256": "340f4aee12dc22b6424839870ced96d32c83a2ec7bbdcc3a585b0791a9bbc529",
+  "compiler": {
+    "wrapper": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "wrapper_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "binary": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+    "binary_sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+    "version": "Verilator 5.050 2026-07-01 rev v5.050",
+    "environment_overrides_absent": [
+      "VERILATOR_ROOT",
+      "VERILATOR_BIN",
+      "VERILATOR_TEST_FLAGS",
+      "VERILATOR_RUNNING",
+      "MAKEFLAGS",
+      "MFLAGS",
+      "CC",
+      "CXX",
+      "CXXFLAGS",
+      "CPPFLAGS",
+      "LDFLAGS",
+      "LD_PRELOAD",
+      "LD_LIBRARY_PATH",
+      "PERL5OPT",
+      "PERL5LIB"
+    ]
+  },
+  "jobs": [
+    {
+      "label": "baseline",
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "{run}/baseline/obj",
+        "{run}/baseline/sources/window_prefetch_recovery.sv",
+        "{run}/baseline/sources/kv_reqmux_recovery.sv",
+        "{run}/baseline/sources/kv_rope_reqmux_recovery.sv",
+        "{run}/baseline/sources/hbm_karb_recovery.sv",
+        "{run}/baseline/sources/idx_hbm_recovery.sv",
+        "{run}/baseline/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "{run}/baseline/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "{run}/baseline/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "{run}/baseline/sources/tb.sv"
+      ],
+      "compile_seconds": 30,
+      "cases": [
+        {
+          "args": [
+            "+CASE=READ_HELD"
+          ],
+          "seconds": 4,
+          "expected": "PASS",
+          "marker": "PREPARED_RECOVERY_CASE_PASS case=READ_HELD"
+        },
+        {
+          "args": [
+            "+CASE=WC_INTENT"
+          ],
+          "seconds": 4,
+          "expected": "PASS",
+          "marker": "PREPARED_RECOVERY_CASE_PASS case=WC_INTENT"
+        },
+        {
+          "args": [
+            "+CASE=WS_VISIBLE"
+          ],
+          "seconds": 4,
+          "expected": "PASS",
+          "marker": "PREPARED_RECOVERY_CASE_PASS case=WS_VISIBLE"
+        }
+      ]
+    },
+    {
+      "label": "discard_retirement_omitted",
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "{run}/discard_retirement_omitted/obj",
+        "{run}/discard_retirement_omitted/sources/window_prefetch_recovery.sv",
+        "{run}/discard_retirement_omitted/sources/kv_reqmux_recovery.sv",
+        "{run}/discard_retirement_omitted/sources/kv_rope_reqmux_recovery.sv",
+        "{run}/discard_retirement_omitted/sources/hbm_karb_recovery.sv",
+        "{run}/discard_retirement_omitted/sources/idx_hbm_recovery.sv",
+        "{run}/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "{run}/discard_retirement_omitted/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "{run}/discard_retirement_omitted/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "{run}/discard_retirement_omitted/sources/tb.sv"
+      ],
+      "compile_seconds": 30,
+      "mutation": {
+        "file": "window_prefetch_recovery.sv",
+        "case": "READ_HELD",
+        "expected_failure": "bounded recovery case timeout; ownership retained",
+        "patch_sha256": "028dd3291b0495e220cb1ce333619c90950d366a72c2825342f7912a6f869602"
+      },
+      "cases": [
+        {
+          "args": [
+            "+CASE=READ_HELD",
+            "+CONTROL=discard_retirement_omitted"
+          ],
+          "seconds": 4,
+          "expected": "FAIL",
+          "marker": "bounded recovery case timeout; ownership retained"
+        }
+      ]
+    },
+    {
+      "label": "accepted_WS_intent_dropped",
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "{run}/accepted_WS_intent_dropped/obj",
+        "{run}/accepted_WS_intent_dropped/sources/window_prefetch_recovery.sv",
+        "{run}/accepted_WS_intent_dropped/sources/kv_reqmux_recovery.sv",
+        "{run}/accepted_WS_intent_dropped/sources/kv_rope_reqmux_recovery.sv",
+        "{run}/accepted_WS_intent_dropped/sources/hbm_karb_recovery.sv",
+        "{run}/accepted_WS_intent_dropped/sources/idx_hbm_recovery.sv",
+        "{run}/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "{run}/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "{run}/accepted_WS_intent_dropped/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "{run}/accepted_WS_intent_dropped/sources/tb.sv"
+      ],
+      "compile_seconds": 30,
+      "mutation": {
+        "file": "window_prefetch_recovery.sv",
+        "case": "WC_INTENT",
+        "expected_failure": "observer premature closed/visible fence",
+        "patch_sha256": "76d9440b5f14537d2f2102f1dba378105b7adadbedddfd9552e52fe7aad7e3e4"
+      },
+      "cases": [
+        {
+          "args": [
+            "+CASE=WC_INTENT",
+            "+CONTROL=accepted_WS_intent_dropped"
+          ],
+          "seconds": 4,
+          "expected": "FAIL",
+          "marker": "observer premature closed/visible fence"
+        }
+      ]
+    },
+    {
+      "label": "issue_ACK_as_visibility",
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "{run}/issue_ACK_as_visibility/obj",
+        "{run}/issue_ACK_as_visibility/sources/window_prefetch_recovery.sv",
+        "{run}/issue_ACK_as_visibility/sources/kv_reqmux_recovery.sv",
+        "{run}/issue_ACK_as_visibility/sources/kv_rope_reqmux_recovery.sv",
+        "{run}/issue_ACK_as_visibility/sources/hbm_karb_recovery.sv",
+        "{run}/issue_ACK_as_visibility/sources/idx_hbm_recovery.sv",
+        "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_row_codec.sv",
+        "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_window_stage4.sv",
+        "{run}/issue_ACK_as_visibility/sources/pinned_ot_chip_v41x_hbm_rsp_pipe.sv",
+        "{run}/issue_ACK_as_visibility/sources/tb.sv"
+      ],
+      "compile_seconds": 30,
+      "mutation": {
+        "file": "idx_hbm_recovery.sv",
+        "case": "WS_VISIBLE",
+        "expected_failure": "observer premature closed/visible fence",
+        "patch_sha256": "79595ee81e98358ea8a12349593b478baeb524471ea8f0629609dedb9cf48159"
+      },
+      "cases": [
+        {
+          "args": [
+            "+CASE=WS_VISIBLE",
+            "+CONTROL=issue_ACK_as_visibility"
+          ],
+          "seconds": 4,
+          "expected": "FAIL",
+          "marker": "observer premature closed/visible fence"
+        }
+      ]
+    },
+    {
+      "label": "provider_ghost_assumption",
+      "compile_command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--binary",
+        "--timing",
+        "--assert",
+        "--top-module",
+        "tb_provider_fence_ghost",
+        "-j",
+        "2",
+        "-Wno-fatal",
+        "--Mdir",
+        "{run}/provider_ghost_assumption/obj",
+        "{run}/provider_ghost_assumption/sources/tb_provider_fence_ghost.sv"
+      ],
+      "compile_seconds": 10,
+      "cases": [
+        {
+          "args": [],
+          "seconds": 1,
+          "expected": "PASS",
+          "marker": "CLOSED_PROVIDER_ASSUMPTION_CHECK_ONLY"
+        },
+        {
+          "args": [],
+          "seconds": 1,
+          "expected": "FAIL",
+          "marker": "FAIL_PROVIDER_FENCE_ASSUMPTION_VIOLATION; NOT_WINDOW_DETECTION"
+        }
+      ],
+      "ghost_two_configurations": "Use one runtime-selectable plusarg ghost witness, no second compile."
+    }
+  ],
+  "command_sha256": "c79bbceddf139af12c028a3ffa4697077e071407f2ffbfea37d4b31ff1d651cf",
+  "caps": {
+    "MemoryMax": 4294967296,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 268435456,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 180,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_jobs_max": 2,
+    "compile_steps": 5,
+    "connected_compile_seconds_each": 30,
+    "ghost_compile_seconds": 10,
+    "positive_case_seconds_each": 4,
+    "negative_case_seconds_each": 4,
+    "ghost_case_seconds_each": 1,
+    "declared_compile_total_seconds": 130,
+    "declared_runtime_total_seconds": 26,
+    "supervision_reserve_seconds": 24,
+    "service_hardstop_seconds": 180,
+    "generated_output_total_bytes": 268435456,
+    "cycles_per_connected_case": 250000,
+    "discard_control_watchdog_cycles": 4096,
+    "automatic_retries": 0
+  },
+  "model_composition": {
+    "unified_tool_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "basis_model_sha256": "1b7fb7a6173107d2f94093b4d4dcd9c0e8fb93d64bec4cf3c899f02e5992b8c8",
+    "applicable_designs": [
+      "v41_rom",
+      "v41_hbm"
+    ],
+    "not_applicable_designs": [
+      "qwen_rom",
+      "qwen_hbm"
+    ],
+    "dedicated_entry": {
+      "element": "selected_WINDOW_recovery_fence_simulation_candidate",
+      "replicas_fixed": 1,
+      "macs_per_element": 0,
+      "ports_per_element": {
+        "request_bits": 342,
+        "response_bits": 279,
+        "control_forward_bits": 3,
+        "control_reverse_bits": 3
+      },
+      "ports_total": {
+        "request_bits": 342,
+        "response_bits": 279,
+        "control_forward_bits": 3,
+        "control_reverse_bits": 3
+      },
+      "storage_bits": 259,
+      "area_est_um2": 638.7244,
+      "area_cap_um2": 1287.3632,
+      "latency": 0,
+      "latency_basis": "Healthy added pipeline stages intended0; fault branch bounded by model assumptions, not token-rate gain.",
+      "route_segments_proxy": 24
+    },
+    "fault_branch": "Nread*(A+S+R)+Nwrite_intent*(A+S+V)+4 control edges; service fairness/readiness/visibility/fence bounds externally required. Fixture introduces finite interference and held-return release.",
+    "slot_limitations": "No physical slot/corridor capacity, critical-path/SSFF or PHY provider qualification. Simulated ring assertions/observer IDs excluded from hardware estimate. No automatic evaluate() integration or adoption claimed.",
+    "GO_review_required": "Parent explicitly approves unified-model composition and slot limitations; logical ledger alone is not physical signoff."
+  },
+  "WIN_STACK": 2,
+  "OPT_RECOVERY_default": 0,
+  "scope": "Local connected source fault drain/restart, simulation provider only. No producer-wide cancellation, global reset, physical PHY, fulltoken or QDQ8-based fence credit.",
+  "ghost_limitation": "Oracle distinguishes hidden operation0/512, wire fields identical. Hostile post-fence emission violates provider provenance; WINDOW has no detection claim. Uncertified provenance prohibits restart.",
+  "visibility_oracle_scope": "Pinned idx schedule h_tcol/last_wr+CWL6250+BURST1024 projected deadline only. Scheduled command times can be retrospective relative to actual dispatch; this is not causal PHY completion. No fixed-floor/ACK-as-visible replacement.",
+  "service_provider_admission": false,
+  "physical_drain_admission": false,
+  "state": "PREPARED_NOT_COMPILED_NOT_RUN"
+}

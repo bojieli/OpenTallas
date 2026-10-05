@@ -1,0 +1,29 @@
+read_verilog -sv /home/ubuntu/w10-w18-recovery/baseline_wake/retention_lean_r1/wake.sv
+hierarchy -top wake_diag
+proc
+write_json /home/ubuntu/w10-w18-recovery/baseline_wake/retention_lean_r1/both_proc.json
+# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.
+select -assert-count 8 {w:g_wake.g_leaf*.wake}
+select -set ot_wake_proc {w:g_wake.g_leaf*.wake} %ci {t:$adff} %i
+select -assert-count 8 @ot_wake_proc
+setattr -set keep 1 @ot_wake_proc
+select -clear
+synth -top wake_diag -run coarse:coarse
+write_json /home/ubuntu/w10-w18-recovery/baseline_wake/retention_lean_r1/both_coarse.json
+opt -fast -full
+memory_map
+opt -full
+techmap
+write_json /home/ubuntu/w10-w18-recovery/baseline_wake/retention_lean_r1/both_techmap.json
+# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.
+select -assert-count 8 {w:g_wake.g_leaf*.wake}
+select -set ot_wake_techmap {w:g_wake.g_leaf*.wake} %ci {t:$_DFF_*} %i
+select -assert-count 8 @ot_wake_techmap
+setattr -set keep 1 @ot_wake_techmap
+select -clear
+opt -fast
+dfflibmap -liberty /home/ubuntu/w10-w18-recovery/baseline_wake/asap7_seq_ss.lib
+opt -fast
+abc -fast
+opt -fast
+write_json /home/ubuntu/w10-w18-recovery/baseline_wake/retention_lean_r1/both_mapped.json

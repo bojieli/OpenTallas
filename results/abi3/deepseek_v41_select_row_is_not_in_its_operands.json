@@ -1,0 +1,44 @@
+{
+  "and_it_raises_a_second_question": "if the select's score view sits at element offset 0 for every issue while the score's own output view walks rows at stride 256, then the select ranks ROW ZERO's scores for every query as well as computing row zero's horizon. This record does not establish that -- the producer's loop value at the moment measured was zero, so both views were at offset zero and the two readings are indistinguishable from one sample -- but it is the next thing to measure and it would be a second fault in the same place.",
+  "answer": "NO, and the view says so. The score view the SELECT reads -- descriptor 3317 in the shipped V4.1 HBM cell -- resolves to dims (1, 256), strides (256, 1), element offset 0 and NO DYNAMIC TERMS AT ALL. It is a fixed one-row window, reused for every query. The producer's view (3312) does carry a row-walking term with stride 256; the consumer's does not, and the consumer is this operator. There is nothing in its operands to read.",
+  "measured_view": {
+    "descriptor": 3317,
+    "dims": [
+      1,
+      256
+    ],
+    "element_offset": 0,
+    "loop_terms": [],
+    "note": "dims say 256 candidates, the DECLARED maximum; the engine takes the live count from aux_id_2 (CONTEXT_LENGTH / ratio = 5) and uses the width only as a capacity bound, which is why the score's shape is not itself a fault",
+    "strides": [
+      256,
+      1
+    ]
+  },
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "the derivation was removed rather than left inert: it measured nothing twice and a dead path with a confident comment is worse than no path",
+    "ResolvedView.loop_terms is kept, because it is how this was measured and the cheapest way to measure it again -- nothing derives behaviour from it"
+  ],
+  "producer": {
+    "git": {
+      "commit": "8609e6dae0aa1fe250a508e83229803f76992680"
+    },
+    "tool": "tools/probe_deepseek_v41_device_index_selection.py"
+  },
+  "question": "the streamed index select computes query position zero on every issue. Its producer's view carries a row-walking LOOP_INDUCTION term, so can the select derive the row from its own operands instead of needing a wire-format change?",
+  "schema": "opentallas.result.v41_select_row_is_not_in_its_operands.v1",
+  "two_attempts_both_measured": [
+    {
+      "attempt": "match a LOOP_INDUCTION term whose stride equals the resolved candidate width",
+      "result": "no match; all 160 issues of layer 2 still selected nothing",
+      "why": "the object's rows are the DECLARED capacity apart -- 256 -- and the resolved width is the live count, 5"
+    },
+    {
+      "attempt": "match a term whose stride equals the view's own strides[-2]",
+      "result": "no match; all 160 issues still selected nothing",
+      "why": "the view carries no dynamic terms of any kind"
+    }
+  ],
+  "what_this_closes_off": "the whole class of 'derive it in the runtime' fixes. The row identity is not in the descriptor, not in the view, and not in any symbol -- so the two options in results/abi3/deepseek_v41_select_position_is_an_a18_limit.json stand as the only ones: supply the joined window operand (a frontend shape change), or give a view a second request-dependent extent (a wire-format amendment)."
+}

@@ -1,0 +1,100 @@
+{
+  "artifact_hashes_sha256": {
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/macro_sta.log.gz": "6291e0e75b258804bbbe874d84b25eb11ee7d23d53fa9a2d71905312c6fcd3ec",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/mapped.v.gz": "bf2e6104b6ac20f2b71669815e81661b1b2ebf6e2ef175674bf7fe04572f86ec",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/place_global_route.log.gz": "423b6fc5e7e35d2bcf1f79f578f71eec1434d398ca9d1a5a354893f647407a0b",
+    "results/physical_hdc/asap7/qwen_o4_int8_shard/artifacts/synth.log.gz": "e13dcb711a62b6dafba285629fe699134dc2d39bb1c29444725fbac34a2a00f0"
+  },
+  "bounded_shard": {
+    "core_um": [
+      15,
+      15,
+      245,
+      245
+    ],
+    "die_um": [
+      260,
+      260
+    ],
+    "fixed_instance_area_um2_before_cts": 14629.499,
+    "macro_bbox_um": [
+      35.0,
+      69.984,
+      157.256,
+      189.324
+    ],
+    "product_lanes": 32,
+    "rom_count": 1,
+    "spare_rom_output_bits": 10,
+    "standard_cell_area_um2_before_cts": 3231.89,
+    "standard_cell_instances_before_cts": 26290,
+    "usable_rom_output_bits": 256
+  },
+  "global_route_timing": {
+    "critical_path": "internal BF16 product pipeline flip-flop to flip-flop; no timing/slew repair in direct flow",
+    "engineering_acceptance": "NOT_MET",
+    "post_rom_to_first_register_data_delay_ps": 1333.16,
+    "recovery_wns_ps": -3070.91,
+    "rom_clk_to_q_ps_on_that_path": 794.62,
+    "rom_output_to_product_register_setup_wns_ps": -1218.18,
+    "rom_path_endpoint": "first signed-INT8 product pipeline flop _46339_/D",
+    "rom_path_practical_implication": "register ROM output / code before the product pipeline or reschedule nibble arithmetic; post-ROM 1.33ns combinational delay cannot meet a single 0.92ns cycle as routed",
+    "rom_path_startpoint": "u_weight_rom/rd_out[8]",
+    "setup_wns_ps": -2347.08
+  },
+  "limitations": [
+    "The macro is an analytical compiler view with assumed periphery and current; this is not a fabricated memory macro or signoff PDK.",
+    "No PDN, tie-cell/antenna repair, DFT, formal equivalence or post-route extraction in this global-route record.",
+    "Probe top has a lane-select mux and no O4 reduction tree; product-valid is not a functional token test.",
+    "Full 6144-group bank selection, wire distribution, package and die route are unbuilt."
+  ],
+  "o4_scaling_preflight": {
+    "capacity_macros_per_die": 17631,
+    "groups_per_die": 6144,
+    "int8_codes_per_group_cycle": 16,
+    "macro_capacity_area_mm2_per_die": 257.23683726624,
+    "macro_over_model_area_mm2_per_die": 3.82233726624,
+    "o4_model_target_plus_drafter_rom_mm2_per_die": 253.4145,
+    "rom_macros_active_per_cycle": 3072,
+    "target_plus_drafter_bytes_total": 9243527168,
+    "usable_codes_per_rom_read": 32,
+    "useful_bytes_per_macro": 262144,
+    "weight_bytes_per_die": 4621763584
+  },
+  "schema": "qwen-o4-int8-one-rom-32-lane-physical-probe-v1",
+  "scope": "one analytical ASAP7 8192x266 ROM macro feeding 32 INT8 product lanes and one row-scale path; physical probe only, not O4 tile/token",
+  "source_commit": "284adf1b",
+  "source_hashes_sha256": {
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.json": "07e6b7aaaff93b14458d17f7fe0344f8a70ec8a70cf4695d5ab2813aa7f2c480",
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8.lef": "d193a5f43f7ff2ecd56adf29ba388dfcf3d4d7ff8e8392da78fea78eb81015a5",
+    "physical/asap7_memory_macros/ot_rom_8192x266_m8/ot_rom_8192x266_m8_tt.lib": "a7ce0e45d5d181b6365823963792f0234fe7d3b9414ea212debef51603a7cf92",
+    "physical/qwen_o4_int8_shard/constraint.sdc": "036b9da59fd9ea43a74a71e45c70383e2deeee205c5e7c35e3b13200d121775a",
+    "physical/qwen_o4_int8_shard/detailed_route.tcl": "03741021b1687a0e3fdce5854ae695fdd0bc5805247493d7e53520ef38039387",
+    "physical/qwen_o4_int8_shard/macro_sta.tcl": "3d9898c16d39619c3611fde907400b708d15bcf5890203ed5d86673c485f659b",
+    "physical/qwen_o4_int8_shard/ot_qwen_o4_int8_shard.sv": "315405bc00d2040bc587274a09a4044a6563044121d8ec74ad71b88b736f4fb6",
+    "physical/qwen_o4_int8_shard/place_route.tcl": "a1b40ac2050e4aec08ccd3eff7adc20fe61fee98125e02682f07eec8e1fd5c54",
+    "physical/qwen_o4_int8_shard/prepare_mapped.py": "582c2fe4b7539b9582595a82594a09ac663472efa18b63b0fb7acd3c6c7045dc",
+    "physical/qwen_o4_int8_shard/synth.ys": "3d015fc6b865c63eaedb83c8773fdce657e9c567a9aeb1841cb0b7e419411da2",
+    "results/arch/qwen3_8bit_design.json": "0f357ffff8e3b98634bdfbbe891dfae24168c387c93c3fbb45aa025a385e29c9",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d"
+  },
+  "stage": {
+    "clock_tree": "PASS",
+    "detailed_route": "RUNNING_SEPARATE_FOLLOWUP",
+    "drc": "NOT_MEASURED",
+    "extracted_spef": false,
+    "global_route": "PASS",
+    "placement": "PASS",
+    "synthesis": "PASS"
+  },
+  "target_clock_ns": 0.92,
+  "technology": {
+    "macro": "ot_rom_8192x266_m8 analytical LEF/Liberty",
+    "openroad": "v2.0-17598-ga008522d8",
+    "standard_cells": "ASAP7 RVT TT 0.7 V",
+    "yosys": "0.68"
+  }
+}

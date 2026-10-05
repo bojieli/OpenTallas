@@ -1,0 +1,189 @@
+{
+  "schema": "opentallas.qwen-packed-KV-port-demands.v1",
+  "prior_immutable_progress": "ordinary_GPU_lowering_progress_r1.json",
+  "source_sha256": {
+    "tools/qwen_hbm_complete_isa.py": "9b697524744740b3a0562060de96488241955523e42f03404991569b95d6b738",
+    "tests/test_qwen_hbm_complete_isa.py": "55e88da15b2a4afed4ef3da28ec573898642c257cffd3813e7eb09c239ebf52e",
+    "tools/qwen_hbm_complete_program.py": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203"
+  },
+  "expanded_artifact_sha256": "13fedd237c2d94ff224c1f12ec9e44f494eca9db9c34f71bec00eef8ae5f4c51",
+  "regenerate": "python3 tools/qwen_hbm_complete_isa.py --out /home/ubuntu/qwen-packed-KV-demand-replay.json",
+  "KV_writers_per_token": 72,
+  "positions": [
+    0,
+    1
+  ],
+  "per_die_per_layer_position0": {
+    "id": 10,
+    "layer": 0,
+    "die": 0,
+    "position": 0,
+    "dependencies": [
+      5,
+      9
+    ],
+    "reads": [
+      "L0.d0.kr",
+      "L0.d0.v",
+      "position"
+    ],
+    "format": "E4M3 byte packed",
+    "kinds": {
+      "K": {
+        "produced_payload_bytes": 512,
+        "valid_written_bytes_by_stack": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "full_sector_writes_by_stack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "partial_sector_writes_by_stack": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "total_32B_write_commands": 256,
+        "write_port_payload_bytes": 8192,
+        "distinct_byte_masks": [
+          65537
+        ],
+        "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+        "RMW_read_fast_cycles": null,
+        "WR_visible_ACK_fast_cycles": null
+      },
+      "V": {
+        "produced_payload_bytes": 512,
+        "valid_written_bytes_by_stack": [
+          0,
+          0,
+          512,
+          0
+        ],
+        "full_sector_writes_by_stack": [
+          0,
+          0,
+          16,
+          0
+        ],
+        "partial_sector_writes_by_stack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "total_32B_write_commands": 16,
+        "write_port_payload_bytes": 512,
+        "distinct_byte_masks": [
+          4294967295
+        ],
+        "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+        "RMW_read_fast_cycles": null,
+        "WR_visible_ACK_fast_cycles": null
+      }
+    },
+    "publication": "Only all addressed-sector WRvisible commits for matching layer/die/position; retain reader generation until SCORES/PV final consumers",
+    "client_quad_binding": null,
+    "callback_timeline": null,
+    "hardware_qualified": false
+  },
+  "per_die_per_layer_position1": {
+    "id": 10,
+    "layer": 0,
+    "die": 0,
+    "position": 1,
+    "dependencies": [
+      5,
+      9
+    ],
+    "reads": [
+      "L0.d0.kr",
+      "L0.d0.v",
+      "position"
+    ],
+    "format": "E4M3 byte packed",
+    "kinds": {
+      "K": {
+        "produced_payload_bytes": 512,
+        "valid_written_bytes_by_stack": [
+          128,
+          128,
+          128,
+          128
+        ],
+        "full_sector_writes_by_stack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "partial_sector_writes_by_stack": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "total_32B_write_commands": 256,
+        "write_port_payload_bytes": 8192,
+        "distinct_byte_masks": [
+          131074
+        ],
+        "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+        "RMW_read_fast_cycles": null,
+        "WR_visible_ACK_fast_cycles": null
+      },
+      "V": {
+        "produced_payload_bytes": 512,
+        "valid_written_bytes_by_stack": [
+          0,
+          0,
+          0,
+          512
+        ],
+        "full_sector_writes_by_stack": [
+          0,
+          0,
+          0,
+          16
+        ],
+        "partial_sector_writes_by_stack": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "total_32B_write_commands": 16,
+        "write_port_payload_bytes": 512,
+        "distinct_byte_masks": [
+          4294967295
+        ],
+        "RMW_policy": "Partial masks require admitted byte-enable support or actual lock/read/merge/WR schedule; no free partial write/RMW assumed",
+        "RMW_read_fast_cycles": null,
+        "WR_visible_ACK_fast_cycles": null
+      }
+    },
+    "publication": "Only all addressed-sector WRvisible commits for matching layer/die/position; retain reader generation until SCORES/PV final consumers",
+    "client_quad_binding": null,
+    "callback_timeline": null,
+    "hardware_qualified": false
+  },
+  "write_ingress": "one32B-sector write command per stack/fastcycle shares read/write column;4controller stacks;36clients. ReadLENMAX32 is not write length.",
+  "RMW_scope": "256 partial K sector writes cannot be priced as512payload bytes or free RMW; actual byte-enables OR admitted read/lock/merge/WR command budget required; ACK only actual final visibility. V16fullsector writes.",
+  "validation": {
+    "new_ISA_tests": 8,
+    "original_ISA_tests": 7,
+    "packed_mask_counts_and_position1_mutation": true
+  },
+  "actual_hardware_callback_timeline": null,
+  "provider_qualified": false,
+  "physical_build_ready": false,
+  "token_cycles": null,
+  "token_rate": null
+}

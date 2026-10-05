@@ -1,0 +1,15 @@
+....F...........                                                         [100%]
+=================================== FAILURES ===================================
+________ test_exact_missing_dynamic_weight_aux_and_generated_ownership _________
+
+    def test_exact_missing_dynamic_weight_aux_and_generated_ownership():
+        op={'pc':20,'family':'expert_fetch'};manifest={'generation':1,'checkpoint_revision':'rev','view_bindings':{}}
+        assert P.missing_binding(op,'t','table',{'kind':'explicit_auxiliary_provider'},manifest)=='EXPLICIT_AUXILIARY_SOURCE_UNBOUND'
+>       assert P.missing_binding(op,'t','w',{'kind':'immutable_weight_provider','logical_tensor':[0,'w1']},manifest) is None
+E       AssertionError: assert 'COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND' is None
+E        +  where 'COMPOSITE_WEIGHT_SOURCE_HANDLER_UNBOUND' = <function missing_binding at 0x7dce576d53f0>({'family': 'expert_fetch', 'pc': 20}, 't', 'w', {'kind': 'immutable_weight_provider', 'logical_tensor': [0, 'w1']}, {'checkpoint_revision': 'rev', 'generation': 1, 'view_bindings': {}})
+E        +    where <function missing_binding at 0x7dce576d53f0> = P.missing_binding
+
+tests/test_ds_full_checkpoint_continuation_plan.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_ds_full_checkpoint_continuation_plan.py::test_exact_missing_dynamic_weight_aux_and_generated_ownership

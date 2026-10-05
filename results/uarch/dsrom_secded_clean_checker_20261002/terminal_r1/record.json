@@ -1,0 +1,217 @@
+{
+  "actual_resources_children": {
+    "maxrss_KiB": 296156,
+    "system_s": 0.420193,
+    "user_s": 36.240701
+  },
+  "input_transition_ps": 20,
+  "model": {
+    "FF_hold_uncertainty_ps": 25,
+    "MACs_per_cycle": 0,
+    "Maxwell_admission_commit": "6e7c88e7ae1f7d8f4b5308a3d1e5d993bc7eec20",
+    "Maxwell_current_area_screen_mm2": 734.0705829880858,
+    "Maxwell_model_sha256": "dedd193ca40a312b869a7014f689438534e094257dc3ec248fe0ef46968133c1",
+    "PR_admitted": false,
+    "SS_period_ps": 833.333333,
+    "SS_setup_uncertainty_ps": 60,
+    "area_slot": "Keep existing733.7227518355257 conservative service screen and fullcorrector floors; add held state and mapped checkers without reuse credit. Actual slots/translated PG/OBS/via/clock/wire still required.",
+    "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+    "checker_latency_is_after_accepted_fullword_capture": true,
+    "clean_contract": "syn==0 && overall==0 AND valid accepted word/identity; payload direct release only after checker decision; source full decoder returns same data and no flags in this condition. No error-frequency or data-change assumption.",
+    "composed_model": "Retain Maxwell clean detector2cycles and heldII2 provisional service. Measurement may support an isolated1cycle logic screen; no automatic cycle reduction or token gain without actual capture/clock/route/accepted service.",
+    "cone_sha256": "b17ebbc04a7212f490fc79216c2c385fcab8e2e920ff674751632db8031aaa34",
+    "engine_RTL_admitted": false,
+    "engine_opt_in_default": false,
+    "finite_contract": "one accepted word/debt seat per replica; forbid overwrite/epoch/bank reuse until matched consumerACK or corrected-good ACK or fault/cancel physical drain. Full word and address/transaction remain held on error. No unchecked or early retirement. New reads refused while busy.",
+    "four_target_applicability": {
+      "DS_HBM": "no ROM parity provider transfer",
+      "DS_ROM": "current PAR2 ECC word validation",
+      "Qwen_HBM": "not applicable to GPU comparator",
+      "Qwen_ROM": "separate source/interface model required"
+    },
+    "fullcorrector_failure_commit": "9c3aeed6c292151bf32d54de342b44e1e348be24",
+    "guaranteed_II_cycles": null,
+    "input_ports": [
+      {
+        "K": 256,
+        "bits": 266,
+        "bytes": 33.25,
+        "direct_payload_bits": 256,
+        "logical_boundary_tracks": 533,
+        "outputs_bits": 11,
+        "outputs_bytes": 1.375
+      },
+      {
+        "K": 272,
+        "bits": 282,
+        "bytes": 35.25,
+        "direct_payload_bits": 272,
+        "logical_boundary_tracks": 565,
+        "outputs_bits": 11,
+        "outputs_bytes": 1.375
+      }
+    ],
+    "isolation_contract": "fast syndrome/overall outputs drive declared capture pins only. Slow correction is fed from held word or registered check state; unisolated sharing/dedup can recreate full-corrector fanout221/176 and is rejected.",
+    "new_checker_logic_charged_additionally": true,
+    "original_fullcorrector_area_allowance_mm2": 1.3275684864,
+    "own_extra_state_beyond_Maxwell_exception_hold_bits": 11312,
+    "pin_load": "one actual corner-specific DFFHQNx1 D pin on each syndrome9, overall and clean output;20ps input transition, actual input pin loads extracted",
+    "provisional_checker_latency_cycles": 2,
+    "replicas": [
+      {
+        "K": 256,
+        "N": 266,
+        "count": 412,
+        "held_word_bits": 274
+      },
+      {
+        "K": 272,
+        "N": 282,
+        "count": 256,
+        "held_word_bits": 282
+      }
+    ],
+    "retained_word_DFF_cell_area_only_mm2": 0.07072116480000001,
+    "retained_word_FF50_proxy_mm2": 0.18387502847999998,
+    "retained_word_state_bits": 242528,
+    "routing_capacity_after_exclusions": null,
+    "schema": "opentallas.dsrom.clean-checker-model.v1",
+    "source_pipeline_cycles": 0,
+    "source_sha256": "11d1398ef86747b01d87b81b4c0c43374ba7673038b16abdbb7ef60ee55b8795",
+    "source_state_bits": 0,
+    "state_contract": "per instance: complete held raw physical274 or main assembled282 + source identity74 includingnonce16; checker syndrome9/overall/clean +valid1. Raw reserved8 retained but not ECC data. No embedding credit."
+  },
+  "physical_adoption": false,
+  "results": {
+    "256": {
+      "cell_counts": {
+        "NOR3xp33_ASAP7_75t_R": 1,
+        "OR4x1_ASAP7_75t_R": 1,
+        "OR5x1_ASAP7_75t_R": 1,
+        "XNOR2xp5_ASAP7_75t_R": 468,
+        "XOR2xp5_ASAP7_75t_R": 140
+      },
+      "ff": {
+        "all_outputs_max_delay_ps": 256.66452,
+        "clean_max_delay_ps": 256.66452,
+        "errors": false,
+        "library_limits_exceeded": false,
+        "min_delay_ps": 11.66715,
+        "missing_templates": false,
+        "output_D_pin_fF": 0.62135,
+        "process": {
+          "elapsed_s": 0.6400463473983109,
+          "returncode": 0
+        },
+        "report_sha256": "3e8fb91e70f51b47932e050891e38404c7f2e95639514fad265a5fae88eb6e3e",
+        "virtual_slack_ps": [
+          516.668823,
+          516.668823,
+          -13.33285
+        ]
+      },
+      "mapped_area_um2": 80.07336000000001,
+      "mapping": {
+        "elapsed_s": 16.680236413143575,
+        "returncode": 0
+      },
+      "netlist_sha256": "088113a6b7bd36b47ea192fd9dbe044165a942ffc0031c0ce29ea4fbad7943a3",
+      "ports": {
+        "clean": 1,
+        "cw": 266,
+        "overall": 1,
+        "syn": 9
+      },
+      "ss": {
+        "all_outputs_max_delay_ps": 525.730774,
+        "clean_max_delay_ps": 525.730774,
+        "errors": false,
+        "library_limits_exceeded": false,
+        "min_delay_ps": 20.163107,
+        "missing_templates": false,
+        "output_D_pin_fF": 0.524726,
+        "process": {
+          "elapsed_s": 0.6530608301982284,
+          "returncode": 0
+        },
+        "report_sha256": "9fe421b993efecd5488705ba09a08fc3e8b2db40c916b9dc4a90ce1045cfc1b8",
+        "virtual_slack_ps": [
+          247.602554,
+          247.602554,
+          -4.836893
+        ]
+      },
+      "state_bits": 0
+    },
+    "272": {
+      "cell_counts": {
+        "NOR4xp25_ASAP7_75t_R": 1,
+        "OR4x1_ASAP7_75t_R": 2,
+        "XNOR2xp5_ASAP7_75t_R": 512,
+        "XOR2xp5_ASAP7_75t_R": 145
+      },
+      "ff": {
+        "all_outputs_max_delay_ps": 270.679443,
+        "clean_max_delay_ps": 270.679443,
+        "errors": false,
+        "library_limits_exceeded": false,
+        "min_delay_ps": 29.469517,
+        "missing_templates": false,
+        "output_D_pin_fF": 0.62135,
+        "process": {
+          "elapsed_s": 0.6638456666842103,
+          "returncode": 0
+        },
+        "report_sha256": "dbbfa064a279dd14caa672ed5f4acd872736a5c00ad658d4ed5ad5cdc7306061",
+        "virtual_slack_ps": [
+          502.653931,
+          502.653931,
+          4.469517
+        ]
+      },
+      "mapped_area_um2": 86.50314,
+      "mapping": {
+        "elapsed_s": 17.39371963078156,
+        "returncode": 0
+      },
+      "netlist_sha256": "598b421c7f9ec1cfb4cb7dd6d48b13634d99ae06879cb0eb5a882aeef57303f7",
+      "ports": {
+        "clean": 1,
+        "cw": 282,
+        "overall": 1,
+        "syn": 9
+      },
+      "ss": {
+        "all_outputs_max_delay_ps": 555.61792,
+        "clean_max_delay_ps": 555.61792,
+        "errors": false,
+        "library_limits_exceeded": false,
+        "min_delay_ps": 60.335278,
+        "missing_templates": false,
+        "output_D_pin_fF": 0.524726,
+        "process": {
+          "elapsed_s": 0.6669809869490564,
+          "returncode": 0
+        },
+        "report_sha256": "462e8c896f280d1cd1a19f00324db7d4f26536e4b62052e60c7d259235fedd64",
+        "virtual_slack_ps": [
+          217.715408,
+          217.715408,
+          35.335278
+        ]
+      },
+      "state_bits": 0
+    }
+  },
+  "source_commit": "68524a625ec0ea5963410637cdaafe58f9123d64",
+  "status": "MEASURED_CHECKER_ONLY_CONTEXT_OPEN",
+  "tool_sha256": {
+    "sta": "fe5ac66d24d6a9a439559f1e93986f666b3b2bb21d423e4b782f2389ce1c7528",
+    "yosys": "dab84e88b53146fe22d675a142de32b1e545ee9b7fe1054238f6220245b24c8d"
+  },
+  "tool_versions": {
+    "sta": "2.6.0",
+    "yosys": "Yosys 0.9 (git sha1 1979e0b)"
+  },
+  "wire_and_clock_context_bound": false
+}

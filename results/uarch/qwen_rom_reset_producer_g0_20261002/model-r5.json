@@ -1,0 +1,1876 @@
+{
+  "admission": {
+    "external_zero_delay_is_not_internal_failure": true,
+    "generic_literal_gate_is_not_hardware_admission": true,
+    "hardware_adoption": false,
+    "new_mapping": false,
+    "root_RTL": false,
+    "tile_PR": false
+  },
+  "clock_domains": {
+    "required_physical": "Streaming 1.2GHz, serial 0.9GHz. No separate 0.9GHz clock/reset/CDC port exists in this fixture. Two streaming FFs cannot alone release a physical serial domain.",
+    "serial_release": "Parent must provide distinct serial-domain release and readiness join; its hardware cost is not included in 0.84564um2.",
+    "source_die": "clk plus core.g_me_cg.u_me_cg.u_icg gated me_clk; enable forced by !rst_n; CXX tiles receive direct clk.",
+    "source_tile": "All tile registers clocked by clk; same 1.2GHz streaming proposal."
+  },
+  "conditional_external_release_window": {
+    "characterized_clock_and_reset_slew_ps": [
+      5,
+      320
+    ],
+    "deassert_max_ps_after_previous_root_posedge": 791.5025333333334,
+    "deassert_min_ps_after_previous_root_posedge": 92.5064,
+    "reset_low_pulse_min_ps": 321.045,
+    "scope": "Conservative external-root pin requirement across Liberty grids, before wire/skew. Both root FFs must meet it. This is not an observed provider phase, internal closure, or recovery/removal waiver."
+  },
+  "constraints": {
+    "address_min_arrival_plus_distribution_minus_skew_required_ps": 42.422199,
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833.3333333333334,
+    "reset_min_arrival_plus_distribution_minus_skew_required_ps": 50.049297,
+    "setup_uncertainty_ps": 60,
+    "unknown_arrivals_may_not_be_zero_filled": true
+  },
+  "die_bench_hardware": {
+    "clock_groups": {
+      "ot_qwen_rom_rt_die_w12/clk[0]": {
+        "clock_bits": 41094550,
+        "reset_bits": 1946081
+      },
+      "ot_qwen_rom_rt_die_w12/core/net2148594": {
+        "clock_bits": 2285470,
+        "reset_bits": 716246
+      }
+    },
+    "groups": {
+      "core": {
+        "async_reset_bits": 2225,
+        "clock_bits": 7866,
+        "sync_reset_bits": 0
+      },
+      "core/g_vsu.u_su": {
+        "async_reset_bits": 1941813,
+        "clock_bits": 41082559,
+        "sync_reset_bits": 0
+      },
+      "core/u_me": {
+        "async_reset_bits": 716246,
+        "clock_bits": 2285470,
+        "sync_reset_bits": 0
+      },
+      "seq": {
+        "async_reset_bits": 2043,
+        "clock_bits": 4091,
+        "sync_reset_bits": 0
+      },
+      "tile_or_die_local": {
+        "async_reset_bits": 0,
+        "clock_bits": 34,
+        "sync_reset_bits": 0
+      }
+    },
+    "primitives": {
+      "ICGx1_ASAP7_75t_R": 1
+    },
+    "register_inventory": {
+      "path": "results/uarch/qwen_rom_reset_producer_g0_20261002/die_registers_r1.json.gz",
+      "register_cell_count": 1144481,
+      "sha256": "01f36b3238607b9032024dcafac92aaddc444235b80232588992b488c02713f6"
+    },
+    "scope": "Complete elaborated hierarchy, proc only; no opt/map/CTS. Register WIDTH is a source load inventory, not mapped pins.",
+    "top": "ot_qwen_rom_rt_die_w12",
+    "totals": {
+      "async_reset_bits": 2662327,
+      "clock_bits": 43380020,
+      "memory_clock_ports": 0,
+      "sync_reset_bits": 0
+    }
+  },
+  "parent_milestone": {
+    "commit": "68a05aca992a86da70c2ef362a0815508a69a506",
+    "hardware_qualification": false,
+    "literal_review": {
+      "SS_FF_closed": false,
+      "bank_strobe_and_address_mutants_rejected": true,
+      "compressed_and_raw_artifact_counts_verified": {
+        "distribution_terminal_r1_manifest.json": 14,
+        "integrated_terminal_r2_manifest.json": 16,
+        "terminal_manifest_r1.json": 15
+      },
+      "four_state_checks_per_run": 77,
+      "full_tile_mapped_survival_proven": false,
+      "hardware_admitted": false,
+      "immutable_model_source_origins_verified": 13,
+      "independent_literal_runs": [
+        "Qwen-bank5-parent-literal-20261002.json",
+        "Qwen-context-parent-literal-20261002.json"
+      ],
+      "induction_PASS": true,
+      "parent_execution_caps": "none imposed by parent wrapper; source/tool/flags preserved; functional proof only",
+      "parent_final_focused_tests_passed": 91,
+      "parent_test_log": "results/uarch/native_software_parent_intake_20261002/Qwen_C0_parent_final_tests_PASS.log",
+      "raw_elaboration_BUFx4_count": 76,
+      "remaining": [
+        "actual reset release protocol and recovery/removal",
+        "complete-tile clock/reset and address arrivals",
+        "full-tile mapping/CTS/PGOBS/routing and SSFF"
+      ],
+      "reset_context_owner": "Ampere independently prices actual complete parent reset/clock/address; no wait on unrelated DS reticle",
+      "schema": "opentallas.Qwen.ROM.bank5-context.parent-review.v1",
+      "worker_commit": "51218664b81ba61f5ffddb2790eacb227cfc87cb"
+    },
+    "provider_additive_manifest": {
+      "hardware_qualified": false,
+      "records_sha256": {
+        "atomic_owner_contract.json": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d",
+        "composed_owner_model.json": "6c6fc77dbc52d7312491699d332272376a58309cb835c72fc8d4ad71995f90af",
+        "integration_API.json": "1a16343a9ab1feb560b0dfb6b847a703a610816c51e575d80e24b89c10c0c577",
+        "source_join.json": "119a60a0f2a0f49577bbc62b2c41f2d756b8400f7baea4a18365091cd45372a3"
+      },
+      "source_sha256": {
+        "tools/h4_c0_forward_observer.py": "b968934fa94be395ba9aff9eadd984a7a7973f1da8bfe9be269badef675eb128",
+        "tools/h4_c0_forward_observer_addressed.py": "d54248d07916c7939b91db638af491a46f7f0bfbf1e4e7e0f300a2a441eb5d66",
+        "tools/h4_c0_parent_provider_join.py": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a",
+        "tools/h4_c0_provider_movement.py": "4ab7c01298d9e6948c3d53a04c833bf0e2f55cf0e664215b88fcb097f4899164",
+        "tools/h4_c0_v1_owner_lock.py": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22",
+        "tools/h4_c0_v1_owner_lock_addressed.py": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+        "tools/test_h4_c0_parent_provider_join.py": "f3bacfad5f6347d02a53762bf697ea1eb142682cf99041e83a1c210a97f6edbc",
+        "tools/test_h4_c0_provider_movement.py": "50e75084479d44a4e07d7bd3ae4ac12378fb78b01b6cc3c563b1ebe9dbb43931",
+        "tools/test_h4_c0_v1_owner_lock.py": "3b88466b493ac849662fcf6bcaccad312147eb4334961db2426af7d30524ead9",
+        "tools/test_h4_c0_v1_owner_lock_addressed.py": "bee57b1acea6690a632ab7faf4a3c4f9171520f5ddf83bcae2d2997b369b444a",
+        "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+      }
+    },
+    "r33_lowered_window_join_complete": false,
+    "restored_original_observer": true
+  },
+  "persistent_KV": {
+    "adoption": false,
+    "blockers": [
+      "existing TP2 raw-state provider now translated by global head identity; actual ROM TP4 producer/stage owner state still unconnected",
+      "r14 tag freed on owned acceptance before reverse credit and lacks caller-visible allocation receipt; provider successor must retain identity/quarantine and expose allocation tag",
+      "r14 read reverse credit validation missing; no inherited runtime PASS",
+      "calendar conservative scan/return reservations not measured service; full-program releases and runtime arithmetic identity unresolved",
+      "complete service area, finite port arbitration, hub routing-layer capacity and current slot placement unresolved",
+      "contextual SS60ps/FF25ps at source-matched1GHz service and1.2GHz fill unresolved"
+    ],
+    "clock_reset": {
+      "payload": "Reset may clear validity/control only under drain/quarantine contract. Host stage KV reset does not establish persistent state; never erase persistent KV on layer hop.",
+      "physical_release": "Parent must coordinate service/FIFO reset and credits with tile readiness; tile two-FF streaming root cannot release the 1GHz service or 0.9GHz serial domain.",
+      "serial_Hz": 900000000,
+      "service_Hz": 1000000000,
+      "source": "r14 clock_bridge has src_clk/fast_clk/dst_clk and shared rst_n. FIFO/held-route reset users are a separate service branch, not tile metadata sinks.",
+      "streaming_Hz": 1200000000
+    },
+    "fill_capture": {
+      "address_rows_per_tile": 54,
+      "asynchronous_reset_bits": 1,
+      "edges_to_macro_visibility": 2,
+      "fields": {
+        "address": 7,
+        "ce": 1,
+        "data": 512,
+        "mask": 512
+      },
+      "note": "Source wrapper registers kvw_*; only kvw_ce_q resets. Added once to logic-only census; two 128x256 SRAM clocks counted separately.",
+      "register_clock_bits": 1032
+    },
+    "latency": {
+      "admitted_latency_or_rate": false,
+      "conservative_composition": {
+        "compute_cycles": 134086,
+        "delta_from_old_max": 387403068,
+        "existing_kv_bound_cycles": 50331.647999999994,
+        "existing_kv_bound_replaced": true,
+        "finite_delivery_cycles": 387403068,
+        "incremental_read_bytes": 0,
+        "proven_overlap_cycles": 0,
+        "token_cycles": 387537154
+      },
+      "conservative_seconds": 0.32294762833333335,
+      "existing_read_bytes_charged_once": 150994944,
+      "incremental_full_reload_bytes": 0,
+      "qualification": "Legal conservative calendar under disclosed guards. No measured r14 stall bound, selected prefetch overlap, actual8K ROM state, runtime or physical transfer credit.",
+      "reset_startup_addition": "Two streaming startup edges only once, conditional on joined domain readiness; never repeat per layer or per token, never add another KV read charge.",
+      "selected_production_policy": false
+    },
+    "lowered_window_gap": "Current r33 lowered-window integration remains unjoined. No actual TP4 persistent producer/stage owner join, retained allocation receipt, validated reverse-credit/quarantine, or full selected prefetch/fill release trace. No numerical second-position run.",
+    "owner_bindings": {
+      "Euclid": [
+        "Bind actual producer PC/owner and raw FP8 result into identity() and Delivery; no host stage KV reset may qualify persistent state.",
+        "Join Homes.tile raw code/mask tuples to actual registered tile fill and macro visibility;54 addressed rows at8K, not historical44.",
+        "Require full reader drain and ACK/credit retirement before overwriting one active layer; no second numerical position requested."
+      ],
+      "Kepler": [
+        "Expose allocated physical tag receipt; retain owner until validated per-beat reverse credit and grant release.",
+        "Fix r14 early tag free and unconditional read credit grant; bind exact request455/return467/reverse404 interfaces and two package endpoints.",
+        "The candidate32sector/16burst credit inventory needs1024 worst-case assembly slots/stack; the serial reference exercises one sector at a time and cannot claim burst speed."
+      ],
+      "Maxwell": [
+        "Replace existing KV bound once with a selected production release/prefetch trace; current cold serial calendar does not require a refill policy.",
+        "Keep read150994944B/rank separate from actual RMW/write traffic; zero overlap is this conditional case only.",
+        "Finish service/control/CAM/mux/quarantine area, fill demux routing-layer capacity and source-matched slot placement; no architecture admission from macro sums."
+      ]
+    },
+    "resources": {
+      "CDC": "source r14 two depth2 FIFOs plus one held38FAST-edge route; preflight42FAST+3destination edges, per direction; request/return/reverse credit/held grant",
+      "RMW_merge_serial_edges": 27,
+      "actual_bridge_payload_bits_per_rank": 27228,
+      "actual_service_macro_area_mm2_per_rank": 3.907876736,
+      "actual_service_macro_area_mm2_per_stack": 0.976969184,
+      "actual_service_macro_count_per_stack": 96,
+      "allocation_receipt_additional_bits": 12,
+      "allocation_receipt_required": true,
+      "area": "payload/register lower bound only; allocator/CAM/mux/retirement/quarantine/CDC/control area still required",
+      "assembly_area_lower_bound_mm2": 0.9399877632,
+      "assembly_binding": {
+        "burst_bytes": 1024,
+        "burst_credits_per_stack": 16,
+        "per_burst_destinations": {
+          "K": 16,
+          "V": 64
+        },
+        "prior16_slot_proposal_sufficient": false,
+        "required_slots_per_stack": 1024,
+        "slot_retirement": "registered masked SRAM fill accepted and write visibility precede credit return"
+      },
+      "assembly_entries_per_stack": 1024,
+      "assembly_payload_bits_per_slot": 787,
+      "boundary_tracks": {
+        "command_per_stack": 339,
+        "fill_lane": 1048,
+        "request_per_stack": 455,
+        "return_per_stack": 467,
+        "reverse_per_stack": 404
+      },
+      "burst_record_bits_per_slot": 236,
+      "burst_sectors": 32,
+      "byte_mask_to_bit_mask": "each valid raw code expands to8 mask bits; no BF16 streamer conversion",
+      "channel_capacity": null,
+      "communication_intensity": "one raw byte per existing KV byte, masks additional",
+      "compute_intensity_MAC_per_byte": 0,
+      "destination_selector_bits": 11,
+      "directory_bits_per_rank": 2340,
+      "fill_capacity_bytes_per_stream_edge": 64,
+      "fill_demux_data_mask_bits": 1024,
+      "fill_demux_outputs": 1536,
+      "fill_lanes_per_rank": 1,
+      "finite_control": "136 pending writer descriptors per rank, one writer and reader per rank,144 total layer-directory entries, transport generations32bit with drain-before-wrap",
+      "historical_dimension_rows": 44,
+      "inherited_service_slot_mm2_per_stack": 16.6015872,
+      "inherited_slot_is_not_current_fit": true,
+      "macro_port_bytes_per_edge": {
+        "context_ram_read": 32,
+        "context_ram_write": 32,
+        "request_ram_read": 64,
+        "request_ram_write": 64,
+        "return_ram_read": 64,
+        "return_ram_write": 64
+      },
+      "macros_still_fit": true,
+      "macs_per_cycle": 0,
+      "outstanding_bursts_per_stack": 16,
+      "payload_storage_bits_per_rank": 3762944,
+      "quarantine_bits_per_stack": 4336,
+      "required_parallel_signal_tracks_at_fill_boundary": 1048,
+      "reserved_response_bytes_per_stack": 16384,
+      "serial_target_Hz": 900000000,
+      "service_target_Hz": 1000000000,
+      "slot_fit": null,
+      "source_address_map_rows_per_tile": 54,
+      "stack_boundary_bytes_per_service_edge": 32,
+      "stream_target_Hz": 1200000000,
+      "writer_mode": "Conservative candidate drains K tail to backing via partial-sector RMW on layer hop; V full sectors; zero overlap credited. This drain is newly priced, not production-measured.",
+      "writer_pending_descriptor_bits_per_rank": 44472
+    },
+    "slot": {
+      "complete_control_CDC_demux_area_mm2": null,
+      "current_channel_capacity": null,
+      "current_slot_fit": null,
+      "fill_boundary_tracks": 1048,
+      "inherited_service_slot_mm2_per_stack": 16.6015872,
+      "note": "Service SRAM inventory exists; macro fit alone is not complete service/reset/CTS/PGOBS/routing fit.",
+      "service_macro_area_mm2_per_stack": 0.976969184,
+      "service_macro_count_per_stack": 96
+    },
+    "source_commit": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe",
+    "source_ports": {
+      "r14": {
+        "command_bits_per_stack": 339,
+        "commands_per_edge": 1,
+        "owned_bits": 465,
+        "owner_lookup_edges": 12,
+        "pseudo_channels_per_stack": 32,
+        "request_bits": 455,
+        "request_entries_per_PC": 64,
+        "return_arbitration_edges": 7,
+        "return_entries_per_PC": 32,
+        "return_wire_bits": 467,
+        "reverse_wire_bits": 404,
+        "stacks_per_rank": 4,
+        "tags_per_stack": 4096,
+        "write_residence_per_stack": 4
+      },
+      "sector_bridge": {
+        "bytes": 32,
+        "len": 1,
+        "outstanding": 1,
+        "write_completion": "request acceptance only"
+      },
+      "tile": {
+        "address_bits": 7,
+        "addressed_fill_bits": 1048,
+        "fill_capture_then_macro_write_edges": 2,
+        "fill_data_bytes_per_edge": 64,
+        "macro_write_bytes_per_edge": 32,
+        "macros_per_tile": 2,
+        "mask_bits": 512,
+        "read_bytes_per_tile_edge": 64,
+        "replicas": 1536
+      }
+    },
+    "status": "CANDIDATE_FUNCTIONAL_CONTRACT_G0_BLOCKED"
+  },
+  "price": {
+    "adoption_1percent_gate": false,
+    "bench_start_added_cycles_if_first_sample_cyc8": 0,
+    "clock_inventory_after_root_and_physical_memories": 134624,
+    "complete_distribution_and_CTS_area_um2_per_tile": null,
+    "corridor_note": "One local root/tile; existing shared reset/clk still require fanout routing. Zero new global signals does not establish routing fit.",
+    "corridor_track_capacity": null,
+    "dies": 4,
+    "first_accept_edge_time_ps": 2500.0,
+    "first_downstream_accept_edge": 3,
+    "global_reset_fanout_note": "3072 root RESETN pins/die plus separate die/core branch; do not drive them with one assumed ideal source.",
+    "hold_relaxed": false,
+    "hold_uncertainty_ps": 25,
+    "incremental_global_corridor_signals": 0,
+    "memory_clock_note": "10 ROM and 2 KV physical macro CLK ports added to logic-only inventory; macros themselves are not reset.",
+    "metadata_reset_bits_already_on_15BUF_tree": 90,
+    "per_die_root_replicas": 1536,
+    "per_layer_added_cycles": 0,
+    "physical_complete": false,
+    "physical_slot_fit": null,
+    "prior_bank5_control_reservation_um2_per_tile": 23.1822,
+    "rate_gain_percent": 0,
+    "release_two_cycle_budget_ps": 1666.6666666666667,
+    "remaining_tile_async_reset_bits": 58829,
+    "reset_and_clock_routing_tracks_required": null,
+    "reset_replica_demuxes": 0,
+    "reset_replica_muxes": 0,
+    "root_MACs_per_cycle": 0,
+    "root_boundary_bits": {
+      "external_reset": 1,
+      "streaming_clk": 1,
+      "tile_reset": 1
+    },
+    "root_cell_area_mm2_per_die": 0.00129890304,
+    "root_cell_area_um2_per_tile": 0.84564,
+    "root_cells_per_tile": 4,
+    "root_memory_bytes_per_cycle": 0,
+    "root_plus_prior_reservation_um2_per_tile": 24.02784,
+    "setup_period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "source_census_note": "Pre-opt proc WIDTH totals, not mapped pin survival. Core includes bench/sequencer, spine and SU; hosted tile fabric added exactly once.",
+    "source_die_core_async_reset_bits": 2662327,
+    "source_die_core_clock_bits": 43380020,
+    "source_die_plus_all_tile_async_reset_bits": 93161911,
+    "source_die_plus_all_tile_clock_bits": 250140980,
+    "source_fulltile_KV_fill_clock_bits": 1032,
+    "source_fulltile_KV_fill_reset_bits": 1,
+    "source_logic_tile_async_reset_bits": 58918,
+    "source_logic_tile_clock_bits": 133578,
+    "source_pin_loads": {
+      "ff": {
+        "added_clock_cap_fF": 1.006304,
+        "external_reset_cap_fF": 1.605818,
+        "note": "Pin-only nominal inputs. Wire, CTS and all other tile reset loads require the actual mapped parent.",
+        "stage1_INV_load_fF": 0.623429,
+        "stage1_QN_load_fF": 0.683716,
+        "stage2_INV_metadata_root_load_fF": 0.581966,
+        "stage2_INV_other_tile_reset_load_fF": null,
+        "stage2_QN_load_fF": 0.683716
+      },
+      "ss": {
+        "added_clock_cap_fF": 0.867964,
+        "external_reset_cap_fF": 1.40805,
+        "note": "Pin-only nominal inputs. Wire, CTS and all other tile reset loads require the actual mapped parent.",
+        "stage1_INV_load_fF": 0.527811,
+        "stage1_QN_load_fF": 0.578766,
+        "stage2_INV_metadata_root_load_fF": 0.511385,
+        "stage2_INV_other_tile_reset_load_fF": null,
+        "stage2_QN_load_fF": 0.578766
+      }
+    },
+    "source_tile_async_reset_bits": 58919,
+    "source_tile_clock_bits": 134610,
+    "startup_added_cycles_if_previous_accept_edge1": 2,
+    "startup_release_edges": 2,
+    "startup_serial_domain_cycles": null,
+    "steady_token_added_cycles": 0,
+    "tile_count_per_die": 1536,
+    "upstream_external_reset_added_nominal_pins_per_die": 3072
+  },
+  "protocol": {
+    "acceptance": "Release after edge 2; first downstream acceptance edge 3. IREG captures ib/x/go then; engine accepts at edge 4; first ROM producer re/address after edge 5; macro accepts edge 6; MEM_EXTRA capture edge 7.",
+    "assertion": "Asynchronous low assertion, no ROM ECC added; reset valid/control, not ROM payload.",
+    "bench": "rt_rst_n NBA at cyc5. Synchronizer stages sample at cyc6/7; downstream reset available at cyc8. Bench start NBA at cyc7 is first sampled at cyc8. This is a source schedule, not a physical inputdelay.",
+    "per_layer_added_cycles": 0,
+    "per_token_added_cycles": 0,
+    "queue": "Tile ready()/idle() are unconnected. No ready handshake or request queue exists at ib_go. Parent must hold/schedule ib_go and ib/x through first acceptance; never silently add a queue.",
+    "release": "Two same-streaming-clock DFFASR/QN plus two INV. External RESETN on both; SETN tied high. No arbitrary-phase recovery/removal waiver.",
+    "scope": "Per-tile producer resets complete tile control. Die/core remain a distinct upstream reset branch. A global owner must coordinate starts and streaming/serial readiness.",
+    "startup_trace": [
+      {
+        "edge": 1,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 0
+      },
+      {
+        "edge": 2,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 0
+      },
+      {
+        "edge": 3,
+        "engine_go": 0,
+        "ib_go": 1,
+        "producer_read_after": 0,
+        "reset_before": 1
+      },
+      {
+        "edge": 4,
+        "engine_go": 1,
+        "ib_go": 0,
+        "producer_read_after": 0,
+        "reset_before": 1
+      },
+      {
+        "edge": 5,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 6,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 7,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      },
+      {
+        "edge": 8,
+        "engine_go": 0,
+        "ib_go": 0,
+        "producer_read_after": 1,
+        "reset_before": 1
+      }
+    ]
+  },
+  "ranked_release_dependencies": [
+    {
+      "missing": "Physical external RESETN min/max phase, pulse width, recovery/removal at both root FFs; coordinated streaming/serial reset and start contract.",
+      "owner": "Qwen die/reset parent",
+      "rank": 1
+    },
+    {
+      "missing": "Mapped complete-tile clock/reset pin classes and loads, full reset distribution, CTS slew/skew, source address/strobe CLKQ SS/FF. Source register census below is complete for the explicit fixture.",
+      "owner": "Qwen tile context parent",
+      "rank": 2
+    },
+    {
+      "missing": "Incremental reset/clock tree cells and wire, pin/OBS/PG slot placement and routing-layer/corridor capacity receipt.",
+      "owner": "Qwen physical slot parent",
+      "rank": 3
+    },
+    {
+      "missing": "Only after 1-3 compose: actual two-FF/INV path FF hold, SS setup, recovery/removal, macro capture, pulse width, complete tile SS/FF. No input-zero-delay failure relabeling.",
+      "owner": "Euclid/context STA",
+      "rank": 4
+    }
+  ],
+  "release_equations": {
+    "address_hold": "registered_address_CLKQ_min + two_BUF_min + wire_min - macro_CLK_skew_max >= 42.422199ps",
+    "external_root_recovery": "next_root_CLK_min - RESETN_max >= SS recovery(slews, condition) +60ps",
+    "external_root_removal": "RESETN_min - root_CLK_max >= FF removal(slews, condition) +25ps",
+    "no_waivers": "Apply at both external rootFF RESETN pins, every tile reset pin and every active macro capture endpoint. Grid envelopes do not establish slew or arrival bounds.",
+    "tile_recovery": "Tstream - root_stage2_CLKQ_max - INV_max - reset_distribution_max - skew_max >= SS recovery +60ps",
+    "tile_removal": "root_stage2_CLKQ_min + INV_min + reset_distribution_min - downstream_CLK_skew_max >= FF removal +25ps"
+  },
+  "root_RESETN_constraint_grid_envelopes": {
+    "ff": [
+      {
+        "condition": "(D * SETN)",
+        "max_ps": -9.72729,
+        "min_ps": -53.1152,
+        "type": "recovery_rising"
+      },
+      {
+        "condition": "unconditional",
+        "max_ps": -9.72729,
+        "min_ps": -53.1152,
+        "type": "recovery_rising"
+      },
+      {
+        "condition": "(D * SETN)",
+        "max_ps": 67.5064,
+        "min_ps": 17.4588,
+        "type": "removal_rising"
+      },
+      {
+        "condition": "unconditional",
+        "max_ps": 67.5064,
+        "min_ps": 17.4588,
+        "type": "removal_rising"
+      },
+      {
+        "condition": "(CLK * SETN)",
+        "max_ps": 321.045,
+        "min_ps": 20.1416,
+        "type": "min_pulse_width"
+      },
+      {
+        "condition": "(!CLK * SETN)",
+        "max_ps": 321.045,
+        "min_ps": 20.1416,
+        "type": "min_pulse_width"
+      }
+    ],
+    "ss": [
+      {
+        "condition": "(D * SETN)",
+        "max_ps": -18.1692,
+        "min_ps": -84.2478,
+        "type": "recovery_rising"
+      },
+      {
+        "condition": "unconditional",
+        "max_ps": -18.1692,
+        "min_ps": -84.2478,
+        "type": "recovery_rising"
+      },
+      {
+        "condition": "(D * SETN)",
+        "max_ps": 107.064,
+        "min_ps": 30.3418,
+        "type": "removal_rising"
+      },
+      {
+        "condition": "unconditional",
+        "max_ps": 107.064,
+        "min_ps": 30.3418,
+        "type": "removal_rising"
+      },
+      {
+        "condition": "(CLK * SETN)",
+        "max_ps": 321.045,
+        "min_ps": 34.8508,
+        "type": "min_pulse_width"
+      },
+      {
+        "condition": "(!CLK * SETN)",
+        "max_ps": 321.045,
+        "min_ps": 36.9042,
+        "type": "min_pulse_width"
+      }
+    ]
+  },
+  "schema": "opentallas.qwen-rom-reset-context-g0.v1",
+  "selected_model_extension": "tools/uarch_model_qwen_reset.py",
+  "source_ports": {
+    "ROM_physical_bits_per_active_port": 266,
+    "ROM_ports": 10,
+    "address_width_bits": 24,
+    "bank_strobe_loads": [
+      6,
+      6,
+      5
+    ],
+    "extra_strobe_D_sinks": 4,
+    "hold_term_loads": [
+      8,
+      8
+    ],
+    "low_address_bits": 12,
+    "macro_address_sinks": 120,
+    "memory_MACs_per_cycle": 64,
+    "metadata_reset_leaf_loads": [
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      8,
+      2
+    ],
+    "note": "64 MAC/cycle describes existing W16/TG4 tile; reset block performs zero MACs and zero memory transfers.",
+    "payload_bits_per_active_pair": 512,
+    "producer": "u_me.g_issue_fast: registered wrom_re, wrom_addr<=cur; address has no reset assignment and is qualified only by accepted CE."
+  },
+  "sourcepins": {
+    "base_main_commit": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+    "baseline_restored_byteidentical_to": "433ccff91c9ed6f0e61761bdbffa11f4878d6339",
+    "historical_model_revision": "model-r4.json",
+    "latest_parent_milestone": "68a05aca992a86da70c2ef362a0815508a69a506",
+    "parameter_scope": "Die non-overridden parameters are actual fixture defaults. This observed bench hardware is not a physical W12 wire-stage admission; parent final instantiated parameters require a new additive census if different.",
+    "parameters": {
+      "die": {
+        "ACC_LAT": 7,
+        "BD": 1,
+        "D": 4,
+        "FAST_ISSUE": 1,
+        "G": 6144,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "NWS": 0,
+        "ORD": 0,
+        "SMAX": 10,
+        "SMIN": 7,
+        "SW": 1024,
+        "TCUT": 7,
+        "TREE_LAT": 7,
+        "TWS": 0,
+        "XVM": 0
+      },
+      "tile": {
+        "ACC_LAT": 7,
+        "CODE_BANKS": 5,
+        "FAST_ISSUE": 1,
+        "GT": 6144,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "ROM_BANK5_CONTROL": 1,
+        "ROM_CONTROL_DISTRIBUTION": 1,
+        "ROM_HOLD_DIRECT_CAPTURE": 1,
+        "TG": 4,
+        "TREE_LAT": 7,
+        "W": 16
+      }
+    },
+    "parent_commit": "51218664b",
+    "parent_model_commit": "cdcbe60a34389a5671f9e303c4f5023e83b23710",
+    "persistent_KV_source": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe",
+    "re_elaboration_performed": false,
+    "selected_model_extension": "tools/uarch_model_qwen_reset.py",
+    "sha256": {
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/die_proc.json.gz": "3c841a0b9e96c932ade50fdebc94eb9a9142bda9705a02c19b7cf0f9595cfb98",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/BUF_blackbox.sv": "3bec51be995696fa162bdd77ad95a8c065992659eb2f800ac7942a2556e829e5",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/ICG_blackbox.sv": "67940a5049925fb60b221000ca5355f8038593227285582da13e7b0a2c219b7f",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_BUF_blackbox.sv": "d193540996f05eb2868edb8c244fe90b6e118ff491e554b1786e7132e738eb53",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_fp32_add_rne_pipe.sv": "7b2e00cdf3b370a870fbbd565731b6751afd1d187fa5f70a3973266dab1408c4",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_delay.sv": "e9a9efab50a9dbae0d1d6b7427c0e084a160383799b5d68e2398b9ca78661470",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_fastfp.sv": "25d2f4ff5eef9e97a3a8da4a024941bfe8e5e0476f0796828d4ce6103e2bb87a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_fp32_add_lat.sv": "65ccd31527a8a891b51d13a280f3520b2a756a6f0730105b4f3178dadbe71f54",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_fp32_mul_pipe.sv": "5dc167fcf9834fd4bd3900b2862bf438382183d5780fc8bcfd288051d36de0d9",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_fpu.sv": "a561aedeb740ff3fd03098e377ea2f02b91a8cec4000def11d2db070ab90b928",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_matvec.sv": "e28b85a3cb514817c098087f2109136446ed0a776ae1a3abc365e5cf01ac78bb",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_prefix.sv": "c52d1744c572ab261bc4f10b2522b15a894de673ea579d72eb6b1db498dbf59c",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_hdc_sfu.sv": "ddcc3ebc6200d1e57772d64a32d2b3ce3bff4113194dcd9d2f842b165f672362",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_me_array_w12.sv": "6512ef3e571bfc6cf21c27d3764789ca3feec3874e73fb39275f9b59f1039d9a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_bank5_control_distribution.sv": "6ea152d65c3e29d25a6216c50671f3211d3486b7b7d847bada5a0aac00f87328",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_rom_tile_context_candidate_r2.sv": "b21009589fffb88a35dbb2f1c0f97b4a637cbc861131d5ffaff3f18f142f55ab",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_arith.sv": "93d804170fc1e68c591e38cf0e06724d5d1eb971e80cbe9b93c74612d82ac527",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/census_ot_qwen_w12_matvec.sv": "82bb3a691564bc663af5287951e6b2b3f5fabb7d6900e2c3fb9bcf75a22a2c86",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/context_origins_r1.json": "72d94533a44033999b93f4e0df46214685bc61e1fbe2f173727193502f2002ba",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ff.lib.gz": "397d365ba61d6723a190c243259927dfd94e7f2a6e633717c91f3ef99bfa1d97",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/invbuf_ss.lib.gz": "874764b0c9695f283f39abef87d761d70fef34be9b492ed339271661f647c49c",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/model-r3.json": "6c29c80c881e0513e762eeae98b781be88dbc580e9c3b30c707a2aad051fbdda",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/ot_hdc_vstream_rt.sv": "361e6b16f4ed2f4226e001b83ece289201741ac0c5b52250a255fa1c602c8a55",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/ot_qwen_rom_bank5_control_distribution.sv": "7b1f5eacaec02856ab44d30df9b02ea2496594df75602e990ff433054ecbaa73",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/ot_qwen_rom_core.sv": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/ot_qwen_rom_tile_context_candidate_r2.sv": "8454cbb977f47f7109afb9ca9f6453cf53286f10346924ea956e3167c23a15d0",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_Qwen_bank5_context_parent_review.json": "b8ed07db8ec83b7ebaa8d47112cfe5e8e1c46337d990d733c40a6aabbedabbbf",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_manifest.json": "6f0fdc6c9bd9f0d9246e6cc3122e05e676ad71038e565ec351a7c8d6af81f999",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_model_atomic_owner_contract.json": "2614837337c407eb801a0844440fd07d34a244e28dd4d660384a0de4c0a4146d",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_model_byteidentity_r1.json": "f4e92a5fd28c4b00154476294fe832ddaad8365ff05c072982af58e8b8a7ccbf",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_model_composed_owner_model.json": "6c6fc77dbc52d7312491699d332272376a58309cb835c72fc8d4ad71995f90af",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_model_integration_API.json": "1a16343a9ab1feb560b0dfb6b847a703a610816c51e575d80e24b89c10c0c577",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_model_source_join.json": "119a60a0f2a0f49577bbc62b2c41f2d756b8400f7baea4a18365091cd45372a3",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_forward_observer.py": "b968934fa94be395ba9aff9eadd984a7a7973f1da8bfe9be269badef675eb128",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_forward_observer_addressed.py": "d54248d07916c7939b91db638af491a46f7f0bfbf1e4e7e0f300a2a441eb5d66",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_parent_provider_join.py": "b0e4e3eb7b36cf716be04bbec06c860f0d4d435ae9e1990d806abad0d4b0801a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_provider_movement.py": "4ab7c01298d9e6948c3d53a04c833bf0e2f55cf0e664215b88fcb097f4899164",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_v1_owner_lock.py": "38fd7d803d856d7cd29c1e43c95254754cf907bf7d84e532e2e44f4f8bc48b22",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__h4_c0_v1_owner_lock_addressed.py": "af25f5fcec8730db28f3a988877364601823e2a13605257bfe07e3f4bf641528",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__test_h4_c0_parent_provider_join.py": "f3bacfad5f6347d02a53762bf697ea1eb142682cf99041e83a1c210a97f6edbc",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__test_h4_c0_provider_movement.py": "50e75084479d44a4e07d7bd3ae4ac12378fb78b01b6cc3c563b1ebe9dbb43931",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__test_h4_c0_v1_owner_lock.py": "3b88466b493ac849662fcf6bcaccad312147eb4334961db2426af7d30524ead9",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__test_h4_c0_v1_owner_lock_addressed.py": "bee57b1acea6690a632ab7faf4a3c4f9171520f5ddf83bcae2d2997b369b444a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/parent_source_tools__uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/provider_context_r1.json": "080267ae007bd9d707180059aed753a172a92138a16abc5ea1d920b7a792119a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_BUF_blackbox.sv": "d193540996f05eb2868edb8c244fe90b6e118ff491e554b1786e7132e738eb53",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_fp32_add_rne_pipe.sv": "e6164b2eca635a90a569738d243dae2619ab8324607b1fce98716a3f5be30736",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_delay.sv": "a6088a212933ba60f68e38e359783c61563ea8b439f6f67b4ec6f08f7c4487a0",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_fastfp.sv": "47502ad097a092d15060b7558c653b9362f9d0a28c84fc0b37698138ce75182e",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_fp32_add_lat.sv": "583326017bd81bb536d210fb1a1ec74401d3bace178a4e1378a3eaa11c91f8c0",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_fp32_mul_pipe.sv": "ec4c78e5a8b847b621e48d28e94007a1572eaefad0d995150cd165adcf2f8ef1",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_fpu.sv": "86c01cca2c58b609b813adfc3994732f4ae4a7275bc66cfb35a84010c8c2ed6e",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_matvec.sv": "0e13a66c6d92b41bc3825b9f0cc9068a971202005e290b5c106196b0abb151ae",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_prefix.sv": "980fb8940216c79d74b00f472273185bb1cb52b7cb7cf6c5e3a8eb369ffeccaa",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_hdc_sfu.sv": "5bf2713e0ef206c026003288b1b875b5d91a91d52ead42cc5107c7d5713d1f17",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_qwen_me_array_w12.sv": "cd04416ec2f84d6c51f4cadfd5b789f012afaa68186ad07cde406b6f0e1074ac",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_qwen_rom_bank5_control_distribution.sv": "02d40613d3dbd03562d2ddd9176371b22d2b9c5acac9d111d045630459ef5fc8",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_qwen_rom_tile_context_candidate_r2.sv": "2dc481d9d7cfe29e61c7070da72a657b6b1e24e08618688e6bacea982e98c94c",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_qwen_w12_arith.sv": "5af76756b857e0e86432375fc54ad304a963269c4473a623d472ee4ed7987ab5",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/r4_census_ot_qwen_w12_matvec.sv": "ac88be6527b3921a8725afa0a20d9441596b368c3595a22da79b47affadfba6f",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/reset_producer_price_inputs_r1.json": "413acd7d2579583248cd7f27ac002b8f90836aa2b58b97a7fef94e3861d49b4f",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_contract_r8.json": "0936e783448fd4ee9c7998c55ebc6d4d34ad1fcd1b989017afb5678b75797c17",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_full_calendar_r8.json": "c1618fe0c66f91549eb1b37675276d15fdf29a108d6e60b91b6890f4bc3abc92",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_handoff_r8.json": "f69ed65ff75bd60f89b94b99dc038751e60e729ebb904d09799d7f68c8ab2f35",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_physical__asap7_memory_macros__index.json": "08255529d597c67d9306bc9a33f801b2d0f0729c8180be7df483e2704aeb7f2b",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__hdc__kv__ot_hdc_qwen_hbm_sector_bridge.sv": "2cb3c6d81e343bce86474b64eea27c6b48dbc897f1d988e9212cd1d7d1d1b764",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__hdc__kv__ot_hdc_qwen_kv_system.sv": "5822854cb06592f0a30c3f996f4cd6fff3e317ac83ec40564fd96ca359c286ec",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__hdc__ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_causal_command_provider.sv": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_clock_bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_pc.sv": "5de049782df95ea81bf79458839e12e987fe2316c19237483788e3d578011025",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__model_ready_hbm_r14__ot_hbm_r14_tag_owner.sv": "da400039db45c4233b6534add32d3adc80da0f77923da93d94535a4b4040919a",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__test__model_ready_hbm_r14__tb_hbm_finite_stage.sv": "ad6648ee9d866953e8a996b702a18d249505b95bfe307d0dc3d2a4ec8083f404",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/russell_source_rtl__test__qwen_rom_runtime__qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ff.lib.gz": "fe9c3d9a1e7711897835f42643ba2b6bb56bcb43cea489cbf16bee4f8bce7b5b",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/inputs/seq_ss.lib.gz": "55207b0273d8a452871483f607cfc82fba493c08c1299430eee814fd1d743386",
+      "results/uarch/qwen_rom_reset_producer_g0_20261002/tile_proc.json.gz": "67b9bb7dfe3be5cf6ba0eb8a057b01bce1fa3e50ac88483576c07118b046f449",
+      "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+      "rtl/hdc/ot_hdc_core_vector_weight.sv": "702807d4db28a2881caebe02c42595f53d8eac48934b71be1941cec44106615f",
+      "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "rtl/hdc/ot_hdc_dyn_ttiles.sv": "574b918154da9bc8e1fde75f8c9d3bfd10374c5e1979c26588d5c00f133c5f93",
+      "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+      "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+      "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+      "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+      "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+      "rtl/hdc/ot_hdc_reduce_q.sv": "0b3e3050e99b81ceb0ca43af80eac9445508991a8e74eb9b2ec9f2017be02f32",
+      "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+      "rtl/hdc/ot_hdc_sfu_q.sv": "e5214ce45567a64470f5f4c4441221bbb1437361b0f4fc1d8cd441f30568a338",
+      "rtl/hdc/ot_hdc_stream.sv": "385e39b89576689ee88a5cba8af8dce389f91f9d5607c85ce477c950868dea61",
+      "rtl/hdc/ot_hdc_vreduce.sv": "471c36e1449bce3f9c55388ef1920d4bbfed98160a58ed249a0ca7d5007e93bb",
+      "rtl/hdc/ot_hdc_vstream.sv": "02aefbfbf170303f98b5880cd8582f168b5cbf9ee7019b077ee73eed0a07a4db",
+      "rtl/hdc/ot_hdc_vstream_lane.sv": "b6b3ffed46c55dbbc1ee31f80047c5e332b6727a4e58580c28755341e245d63c",
+      "rtl/hdc/ot_qwen_me_array_w12.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+      "rtl/hdc/ot_qwen_rom_tile_w12.sv": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "rtl/hdc/ot_qwen_w12_arith.sv": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4",
+      "rtl/hdc/ot_qwen_w12_matvec.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+      "rtl/rom/ot_qwen_tp_seq_w12.sv": "290c2f74593f72bcc9d275b5a66e38551f5458af19f63adfd179794d54182055",
+      "rtl/rom/ot_rom_pkg_ctrl.sv": "08518fd4c4a596f4c1d819aa23ad70960f965833ab7cd837e22dee77375f1b46",
+      "rtl/rom/ot_rom_pkg_link.sv": "26cdfc8b8f21691fe4dc81a3f9af9191d6a970494d8f16fd078dc7360dc622c3",
+      "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv": "edfb21846e1daba618cfece30c8aae86e121ccc87225a1f8af68e02c201240cf",
+      "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "tests/test_qwen_rom_reset_context_g0.py": "321e1b45b1aa94bcff85aeca1654d5b1cf16b7af31be8b68da7d7835077c6550",
+      "tools/qwen_rom_reset_context_g0.py": "8a667e8b43fa8dfd34628c4935d558547342bfb43818f98c23781e8f0bb0af23",
+      "tools/qwen_rom_rt_core_emit_w12.py": "3bc9f77dd897ce089775ef57e4a0acae22975e3037361101e9e64772787a2fea",
+      "tools/qwen_rom_rt_token_w12.py": "7e8269ee751d10eb2df57f98703db51273050c20b19c58ba9af50a5e6a162cc1",
+      "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+      "tools/uarch_model_qwen_reset.py": "5f871efce428043502efa23b3f9864b4b5f5e248de4ef7d8b6a7be8998ee3cd8"
+    },
+    "source_derivations": "census_ snapshots only prepend timescale and remove unused fulltile wrapper; r4 adds per-module timescale. Successful authoritative census uses unmodified sources plus immutable parent candidate snapshots, Yosys0.68 hierarchy+proc only. BUF/ICG blackboxes enumerate known instance ports, give no timing/area/load credit.",
+    "successor_model_revision": "model-r5.json"
+  },
+  "staging": {
+    "MEM_EXTRA": 1,
+    "data_capture_bits": 2560,
+    "default_off": true,
+    "existing_consumer_bits": 512,
+    "no_lane_or_arithmetic_reordering": true,
+    "no_new_data_stage": true
+  },
+  "status": "SOURCE_COMPOSED_PHYSICAL_PARENT_DEPENDENCIES_OPEN",
+  "tile": {
+    "clock_groups": {
+      "ot_qwen_rom_tile_logic_context_candidate_r2/clk[0]": {
+        "clock_bits": 133578,
+        "reset_bits": 58918
+      }
+    },
+    "groups": {
+      "tile_or_die_local": {
+        "async_reset_bits": 97,
+        "clock_bits": 3676,
+        "sync_reset_bits": 0
+      },
+      "u_me": {
+        "async_reset_bits": 276,
+        "clock_bits": 36294,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[0].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[0].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[10].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[10].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[11].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[11].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[12].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[12].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[13].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[13].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[14].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[14].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[15].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[15].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[1].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[1].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[2].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[2].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[3].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[3].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[4].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[4].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[5].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[5].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[6].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[6].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[7].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[7].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[8].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[8].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[9].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[0].g_lane[9].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[0].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[0].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[10].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[10].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[11].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[11].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[12].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[12].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[13].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[13].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[14].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[14].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[15].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[15].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[1].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[1].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[2].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[2].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[3].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[3].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[4].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[4].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[5].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[5].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[6].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[6].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[7].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[7].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[8].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[8].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[9].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[1].g_lane[9].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[0].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[0].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[10].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[10].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[11].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[11].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[12].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[12].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[13].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[14].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[14].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[15].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[15].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[1].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[1].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[2].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[2].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[3].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[3].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[4].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[4].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[5].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[5].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[6].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[6].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[7].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[7].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[8].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[8].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[9].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[2].g_lane[9].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[0].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[0].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[10].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[10].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[11].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[11].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[12].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[12].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[13].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[13].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[14].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[14].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[15].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[15].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[1].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[1].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[2].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[2].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[3].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[3].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[4].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[4].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[5].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[5].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[6].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[6].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[7].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[7].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[8].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[8].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[9].g_candidate_mul.u_mul": {
+        "async_reset_bits": 38,
+        "clock_bits": 214,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lanes.g_grp[3].g_lane[9].g_ladd.u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[0].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[10].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[11].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[12].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[13].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[14].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[15].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[16].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[17].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[18].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[19].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[1].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[20].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[21].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[22].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[23].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[24].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[25].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[26].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[27].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[28].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[29].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[2].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[30].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[31].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[3].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[4].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[5].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[6].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[7].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[8].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].g_add[9].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[1].u_sd": {
+        "async_reset_bits": 0,
+        "clock_bits": 28,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[0].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[10].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[11].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[12].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[13].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[14].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[15].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[1].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[2].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[3].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[4].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[5].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[6].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[7].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[8].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].g_add[9].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_me/g_lvl[2].u_sd": {
+        "async_reset_bits": 0,
+        "clock_bits": 28,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_first": {
+        "async_reset_bits": 6,
+        "clock_bits": 6,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_mt": {
+        "async_reset_bits": 0,
+        "clock_bits": 174,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_mtt": {
+        "async_reset_bits": 0,
+        "clock_bits": 18,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_mv": {
+        "async_reset_bits": 3,
+        "clock_bits": 3,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_ovl": {
+        "async_reset_bits": 2,
+        "clock_bits": 2,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_ts": {
+        "async_reset_bits": 0,
+        "clock_bits": 52,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_ttag": {
+        "async_reset_bits": 0,
+        "clock_bits": 203,
+        "sync_reset_bits": 0
+      },
+      "u_me/u_v": {
+        "async_reset_bits": 29,
+        "clock_bits": 29,
+        "sync_reset_bits": 0
+      },
+      "u_node": {
+        "async_reset_bits": 0,
+        "clock_bits": 512,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[0].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[10].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[11].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[12].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[13].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[14].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[15].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[1].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[2].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[3].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[4].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[5].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[6].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[7].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[8].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/g_add[9].u_add": {
+        "async_reset_bits": 438,
+        "clock_bits": 607,
+        "sync_reset_bits": 0
+      },
+      "u_node/u_vy": {
+        "async_reset_bits": 8,
+        "clock_bits": 8,
+        "sync_reset_bits": 0
+      },
+      "u_node/u_w": {
+        "async_reset_bits": 0,
+        "clock_bits": 1024,
+        "sync_reset_bits": 0
+      },
+      "u_node/u_wv": {
+        "async_reset_bits": 1,
+        "clock_bits": 1,
+        "sync_reset_bits": 0
+      },
+      "u_xm": {
+        "async_reset_bits": 0,
+        "clock_bits": 128,
+        "sync_reset_bits": 0
+      }
+    },
+    "primitives": {
+      "BUFx4_ASAP7_75t_R": 76
+    },
+    "register_inventory": {
+      "path": "results/uarch/qwen_rom_reset_producer_g0_20261002/tile_registers_r1.json.gz",
+      "register_cell_count": 6185,
+      "sha256": "8d7a5e0501765bc93977891a05829bad96138b3c0f2ac795d563ae1ab0fa913e"
+    },
+    "scope": "Complete elaborated hierarchy, proc only; no opt/map/CTS. Register WIDTH is a source load inventory, not mapped pins.",
+    "top": "ot_qwen_rom_tile_logic_context_candidate_r2",
+    "totals": {
+      "async_reset_bits": 58918,
+      "clock_bits": 133578,
+      "memory_clock_ports": 0,
+      "sync_reset_bits": 0
+    }
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.w13.bounded-calendar-review.v1",
+  "utc": "2026-10-01T16:44:19.380224+00:00",
+  "ordered_prerequisites": [
+    "d4780ea76136263d85d3406ca5b889e034fdfcfe",
+    "8e52c0faa011a706b4a7328b1d56d712af333154",
+    "7c236cdc6fba6c211ea529dee8325f45f1d57e44",
+    "213b64f5bb4bf074dff663b6d1d6761fbe5178ed",
+    "29e386799c1a2cc7d6e15bf0ac1cc8af2adb6dba"
+  ],
+  "review_scope": "Read-only isolated review of213b64f5b dependency/typed-service correction and original8e52 program-source contracts. No Boyleimplementation fork or mainmutation.",
+  "source_pins": {
+    "tools/w13_gpu_calendar_gate.py": {
+      "commit": "213b64f5bb4bf074dff663b6d1d6761fbe5178ed",
+      "sha256": "8aa98051a5f1f47c59947ce3ad423344191ae20a8daef41faf6c53a5ac7674a1"
+    },
+    "tests/test_w13_gpu_calendar_gate.py": {
+      "commit": "213b64f5bb4bf074dff663b6d1d6761fbe5178ed",
+      "sha256": "2d3f93a6dbacf80aa0449b248e2670071a6a9c838acd02a81b319f1be85b07c8"
+    }
+  },
+  "current_main_snapshot": {
+    "commit": "553ca4c58e65caa86b4f51a42bde7cb1b5b96008",
+    "gate_sha256": "8aa98051a5f1f47c59947ce3ad423344191ae20a8daef41faf6c53a5ac7674a1",
+    "matches_reviewed_gate": true
+  },
+  "focused_tests": {
+    "passed": 9,
+    "physical_or_engine_admission": false
+  },
+  "named_regression_replay": {
+    "controls": 11,
+    "positive_candidate_controls": 2,
+    "negative_rejections": 9,
+    "result": "PASS_SCOPED_DEPENDENCY_HASH_AND_TYPED_SERVICE_CHRONOLOGY",
+    "hardware_adopted": false,
+    "speed_credit": 0
+  },
+  "new_remaining_bug": {
+    "verdict": "FAIL_DIV_CARDINALITY_ADMISSION",
+    "artifact": "remaining_DIV_cardinality_counterexample.json",
+    "finding": "active_lanes is added to perSM/tick DIV counter without integer/domain validation. A negative value is accepted and masks real overbooking.",
+    "reproduction": "Two simultaneousvalidDIV lanes =>single_scalar_DIV_overbooked. Addthirdpartition event active_lanes=-1 =>calendarclosed=True with noissues.",
+    "source_line": 72,
+    "owner": "Boyle",
+    "required_fix": "Validate active lane participation/count before accounting and reject invalid/negative counts; define zero-predicate handling explicitly. Preserve positive/nonnegative aggregate counts. Add omittednegative-cancellation regression plus validmasked/participation controls. W13doesnotimplement."
+  },
+  "both_full_program_admission": {
+    "qwen": {
+      "original_producer_commit": "defc45332c52a173d47f882595ddd78c4ce22fde",
+      "source_graph_archive_commit": "2f85997f109847838b57068f0d2c76a1d1ca3e2e",
+      "graph_ops": 1737,
+      "status": "REJECT_MISSING_COMPLETE_CALENDARS",
+      "missing_counts": {
+        "callback_dependency_mismatch": 1736,
+        "graph_dependency_not_visible": 1736,
+        "missing_SFU_lowering_complete": 1737,
+        "missing_fabric_edge_calendar_complete": 1737,
+        "missing_instruction_events": 1737,
+        "missing_issue_RF_calendar_complete": 1737,
+        "missing_ordinary_lowering_complete": 1737,
+        "missing_shared_bank_map_complete": 1737,
+        "unbound_or_incomplete_required_fabric_events": 1737,
+        "unbound_or_incomplete_required_instruction_events": 1737
+      },
+      "full_program_events_bound": false
+    },
+    "deepseek": {
+      "program_pin": {
+        "source_git": "42c90ce67120dd1a3e7eaf54296aab9877696824",
+        "path": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+        "sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+      },
+      "source_operations": 2213,
+      "layers_plus_head": 41,
+      "status": "REJECT_UNBOUND_AUTHORITATIVE_GRAPH_AND_CALENDARS",
+      "issues": [
+        "authoritative_graph_unbound:'instructions'",
+        "empty_program"
+      ],
+      "prerequisite": "Sourceowner publish immutableflat/globalID DAG and exactauthoritative deps tiedtoTP96oreduce source, no guessedsequential ordering. Then supply completeinstruction/RF/shared/SFU andtypedfabric eventcalendars."
+    }
+  },
+  "exact_next_prerequisites": [
+    "Boyle fixes andregression-tests DIVparticipation cardinality/cancellation beforemodeledcalendarqualification.",
+    "Preserve original7c236FAIL and29e scopedcorrectionPASS; no9test-to-engine admission transfer.",
+    "Programowners bindimmutablecompletegraphs and realoperatorlowerings, eventcounts/dependencies, exactnumerical recipes and actual RF/shared/SFU/INT/partition scheduling forboth targets.",
+    "Bind readrequest/response transactionidentity and writevisiblecommit chronology, producer/consumer andcreditretirement; applyfinitecombinedservice/port/bank/lane limits andmeasured clock/CDC/fence costs.",
+    "WholeGPU resource/slot/corridor fit andcontextual SS/FF remainmandatory. TC16FAIL cannotlaunchSM orbe tuned/retried; existingTCcol alone remainspending bothcorners."
+  ],
+  "preservation": {
+    "original_failure_review_pin": {
+      "commit": "7c236cdc6fba6c211ea529dee8325f45f1d57e44",
+      "path": "results/quality/parent_hbm_calendar_gate_review_20261001/review.json",
+      "sha256": "709efee41c5d3fc28cd929fb1b8b0393a03299c6ed054fda72552668a4b27b3d"
+    },
+    "parent_scoped_correction_pin": {
+      "commit": "29e386799c1a2cc7d6e15bf0ac1cc8af2adb6dba",
+      "path": "results/quality/parent_hbm_calendar_correction_review_20261001/review.json",
+      "sha256": "c412dd28bf943bff53ec457fa0ec236c9203b6eea49d3a7ce64f78cae3d95cf6"
+    },
+    "retirement_audit_pin": {
+      "commit": "955ef45136773adb7850051d0b47db3151d72dbc",
+      "path": "results/physical_abi3/asap7/gpu/w13_retirement_and_gate_audit_20261001.json",
+      "sha256": "fc0a1b5f8317613652e7da2671b2eed177d3f922d63c6a4b3c479769dd139cba"
+    },
+    "TC16": "FAIL preserved no tuning/retry",
+    "live_job_recheck": "live_job_recheck.json",
+    "SM_dispatch_events": 0,
+    "source_pinned_TCcol_live": true,
+    "other_owner_jobs_not_signalled": true,
+    "deleted_paths": []
+  },
+  "overall_verdict": "FAIL_CLOSED_REMAINING_DIV_CARDINALITY_BUG_AND_MISSING_FULLPROGRAM_BINDINGS",
+  "modeled_fullprogram_service_calendar_qualified": false,
+  "engine_admission": false,
+  "physical_admission": false,
+  "full_token_rate": null,
+  "new_dispatch": false,
+  "main_TASKS_docs_mutation": false,
+  "Boyle_implementation_changed": false
+}

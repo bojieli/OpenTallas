@@ -1,0 +1,53 @@
+{
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "contextual_PR_admitted": false,
+  "failure_preserved": "greedy_r1_FAIL plus immutable Arch bd872 original",
+  "first_hops": [
+    19622,
+    15682
+  ],
+  "new_jobs": [],
+  "next_gate": "Place/bind all downstream relay/pad branches at unchanged counts, verify source/sink full escapes against OBS/PG and contact C, and qualify clock/reset skew/slew at SS/FF. No same-cell-depth skew assumption.",
+  "parent_originals_edited": false,
+  "per_shard_common_transfer": {
+    "0": {
+      "common_50pct_reservation_transfer_um2": 20.82024,
+      "common_occupied_bbox_DBU": [
+        11188476,
+        15567390,
+        11196414,
+        15570900
+      ],
+      "common_owner_must_exclude_each_listed_cell_rectangle": true,
+      "exact_common_cell_body_um2": 10.41012,
+      "net_new_cell_or_reticle_reservation_mm2": 0,
+      "raw_50pct_reservation_released_um2": 20.82024,
+      "relocated_existing_buffers": 102
+    },
+    "1": {
+      "common_50pct_reservation_transfer_um2": 13.471919999999999,
+      "common_occupied_bbox_DBU": [
+        11188476,
+        15567390,
+        11194902,
+        15570360
+      ],
+      "common_owner_must_exclude_each_listed_cell_rectangle": true,
+      "exact_common_cell_body_um2": 6.7359599999999995,
+      "net_new_cell_or_reticle_reservation_mm2": 0,
+      "raw_50pct_reservation_released_um2": 13.471919999999999,
+      "relocated_existing_buffers": 66
+    }
+  },
+  "physical_fit": false,
+  "prerequisites": "Current parent c9/781 and their exact input chains. db47 imported nowhere: exact grid/tech snapshots and copied escape helper functions are local inputs. Arch bd872 exact record retained.",
+  "raw_rows": [
+    320,
+    256
+  ],
+  "replay": "python3 tools/dsrom_capture_clock_branch_reallocation.py --out /tmp/FRESH-clock-reallocation",
+  "result": "FIXED_COUNT_FIRST_HOP_CONSTRUCTION_PASS_FULL_CLOCK_ROUTE_PENDING",
+  "selected_bank": "d4/c9 sole bank; prior annex unselected and charge0",
+  "source_rejection_commit": "bd87257f2",
+  "tests": "python3 -m pytest -q tests/test_dsrom_capture_clock_branch_reallocation.py"
+}

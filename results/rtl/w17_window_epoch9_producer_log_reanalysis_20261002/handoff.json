@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.window_epoch9.producer_offline_handoff.v1",
+  "failure_commit": "0f2d93d82267bba57565cd46ea7af95099ec15c3",
+  "original_verdict": "FAIL_PRESERVED_NO_RETRY",
+  "offline_verdict": "PASS_OFFLINE_REANALYSIS_ALL_DECLARED_CHECKS",
+  "no_build_no_rerun": true,
+  "old_sources_generators_predictions_and_failure_byteidentical": true,
+  "base": "e72abea5ae169d3167dddc89543013f0e6bb3a7a",
+  "all_branch_changes_added_only": true,
+  "sha256": {
+    "tools/w17_window_epoch9_producer_log_reanalysis.py": "34ded76c57b8a7c68b77435b455b367373b6c513e7a9a0a06c3e59b8f640fe0e",
+    "tests/test_w17_window_epoch9_producer_log_reanalysis.py": "22d6a1d63722b05888859be909a3c8a881936456dacb57540bd34f39723447c7",
+    "tools/w17_window_epoch9_producer_run.py": "c3fd6fbfba77f5cbcac215dc046a907dc4bdca563b099b4d06e29b17ac5cc065",
+    "tools/w17_window_epoch9_producer_prediction.py": "73a7903e02b5cb9648a78f7d3cbc98a24219b5c260f46b847edd782d2ac6bb39",
+    "results/rtl/w17_window_epoch9_producer_single_run_20261002/record.json": "ad2dfe240df37d6634770b842790183123eb6d1663a8d9976cac8f75854fe549",
+    "results/uarch/w17_window_epoch9_producer_prediction_20261001_attempt3/prediction.json": "6bde2e30fd4d32ff58646b4ccdbb54b84db99891c61d6ea17d1c468911f431d7"
+  },
+  "output_sha256": {
+    "pytest.log": "4d2df7a96ce4a667da3ccf295f2d16c728a65ed0e861a3baa919f7bb469b02b5",
+    "record.json": "23ae3af7a14111e3a3c5580c4f42d8dc3fda19af714d7f4117b7ef26f04b56df"
+  },
+  "tests": "5 PASS; source omission/sampling mutants plus unchanged-log bad-edge and omitted-ACT controls",
+  "reproduce_command": "python3 tools/w17_window_epoch9_producer_log_reanalysis.py --out /tmp/unique-new-offline-output",
+  "limits": "Single simulation service remains failed/exit-code/MainPID0. Offline result does not change service outcome or qualify producer arithmetic, physicalclock, fulltoken, fault recovery or adoption. No admission claim.",
+  "next_gate": "Parent review/intake of additive source-accounting correction and retained-log evidence. Arithmetic/provenance beyond synthetic QE capture interface and fault physical-publication/recovery remain separate prerequisites."
+}

@@ -1,0 +1,179 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "$ref": "#/$defs/artifact"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "claim_boundary": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "const": 0
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "deterministic": {
+          "const": true
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "deterministic",
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "capability": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "command_program": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "execution_expectations": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "hbm_image": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "model_graph": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "physical_plan": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "tensor_kernel_ir": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "capability",
+        "command_program",
+        "execution_expectations",
+        "hbm_image",
+        "model_graph",
+        "physical_plan",
+        "tensor_kernel_ir"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "numeric_profile": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "physical_plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.deployment.v1"
+    },
+    "semantic_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "capability_id",
+    "claim_boundary",
+    "command_abi",
+    "compiler",
+    "entrypoint",
+    "model_id",
+    "numeric_profile",
+    "physical_plan_id",
+    "schema",
+    "semantic_sha256"
+  ],
+  "title": "OpenTallas tensor-accelerator deployment manifest v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "role": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "role",
+        "sha256",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

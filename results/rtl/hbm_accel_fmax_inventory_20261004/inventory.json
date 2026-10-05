@@ -1,0 +1,1143 @@
+{
+ "schema": "opentallas.hbm_accel.fmax_inventory.v1",
+ "date": "2026-10-04",
+ "signoff": "0.833 ns, SS setup 60 ps, FF hold 25 ps (tools/w18/corner_sta.py)",
+ "source_main": "2a987bdc5",
+ "limiter": {
+  "as_built_sm_clock_ghz": 0.5897,
+  "set_by": "ot_gpu_bulk_copy (DS line 1088) consume loop cons_p -> 1024:1 full[cons_p] -> take: screen 590 MHz (-863 ps at 0.833 ns), results/rtl/risk_clock_loops_20261003/screens/hbm/bulkcopy_ds_833.json; priced in tools/dshbm_baseline_measure.py as the binding SM sub-block",
+  "status": "fixed by ot_hbm_accel_bulk_copy r12 (routed SS +13.51/FF +11.43 DS, 0 added cycles); the SM element as a whole is NOT yet shown at 1.2 GHz: next-worst on-SM evidence is ot_gpu_tc_col -102.66 ps (about 1.07 GHz) and the issue output ports",
+  "serial_domain": "the SU (local term) runs at 0.9 GHz by design and its measured MLAT4/ALAT3 build closes only 819.5 MHz even there; the owner target is 1.2 GHz everywhere"
+ },
+ "counts": {
+  "open": 16,
+  "closed": 4,
+  "open_io": 2,
+  "never_measured": 16,
+  "closed_unit": 2,
+  "closed_0p9_only": 1,
+  "in_progress_other": 2,
+  "screen_pass": 1,
+  "closed_variant": 8,
+  "blocked_exactness": 1,
+  "failed_variant": 2
+ },
+ "blocks": [
+  {
+   "module": "ot_gpu_bulk_copy (as built, in ot_gpu_sm_v)",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/bulkcopy_ds_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -863,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "LIMITER of the as-built SM clock: DS 590 MHz (Q 682 MHz); sets 0.59 GHz in results/rtl/dshbm_baseline_measured_20261004 (as_built_bulk_copy_0p590GHz)",
+   "fmax_mhz_equiv_ss": 589.6
+  },
+  {
+   "module": "ot_hbm_accel_bulk_copy ENABLE=1 r12",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "closed",
+   "evidence": "results/rtl/hbm_clock_loops_20261004/bulk/closure_r12.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 13.51,
+   "ff_hold_slack_ps": 11.43,
+   "evidence_kind": "routed",
+   "note": "Q +55.58/+4.97; false-path IO (registered both sides); 0 added cycles",
+   "fmax_mhz_equiv_ss": 1220.3,
+   "closure_owner": "done"
+  },
+  {
+   "module": "ot_gpu_issue (as built)",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/issue_ds_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -497,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "DS 752 / Q 813 MHz",
+   "fmax_mhz_equiv_ss": 751.9
+  },
+  {
+   "module": "ot_hbm_accel_issue ENABLE=1",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "open_io",
+   "evidence": "results/rtl/hbm_clock_loops_20261004/routes/issue_ds_0833_r4/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 27.94,
+   "ff_hold_slack_ps": 8.4,
+   "evidence_kind": "routed",
+   "note": "r2r closes (Q +31.94/+8.97) but output ports -136.7 (DS) / -189.6 (Q) ps: closes_signoff=false until proven in SM context",
+   "fmax_mhz_equiv_ss": 1242.1,
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_tc_col",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/gpu/parent_tc_col_terminal_record_20261001/corners.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -102.66,
+   "ff_hold_slack_ps": -0.91,
+   "evidence_kind": "routed",
+   "note": "",
+   "fmax_mhz_equiv_ss": 1068.8,
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_tc16",
+   "design": "DS",
+   "family": "sm",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/gpu/w13_tc16_terminal_20261001T120346Z",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -31.06,
+   "ff_hold_slack_ps": 5.22,
+   "evidence_kind": "routed",
+   "note": "",
+   "fmax_mhz_equiv_ss": 1157.3,
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_bd_col",
+   "design": "DS",
+   "family": "sm",
+   "status": "closed",
+   "evidence": "results/physical_abi3/asap7/gpu/w13_followup_20261001/terminal_snapshot/ot_gpu_bd_col/corners.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 14.3,
+   "ff_hold_slack_ps": 3.48,
+   "evidence_kind": "routed",
+   "note": "",
+   "fmax_mhz_equiv_ss": 1221.4,
+   "closure_owner": "done"
+  },
+  {
+   "module": "ot_gpu_stack",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/stack_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -126.3,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "only a TT 0.92 ns route exists",
+   "fmax_mhz_equiv_ss": 1042.4,
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_tree / ot_gpu_xstore / ot_v41_bterm(2) / ot_hdc_blockdot / row-scale fmul",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "never_measured",
+   "evidence": "none at SS (blockdot TT only)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_fadd = ot_hdc_fp32_add_lat LAT7",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "closed_unit",
+   "evidence": "results/physical_abi3/asap7/hdc/w11_fp/nm_fadd7/physical.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 40.1,
+   "ff_hold_slack_ps": 7.1,
+   "evidence_kind": "routed",
+   "note": "standalone only; must hold in context (ABC re-ripple)",
+   "fmax_mhz_equiv_ss": 1261.2,
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_hdc_fp32_mul_lat LAT6",
+   "design": "DS+Q",
+   "family": "sm",
+   "status": "closed_unit",
+   "evidence": "results/physical_abi3/asap7/hdc/w11_fp/w11_fp_latency_sweep.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 11.4,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "routed",
+   "note": "LAT3-5 fail, LAT7 -17.8",
+   "fmax_mhz_equiv_ss": 1217.1
+  },
+  {
+   "module": "ot_gpu_sm_v element (whole)",
+   "design": "DS",
+   "family": "sm",
+   "status": "never_measured",
+   "evidence": "results/physical_abi3/asap7/gpu/w13_followup_20261001/modeled_queue.json (queued only)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_gpu_sm_q / ot_hbm_accel_sm_q element",
+   "design": "Q (ablation)",
+   "family": "sm",
+   "status": "never_measured",
+   "evidence": "not on the HA8 Qwen accelerator vehicle (W12 datapath) - sm agent to confirm",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "sm"
+  },
+  {
+   "module": "ot_hdc_v41x_vec N1024/M256 (SU) as measured MLAT4/ALAT3",
+   "design": "DS",
+   "family": "su",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json (sc_l3 light lane)",
+   "period_ns": 1.111,
+   "ss_reg_to_reg_slack_ps": -109.3,
+   "ff_hold_slack_ps": 3.3,
+   "evidence_kind": "routed",
+   "note": "the measured SU build does not even close 0.9 GHz (819.5 MHz); never routed at 0.833; the full SU has no valid number (ds05_vec_bbdp screen openroad_rc=1)",
+   "fmax_mhz_equiv_ss": 819.5,
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_v41x_vec_light1024r MLAT5/ALAT4",
+   "design": "DS",
+   "family": "su",
+   "status": "closed_0p9_only",
+   "evidence": "results/physical_abi3/asap7/hdc/v41x/w11_serial/summary.json (sc_l5b)",
+   "period_ns": 1.111,
+   "ss_reg_to_reg_slack_ps": 34.6,
+   "ff_hold_slack_ps": 2.5,
+   "evidence_kind": "routed",
+   "note": "929 MHz; 1.2 GHz needs deeper FP units",
+   "fmax_mhz_equiv_ss": 929.0,
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_v41x_vec_red1024 (reducer)",
+   "design": "DS",
+   "family": "su",
+   "status": "never_measured",
+   "evidence": "sc_r5/sc_r6 yosys OOM",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_v41x side/SFU (softplus_s, fsqrt, fdiv, exp/sigmoid/rsqrt)",
+   "design": "DS",
+   "family": "su",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/hdc/w11_softplus_short/",
+   "period_ns": 1.111,
+   "ss_reg_to_reg_slack_ps": -2.5,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "routed",
+   "note": "softplus_s fails even at 1.111; fdiv TT only",
+   "fmax_mhz_equiv_ss": 898.1,
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_v41x_vec_kr KR_DEPTH=40 (local-chains lever)",
+   "design": "DS",
+   "family": "su",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/hdc/w11_recovery_20261001/fz_l8,fz_l20",
+   "period_ns": 1.111,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "routed",
+   "note": "GRT congestion failure",
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_fastfp LAT3 add/mul (SU + attention as built)",
+   "design": "DS",
+   "family": "su",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/hdc/w11_fp/ (nm_fadd3, nm_fmul3)",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -192.7,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "routed",
+   "note": "975 / 881 MHz at SS",
+   "fmax_mhz_equiv_ss": 974.9,
+   "closure_owner": "su"
+  },
+  {
+   "module": "ot_hdc_v41x_attn_tile (T=128 225 cyc / T=640 609 cyc, FPL=FML=QL=3)",
+   "design": "DS",
+   "family": "attn",
+   "status": "open",
+   "evidence": "results/rtl/v41_full_attention_numeric/result.json; w11_stream_summary.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "none",
+   "note": "as-built build uses fastfp LAT3 (fails SS); 1.2 GHz needs FPL7/FML6 (+39 cyc); no tile route",
+   "closure_owner": "attn"
+  },
+  {
+   "module": "ot_hdc_v41x_attn engine control (verify)",
+   "design": "DS",
+   "family": "attn",
+   "status": "open",
+   "evidence": "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/wc833_cts",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -1204.62,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "cts",
+   "note": "",
+   "fmax_mhz_equiv_ss": 490.8,
+   "closure_owner": "attn"
+  },
+  {
+   "module": "ot_hbm_r14_stream_pc/stack r8b (WR_EN=0)",
+   "design": "DS+Q",
+   "family": "svc",
+   "status": "closed",
+   "evidence": "results/rtl/hbm_clock_loops_20261004/stream/corner_sta-r8b-0833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 6.28,
+   "ff_hold_slack_ps": 5.11,
+   "evidence_kind": "routed",
+   "note": "",
+   "fmax_mhz_equiv_ss": 1209.6,
+   "closure_owner": "done"
+  },
+  {
+   "module": "Qwen HBM_STREAM merged stream_stack WR_EN=1 WQ=4",
+   "design": "Q",
+   "family": "svc",
+   "status": "open",
+   "evidence": "results/rtl/qwen_rom_hbm_stream_realmem_20261004/merge_r8/physical-ss-wr1-1024-PASS.json + corner_sta re-run 2026-10-04 (SS 25.57/FF 3.86 at 1.024 ns)",
+   "period_ns": 1.024,
+   "ss_reg_to_reg_slack_ps": 25.57,
+   "ff_hold_slack_ps": 3.86,
+   "evidence_kind": "routed",
+   "note": "record header says TT (the tool's synth descriptor); corner_sta on the kept route confirms SS/FF at 1.024 ns only (977 MHz); WR_EN=0 at 0.833: SS +8.31/FF +5.01",
+   "fmax_mhz_equiv_ss": 1001.6,
+   "closure_owner": "svc"
+  },
+  {
+   "module": "ot_hbm_accel_kv_lifecycle k10",
+   "design": "DS+Q",
+   "family": "svc",
+   "status": "closed",
+   "evidence": "results/rtl/hbm_clock_loops_20261004/kv/kv_closure_record.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 10.36,
+   "ff_hold_slack_ps": 7.73,
+   "evidence_kind": "routed",
+   "note": "",
+   "fmax_mhz_equiv_ss": 1215.6,
+   "closure_owner": "done"
+  },
+  {
+   "module": "ot_hbm_accel_dskv_wb / stream_pc_wb / stream_pc / index_stack / return_fifo / cdc_fifo / owned_crossing / causal_command_provider",
+   "design": "DS",
+   "family": "svc",
+   "status": "never_measured",
+   "evidence": "none",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "svc"
+  },
+  {
+   "module": "rtl/model_ready_hbm_r14 pc/route/tag_owner/clock_bridge/reader_lease/fifo2/result_producer/sector_completion_store",
+   "design": "DS+Q",
+   "family": "svc",
+   "status": "never_measured",
+   "evidence": "r14pc screens launched, never committed",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "svc"
+  },
+  {
+   "module": "ot_hbm_accel_expert_fetch_stream(_la/_sram) / expert_stream_pc",
+   "design": "DS",
+   "family": "svc",
+   "status": "in_progress_other",
+   "evidence": "claude/hbm-accel-r5a-gates-20261004 (floorplan e6 -7.5 ps)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "r5a agent"
+  },
+  {
+   "module": "ot_gpu_rf_visibility_fence_w6 (SECDED)",
+   "design": "DS+Q",
+   "family": "ctl",
+   "status": "in_progress_other",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/fence_w6_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -1498,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "429 MHz; HA1 says not on the base-system path",
+   "fmax_mhz_equiv_ss": 429.0,
+   "closure_owner": "fence agent"
+  },
+  {
+   "module": "ot_gpu_router_topk",
+   "design": "DS",
+   "family": "ctl",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/topk_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -776,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "621 MHz; top-6 is model-priced in the baseline",
+   "fmax_mhz_equiv_ss": 621.5,
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "ot_gpu_barrier_node",
+   "design": "DS+Q",
+   "family": "ctl",
+   "status": "screen_pass",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/barrier_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 601.5,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "TT 0.92 route only",
+   "fmax_mhz_equiv_ss": 4319.7,
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "ot_gpu_scratch_service",
+   "design": "DS+Q",
+   "family": "ctl",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/scratch_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -130.1,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "SRAM clk->Q 707 ps",
+   "fmax_mhz_equiv_ss": 1038.3,
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "ot_gpu_rf_service / ot_gpu_full_sm_service / hbm_rf_shared_context / payload_assemble",
+   "design": "DS+Q",
+   "family": "ctl",
+   "status": "never_measured",
+   "evidence": "rfsvc_ack/fullsm_ack screens openroad_rc=1",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "DS MTP accept guarded (SECDED slot state)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/hbm/mtp_1111.json",
+   "period_ns": 1.111,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "444 MHz",
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "rtl/gpu/dshbm/* (accept_port, argmax, dspark_ctl, dspark_top, expert_union, spec_state)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "never_measured",
+   "evidence": "none",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "ctl"
+  },
+  {
+   "module": "W15 NVLS switch ot_link_nvls_switch",
+   "design": "DS",
+   "family": "noc",
+   "status": "never_measured",
+   "evidence": "results/rtl/risk_clock_loops_20261003/jobs/hbm_jobs.sh (nvls_833/967 launched, never committed)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "noc"
+  },
+  {
+   "module": "gpu_sys coll_endpoint/fabric/mux/xbar/l2_slice/cdc",
+   "design": "DS+Q",
+   "family": "noc",
+   "status": "never_measured",
+   "evidence": "none",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "noc"
+  },
+  {
+   "module": "HA2 direct-link endpoint rtl/hbm_accel/ha2_ar",
+   "design": "DS",
+   "family": "noc",
+   "status": "never_measured",
+   "evidence": "results/rtl/hbm_accel_ha2_ar_20261004/terminal.json (G-timing NOT RUN; not adopted)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "noc"
+  },
+  {
+   "module": "ot_qwen_me_spine_w12 / me_array / w12_matvec (ME)",
+   "design": "Q",
+   "family": "qwen-me",
+   "status": "never_measured",
+   "evidence": "results/rtl/qwen_rom_w12_runtime/terminal_review_20261001/spine_s833b (yosys 24 h timeout)",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "qwen-me"
+  },
+  {
+   "module": "ot_qwen_rom_tile_logic_w12",
+   "design": "Q",
+   "family": "qwen-me",
+   "status": "never_measured",
+   "evidence": "none",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "qwen-me"
+  },
+  {
+   "module": "ot_qwen_rom_core (generated sequencer)",
+   "design": "Q",
+   "family": "qwen-core",
+   "status": "never_measured",
+   "evidence": "core_bb screens never committed",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "qwen-core"
+  },
+  {
+   "module": "ot_hdc_vstream_rt SW64 (Qwen SU/attention)",
+   "design": "Q",
+   "family": "qwen-core",
+   "status": "never_measured",
+   "evidence": "vstream_sw64 screen never committed",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "qwen-core"
+  },
+  {
+   "module": "ot_qwen_tp_seq_w12 (N=4)",
+   "design": "Q",
+   "family": "qwen-core",
+   "status": "open_io",
+   "evidence": "results/rtl/risk_clock_loops_20261003/routes/qwen_tp_seq_0833/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 6.99,
+   "ff_hold_slack_ps": 10.6,
+   "evidence_kind": "routed",
+   "note": "output port -73.7 ps; N=2 never routed",
+   "fmax_mhz_equiv_ss": 1210.6,
+   "closure_owner": "qwen-core"
+  },
+  {
+   "module": "ot_rom_oneshot_die (Qwen collective endpoint)",
+   "design": "Q",
+   "family": "qwen-core",
+   "status": "open",
+   "evidence": "results/rtl/risk_clock_loops_20261003/screens/qwen/oneshot_die_d32_833.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -1208,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": "screen",
+   "note": "490 MHz, rp->head mux->pop loop",
+   "fmax_mhz_equiv_ss": 490.0,
+   "closure_owner": "qwen-core"
+  },
+  {
+   "module": "ot_hbmacc_qwen_wstream + engine-side CDC/ME_STALL gating",
+   "design": "Q",
+   "family": "qwen-core",
+   "status": "never_measured",
+   "evidence": "none",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "",
+   "closure_owner": "qwen-core"
+  },
+  {
+   "module": "ot_gpu_barrier_node barrier_a0 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/barrier_a0/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 604.17,
+   "ff_hold_slack_ps": 26.06,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; no extra cycles; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 4370.1,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_gpu_barrier_node",
+   "parameters": {
+    "K": 8
+   },
+   "ss_worst_slack_ps": 379.98,
+   "cycle_delta": 0,
+   "source_pins": {
+    "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_gpu_barrier_node barrier_k32 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/barrier_k32/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 384.3,
+   "ff_hold_slack_ps": 39.39,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; no extra cycles; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 2228.7,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_gpu_barrier_node",
+   "parameters": {
+    "K": 32
+   },
+   "ss_worst_slack_ps": 330.53,
+   "cycle_delta": 0,
+   "source_pins": {
+    "rtl/gpu/ot_gpu_barrier_node.sv": "56924475eb2b701a485e347135d6ea574e2c54005956d00de72b5d69371bbc7a",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_hdc_accept accept_a0 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/accept_a0/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 55.27,
+   "ff_hold_slack_ps": 13.99,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; no extra cycles; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 1285.8,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_hdc_accept",
+   "parameters": {
+    "NSLOT": 8,
+    "NW": 17
+   },
+   "ss_worst_slack_ps": 55.27,
+   "cycle_delta": 0,
+   "source_pins": {
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_dshbm_dspark_ctl ctl_f2 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/ctl_f2/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 15.6,
+   "ff_hold_slack_ps": 10.12,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; no extra cycles; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 1223.4,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_dshbm_dspark_ctl",
+   "parameters": {
+    "ACCEPT_LEAF": 0,
+    "FAST": 1,
+    "MAXPOS": 1048576,
+    "NL": 40,
+    "TW": 17
+   },
+   "ss_worst_slack_ps": 1.25,
+   "cycle_delta": 0,
+   "source_pins": {
+    "rtl/gpu/dshbm/ot_dshbm_accept_port.sv": "92f365a2785461459b2370f515c99a9c76d3ceafb6278aee6f8f66952d2381f2",
+    "rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv": "42eb3474782c24d46f375875761d4e5c5b8244a53697d132c5e6f736a2b509af",
+    "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_dshbm_argmax argmax_f1 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/argmax_f1/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 42.63,
+   "ff_hold_slack_ps": 3.0,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; per output row; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 1265.2,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_dshbm_argmax",
+   "parameters": {
+    "FAST": 1,
+    "FLAT": 7,
+    "IW": 17,
+    "LP": 8
+   },
+   "ss_worst_slack_ps": 42.63,
+   "cycle_delta": 1,
+   "source_pins": {
+    "rtl/gpu/dshbm/ot_dshbm_argmax.sv": "b4ec32213c72dcf36f2495ba810b809eee891b08ebe21fbc782b71fb833539bf",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_gpu_scratch_service scratch_c2 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/scratch_c2/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 216.11,
+   "ff_hold_slack_ps": 18.63,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; read only, write unchanged; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 1621.0,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_gpu_scratch_service",
+   "parameters": {
+    "CAP2": 1
+   },
+   "ss_worst_slack_ps": 80.22,
+   "cycle_delta": 1,
+   "source_pins": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "8e881e60f06aeb4030bd945d660900ad03569841f229e73f217f7bac50179f85"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_dshbm_expert_union union_f3 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/union_f3/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 9.52,
+   "ff_hold_slack_ps": 10.79,
+   "evidence_kind": "routed",
+   "note": "Full-shape source-selected component only; flush to FIRST output, not per emitted expert; default off, parent accelerator unqualified",
+   "fmax_mhz_equiv_ss": 1214.4,
+   "closure_owner": "Sagan (Codex item 9 ctl)",
+   "canonical_module": "ot_dshbm_expert_union",
+   "parameters": {
+    "FAST": 1,
+    "IW": 9,
+    "K": 6,
+    "NE": 384,
+    "PM": 8
+   },
+   "ss_worst_slack_ps": 9.52,
+   "cycle_delta": 1,
+   "source_pins": {
+    "rtl/gpu/dshbm/ot_dshbm_expert_union.sv": "e0ca04b5d5f0b8cfdcbd63e2d9ce3fc3c41f53bfce215c04feb9e115fb40108a"
+   },
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_dshbm_spec_state_f spec_f3 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "blocked_exactness",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/sim_spec3_s8/run.log",
+   "period_ns": null,
+   "ss_reg_to_reg_slack_ps": null,
+   "ff_hold_slack_ps": null,
+   "evidence_kind": null,
+   "note": "Retained terminal reports 2 mismatches although exit0; positive routed slack does not permit adoption",
+   "closure_owner": "Claude (exactness escalation)"
+  },
+  {
+   "module": "ot_dshbm_spec_state_f_token_edge TOKEN_EDGE_FIX1 route1 (source-selected)",
+   "design": "DS",
+   "family": "ctl",
+   "status": "closed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_spec_token_edge_20261005/corner_sta.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": 28.41,
+   "ff_hold_slack_ps": 6.86,
+   "evidence_kind": "routed",
+   "note": "same LAT5,0 added cycles; no whole-target adoption",
+   "fmax_mhz_equiv_ss": 1242.9,
+   "closure_owner": "Sagan (Codex item9 ctl); Pauli semantic source",
+   "canonical_module": "ot_dshbm_spec_state_f_token_edge",
+   "parameters": {
+    "AW": 32,
+    "CKMAX": 262144,
+    "NG": 4,
+    "NL": 40,
+    "NSRC": 4,
+    "NST": 3,
+    "PMAX": 8,
+    "RLOG": "16'h7272",
+    "SR": 136,
+    "TR": 16,
+    "TW": 17,
+    "W": 128,
+    "WR": 136,
+    "TOKEN_EDGE_FIX": 1
+   },
+   "source_pins": {
+    "rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv": "7ba75538d2ef10775a8a26fb7af15d3a140ee4ffbbcfd43173c3c970437633e8"
+   },
+   "ss_worst_slack_ps": 28.41,
+   "cycle_delta": 0,
+   "complete_accelerator_qualified": false
+  },
+  {
+   "module": "ot_qwen_rom_tile_logic_w12 tile_tp2_t4 (source-selected)",
+   "design": "Q",
+   "family": "qwen-me",
+   "status": "failed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/tile_failures_r1.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -83.8255,
+   "ff_hold_slack_ps": 0.928924,
+   "evidence_kind": "routed",
+   "note": "Terminal FAIL/NOADOPT under SS60/FF25; standalone false-path IO, enclosing boundary unqualified. No new source cut or clock/latency credit. s3_x[94] = group2 BF16 exponent bit30, shared across16 lane multipliers; ot_qwen_w12_bmul dec()+signed exponent addition ->s1_e[8]. Hold is final registered add bypass-code ->y[18] OAI22.",
+   "fmax_mhz_equiv_ss": 1090.7,
+   "closure_owner": "Claude (source-cone diagnosis); Nash (qme)",
+   "canonical_module": "ot_qwen_rom_tile_logic_w12",
+   "case": "tile_tp2_t4",
+   "parameters": {
+    "ACC_LAT": 7,
+    "CODE_BANKS": 10,
+    "FAST_ISSUE": 1,
+    "GT": 6144,
+    "IREG": 1,
+    "KV_LOCAL": 0,
+    "KV_PREP": 3,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "NREG": 1,
+    "NW": 18,
+    "SMIN": 6,
+    "TREE_LAT": 7
+   },
+   "source_pins": [
+    {
+     "path": "rtl/hdc/ot_hdc_fpu.sv",
+     "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fastfp.sv",
+     "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_delay.sv",
+     "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_sfu.sv",
+     "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_matvec.sv",
+     "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+     "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+     "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_prefix.sv",
+     "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+     "sha256": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_w12_arith.sv",
+     "sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+    },
+    {
+     "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    }
+   ],
+   "evidence_sha256": "3f34beb51eb320b2bedb858a6ffc0e4d2f61c11fd085e552406e568fc777a853",
+   "route_exit": 0,
+   "corner_exit": 0,
+   "closes_signoff": false,
+   "adopted": false,
+   "DRV": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 15
+   },
+   "drc": 0,
+   "antenna": 0,
+   "mapped_area": {
+    "cells": 650355,
+    "core_um2": 248826,
+    "excludes": "weight/code macros, VM, spine, service, parent routes/PG/clock; no parent fit claim",
+    "logic_tiles_per_die": 1536,
+    "replicated_logic_cell_mm2_only": 128.274432,
+    "replicated_logic_core_mm2_only": 382.196736,
+    "sequential_um2": 35487.6,
+    "standard_cell_um2": 83512
+   },
+   "context_latency": {
+    "ACC_LAT": 7,
+    "KV_PREP": 3,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "RTL_changed": false,
+    "TREE_LAT": 7,
+    "new_edges": 0,
+    "scope": "Existing source schedule retained, no added cut or recipe selected. Clock does not close; no measured physical token latency or clock lowering credited."
+   },
+   "worst_cones": {
+    "ff": {
+     "endpoint": "u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.y[18]$_DFF_PN0_",
+     "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/w18_sta_ff.log",
+     "startpoint": "u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.u_cc.g_r.r[51]$_DFF_PN0_"
+    },
+    "ss": {
+     "endpoint": "u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_",
+     "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/w18_sta_ss.log",
+     "startpoint": "u_me.s3_x[94]$_SDFF_PN0_"
+    }
+   },
+   "standalone_false_path_io": true,
+   "complete_accelerator_qualified": false,
+   "correctness_binding": "Nash reports tile ot_qwen_w12_bmul, port ot_hdc_fp32_mul_lat; neither is suspect ot_hdc_fp32_mul_f12_l6. Correctness hold remains; no new dispatch/reproof or confirmed affected owned heavy job."
+  },
+  {
+   "module": "ot_qwen_rom_tile_logic_w12 tile_tp4_t4 (source-selected)",
+   "design": "Q",
+   "family": "qwen-me",
+   "status": "failed_variant",
+   "evidence": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/tile_failures_r1.json",
+   "period_ns": 0.833,
+   "ss_reg_to_reg_slack_ps": -18.908098,
+   "ff_hold_slack_ps": -1.640743,
+   "evidence_kind": "routed",
+   "note": "Terminal FAIL/NOADOPT under SS60/FF25; standalone false-path IO, enclosing boundary unqualified. No new source cut or clock/latency credit. Captured KV offset r_part[9] ->8-row CSA ->AW24 kept prefix sum ->off[group2][21], third KV_PREP edge. Hold captured add A-cut r[95] ->s1_code[12] inverter; separate cone from offset setup.",
+   "fmax_mhz_equiv_ss": 1173.8,
+   "closure_owner": "Claude (source-cone diagnosis); Nash (qme)",
+   "canonical_module": "ot_qwen_rom_tile_logic_w12",
+   "case": "tile_tp4_t4",
+   "parameters": {
+    "ACC_LAT": 7,
+    "CODE_BANKS": 5,
+    "FAST_ISSUE": 1,
+    "GT": 6144,
+    "IREG": 1,
+    "KV_LOCAL": 0,
+    "KV_PREP": 3,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "NREG": 1,
+    "NW": 18,
+    "SMIN": 7,
+    "TREE_LAT": 7
+   },
+   "source_pins": [
+    {
+     "path": "rtl/hdc/ot_hdc_fpu.sv",
+     "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+     "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fastfp.sv",
+     "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_delay.sv",
+     "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_sfu.sv",
+     "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_matvec.sv",
+     "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+     "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+     "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    },
+    {
+     "path": "rtl/hdc/ot_hdc_prefix.sv",
+     "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+     "sha256": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e"
+    },
+    {
+     "path": "rtl/hdc/ot_qwen_w12_arith.sv",
+     "sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+    },
+    {
+     "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+     "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    }
+   ],
+   "evidence_sha256": "3f34beb51eb320b2bedb858a6ffc0e4d2f61c11fd085e552406e568fc777a853",
+   "route_exit": 0,
+   "corner_exit": 0,
+   "closes_signoff": false,
+   "adopted": false,
+   "DRV": {
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 6
+   },
+   "drc": 0,
+   "antenna": 0,
+   "mapped_area": {
+    "cells": 633744,
+    "core_um2": 243948,
+    "excludes": "weight/code macros, VM, spine, service, parent routes/PG/clock; no parent fit claim",
+    "logic_tiles_per_die": 1536,
+    "replicated_logic_cell_mm2_only": 124.8182784,
+    "replicated_logic_core_mm2_only": 374.704128,
+    "sequential_um2": 34731.1,
+    "standard_cell_um2": 81261.9
+   },
+   "context_latency": {
+    "ACC_LAT": 7,
+    "KV_PREP": 3,
+    "MEM_EXTRA": 1,
+    "MUL_LAT": 6,
+    "RTL_changed": false,
+    "TREE_LAT": 7,
+    "new_edges": 0,
+    "scope": "Existing source schedule retained, no added cut or recipe selected. Clock does not close; no measured physical token latency or clock lowering credited."
+   },
+   "worst_cones": {
+    "ff": {
+     "endpoint": "u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.s1_code[12]$_DFF_P_",
+     "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/w18_sta_ff.log",
+     "startpoint": "u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.u_ca.g_r.r[95]$_DFF_PN0_"
+    },
+    "ss": {
+     "endpoint": "u_me.genblk2.g_kv_addr_prep.off[2][21]$_DFF_P_",
+     "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/w18_sta_ss.log",
+     "startpoint": "u_me.genblk2.g_kv_addr_prep.g_off[2].r_part[9]$_DFF_P_"
+    }
+   },
+   "standalone_false_path_io": true,
+   "complete_accelerator_qualified": false,
+   "correctness_binding": "Nash reports tile ot_qwen_w12_bmul, port ot_hdc_fp32_mul_lat; neither is suspect ot_hdc_fp32_mul_f12_l6. Correctness hold remains; no new dispatch/reproof or confirmed affected owned heavy job."
+  }
+ ],
+ "families": {
+  "sm": "DS SM element",
+  "su": "DS serial unit",
+  "attn": "DS attention tile/engine",
+  "svc": "memory-controller front end + HBM service",
+  "ctl": "SM-side service/control + DSpark",
+  "noc": "collectives/NoC",
+  "qwen-me": "Qwen W12 ME + tile",
+  "qwen-core": "Qwen core/vstream/tp_seq/collective/wstream"
+ }
+}

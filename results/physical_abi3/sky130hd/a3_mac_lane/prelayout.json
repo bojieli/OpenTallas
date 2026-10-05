@@ -1,0 +1,249 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.36613751955519136,
+        "met": false,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": false,
+        "setup_violating_paths": 150,
+        "setup_wns_ns": -27.09858725226344,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "did not meet in: static_timing",
+    "status": "not_met"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-31T07:24:09.579958+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "ot_a3_mac_lane",
+    "clock_port": "clk",
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_fp32_rne_pkg.sv",
+        "sha256": "3f892e737057cdfb651c0022c913d00f5e1be02b960f9afe9f57b202f1d57fa9",
+        "size_bytes": 20796
+      },
+      {
+        "path": "rtl/abi3/ot_a3_format_pkg.sv",
+        "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0",
+        "size_bytes": 7072
+      },
+      {
+        "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+        "sha256": "a4e78449b610ac226127d5c676b8dfa59659c0122a1d2e62799374da1ec2d892",
+        "size_bytes": 2763
+      },
+      {
+        "path": "rtl/abi3/ot_a3_mac_lane.sv",
+        "sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+        "size_bytes": 14028
+      }
+    ],
+    "top": "ot_a3_mac_lane"
+  },
+  "elapsed_seconds": 173.319,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-08-31T07:21:16.260750+00:00",
+  "git": {
+    "commit": "7a320bf3a7652393cf6632bf8fa22f9875c827b6",
+    "worktree_dirty": true
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--top",
+      "ot_a3_mac_lane",
+      "--source",
+      "rtl/ot_fp32_rne_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_format_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_engine_pkg.sv",
+      "--source",
+      "rtl/abi3/ot_a3_mac_lane.sv",
+      "--clock-period-ns",
+      "30",
+      "--stages",
+      "synth,sta",
+      "--fmax-search",
+      "--false-path-from",
+      "rst_n",
+      "--purpose",
+      "characterization",
+      "--output",
+      "results/physical_abi3/sky130hd/a3_mac_lane/prelayout.json",
+      "--force"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 30.0,
+    "critical_path_ns": 57.09858725226344,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 17513568.165565412,
+    "fmax_search": {
+      "evaluations": 13,
+      "fmax_hz": 17423855.708694912,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 57.392578125,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 30.0,
+          "setup_wns_ns": -27.09858725226344
+        },
+        {
+          "clock_period_ns": 45.0,
+          "setup_wns_ns": -12.098585586928856
+        },
+        {
+          "clock_period_ns": 45.0,
+          "setup_wns_ns": -12.098585586928856
+        },
+        {
+          "clock_period_ns": 56.25,
+          "setup_wns_ns": -0.8946550420391511
+        },
+        {
+          "clock_period_ns": 56.953125,
+          "setup_wns_ns": -0.3321751856487239
+        },
+        {
+          "clock_period_ns": 57.3046875,
+          "setup_wns_ns": -0.050892624888158905
+        },
+        {
+          "clock_period_ns": 57.3486328125,
+          "setup_wns_ns": -0.015774049179994802
+        },
+        {
+          "clock_period_ns": 57.392578125,
+          "setup_wns_ns": 0.019426238945092697
+        },
+        {
+          "clock_period_ns": 57.48046875,
+          "setup_wns_ns": 0.0897451027783443
+        },
+        {
+          "clock_period_ns": 57.65625,
+          "setup_wns_ns": 0.23030467074170338
+        },
+        {
+          "clock_period_ns": 59.0625,
+          "setup_wns_ns": 1.3553460959394812
+        },
+        {
+          "clock_period_ns": 61.875,
+          "setup_wns_ns": 3.605350786631893
+        },
+        {
+          "clock_period_ns": 67.5,
+          "setup_wns_ns": 8.105349509875378
+        }
+      ]
+    },
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.36613751955519136,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.36613751955519136,
+      "setup_tns": -3466.090090826238,
+      "setup_wns": -27.09858725226344
+    },
+    "sdc_clock_period_library_units": 30.0,
+    "setup_tns_ns": -3466.090090826238,
+    "setup_violating_paths": 150,
+    "setup_wns_ns": -27.09858725226344,
+    "timing_met": false
+  },
+  "status": "not_met",
+  "synthesis": {
+    "abc_delay_target_ps": 30000.0,
+    "cell_area_um2": 160516.051,
+    "cell_count": 24224,
+    "cell_types_used": 79,
+    "chip_area_um2": 160560.24,
+    "combinational_cell_count": 23762,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "403effbe66dd94d7ec8691e97bc3d86562d019f3fab0bb059f94013fd3a228b3",
+      "raw_netlist_sha256": "403effbe66dd94d7ec8691e97bc3d86562d019f3fab0bb059f94013fd3a228b3",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 11526.275,
+    "sequential_cell_count": 462,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 30.0,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

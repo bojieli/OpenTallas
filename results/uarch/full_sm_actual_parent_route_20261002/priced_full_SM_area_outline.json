@@ -1,0 +1,3520 @@
+{
+  "clock_policy": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "full_parent_SSFF_not_measured": true,
+    "serial_chain_GHz": 0.9,
+    "streaming_GHz": 1.2
+  },
+  "full_SM_build_GO": false,
+  "models": {
+    "DS": {
+      "RF_mirrored_physical_write_bits_pc": 8192,
+      "RF_read_payload_bits_pc": 8192,
+      "RF_visible_write_ack_and_bank_arbitration_provider_bound": false,
+      "RF_write_logical_bits_pc": 4096,
+      "ROM_transfer": false,
+      "SM_replicas": 32,
+      "actual_parent_placed": false,
+      "added_transport_cycles": null,
+      "additional_service_halo_rectangles": [
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            0.0,
+            1675.624,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_0",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            0.0,
+            1778.448,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_1",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            0.0,
+            1881.272,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_2",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            0.0,
+            1984.096,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_3",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            0.0,
+            2086.92,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_4",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            0.0,
+            2189.744,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_5",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            0.0,
+            2292.5679999999998,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_6",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            0.0,
+            2395.3920000000003,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_7",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            49.04,
+            1675.624,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_8",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            49.04,
+            1778.448,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_9",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            49.04,
+            1881.272,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_10",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            49.04,
+            1984.096,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_11",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            49.04,
+            2086.92,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_12",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            49.04,
+            2189.744,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_13",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            49.04,
+            2292.5679999999998,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_14",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            49.04,
+            2395.3920000000003,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_15",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            98.08,
+            1675.624,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_16",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            98.08,
+            1778.448,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_17",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            98.08,
+            1881.272,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_18",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            98.08,
+            1984.096,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_19",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            98.08,
+            2086.92,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_20",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            98.08,
+            2189.744,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_21",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            98.08,
+            2292.5679999999998,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_22",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            98.08,
+            2395.3920000000003,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_23",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            147.12,
+            1675.624,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_24",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            147.12,
+            1778.448,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_25",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            147.12,
+            1881.272,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_26",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            147.12,
+            1984.096,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_27",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            147.12,
+            2086.92,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_28",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            147.12,
+            2189.744,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_29",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            147.12,
+            2292.5679999999998,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_30",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            147.12,
+            2395.3920000000003,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_31",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            196.16,
+            1675.624,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_32",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            196.16,
+            1778.448,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_33",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            196.16,
+            1881.272,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_34",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            196.16,
+            1984.096,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_35",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            196.16,
+            2086.92,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_36",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            196.16,
+            2189.744,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_37",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            196.16,
+            2292.5679999999998,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_38",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            196.16,
+            2395.3920000000003,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_39",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            245.2,
+            1675.624,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_40",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            245.2,
+            1778.448,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_41",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            245.2,
+            1881.272,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_42",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            245.2,
+            1984.096,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_43",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            245.2,
+            2086.92,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_44",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            245.2,
+            2189.744,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_45",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            245.2,
+            2292.5679999999998,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_46",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            245.2,
+            2395.3920000000003,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_47",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            294.24,
+            1675.624,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_48",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            294.24,
+            1778.448,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_49",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            294.24,
+            1881.272,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_50",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            294.24,
+            1984.096,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_51",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            294.24,
+            2086.92,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_52",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            294.24,
+            2189.744,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_53",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            294.24,
+            2292.5679999999998,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_54",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            294.24,
+            2395.3920000000003,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_55",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            343.28,
+            1675.624,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_56",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            343.28,
+            1778.448,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_57",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            343.28,
+            1881.272,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_58",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            343.28,
+            1984.096,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_59",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            343.28,
+            2086.92,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_60",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            343.28,
+            2189.744,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_61",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            343.28,
+            2292.5679999999998,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_62",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            343.28,
+            2395.3920000000003,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_63",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            392.32,
+            1675.624,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_64",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            392.32,
+            1778.448,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_65",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            392.32,
+            1881.272,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_66",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            392.32,
+            1984.096,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_67",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            392.32,
+            2086.92,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_68",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            392.32,
+            2189.744,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_69",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            392.32,
+            2292.5679999999998,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_70",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            392.32,
+            2395.3920000000003,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_71",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            441.36,
+            1675.624,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_72",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            441.36,
+            1778.448,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_73",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            441.36,
+            1881.272,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_74",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            441.36,
+            1984.096,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_75",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            441.36,
+            2086.92,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_76",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            441.36,
+            2189.744,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_77",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            441.36,
+            2292.5679999999998,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_78",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            441.36,
+            2395.3920000000003,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_79",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            490.4,
+            1675.624,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_80",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            490.4,
+            1778.448,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_81",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            490.4,
+            1881.272,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_82",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            490.4,
+            1984.096,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_83",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            490.4,
+            2086.92,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_84",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            490.4,
+            2189.744,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_85",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            490.4,
+            2292.5679999999998,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_86",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            490.4,
+            2395.3920000000003,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_87",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            539.4399999999999,
+            1675.624,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_88",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            539.4399999999999,
+            1778.448,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_89",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            539.4399999999999,
+            1881.272,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_90",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            539.4399999999999,
+            1984.096,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_91",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            539.4399999999999,
+            2086.92,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_92",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            539.4399999999999,
+            2189.744,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_93",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            539.4399999999999,
+            2292.5679999999998,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_94",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            539.4399999999999,
+            2395.3920000000003,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_95",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            588.48,
+            1675.624,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_96",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            588.48,
+            1778.448,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_97",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            588.48,
+            1881.272,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_98",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            588.48,
+            1984.096,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_99",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            588.48,
+            2086.92,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_100",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            588.48,
+            2189.744,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_101",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            588.48,
+            2292.5679999999998,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_102",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            588.48,
+            2395.3920000000003,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_103",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            637.52,
+            1675.624,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_104",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            637.52,
+            1778.448,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_105",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            637.52,
+            1881.272,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_106",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            637.52,
+            1984.096,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_107",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            637.52,
+            2086.92,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_108",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            637.52,
+            2189.744,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_109",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            637.52,
+            2292.5679999999998,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_110",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            637.52,
+            2395.3920000000003,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_111",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            686.56,
+            1675.624,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_112",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            686.56,
+            1778.448,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_113",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            686.56,
+            1881.272,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_114",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            686.56,
+            1984.096,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_115",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            686.56,
+            2086.92,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_116",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            686.56,
+            2189.744,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_117",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            686.56,
+            2292.5679999999998,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_118",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            686.56,
+            2395.3920000000003,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_119",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1572.8,
+            735.6,
+            1675.624,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_120",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1675.624,
+            735.6,
+            1778.448,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_121",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1778.4479999999999,
+            735.6,
+            1881.272,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_122",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1881.272,
+            735.6,
+            1984.096,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_123",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            1984.096,
+            735.6,
+            2086.92,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_124",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2086.92,
+            735.6,
+            2189.744,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_125",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2189.7439999999997,
+            735.6,
+            2292.5679999999998,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_126",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2292.568,
+            735.6,
+            2395.3920000000003,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_127",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1572.8,
+            957.44,
+            1755.5439999999999,
+            1035.91
+          ],
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "name": "proposed_scratch_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1755.5439999999999,
+            957.44,
+            1938.2879999999998,
+            1035.91
+          ],
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "name": "proposed_scratch_1",
+          "provider_bound": false
+        }
+      ],
+      "array_columns": 8,
+      "array_gross_mm2": 125.94880512000003,
+      "array_outline_um": [
+        19180.800000000003,
+        6566.400000000001
+      ],
+      "array_rows": 4,
+      "channel_M7_M9_50pct_track_budget": 2430,
+      "channel_complete_provider_demand_bound": false,
+      "channel_control_reserved_tracks": 64,
+      "channel_payload_source_lower_bound_tracks": 2304,
+      "current_shared_RNE_integrated": false,
+      "dedicated_service_channel_um": [
+        1400.0,
+        0,
+        1572.8,
+        1641.6000000000001
+      ],
+      "element_gross_mm2": 3.935900160000001,
+      "element_outline_um": [
+        2397.6000000000004,
+        1641.6000000000001
+      ],
+      "existing_native_OBS_capacity_file": "actual_geometry_capacity.json",
+      "four_target_applicability": {
+        "DS_HBM": true,
+        "DS_ROM": false,
+        "Qwen_HBM": false,
+        "Qwen_ROM": false
+      },
+      "macro_pin_escape_qualified": false,
+      "retained_macro_body_um": [
+        0,
+        0,
+        1400.0,
+        1640.0
+      ],
+      "retained_parent_cells_use_actual_postcut_ROW_sites": true,
+      "reticle_area_screen": true,
+      "reticle_source": "e72abea5ae169d3167dddc89543013f0e6bb3a7a:tools/uarch_model.py HBM_SHORE.reticle_mm; parent54d46eff8 corroborates",
+      "reticle_um": [
+        26000,
+        33000
+      ],
+      "service_logic_50pct_rectangle_um": [
+        1572.8,
+        1208.71,
+        2395.76,
+        1595.35
+      ],
+      "token_admission": false,
+      "verdict": "AREA_AND_RETICLE_FIT_ONLY: source-native parent placement and finite service route schedule still required; not an admissible routed layout"
+    },
+    "Qwen": {
+      "RF_mirrored_physical_write_bits_pc": 8192,
+      "RF_read_payload_bits_pc": 8192,
+      "RF_visible_write_ack_and_bank_arbitration_provider_bound": false,
+      "RF_write_logical_bits_pc": 4096,
+      "ROM_transfer": false,
+      "SM_replicas": 32,
+      "actual_parent_placed": false,
+      "added_transport_cycles": null,
+      "additional_service_halo_rectangles": [
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            0.0,
+            2495.064,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_0",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            0.0,
+            2597.888,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_1",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            0.0,
+            2700.712,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_2",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            0.0,
+            2803.5359999999996,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_3",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            0.0,
+            2906.3599999999997,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_4",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            0.0,
+            3009.1839999999997,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_5",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            0.0,
+            3112.008,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_6",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            0.0,
+            3214.832,
+            49.04
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_7",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            49.04,
+            2495.064,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_8",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            49.04,
+            2597.888,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_9",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            49.04,
+            2700.712,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_10",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            49.04,
+            2803.5359999999996,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_11",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            49.04,
+            2906.3599999999997,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_12",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            49.04,
+            3009.1839999999997,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_13",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            49.04,
+            3112.008,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_14",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            49.04,
+            3214.832,
+            98.08
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_15",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            98.08,
+            2495.064,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_16",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            98.08,
+            2597.888,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_17",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            98.08,
+            2700.712,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_18",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            98.08,
+            2803.5359999999996,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_19",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            98.08,
+            2906.3599999999997,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_20",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            98.08,
+            3009.1839999999997,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_21",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            98.08,
+            3112.008,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_22",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            98.08,
+            3214.832,
+            147.12
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_23",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            147.12,
+            2495.064,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_24",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            147.12,
+            2597.888,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_25",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            147.12,
+            2700.712,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_26",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            147.12,
+            2803.5359999999996,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_27",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            147.12,
+            2906.3599999999997,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_28",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            147.12,
+            3009.1839999999997,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_29",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            147.12,
+            3112.008,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_30",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            147.12,
+            3214.832,
+            196.16
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_31",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            196.16,
+            2495.064,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_32",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            196.16,
+            2597.888,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_33",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            196.16,
+            2700.712,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_34",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            196.16,
+            2803.5359999999996,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_35",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            196.16,
+            2906.3599999999997,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_36",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            196.16,
+            3009.1839999999997,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_37",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            196.16,
+            3112.008,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_38",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            196.16,
+            3214.832,
+            245.2
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_39",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            245.2,
+            2495.064,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_40",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            245.2,
+            2597.888,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_41",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            245.2,
+            2700.712,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_42",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            245.2,
+            2803.5359999999996,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_43",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            245.2,
+            2906.3599999999997,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_44",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            245.2,
+            3009.1839999999997,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_45",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            245.2,
+            3112.008,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_46",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            245.2,
+            3214.832,
+            294.24
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_47",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            294.24,
+            2495.064,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_48",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            294.24,
+            2597.888,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_49",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            294.24,
+            2700.712,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_50",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            294.24,
+            2803.5359999999996,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_51",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            294.24,
+            2906.3599999999997,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_52",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            294.24,
+            3009.1839999999997,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_53",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            294.24,
+            3112.008,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_54",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            294.24,
+            3214.832,
+            343.28000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_55",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            343.28,
+            2495.064,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_56",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            343.28,
+            2597.888,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_57",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            343.28,
+            2700.712,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_58",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            343.28,
+            2803.5359999999996,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_59",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            343.28,
+            2906.3599999999997,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_60",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            343.28,
+            3009.1839999999997,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_61",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            343.28,
+            3112.008,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_62",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            343.28,
+            3214.832,
+            392.32
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_63",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            392.32,
+            2495.064,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_64",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            392.32,
+            2597.888,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_65",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            392.32,
+            2700.712,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_66",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            392.32,
+            2803.5359999999996,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_67",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            392.32,
+            2906.3599999999997,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_68",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            392.32,
+            3009.1839999999997,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_69",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            392.32,
+            3112.008,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_70",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            392.32,
+            3214.832,
+            441.36
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_71",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            441.36,
+            2495.064,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_72",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            441.36,
+            2597.888,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_73",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            441.36,
+            2700.712,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_74",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            441.36,
+            2803.5359999999996,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_75",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            441.36,
+            2906.3599999999997,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_76",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            441.36,
+            3009.1839999999997,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_77",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            441.36,
+            3112.008,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_78",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            441.36,
+            3214.832,
+            490.40000000000003
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_79",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            490.4,
+            2495.064,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_80",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            490.4,
+            2597.888,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_81",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            490.4,
+            2700.712,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_82",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            490.4,
+            2803.5359999999996,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_83",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            490.4,
+            2906.3599999999997,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_84",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            490.4,
+            3009.1839999999997,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_85",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            490.4,
+            3112.008,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_86",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            490.4,
+            3214.832,
+            539.4399999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_87",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            539.4399999999999,
+            2495.064,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_88",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            539.4399999999999,
+            2597.888,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_89",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            539.4399999999999,
+            2700.712,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_90",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            539.4399999999999,
+            2803.5359999999996,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_91",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            539.4399999999999,
+            2906.3599999999997,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_92",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            539.4399999999999,
+            3009.1839999999997,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_93",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            539.4399999999999,
+            3112.008,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_94",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            539.4399999999999,
+            3214.832,
+            588.4799999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_95",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            588.48,
+            2495.064,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_96",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            588.48,
+            2597.888,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_97",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            588.48,
+            2700.712,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_98",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            588.48,
+            2803.5359999999996,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_99",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            588.48,
+            2906.3599999999997,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_100",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            588.48,
+            3009.1839999999997,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_101",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            588.48,
+            3112.008,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_102",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            588.48,
+            3214.832,
+            637.52
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_103",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            637.52,
+            2495.064,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_104",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            637.52,
+            2597.888,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_105",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            637.52,
+            2700.712,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_106",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            637.52,
+            2803.5359999999996,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_107",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            637.52,
+            2906.3599999999997,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_108",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            637.52,
+            3009.1839999999997,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_109",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            637.52,
+            3112.008,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_110",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            637.52,
+            3214.832,
+            686.56
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_111",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            686.56,
+            2495.064,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_112",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            686.56,
+            2597.888,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_113",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            686.56,
+            2700.712,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_114",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            686.56,
+            2803.5359999999996,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_115",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            686.56,
+            2906.3599999999997,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_116",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            686.56,
+            3009.1839999999997,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_117",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            686.56,
+            3112.008,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_118",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            686.56,
+            3214.832,
+            735.5999999999999
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_119",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2392.24,
+            735.6,
+            2495.064,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_120",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2495.064,
+            735.6,
+            2597.888,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_121",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2597.888,
+            735.6,
+            2700.712,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_122",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2700.7119999999995,
+            735.6,
+            2803.5359999999996,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_123",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2803.5359999999996,
+            735.6,
+            2906.3599999999997,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_124",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            2906.3599999999997,
+            735.6,
+            3009.1839999999997,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_125",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3009.1839999999997,
+            735.6,
+            3112.008,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_126",
+          "provider_bound": false
+        },
+        {
+          "abstract_provider_grid": "DS_grid.json",
+          "abstract_provider_scope": "Retained same-process DS shallow SRAM; not present in retained Qwen matrix parent; no timing transfer",
+          "halo_bbox_um": [
+            3112.008,
+            735.6,
+            3214.832,
+            784.64
+          ],
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "name": "proposed_RF_readcopy_page_127",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2392.24,
+            976.88,
+            2574.984,
+            1055.35
+          ],
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "name": "proposed_scratch_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2574.984,
+            976.88,
+            2757.728,
+            1055.35
+          ],
+          "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+          "name": "proposed_scratch_1",
+          "provider_bound": false
+        }
+      ],
+      "array_columns": 8,
+      "array_gross_mm2": 257.4309371904,
+      "array_outline_um": [
+        25729.920000000002,
+        10005.12
+      ],
+      "array_rows": 4,
+      "channel_M7_M9_50pct_track_budget": 2702,
+      "channel_complete_provider_demand_bound": false,
+      "channel_control_reserved_tracks": 64,
+      "channel_payload_source_lower_bound_tracks": 2560,
+      "current_shared_RNE_integrated": false,
+      "dedicated_service_channel_um": [
+        2200.0,
+        0,
+        2392.24,
+        2501.28
+      ],
+      "element_gross_mm2": 8.0447167872,
+      "element_outline_um": [
+        3216.2400000000002,
+        2501.28
+      ],
+      "existing_native_OBS_capacity_file": "actual_geometry_capacity.json",
+      "four_target_applicability": {
+        "DS_HBM": false,
+        "DS_ROM": false,
+        "Qwen_HBM": true,
+        "Qwen_ROM": false
+      },
+      "macro_pin_escape_qualified": false,
+      "retained_macro_body_um": [
+        0,
+        0,
+        2200.0,
+        2500.0
+      ],
+      "retained_parent_cells_use_actual_postcut_ROW_sites": true,
+      "reticle_area_screen": true,
+      "reticle_source": "e72abea5ae169d3167dddc89543013f0e6bb3a7a:tools/uarch_model.py HBM_SHORE.reticle_mm; parent54d46eff8 corroborates",
+      "reticle_um": [
+        26000,
+        33000
+      ],
+      "service_logic_50pct_rectangle_um": [
+        2392.24,
+        1247.5900000000001,
+        3215.2,
+        1634.23
+      ],
+      "token_admission": false,
+      "verdict": "AREA_AND_RETICLE_FIT_ONLY: source-native parent placement and finite service route schedule still required; not an admissible routed layout"
+    }
+  },
+  "new_OpenROAD_invocations": 0,
+  "original_failures_unchanged": true,
+  "schema": "opentallas.fullSM.native-parent-area-outline.v1",
+  "source_dependency_pins": {
+    "rtl/gpu/ot_gpu_bd_col.sv": "6bb9a1468b9d0e54e93b75ff697461ba2d277cc2657c5337d8b97e01a2263af0",
+    "rtl/gpu/ot_gpu_fadd.sv": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6",
+    "rtl/gpu/ot_gpu_xstore.sv": "990094f52f6a13f1618730bb2b61f02b7d439df872e31509b0cb83ae9eb770ca"
+  }
+}

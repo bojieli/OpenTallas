@@ -1,0 +1,456 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_natural_agent_campaign_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_executions": {
+      "items": {"$ref": "#/$defs/agent_execution"},
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "campaign_version": {
+      "const": "tensor-accelerator-qwen-natural-agent-campaign-0.1.0"
+    },
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "all_generated_tokens_legitimate": {"const": true},
+        "all_model_forwards_artifact_only": {"const": true},
+        "deepseek_200000_token_acceptance": {"const": false},
+        "exact_8000_token_acceptance": {"const": false},
+        "first_eos_termination_verified": {"const": true},
+        "live_agent_environment_actions_causal": {"const": true},
+        "live_agent_suite_complete": {"const": true},
+        "live_agent_withheld_tests_passed": {"const": true},
+        "natural_chat_reasoning_suite_complete": {"const": true},
+        "official_chat_template_verified": {"const": true},
+        "release_admission_claimed": {"const": false},
+        "semantic_rom_golden_exact": {"const": true},
+        "target_precision_reference_verified": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": [
+        "all_generated_tokens_legitimate",
+        "all_model_forwards_artifact_only",
+        "deepseek_200000_token_acceptance",
+        "exact_8000_token_acceptance",
+        "first_eos_termination_verified",
+        "live_agent_environment_actions_causal",
+        "live_agent_suite_complete",
+        "live_agent_withheld_tests_passed",
+        "natural_chat_reasoning_suite_complete",
+        "official_chat_template_verified",
+        "release_admission_claimed",
+        "semantic_rom_golden_exact",
+        "target_precision_reference_verified",
+        "timing_or_performance"
+      ],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "model_id": {"const": "qwen3-8b"},
+    "natural_executions": {
+      "items": {"$ref": "#/$defs/natural_execution"},
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_natural_agent_campaign.v1"
+    },
+    "scope": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_command_count": {"maximum": 32, "minimum": 0, "type": "integer"},
+        "agent_task_count": {"const": 2},
+        "agent_turn_count": {"const": 5},
+        "natural_case_count": {"const": 6}
+      },
+      "required": [
+        "agent_command_count",
+        "agent_task_count",
+        "agent_turn_count",
+        "natural_case_count"
+      ],
+      "type": "object"
+    },
+    "source_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "bash_tool_sha256": {"$ref": "#/$defs/sha256"},
+        "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+        "model_revision": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "official_chat_template_sha256": {"$ref": "#/$defs/sha256"},
+        "rom_agent_campaign_id": {"$ref": "#/$defs/sha256"},
+        "rom_agent_suite_id": {"$ref": "#/$defs/sha256"},
+        "terminalbench_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": [
+        "bash_tool_sha256",
+        "checkpoint_lock_id",
+        "model_revision",
+        "official_chat_template_sha256",
+        "rom_agent_campaign_id",
+        "rom_agent_suite_id",
+        "terminalbench_commit"
+      ],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "totals": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_decode_transaction_count": {"minimum": 0, "type": "integer"},
+        "agent_generated_token_count": {"minimum": 1, "type": "integer"},
+        "agent_prompt_token_count": {"minimum": 1, "type": "integer"},
+        "agent_transaction_count": {"minimum": 1, "type": "integer"},
+        "generated_token_count": {"minimum": 1, "type": "integer"},
+        "model_transaction_count": {"minimum": 1, "type": "integer"},
+        "natural_decode_transaction_count": {"minimum": 0, "type": "integer"},
+        "natural_generated_token_count": {"minimum": 1, "type": "integer"},
+        "natural_prompt_token_count": {"minimum": 1, "type": "integer"},
+        "natural_transaction_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "agent_decode_transaction_count",
+        "agent_generated_token_count",
+        "agent_prompt_token_count",
+        "agent_transaction_count",
+        "generated_token_count",
+        "model_transaction_count",
+        "natural_decode_transaction_count",
+        "natural_generated_token_count",
+        "natural_prompt_token_count",
+        "natural_transaction_count"
+      ],
+      "type": "object"
+    },
+    "workload_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "agent_executions",
+    "build_id",
+    "campaign_id",
+    "campaign_version",
+    "claim_boundary",
+    "graph_id",
+    "model_id",
+    "natural_executions",
+    "schema",
+    "scope",
+    "source_binding",
+    "status",
+    "totals",
+    "workload_id"
+  ],
+  "title": "Qwen natural chat, reasoning, and live-agent campaign",
+  "type": "object",
+  "$defs": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "call_index": {"maximum": 16, "minimum": 1, "type": "integer"},
+        "command": {"maxLength": 8192, "minLength": 1, "type": "string"},
+        "exit_code": {"oneOf": [{"type": "integer"}, {"type": "null"}]},
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"},
+        "timed_out": {"type": "boolean"},
+        "truncated": {"type": "boolean"},
+        "turn": {"maximum": 4, "minimum": 1, "type": "integer"},
+        "type": {"const": "bash_action"}
+      },
+      "required": [
+        "call_index",
+        "command",
+        "exit_code",
+        "stderr",
+        "stdout",
+        "timed_out",
+        "truncated",
+        "turn",
+        "type"
+      ],
+      "type": "object"
+    },
+    "agent_execution": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {"$ref": "#/$defs/action"},
+          "maxItems": 16,
+          "type": "array"
+        },
+        "agent_execution_id": {"$ref": "#/$defs/sha256"},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "build_id": {"$ref": "#/$defs/sha256"},
+        "command_count": {"maximum": 16, "minimum": 0, "type": "integer"},
+        "docker_image_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "environment_actions_model_generated": {"const": true},
+        "final_answer": {"minLength": 1, "type": "string"},
+        "graph_id": {"$ref": "#/$defs/sha256"},
+        "instruction": {"minLength": 1, "type": "string"},
+        "isolated_environment_verified": {"const": true},
+        "semantic_rom_golden_exact": {"const": true},
+        "status": {"const": "pass"},
+        "task_id": {"enum": ["hello-world", "fix-permissions"]},
+        "test": {"$ref": "#/$defs/test"},
+        "turn_count": {"maximum": 4, "minimum": 1, "type": "integer"},
+        "turns": {
+          "items": {"$ref": "#/$defs/agent_turn"},
+          "maxItems": 4,
+          "minItems": 1,
+          "type": "array"
+        },
+        "withheld_task_tests_passed": {"const": true}
+      },
+      "required": [
+        "actions",
+        "agent_execution_id",
+        "artifact",
+        "build_id",
+        "command_count",
+        "docker_image_id",
+        "environment_actions_model_generated",
+        "final_answer",
+        "graph_id",
+        "instruction",
+        "isolated_environment_verified",
+        "semantic_rom_golden_exact",
+        "status",
+        "task_id",
+        "test",
+        "turn_count",
+        "turns",
+        "withheld_task_tests_passed"
+      ],
+      "type": "object"
+    },
+    "agent_generation": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_text_raw": {"type": "string"},
+        "generated_text_visible": {"type": "string"},
+        "generated_token_count": {"maximum": 800, "minimum": 1, "type": "integer"},
+        "generated_token_ids": {
+          "items": {"maximum": 151668, "minimum": 0, "type": "integer"},
+          "maxItems": 800,
+          "minItems": 1,
+          "type": "array"
+        },
+        "stop_reason": {"const": "eos"},
+        "token_legitimacy_verified": {"const": true}
+      },
+      "required": [
+        "generated_text_raw",
+        "generated_text_visible",
+        "generated_token_count",
+        "generated_token_ids",
+        "stop_reason",
+        "token_legitimacy_verified"
+      ],
+      "type": "object"
+    },
+    "agent_turn": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "base_session_id": {"$ref": "#/$defs/sha256"},
+        "build_id": {"$ref": "#/$defs/sha256"},
+        "content": {"type": "string"},
+        "control_id": {"$ref": "#/$defs/sha256"},
+        "controlled_execution_id": {"$ref": "#/$defs/sha256"},
+        "decode_transaction_count": {"minimum": 0, "type": "integer"},
+        "exact_rom_golden": {"const": true},
+        "generation": {"$ref": "#/$defs/agent_generation"},
+        "graph_id": {"$ref": "#/$defs/sha256"},
+        "parsed_calls": {
+          "items": {"$ref": "#/$defs/call"},
+          "maxItems": 16,
+          "type": "array"
+        },
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "reasoning": {"type": "string"},
+        "rom_result_id": {"$ref": "#/$defs/sha256"},
+        "status": {"const": "pass"},
+        "transaction_count": {"minimum": 1, "type": "integer"},
+        "turn": {"maximum": 4, "minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "artifact",
+        "base_session_id",
+        "build_id",
+        "content",
+        "control_id",
+        "controlled_execution_id",
+        "decode_transaction_count",
+        "exact_rom_golden",
+        "generation",
+        "graph_id",
+        "parsed_calls",
+        "prompt",
+        "reasoning",
+        "rom_result_id",
+        "status",
+        "transaction_count",
+        "turn"
+      ],
+      "type": "object"
+    },
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["sha256", "size_bytes"],
+      "type": "object"
+    },
+    "call": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": false,
+          "properties": {
+            "command": {"maxLength": 8192, "minLength": 1, "type": "string"}
+          },
+          "required": ["command"],
+          "type": "object"
+        },
+        "name": {"const": "bash"}
+      },
+      "required": ["arguments", "name"],
+      "type": "object"
+    },
+    "message": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {"type": "string"},
+        "role": {"enum": ["assistant", "system", "tool", "user"]}
+      },
+      "required": ["content", "role"],
+      "type": "object"
+    },
+    "natural_execution": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "artifact_only_model_forwards": {"const": true},
+        "base_session_id": {"$ref": "#/$defs/sha256"},
+        "build_id": {"$ref": "#/$defs/sha256"},
+        "case_id": {
+          "enum": [
+            "arithmetic",
+            "geography",
+            "science",
+            "computer_science",
+            "practical_advice",
+            "reasoning"
+          ]
+        },
+        "control_id": {"$ref": "#/$defs/sha256"},
+        "controlled_execution_id": {"$ref": "#/$defs/sha256"},
+        "decode_transaction_count": {"minimum": 0, "type": "integer"},
+        "enable_thinking": {"type": "boolean"},
+        "exact_rom_golden": {"const": true},
+        "first_eos_stop_verified": {"const": true},
+        "generation": {"$ref": "#/$defs/natural_generation"},
+        "graph_id": {"$ref": "#/$defs/sha256"},
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "rom_result_id": {"$ref": "#/$defs/sha256"},
+        "source_messages": {
+          "items": {"$ref": "#/$defs/message"},
+          "maxItems": 32,
+          "minItems": 1,
+          "type": "array"
+        },
+        "status": {"const": "pass"},
+        "transaction_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "artifact",
+        "artifact_only_model_forwards",
+        "base_session_id",
+        "build_id",
+        "case_id",
+        "control_id",
+        "controlled_execution_id",
+        "decode_transaction_count",
+        "enable_thinking",
+        "exact_rom_golden",
+        "first_eos_stop_verified",
+        "generation",
+        "graph_id",
+        "prompt",
+        "rom_result_id",
+        "source_messages",
+        "status",
+        "transaction_count"
+      ],
+      "type": "object"
+    },
+    "natural_generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_id": {"enum": [151643, 151645]},
+        "generated_text_raw": {"type": "string"},
+        "generated_text_visible": {"type": "string"},
+        "generated_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "generated_token_ids": {
+          "items": {"maximum": 151668, "minimum": 0, "type": "integer"},
+          "maxItems": 8000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "stop_reason": {"const": "eos"},
+        "token_legitimacy_verified": {"const": true}
+      },
+      "required": [
+        "eos_token_id",
+        "generated_text_raw",
+        "generated_text_visible",
+        "generated_token_count",
+        "generated_token_ids",
+        "stop_reason",
+        "token_legitimacy_verified"
+      ],
+      "type": "object"
+    },
+    "prompt": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_text": {"minLength": 1, "type": "string"},
+        "prompt_text_utf8_sha256": {"$ref": "#/$defs/sha256"},
+        "prompt_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "prompt_token_ids": {
+          "items": {"maximum": 151668, "minimum": 0, "type": "integer"},
+          "maxItems": 8000,
+          "minItems": 1,
+          "type": "array"
+        },
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "prompt_text",
+        "prompt_text_utf8_sha256",
+        "prompt_token_count",
+        "prompt_token_ids",
+        "prompt_token_sha256"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "test": {
+      "additionalProperties": false,
+      "properties": {
+        "exit_code": {"minimum": 0, "type": "integer"},
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"}
+      },
+      "required": ["exit_code", "stderr", "stdout"],
+      "type": "object"
+    }
+  }
+}

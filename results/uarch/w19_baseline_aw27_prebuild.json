@@ -1,0 +1,185 @@
+{
+  "schema": "opentallas.w19.accepted_baseline_aw27_prebuild.v1",
+  "base_commit": "c0661c1e0aff4e73a5c3e4d2e681e1a20a7ce5fc",
+  "model_source_commit": "5be9f42d26ae82a541c6c4e5c1d6b530df7487d5",
+  "model_source_sha256": "16c9663fa33ea04b2f8decc0435321559e91ef9aceeffc4bebefe67553880c23",
+  "model_symbol": "gpu_checkpoint_address_transport",
+  "model_symbol_ast_sha256": "8e348ea466ceeb061ec6fbd3d70d7bad03564c34a219650e5cf96daa8d2a08f3",
+  "address_model": {
+    "schema": "opentallas.w19.address_transport.v1",
+    "enabled_default": false,
+    "default_sector_address_bits": 24,
+    "selected_sector_address_bits": 27,
+    "aperture_bytes": 4294967296,
+    "cfg_base_line_bits": 25,
+    "expert_stride_bits": 16,
+    "SM_offset_bits": 16,
+    "SM_request_bits": 32,
+    "SM_sector_window_index_bits": 24,
+    "sector_index_scope": "Relative operation index, not physicalHBM address",
+    "replicas_per_rank": 4,
+    "ranks": 96,
+    "added_address_bits_per_request_port": 3,
+    "added_cfg_base_bits_per_stack": 3,
+    "added_boundary_bits_per_rank": 24,
+    "added_fetch_storage_bits_per_rank": 480,
+    "added_controller_queue_address_bits_per_rank": 24576,
+    "added_SM_selector_mux_bit_equivalents_per_rank": 84,
+    "added_fetch_logic_area_mm2_per_rank": 0.00015676800000000003,
+    "area_basis": "ASSUMED DFFHQNx1 0.2916um2 and mux0.2um2/bit; controller queue area/adder carry must be qualified separately",
+    "replica_fanout": "Same four stack-local endpoints; cfg_base fanout40 address registers per stack; no new global datapath",
+    "routing": {
+      "added_request_and_cfg_tracks_per_stack": 6,
+      "basis": "Existing local address route widened only; contextual channel/slot/SSFF still pending"
+    },
+    "added_architectural_latency_cycles": 0,
+    "carry_path": "Existing descriptor base+expert*stride+offset and active address increments widened; same scheduling, unqualified atSS",
+    "contingency_one_pipeline_cycle_per_matrix_us": 0.9191666666666666,
+    "latency_policy": "Zero added cycles is a parameter-level hypothesis only. Any required stage must enter composed model and SS/FF gain gate before adoption.",
+    "backing_store": "Bounded exact full-address dictionary for simulation; baseline finite request/return queues and bank/refresh schedule retained. Missing keys fail, never alias or reload.",
+    "physical": "W13_CHAIN17_CPU_RAM_EXCLUSIVE; actualSM LEF + contextual SS1.2GHz60ps / FF25ps required",
+    "acceptance": "Actual checkpoint boundary-crossing/beyond512MiB and2GiB descriptors -> router/fetch finiteHBM -> adapter/SM exactness; later all32SM/current-token full96 propagation",
+    "adoption": "OFF: no token-rate or full-token/physical claim"
+  },
+  "w16_prerequisite_sha256": "c462190c077a67ed117821ce1b096845303b1662408e72c3bebd04ddd4b8baed",
+  "map_sha256": "0f5eb379f9083344b6f6e7f3bc55cf0faffed00170935a1f4b810993d1d745f9",
+  "map_source_commit": "fc3483c0ffe6eac2237c4cabb38678b539c39b3f",
+  "cases": [
+    {
+      "descriptor": {
+        "K": 2304,
+        "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+        "byte_length": 8192,
+        "cfg_base_line": 4145584,
+        "cfg_exp_lines": 800,
+        "cfg_lines": 64,
+        "cfg_off": 704,
+        "expert_range": [
+          0,
+          384
+        ],
+        "expert_stride_bytes": 102400,
+        "family": "w2",
+        "fmt": "fp4",
+        "layer": 13,
+        "offset": 90112,
+        "operation_id": 43,
+        "payloads": 32,
+        "rank": 0,
+        "resident_24bit_sector_fit": false,
+        "resident_first_byte": 530724864,
+        "resident_last_exclusive": 569952256,
+        "rows": [
+          50,
+          52
+        ],
+        "sm": 25,
+        "stack": 2
+      },
+      "expert_id": 60,
+      "boundary_bytes": 536870912,
+      "first_byte": 536868864
+    },
+    {
+      "descriptor": {
+        "K": 5120,
+        "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+        "byte_length": 6144,
+        "cfg_base_line": 8291424,
+        "cfg_exp_lines": 800,
+        "cfg_lines": 48,
+        "cfg_off": 368,
+        "expert_range": [
+          0,
+          384
+        ],
+        "expert_stride_bytes": 102400,
+        "family": "w3",
+        "fmt": "fp4",
+        "layer": 26,
+        "offset": 47104,
+        "operation_id": 22,
+        "payloads": 24,
+        "rank": 0,
+        "resident_24bit_sector_fit": false,
+        "resident_first_byte": 1061349376,
+        "resident_last_exclusive": 1100574720,
+        "rows": [
+          18,
+          19
+        ],
+        "sm": 18,
+        "stack": 2
+      },
+      "expert_id": 121,
+      "boundary_bytes": 1073741824,
+      "first_byte": 1073739776
+    },
+    {
+      "descriptor": {
+        "K": 5120,
+        "address_formula": "resident_first_byte + expert_id * expert_stride_bytes",
+        "byte_length": 6144,
+        "cfg_base_line": 16699392,
+        "cfg_exp_lines": 1280,
+        "cfg_lines": 48,
+        "cfg_off": 1008,
+        "expert_range": [
+          0,
+          384
+        ],
+        "expert_stride_bytes": 163840,
+        "family": "w3",
+        "fmt": "fp4",
+        "layer": 33,
+        "offset": 129024,
+        "operation_id": 22,
+        "payloads": 24,
+        "rank": 0,
+        "resident_24bit_sector_fit": false,
+        "resident_first_byte": 2137651200,
+        "resident_last_exclusive": 2200408064,
+        "rows": [
+          10,
+          11
+        ],
+        "sm": 10,
+        "stack": 0
+      },
+      "expert_id": 60,
+      "boundary_bytes": 2147483648,
+      "first_byte": 2147481600
+    }
+  ],
+  "baseline": "256B =128B weights+8B UE8M0+120B padding; compact240vs233 REJECTED",
+  "simulated_replica": {
+    "NSM": 1,
+    "NPC": 32,
+    "DQ": 4,
+    "DEPTH": 64,
+    "MAX_OUT": 32,
+    "tag_join": 512,
+    "SM_source": "000ba0898f5120a66d5905ccff333ebbbe28394d"
+  },
+  "target": {
+    "ranks": 96,
+    "SM_per_rank": 32,
+    "stacks_per_rank": 4,
+    "fetch_NSM": 8,
+    "fetch_DQ": 4
+  },
+  "qualification": "BOUND_EXISTING_PARAMETER_REPLAY_ONLY",
+  "full_resident_admitted": false,
+  "physical": "UNQUALIFIED: contextual channel/area/carry SSFF and nonSM regions remain prerequisites",
+  "token_cycles": null,
+  "model_headlines": "UNCHANGED",
+  "preload": "Activation SRAM and bounded exact-address sparse keys loaded before timing; no complete resident memory or shared500ns service claim",
+  "ports": {
+    "HBM_request_bytes_per_beat": 32,
+    "fetch_SM_bytes_per_line": 128,
+    "SM_response_bytes_per_payload": 136,
+    "HBM_bytes_per_payload": 256
+  },
+  "new_engine": false,
+  "adoption": false
+}

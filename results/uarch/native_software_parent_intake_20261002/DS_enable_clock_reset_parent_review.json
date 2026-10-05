@@ -1,0 +1,24 @@
+{
+  "artifact_pins_verified": 15,
+  "cold_model_replay": "byte-identical serialized model",
+  "core_reservation_um2_per_element_at50pct": 40.06584,
+  "delta_per_2048_site_shard_mm2": 0.00095551488,
+  "delta_vs_Maxwell_r7_um2_per_element": 0.46656,
+  "existing_WAKE_recharged": false,
+  "focused_tests_passed": 17,
+  "new_same_edge_state_FFs_per_element": 8,
+  "owner_commit": "8d6baed75",
+  "physical_admission": false,
+  "prior_negative_hold_screen_preserved": true,
+  "raw_complete_clock_reset_pin_union_present": true,
+  "required_constraints": [
+    "Prescribed D-root/HB2 physical slots and wire minima/maxima must join source predecessor and every retained-driver route, including four SETN1 tie pins; max/min screens are conditional on those exact envelopes",
+    "Raw full-source CLK/RESET union delivered; Maxwell must bind actual same-level leaf0 clock endpoints/skew<=25ps and source reset recovery/removal, without duplicating existing8 WAKE",
+    "Every local root/leaf pin escape and via array against source PG/OBS; source PG rail projection and M5 trunks are checked, other cell pin escapes and native arrays remain open; existing capture feedback/arithmetic FF hold also needs complete context",
+    "Committed b328 selected caller manifest and flags must be consumed by the context frontend; caller source pin does not qualify physical constraints"
+  ],
+  "sampling_edges_added": 0,
+  "schema": "opentallas.parent.ds-enable-context-review.v1",
+  "scope": "Source-library conditional timing and translated cell/pin/PG model; not extracted timing or full pin/via legalisation.",
+  "source_dependency_pins_verified": 37
+}

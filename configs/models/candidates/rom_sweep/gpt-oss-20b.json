@@ -1,0 +1,188 @@
+{
+ "schema": "rom_model_sweep.profile.v1",
+ "slug": "gpt-oss-20b",
+ "repo": "openai/gpt-oss-20b",
+ "revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+ "original_repo": "openai/gpt-oss-20b",
+ "license": "apache-2.0",
+ "mirror_note": null,
+ "config_sha256": "3a2a26ded679375b7928ddeca59764df7cea83220c1961035f6d6e232659e9ce",
+ "index_sha256": "0e085b977c4c9942f85938828e8c989ed7d5cdabf852e4da6a67c116cd502cd1",
+ "shards": 3,
+ "tensors": 459,
+ "header_storage_bytes_by_dtype": {
+  "BF16": 3608919168,
+  "U8": 10152345600
+ },
+ "method": "config.json + safetensors JSON headers via opentallas.profiling range reads; no tensor payload fetched, no inference run",
+ "model_type": "gpt_oss",
+ "architectures": [
+  "GptOssForCausalLM"
+ ],
+ "layers": 24,
+ "hidden": 2880,
+ "heads": 64,
+ "kv_heads": 8,
+ "head_dim": 64,
+ "vocab": 201088,
+ "tied_embeddings": false,
+ "max_context": 131072,
+ "intermediate": 2880,
+ "moe_intermediate": null,
+ "moe": {
+  "experts": 32,
+  "top_k": 4,
+  "shared": 0
+ },
+ "params": {
+  "dense_layers": 639557184,
+  "routed": 19116933120,
+  "embed": 579133440,
+  "head": 579133440,
+  "mtp": 0,
+  "vision": 0,
+  "total_text": 20914757184,
+  "total_all": 20914757184,
+  "active_per_token": 3608307264,
+  "active_routed": 2389616640,
+  "head_streamed": 579133440
+ },
+ "header_bytes": {
+  "dense": 1279114368,
+  "routed": 10165616640,
+  "head": 1158266880,
+  "embed": 1158266880
+ },
+ "layer_count_in_headers": 24,
+ "kv_layers": [
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  },
+  {
+   "kind": "window",
+   "bytes_per_pos": 1024,
+   "window": 128
+  },
+  {
+   "kind": "full",
+   "bytes_per_pos": 1024,
+   "window": 0
+  }
+ ],
+ "mtp": {
+  "native_modules": 0,
+  "weights_present": false,
+  "params": 0
+ },
+ "drafters_published": {
+  "eagle3": "RedHatAI/gpt-oss-20b-speculator.eagle3"
+ },
+ "quantization": "mxfp4"
+}

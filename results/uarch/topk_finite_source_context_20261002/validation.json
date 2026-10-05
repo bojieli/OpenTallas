@@ -1,0 +1,26 @@
+{
+  "PVE2_PVE3_new_jobs": 0,
+  "classification": "FULL_FIXED_SELECTOR_FINITE_RESERVATION_AND_SOURCE_TRANSPORT_MODEL_ONLY",
+  "current_hardware_geometry_unchanged": true,
+  "fresh_cli_byte_exact": true,
+  "jobs_launched": 0,
+  "native_source_snapshot": "c429b2732aea08d9f6fa9ddc850afdbd7b4bd6ea",
+  "next_required_engineering_action": "Bind actual register-station coordinates and clock/reset/control/prefix/via allocation to Maxwell endpoint pins and source calendar; review SS setup and FF hold before any RTL/PR admission",
+  "no_clock_token_or_acceptance_credit": true,
+  "physical_owner_snapshot": "92a6c63b1d3ee8370859a2190111abb2b001c5dc",
+  "preserved_failure_records": [
+    "prepare_failure_r1.json",
+    "packing_refusal_r2.json",
+    "test_discovery_failure_r1.json"
+  ],
+  "replay_command": "python3 tools/uarch_topk_finite_source_context.py --out FRESH_MODEL.json",
+  "source_mode": "Exact SHA/length verified archived inputs; unchanged baseline archive-only replay additionally verifies actual repository source inventory T",
+  "source_parent": "04fd7780bb97d13ee3e949292affa7c02a7b2544",
+  "tests": {
+    "finite_context": 12,
+    "physical_inputs_regression": 14,
+    "portable_archive_regression": 13,
+    "total_passed": 39
+  },
+  "transport_is_unadmitted_proposal": true
+}

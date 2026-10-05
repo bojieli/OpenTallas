@@ -1,0 +1,22 @@
+{
+  "scope": "add-only native output binding, no new arithmetic/controller/state or model build",
+  "base": "ce339a9d1",
+  "new_hardware_state_bits": 0,
+  "added_pipeline_cycles": 0,
+  "new_MACs": 0,
+  "new_memory_ports": 0,
+  "additional_output_bits": 134,
+  "producer": "existing selected core EAM e_go&&e_ready&&me_amax, am_any_v[0], actual END take, existing core_next_token/val and C8 engine identity/entry/retirement",
+  "replicas": "one output bundle per existing top; no new engine",
+  "fanout_area_route": "added observation loads/enable gates ESTIMATE; actual loaded area/route/SSFF unmeasured",
+  "default": "NATIVE_RESULT_READ=0; provider enable=false",
+  "host_bookkeeping": "save accepted-producer/END samples and raw output until caller read; no clock/reset/visibility/credit authority",
+  "actual_source_gap": "StageProgramJoin emits FIELD+END only; X_ROM g_me_rom e_am_idx/val/any=0; global head.weight capacity is not runtime qualification. EAM0 producer must actually execute; zero/stale reset bits do not satisfy fresh producer.",
+  "latency_composition": "no new engine cycle, no measured system contribution",
+  "MODEL_ONLY": {
+    "tau": 4.159,
+    "composed_rate": 8036,
+    "measured_system_result": false
+  },
+  "adopt": false
+}

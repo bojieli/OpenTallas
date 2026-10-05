@@ -1,0 +1,1229 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "checks_per_simulator": 9284,
+  "claim_boundary": {
+    "covers_a_partial_final_scale_group": false,
+    "covers_extents_beyond_the_max_elements_parameter": false,
+    "covers_scale_groups_that_are_not_multiples_of_lanes": false,
+    "dual_simulator_word_for_word": true,
+    "establishes_a_model_token_or_tpot": false,
+    "establishes_area_or_power": false,
+    "establishes_asap7_or_sky130_frequency": false,
+    "establishes_e2m1_e4m3_to_fp8_bit_exactness": true,
+    "establishes_e2m1_x_e4m3_to_e4m3_bit_exactness_over_the_whole_pair_space": true,
+    "establishes_fail_closed_refusal_with_untouched_destination": true,
+    "establishes_frequency_or_area": false,
+    "establishes_identical_results_at_lanes_1_4_and_8": true,
+    "establishes_initiation_interval_one_by_measurement": true,
+    "establishes_the_vendor_forward_quantizer_scale_selection": false,
+    "establishes_token_correctness_or_tpot": false,
+    "establishes_vendor_forward_quantizer_scale_rule": false,
+    "executes_an_abi3_descriptor_or_program": false,
+    "executes_the_shipped_engine_array_or_a_descriptor": false,
+    "implements_dequantize_operand_slot_three_passthrough": true,
+    "integrates_the_shipped_engine_array": false,
+    "is_placed_or_routed": false,
+    "reads_the_pinned_vendor_inference_model_py": false,
+    "reads_the_pinned_vendor_model_py": false,
+    "simulator_cycles_are_verification_cost_only": true
+  },
+  "coverage": {
+    "distinct_scale_groups_admitted": [
+      8,
+      12,
+      16,
+      20,
+      32,
+      64,
+      512
+    ],
+    "e2m1_codes_covered": 16,
+    "element_checks_per_lane_count": {
+      "1": 10184,
+      "4": 10184,
+      "8": 10056
+    },
+    "exhaustive_element_scale_pairs": 4064,
+    "exhaustive_pair_elements": 4064,
+    "exhaustive_pair_space_is_complete": true,
+    "extents_admitted": [
+      8,
+      16,
+      32,
+      48,
+      64,
+      80,
+      512,
+      2032,
+      2048
+    ],
+    "extents_requested": [
+      0,
+      8,
+      16,
+      18,
+      24,
+      32,
+      48,
+      64,
+      80,
+      512,
+      2032,
+      2048,
+      2056
+    ],
+    "finite_e4m3fn_scale_codes_covered": 254,
+    "output_word_checks_per_lane_count": {
+      "1": 2546,
+      "4": 2546,
+      "8": 2514
+    }
+  },
+  "geometry": {
+    "extents_admitted": [
+      8,
+      16,
+      32,
+      48,
+      64,
+      80,
+      512,
+      2032,
+      2048
+    ],
+    "identical_output_words_at_every_lane_count": true,
+    "lane_counts_elaborated": [
+      1,
+      4,
+      8
+    ],
+    "max_elements_parameter": 2048,
+    "no_model_dimension_is_a_localparam": true,
+    "scale_group_default_parameter": 16,
+    "scale_group_is_an_operand_field": true,
+    "scale_groups_admitted": [
+      8,
+      12,
+      16,
+      20,
+      32,
+      64,
+      512
+    ]
+  },
+  "log_sha256": {
+    "icarus": "f3c18fbcd28a4f56b675e3808580cbedb576f54b64aac09ec3138a5ed816d291",
+    "verilator": "cd3bec886bf6f497eb7279a079d14d99084cc44934e94847bb5186fbcd72717d",
+    "verilator_compile": "c2d5af61ba18a23f2672086b3d320fd6cd793d33e904a81ff5f45a5af5712af9",
+    "yosys": "23c4c42ad53077c438ff66e8b2f6048fc546c4cb11512b05efb7c3ac08a68a54"
+  },
+  "normalized_cases": [
+    {
+      "beats": 2032,
+      "case": 0,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 2032,
+      "case": 1,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 2,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 3,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 4,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 5,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 6,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 7,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 48,
+      "case": 8,
+      "elements": 48,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 12,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 80,
+      "case": 9,
+      "elements": 80,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 20,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 10,
+      "elements": 8,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 2,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 11,
+      "elements": 64,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 2048,
+      "case": 12,
+      "elements": 2048,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 512,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 32,
+      "case": 13,
+      "elements": 32,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 8,
+      "saturations": 20,
+      "stalls": 0
+    },
+    {
+      "beats": 32,
+      "case": 14,
+      "elements": 32,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 8,
+      "saturations": 10,
+      "stalls": 0
+    },
+    {
+      "beats": 16,
+      "case": 15,
+      "elements": 16,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 16,
+      "elements": 64,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 16,
+      "case": 17,
+      "elements": 16,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 18,
+      "elements": 512,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 19,
+      "elements": 64,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 32,
+      "case": 20,
+      "elements": 32,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 21,
+      "elements": 0,
+      "error": 1,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 22,
+      "elements": 0,
+      "error": 1,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 32,
+      "case": 23,
+      "elements": 32,
+      "error": 0,
+      "lanes": 1,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 24,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 25,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 26,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 27,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 28,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 29,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 30,
+      "elements": 0,
+      "error": 7,
+      "lanes": 1,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 508,
+      "case": 0,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 508,
+      "case": 1,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 2,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 3,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 4,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 5,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 6,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 7,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 12,
+      "case": 8,
+      "elements": 48,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 12,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 20,
+      "case": 9,
+      "elements": 80,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 20,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 2,
+      "case": 10,
+      "elements": 8,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 2,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 16,
+      "case": 11,
+      "elements": 64,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 512,
+      "case": 12,
+      "elements": 2048,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 512,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 13,
+      "elements": 32,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 8,
+      "saturations": 20,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 14,
+      "elements": 32,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 8,
+      "saturations": 10,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 15,
+      "elements": 16,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 16,
+      "case": 16,
+      "elements": 64,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 17,
+      "elements": 16,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 128,
+      "case": 18,
+      "elements": 512,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 16,
+      "case": 19,
+      "elements": 64,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 20,
+      "elements": 32,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 21,
+      "elements": 0,
+      "error": 1,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 22,
+      "elements": 0,
+      "error": 1,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 23,
+      "elements": 32,
+      "error": 0,
+      "lanes": 4,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 24,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 25,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 26,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 27,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 28,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 29,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 30,
+      "elements": 0,
+      "error": 7,
+      "lanes": 4,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 254,
+      "case": 0,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 254,
+      "case": 1,
+      "elements": 2032,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 508,
+      "saturations": 126,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 2,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 3,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 4,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 5,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 6,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 7,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 8,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 9,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 1,
+      "case": 10,
+      "elements": 8,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 2,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 11,
+      "elements": 64,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 256,
+      "case": 12,
+      "elements": 2048,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 512,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 13,
+      "elements": 32,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 8,
+      "saturations": 20,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 14,
+      "elements": 32,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 8,
+      "saturations": 10,
+      "stalls": 0
+    },
+    {
+      "beats": 2,
+      "case": 15,
+      "elements": 16,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 16,
+      "elements": 64,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 2,
+      "case": 17,
+      "elements": 16,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 4,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 64,
+      "case": 18,
+      "elements": 512,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 128,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 8,
+      "case": 19,
+      "elements": 64,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 16,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 20,
+      "elements": 32,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 21,
+      "elements": 0,
+      "error": 1,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 22,
+      "elements": 0,
+      "error": 1,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 4,
+      "case": 23,
+      "elements": 32,
+      "error": 0,
+      "lanes": 8,
+      "out_words": 8,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 24,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 25,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 26,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 27,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 28,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 29,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    },
+    {
+      "beats": 0,
+      "case": 30,
+      "elements": 0,
+      "error": 7,
+      "lanes": 8,
+      "out_words": 0,
+      "saturations": 0,
+      "stalls": 0
+    }
+  ],
+  "not_established": [
+    "no frequency, area or power number: the campaign elaborates the block through the Yosys frontend and stops there",
+    "the vendor's forward FP4 quantizer scale-selection rule is not pinned here; the pinned inference/model.py is not in this checkout and only the dequantize direction is claimed",
+    "the block is not wired into ot_a3_engine_array, so no ABI 3.0 descriptor, program or token path is exercised",
+    "a quantized region that is not a whole number of scale groups is REFUSED, not padded; nothing is claimed about partial groups",
+    "the FP8 destination format is the OpenTallas contract's choice; the vendor reconstructs the same exact products in BF16"
+  ],
+  "oracle": {
+    "arithmetic": "exact rationals, no host floating point",
+    "binary32_intermediate_pairs_proved_exact": 4064,
+    "module": "runtime/reference/fp4_kv.py",
+    "single_rounding_contract": "the E2M1 x E4M3FN product is exact, so the contract is one saturating round-to-nearest-even into E4M3FN",
+    "third_party_cross_check": {
+      "available": true,
+      "excluded_because": "the contract clamps to the finite endpoint; the PyTorch cast produces NaN instead",
+      "implementation": "torch 2.10.0+cu128 float8_e4m3fn cast",
+      "in_range_pairs_compared": 3812,
+      "in_range_pairs_matched": 3812,
+      "saturating_pairs_excluded": 252
+    }
+  },
+  "per_lane_count": {
+    "1": {
+      "checks": 3096,
+      "elements_compared": 10184,
+      "legal_cases": 22,
+      "output_words_compared": 2546,
+      "refused_cases": 9,
+      "untouched_sentinel_words_checked": 320,
+      "worst_case_operator_cycles": 2098,
+      "worst_case_stall_cycles": 0
+    },
+    "4": {
+      "checks": 3096,
+      "elements_compared": 10184,
+      "legal_cases": 22,
+      "output_words_compared": 2546,
+      "refused_cases": 9,
+      "untouched_sentinel_words_checked": 320,
+      "worst_case_operator_cycles": 562,
+      "worst_case_stall_cycles": 0
+    },
+    "8": {
+      "checks": 3092,
+      "elements_compared": 10056,
+      "legal_cases": 20,
+      "output_words_compared": 2514,
+      "refused_cases": 11,
+      "untouched_sentinel_words_checked": 352,
+      "worst_case_operator_cycles": 306,
+      "worst_case_stall_cycles": 0
+    }
+  },
+  "pipeline": {
+    "initiation_interval": 1,
+    "initiation_interval_is_measured_not_asserted": true,
+    "measured_worst_case_stall_cycles": 0,
+    "registered_stages": 7,
+    "retired_elements_per_cycle_equals_lanes": true,
+    "stage_names": [
+      "issue beat registers",
+      "E2M1/E4M3FN decode",
+      "4x4 significand multiply",
+      "exact 22-bit alignment shift",
+      "leading-one normalize",
+      "truncate, round bit, sticky OR",
+      "RNE round, carry, saturate, encode"
+    ]
+  },
+  "schema": "opentallas.rtl.a3_v41_fp4kv_dequant_campaign.v1",
+  "simulators_agree": true,
+  "source_sha256": {
+    "rtl/abi3/ot_a3_engine_pkg.sv": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477",
+    "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv": "99f862fac0d90f1d236a936bd902bdb2971513b75245032c8e03f76362fbccd7",
+    "rtl/test/tb_a3_v41_fp4kv_dequant.sv": "b3bead4fc54b68e467507760a1822dc5d553b27dd7634428d07811e2ccd841fc",
+    "runtime/reference/formats.py": "74a3254c7a1dba9ad3bf07a5c793cb2ec1766f953b48ec4c782391f757290aa2",
+    "runtime/reference/fp4_kv.py": "7b1e216e89a7df717a23ebc2d0f358b44de314ca9898a226c1e487465220ed4a",
+    "tools/build_a3_v41_fp4kv_vectors.py": "3d833f9eea7e8ceaf03a02aa3ab0262a68afc2e1c747e3454eb98127e9268cf7",
+    "tools/run_a3_v41_fp4kv_rtl_campaign.py": "15eba9c83fc6f6f1e707411565bd92ef383c0ab214ced56209056fe960635359"
+  },
+  "status": "pass",
+  "synthesis_frontend": {
+    "check_problems": 0,
+    "divider_absence_asserted_by": "yosys select -assert-count 0",
+    "dividers_or_modulo": 0,
+    "multiplier_cell": "$paramod$d2b149ed5c1ae4856a5bcdc21bb47649e33ad0b2\\ot_a3_fp4kv_dequant_lane/$mul$<ROOT>/rtl/abi3/ot_a3_vector_fp4kv_dequant.sv:256$352",
+    "multiplier_cells": 1,
+    "note": "generic synthesizable elaboration only; no library mapping, no PPA, no frequency, no token correctness, no TPOT claim",
+    "top": "ot_a3_vector_fp4kv_dequant",
+    "yosys_stat_cell_counts": {
+      "add": 78,
+      "adff": 248,
+      "adffe": 104,
+      "and": 14,
+      "dffe": 5,
+      "eq": 77,
+      "ge": 13,
+      "gt": 5,
+      "le": 10,
+      "logic_and": 105,
+      "logic_not": 77,
+      "logic_or": 19,
+      "lt": 12,
+      "mul": 5,
+      "mux": 486,
+      "ne": 60,
+      "neg": 2,
+      "not": 4,
+      "or": 7,
+      "pmux": 59,
+      "reduce_and": 52,
+      "reduce_bool": 40,
+      "reduce_or": 13,
+      "shift": 4,
+      "shiftx": 6,
+      "shl": 10,
+      "shr": 10,
+      "sub": 39,
+      "xor": 5
+    },
+    "yosys_stat_note": "stat sums its per-module listings, so a cell inside the lane appears once per elaborated listing; the authoritative multiplier count is multiplier_cells below"
+  },
+  "tools": {
+    "iverilog": {
+      "path": "/usr/bin/iverilog",
+      "sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "path": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "path": "/usr/bin/vvp",
+      "sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d"
+    },
+    "yosys": {
+      "path": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "unit": {
+    "contract": "fp4_e2m1_s16_e4m3_to_fp8_v1",
+    "dtype": "fp4_e2m1_s16_e4m3",
+    "engine": "VECTOR.CONVERT with a scale-group operand",
+    "ir_kind": "DEQUANTIZE",
+    "primary_source": "SRC-DSV41-FLASH-MODEL",
+    "reference": "runtime/reference/fp4_kv.py",
+    "rtl": "rtl/abi3/ot_a3_vector_fp4kv_dequant.sv",
+    "work_package": "WP-K (DS41-R6)"
+  },
+  "vector_sha256": {
+    "cases.hex": "435437e9beb80f0fa8e961f66b77e6f0c53aca675500efe1084c9eef4329c971",
+    "code.hex": "86737ec837ff9df1e6c60c949a6021bc9403f0c27cfe3e8155d6bd6659f038fc",
+    "expected.hex": "ed4272ce208765ac3b6024411d73f1fa2c5729530c8a0999793edae5b0e788af",
+    "index.json": "dcc2c75ad338af9c5afeccfb5eeb53115620d13bcf7e8fc6fe0354a622d5a5d3",
+    "meta.hex": "2670b32f1ce428174a7d668d60ad119f4198365a0f4b05c6f858b070d7498650",
+    "pass.hex": "6cd4d891aa883461ebba71bca79f88c9db84d0a5f81b861e73af386f09ed03f3",
+    "scale.hex": "116ecb4ca6f71f2f0d17cf50bae43416c0c15d28042e68dab7574c7efddbb990"
+  },
+  "verification_wall_seconds": {
+    "icarus_compile": 0.03326453408226371,
+    "icarus_simulation": 1.4853149289265275,
+    "verilator_compile": 5.0081913659814745,
+    "verilator_simulation": 0.014641898917034268,
+    "yosys_elaboration": 0.09638996003195643
+  },
+  "verilator_harness": {
+    "plusarg_context_owner": "the generated main creates a VerilatedContext, calls contextp->commandArgs(argc, argv) BEFORE constructing the model, and hands that same context to the model, so $value$plusargs in the testbench reads the real argv; no hand-written C++ harness with a second context is used",
+    "style": "--binary --timing, Verilator's own generated main",
+    "verified_in_generated_main": true
+  }
+}

@@ -1,0 +1,476 @@
+{
+ "schema": "v41_c7_realcore_vs_stub/1",
+ "tool": "tools/v41_c7_realcore_vs_stub.py",
+ "gate": "C7 (rack collective overlap)",
+ "claim_boundary": "Reduced 4-rank all-reduce at 8 words x 16 lanes, receive depth 2, queue depth 2; ranks 1-3 synthetic in the real-core bench; behavioural links and vector memory. Compares timing only; not a full-token or full-size tail and not a model input.",
+ "inputs": {
+  "results/rtl/v41x_real_core_collective_stage.json": "9242cc82986229b1bd9e002d6ea8040e4061387da0461e9937d87a0c8e86a316",
+  "results/rtl/v41_stage_collective_campaign.json": "f8b1c0f33a26b3bd8022ab865f2dec319050c289309b40046e68d5782267f188",
+  "results/rtl/v41_collective_levers_campaign.json": "13b6db536711b226b7616b5c3a50c2c9511a8ff73a1f21082043b4966b1263bd",
+  "results/arch/v41_lanes.json": "1295876dbdd4f7bbc0bf230adec06068643fafc4cdadc20e9bbdfe9304ddbff6"
+ },
+ "real_core": {
+  "142": {
+   "lat_x": 142,
+   "words": 8,
+   "lanes": 16,
+   "rx_depth": 2,
+   "tx_queue": 2,
+   "status": "pass",
+   "mismatches": 0,
+   "total_cycles": 1126,
+   "first_reduced_all_ranks": 212,
+   "last_reduced_all_ranks": 1071,
+   "last_reduced_rank0": 1048,
+   "last_consumed": 1125,
+   "reduced_cycles_by_rank": {
+    "0": [
+     189,
+     190,
+     475,
+     476,
+     761,
+     762,
+     1047,
+     1048
+    ],
+    "1": [
+     189,
+     190,
+     475,
+     476,
+     761,
+     762,
+     1047,
+     1048
+    ],
+    "2": [
+     212,
+     213,
+     498,
+     499,
+     784,
+     785,
+     1070,
+     1071
+    ],
+    "3": [
+     212,
+     213,
+     498,
+     499,
+     784,
+     785,
+     1070,
+     1071
+    ]
+   },
+   "collective_span_cycles": 859,
+   "wave_period_cycles": [
+    286
+   ],
+   "consumer_back_to_back_cycles": [
+    39
+   ],
+   "consumer_tail_after_last_reduced_all": 54,
+   "consumer_tail_after_last_reduced_rank0": 77,
+   "producer_stall_cycles": {
+    "0": 568,
+    "1": 597,
+    "2": 571,
+    "3": 568
+   },
+   "fifo_qmax": {
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2
+   },
+   "log": "results/rtl/v41x_real_core_stage_rankwise142.log"
+  },
+  "228": {
+   "lat_x": 228,
+   "words": 8,
+   "lanes": 16,
+   "rx_depth": 2,
+   "tx_queue": 2,
+   "status": "pass",
+   "mismatches": 0,
+   "total_cycles": 1728,
+   "first_reduced_all_ranks": 298,
+   "last_reduced_all_ranks": 1673,
+   "last_reduced_rank0": 1650,
+   "last_consumed": 1727,
+   "reduced_cycles_by_rank": {
+    "0": [
+     275,
+     276,
+     733,
+     734,
+     1191,
+     1192,
+     1649,
+     1650
+    ],
+    "1": [
+     275,
+     276,
+     733,
+     734,
+     1191,
+     1192,
+     1649,
+     1650
+    ],
+    "2": [
+     298,
+     299,
+     756,
+     757,
+     1214,
+     1215,
+     1672,
+     1673
+    ],
+    "3": [
+     298,
+     299,
+     756,
+     757,
+     1214,
+     1215,
+     1672,
+     1673
+    ]
+   },
+   "collective_span_cycles": 1375,
+   "wave_period_cycles": [
+    458
+   ],
+   "consumer_back_to_back_cycles": [
+    39
+   ],
+   "consumer_tail_after_last_reduced_all": 54,
+   "consumer_tail_after_last_reduced_rank0": 77,
+   "producer_stall_cycles": {
+    "0": 912,
+    "1": 941,
+    "2": 915,
+    "3": 912
+   },
+   "fifo_qmax": {
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2
+   },
+   "log": "results/rtl/v41x_real_core_stage_rankwise228.log"
+  }
+ },
+ "matched_stub": {
+  "142": {
+   "lat_x": 142,
+   "params": {
+    "LANES": 16,
+    "DEPTH": 2,
+    "QTX": 2,
+    "PKG_DIES": 2,
+    "LAT_U": 11,
+    "BPC_U": 3864,
+    "LAT_X": 142,
+    "BPC_X": 15758,
+    "BPC_X_DEN": 100,
+    "FLIT_OVH": 0
+   },
+   "plusargs": {
+    "WORDS": 8,
+    "START": 20,
+    "SKEW": 3,
+    "MODE": 0,
+    "ready": "all words at t=0"
+   },
+   "passed": true,
+   "mismatches": 0,
+   "first_reduced_all_ranks": 189,
+   "last_reduced_all_ranks": 1048,
+   "reduced_cycles_by_rank": {
+    "0": [
+     189,
+     190,
+     475,
+     476,
+     761,
+     762,
+     1047,
+     1048
+    ],
+    "1": [
+     189,
+     190,
+     475,
+     476,
+     761,
+     762,
+     1047,
+     1048
+    ],
+    "2": [
+     183,
+     184,
+     469,
+     470,
+     755,
+     756,
+     1041,
+     1042
+    ],
+    "3": [
+     183,
+     184,
+     469,
+     470,
+     755,
+     756,
+     1041,
+     1042
+    ]
+   },
+   "collective_span_cycles": 859,
+   "wave_period_cycles": [
+    286
+   ],
+   "producer_stall_cycles": {
+    "0": 578,
+    "1": 575,
+    "2": 578,
+    "3": 575
+   },
+   "fifo_qmax": {
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2
+   }
+  },
+  "228": {
+   "lat_x": 228,
+   "params": {
+    "LANES": 16,
+    "DEPTH": 2,
+    "QTX": 2,
+    "PKG_DIES": 2,
+    "LAT_U": 11,
+    "BPC_U": 3864,
+    "LAT_X": 228,
+    "BPC_X": 15758,
+    "BPC_X_DEN": 100,
+    "FLIT_OVH": 0
+   },
+   "plusargs": {
+    "WORDS": 8,
+    "START": 20,
+    "SKEW": 3,
+    "MODE": 0,
+    "ready": "all words at t=0"
+   },
+   "passed": true,
+   "mismatches": 0,
+   "first_reduced_all_ranks": 275,
+   "last_reduced_all_ranks": 1650,
+   "reduced_cycles_by_rank": {
+    "0": [
+     275,
+     276,
+     733,
+     734,
+     1191,
+     1192,
+     1649,
+     1650
+    ],
+    "1": [
+     275,
+     276,
+     733,
+     734,
+     1191,
+     1192,
+     1649,
+     1650
+    ],
+    "2": [
+     269,
+     270,
+     727,
+     728,
+     1185,
+     1186,
+     1643,
+     1644
+    ],
+    "3": [
+     269,
+     270,
+     727,
+     728,
+     1185,
+     1186,
+     1643,
+     1644
+    ]
+   },
+   "collective_span_cycles": 1375,
+   "wave_period_cycles": [
+    458
+   ],
+   "producer_stall_cycles": {
+    "0": 922,
+    "1": 919,
+    "2": 922,
+    "3": 919
+   },
+   "fifo_qmax": {
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2
+   }
+  },
+  "sources_sha256": {
+   "rtl/rom/ot_rom_oneshot_allreduce.sv": "720f886340e65848a4e2f045793013aad9ef047d277c707d1980583a19140ab3",
+   "rtl/test/tb_v41_stage_collective.sv": "9ecce59a8d5898b8c1da81106a2f134c35e08e106e692f7a0cf6ad4e6a83daf9",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "tools/rtl_v41_stage_collective_campaign.py": "b1d8a57b03d2e54f2764418382921019b1ae8be16124c985e24935dd394739e6"
+  }
+ },
+ "model": {
+  "stub_baseline_tail_cycles": 254,
+  "stub_baseline_case": {
+   "words": 40,
+   "lanes": 128,
+   "rx_depth": 64,
+   "lat_x": 142,
+   "record": "results/rtl/v41_stage_collective_campaign.json"
+  },
+  "stub_depth_sweep_d8": 1294,
+  "adopted_lever_tail_cycles": 195,
+  "adopted_lever_record": "results/rtl/v41_collective_levers_campaign.json",
+  "model_exposed_cycles": 152.87,
+  "all_reduce_residual_cycles_priced": 16.14,
+  "priced_by": "results/arch/v41_lanes.json collective_exposure.levers"
+ },
+ "comparison": {
+  "collective_wave_period_identical": true,
+  "constant_offset_cycles": [
+   23
+  ],
+  "remote_rank_offset_cycles": [
+   29
+  ],
+  "local_rank_offset_cycles": [
+   0
+  ],
+  "offset_reading": "Ranks 0 and 1 (the real core's package) receive every reduced word on exactly the stub's cycle; ranks 2 and 3 receive each a constant offset later (remote_rank_offset_cycles), because rank 0's core emits its first word later than the synthetic ranks start and that word crosses the package link to them. The wave period is identical, so the collective adds no tail beyond the stub; the offset is producer compute, not collective exposure.",
+  "sensitivity_upper_bound": {
+   "on_path_all_reduces": 52,
+   "on_path_source": "results/rtl/v41_stage_collective_campaign.json patterns.*.on_path",
+   "cases": {
+    "consumer_after_last_reduced_all_ranks": {
+     "added_cycles_per_all_reduce": 54,
+     "added_us_per_token": 2.583,
+     "1048576": {
+      "ar_now": 7049,
+      "ar_if_unpriced": 6923,
+      "mtp_now": 15890,
+      "mtp_if_unpriced": 15702
+     },
+     "200000": {
+      "ar_now": 7286,
+      "ar_if_unpriced": 7151,
+      "mtp_now": 16449,
+      "mtp_if_unpriced": 16246
+     }
+    },
+    "consumer_after_rank0_last_reduced": {
+     "added_cycles_per_all_reduce": 77,
+     "added_us_per_token": 3.684,
+     "1048576": {
+      "ar_now": 7049,
+      "ar_if_unpriced": 6871,
+      "mtp_now": 15890,
+      "mtp_if_unpriced": 15623
+     },
+     "200000": {
+      "ar_now": 7286,
+      "ar_if_unpriced": 7095,
+      "mtp_now": 16449,
+      "mtp_if_unpriced": 16161
+     }
+    }
+   }
+  },
+  "per_lat": {
+   "142": {
+    "per_rank_delta_cycles": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ],
+     "2": [
+      29
+     ],
+     "3": [
+      29
+     ]
+    },
+    "first_reduced_delta_cycles": 23,
+    "last_reduced_delta_cycles": 23,
+    "wave_period_real": [
+     286
+    ],
+    "wave_period_stub": [
+     286
+    ],
+    "wave_period_equals_2lat_plus_2": true,
+    "real_core_added_consumer_tail_cycles": 54
+   },
+   "228": {
+    "per_rank_delta_cycles": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ],
+     "2": [
+      29
+     ],
+     "3": [
+      29
+     ]
+    },
+    "first_reduced_delta_cycles": 23,
+    "last_reduced_delta_cycles": 23,
+    "wave_period_real": [
+     458
+    ],
+    "wave_period_stub": [
+     458
+    ],
+    "wave_period_equals_2lat_plus_2": true,
+    "real_core_added_consumer_tail_cycles": 54
+   }
+  },
+  "real_core_added_tail_cycles": 54,
+  "real_core_added_tail_after_rank0_cycles": 77,
+  "real_core_added_tail_ns": 49.7,
+  "against_model": {
+   "priced_all_reduce_tail_cycles": 195,
+   "priced_residual_cycles": 16.14,
+   "if_added_to_every_all_reduce_cycles": 54,
+   "note": "The stub tail ends at the last reduced word's arrival; the real-core bench adds the rank-0 core's consumer, which here runs one core invocation per word after that word is committed. The headline prices hc_post as a streaming consumer that starts on the first arriving word, so this per-word serial consumer is an upper bound on the added exposure, not a priced term."
+  }
+ }
+}

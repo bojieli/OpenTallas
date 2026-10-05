@@ -1,0 +1,38 @@
+{
+  "RTL_frontend_simulation_PR_admitted": false,
+  "actual_accepted_trace": false,
+  "authoritative_model": "model_r2.json",
+  "backend_source_review": "5.050 supports UDP and delayed $setuphold assignment lowering. 72 isolated known-binary transfers checked. Simultaneous-input delta, four-state, event ordering and actual mapped primitive runtime are unqualified. No behavioral substitution.",
+  "capture_e899_FAIL_preserved": true,
+  "combined_model_bits": 1174534,
+  "combined_priced_proxy_mm2": 2.32020267588,
+  "command": "python3 tools/model_dsrom_selector_join_admissibility.py --out /tmp/FRESH-selector-join.json",
+  "complete_occupied_area_mm2": null,
+  "conditional_floor_root_count": 2,
+  "consumer_deadline": null,
+  "core_bits": 698354,
+  "core_clock_floor_newly_priced_BUF": 70406,
+  "finite_core_clock_colocation_deficit_mm2": 0.01192127868,
+  "fulltoken_credit": false,
+  "incremental_bits_vs_core_baseline": 603320,
+  "live1950286": "untouched",
+  "new_jobs": [],
+  "owner_next": {
+    "Arch": "Named core-clock home and full station378DBU sites CLK/reset/SETN/PG/pin escape. Keep element73/1100 union separate.",
+    "Maxwell": "Join incremental0.01437127272mm2 core-clock floor exactly once; current whole-reticle inclusion and physical occupied area pending. Bind two shard homes and downstream route.",
+    "Nash_Hubble": "Actual accepted edges, VM ready/lease, last formed write and root visibility/deadline, implemented domain identity; no conditional425..1000 transfer."
+  },
+  "physical_credit": false,
+  "recipient_ACK_received": false,
+  "root_count_actual": null,
+  "station_bits": 476180,
+  "station_clock_floor_BUF": 48007,
+  "status": "JOINED_SIZING_AND_READ_ONLY_BACKEND_REVIEW_COMPLETE_ADMISSION_REFUSED",
+  "test_command": "python3 tests/test_model_dsrom_selector_join_admissibility.py -v",
+  "tests": {
+    "new_tests": 10,
+    "preserved_candidate_tests": 19,
+    "preserved_literal_tests": 7
+  },
+  "track_scope": "4214 across main corridor, remaining28/38 before unallocated PG/clock branches; formed-write2114 separate capacity unbound"
+}

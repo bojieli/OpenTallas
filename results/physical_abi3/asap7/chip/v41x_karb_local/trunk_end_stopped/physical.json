@@ -1,0 +1,221 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T10:43:17.723901+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 1705.873,
+    "block": "ot_v41x_karb_trunk_cut",
+    "cells": 12407,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41x_karb_trunk_cut.sv",
+        "sha256": "7249ac944ea20fb6f6b1968f63b0d4a88e430bfa5d4a11ed7fd8160fe3a2958d",
+        "size_bytes": 3630
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+        "sha256": "4d0e4b88b7fd66d517f3057ac1c1715fb1fadd969d1bf2d6389662771f199528",
+        "size_bytes": 6172
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+        "sha256": "ffbdd286d3e21ff309f4636763e4d9d8fa0a989bb664ece3149ccfa004475eb7",
+        "size_bytes": 4776
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_q2.sv",
+        "sha256": "90c16f6e5ccce13ea45af4d36cc91dcdaebe2de88b5d0e59da1caf1cedbc3b47",
+        "size_bytes": 1470
+      },
+      {
+        "path": "rtl/chip/ot_chip_v41x_karb_qn.sv",
+        "sha256": "2e7ff8700db4d25f0d68d3d096d1f151e12e84778816f162b9126c4d545990a0",
+        "size_bytes": 1464
+      }
+    ],
+    "top": "ot_v41x_karb_trunk_cut"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 143:\n region query size = 1718395.\n[INFO DRT-0033] V1 shape region query size = 72846523.\n[INFO DRT-0033] M2 shape region query size = 495242.\n[INFO DRT-0033] V2 shape region query size = 1456590.\n[INFO DRT-0033] M3 shape region query size = 1456590.\n[INFO DRT-0033] V3 shape region query size = 971060.\n[INFO DRT-0033] M4 shape region query size = 971060.\n[INFO DRT-0033] V4 shape region query size = 971060.\n[INFO DRT-0033] M5 shape region query size = 542605.\n[INFO DRT-0033] V5 shape region query size = 101328.\n[INFO DRT-0033] M6 shape region query size = 50712.\n[INFO DRT-0033] V6 shape region query size = 0.\n[INFO DRT-0033] M7 shape region query size = 0.\n[INFO DRT-0033] V7 shape region query size = 0.\n[INFO DRT-0033] M8 shape region query size = 0.\n[INFO DRT-0033] V8 shape region query size = 0.\n[INFO DRT-0033] M9 shape region query size = 0.\n[INFO DRT-0033] V9 shape region query size = 0.\n[INFO DRT-0033] Pad shape region query size = 0.\n[INFO DRT-0165] Start pin access.\n[INFO DRT-0078]   Complete 809 pins.\n[INFO DRT-0079]   Complete 100 unique inst patterns.\n[INFO DRT-0081]   Complete 152 unique inst patterns.\n[INFO DRT-0082]   Complete 10000 groups.\n[INFO DRT-0082]   Complete 20000 groups.\n[INFO DRT-0082]   Complete 30000 groups.\n[INFO DRT-0082]   Complete 40000 groups.\n[INFO DRT-0082]   Complete 50000 groups.\n[INFO DRT-0082]   Complete 60000 groups.\n[INFO DRT-0082]   Complete 70000 groups.\n[INFO DRT-0082]   Complete 80000 groups.\n[INFO DRT-0082]   Complete 90000 groups.\n[INFO DRT-0082]   Complete 100000 groups.\n[INFO DRT-0084]   Complete 122577 groups.\n#scanned instances     = 180784\n#unique  instances     = 152\n#stdCellGenAp          = 4445\n#stdCellValidPlanarAp  = 52\n#stdCellValidViaAp     = 3813\n#stdCellPinNoAp        = 0\n#stdCellPinCnt         = 273992\n#instTermValidViaApCnt = 0\n#macroGenAp            = 0\n#macroValidPlanarAp    = 0\n#macroValidViaAp       = 0\n#macroNoAp             = 0\n[INFO DRT-0166] Complete pin access.\n[INFO DRT-0267] cpu time = 00:03:32, elapsed time = 00:00:37, memory = 3289.16 (MB), peak = 5907.20 (MB)\nTook 60 seconds: pin_access\nglobal_route -congestion_report_file /work/reports/asap7/opentallas_ot_v41x_karb_trunk_cut_asap7_w2a_karb_trunk_end/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware\n[INFO GRT-0020] Min routing layer: M2\n[INFO GRT-0021] Max routing layer: M7\n[INFO GRT-0022] Global adjustment: 0%\n[INFO GRT-0023] Grid origin: (0, 0)\n[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360\n[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360\n[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360\n[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480\n[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480\n[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640\n[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640\n\nElapsed time: 0:03.59[h:]min:sec. CPU time: user 3.32 sys 0.27 (99%). Peak memory: 237688KB.\nElapsed time: 0:09.71[h:]min:sec. CPU time: user 10.61 sys 0.58 (115%). Peak memory: 277488KB.\nElapsed time: 0:03.41[h:]min:sec. CPU time: user 3.17 sys 0.24 (99%). Peak memory: 226296KB.\nElapsed time: 0:03.67[h:]min:sec. CPU time: user 3.48 sys 0.19 (99%). Peak memory: 246428KB.\nElapsed time: 0:31.95[h:]min:sec. CPU time: user 31.42 sys 0.52 (99%). Peak memory: 477080KB.\nElapsed time: 2:18.52[h:]min:sec. CPU time: user 278.68 sys 1.41 (202%). Peak memory: 829916KB.\nElapsed time: 0:06.75[h:]min:sec. CPU time: user 6.19 sys 0.56 (99%). Peak memory: 428172KB.\nElapsed time: 6:14.81[h:]min:sec. CPU time: user 561.58 sys 41.62 (160%). Peak memory: 46676540KB.\nElapsed time: 1:01.91[h:]min:sec. CPU time: user 85.09 sys 5.57 (146%). Peak memory: 632000KB.\nElapsed time: 2:33.75[h:]min:sec. CPU time: user 166.43 sys 12.25 (116%). Peak memory: 3043496KB.\nElapsed time: 5:24.20[h:]min:sec. CPU time: user 376.42 sys 18.85 (121%). Peak memory: 3299328KB.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T10:21:51.090373+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41x_karb_trunk_cut",
+      "--source",
+      "rtl/chip/physical/ot_v41x_karb_trunk_cut.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_stack_ep.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_region_kq.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_q2.sv",
+      "--source",
+      "rtl/chip/ot_chip_v41x_karb_qn.sv",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "11400",
+      "64",
+      "--core-area",
+      "1.08",
+      "1.08",
+      "11398.9",
+      "62.92",
+      "--place-density",
+      "0.6",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--pin-region",
+      "^(k_v|k_rdy|k_we|k_wr_done|k_rsp_v|k_rsp_rdy|clk|rst_n)$|^(k_addr|k_len|k_tag|k_wdata|k_wstrb|k_rsp_tag|k_rsp_beat|k_rsp_data|k_grants|b_grants|contended)\\[\\d+\\]$=top:11140-11390",
+      "--pin-region",
+      "^s_we$|^(s_kv|s_take|s_addr|s_len|s_tag|s_wdata|s_wstrb|s_kwd|s_bg|s_ct)\\[\\d+\\]$=bottom:20-730",
+      "--pin-region",
+      "^(s_krv|s_krdy|s_rtag|s_rbeat|s_rdata)\\[\\d+\\]$=top:20-730",
+      "--nickname-tag",
+      "w2a_karb_trunk_end",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41x_karb_local/trunk_end/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w2/pnr2/trunk_end",
+      "--force"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/w2/karb2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/home/ubuntu/w2/karb2"
+    },
+    "orfs_num_cores": 6,
+    "platform": "Linux-5.15.0-194-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/home/ubuntu/w2/karb2"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 920.0,
+    "cell_area_um2": 1705.873,
+    "cell_count": 12407,
+    "cell_types_used": 26,
+    "chip_area_um2": 1705.87458,
+    "combinational_cell_count": 9538,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "3f4f3f2af2ca2138ebb255ccffff58472cb26b5b6d33f5c58cff7f02254a36a4",
+      "raw_netlist_sha256": "3f4f3f2af2ca2138ebb255ccffff58472cb26b5b6d33f5c58cff7f02254a36a4",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 847.535,
+    "sequential_cell_count": 2869,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

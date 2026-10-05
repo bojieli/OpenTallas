@@ -1,0 +1,135 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/canonical_application_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "application_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/check"
+      },
+      "type": "array"
+    },
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "checked_assignment_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "checked_input_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "checked_output_bytes": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "checked_assignment_count",
+        "checked_input_count",
+        "checked_output_bytes"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.canonical_application_check.v1"
+    },
+    "status": {
+      "const": "full_assignment_match"
+    },
+    "verification_id": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "application_id",
+    "checkpoint_lock_id",
+    "checks",
+    "coverage",
+    "schema",
+    "status",
+    "verification_id"
+  ],
+  "title": "OpenTallas canonical checkpoint application check v1",
+  "type": "object",
+  "$defs": {
+    "check": {
+      "additionalProperties": false,
+      "properties": {
+        "assignment_path": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "check_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "checked_output_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "detail_check_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "enum": [
+            "independent_fp8_e8m0_bf16",
+            "native_mxfp4_pair_identity",
+            "streamed_identity_or_slice"
+          ]
+        },
+        "output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "rank": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_name": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,239}$",
+          "type": "string"
+        },
+        "status": {
+          "const": "full_payload_match"
+        },
+        "transform": {
+          "enum": [
+            "dequantize_fp8_e8m0_to_bf16_rne",
+            "identity",
+            "reinterpret_i8_bytes_as_native_mxfp4_low_nibble_first"
+          ]
+        }
+      },
+      "required": [
+        "assignment_path",
+        "check_id",
+        "checked_output_bytes",
+        "detail_check_id",
+        "method",
+        "output_sha256",
+        "rank",
+        "source_name",
+        "status",
+        "transform"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

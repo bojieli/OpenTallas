@@ -1,0 +1,16 @@
+{
+ "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "tensors": 2401,
+ "bytes_total": 7932874632,
+ "bytes_by_group": {
+  "attention": 380259840,
+  "other": 15794312,
+  "routed_experts": 7219445760,
+  "shared_expert": 106272000,
+  "main_proj": 78720000,
+  "markov_head": 132382720
+ },
+ "bytes_per_routed_expert": 18800640,
+ "bytes_read_per_call_excl_routed": 713428872,
+ "note": "head and embed are tied to the backbone's (no separate tensors)"
+}

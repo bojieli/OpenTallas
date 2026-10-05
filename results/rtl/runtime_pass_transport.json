@@ -1,0 +1,77 @@
+{
+  "status": "pass",
+  "scope": "Runtime operand service plus real compact object transport, SRAM banks, auxiliary queue and operand join. Issue preview is independently generated; loaded pass-first arithmetic/output integration remains open.",
+  "tests": 4,
+  "legacy_service_regression": true,
+  "rows": 3,
+  "logical_cols": 53,
+  "local_cols": 7,
+  "cases": [
+    {
+      "depth": 160,
+      "reuse": false,
+      "fetched_words": 3360,
+      "joined_bundles": 3360
+    },
+    {
+      "depth": 160,
+      "reuse": true,
+      "fetched_words": 1120,
+      "joined_bundles": 3360
+    },
+    {
+      "depth": 342,
+      "reuse": false,
+      "fetched_words": 7182,
+      "joined_bundles": 7182
+    },
+    {
+      "depth": 342,
+      "reuse": true,
+      "fetched_words": 6498,
+      "joined_bundles": 7182
+    }
+  ],
+  "coverage": [
+    "strided object bytes with higher-address-dependent oracle",
+    "every delivered activation and scale plus weight bundle",
+    "independent stalls",
+    "command lifetime held through final issue",
+    "parent-approved cancellation and restart"
+  ],
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_lq8_runtime_operands.sv",
+      "sha256": "2aa72c331a7ee62d2876b51e133ae575e80391d808308698ea502769b5bf9ba3"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8.sv",
+      "sha256": "6f9a57c123763b696df3c6ac1f98526a7de5220fd45617633b5de4b0591d9022"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_pass_scheduler.sv",
+      "sha256": "09228e0339b3eeacc3bef474f832f7cd3b63418f4aa81a1bf79f24d250550b79"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_cursor.sv",
+      "sha256": "f877b618a11ed5cd8bf79f763419bb8e82349110158e6c8482d0213227b7141c"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_lq8_operand_join.sv",
+      "sha256": "bdb6d2112202b76a10c7cfc3436a8bbb02aa9f7bef71ba6c446fee9c5ded3298"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "sha256": "16e29b23557cd4975506a46ca3801af56ee97d589456ce6ef1f3408527c91062"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "sha256": "533b1e92b41bd34673cfb1cc69eb7e7159b7f1e45011f6eef0abc682961cda4b"
+    },
+    {
+      "path": "tests/test_runtime_pass_transport.py",
+      "sha256": "88aea36fb6c604a7d5d53549302da14e7c7030605a3231080358966ee709ecbe"
+    }
+  ],
+  "default_loaded_regression": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4_strided_output_input_layout_weight_object_reads_strided_weights.json"
+}

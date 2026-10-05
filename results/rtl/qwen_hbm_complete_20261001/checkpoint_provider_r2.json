@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen-checkpoint-provider.v2",
+  "previous_receipt": "start_receipt_v1.json",
+  "previous_source_commit": "4b302dff6",
+  "source_sha256": {
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8",
+    "tools/qwen_hbm_complete_checkpoint.py": "d59615948a326fc28d26d629ba2a5c77c029c8da580a1dfd630081267783a97d",
+    "tools/qwen_hbm_complete_launch.py": "01caaf71d440515879c1e6b8564aeab72c46874ab3498d21c778e53033b0f3f2",
+    "tests/test_qwen_hbm_complete_checkpoint.py": "3b59b688201121c7add01b0975d20bf5edeb3a439ee5a54d0fd0a96be61e1e37",
+    "tests/test_qwen_hbm_complete_launch.py": "e22110f31d03c824ba4776037eb9edf3fe073784fb377d12c587158c2f42128d",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607"
+  },
+  "reader": {
+    "format": "checkpoint BF16 safetensors",
+    "max_rows": 256,
+    "verification": "metadata plus every touched complete shard SHA256 and source row-read SHA256; fail on file identity drift",
+    "quantization": "Existing O4 W8 whole output row MSE clipping with BF16 scale; qkv/GU norm folded in FP32 before quantization; only then TP row/column partition",
+    "no_duplicate_images": true,
+    "no_downloads": true
+  },
+  "executor": {
+    "layer_prefix_then_continuation": "same full program instruction stream",
+    "reference": "Independent shipped Torch primitive arithmetic; private reference activations and persistent KV; compare only after executed layer and head",
+    "consumer_leases": "Finite software leases retained until actual software SCORES and PV results; not hardware completion proof"
+  },
+  "launch": {
+    "host": "local only",
+    "CPU": 4,
+    "OMP_BLAS_threads": 4,
+    "MemAvailable_min_GiB": 112,
+    "runtime_MemAvailable_floor_GiB": 80,
+    "owned_RSS_max_GiB": 12,
+    "nice": 10,
+    "runtime_sample_seconds": 2,
+    "PID_start_cwd_manifest_before_execution": true,
+    "stop_only_owned_process_group": true
+  },
+  "validation": {
+    "focused_tests_passed": 16,
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 python3 -m pytest -q tests/test_qwen_hbm_complete_program.py tests/test_qwen_hbm_complete_executor.py tests/test_qwen_hbm_complete_checkpoint.py tests/test_qwen_hbm_complete_launch.py",
+    "checkpoint_fixture_two_token_exactness": true,
+    "row_recipe_identity": true,
+    "stale_source_and_comparison_and_lease_negatives": true
+  },
+  "actual_cached_checkpoint_execution": "PENDING launch of this immutable source",
+  "actual_RTL_executed": false,
+  "hardware_provider_binding": false,
+  "token_cycles": null,
+  "token_rate": null,
+  "engine_RTL_build_ready": false
+}

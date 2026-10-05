@@ -1,0 +1,154 @@
+{
+  "schema": "opentallas.qcnam.admission-watcher-launch.v1",
+  "utc": "2026-10-01T08:47:05.620818+00:00",
+  "launch": {
+    "pid": 434818,
+    "source_commit": "0a7d9daed2ab72cde68cec5ab900e6f30eef8206",
+    "worktree": "/tmp/claude-1000/wt/qcnam-admission-watch",
+    "events": "/tmp/claude-1000/qcnam/admission-watch"
+  },
+  "watcher_start_ticks": "304925049",
+  "watcher_pid_namespace": "pid:[4026531836]",
+  "worktree_clean": true,
+  "initial_event": {
+    "kind": "readiness",
+    "utc_ns": 1790844394523448926,
+    "watcher_source_commit": "0a7d9daed2ab72cde68cec5ab900e6f30eef8206",
+    "watcher_source_sha256": {
+      "qcnam_long_admission.py": "83143123f68db16b778d85c6227a9b13d6b418e090f91150ff847f90a858c94a",
+      "qcnam_finalize_guard.py": "f1facf666c849b0568194d9bf969f977e2dc517871e56ca0920aeddf3c5de56f",
+      "qcnam_long_admission_watch.py": "7db2812b9e310dc3051d33c4d486011e4bee805e30d0fd62f12ee19207b57e6b"
+    },
+    "observation_sha256": "49ce6c145e36adbea37158b93089833e71c93b3e58aef1d3bded6dbcf4f7ea68",
+    "hold_sha256": "e424bf42c11d091c6e9c6b79f74ce1ac231f276d846e06b085262403de22af27",
+    "data": {
+      "held": true,
+      "ready_to_release": false,
+      "released": false,
+      "supervisor": {
+        "pid": 2637360,
+        "state": "T",
+        "ppid": 2637358,
+        "start_ticks": "303668157",
+        "exit_code": 19,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ]
+      },
+      "greedy_waiter": {
+        "pid": 366428,
+        "state": "S",
+        "ppid": 2637360,
+        "start_ticks": "304830223",
+        "exit_code": 0,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ]
+      },
+      "live": [
+        {
+          "pid": 366428,
+          "argv": [
+            "/bin/bash",
+            "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+          ],
+          "cwd": "/tmp/claude-1000/wt/qcnam-run",
+          "start_ticks": "304830223"
+        },
+        {
+          "pid": 366429,
+          "argv": [
+            "/usr/bin/python3",
+            "tools/deepseek_v41_greedy_reference.py",
+            "--prompts",
+            "8",
+            "--prompt-len",
+            "128",
+            "--gen",
+            "128",
+            "--out",
+            "/tmp/claude-1000/qcnam/runs/gen/gen.json"
+          ],
+          "cwd": "/tmp/claude-1000/wt/qcnam-run",
+          "start_ticks": "304830223"
+        },
+        {
+          "pid": 2637360,
+          "argv": [
+            "/bin/bash",
+            "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+          ],
+          "cwd": "/tmp",
+          "start_ticks": "303668157"
+        },
+        {
+          "pid": 2637420,
+          "argv": [
+            "/bin/bash",
+            "/tmp/claude-1000/queue/qcnam_jobs/laneB.sh"
+          ],
+          "cwd": "/tmp",
+          "start_ticks": "303668258"
+        },
+        {
+          "pid": 2637423,
+          "argv": [
+            "/bin/bash",
+            "/tmp/claude-1000/queue/qcnam_jobs/laneB.sh"
+          ],
+          "cwd": "/tmp/claude-1000/wt/qcnam-run",
+          "start_ticks": "303668259"
+        },
+        {
+          "pid": 2637424,
+          "argv": [
+            "/usr/bin/python3",
+            "tools/deepseek_v41_nam_quality.py",
+            "--work",
+            "/tmp/claude-1000/qcnam/runs/mmlu1000/work",
+            "--out",
+            "/tmp/claude-1000/qcnam/runs/mmlu1000/run.json",
+            "--raw-out",
+            "/tmp/claude-1000/qcnam/runs/mmlu1000/raw.json",
+            "--partial",
+            "/tmp/claude-1000/qcnam/runs/mmlu1000/partial.json",
+            "--resume",
+            "--windows",
+            "0",
+            "--mmlu",
+            "1000",
+            "--batch",
+            "4",
+            "--modes",
+            "a,a2,b,b_nam",
+            "--tf-chunks",
+            "0"
+          ],
+          "cwd": "/tmp/claude-1000/wt/qcnam-run",
+          "start_ticks": "303668259"
+        }
+      ],
+      "available_bytes": 220016750592,
+      "admission": {
+        "long_hidden_bytes": 11408506880,
+        "hypothetical_long_checkpoint_bytes": 4437996481,
+        "checkpoint_and_atomic_temporary_bytes": 8875992962,
+        "mmlu_temporary_overlap_bytes": 3700753633,
+        "growth_margin_bytes": 4294967296,
+        "required_available_bytes": 28280220771,
+        "limitation": "Planning budget based on observed checkpoint sizes, not a proven upper bound for long. Continue disk watch after admission; growth margin is a resource reserve, not a numerical gate."
+      },
+      "reasons": [
+        "greedy waiter has not exited successfully"
+      ]
+    }
+  },
+  "tests": "55 CPU guard/admission/watcher tests passed",
+  "authorization": "User authorized resume SAME held2637360 through --release only after successful complete greedy and disk-budget/identity/provenance checks.",
+  "release_record_policy": "Watcher writes new exclusive event files for every readiness, release_attempt and post_release_handles. On release it records actual long argv/PID/start_ticks plus gen/long status, then exits. It never invokes finalizer, reruns laneA or changes source/thresholds.",
+  "released": false,
+  "gate_complete": false,
+  "adopted": false
+}

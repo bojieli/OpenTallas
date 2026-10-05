@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "profile_id": "local-qwen3-vl-30b-a3b-instruct-fp8-text-decode-v1",
+  "model_repo": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+  "revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd",
+  "endpoint_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+  "expected": {
+    "architecture": "Qwen3VLMoeForConditionalGeneration",
+    "model_type": "qwen3_vl_moe",
+    "text_model_type": "qwen3_vl_moe_text",
+    "quantization_method": "fp8",
+    "quantization_format": "e4m3",
+    "activation_scheme": "dynamic",
+    "text_dtype": "bfloat16",
+    "num_hidden_layers": 48,
+    "hidden_size": 2048,
+    "num_attention_heads": 32,
+    "num_key_value_heads": 4,
+    "head_dim": 128,
+    "num_experts": 128,
+    "num_experts_per_token": 8,
+    "tensor_count": 1170,
+    "shard_count": 4
+  },
+  "decode_contract": {
+    "modality": "text-only ordinary autoregressive decode",
+    "visual_frontend_exercised": false,
+    "input_embedding_service": "resident lookup; capacity retained but excluded from full-array active-weight bytes per generated token",
+    "expert_service": "exact configured 8/128 storage fraction per layer; equal expert shapes make byte count route-identity independent, but no temporal/router-locality credit is taken",
+    "fp8_gemm_semantics": "checkpoint-declared FP8 E4M3 weights and dynamic FP8 activations; two tensor operations per selected matrix weight is a GEMM lower bound",
+    "bf16_gemm_semantics": "BF16 router and LM-head matrices; two tensor operations per matrix weight is a GEMM lower bound",
+    "kv_cache_dtype": "BF16",
+    "kv_traffic_semantics": "logical full-attention K/V bytes from the published topology; not measured HBM traffic and excludes allocator, paging, reread, metadata, and kernel effects"
+  },
+  "claim_boundary": [
+    "The profile inventories the exact locally pinned checkpoint tensor headers without claiming that the checkpoint was numerically qualified for OpenTallas.",
+    "The benchmark is text-only; the visual tower remains part of full endpoint capacity but is not active during the measured decode requests.",
+    "The matrix-operation count is a lower bound and excludes normalization, rotary embedding, softmax, routing selection, sampling, and other vector/control work.",
+    "The logical KV calculation is architecture-derived rather than a measured GPU HBM counter.",
+    "No router trace, target-ROM implementation, or OpenTallas performance is supplied by this profile."
+  ]
+}

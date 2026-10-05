@@ -1,0 +1,36 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_v41x_karb_pc_budget/ot_chip_v41x_hbm_karb_pc_local/ot_chip_v41x_hbm_karb_pc_local_tt.lib
+read_db /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_group4_asap7_codex_v41x_karb_group4_macro_m9/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_group4_asap7_codex_v41x_karb_group4_macro_m9/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_macro_place_macro_placement.tcl
+[INFO MPL-0035] Macro g_pc\[0\].u_local placed. Bounding box (5.040um, 6.480um), (380.040um, 23.490um). Orientation R0
+[INFO MPL-0035] Macro g_pc\[1\].u_local placed. Bounding box (390.000um, 6.480um), (765.000um, 23.490um). Orientation R0
+[INFO MPL-0035] Macro g_pc\[2\].u_local placed. Bounding box (775.008um, 6.480um), (1150.008um, 23.490um). Orientation R0
+[INFO MPL-0035] Macro g_pc\[3\].u_local placed. Bounding box (1160.016um, 6.480um), (1535.016um, 23.490um). Orientation R0
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.183499995470047, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.12999999523162842
+rtl_macro_placer -max_num_level 2 -halo_width 2 -halo_height 2 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_chip_v41x_hbm_karb_group4_asap7_codex_v41x_karb_group4_macro_m9/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.183499995470047
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro g_pc\[0\].u_local.
+[INFO MPL-0062] Found fixed macro g_pc\[1\].u_local.
+[INFO MPL-0062] Found fixed macro g_pc\[2\].u_local.
+[INFO MPL-0062] Found fixed macro g_pc\[3\].u_local.
+[INFO MPL-0017] No unfixed macros.
+[INFO MPL-0013] Skipping macro placement.
+[INFO MPL-0500] Runtime: 0.01s
+Design area 27239 um^2 68% utilization.
+write_db /work/results/asap7/opentallas_ot_chip_v41x_hbm_karb_group4_asap7_codex_v41x_karb_group4_macro_m9/base/2_2_floorplan_macro.odb
+Elapsed time: 0:03.22[h:]min:sec. CPU time: user 3.36 sys 0.23 (111%). Peak memory: 300056KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            3            293 be4e3f37beecd5f08bc6

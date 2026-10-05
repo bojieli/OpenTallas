@@ -1,0 +1,73 @@
+{
+  "all_external_bytes": 9428966912,
+  "byte_recipe": {
+    "bfbytes_AST_unchanged": true,
+    "matrix_rows_AST_unchanged": true,
+    "reader_quantizer_native_modules_byte_identical": true
+  },
+  "codes_consumed": 290,
+  "continuation": {
+    "actual_prior_GO": "50673ec4c4a56b9adf2fe0ed4331186599f26be5",
+    "actual_prior_source": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+    "copy": "Exclusive new directory, every old and copied page checked, no hardlinks, fsync data+receipts, before/after source file identity checked",
+    "expected_bytes": 25174016,
+    "expected_pages": 64,
+    "fresh_GO_before_copy": true,
+    "identity_rule": "Exact native/checkpoint/revision/shard/package/reader/quantizer pins plus exact matrix_rows/bfbytes AST. Historical admitted producer hash checked from committed source. Explicit new source hashes; source-bound report SHA required by fresh GO.",
+    "old_identity_and_pages_mutated": false,
+    "qualification_only_default": true,
+    "reuse": "New producer independently rehashes checkpoint; new identity must match copied qualified identity; then complete old descriptor pages reused without quantization"
+  },
+  "immutable_bytes": 8824912128,
+  "immutable_extents": 586,
+  "matrix_descriptor_count": 290,
+  "model_before_actual_build": true,
+  "mutable_native_extents": 146,
+  "preflight": [
+    "all290 declared matrix names, ownership, byte counts and INT8/BF16 codec fields",
+    "all290 actual checkpoint header rows/K/BF16 dtype/folded norms before first page"
+  ],
+  "prior_model_sha256": "172d3e7b942e4a40b50389723a85f3e8bd2ae7d081534afd27ed56c2fe1fd9e9",
+  "resource": {
+    "FSIZE": "unlimited",
+    "RLIMIT_AS": "unlimited",
+    "actual_fresh_headroom_required": true,
+    "disk_floor_GiB": 24,
+    "launch": false,
+    "memory_GiB": 80,
+    "threads": 8,
+    "wall_limit": null
+  },
+  "scales_consumed": 218,
+  "scales_declared_unconsumed": 72,
+  "schema": "opentallas.Qwen.trained-byte-inventory-continuation.model.v1",
+  "scope": {
+    "actual_RTL": false,
+    "actual_numerical_result": false,
+    "full_geometry": true,
+    "token_credit": false
+  },
+  "tests": {
+    "PASS": 36,
+    "continuation_mutants": [
+      "changed matrix_rows AST",
+      "reader source pin",
+      "checkpoint shard",
+      "codec library",
+      "revision",
+      "native identity",
+      "corrupt page",
+      "orphan page",
+      "missing source-bound GO",
+      "existing target refusal"
+    ],
+    "unsupported_mutants": [
+      "INT4 code format",
+      "unknown matrix family",
+      "missing matrix descriptor",
+      "wrong scale consumer rank",
+      "actual safetensors FP16 source"
+    ]
+  },
+  "unsupported_format": "reject before checkpoint conversion/page creation; no guessed codec fallback"
+}

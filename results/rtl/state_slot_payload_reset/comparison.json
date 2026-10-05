@@ -1,0 +1,27 @@
+{
+  "scope": "Reset-free private slot payload bank on retained-capacity candidate; protocol and public reset preserved; identical admission and retirement schedule.",
+  "baseline": "results/physical_abi3/asap7/state_controller/remaining_capacity_synth_sta_1ns.json",
+  "baseline_sha256": "e728adc876dc0278cfb5de2e387429f3a91091f8e39ffe9711dd28e1a1eed04b",
+  "record": "results/physical_abi3/asap7/state_controller/slot_payload_reset_synth_sta_1ns.json",
+  "record_sha256": "54eedd50e49d70d8372c8b237cce14c8bc668cdb281496f7c6051f60d7aea3c4",
+  "sources": [
+    {
+      "path": "rtl/abi3/ot_a3_pkg.sv",
+      "sha256": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+      "size_bytes": 19703
+    },
+    {
+      "path": "results/rtl/state_slot_payload_reset/candidate.sv",
+      "sha256": "a07c5efd2751594b0aff0efd9aa1d3b359a4a1da1439eccf28e3b8acc3ea5458",
+      "size_bytes": 22859
+    }
+  ],
+  "baseline_area_um2": 3729.17,
+  "area_um2": 3557.796,
+  "area_reduction_percent": 4.595499802905212,
+  "baseline_slack_ns": -3.5126528493050047,
+  "slack_ns": -4.161595085181429,
+  "verification": "Two differential tests pass in Icarus/Verilator, including 90 transactions, 21 cancellations, 120 refusal comparisons and 18 repeated-commit scenarios each. Containing microsequencer: 65 cases and 4555 checks each simulator; source hashes verified.",
+  "decision": "Not selected for production. Area improves but prelayout timing regresses. No additional physical run launched; existing retained-capacity route remains active.",
+  "test_sha256": "7885e659706fae408b3e381bd213ee3ce2bbc6fab84dce0bf4b443d3a2c3e3d3"
+}

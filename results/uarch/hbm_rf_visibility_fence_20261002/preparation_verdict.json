@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS_PREPARATION_ONLY",
+  "tests": 9,
+  "command": [
+    "python3",
+    "tools/test_hbm_rf_connected_preparation.py"
+  ],
+  "log_sha256": "da94094a60cddd5505feab8830637cc18972fdda83dd9f4776b8d4a9d1f737c0",
+  "RTL_compile_launched": false,
+  "RTL_simulation_launched": false,
+  "connected_measurement": false,
+  "GO": false,
+  "matrix_handoff": "01d277491e6b0b504947658a7c0a750b694ef142"
+}

@@ -1,0 +1,37 @@
+{
+  "L1_source": null,
+  "actual_DUT_producer": false,
+  "actual_retained_parameter_bytes": 81920,
+  "checkpoint_reads": 0,
+  "elements": 20480,
+  "focused_source_and_finite_trace_tests_passed": 12,
+  "fresh_artifacts": {
+    "L14.product.crom64-logical-slice.bin": {
+      "byte_equal": true,
+      "sha256": "f2297940486c2604a7a4baf8887ed319c264f77cb10ccc3f164c16e01182f377"
+    },
+    "L14.product.fp32.bin": {
+      "byte_equal": true,
+      "sha256": "ab43ae81a7cc77c56b063a7ba730f5f1535c76d04d1dd8507cb6ad3bca22e9fe"
+    },
+    "contract.json": {
+      "byte_equal": true,
+      "sha256": "64d4f3804a95132df4382bfc9d4bd366c1ad2a9f94cba9affec6eb65418cfe31"
+    }
+  },
+  "hardware_admission": false,
+  "schema": "parent_engram_product_source_review.v1",
+  "scope": "Retained source integer arithmetic and exact logical layout only; no symbolic append interpreted as physical CROM.",
+  "source_commits": [
+    "277279767fcb1b5efc82056db71b5fd3caf6ad04",
+    "65551834cf3a95c9777a2592d180df2273c1e20f",
+    "60545ff45"
+  ],
+  "source_layer": 14,
+  "unclosed": [
+    "L1 immutable parameter source",
+    "physical q/k/product ports and scratch reservation",
+    "clock crossing and composed initialization latency",
+    "DUT publication/consumer lifetime"
+  ]
+}

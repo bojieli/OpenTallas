@@ -1,0 +1,396 @@
+{
+ "schema": "claude-review.qwen-rom-L0-reconciliation.v1",
+ "at": "2026-10-03",
+ "scope_note": "Read-only review. No process signalled, nothing committed. Model evaluated in detached worktree of origin/main dcba5c0ab.",
+ "measured": {
+  "run_dir": "ot-pve1:/home/ubuntu/w12/qrom-observer-L0-review-f5-20261003-r1",
+  "stage_line": "STAGE L0 done cycles=4669 start_cyc=7 end_cyc=4676 me_busy=2033/2033 seq_fault=0 core_fault=0 coll_fault=0 me_writes=1536 su_writes=30236 (in token.log; run.stderr is 0 bytes)",
+  "pass_line": "QWEN_ROM_TOKEN_TP2 PASS stages=1 token=0 val=00000000 cycles=4676 threads=14",
+  "L0_x_sha256_all_4_dies": "7631b1892d09d008624daf2936a1ca5dcff722e9738b067f72c1ea45d24fcc47 (equals retained TP4 terminal L0 expected/actual)",
+  "equals_retained_L0": {
+   "cycles": 4669,
+   "me_clock_edges": "2033/2033",
+   "source": "results/rtl/qwen_rom_TP4_terminal_20261002/original_terminal.json stages.L0; also QWEN_L0_RTL in tools/uarch_model.py (42ecf382)"
+  }
+ },
+ "Q1_configuration": {
+  "TP2_label": "Harness string only. qwen_rom_rt_observed.cpp line ~382 prints a hardcoded \"QWEN_ROM_TOKEN_TP2\"; the die count is the compile-time TPD macro (default 2). The retained terminal manifest already records this (legacy_label_reconciliation).",
+  "actual": {
+   "tp_dies": 4,
+   "evidence": [
+    "host compile -DTPD=4 (stage0.log / qwen_rom_observer_host_build.py defines)",
+    "4 payload dirs die0..die3 in stages-L0-only.txt",
+    "runtime-terminal scope.ranks=4",
+    "rt_tp4d/build_params.json die -GD=4, coll -GN=4"
+   ],
+   "groups_per_die": 6144,
+   "tiles_per_die": 1536,
+   "tiles_note": "NT = G/TG = 6144/4; nodes/die=1488 counts host-hosted split-tree nodes, not tiles",
+   "kv_heads_per_die": 2,
+   "q_heads_per_die": 8,
+   "su_width": 64,
+   "smin": 7,
+   "smax": 11,
+   "tree_cut": 7,
+   "lv": 7,
+   "wire_stages": {
+    "BD": 41,
+    "NWS": 5,
+    "TWS": 38,
+    "ORD": 7,
+    "XVM": 1,
+    "MEM_EXTRA": 1,
+    "me_extra_total": 112
+   },
+   "collective": {
+    "module": "ot_rom_oneshot_allreduce",
+    "N": 4,
+    "LANES": 16,
+    "DEPTH": 1024,
+    "LAT": 339
+   },
+   "arithmetic_latency": "original adders/issue loop (no +54/+55 LAT-7/MUL6 deltas) per QWEN_L0_RTL note",
+   "position": 0,
+   "kv_capacity_TMAX": 8192,
+   "attended_positions": 1,
+   "kv_reset_at_stage": true,
+   "source_freeze": "f5deb56b9cc53d4a0632b9ba69e3e50b834c4801 (supervisor); runtime cpp sha d42a775f...; die/tile/coll archives = rt_tp4d (same as retained)"
+  },
+  "retained_TP4": {
+   "binary_sha256": "f16129f2... (rt_tp4d/qwen_rom_rt)",
+   "build_params": "identical -G list (D4/G6144/SW64/LV7/BD41/NWS5/TWS38/ORD7/MEM_EXTRA1; coll N4/LAT339/DEPTH1024)",
+   "same_config": true,
+   "difference": "observer build (QROM_OBSERVER=1, journal) of the same Verilated archives; cycle counts identical"
+  }
+ },
+ "Q2_stage_contents": {
+  "includes": [
+   "layer-0 input RMSNorm through down-projection residual and next-norm tail (program fetch 0..34)",
+   "QKV ME, q/k norm, RoPE, KV write of position 0 (KV memory zeroed at stage start)",
+   "attention over exactly 1 position (pos 0), softmax, P.V",
+   "O and down projections on the ME tile array (6 ME clock windows)",
+   "2 all-reduces (after O and after down), each as 2 serialized 128-word TP segments on the LAT-339 oneshot collective"
+  ],
+  "excludes": [
+   "embedding lookup (x0 preloaded by host into VM)",
+   "LM head / argmax (separate head stage, 2,998 cycles in retained terminal)",
+   "stage/image switching (host loads images between stages, 1-cycle h_start)",
+   "HBM KV traffic (KV_LOCAL=0 bench memory, zero-latency registered response)",
+   "physical timing"
+  ],
+  "itrace_die0": {
+   "source": "git a17a3c79 results/rtl/qwen_rom_w12_runtime/layer0_tp4_g6144_sw64_itrace.txt (same binary f16129f2, same 4,669)",
+   "me_clock_windows": [
+    [
+     0,
+     6
+    ],
+    [
+     18,
+     270
+    ],
+    [
+     507,
+     729
+    ],
+    [
+     730,
+     1003
+    ],
+    [
+     1004,
+     1276
+    ],
+    [
+     2336,
+     2864
+    ],
+    [
+     2983,
+     3463
+    ]
+   ],
+   "me_window_cycles_sum": 2033,
+   "collective_active_windows": [
+    [
+     1280,
+     1408
+    ],
+    [
+     1777,
+     1905
+    ],
+    [
+     3467,
+     3595
+    ],
+    [
+     3964,
+     4092
+    ]
+   ],
+   "segment_issue_to_resume": [
+    [
+     1280,
+     1770
+    ],
+    [
+     1777,
+     2267
+    ],
+    [
+     3467,
+     3957
+    ],
+    [
+     3964,
+     4454
+    ]
+   ],
+   "segment_cycles": [
+    490,
+    490,
+    490,
+    490
+   ],
+   "collective_exposed_cycles_total": 1960,
+   "note": "each segment: 128 cycles of transfer (coll=1) then ~362 cycles to resume (LAT 339 + ~23). Fully exposed: ME is off throughout."
+  },
+  "me_busy_2033": "= number of cycles with the ME clock enabled (die0 and die3); equals the sum of the 7 trace ME windows (6 at reset + 2,027 steady). L1..L35 record 2,027. It is a window count incl. per-op fill latency (16+112), not MAC-issue cycles.",
+  "me_writes_1536": "port-group result-write events on die 0 (cumulative counter, stage 1 only)",
+  "su_writes_30236": "lane-element VM writes by the stream unit on die 0, not cycles; /64 lanes = 473 cycle lower bound if fully packed",
+  "per_layer_uniformity": "retained TP4 terminal: L0 4,669 (2,033 ME), L1..L35 4,668 (2,027 ME) each, head 2,998, total 171,090"
+ },
+ "Q3_model": {
+  "why_3338_vs_2270": {
+   "main_default": "qwen_tp_point(4,6144,\"board\",clock_hz=1.2e9): su_width=1024, wire extra 81 (QWEN_WIRE_W12), ctx 8192 -> chain 2,270, 116,936 cycles",
+   "credit17_r3": "tools/uarch_model_qwen_kv_credit17.py:131 qwen_tp_point(4,6144,\"ucie_measured\",clock_hz=1.2e9,me_lat_extra=55,ctx=8192,su_width=64) -> chain 3,338, AR 71, 128,444 cycles",
+   "decomposition": {
+    "su_width 1024->64 at extra 55, ctx 8192": 1224,
+    "extra 81->55 at su 1024": -156
+   },
+   "finding": "me_lat_extra REPLACES the wire extra in qwen_tp_point (T.K[\"me_lat\"] = 16 + me_lat_extra). The house convention is total = wire + arithmetic (QWEN_SS = 112 + 54 = 166; propagation gate: target +55 vs priced +54 on top of 112). credit17 (and kv_bank_groups, kv_rate_risk) pass 55 alone, so their ME latency is 71 cycles/op, dropping the 112 wire stages that the measured build has. Not an SS variant: no SS clock derate is applied (clock 1.2e9 either way)."
+  },
+  "variants": {
+   "main_default_su1024_w12extra81_ctx8192": {
+    "chain": 2270,
+    "ar": 442.0,
+    "token_cycles": 116936
+   },
+   "credit17_r3": {
+    "chain": 3338,
+    "ar": 71.0,
+    "token_cycles": 128444
+   },
+   "credit17_link_board": {
+    "chain": 3338,
+    "ar": 442.0,
+    "token_cycles": 155478
+   },
+   "su64_extra81_ctx8192": {
+    "chain": 3494,
+    "ar": 442.0,
+    "token_cycles": 161120
+   },
+   "su64_extra112_ctx8192": {
+    "chain": 3680,
+    "ar": 442.0,
+    "token_cycles": 167847
+   },
+   "su64_extra166_ctx8192": {
+    "chain": 4004,
+    "ar": 442.0,
+    "token_cycles": 179565
+   },
+   "su1024_extra55_ctx8192": {
+    "chain": 2114,
+    "ar": 442.0,
+    "token_cycles": 111294
+   },
+   "su1024_extra166_ctx8192": {
+    "chain": 2780,
+    "ar": 442.0,
+    "token_cycles": 135381
+   },
+   "RTLmatch_su64_extra112_ctx1": {
+    "chain": 2460,
+    "ar": 442.0,
+    "token_cycles": 123923
+   },
+   "su64_extra55_ctx1": {
+    "chain": 2118,
+    "ar": 442.0,
+    "token_cycles": 111554
+   },
+   "su64_extra0_ctx1": {
+    "chain": 1821,
+    "ar": 442.0,
+    "token_cycles": 100627
+   },
+   "su64_extra112_ctx1_ucie": {
+    "chain": 2460,
+    "ar": 71.0,
+    "token_cycles": 96889
+   }
+  },
+  "variants_extra167": {
+   "ctx1_extra112_board": {
+    "chain": 2460,
+    "ar": 442.0,
+    "token_cycles": 123923
+   },
+   "ctx1_extra112_ucie_measured": {
+    "chain": 2460,
+    "ar": 71.0,
+    "token_cycles": 96889
+   },
+   "ctx1_extra167_board": {
+    "chain": 2790,
+    "ar": 442.0,
+    "token_cycles": 135858
+   },
+   "ctx1_extra167_ucie_measured": {
+    "chain": 2790,
+    "ar": 71.0,
+    "token_cycles": 108824
+   },
+   "ctx8192_extra112_board": {
+    "chain": 3680,
+    "ar": 442.0,
+    "token_cycles": 167847
+   },
+   "ctx8192_extra112_ucie_measured": {
+    "chain": 3680,
+    "ar": 71.0,
+    "token_cycles": 140813
+   },
+   "ctx8192_extra167_board": {
+    "chain": 4010,
+    "ar": 442.0,
+    "token_cycles": 179782
+   },
+   "ctx8192_extra167_ucie_measured": {
+    "chain": 4010,
+    "ar": 71.0,
+    "token_cycles": 152748
+   }
+  },
+  "ctx_attention_increment_model": 1220,
+  "rtl_matched_point": {
+   "call": "qwen_tp_point(4,6144,\"board\",clock_hz=1.2e9,me_lat_extra=112,ctx=1,su_width=64)  (= qwen_l0_rtl_vs_model)",
+   "chain": 2460,
+   "stages": {
+    "QKV projection, then q/k norm, RoPE": 504,
+    "attention: scores, softmax, P.V, 1/Z": 522,
+    "O projection, residual, FFN norm": 315,
+    "gate/up projection, fused SiLU.up": 708,
+    "down projection, residual, next norm": 411
+   },
+   "engine_busy_per_layer": 528,
+   "ar_board": 442,
+   "ar_ucie_measured": 71
+  },
+  "comparison_per_layer": {
+   "measured": {
+    "total": 4669,
+    "steady": 4668,
+    "body_excl_collectives": 2687,
+    "collectives": 1982
+   },
+   "model_rtl_matched_board": {
+    "total": 3344,
+    "body": 2460,
+    "collectives": 884,
+    "under_cycles": 1325,
+    "under_pct_of_measured": 28.4,
+    "measured_over_model": 1.3962
+   },
+   "model_rtl_matched_ucie": {
+    "total": 2602,
+    "under_cycles": 2067,
+    "measured_over_model": 1.7944
+   },
+   "body": {
+    "measured": 2687,
+    "model": 2460,
+    "under_cycles": 227,
+    "measured_over_model": 1.0923
+   },
+   "collectives": {
+    "measured": 1982,
+    "model_board": 884,
+    "model_ucie_measured": 142,
+    "credit17_calendar": 181.76,
+    "note": "measured is as-built 2-segment at LAT 339; one-segment fix (79783ff9) unmeasured, est. ~620/AR"
+   },
+   "credit17_position_independent": {
+    "chain_ctx1_extra55": 2118,
+    "plus_calendar_AR": 181.76,
+    "total": 2299.76,
+    "measured": 4668,
+    "under_cycles": 2368.24,
+    "body_under": 569,
+    "collective_under": 1800.24
+   },
+   "span_alignment": {
+    "note": "model stage vs trace span boundaries are approximate",
+    "rows": [
+     {
+      "model": "QKV+qk norm+RoPE",
+      "model_c": 504,
+      "measured": "qkv",
+      "meas_c": 431
+     },
+     {
+      "model": "attention(1 pos)+O+res+FFN norm",
+      "model_c": 837,
+      "measured": "attn+pv_o_me+post",
+      "meas_c": 925
+     },
+     {
+      "model": "gate/up+SiLU",
+      "model_c": 708,
+      "measured": "gate_up+silu",
+      "meas_c": 647
+     },
+     {
+      "model": "down+res+next norm",
+      "model_c": 411,
+      "measured": "down+tail",
+      "meas_c": 702
+     }
+    ]
+   }
+  },
+  "whole_token": {
+   "measured_TP4_pos0": 171090,
+   "model_rtl_matched_board_ctx1": 123923,
+   "model_rtl_matched_ucie_ctx1": 96889,
+   "credit17_r3_ctx8192": 128444,
+   "note": "head stage measured 2,998; model token includes exchange/embedding terms not in host-serviced bench"
+  },
+  "units": {
+   "ME": "measured 2,027 ME-clock cycles/layer (window) vs model engine issue 528/layer; window includes 6 ME phases x ~(16+112) fill. Not a like-for-like busy metric.",
+   "SU": "measured 30,236 lane-writes/layer (>=473 cycles at 64 lanes) vs model stream busy 13,233/token at ctx1 (~368/layer averaged incl. head). Suggestive of model SU under-count but metrics differ; no SU cycle trace.",
+   "collectives": "measured 1,982 exposed cycles/layer (4 segments x ~490) vs model 884 (board) / 142 (ucie_measured); this is 1,098 / 1,840 of the gap."
+  }
+ },
+ "Q4_verdict": {
+  "direction": "model UNDER-predicts",
+  "at_rtl_matched_scope": "TP4/G6144/SU64/ME extra 112/position 0/LAT-339 two-segment collective: 4,669 measured vs 3,344 model (board AR) = -1,325 (-28.4%); body 2,687 vs 2,460 (x1.092, -227); collectives 1,982 vs 884 (-1,098).",
+  "vs_credit17_calendar": "its per-layer compute (3,338 chain + 181.76 AR) cannot be checked at ctx 8,192 (8,191-position attention unmeasured; model adds +1,220 for it). Its position-independent part is 2,118 + 181.76 = 2,300 vs 4,668 measured: under by ~2,368 (51%): body -569 (incl. the dropped 112-cycle wire stages) and collectives -1,800.",
+  "not_shown": [
+   "attention cost at long context (model +1,220 cycles at 8,192 unverified)",
+   "one-segment all-reduce latency",
+   "+55 arithmetic latency (not in measured RTL)",
+   "ucie_measured link in RTL (bench uses LAT 339)",
+   "SS/FF physical timing, HBM KV service, persistent windows"
+  ],
+  "calendar_recommendation": [
+   "Use me_lat_extra = 112 (wire) + arithmetic delta (55 if MUL6/ACC7/TREE7 is the target), not 55 alone: chain 2,790 (ctx1) / 4,010 (ctx 8,192), su_width=64.",
+   "Apply the measured body ratio 1.092 to the x112 position-0 body (or carry 2,687 directly at position 0) until a second-position/long-context measurement exists.",
+   "Charge collectives at the measured as-built 991 cycles/all-reduce (1,982/layer) for the LAT-339 bench link; use 71 (ucie_measured) only with an RTL measurement on that link/segmenting; the one-segment fix remains an unmeasured estimate (~620).",
+   "Label the result position-0, host-serviced; long-context attention stays model-only."
+  ]
+ }
+}

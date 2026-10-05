@@ -1,0 +1,108 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13178, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13211, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13244, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13277, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13310, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13343, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13376, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14772, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14805, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14838, timing group from output port.
+Startpoint: op_descriptor_id[13] (input port clocked by core_clk)
+Endpoint: _44206_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+ 200.0000  200.0000 v input external delay
+   0.0000  200.0000 v op_descriptor_id[13] (in)
+  39.2649  239.2649 v _30880_/Y (AO222x2_ASAP7_75t_R)
+  44.7107  283.9756 v _30882_/Y (OR5x1_ASAP7_75t_R)
+  41.1914  325.1671 v _30887_/Y (OR5x1_ASAP7_75t_R)
+ 175.5483  500.7154 v _30898_/Y (OR4x1_ASAP7_75t_R)
+  73.3366  574.0519 v _34253_/Y (OA222x2_ASAP7_75t_R)
+  19.1063  593.1583 v _34255_/Y (AND4x1_ASAP7_75t_R)
+  27.4450  620.6032 v _34256_/Y (AND5x1_ASAP7_75t_R)
+   8.7401  629.3434 ^ _34258_/Y (OAI21x1_ASAP7_75t_R)
+ 174.8128  804.1562 ^ _34284_/Y (OR4x1_ASAP7_75t_R)
+  44.1126  848.2688 v _34664_/Y (NAND3x1_ASAP7_75t_R)
+  44.6086  892.8774 v _34666_/Y (MAJx2_ASAP7_75t_R)
+  31.3019  924.1793 v _34668_/Y (MAJx2_ASAP7_75t_R)
+  31.0806  955.2599 v _34670_/Y (MAJx2_ASAP7_75t_R)
+  31.3018  986.5617 v _34672_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1017.6423 v _34674_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1048.7229 v _34676_/Y (MAJx2_ASAP7_75t_R)
+  30.9527 1079.6755 v _34678_/Y (MAJx2_ASAP7_75t_R)
+  31.0302 1110.7058 v _34680_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1141.7864 v _34682_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1172.8669 v _34684_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1203.9475 v _34686_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1235.0281 v _34688_/Y (MAJx2_ASAP7_75t_R)
+  31.2895 1266.3176 v _34690_/Y (MAJx2_ASAP7_75t_R)
+  34.2871 1300.6047 v _34694_/Y (OA211x2_ASAP7_75t_R)
+  27.8600 1328.4648 v _34696_/Y (OA31x2_ASAP7_75t_R)
+  31.3961 1359.8608 v _34698_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1390.9415 v _34700_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1422.0221 v _34702_/Y (MAJx2_ASAP7_75t_R)
+  31.0806 1453.1027 v _34704_/Y (MAJx2_ASAP7_75t_R)
+  31.2895 1484.3922 v _34706_/Y (MAJx2_ASAP7_75t_R)
+  34.0793 1518.4714 v _34710_/Y (OA211x2_ASAP7_75t_R)
+  31.7021 1550.1736 v _34711_/Y (OR3x1_ASAP7_75t_R)
+  22.8088 1572.9823 v _34712_/Y (AND2x2_ASAP7_75t_R)
+  25.3666 1598.3489 v _34713_/Y (AO21x1_ASAP7_75t_R)
+  14.0066 1612.3555 ^ _34714_/Y (NOR2x1_ASAP7_75t_R)
+  13.8232 1626.1786 v _34715_/Y (AOI21x1_ASAP7_75t_R)
+  12.1027 1638.2812 ^ _34716_/Y (NAND2x1_ASAP7_75t_R)
+  23.2221 1661.5034 ^ _34717_/Y (AND2x2_ASAP7_75t_R)
+  27.1027 1688.6061 ^ _35099_/Y (MAJx2_ASAP7_75t_R)
+  13.5322 1702.1382 v _35144_/Y (OAI21x1_ASAP7_75t_R)
+  32.9305 1735.0687 v _35159_/Y (MAJx2_ASAP7_75t_R)
+  27.4338 1762.5026 v _35172_/Y (XOR2x2_ASAP7_75t_R)
+  23.0630 1785.5656 v _35173_/Y (OA21x2_ASAP7_75t_R)
+  27.0063 1812.5719 v _35176_/Y (AO221x1_ASAP7_75t_R)
+  26.3077 1838.8796 v _35177_/Y (AO21x1_ASAP7_75t_R)
+  43.6206 1882.5001 v _37334_/Y (OR4x1_ASAP7_75t_R)
+  20.3317 1902.8319 ^ _37335_/Y (NOR2x1_ASAP7_75t_R)
+  29.0585 1931.8904 ^ _37336_/Y (AND2x2_ASAP7_75t_R)
+  36.6707 1968.5612 ^ _37338_/Y (AND3x1_ASAP7_75t_R)
+  13.4031 1981.9641 v _37339_/Y (NAND2x1_ASAP7_75t_R)
+  30.6977 2012.6619 v _37340_/Y (OR2x2_ASAP7_75t_R)
+  39.2311 2051.8928 v _37341_/Y (OR3x1_ASAP7_75t_R)
+  40.4758 2092.3687 v _37343_/Y (OR3x1_ASAP7_75t_R)
+  40.4319 2132.8005 v _37345_/Y (OR3x1_ASAP7_75t_R)
+  40.3171 2173.1177 v _37347_/Y (OR3x1_ASAP7_75t_R)
+  38.1182 2211.2358 v _37349_/Y (OR3x1_ASAP7_75t_R)
+  33.6535 2244.8894 v _37350_/Y (OR2x2_ASAP7_75t_R)
+  46.5092 2291.3987 v _37352_/Y (OR4x1_ASAP7_75t_R)
+  33.2836 2324.6821 v _37353_/Y (OR2x2_ASAP7_75t_R)
+  44.7649 2369.4470 v _37354_/Y (OR3x1_ASAP7_75t_R)
+  61.1564 2430.6035 v _37356_/Y (OR5x1_ASAP7_75t_R)
+  45.0966 2475.7002 v _37358_/Y (OR3x1_ASAP7_75t_R)
+  39.3154 2515.0156 v _37360_/Y (OR3x1_ASAP7_75t_R)
+  12.8020 2527.8176 ^ _27374_/Y (NAND2x1_ASAP7_75t_R)
+  25.0364 2552.8540 ^ _27376_/Y (AND3x1_ASAP7_75t_R)
+   0.0000 2552.8540 ^ _44206_/D (DFFASRHQNx1_ASAP7_75t_R)
+          2552.8540   data arrival time
+
+1000.0000 1000.0000   clock core_clk (rise edge)
+   0.0000 1000.0000   clock network delay (ideal)
+   0.0000 1000.0000   clock reconvergence pessimism
+          1000.0000 ^ _44206_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -26.3410  973.6589   library setup time
+           973.6589   data required time
+-------------------------------------------------------------
+           973.6589   data required time
+          -2552.8540   data arrival time
+-------------------------------------------------------------
+          -1579.1949   slack (VIOLATED)
+
+

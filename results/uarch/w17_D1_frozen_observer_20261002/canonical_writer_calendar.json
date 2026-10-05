@@ -1,0 +1,1118 @@
+{
+  "status": "EXISTING_SOURCE_WRITE_PREFIX_REPLAY_IDENTICAL_REUSED",
+  "source_hook": "Actual WINDOW WC/WC_DONE/WS/WS_DONE; credit/epoch change affects FR only. Writer prefix binds original unchanged source; no across-token retention claim.",
+  "fixture_inputs": {
+    "synthetic_capture_first_cycle": 300,
+    "capture_vectors": 16,
+    "capture_full_cycle": 315,
+    "drain_issue_cycle": 317,
+    "source_first_block_cycle": 317,
+    "own_slot": 127,
+    "base_sector": 262144,
+    "clock_model_ps": 1000,
+    "NPC": 32,
+    "REFPB": 3,
+    "TAGW": 17,
+    "MEM_MODE": 0,
+    "MEM_WORDS": 264320,
+    "writer_hbm_payload_checkpoint": false,
+    "reset_and_backend_state": "Same reset-origin cold no-competitor WriteBackend as immutable producer prediction; this is independent WRITER case, not a changed read-baseline start."
+  },
+  "block_accepts": 16,
+  "write_accepts": 32,
+  "qualified_ACKs": 32,
+  "final_ACK_pre_NBA_cycle": 1105,
+  "logical_row_valid_after_NBA_same_edge": 1105,
+  "final_WRcolumn_ps": 1104000,
+  "projected_final_visibility_ps": 1111274,
+  "physical_visibility_qualification": false,
+  "max_source_write_credit": 1,
+  "events": [
+    {
+      "kind": "block",
+      "cycle": 317,
+      "block": 0
+    },
+    {
+      "kind": "request",
+      "cycle": 318,
+      "pc": 11,
+      "address": 264303,
+      "tag": 65536,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 339,
+      "address": 264303,
+      "tag": 65536
+    },
+    {
+      "kind": "request",
+      "cycle": 340,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 1
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 361,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 362,
+      "block": 1
+    },
+    {
+      "kind": "request",
+      "cycle": 363,
+      "pc": 12,
+      "address": 264304,
+      "tag": 65537,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 384,
+      "address": 264304,
+      "tag": 65537
+    },
+    {
+      "kind": "request",
+      "cycle": 385,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 2
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 396,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 397,
+      "block": 2
+    },
+    {
+      "kind": "request",
+      "cycle": 398,
+      "pc": 12,
+      "address": 264305,
+      "tag": 65538,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 419,
+      "address": 264305,
+      "tag": 65538
+    },
+    {
+      "kind": "request",
+      "cycle": 420,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 4
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 431,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 432,
+      "block": 3
+    },
+    {
+      "kind": "request",
+      "cycle": 433,
+      "pc": 12,
+      "address": 264306,
+      "tag": 65539,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 454,
+      "address": 264306,
+      "tag": 65539
+    },
+    {
+      "kind": "request",
+      "cycle": 455,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 8
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 466,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 467,
+      "block": 4
+    },
+    {
+      "kind": "request",
+      "cycle": 468,
+      "pc": 12,
+      "address": 264307,
+      "tag": 65540,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 489,
+      "address": 264307,
+      "tag": 65540
+    },
+    {
+      "kind": "request",
+      "cycle": 490,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 16
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 501,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 502,
+      "block": 5
+    },
+    {
+      "kind": "request",
+      "cycle": 503,
+      "pc": 13,
+      "address": 264308,
+      "tag": 65541,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 524,
+      "address": 264308,
+      "tag": 65541
+    },
+    {
+      "kind": "request",
+      "cycle": 525,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 32
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 536,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 537,
+      "block": 6
+    },
+    {
+      "kind": "request",
+      "cycle": 538,
+      "pc": 13,
+      "address": 264309,
+      "tag": 65542,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 559,
+      "address": 264309,
+      "tag": 65542
+    },
+    {
+      "kind": "request",
+      "cycle": 560,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 64
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 571,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 572,
+      "block": 7
+    },
+    {
+      "kind": "request",
+      "cycle": 573,
+      "pc": 13,
+      "address": 264310,
+      "tag": 65543,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 594,
+      "address": 264310,
+      "tag": 65543
+    },
+    {
+      "kind": "request",
+      "cycle": 595,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 128
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 606,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 607,
+      "block": 8
+    },
+    {
+      "kind": "request",
+      "cycle": 608,
+      "pc": 13,
+      "address": 264311,
+      "tag": 65544,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 629,
+      "address": 264311,
+      "tag": 65544
+    },
+    {
+      "kind": "request",
+      "cycle": 630,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 256
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 641,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 642,
+      "block": 9
+    },
+    {
+      "kind": "request",
+      "cycle": 643,
+      "pc": 14,
+      "address": 264312,
+      "tag": 65545,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 664,
+      "address": 264312,
+      "tag": 65545
+    },
+    {
+      "kind": "request",
+      "cycle": 665,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 512
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 676,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 677,
+      "block": 10
+    },
+    {
+      "kind": "request",
+      "cycle": 678,
+      "pc": 14,
+      "address": 264313,
+      "tag": 65546,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 699,
+      "address": 264313,
+      "tag": 65546
+    },
+    {
+      "kind": "request",
+      "cycle": 700,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 1024
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 711,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 712,
+      "block": 11
+    },
+    {
+      "kind": "request",
+      "cycle": 713,
+      "pc": 14,
+      "address": 264314,
+      "tag": 65547,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 734,
+      "address": 264314,
+      "tag": 65547
+    },
+    {
+      "kind": "request",
+      "cycle": 735,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 2048
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 746,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 747,
+      "block": 12
+    },
+    {
+      "kind": "request",
+      "cycle": 748,
+      "pc": 14,
+      "address": 264315,
+      "tag": 65548,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 769,
+      "address": 264315,
+      "tag": 65548
+    },
+    {
+      "kind": "request",
+      "cycle": 770,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 4096
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 781,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 782,
+      "block": 13
+    },
+    {
+      "kind": "request",
+      "cycle": 783,
+      "pc": 15,
+      "address": 264316,
+      "tag": 65549,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 804,
+      "address": 264316,
+      "tag": 65549
+    },
+    {
+      "kind": "request",
+      "cycle": 805,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 8192
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 1035,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 1036,
+      "block": 14
+    },
+    {
+      "kind": "request",
+      "cycle": 1037,
+      "pc": 15,
+      "address": 264317,
+      "tag": 65550,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 1058,
+      "address": 264317,
+      "tag": 65550
+    },
+    {
+      "kind": "request",
+      "cycle": 1059,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 16384
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 1070,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "block",
+      "cycle": 1071,
+      "block": 15
+    },
+    {
+      "kind": "request",
+      "cycle": 1072,
+      "pc": 15,
+      "address": 264318,
+      "tag": 65551,
+      "we": true,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 1093,
+      "address": 264318,
+      "tag": 65551
+    },
+    {
+      "kind": "request",
+      "cycle": 1094,
+      "pc": 15,
+      "address": 264319,
+      "tag": 65552,
+      "we": true,
+      "strobe": 32768
+    },
+    {
+      "kind": "write_ack",
+      "cycle": 1105,
+      "address": 264319,
+      "tag": 65552
+    },
+    {
+      "kind": "logical_publish",
+      "cycle": 1105
+    },
+    {
+      "kind": "column",
+      "cycle": 338,
+      "pc": 11,
+      "tcol_ps": 337375,
+      "address": 264303,
+      "tag": 65536,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 344649,
+      "address": 264303,
+      "tag": 65536,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 360,
+      "pc": 15,
+      "tcol_ps": 359375,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 366649,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 1
+    },
+    {
+      "kind": "column",
+      "cycle": 383,
+      "pc": 12,
+      "tcol_ps": 382375,
+      "address": 264304,
+      "tag": 65537,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 389649,
+      "address": 264304,
+      "tag": 65537,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 395,
+      "pc": 15,
+      "tcol_ps": 395000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 402274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 2
+    },
+    {
+      "kind": "column",
+      "cycle": 418,
+      "pc": 12,
+      "tcol_ps": 417375,
+      "address": 264305,
+      "tag": 65538,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 424649,
+      "address": 264305,
+      "tag": 65538,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 430,
+      "pc": 15,
+      "tcol_ps": 430000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 437274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 4
+    },
+    {
+      "kind": "column",
+      "cycle": 453,
+      "pc": 12,
+      "tcol_ps": 452375,
+      "address": 264306,
+      "tag": 65539,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 459649,
+      "address": 264306,
+      "tag": 65539,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 465,
+      "pc": 15,
+      "tcol_ps": 465000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 472274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 8
+    },
+    {
+      "kind": "column",
+      "cycle": 488,
+      "pc": 12,
+      "tcol_ps": 487375,
+      "address": 264307,
+      "tag": 65540,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 494649,
+      "address": 264307,
+      "tag": 65540,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 500,
+      "pc": 15,
+      "tcol_ps": 500000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 507274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 16
+    },
+    {
+      "kind": "column",
+      "cycle": 523,
+      "pc": 13,
+      "tcol_ps": 522375,
+      "address": 264308,
+      "tag": 65541,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 529649,
+      "address": 264308,
+      "tag": 65541,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 535,
+      "pc": 15,
+      "tcol_ps": 535000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 542274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 32
+    },
+    {
+      "kind": "column",
+      "cycle": 558,
+      "pc": 13,
+      "tcol_ps": 557375,
+      "address": 264309,
+      "tag": 65542,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 564649,
+      "address": 264309,
+      "tag": 65542,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 570,
+      "pc": 15,
+      "tcol_ps": 570000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 577274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 64
+    },
+    {
+      "kind": "column",
+      "cycle": 593,
+      "pc": 13,
+      "tcol_ps": 592375,
+      "address": 264310,
+      "tag": 65543,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 599649,
+      "address": 264310,
+      "tag": 65543,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 605,
+      "pc": 15,
+      "tcol_ps": 605000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 612274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 128
+    },
+    {
+      "kind": "column",
+      "cycle": 628,
+      "pc": 13,
+      "tcol_ps": 627375,
+      "address": 264311,
+      "tag": 65544,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 634649,
+      "address": 264311,
+      "tag": 65544,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 640,
+      "pc": 15,
+      "tcol_ps": 640000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 647274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 256
+    },
+    {
+      "kind": "column",
+      "cycle": 663,
+      "pc": 14,
+      "tcol_ps": 662375,
+      "address": 264312,
+      "tag": 65545,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 669649,
+      "address": 264312,
+      "tag": 65545,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 675,
+      "pc": 15,
+      "tcol_ps": 675000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 682274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 512
+    },
+    {
+      "kind": "column",
+      "cycle": 698,
+      "pc": 14,
+      "tcol_ps": 697375,
+      "address": 264313,
+      "tag": 65546,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 704649,
+      "address": 264313,
+      "tag": 65546,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 710,
+      "pc": 15,
+      "tcol_ps": 710000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 717274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 1024
+    },
+    {
+      "kind": "column",
+      "cycle": 733,
+      "pc": 14,
+      "tcol_ps": 732375,
+      "address": 264314,
+      "tag": 65547,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 739649,
+      "address": 264314,
+      "tag": 65547,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 745,
+      "pc": 15,
+      "tcol_ps": 745000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 752274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 2048
+    },
+    {
+      "kind": "column",
+      "cycle": 768,
+      "pc": 14,
+      "tcol_ps": 767375,
+      "address": 264315,
+      "tag": 65548,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 774649,
+      "address": 264315,
+      "tag": 65548,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 780,
+      "pc": 15,
+      "tcol_ps": 780000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 787274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 4096
+    },
+    {
+      "kind": "column",
+      "cycle": 803,
+      "pc": 15,
+      "tcol_ps": 802375,
+      "address": 264316,
+      "tag": 65549,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 809649,
+      "address": 264316,
+      "tag": 65549,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 1034,
+      "pc": 15,
+      "tcol_ps": 1033524,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 1040798,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 8192
+    },
+    {
+      "kind": "column",
+      "cycle": 1057,
+      "pc": 15,
+      "tcol_ps": 1056375,
+      "address": 264317,
+      "tag": 65550,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 1063649,
+      "address": 264317,
+      "tag": 65550,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 1069,
+      "pc": 15,
+      "tcol_ps": 1069000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 1076274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 16384
+    },
+    {
+      "kind": "column",
+      "cycle": 1092,
+      "pc": 15,
+      "tcol_ps": 1091375,
+      "address": 264318,
+      "tag": 65551,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 1098649,
+      "address": 264318,
+      "tag": 65551,
+      "strobe": 4294967295
+    },
+    {
+      "kind": "column",
+      "cycle": 1104,
+      "pc": 15,
+      "tcol_ps": 1104000,
+      "address": 264319,
+      "tag": 65552,
+      "we": true
+    },
+    {
+      "kind": "write_visible",
+      "ps": 1111274,
+      "address": 264319,
+      "tag": 65552,
+      "strobe": 32768
+    }
+  ],
+  "calendar_provenance": "Prior original FAIL and additive ACT/publication correction remain separate; no old prediction/runtime overwritten. Event timing reused; per-PC ACT omitted from this writer-only summary until corrected helper bound.",
+  "future_negative_controls": [
+    "unaccepted ACK",
+    "duplicate ACK",
+    "wrong owner ACK",
+    "early WC/WS ACK",
+    "masked scale corruption",
+    "out-of-aperture address/no alias",
+    "static ready counted as progress"
+  ]
+}

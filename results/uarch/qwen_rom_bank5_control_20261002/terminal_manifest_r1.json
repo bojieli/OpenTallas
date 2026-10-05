@@ -1,0 +1,78 @@
+{
+  "PnR": false,
+  "STA_launched": false,
+  "artifacts": {
+    "bank_cone.sv.gz": {
+      "sha256": "b218ff32987cf1b4ff4ae86f30e17d2a59d0735aecdcd51dac3f84e2cd4a060e",
+      "uncompressed_sha256": "e801d95c44f6da1b145beba3fc4702cf1322c07d21abde6b97901b0f0b84720f"
+    },
+    "fourstate.sv.gz": {
+      "sha256": "0850d287ebaf64450a8ea04888a59662e9e97038de7d8f98e39d22e3313b0b9a",
+      "uncompressed_sha256": "68211a79aabb75acd1e87702c4e703f804cdef698fa35dca084b86bfbc51d8c0"
+    },
+    "fourstate_build.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fourstate_run.log.gz": {
+      "sha256": "4e5f516a1acf7b21c98127eb7327e80e55bc348c8226cfe53e56a70b346a5b85",
+      "uncompressed_sha256": "37cb3784a374bf180f1a6e5899da503744a7555d0592609d2de24ea1ec045f60"
+    },
+    "gate.vvp.gz": {
+      "sha256": "bb0c48db2c232b4c87fb854acab8378c95bbae65d668ccf85f5e46200859903b",
+      "uncompressed_sha256": "23eccf6fd1121083d8c4c2e57f7c5e39e044465583df5c28dc2ba7978f136563"
+    },
+    "miter.sv.gz": {
+      "sha256": "1f840eaebcbf08aaafad3a8924bcb7945356819b0ca6fbbc9cad9d90096e24b4",
+      "uncompressed_sha256": "6cd79dfcce7c22c486b5cb3e6ddcdb49d37b3cfd8e33ef32f07437dd36be9bb0"
+    },
+    "original.sv.gz": {
+      "sha256": "2926ff2d60e1fd22b17d2489ae074e37111d0f705ec7b70ea4addaab45a0adaf",
+      "uncompressed_sha256": "b34727134008e1b77070f7bfeb07d4fc6734102fa41673004232dfe7057c6e47"
+    },
+    "positive.log.gz": {
+      "sha256": "b1e9bf83d41494bdf4d2f692fcea4e4161b422bb569c29c8f840d2e7b29e8124",
+      "uncompressed_sha256": "43a610767afbb3cae9f78304b2c8db9dcbd5a550144960b3a1151d2cf9fb081a"
+    },
+    "positive.sv.gz": {
+      "sha256": "6fce3172fe80bf89fe57667b40d225563899c1a6248da5dbf71bbe24217629f0",
+      "uncompressed_sha256": "8c1f76861d981f3c6f141cdb331d70059e8ed5f3441e418f5d3e6096fb3568b7"
+    },
+    "positive.ys.gz": {
+      "sha256": "4d9d18ae706b7ed06fbd6437cf6f2b2b8c7c77be6722e5d9edd976159066135f",
+      "uncompressed_sha256": "1b874366b12750387f42688eab45885613963c789f62d0804e247dbfddf4b6e3"
+    },
+    "prior.sv.gz": {
+      "sha256": "e3dc76e797f93baa2a4372802784491533be07c9e39f2ca327170481ae2b8c87",
+      "uncompressed_sha256": "d63c0fe09cfada12f180f35a4447b8898df9940b8506cc2093b09bb91aeb232c"
+    },
+    "repaired.sv.gz": {
+      "sha256": "6fce3172fe80bf89fe57667b40d225563899c1a6248da5dbf71bbe24217629f0",
+      "uncompressed_sha256": "8c1f76861d981f3c6f141cdb331d70059e8ed5f3441e418f5d3e6096fb3568b7"
+    },
+    "wrong_bank4_strobe.log.gz": {
+      "sha256": "cfd68b38a8e85a252acc5f6b3ee115ebfff14bb7bda31b50782018e936a5b2f7",
+      "uncompressed_sha256": "25455e0120072d8f3233593945712a10b5dc10121bf835225a3cb80edc158378"
+    },
+    "wrong_bank4_strobe.sv.gz": {
+      "sha256": "99d173552dd08ce274af511a32e96e15c808f401ef08ce0624b19ef45eac7289",
+      "uncompressed_sha256": "f0034939d7da50375d5ba2cbc8ecf17629e60156dd5d2f92b5798cea735d14d2"
+    },
+    "wrong_bank4_strobe.ys.gz": {
+      "sha256": "1e58e56d52308530f77488cdd0a55d7331de99b01721ffd0542619a08f386516",
+      "uncompressed_sha256": "bc750a36c5af5a4056a04e44c8a95d6e193b50bb4744dbec3cead300d6ceca6e"
+    }
+  },
+  "live_handle": null,
+  "measured_formal_peak_MiB": 476.61,
+  "model_gate": "cdcbe60a34389a5671f9e303c4f5023e83b23710",
+  "new_token_run": false,
+  "result_sha256": "c9f7c8723183cd20c6406b725602f17fb0d668c68f94c497e7d1bee9c749f374",
+  "schema": "opentallas.qwen-rom-bank5-literal-terminal.v1",
+  "source_commit": "fbd9f297f",
+  "status": "PASS_LITERAL_BANK5_SAMEEDGE_AND_FOURSTATE",
+  "terminal_handles": {
+    "supervisor": 1197765,
+    "yosys": 1197853
+  }
+}

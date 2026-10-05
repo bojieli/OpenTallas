@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.w17.full40_connected_completion_contract.v1",
+  "time": "2026-10-01T09:55:39.566938+00:00",
+  "scope": "DSROM full40layers+finalnorm+head end-to-end token",
+  "mandatory_invariants": [
+    "Previous RTL layer output is next layer input; preserve DUT token activations and hidden/mHC/state across layer transitions",
+    "No per-layer golden activation reset, injection, checkpoint substitution, or golden replay of intermediate results",
+    "Current-token KV is produced by the connected DUT writer and consumed by downstream attention/index; CKV own-row reencode stand-in cannot qualify a full token",
+    "Real connected collectives execute; DUT index selections and attention decisions drive downstream work",
+    "Golden runs only as comparison and never drives DUT intermediate activation, current-token KV, selection or output"
+  ],
+  "allowed_fixtures": [
+    "Exact constants",
+    "Source-bound preexisting KV context",
+    "Host ROM image swaps preserving DUT activation/state and connected service decisions"
+  ],
+  "coverage": [
+    "Embedding/token input",
+    "Layers0..39 in actual connected order",
+    "Finalnorm",
+    "Vocabularyhead/logits and token selection"
+  ],
+  "required_receipts": [
+    "Per-layer input/output producer-consumer provenance and no-reset trace",
+    "Current-token KV writer/consumer provenance including selectedCKV ownrow",
+    "TPcollective/rank coverage and index/attention decision trace",
+    "Manifest of all stage programs, weights, constants and source/binary pins",
+    "Bit-exact golden comparisons at stage boundaries and final token/state, with no missing expectedwords",
+    "Composed measured cycles carried to model and contextualSS/FF physical records"
+  ],
+  "current_status": {
+    "connected_L0_pid": 620383,
+    "scope": "historical L0_ONLY",
+    "full40_qualified": false,
+    "CKV_ownrow_standin_fulltoken_allowed": false
+  },
+  "dependencies_receipt": "results/rtl/w17_L0_only_scope_overlay_20261001.json",
+  "adopt": false
+}

@@ -1,0 +1,16 @@
+{
+  "scope": "Direct sum handoff after divider handoff. ASAP7 TT2ns matched synthesis with pipelined divider1. Both prelayout fail; no routed clock claim.",
+  "area_before_um2": 2595.169,
+  "area_after_um2": 2537.794,
+  "setup_before_ns": -2.14745263919471,
+  "setup_after_ns": -0.9464356003422609,
+  "cycles_reference_divider_before": 744721,
+  "cycles_reference_divider_after": 735047,
+  "cycles_pipeline_divider_before": 1115228,
+  "cycles_pipeline_divider_after": 1105554,
+  "cases": 36,
+  "functional_tests_passed": 6,
+  "measured_snapshot": "candidate_measured.sv",
+  "active_snapshot": "candidate.sv",
+  "snapshot_difference": "Comments only: active header removes outdated schedule and clock claims. Measured snapshot SHA matches physical record."
+}

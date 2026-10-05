@@ -1,0 +1,154 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-29T10:16:51.586240+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_v41_attn_stage_ctl",
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.434,
+    "core_input_delay_min_ns": 0.25,
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41_attn_stage_ctl.sv",
+        "sha256": "e9365edcb8f43428442d3110ae600942e565034fd1b8a7638651903cc3d60ac2",
+        "size_bytes": 5303
+      }
+    ],
+    "top": "ot_v41_attn_stage_ctl"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n% |  14.710 |   0.000 | g_bank[0].user[14][6]$_DFFE_PP_/D\n     3580 |       0 |    4209 |            0 |   +10.0% |  14.746 |   0.000 | g_bank[3].tag[13][10]$_DFFE_PP_/D\n     3590 |       0 |    4219 |            0 |   +10.1% |  14.793 |   0.000 | g_bank[0].user[2][7]$_DFFE_PP_/D\n     3600 |       0 |    4229 |            0 |   +10.1% |  14.843 |   0.000 | g_bank[1].tag[3][7]$_DFFE_PP_/D\n     3610 |       0 |    4239 |            0 |   +10.1% |  14.908 |   0.000 | g_bank[2].tag[4][7]$_DFFE_PP_/D\n     3620 |       0 |    4249 |            0 |   +10.1% |  14.954 |   0.000 | g_bank[0].user[22][2]$_DFFE_PP_/D\n     3630 |       0 |    4259 |            0 |   +10.2% |  14.985 |   0.000 | g_bank[1].user[17][8]$_DFFE_PP_/D\n     3640 |       0 |    4269 |            0 |   +10.2% |  15.054 |   0.000 | g_bank[0].tag[6][15]$_DFFE_PP_/D\n     3650 |       0 |    4279 |            0 |   +10.2% |  15.117 |   0.000 | g_bank[1].user[16][4]$_DFFE_PP_/D\n     3660 |       0 |    4289 |            0 |   +10.2% |  15.181 |   0.000 | g_bank[0].tag[29][7]$_DFFE_PP_/D\n     3670 |       0 |    4299 |            0 |   +10.2% |  15.231 |   0.000 | g_bank[0].tag[29][17]$_DFFE_PP_/D\n     3680 |       0 |    4309 |            0 |   +10.3% |  15.275 |   0.000 | g_bank[2].user[31][6]$_DFFE_PP_/D\n     3690 |       0 |    4319 |            0 |   +10.3% |  15.356 |   0.000 | g_bank[1].tag[17][8]$_DFFE_PP_/D\n     3700 |       0 |    4329 |            0 |   +10.3% |  15.422 |   0.000 | g_bank[2].tag[0][19]$_DFFE_PP_/D\n     3710 |       0 |    4339 |            0 |   +10.3% |  15.479 |   0.000 | g_bank[0].user[22][8]$_DFFE_PP_/D\n     3720 |       0 |    4349 |            0 |   +10.4% |  15.527 |   0.000 | g_bank[0].tag[7][9]$_DFFE_PP_/D\n     3730 |       0 |    4359 |            0 |   +10.4% |  15.603 |   0.000 | g_bank[0].user[7][1]$_DFFE_PP_/D\n     3740 |       0 |    4369 |            0 |   +10.4% |  15.661 |   0.000 | g_bank[3].tag[15][11]$_DFFE_PP_/D\n     3750 |       0 |    4379 |            0 |   +10.4% |  15.735 |   0.000 | g_bank[1].tag[0][20]$_DFFE_PP_/D\n     3760 |       0 |    4389 |            0 |   +10.5% |  15.786 |   0.000 | g_bank[2].tag[29][7]$_DFFE_PP_/D\n     3770 |       0 |    4399 |            0 |   +10.5% |  15.835 |   0.000 | g_bank[0].tag[22][17]$_DFFE_PP_/D\n     3780 |       0 |    4409 |            0 |   +10.5% |  15.898 |   0.000 | g_bank[0].tag[18][17]$_DFFE_PP_/D\n     3790 |       0 |    4419 |            0 |   +10.5% |  15.997 |   0.000 | g_bank[2].tag[14][12]$_DFFE_PP_/D\n     3800 |       0 |    4429 |            0 |   +10.6% |  16.087 |   0.000 | g_bank[0].tag[19][13]$_DFFE_PP_/D\n    final |       0 |    4435 |            0 |   +10.6% |  16.125 |   0.000 | g_bank[0].tag[9][13]$_DFFE_PP_/D\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0064] Unable to repair all hold checks within margin.\n[INFO RSZ-0032] Inserted 4435 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:04.69[h:]min:sec. CPU time: user 4.47 sys 0.22 (99%). Peak memory: 247040KB.\nElapsed time: 0:49.53[h:]min:sec. CPU time: user 75.47 sys 9.85 (172%). Peak memory: 292636KB.\nElapsed time: 0:03.73[h:]min:sec. CPU time: user 3.51 sys 0.22 (99%). Peak memory: 231416KB.\nElapsed time: 0:03.80[h:]min:sec. CPU time: user 3.62 sys 0.18 (99%). Peak memory: 220828KB.\nElapsed time: 0:04.15[h:]min:sec. CPU time: user 3.94 sys 0.21 (100%). Peak memory: 236164KB.\nElapsed time: 0:49.63[h:]min:sec. CPU time: user 455.43 sys 3.56 (924%). Peak memory: 266228KB.\nElapsed time: 0:03.86[h:]min:sec. CPU time: user 3.56 sys 0.30 (99%). Peak memory: 235120KB.\nElapsed time: 2:30.80[h:]min:sec. CPU time: user 866.34 sys 16.54 (585%). Peak memory: 635992KB.\nElapsed time: 0:33.73[h:]min:sec. CPU time: user 42.78 sys 3.96 (138%). Peak memory: 317692KB.\nElapsed time: 0:41.96[h:]min:sec. CPU time: user 50.41 sys 3.74 (129%). Peak memory: 355632KB.\nElapsed time: 2:01.83[h:]min:sec. CPU time: user 231.01 sys 28.63 (213%). Peak memory: 368120KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_v41_attn_stage_ctl_asap7_w2c_stagectl_l250/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-29T10:07:37.778273+00:00",
+  "git": {
+    "commit": "5e768c5657df31458e31405e8401e361e914f13f",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--clock-period-ns",
+      "0.92",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--io-delay-fraction",
+      "0.2",
+      "--max-transition-ns",
+      "0.32",
+      "--slew-margin-percent",
+      "40",
+      "--hold-margin-ns",
+      "0.02",
+      "--cts-cluster-size",
+      "16",
+      "--stages",
+      "pnr",
+      "--purpose",
+      "characterization",
+      "--corner",
+      "TT",
+      "--core-input-delay-min-ns",
+      "0.25",
+      "--core-input-delay-max-ns",
+      "0.434",
+      "--false-path-from",
+      "rst_n",
+      "--top",
+      "ot_v41_attn_stage_ctl",
+      "--source",
+      "rtl/chip/physical/ot_v41_attn_stage_ctl.sv",
+      "--core-utilization",
+      "40",
+      "--place-density",
+      "0.6",
+      "--output",
+      "results/physical_abi3/asap7/chip/v41_w2_attn/w2c_stagectl_l250/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/w2c/runs/w2c_stagectl_l250/work",
+      "--nickname-tag",
+      "w2c_stagectl_l250"
+    ],
+    "driver": {
+      "commit": "5e768c5657df31458e31405e8401e361e914f13f",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w2-attn/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "be101ec6a636d27985c9c2f68ff0f72bbaf30896bff5aaaddfe1d2be43b7518a",
+      "tree": "/tmp/claude-1000/wt/w2-attn"
+    },
+    "platform": "Linux-5.15.0-194-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w2-attn"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "configuration": {
+    "capacity_bytes": 393216,
+    "clock_period_ns": 0.92,
+    "core_area_um": [
+      20,
+      20,
+      780,
+      780
+    ],
+    "depth_groups": 3,
+    "die_area_um": [
+      0,
+      0,
+      800,
+      800
+    ],
+    "io_delay_fraction": 0.25,
+    "macro_count": 48
+  },
+  "next_change": "Register incoming read/write commands and fault outputs; pipeline bank-local depth selection to break high-fanout mux; re-run exact beat/latency gate and P&R",
+  "pin_placement": {
+    "available_slots": 33272,
+    "pins": 4184,
+    "status": "passed"
+  },
+  "post_place_resize": {
+    "critical_path": "wr_word_addr[13] input to combinational wr_fault output",
+    "hold_wns_ps": 73.3359,
+    "macro_area_um2": 248191,
+    "second_path": "g_bank[0].read_group_q[0] to rd_out_bank_words[416] register, WNS -3372.2935ps",
+    "setup_wns_ps": -3525.15,
+    "standard_cell_area_um2": 12328.3,
+    "standard_cell_count": 92206
+  },
+  "rate_credit": "none",
+  "scope": "Actual four 512-bit 1R1W VM banks, DEPTH_GROUPS=3 (384KiB), 48 analytic SRAM macros; physical slice covering checkpoint ACC base",
+  "source_commit": "29316ed2",
+  "sources_sha256": {
+    "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json": "4749acc7f92350b8d1ec05baebec1a0f75de1bbc0cb8dee29eb63b5cd382eec3",
+    "rtl/chip/ot_v41_vm_bank4_macro.sv": "800372d66ea8ef07363d87d86edd92c0c01ced94cf81d21e689968e523020ac6"
+  },
+  "stage_record_sha256": {
+    "1_synth.json": "561a960f415d1a80a4e500fe9a6874e9acb10f015469ba71bbd9877ace4b61ee",
+    "3_2_place_iop.log": "9f25c9e2e6cd295448954b7668eb1ac55928889636112c8888e1d7ccd477da61",
+    "3_4_place_resized.json": "528b52ae717e888466537736ef60861abac70594821678bfb68b4388d0dd3fc5"
+  },
+  "status": "Stopped after placement due large setup miss; no CTS, detailed route, DRC, antenna or power verdict",
+  "synthesis": {
+    "macro_area_um2": 248191,
+    "standard_cell_area_um2": 1354.39,
+    "standard_cell_count": 9746
+  }
+}

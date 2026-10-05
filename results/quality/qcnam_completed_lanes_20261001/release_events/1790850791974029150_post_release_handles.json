@@ -1,0 +1,69 @@
+{
+  "kind": "post_release_handles",
+  "utc_ns": 1790850791974029150,
+  "watcher_source_commit": "0a7d9daed2ab72cde68cec5ab900e6f30eef8206",
+  "watcher_source_sha256": {
+    "qcnam_long_admission.py": "83143123f68db16b778d85c6227a9b13d6b418e090f91150ff847f90a858c94a",
+    "qcnam_finalize_guard.py": "f1facf666c849b0568194d9bf969f977e2dc517871e56ca0920aeddf3c5de56f",
+    "qcnam_long_admission_watch.py": "7db2812b9e310dc3051d33c4d486011e4bee805e30d0fd62f12ee19207b57e6b"
+  },
+  "observation_sha256": "49ce6c145e36adbea37158b93089833e71c93b3e58aef1d3bded6dbcf4f7ea68",
+  "hold_sha256": "e424bf42c11d091c6e9c6b79f74ce1ac231f276d846e06b085262403de22af27",
+  "data": {
+    "live": [
+      {
+        "pid": 727204,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ],
+        "cwd": "/tmp/claude-1000/wt/qcnam-run",
+        "start_ticks": "305564319"
+      },
+      {
+        "pid": 727205,
+        "argv": [
+          "/usr/bin/python3",
+          "tools/deepseek_v41_nam_quality.py",
+          "--work",
+          "/tmp/claude-1000/qcnam/runs/long/work",
+          "--out",
+          "/tmp/claude-1000/qcnam/runs/long/run.json",
+          "--raw-out",
+          "/tmp/claude-1000/qcnam/runs/long/raw.json",
+          "--partial",
+          "/tmp/claude-1000/qcnam/runs/long/partial.json",
+          "--resume",
+          "--windows",
+          "4",
+          "--ctx",
+          "8192",
+          "--batch",
+          "1",
+          "--modes",
+          "a,a2,b,b_nam",
+          "--tf-chunks",
+          "0",
+          "--gen-file",
+          "/tmp/claude-1000/qcnam/runs/gen/gen.json"
+        ],
+        "cwd": "/tmp/claude-1000/wt/qcnam-run",
+        "start_ticks": "305564319"
+      },
+      {
+        "pid": 2637360,
+        "argv": [
+          "/bin/bash",
+          "/tmp/claude-1000/queue/qcnam_jobs/laneA.sh"
+        ],
+        "cwd": "/tmp",
+        "start_ticks": "303668157"
+      }
+    ],
+    "gen_status": "start 2026-10-01T08:30:45+00:00\nend rc=0 2026-10-01T10:33:06+00:00\n",
+    "long_status": "start 2026-10-01T10:33:06+00:00\n",
+    "available_bytes": 266105913344,
+    "finalized": false,
+    "adopted": false
+  }
+}

@@ -1,0 +1,97 @@
+{
+ "a_refinement_on_the_comparator": {
+  "gold_that_does_not": {
+   "p9_run_a": [
+    1320,
+    16,
+    42250,
+    16
+   ],
+   "p9_run_b": [
+    1320,
+    42250,
+    16,
+    334
+   ],
+   "reading": "at nine tokens the oracle agrees with itself on the FIRST token and diverges after it, so the 9-token bracket point is run with max_new_tokens 1.  Token-level stability is not a simple function of 'positions 0-7'; it has to be checked per workload, which is why every gold here was produced twice."
+  },
+  "golds_that_reproduce_fully": {
+   "p12": 4,
+   "p16": 4,
+   "p8": 4
+  }
+ },
+ "answer": "between 8 and 12 tokens.  Eight agrees; twelve does not.",
+ "next": "the 9-token point, one token, is running.  If it disagrees, the defect appears with ANY partial candidate block; if it agrees, the break is between 9 and 12 and the partial block alone is not enough.",
+ "not_a_claim": [
+  "the partial-block path is not shown to be at fault; it is the structural difference the bracket isolates",
+  "no cell is closed by this record"
+ ],
+ "question": "at what prompt length does the V4.1 device's prefill stop matching the oracle?",
+ "schema": "opentallas.result.v41_prefill_breaks_between_8_and_12.v2",
+ "the_bracket": [
+  {
+   "agrees": true,
+   "device": [
+    14,
+    1320,
+    42250,
+    294
+   ],
+   "device_first": 14,
+   "oracle": [
+    14,
+    1320,
+    16,
+    42250
+   ],
+   "oracle_first": 14,
+   "terminal_accepted": true,
+   "tokens": 8
+  },
+  {
+   "agrees": false,
+   "device": [
+    2052,
+    223,
+    19,
+    17
+   ],
+   "device_first": 2052,
+   "oracle": [
+    343,
+    19,
+    79,
+    5826
+   ],
+   "oracle_first": 343,
+   "tokens": 12
+  },
+  {
+   "agrees": false,
+   "device": [
+    260,
+    45191,
+    17171,
+    295
+   ],
+   "device_first": 260,
+   "oracle": [
+    270,
+    17171,
+    295,
+    223
+   ],
+   "oracle_first": 270,
+   "tokens": 16
+  },
+  {
+   "agrees": false,
+   "device_first": 305,
+   "oracle_first": 13806,
+   "tokens": 32
+  }
+ ],
+ "what_changes_at_nine": "candidate_block_size is 8, so EIGHT tokens complete exactly one candidate block and nine or more add a PARTIAL second one.  The engine's own contract singles that case out: 'the last block is always admitted.  Its block maximum was taken over a partially filled block whose absent tail is minus-infinity padding, so its score is not comparable with a full block's.'  So the first structurally new thing between 8 and 12 is a partially filled candidate block.",
+ "why_selection_itself_is_not_the_variable": "window_size is 128 and index_topk is 512, so at 8, 12 or 16 positions the whole context sits inside the window and every candidate is selected either way.  What differs is not WHICH blocks are chosen but that a partial block exists to be described."
+}

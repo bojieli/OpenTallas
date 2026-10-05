@@ -1,0 +1,73 @@
+{
+  "actual": {
+    "memory_max": "4294967296",
+    "swap_max": "0",
+    "affinity": [
+      30,
+      31
+    ],
+    "file_limit": [
+      268435456,
+      268435456
+    ],
+    "runtime_usec": "3min",
+    "kill_mode": "control-group",
+    "kill_signal": "9"
+  },
+  "properties": "RuntimeMaxUSec=3min\nMemoryMax=4294967296\nMemorySwapMax=0\nLimitFSIZE=268435456\nCPUAffinity=30-31\nKillMode=control-group\nKillSignal=9\n",
+  "cgroup": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/w17-qdq8-arithmetic-cap-probe-20261002-r1.service",
+  "compiler_verified_before_compile": {
+    "version": "Verilator 5.050 2026-07-01 rev v5.050",
+    "wrapper": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+    "wrapper_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+    "binary": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+    "binary_sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41",
+    "options": [
+      "--binary",
+      "--timing",
+      "--build",
+      "-j",
+      "2",
+      "-Wno-fatal",
+      "-Wno-WIDTH",
+      "--top-module",
+      "tb",
+      "-I/tmp/window-qdq8-arithmetic-prepared-20261002-r4",
+      "--Mdir",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/obj",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_v41_qe.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_actquant.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_fp4qdq.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_blockdot.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_chunk8_stack.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_delay.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_fpu.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_fp32_mul_pipe.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_fp32_add_rne_pipe.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_hdc_v41x_window_kv_blocks.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/ot_chip_v41x_window_block_guard.sv",
+      "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/sources/tb.sv"
+    ],
+    "command_sha256": "3b752744726ef514fa25273bb8e13a5451e50d9104d8340da2c76dbd9db5eb79",
+    "environment_overrides_absent": [
+      "VERILATOR_ROOT",
+      "VERILATOR_BIN",
+      "VERILATOR_GDB",
+      "VERILATOR_VALGRIND",
+      "VERILATOR_TEST_FLAGS",
+      "VERILATOR_RUNNING",
+      "MAKEFLAGS",
+      "MFLAGS",
+      "CXX",
+      "CC",
+      "CXXFLAGS",
+      "CPPFLAGS",
+      "LDFLAGS",
+      "LD_PRELOAD",
+      "LD_LIBRARY_PATH",
+      "PERL5OPT",
+      "PERL5LIB"
+    ]
+  },
+  "verdict": "PASS_VERIFIED_BEFORE_COMPILE"
+}

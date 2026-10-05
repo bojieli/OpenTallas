@@ -1,0 +1,31 @@
+{
+  "fast_native_relink": "Existing public ports: core state/decodedunit/idles/waited, busy,last issue,fault,DONE,CDMAwordcounts. Does not change live process or add getters.",
+  "owned_trace_build": "New full-parent generatedclasses required for actual1020bit simulation packet ports. Larger16worker88GiB plan is separate.",
+  "can_classify_current_live_deadlock_without_attach": false,
+  "can_map_static_owner_paths": true,
+  "can_get_actual_live_read_counts_from_current_regular_logs": false,
+  "guaranteed_actual_completion_bound": null,
+  "conditional_model_only": {
+    "cold_rows": 128,
+    "sectors": 2176,
+    "elapsed_cycles": [
+      123964,
+      125727
+    ],
+    "endpoint_cycles": [
+      136671,
+      138146
+    ],
+    "conditions": [
+      "empty queues",
+      "no concurrent requesters",
+      "cold bank/reset refresh state",
+      "functional transport",
+      "no faults"
+    ],
+    "missing": "Actual live bank state, accepted source cycle, physical queue state and qualified retire counts unobserved."
+  },
+  "next_existing_terminal": "Preserve actual WATCHDOG/FAULT/unit-state and raw result. Timeout before conditional refill endpoint cannot itself prove deadlock.",
+  "causal_service": "BOUND_MISSING",
+  "no_new_tasks_pve2_or_pve3": true
+}

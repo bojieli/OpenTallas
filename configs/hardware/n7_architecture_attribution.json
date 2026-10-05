@@ -1,0 +1,1322 @@
+{
+  "comparison_contract": "N7 ROM/SRAM + HBM2e-era interfaces versus A100 80GB; WSE-2 only as wafer feasibility anchor",
+  "derivations": {
+    "rom_envelopes": [
+      {
+        "compute_anchor_whole_product_ops_s": 1.4041616038882138e+16,
+        "compute_ceiling_fraction": 0.1,
+        "compute_evidence": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.1; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "density_evidence": "derived:28nm fabricated macro scaled to N7 with explicit exponent 1.0",
+        "envelope": "conservative",
+        "fp8_peak_ops_s": 1404161603888214.0,
+        "hbm": {
+          "bandwidth_bytes_s": 6524800000000.0,
+          "capacity_bytes": 256000000000.0,
+          "perimeter_pitch_utilization": 0.22325581395348837,
+          "stack_bandwidth_bytes_s": 407800000000.0,
+          "stack_capacity_bytes": 16000000000.0,
+          "stacks": 16
+        },
+        "macro_density_bytes_mm2": 4464000.0,
+        "raw_weight_bandwidth_bytes_s": 970724999999999.9,
+        "rom_area_mm2": 16178.749999999998,
+        "usable_weight_capacity_bytes": 57777552000.0,
+        "weight_bandwidth_density_bytes_s_mm2": 60000000000.0
+      },
+      {
+        "compute_anchor_whole_product_ops_s": 1.4041616038882138e+16,
+        "compute_ceiling_fraction": 0.25,
+        "compute_evidence": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.25; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "density_evidence": "derived:28nm fabricated macro scaled to N7 with explicit exponent 1.5",
+        "envelope": "central",
+        "fp8_peak_ops_s": 3510404009720534.5,
+        "hbm": {
+          "bandwidth_bytes_s": 13049600000000.0,
+          "capacity_bytes": 512000000000.0,
+          "perimeter_pitch_utilization": 0.44651162790697674,
+          "stack_bandwidth_bytes_s": 407800000000.0,
+          "stack_capacity_bytes": 16000000000.0,
+          "stacks": 32
+        },
+        "macro_density_bytes_mm2": 8928000.0,
+        "raw_weight_bandwidth_bytes_s": 2662560000000000.0,
+        "rom_area_mm2": 22188.0,
+        "usable_weight_capacity_bytes": 170361239040.0,
+        "weight_bandwidth_density_bytes_s_mm2": 120000000000.0
+      },
+      {
+        "compute_anchor_whole_product_ops_s": 1.4041616038882138e+16,
+        "compute_ceiling_fraction": 0.5,
+        "compute_evidence": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.5; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "density_evidence": "derived:28nm fabricated macro scaled to N7 with explicit exponent 2.0",
+        "envelope": "aggressive",
+        "fp8_peak_ops_s": 7020808019441069.0,
+        "hbm": {
+          "bandwidth_bytes_s": 19574400000000.0,
+          "capacity_bytes": 768000000000.0,
+          "perimeter_pitch_utilization": 0.6697674418604651,
+          "stack_bandwidth_bytes_s": 407800000000.0,
+          "stack_capacity_bytes": 16000000000.0,
+          "stacks": 48
+        },
+        "macro_density_bytes_mm2": 17856000.0,
+        "raw_weight_bandwidth_bytes_s": 6101700000000001.0,
+        "rom_area_mm2": 25423.750000000004,
+        "usable_weight_capacity_bytes": 408569832000.00006,
+        "weight_bandwidth_density_bytes_s_mm2": 240000000000.0
+      }
+    ],
+    "sram_control": {
+      "area_scale": 56.16646415552855,
+      "kv_fraction": 0.30000000000000004,
+      "source": "published:Graphcore GC200 page for node, SRAM, and FP16; public die/architecture disclosures for area and aggregate in-processor-memory bandwidth",
+      "total_sram_bandwidth_bytes_s": 2667907047387606.5,
+      "total_sram_capacity_bytes": 50549817739.9757,
+      "weight_fraction": 0.7
+    }
+  },
+  "generated_from": "configs/hardware/technology_inputs.json",
+  "generated_from_sha256": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9",
+  "generation_command": "python3 tools/build_iso_node_studies.py --write",
+  "gpu_architectures": [
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 1,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x1",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 1.0,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 4e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 2,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x2",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 6e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 4,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x4",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 8e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 8,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x8",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 150000000000.0,
+      "collective_latency_s_per_layer": 1.2e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 16,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x16",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 75000000000.0,
+      "collective_latency_s_per_layer": 1.6e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 32,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x32",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 75000000000.0,
+      "collective_latency_s_per_layer": 2.2e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "lossless on-consumption expansion to BF16; released packed HBM bytes retained; unpack cost omitted",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 64,
+      "evidence": {
+        "deployment": "derived GPU-favorable ceiling: packed values can be decoded before native BF16 execution, but exact A100 kernel throughput is unmeasured",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_packed_hbm_bf16_execute",
+      "name": "NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 1,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x1",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 1.0,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 4e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 2,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x2",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 6e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 4,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x4",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 300000000000.0,
+      "collective_latency_s_per_layer": 8e-06,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 8,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x8",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.85,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 150000000000.0,
+      "collective_latency_s_per_layer": 1.2e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 16,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x16",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 75000000000.0,
+      "collective_latency_s_per_layer": 1.6e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 32,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x32",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    },
+    {
+      "clock_efficiency": 0.95,
+      "collective_bandwidth_bytes_s": 75000000000.0,
+      "collective_latency_s_per_layer": 2.2e-05,
+      "compute_efficiency": 0.45,
+      "compute_paths": {
+        "fp4_e2m1_x_fp4_e2m1": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "fp8_e4m3_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_fp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        },
+        "mxfp4_e2m1_x_mxfp8_e4m3": {
+          "conversion_policy": "offline lossless value expansion to BF16; packed scales absorbed",
+          "evidence": "derived:A100 has no native floating FP8/MXFP4/FP4 Tensor Core path; conversion cost status is deployment-specific",
+          "execution_format": "bf16_x_bf16",
+          "native": false,
+          "operation_multiplier": 1.0
+        }
+      },
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 312000000000000.0,
+        "fp32_x_fp32": 19500000000000.0
+      },
+      "cooling_limit_w_per_device": 400.0,
+      "cost_per_device": 15000.0,
+      "device_count": 64,
+      "evidence": {
+        "deployment": "derived native-resident floor: exact tensor-role BF16 expansion in opentallas.deployment",
+        "efficiencies_collective_cost": "assumed:configured latency is an aggregate per-layer floor for both official DeepSeek all-reduces; both logical payloads are serialized; no exact DeepSeek A100 measurement",
+        "node_memory_compute_power": "published:NVIDIA A100 product page and NVIDIA Ampere architecture whitepaper"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "gpu",
+      "kv_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 80000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 5e-13,
+      "model_deployment_policy": "a100_bf16_expanded",
+      "name": "NVIDIA-A100-SXM-80GB-BF16-resident-x64",
+      "power_w_per_device": 400.0,
+      "storage_bandwidth_policy": "shared_HBM_weight_and_KV_bytes_add",
+      "storage_capacity_policy": "shared_HBM_weights_plus_KV_no_double_counting",
+      "sync_efficiency": 0.8,
+      "weight_bandwidth_bytes_s_per_device": 2039000000000.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 80000000000.0,
+      "weight_read_energy_j_per_byte": 5e-12,
+      "weight_storage_technology": "HBM2e"
+    }
+  ],
+  "methodology": "docs/METHODOLOGY.md",
+  "schema_version": 1,
+  "study_id": "n7_architecture_attribution",
+  "wafer_architectures": [
+    {
+      "clock_efficiency": 0.85,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.45,
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 702080801944107.0,
+        "fp32_x_fp32": 87760100243013.38,
+        "fp4_e2m1_x_fp4_e2m1": 2808323207776428.0,
+        "fp8_e4m3_x_fp8_e4m3": 1404161603888214.0,
+        "mxfp4_e2m1_x_fp8_e4m3": 1404161603888214.0,
+        "mxfp4_e2m1_x_mxfp8_e4m3": 1404161603888214.0
+      },
+      "cooling_limit_w_per_device": 23000.0,
+      "cost_per_device": 100000.0,
+      "cross_stage_bandwidth_bytes_s": 200000000000.0,
+      "cross_stage_latency_s": 2.5e-07,
+      "defect_repair_efficiency": 0.85,
+      "device_count": 64,
+      "evidence": {
+        "capacity_density": "derived:28nm fabricated macro scaled to N7 with explicit exponent 1.0",
+        "compute": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.1; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "hbm": "derived:same-generation HBM2e stack normalized from comparator; stack count and pitch are package hypotheses",
+        "read_bandwidth": "derived:YOLoC macro operation rate converted to encoded weight bytes and area-scaled; not wafer silicon",
+        "runtime_cost_power": "assumed:uncertainty inputs; not product evidence"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "rom",
+      "kv_bandwidth_bytes_s_per_device": 6524800000000.0,
+      "kv_bandwidth_efficiency": 0.6,
+      "kv_capacity_bytes_per_device": 256000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.75,
+      "mac_energy_j_per_op": 2e-13,
+      "model_deployment_policy": "official_packed",
+      "name": "ROM-wafer-N7-HBM2e-conservative",
+      "nre_cost": 100000000.0,
+      "pipeline_efficiency": 0.82,
+      "power_w_per_device": 15000.0,
+      "production_units": 1000,
+      "storage_bandwidth_policy": "independent_ROM_weight_and_HBM_KV_service",
+      "storage_capacity_policy": "physically_separate_ROM_weights_and_mutable_HBM_KV",
+      "sync_efficiency": 0.8,
+      "wafer_communication": {
+        "allreduce_events_per_layer": 2,
+        "barrier_cycles": 16.0,
+        "bisection_links": 922,
+        "cols": 922,
+        "endpoint_cycles": 4.0,
+        "evidence": {
+          "events": "derived:two FP32 all-reduces in official DeepSeek block",
+          "hop": "published feasibility anchor plus assumed 0.8GHz; not WSE-2 timing disclosure",
+          "mesh_size": "derived:sqrt(850,000 WSE-2 cores)"
+        },
+        "frequency_hz": 800000000.0,
+        "hop_cycles": 1.0,
+        "link_payload_bytes_per_cycle": 2.0,
+        "payload_efficiency": 0.5,
+        "reduction_bytes_per_element": 4.0,
+        "result_bytes_per_element": 2.0,
+        "rows": 922,
+        "topology": "nearest_neighbor_mesh"
+      },
+      "weight_bandwidth_bytes_s_per_device": 970724999999999.9,
+      "weight_bandwidth_efficiency": 0.5,
+      "weight_capacity_bytes_per_device": 57777552000.0,
+      "weight_read_energy_j_per_byte": 3.5e-13,
+      "weight_storage_technology": "mask_ROM_N7"
+    },
+    {
+      "clock_efficiency": 0.9,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.6,
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 1755202004860267.2,
+        "fp32_x_fp32": 219400250607533.4,
+        "fp4_e2m1_x_fp4_e2m1": 7020808019441069.0,
+        "fp8_e4m3_x_fp8_e4m3": 3510404009720534.5,
+        "mxfp4_e2m1_x_fp8_e4m3": 4036964611178614.5,
+        "mxfp4_e2m1_x_mxfp8_e4m3": 4036964611178614.5
+      },
+      "cooling_limit_w_per_device": 23000.0,
+      "cost_per_device": 100000.0,
+      "cross_stage_bandwidth_bytes_s": 200000000000.0,
+      "cross_stage_latency_s": 2.5e-07,
+      "defect_repair_efficiency": 0.92,
+      "device_count": 64,
+      "evidence": {
+        "capacity_density": "derived:28nm fabricated macro scaled to N7 with explicit exponent 1.5",
+        "compute": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.25; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "hbm": "derived:same-generation HBM2e stack normalized from comparator; stack count and pitch are package hypotheses",
+        "read_bandwidth": "derived:YOLoC macro operation rate converted to encoded weight bytes and area-scaled; not wafer silicon",
+        "runtime_cost_power": "assumed:uncertainty inputs; not product evidence"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "rom",
+      "kv_bandwidth_bytes_s_per_device": 13049600000000.0,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 512000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.85,
+      "mac_energy_j_per_op": 2e-13,
+      "model_deployment_policy": "official_packed",
+      "name": "ROM-wafer-N7-HBM2e-central",
+      "nre_cost": 100000000.0,
+      "pipeline_efficiency": 0.9,
+      "power_w_per_device": 15000.0,
+      "production_units": 1000,
+      "storage_bandwidth_policy": "independent_ROM_weight_and_HBM_KV_service",
+      "storage_capacity_policy": "physically_separate_ROM_weights_and_mutable_HBM_KV",
+      "sync_efficiency": 0.88,
+      "wafer_communication": {
+        "allreduce_events_per_layer": 2,
+        "barrier_cycles": 32.0,
+        "bisection_links": 64,
+        "cols": 64,
+        "endpoint_cycles": 8.0,
+        "evidence": {
+          "events": "derived:two FP32 all-reduces in official DeepSeek block",
+          "status": "requires target-node floorplan and timing; not calibrated to throughput",
+          "topology": "assumed:4096 coarse spatial tiles with explicit global/local traversal"
+        },
+        "frequency_hz": 900000000.0,
+        "hop_cycles": 2.0,
+        "link_payload_bytes_per_cycle": 16.0,
+        "local_hop_cycles": 2.0,
+        "local_path_hops": 14,
+        "payload_efficiency": 0.7,
+        "reduction_bytes_per_element": 4.0,
+        "result_bytes_per_element": 2.0,
+        "rows": 64,
+        "topology": "hierarchical_mesh"
+      },
+      "weight_bandwidth_bytes_s_per_device": 2662560000000000.0,
+      "weight_bandwidth_efficiency": 0.65,
+      "weight_capacity_bytes_per_device": 170361239040.0,
+      "weight_read_energy_j_per_byte": 3.5e-13,
+      "weight_storage_technology": "mask_ROM_N7"
+    },
+    {
+      "clock_efficiency": 0.94,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.7,
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 3510404009720534.5,
+        "fp32_x_fp32": 438800501215066.8,
+        "fp4_e2m1_x_fp4_e2m1": 1.4041616038882138e+16,
+        "fp8_e4m3_x_fp8_e4m3": 7020808019441069.0,
+        "mxfp4_e2m1_x_fp8_e4m3": 9361077359254758.0,
+        "mxfp4_e2m1_x_mxfp8_e4m3": 9361077359254758.0
+      },
+      "cooling_limit_w_per_device": 23000.0,
+      "cost_per_device": 100000.0,
+      "cross_stage_bandwidth_bytes_s": 200000000000.0,
+      "cross_stage_latency_s": 2.5e-07,
+      "defect_repair_efficiency": 0.96,
+      "device_count": 64,
+      "evidence": {
+        "capacity_density": "derived:28nm fabricated macro scaled to N7 with explicit exponent 2.0",
+        "compute": "derived:same-node GC200 published FP16 rate area-scaled to WSE area, then multiplied by explicit compute-equivalent fraction 0.5; used as a format-neutral ceiling, not an FP8 silicon measurement",
+        "hbm": "derived:same-generation HBM2e stack normalized from comparator; stack count and pitch are package hypotheses",
+        "read_bandwidth": "derived:YOLoC macro operation rate converted to encoded weight bytes and area-scaled; not wafer silicon",
+        "runtime_cost_power": "assumed:uncertainty inputs; not product evidence"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-12,
+      "kind": "rom",
+      "kv_bandwidth_bytes_s_per_device": 19574400000000.0,
+      "kv_bandwidth_efficiency": 0.78,
+      "kv_capacity_bytes_per_device": 768000000000.0,
+      "kv_storage_technology": "HBM2e",
+      "load_balance_efficiency": 0.92,
+      "mac_energy_j_per_op": 2e-13,
+      "model_deployment_policy": "official_packed",
+      "name": "ROM-wafer-N7-HBM2e-aggressive",
+      "nre_cost": 100000000.0,
+      "pipeline_efficiency": 0.95,
+      "power_w_per_device": 15000.0,
+      "production_units": 1000,
+      "storage_bandwidth_policy": "independent_ROM_weight_and_HBM_KV_service",
+      "storage_capacity_policy": "physically_separate_ROM_weights_and_mutable_HBM_KV",
+      "sync_efficiency": 0.94,
+      "wafer_communication": {
+        "allreduce_events_per_layer": 2,
+        "barrier_cycles": 32.0,
+        "bisection_links": 8,
+        "cols": 8,
+        "endpoint_cycles": 8.0,
+        "evidence": {
+          "events": "derived:two FP32 all-reduces in official DeepSeek block",
+          "status": "implementation hypothesis gated by P&R, repeater, skew, and power evidence",
+          "topology": "aggressive:reticle-granular exchange and reduction tree"
+        },
+        "frequency_hz": 1000000000.0,
+        "hop_cycles": 3.0,
+        "link_payload_bytes_per_cycle": 256.0,
+        "local_hop_cycles": 3.0,
+        "local_path_hops": 6,
+        "payload_efficiency": 0.75,
+        "reduction_bytes_per_element": 4.0,
+        "result_bytes_per_element": 2.0,
+        "rows": 8,
+        "topology": "coarse_reticle_exchange"
+      },
+      "weight_bandwidth_bytes_s_per_device": 6101700000000001.0,
+      "weight_bandwidth_efficiency": 0.75,
+      "weight_capacity_bytes_per_device": 408569832000.00006,
+      "weight_read_energy_j_per_byte": 3.5e-13,
+      "weight_storage_technology": "mask_ROM_N7"
+    },
+    {
+      "clock_efficiency": 0.9,
+      "collective_bandwidth_bytes_s": 1e+30,
+      "collective_latency_s_per_layer": 0.0,
+      "compute_efficiency": 0.6,
+      "compute_roofs_ops_s_per_device": {
+        "bf16_x_bf16": 1500000000000000.0,
+        "fp32_x_fp32": 187500000000000.0,
+        "fp4_e2m1_x_fp4_e2m1": 6000000000000000.0,
+        "fp8_e4m3_x_fp8_e4m3": 3000000000000000.0,
+        "mxfp4_e2m1_x_fp8_e4m3": 3449999999999999.5,
+        "mxfp4_e2m1_x_mxfp8_e4m3": 3449999999999999.5
+      },
+      "cooling_limit_w_per_device": 23000.0,
+      "cost_per_device": 100000.0,
+      "cross_stage_bandwidth_bytes_s": 200000000000.0,
+      "cross_stage_latency_s": 2.5e-07,
+      "defect_repair_efficiency": 0.92,
+      "device_count": 128,
+      "evidence": {
+        "capacity_bandwidth": "derived:GC200 N7 product values area-scaled to WSE area at fixed composition",
+        "identity": "architectural storage-tier control only; not a Graphcore product/performance claim",
+        "numerics_compute_noc": "assumed:held near N7 central ROM case to isolate storage density"
+      },
+      "hbm_capacity_utilization": 0.9,
+      "hbm_energy_j_per_byte": 5e-13,
+      "kind": "sram",
+      "kv_bandwidth_bytes_s_per_device": 800372114216282.1,
+      "kv_bandwidth_efficiency": 0.7,
+      "kv_capacity_bytes_per_device": 15164945321.992712,
+      "kv_storage_technology": "SRAM_N7",
+      "load_balance_efficiency": 0.85,
+      "mac_energy_j_per_op": 2e-13,
+      "model_deployment_policy": "official_packed",
+      "name": "N7-SRAM-rich-Graphcore-style-derived-control",
+      "pipeline_efficiency": 0.9,
+      "power_w_per_device": 15000.0,
+      "storage_bandwidth_policy": "static_partitioned_SRAM_banks",
+      "storage_capacity_policy": "static_70pct_weight_30pct_KV_partition_no_double_counting",
+      "sync_efficiency": 0.88,
+      "wafer_communication": {
+        "allreduce_events_per_layer": 2,
+        "barrier_cycles": 32.0,
+        "bisection_links": 64,
+        "cols": 64,
+        "endpoint_cycles": 8.0,
+        "evidence": {
+          "events": "derived:two FP32 all-reduces in official DeepSeek block",
+          "status": "requires target-node floorplan and timing; not calibrated to throughput",
+          "topology": "assumed:4096 coarse spatial tiles with explicit global/local traversal"
+        },
+        "frequency_hz": 900000000.0,
+        "hop_cycles": 2.0,
+        "link_payload_bytes_per_cycle": 16.0,
+        "local_hop_cycles": 2.0,
+        "local_path_hops": 14,
+        "payload_efficiency": 0.7,
+        "reduction_bytes_per_element": 4.0,
+        "result_bytes_per_element": 2.0,
+        "rows": 64,
+        "topology": "hierarchical_mesh"
+      },
+      "weight_bandwidth_bytes_s_per_device": 1867534933171324.5,
+      "weight_bandwidth_efficiency": 0.65,
+      "weight_capacity_bytes_per_device": 35384872417.98299,
+      "weight_read_energy_j_per_byte": 5e-13,
+      "weight_storage_technology": "SRAM_N7"
+    }
+  ]
+}

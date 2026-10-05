@@ -1,0 +1,38 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/execution_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "counters": {
+      "$ref": "https://opentallas.org/schemas/compiler/tensor_accelerator/independent_check_v1.schema.json#/$defs/counters"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.execution_expectations.v1"
+    }
+  },
+  "required": [
+    "capability_id",
+    "counters",
+    "model_id",
+    "schema"
+  ],
+  "title": "OpenTallas tensor-accelerator execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

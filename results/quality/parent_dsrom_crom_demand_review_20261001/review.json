@@ -1,0 +1,28 @@
+{
+  "artifact_sha256": "bb597c07e000b2e58f16b949f2c4515ec49cfaa943c70c20133e0361366ec62d",
+  "checkpoint_reads": 0,
+  "focused_tests": {
+    "passed": 4,
+    "seconds": 0.09
+  },
+  "hardware_admission": false,
+  "owner_commits": [
+    "7ed62357d77b534dbd8a177e84321f91f105b45b",
+    "f4bce8fa0a5162964262dd28c476aed549587dd0"
+  ],
+  "per_rank": {
+    "bound_operands": 729,
+    "bound_reads": 508800,
+    "commands": 491,
+    "peak_unique_same_bank_per_emit": 1024,
+    "scalar_service_cycles": 549760,
+    "scalar_service_ns": 458133.3333333334,
+    "unbound_generated_reads": 40960
+  },
+  "ranks": 4,
+  "regenerated_compressed_artifact_byte_equal": true,
+  "schema": "opentallas.parent.dsrom-crom-command-demand-review.v1",
+  "scope": "Static decoded source demand includes predicated commands even if skipped; serialized issue demand is not additive token slowdown. Actual packing/ports/capture/CDC/broadcast/prefetch deadlines require whole-calendar composition.",
+  "token_latency_ns": null,
+  "verdict": "PASS_SOURCE_DEMAND_SCALAR_PROPOSAL_NOT_ADMITTED"
+}

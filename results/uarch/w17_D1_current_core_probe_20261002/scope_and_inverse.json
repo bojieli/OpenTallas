@@ -1,0 +1,20 @@
+{
+  "engine_edits": false,
+  "guard_policy": "Do not define stub guards; real elaboration must reject if activated",
+  "hierarchy_actual_owner": "dut.g_packed_kv.g_window_hbm_attention.u_source.u_window",
+  "native_clock_binding": "New single-SV composition (timed 1ns clock), not reuse of original manual host cut; simultaneous rising NBA captures old registered inputs; no original-runtime equivalence claim",
+  "observer_byte_equal_original": true,
+  "observer_origin_commit": "40c21d66ece16fcbb72068bf6b15ea5659dfadcd",
+  "program_fixture_origin": "f49292daac3dbce3ce8109a8a23af040dbef4105",
+  "protected_sources_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "qualification": "SOURCE_ADMISSION_ONLY_NOT_ELABORATED_OR_EXECUTED",
+  "remaining_elaboration_guards": [
+    "ot_hdc_fp32_add_lat_CUTS_must_match_LAT",
+    "ot_hdc_fp32_mul_lat_CUTS_must_match_LAT",
+    "ot_hdc_v41x_vec_LV_must_be_1_to_7",
+    "ot_hdc_v41x_vec_lane_ALAT_must_be_3_or_4_and_at_most_MLAT"
+  ],
+  "selected_stack": 0,
+  "source_list_additions": "10 exact original owner files resolving ordinary potential references absent from historical driver list; conditional branches retained, no sim replacement",
+  "wrapper_inverse": "Remove D1_CURRENT_OBSERVATION marker block, remove parameter SIM_D1=0, restore module ot_v41_rt_die"
+}

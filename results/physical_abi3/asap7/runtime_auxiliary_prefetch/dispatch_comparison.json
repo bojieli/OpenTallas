@@ -1,0 +1,44 @@
+{
+  "scope": "Matched standalone auxiliary reservation queue synthesis at ASAP7 TT 1 ns; all pre-layout timing fails.",
+  "records": [
+    {
+      "record": "prelayout_registered0_1ns.json",
+      "sha256": "68100af8fcf6da602f34039f03ba6b0e52b39395eb9d289cec64d2eb534c4db8",
+      "parameters": {
+        "REGISTER_REQUESTS": 0
+      },
+      "area_um2": 408.708,
+      "setup_wns_ns": -2.9710141132765764
+    },
+    {
+      "record": "prelayout_registered1_1ns.json",
+      "sha256": "2eacdd3e4216b216a52815a46eab651eafc32279304eba1ace971823cdd43fa5",
+      "parameters": {
+        "REGISTER_REQUESTS": 1
+      },
+      "area_um2": 448.7,
+      "setup_wns_ns": -3.327797162252591
+    },
+    {
+      "record": "prelayout_direct_depth3_1ns.json",
+      "sha256": "af6b2c5b296bee8b81dcb385c6a223f1caa817ddc81e4388cd4124f6a01281ab",
+      "parameters": {
+        "DEPTH": 3,
+        "REGISTER_REQUESTS": 0
+      },
+      "area_um2": 598.758,
+      "setup_wns_ns": -2.3173010269996697
+    },
+    {
+      "record": "prelayout_registered_depth3_1ns.json",
+      "sha256": "25d5fc92a472415631ec9c8bcc52f36f92903ad9b53e86cef39f939296232870",
+      "parameters": {
+        "DEPTH": 3,
+        "REGISTER_REQUESTS": 1
+      },
+      "area_um2": 662.297,
+      "setup_wns_ns": -2.7223379215323855
+    }
+  ],
+  "note": "Direct depth3 selected for integrated modeled-service latency. Registered mode cuts the cursor/service combinational boundary using existing identity storage, but adds counters, a read mux and dispatch latency. No routed gain established."
+}

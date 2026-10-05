@@ -1,0 +1,267 @@
+{
+  "decisiveness": {
+    "hbm": {
+      "argmax": 459,
+      "argmax_survives_a_perturbation_of_that_size": false,
+      "logits_within_perturbation_of_the_top": 2,
+      "margin_over_perturbation": 0.7398,
+      "perturbation_compared_against": 0.115466,
+      "top1_logit": 0.937498,
+      "top1_to_top2_margin": 0.085418,
+      "top2_logit": 0.85208
+    },
+    "oracle_against_oracle_gap": {
+      "argmax": 1638,
+      "argmax_survives_a_perturbation_of_that_size": false,
+      "logits_within_perturbation_of_the_top": 37,
+      "margin_over_perturbation": 0.2178,
+      "perturbation_compared_against": 0.283278,
+      "top1_logit": 0.902116,
+      "top1_to_top2_margin": 0.06169,
+      "top2_logit": 0.840425
+    },
+    "oracle_against_store_gap": {
+      "argmax": 1638,
+      "argmax_survives_a_perturbation_of_that_size": false,
+      "logits_within_perturbation_of_the_top": 4,
+      "margin_over_perturbation": 0.5343,
+      "perturbation_compared_against": 0.115466,
+      "top1_logit": 0.902116,
+      "top1_to_top2_margin": 0.06169,
+      "top2_logit": 0.840425
+    },
+    "rom": {
+      "argmax": 2750,
+      "argmax_survives_a_perturbation_of_that_size": false,
+      "logits_within_perturbation_of_the_top": 6,
+      "margin_over_perturbation": 0.6379,
+      "perturbation_compared_against": 0.115466,
+      "top1_logit": 0.881524,
+      "top1_to_top2_margin": 0.073659,
+      "top2_logit": 0.807865
+    }
+  },
+  "emitted": {
+    "hbm": [
+      459
+    ],
+    "rom": [
+      2750
+    ]
+  },
+  "logit_at_every_winner": {
+    "hbm": {
+      "at_hbm_winner": 0.937498,
+      "at_oracle_token": -0.022279,
+      "at_rom_winner": 0.85208
+    },
+    "oracle": {
+      "at_hbm_winner": -0.265874,
+      "at_oracle_token": 0.902116,
+      "at_rom_winner": 0.004219
+    },
+    "rom": {
+      "at_hbm_winner": 0.801472,
+      "at_oracle_token": -0.00203,
+      "at_rom_winner": 0.881524
+    }
+  },
+  "not_a_claim": [
+    "not an RTL measurement: the device here is runtime.sim",
+    "correlation is not proof of correctness; it bounds how large a shared error could be, and a small margin means the argmax cannot resolve it"
+  ],
+  "oracle_is_not_exact": "the reference is the vendor inference/model.py Transformer in bfloat16 on a GPU; the device runs FP32-accumulate numeric contracts. The rows are not required to be equal, so the comparison that matters is distributional agreement against the oracle's own margin.",
+  "pairs": [
+    {
+      "first_logit_at_second_winner": 0.801472,
+      "first_winner": 2750,
+      "first_winner_rank_in_second": 1,
+      "max_abs_diff": 0.532064,
+      "mean_abs_diff": 0.115466,
+      "pair": "rom_vs_hbm",
+      "pearson_r": 0.836094,
+      "rms_diff": 0.144601,
+      "second_logit_at_first_winner": 0.85208,
+      "second_winner": 459,
+      "second_winner_rank_in_first": 4
+    },
+    {
+      "first_logit_at_second_winner": 0.004219,
+      "first_winner": 1638,
+      "first_winner_rank_in_second": 2102,
+      "max_abs_diff": 1.437404,
+      "mean_abs_diff": 0.282719,
+      "pair": "oracle_vs_rom",
+      "pearson_r": 0.032251,
+      "rms_diff": 0.355298,
+      "second_logit_at_first_winner": -0.00203,
+      "second_winner": 2750,
+      "second_winner_rank_in_first": 2068
+    },
+    {
+      "first_logit_at_second_winner": -0.265874,
+      "first_winner": 1638,
+      "first_winner_rank_in_second": 2170,
+      "max_abs_diff": 1.451614,
+      "mean_abs_diff": 0.283837,
+      "pair": "oracle_vs_hbm",
+      "pearson_r": 0.014175,
+      "rms_diff": 0.357853,
+      "second_logit_at_first_winner": -0.022279,
+      "second_winner": 459,
+      "second_winner_rank_in_first": 3447
+    }
+  ],
+  "producer": {
+    "git": {
+      "commit": "885a0142ec51098f6e6ad06c121db21e7f217391"
+    },
+    "tool": "tools/compare_deepseek_v41_oracle_logits.py"
+  },
+  "question": "the devices disagree with the oracle; is that a fault in the V4.1 graph or is the reduced fixture's argmax not decisive enough to be an instrument?",
+  "schema": "opentallas.abi3.v41_oracle_logit_comparison.v1",
+  "top_10": {
+    "hbm": [
+      {
+        "logit": 0.937498,
+        "token_id": 459
+      },
+      {
+        "logit": 0.85208,
+        "token_id": 2750
+      },
+      {
+        "logit": 0.789133,
+        "token_id": 2284
+      },
+      {
+        "logit": 0.76581,
+        "token_id": 2610
+      },
+      {
+        "logit": 0.759145,
+        "token_id": 566
+      },
+      {
+        "logit": 0.754694,
+        "token_id": 4033
+      },
+      {
+        "logit": 0.752323,
+        "token_id": 3254
+      },
+      {
+        "logit": 0.696877,
+        "token_id": 2479
+      },
+      {
+        "logit": 0.692686,
+        "token_id": 1692
+      },
+      {
+        "logit": 0.68327,
+        "token_id": 3113
+      }
+    ],
+    "oracle": [
+      {
+        "logit": 0.902116,
+        "token_id": 1638
+      },
+      {
+        "logit": 0.840425,
+        "token_id": 930
+      },
+      {
+        "logit": 0.816285,
+        "token_id": 226
+      },
+      {
+        "logit": 0.805378,
+        "token_id": 214
+      },
+      {
+        "logit": 0.771892,
+        "token_id": 3834
+      },
+      {
+        "logit": 0.759857,
+        "token_id": 2587
+      },
+      {
+        "logit": 0.725896,
+        "token_id": 3122
+      },
+      {
+        "logit": 0.722261,
+        "token_id": 3716
+      },
+      {
+        "logit": 0.720453,
+        "token_id": 275
+      },
+      {
+        "logit": 0.699974,
+        "token_id": 3860
+      }
+    ],
+    "rom": [
+      {
+        "logit": 0.881524,
+        "token_id": 2750
+      },
+      {
+        "logit": 0.807865,
+        "token_id": 3813
+      },
+      {
+        "logit": 0.806786,
+        "token_id": 310
+      },
+      {
+        "logit": 0.803998,
+        "token_id": 223
+      },
+      {
+        "logit": 0.801472,
+        "token_id": 459
+      },
+      {
+        "logit": 0.7767,
+        "token_id": 1692
+      },
+      {
+        "logit": 0.75533,
+        "token_id": 3705
+      },
+      {
+        "logit": 0.737472,
+        "token_id": 2284
+      },
+      {
+        "logit": 0.732414,
+        "token_id": 3320
+      },
+      {
+        "logit": 0.72557,
+        "token_id": 1200
+      }
+    ]
+  },
+  "workload": {
+    "model_id": "deepseek-v4.1-flash-reduced-v1",
+    "oracle_token_id": 1638,
+    "prompt_token_ids": [
+      0,
+      3563,
+      3745,
+      418,
+      170,
+      16,
+      3564,
+      3582
+    ],
+    "vocabulary": 4040,
+    "workload_id": "TA-DS41-REDUCED-EOS-1"
+  }
+}

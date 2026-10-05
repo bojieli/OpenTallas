@@ -1,0 +1,1766 @@
+{
+  "schema": "opentallas.parent.dsrom.full_program.static_legality.v1",
+  "builder_commit": "98c14e58b",
+  "source_sha256": {
+    "tools/w11_dsrom_full_tp_program.py": "1a3eb41d939ebeadf68dae56e41de87b5940a83680ff32cbc934cbcb46699da3",
+    "tools/w11_dsrom_full_tp_program_contract.py": "22e11b471dceee46fab68944cbe9265522079aabc18327b02f313aacb96f0a61",
+    "tools/v41_su_legality.py": "dfe5189f5339c7fa8e791b89c8313af5728d8bf3479e826738e64c505f6d3eb3",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+  },
+  "source_pins_verified": {
+    "tools/hdc_replay_v41.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b"
+    },
+    "tools/hdc_golden_v41.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+    },
+    "tools/hdc_program_v41.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f"
+    },
+    "tools/hdc_isa_v41.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+    },
+    "tools/v41_program_constants.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "3000d5e199f960ff7139eaf198ac60d1690454f907bfc90385c28ba88b6bb6e4"
+    },
+    "tools/rtl_v41_fullshape_layer_campaign.py": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8"
+    },
+    "results/rtl/v41_program_constants.json": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "3b59c2233ffe26f3cdedcd4e4ad6706be6c138913cca31a404cb7dc0ee24319d"
+    },
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+    }
+  },
+  "descriptor_count": 4778,
+  "encoded_words_le_sha256": "5ceec3ffb6790a297a62ef6a0c57cbe4231615e242ab0351071b51abce37c9a2",
+  "rows": [
+    {
+      "N": 16,
+      "M": 4,
+      "LV": 7,
+      "illegal_count": 169,
+      "illegal": [
+        {
+          "layer": 0,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 0,
+          "pc": 45,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 0,
+          "pc": 50,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 0,
+          "pc": 111,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 3,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 4,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 5,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 9,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 14,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 55,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 60,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 1,
+          "pc": 121,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 2,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 2,
+          "pc": 77,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 2,
+          "pc": 82,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 2,
+          "pc": 143,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 3,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 3,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 3,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 3,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 4,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 4,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 4,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 4,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 5,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 5,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 5,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 5,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 6,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 6,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 6,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 6,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 7,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 7,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 7,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 7,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 8,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 8,
+          "pc": 77,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 8,
+          "pc": 82,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 8,
+          "pc": 143,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 9,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 9,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 9,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 9,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 10,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 10,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 10,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 10,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 11,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 11,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 11,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 11,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 12,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 12,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 12,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 12,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 13,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 13,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 13,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 13,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 3,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 4,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 5,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 9,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 14,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 87,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 92,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 14,
+          "pc": 153,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 15,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 15,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 15,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 15,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 16,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 16,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 16,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 16,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 17,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 17,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 17,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 17,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 18,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 18,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 18,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 18,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 19,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 19,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 19,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 19,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 20,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 20,
+          "pc": 76,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 20,
+          "pc": 81,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 20,
+          "pc": 142,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 21,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 21,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 21,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 21,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 22,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 22,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 22,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 22,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 23,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 23,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 23,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 23,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 24,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 24,
+          "pc": 56,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 24,
+          "pc": 61,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 24,
+          "pc": 122,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 25,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 25,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 25,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 25,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 26,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 26,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 26,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 26,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 27,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 27,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 27,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 27,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 28,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 28,
+          "pc": 56,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 28,
+          "pc": 61,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 28,
+          "pc": 122,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 29,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 29,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 29,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 29,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 30,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 30,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 30,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 30,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 31,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 31,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 31,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 31,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 32,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 32,
+          "pc": 56,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 32,
+          "pc": 61,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 32,
+          "pc": 122,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 33,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 33,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 33,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 33,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 34,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 34,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 34,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 34,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 35,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 35,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 35,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 35,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 36,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 36,
+          "pc": 56,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 36,
+          "pc": 61,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 36,
+          "pc": 122,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 37,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 37,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 37,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 37,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 38,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 38,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 38,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 38,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 39,
+          "pc": 4,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 39,
+          "pc": 47,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 39,
+          "pc": 52,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": 39,
+          "pc": 113,
+          "tag": "",
+          "nout": 4,
+          "nin": 5120,
+          "reasons": [
+            "span depth 11 > LV 7 (1280 vectors of 16 at N=16)"
+          ]
+        },
+        {
+          "layer": "head",
+          "pc": 2,
+          "tag": "",
+          "nout": 8,
+          "nin": 640,
+          "reasons": [
+            "span depth 9 > LV 7 (320 vectors of 16 at N=16)"
+          ]
+        }
+      ]
+    },
+    {
+      "N": 256,
+      "M": 64,
+      "LV": 7,
+      "illegal_count": 0,
+      "illegal": []
+    },
+    {
+      "N": 1024,
+      "M": 256,
+      "LV": 7,
+      "illegal_count": 0,
+      "illegal": []
+    }
+  ],
+  "verdict": "PASS_STATIC_ENCODED_SU_C_BAD_CHECK_N256_N1024",
+  "scope": "Static encoded fields only; dynamic-bound extents, predicates, scratch capacity and actual numerical transport require separate validation",
+  "actual_four_rank_ISA_executed": false,
+  "full_program_hardware_qualified": false,
+  "physical_admission": false,
+  "speed_credit": 0
+}

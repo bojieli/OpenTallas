@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.w11-hub-recovery.v1",
+  "base": "89eace61f6c5a33b9814e2ab5775dcbf9b5f3ca2",
+  "adoption": false,
+  "git_sources": [
+    {
+      "commit": "99d4c082cdc758201c1394a1a4775336d937e5bf",
+      "path": "results/physical_abi3/asap7/chip/w11_vm_crot/rot512w2_m5u12/physical.json",
+      "archive": "rotate_m5.physical.json",
+      "sha256": "f4975377b5823297b468d38c7cc74f9a155ed8b66d6475931aca594e97dc1bff"
+    },
+    {
+      "commit": "99d4c082cdc758201c1394a1a4775336d937e5bf",
+      "path": "results/physical_abi3/asap7/chip/w11_vm_crot/rot512w2_m5u12/6_finish.rpt",
+      "archive": "rotate_m5.6_finish.rpt",
+      "sha256": "b3b90bc3cb53b6d36fca37b925362c0f97731cd93682700f0b58371c02e71251"
+    },
+    {
+      "commit": "243782986f36bee6a1c71a2ffd99a0ebf1d5de3d",
+      "path": "results/rtl/w11_ckvdie_service_gate.json",
+      "archive": "ckv_service.json",
+      "sha256": "5747c3820cd849b40a790204bee842a87cd981427acc48fed545d3fe9171fcd3"
+    }
+  ],
+  "claim": "Historical source-pinned evidence only; production sources and model unchanged. Rotate slice closure is not composed hub closure. CKV service exactness is not full-token RTL.",
+  "controller": "Withdrawn before admission at 08:29: ORFS resynthesis endpoint guard incomplete; dirty owner changes retained, no launch from this recovery.",
+  "next": "Integrate owner-reviewed ORFS endpoint guard after its gate passes; collect existing u00 and rotate composed gates, then re-evaluate main-current source compatibility. Do not restart rejected softplus/KR variants."
+}

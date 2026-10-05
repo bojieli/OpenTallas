@@ -1,0 +1,48 @@
+{
+  "artifact_regeneration": {
+    "catalog.json.gz": {
+      "byte_identical": false,
+      "fresh_sha256": "d86317e67fec0dedc518a27a7eb2a736e71336d7a4f91d64c94da2e3442b59e1",
+      "original_sha256": "9f3d0fc18fda480c0a47c7bf6f40bf6007f19d7f585dca70a2f8e20bec9da917"
+    },
+    "fill-controls.bin.gz": {
+      "byte_identical": true,
+      "fresh_sha256": "7654388f545d318d00d2f8bd2e02b470275435bf44be320c8feaed081bde8e4f",
+      "original_sha256": "7654388f545d318d00d2f8bd2e02b470275435bf44be320c8feaed081bde8e4f"
+    },
+    "request-controls.bin.gz": {
+      "byte_identical": true,
+      "fresh_sha256": "8d4a4f7d29221077e1117e1683257388a3fdea7520a63bd53051fcc8658c7f78",
+      "original_sha256": "8d4a4f7d29221077e1117e1683257388a3fdea7520a63bd53051fcc8658c7f78"
+    }
+  },
+  "canonical_coefficient_uses_per_rank": 549760,
+  "checkpoint_payload_reads": 0,
+  "focused_test_count": 37,
+  "fresh_catalog_only_difference": "compiler_sha256 reflects corrected source; all program/control contents unchanged",
+  "hardware_admission": false,
+  "independent_negative_cases": {
+    "empty_and_zero_count": {
+      "reason": "source binding: command/use/model counts",
+      "verdict": "REJECTED"
+    },
+    "operand_base": {
+      "reason": "source binding: PC/layer/pred/operand metadata",
+      "verdict": "REJECTED"
+    },
+    "predicate": {
+      "reason": "source binding: PC/layer/pred/operand metadata",
+      "verdict": "REJECTED"
+    },
+    "request_span_reuse": {
+      "reason": "source binding: wave catalog addresses/extents",
+      "verdict": "REJECTED"
+    }
+  },
+  "new_RTL_or_PnR_jobs": false,
+  "old_failed_review_preserved": "ce7f34f45",
+  "owner_evidence_commit": "4580819043a4a0b2cbe78c700c771246affc91f0",
+  "owner_source_commit": "04b75f90504cec9b3c6d2c1fa853df201506d40d",
+  "schema": "parent.CROM.immutable-source-guard-review.v1",
+  "scope": "Compiler persisted control source-completeness correction only. Source pins and immutable ISA/demand precede metadata replay; actual transport tags/leases/reverse ACK/physical providers/SSFF/fulltoken remain open."
+}

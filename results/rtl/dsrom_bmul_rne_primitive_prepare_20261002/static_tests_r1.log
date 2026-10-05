@@ -1,0 +1,12 @@
+test_each_mutant_has_explicit_static_counterexample (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_independent_expected_matches_pinned_golden (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_input_and_assertion_images_separate (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_namespace_and_mutant_changes_are_local (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_negative_baseline_witnesses_and_corrected_RNE (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_reduced_category_proof_and_generic_normal_carry (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+test_state_ports_latency_default_and_preservation (test_dsrom_bmul_rne_primitive.PrimitivePrepareTests) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.547s
+
+OK

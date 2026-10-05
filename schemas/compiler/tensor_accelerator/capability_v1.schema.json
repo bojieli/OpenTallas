@@ -1,0 +1,300 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/capability_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "clock_hz": {
+      "maximum": 100000000000,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "engines": {
+      "additionalProperties": false,
+      "properties": {
+        "dma": {
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "maximum": 64,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "issue_bytes_per_cycle": {
+              "maximum": 1048576,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "count",
+            "issue_bytes_per_cycle"
+          ],
+          "type": "object"
+        },
+        "tensor": {
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "maximum": 1024,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "macs_per_cycle": {
+              "maximum": 1073741824,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_k": {
+              "maximum": 1048576,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_m": {
+              "maximum": 1048576,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "max_n": {
+              "maximum": 1048576,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "setup_cycles": {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "count",
+            "macs_per_cycle",
+            "max_k",
+            "max_m",
+            "max_n",
+            "setup_cycles"
+          ],
+          "type": "object"
+        },
+        "vector": {
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "maximum": 1024,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "elements_per_cycle": {
+              "maximum": 1073741824,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "setup_cycles": {
+              "maximum": 1000000,
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "count",
+            "elements_per_cycle",
+            "setup_cycles"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "dma",
+        "tensor",
+        "vector"
+      ],
+      "type": "object"
+    },
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "burst_bytes": {
+          "enum": [
+            16,
+            32,
+            64,
+            128,
+            256,
+            512,
+            1024
+          ]
+        },
+        "capacity_bytes": {
+          "maximum": 1125899906842624,
+          "minimum": 4096,
+          "type": "integer"
+        },
+        "channels": {
+          "maximum": 32,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_outstanding_per_channel": {
+          "maximum": 1048576,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "pseudo_channels_per_channel": {
+          "maximum": 8,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "read_latency_cycles": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "write_latency_cycles": {
+          "maximum": 1000000,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "burst_bytes",
+        "capacity_bytes",
+        "channels",
+        "max_outstanding_per_channel",
+        "pseudo_channels_per_channel",
+        "read_latency_cycles",
+        "write_latency_cycles"
+      ],
+      "type": "object"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_commands": {
+          "maximum": 1073741824,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_rank": {
+          "maximum": 8,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "max_runtime_symbols": {
+          "maximum": 1024,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "max_tensor_bytes": {
+          "maximum": 1125899906842624,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_commands",
+        "max_rank",
+        "max_runtime_symbols",
+        "max_tensor_bytes"
+      ],
+      "type": "object"
+    },
+    "numeric_profiles": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.capability.v1"
+    },
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "banks": {
+          "enum": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64,
+            128,
+            256,
+            512,
+            1024
+          ]
+        },
+        "bytes_per_bank": {
+          "minimum": 256,
+          "type": "integer"
+        },
+        "read_latency_cycles": {
+          "maximum": 1000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "read_ports_per_bank": {
+          "maximum": 16,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "word_bytes": {
+          "enum": [
+            1,
+            2,
+            4,
+            8,
+            16,
+            32,
+            64,
+            128
+          ]
+        },
+        "write_latency_cycles": {
+          "maximum": 1000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "write_ports_per_bank": {
+          "maximum": 16,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "banks",
+        "bytes_per_bank",
+        "read_latency_cycles",
+        "read_ports_per_bank",
+        "word_bytes",
+        "write_latency_cycles",
+        "write_ports_per_bank"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "capability_id",
+    "clock_hz",
+    "engines",
+    "hbm",
+    "limits",
+    "numeric_profiles",
+    "schema",
+    "sram"
+  ],
+  "title": "OpenTallas tensor-accelerator capability v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

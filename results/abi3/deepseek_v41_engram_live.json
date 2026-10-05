@@ -1,0 +1,99 @@
+{
+ "answer": "yes at every engram layer",
+ "engram_is_live": true,
+ "engram_layers": {
+  "L01": {
+   "input_peak": 9.3125,
+   "max_abs_contribution": 1.3486328125,
+   "mean_abs_contribution": 0.03748349487930682,
+   "rows": 40,
+   "rows_that_moved": 40
+  },
+  "L14": {
+   "input_peak": 1264.0,
+   "max_abs_contribution": 16.0,
+   "mean_abs_contribution": 0.12636667120620587,
+   "rows": 40,
+   "rows_that_moved": 40
+  }
+ },
+ "hash_ids_seen": {
+  "L01": {
+   "count": 240,
+   "distinct": 240,
+   "max": 383196485,
+   "min": 231358,
+   "sentinel_0xffffffff": 0
+  },
+  "L14": {
+   "count": 240,
+   "distinct": 240,
+   "max": 383764017,
+   "min": 1338477,
+   "sentinel_0xffffffff": 0
+  }
+ },
+ "hash_tables": {
+  "cache": {
+   "device": "cuda:0",
+   "nonzero": 0,
+   "scratch": true,
+   "shape": [
+    1,
+    256
+   ],
+   "size": 256
+  },
+  "multipliers": {
+   "device": "cuda:0",
+   "nonzero": 8,
+   "scratch": false,
+   "shape": [
+    2,
+    4
+   ],
+   "size": 8
+  },
+  "offsets": {
+   "device": "cuda:0",
+   "nonzero": 46,
+   "scratch": false,
+   "shape": [
+    2,
+    24
+   ],
+   "size": 48
+  },
+  "primes": {
+   "device": "cuda:0",
+   "nonzero": 48,
+   "scratch": false,
+   "shape": [
+    2,
+    3,
+    8
+   ],
+   "size": 48
+  },
+  "token_map": {
+   "device": "cuda:0",
+   "nonzero": 129279,
+   "scratch": false,
+   "shape": [
+    129280
+   ],
+   "size": 129280
+  }
+ },
+ "hash_tables_entirely_zero": [],
+ "inert_engram_layers": [],
+ "not_a_claim": [
+  "a live Engram is not a correct one: this shows the contribution is non-zero and the ids are in range, not that either matches the vendor",
+  "nothing here is an accelerator measurement"
+ ],
+ "prompt_token_count": 10,
+ "question": "does the oracle's Engram contribute anything to the residual?",
+ "schema": "opentallas.abi3.deepseek_v41_engram_live.v1",
+ "snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "workload": "/home/ubuntu/OpenTallas/build/workloads/deepseek-v4.1-flash-prefix/TA-DS41-CHAT-1-P10.json"
+}

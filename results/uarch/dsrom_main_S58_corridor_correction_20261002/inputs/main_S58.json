@@ -1,0 +1,127 @@
+{
+  "area_and_service_reserve": {
+    "HBM_reader_PC_ports_per_die": 128,
+    "WINDOW_rows": 128,
+    "attention_tiles_per_die": 64,
+    "clock_reset_PG_hold_DFT_policy_fraction": 0.125,
+    "collector_banks_1R1W": 4,
+    "conditional_field_margin_mm2": 0.6577285805540782,
+    "full_conservative_field_need_mm2": 442.1541482137759,
+    "index_MACs_pc": 1024,
+    "inherited_usable_field_mm2": 442.81187679433,
+    "new_service_or_halo_fit_qualified": false,
+    "no_double_debit": true,
+    "peerTXskids": 3,
+    "return_FF_conservative_mm2": 104.9817480192,
+    "return_bits_reservation": 138469120,
+    "return_is_fundamental_lower_bound": false,
+    "selected_seats": 512,
+    "service_cost_counted_in_inherited_field_debit": true,
+    "source_named_service_proxy_mm2": 90.44685198583997,
+    "track_nonsignal_escrow": 0.5
+  },
+  "candidate_id": "DS4096-TP4-S58-PAIR1",
+  "coordination": "Source-pinned handoff for Nash/Maxwell/Kepler via parent intake; no agreement or delivery receipt from other workers inferred.",
+  "main_source_pin": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+  "minimum_partition_claim": {
+    "S58_source_capacity_screen": true,
+    "actual_minimum_partition_certified": false,
+    "reason": "58 is first passing retained analytical repartition screen, not a proof of legal owner assignment or manufacturable minimum. This is one candidate for joint review, not permission to sweep or build.",
+    "unpartitionable_owner_maximum_proven": false
+  },
+  "new_replicated_service_cost_obligations": {
+    "additional_layer_dies": 68,
+    "additional_two_die_layer_packages": 34,
+    "baseline_layer_HBM_stacks": 656,
+    "layer_HBM_stacks_if_source4per_die_retained": 928,
+    "package_envelope_and_service_placement_qualified": false,
+    "source_service_island_replicas": 232
+  },
+  "no_RTL_PR_jobs": true,
+  "no_parameter_or_depth_sweep": true,
+  "our_active_jobs": [],
+  "owned_packing_evidence": {
+    "commit": "1e714c0a1c1f648ca8cf7a99012246acf94c87b5",
+    "main_reader_verification": "4b51f8101ce1af8ef0f932e9c912c17b072cf789",
+    "portable_replay": "01b89bdd5a4de8bdcdb40c23d876773a55a9bfb4",
+    "scope": "S66 diagnostic only, notS58 geometry transfer; all prior collisions/failures preserved"
+  },
+  "ownership_grain": {
+    "BF_column_frame_area_um2": 142971.9984,
+    "BF_column_frame_um": [
+      1002.89,
+      142.56
+    ],
+    "BF_frame_residual_um2": 111446.53920000001,
+    "grain_id": "COMPLETE_NB2_PP1_PAIR",
+    "gross_bits_per_pair": 4489216,
+    "logical_slot_macros": 2,
+    "macro_master": "ot_rom_4096x274_m8",
+    "pair_bitcells_um2": 26181.107711999997,
+    "pair_macro_body_um2": 31525.4592,
+    "pair_periphery_um2": 5344.351488000004,
+    "placement_unit_logical_slots": 2,
+    "placement_unit_macros": 4,
+    "q_frame_area_um2": 64825.596,
+    "q_frame_residual_um2": 33300.13679999999,
+    "q_frame_um": [
+      510.84,
+      126.9
+    ],
+    "residual_scope": "Includes compute/control/wires/margin; not pure measured compute and not current hardened RNE/WAKE abstract",
+    "retained_source_parameters": "NB2/PP1 complete pair with shared compute/control retained; paired halves not separated without equivalent golden/source proof"
+  },
+  "physical_GO": false,
+  "primary_lever": "Fewer complete weight-plus-adjacent-compute pairs per die; more dies;4096 depth unchanged; no independent sweeps",
+  "required_ownership_bound_before_selection": {
+    "Kepler": "Hold existing service ports/finite buffers/leased lifetimes; bind exact native field/collector/HBM/link cuts and pin/OBS/clockPG/via exclusions to candidate addresses/owners.",
+    "Maxwell": "Keep exact reduction ordering and source program. Bind all operator substage boundaries, producer publication/retire/return lifetimes; explicitly reject if indivisible owner cannot fit.",
+    "Nash": "Map every actual stage/operator/bank owner and all nonexpert weights into integer complete-pair assignments. Supply largest operator and reduction subtree that cannot cross a stage; compare its exact pair/port demand to this candidate. Coarse worst-die totals/fractional macro fractions are insufficient."
+  },
+  "separate_latency_prices": {
+    "TP_collectives": {
+      "TP_retained": 4,
+      "collective_latency_required": "Rebind exact golden subtrees/bytes/lifetimes under repartition; unchangedTP does not prove unchanged collective traffic or latency. No stagehop multiplication byTP.",
+      "new_TP_topology_credit": 0
+    },
+    "intensity": "Per-die weight capacity/MACs percycle decrease; same element MACs/byte unchanged.",
+    "pipeline_stage_hops": {
+      "actual_new_wire_CDC_join_bound": false,
+      "additional_boundaries": 17,
+      "baseline_stages": 41,
+      "candidate_stages": 58,
+      "source_conditional_baseline_hops_us": 16.716,
+      "source_conditional_candidate_hops_us": 22.954
+    },
+    "whole_token": {
+      "exact_compiled_and_physical_calibration": false,
+      "source_conditional_baseline_us": 360.9587063239965,
+      "source_conditional_candidate_us": 390.0612396146195
+    }
+  },
+  "single_candidate_counts": {
+    "BF1024_is_indivisible_floor": false,
+    "BF_pairs_per_die_reservation": 724,
+    "TP": 4,
+    "aggregate_BF_pairs_reservation": 167968,
+    "aggregate_q_pairs_reservation": 615032,
+    "aggregate_reservation_not_actual_compiler_ownership": true,
+    "baseline_coarse_BF_pairs_reservation": 167936,
+    "baseline_coarse_q_pairs_reservation": 614836,
+    "complete_pairs_per_die": 3375,
+    "head_dies": 8,
+    "layer_dies": 232,
+    "logical_complete_slots_per_die": 6750,
+    "physical_macros_per_die_reservation": 13500,
+    "q_pairs_per_die_reservation": 2651,
+    "stages": 58,
+    "table_dies": 36,
+    "total_dies": 276
+  },
+  "sizing_source": {
+    "SHA256": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+    "commit": "4c8b7f2d8e246bd09250051fc8f7cb3e3340f574",
+    "path": "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json"
+  },
+  "status": "ONE_WORKING_SHARED_REVIEW_CANDIDATE_NOT_AGREED_ADOPTION_OR_BUILD_GO"
+}

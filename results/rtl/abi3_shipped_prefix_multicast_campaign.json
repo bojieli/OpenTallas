@@ -1,0 +1,620 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "capability_fault_count": 4,
+  "case_count": 4,
+  "cases": [
+    {
+      "checks": 12756653,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-PINMISSING -Wno-WIDTHEXPAND -Wno-WIDTHTRUNC -GENABLE_EXACT_MULTICAST=1 --top-module ot_a3_shipped_prefix_top --Mdir obj_p3_multicast <ROOT>/rtl/lib/ot_crc_pkg.sv <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/ot_fp32_rsqrt_rne.sv <ROOT>/rtl/ot_ta_command_decoder.sv <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv <ROOT>/rtl/abi3/ot_a3_link_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv <ROOT>/rtl/abi3/ot_a3_vector_rope.sv <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv <ROOT>/rtl/abi3/ot_a3_communication_decoder.sv <ROOT>/rtl/abi3/ot_a3_link_channel.sv <ROOT>/rtl/abi3/ot_a3_link_endpoint.sv <ROOT>/rtl/abi3/ot_a3_link_node.sv <ROOT>/rtl/abi3/ot_a3_wafer_multicast_adapter.sv <ROOT>/rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv <ROOT>/rtl/test/a3_shipped_prefix_top.sv <ROOT>/rtl/test/a3_shipped_prefix_harness.cpp -CFLAGS -std=c++17",
+      "compile_log": "%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:304:10: Instance pin connected by name with empty reference: 'busy'\n  304 |         .busy(),\n      |          ^~~~\n                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050\n                          ... Use \"/* verilator lint_off PINCONNECTEMPTY */\" and lint_on around source to disable this message.\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:342:10: Instance pin connected by name with empty reference: 'wait_busy'\n  342 |         .wait_busy(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:378:18: Instance pin connected by name with empty reference: 'apply_busy'\n  378 |                 .apply_busy(),\n      |                  ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:453:10: Instance pin connected by name with empty reference: 'busy'\n  453 |         .busy(),\n      |          ^~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:461:10: Instance pin connected by name with empty reference: 'out_dtype'\n  461 |         .out_dtype(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:462:10: Instance pin connected by name with empty reference: 'out_term_count'\n  462 |         .out_term_count(),\n      |          ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:196:10: Instance pin connected by name with empty reference: 'out_abi_major'\n  196 |         .out_abi_major(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:197:10: Instance pin connected by name with empty reference: 'out_abi_minor'\n  197 |         .out_abi_minor(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:198:10: Instance pin connected by name with empty reference: 'out_flags'\n  198 |         .out_flags(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:202:10: Instance pin connected by name with empty reference: 'out_watchdog_class'\n  202 |         .out_watchdog_class(),\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_device_top.sv:204:10: Instance pin connected by name with empty reference: 'out_signature_descriptor'\n  204 |         .out_signature_descriptor()\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_endpoint.sv:89:10: Instance pin connected by name with empty reference: 'flits_accepted'\n   89 |         .flits_accepted(),\n      |          ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_endpoint.sv:94:10: Instance pin connected by name with empty reference: 'retry_count'\n   94 |         .retry_count(), .timeout(timeout),\n      |          ^~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_endpoint.sv:111:38: Instance pin connected by name with empty reference: 'dropping'\n  111 |         .overrun_error(rx_overrun), .dropping()\n      |                                      ^~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_node.sv:129:18: Instance pin connected by name with empty reference: 'flits_accepted'\n  129 |                 .flits_accepted(),\n      |                  ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_node.sv:134:18: Instance pin connected by name with empty reference: 'retry_count'\n  134 |                 .retry_count(), .timeout(),\n      |                  ^~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_node.sv:134:34: Instance pin connected by name with empty reference: 'timeout'\n  134 |                 .retry_count(), .timeout(),\n      |                                  ^~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_node.sv:158:18: Instance pin connected by name with empty reference: 'flits_delivered'\n  158 |                 .flits_delivered(),\n      |                  ^~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_link_node.sv:160:18: Instance pin connected by name with empty reference: 'dropping'\n  160 |                 .dropping()\n      |                  ^~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:375:10: Instance pin connected by name with empty reference: 'header_done'\n  375 |         .header_done(),\n      |          ^~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:376:10: Instance pin connected by name with empty reference: 'header_legal'\n  376 |         .header_legal(),\n      |          ^~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:377:10: Instance pin connected by name with empty reference: 'header_error'\n  377 |         .header_error(),\n      |          ^~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:378:10: Instance pin connected by name with empty reference: 'header_trap_class'\n  378 |         .header_trap_class(),\n      |          ^~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:379:10: Instance pin connected by name with empty reference: 'header_instruction_count'\n  379 |         .header_instruction_count(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:380:10: Instance pin connected by name with empty reference: 'header_entrypoint_count'\n  380 |         .header_entrypoint_count(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:381:10: Instance pin connected by name with empty reference: 'header_max_retired_work'\n  381 |         .header_max_retired_work(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:382:10: Instance pin connected by name with empty reference: 'header_entrypoint_descriptor'\n  382 |         .header_entrypoint_descriptor(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:388:10: Instance pin connected by name with empty reference: 'host_ready'\n  388 |         .host_ready(),\n      |          ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:389:10: Instance pin connected by name with empty reference: 'host_write_refused'\n  389 |         .host_write_refused(),\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:420:10: Instance pin connected by name with empty reference: 'predicate_read_req'\n  420 |         .predicate_read_req(),\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:421:10: Instance pin connected by name with empty reference: 'predicate_read_object_id'\n  421 |         .predicate_read_object_id(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:422:10: Instance pin connected by name with empty reference: 'predicate_read_element_index'\n  422 |         .predicate_read_element_index(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:458:10: Instance pin connected by name with empty reference: 'loop_depth'\n  458 |         .loop_depth(),\n      |          ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:461:10: Instance pin connected by name with empty reference: 'dbg_decode_error'\n  461 |         .dbg_decode_error(),\n      |          ^~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:462:10: Instance pin connected by name with empty reference: 'dbg_source_operation_id'\n  462 |         .dbg_source_operation_id(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:463:10: Instance pin connected by name with empty reference: 'dbg_wait_fault_event'\n  463 |         .dbg_wait_fault_event(),\n      |          ^~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:464:10: Instance pin connected by name with empty reference: 'dbg_loop_action'\n  464 |         .dbg_loop_action()\n      |          ^~~~~~~~~~~~~~~\n%Warning-MISINDENT: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:342:59: Misleading indentation\n  342 |                                       {16'b0, candidate}] <=\n      |                                                           ^~\n                    <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:338:25: ... Expected indentation matching this earlier statement's line:\n  338 |                         if (output_narrowed[16])\n      |                         ^~\n                    ... For warning description see https://verilator.org/warn/MISINDENT?v=5.050\n                    ... Use \"/* verilator lint_off MISINDENT */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:249:18: Bits of signal are not used: 'pstore_addr'[31:20]\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  249 |     wire [31:0]  pstore_addr;\n      |                  ^~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050\n                       ... Use \"/* verilator lint_off UNUSEDSIGNAL */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:267:19: Bits of signal are not used: 'dstore_addr'[31:20]\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  267 |     wire [31:0]   dstore_addr;\n      |                   ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:308:17: Bits of signal are not used: 'sym_addr'[31:20]\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  308 |     wire [31:0] sym_addr;\n      |                 ^~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:339:10: Signal is not used: 'multicast_busy'\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  339 |     wire multicast_busy;\n      |          ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:343:16: Signal is not used: 'multicast_refusal_reason'\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  343 |     wire [7:0] multicast_refusal_reason;\n      |                ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:771:41: Signal is not used: 'm2_rd_addr'\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  771 |     wire [31:0] m0_rd_addr, m1_rd_addr, m2_rd_addr, m3_rd_addr;\n      |                                         ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:771:53: Signal is not used: 'm3_rd_addr'\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  771 |     wire [31:0] m0_rd_addr, m1_rd_addr, m2_rd_addr, m3_rd_addr;\n      |                                                     ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_shipped_prefix_top.sv:866:10: Signal is not used: 'engine_busy'\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top'\n  866 |     wire engine_busy;\n      |          ^~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:35:22: Parameter is not used: 'COLL_POINT_TO_POINT'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   35 |     localparam [7:0] COLL_POINT_TO_POINT = 8'd0;\n      |                      ^~~~~~~~~~~~~~~~~~~\n                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050\n                      ... Use \"/* verilator lint_off UNUSEDPARAM */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:39:22: Parameter is not used: 'COLL_CONCAT'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   39 |     localparam [7:0] COLL_CONCAT         = 8'd4;\n      |                      ^~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:41:22: Parameter is not used: 'COLL_ALL_GATHER'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   41 |     localparam [7:0] COLL_ALL_GATHER     = 8'd6;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:45:22: Parameter is not used: 'INTEGRITY_NONE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   45 |     localparam [7:0] INTEGRITY_NONE        = 8'd0;\n      |                      ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:47:22: Parameter is not used: 'INTEGRITY_ECC'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   47 |     localparam [7:0] INTEGRITY_ECC         = 8'd2;\n      |                      ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:52:22: Parameter is not used: 'ORDERING_ACQUIRE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   52 |     localparam [7:0] ORDERING_ACQUIRE         = 8'd1;\n      |                      ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:54:22: Parameter is not used: 'ORDERING_ACQUIRE_RELEASE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   54 |     localparam [7:0] ORDERING_ACQUIRE_RELEASE = 8'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:59:22: Parameter is not used: 'PARTICIPANT_RETICLE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   59 |     localparam [7:0] PARTICIPANT_RETICLE = 8'd1;\n      |                      ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:63:22: Parameter is not used: 'LINK_SEND'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   63 |     localparam [7:0] LINK_SEND       = 8'd0;\n      |                      ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:64:22: Parameter is not used: 'LINK_RECEIVE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   64 |     localparam [7:0] LINK_RECEIVE    = 8'd1;\n      |                      ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:65:22: Parameter is not used: 'LINK_REMOTE_DMA'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   65 |     localparam [7:0] LINK_REMOTE_DMA = 8'd2;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:67:22: Parameter is not used: 'LINK_GATHER'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   67 |     localparam [7:0] LINK_GATHER     = 8'd4;\n      |                      ^~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:68:22: Parameter is not used: 'LINK_SCATTER'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   68 |     localparam [7:0] LINK_SCATTER    = 8'd5;\n      |                      ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:73:22: Parameter is not used: 'ORDER_SEQUENTIAL_ASCENDING'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   73 |     localparam [7:0] ORDER_SEQUENTIAL_ASCENDING = 8'd0;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:95:22: Parameter is not used: 'ROUND_TOWARD_ZERO'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   95 |     localparam [7:0] ROUND_TOWARD_ZERO  = 8'd1;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:99:22: Parameter is not used: 'TOPOLOGY_SINGLE_CHIP'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top'\n   99 |     localparam [7:0] TOPOLOGY_SINGLE_CHIP          = 8'd0;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:100:22: Parameter is not used: 'TOPOLOGY_CLUSTER_32'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  100 |     localparam [7:0] TOPOLOGY_CLUSTER_32           = 8'd1;\n      |                      ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:104:23: Parameter is not used: 'TRAP_NUMERIC_OR_EXCEPTIONAL_VALUE'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  104 |     localparam [15:0] TRAP_NUMERIC_OR_EXCEPTIONAL_VALUE = 16'd6;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:172:24: Parameter is not used: 'FLIT_PAYLOAD_W'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  172 |     localparam integer FLIT_PAYLOAD_W = 32;\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:173:24: Parameter is not used: 'FLIT_COORD_W'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  173 |     localparam integer FLIT_COORD_W   = 4;    \n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:174:24: Parameter is not used: 'FLIT_KIND_W'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  174 |     localparam integer FLIT_KIND_W    = 4;\n      |                        ^~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:175:24: Parameter is not used: 'FLIT_TAG_W'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  175 |     localparam integer FLIT_TAG_W     = 8;\n      |                        ^~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:179:24: Parameter is not used: 'FLIT_PAYLOAD_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  179 |     localparam integer FLIT_PAYLOAD_LSB = 0;    \n      |                        ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:180:24: Parameter is not used: 'FLIT_DEST_X_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  180 |     localparam integer FLIT_DEST_X_LSB  = 32;   \n      |                        ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:181:24: Parameter is not used: 'FLIT_DEST_Y_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  181 |     localparam integer FLIT_DEST_Y_LSB  = 36;   \n      |                        ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:182:24: Parameter is not used: 'FLIT_SRC_X_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  182 |     localparam integer FLIT_SRC_X_LSB   = 40;   \n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:183:24: Parameter is not used: 'FLIT_SRC_Y_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  183 |     localparam integer FLIT_SRC_Y_LSB   = 44;   \n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:184:24: Parameter is not used: 'FLIT_KIND_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  184 |     localparam integer FLIT_KIND_LSB    = 48;   \n      |                        ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:185:24: Parameter is not used: 'FLIT_TAG_LSB'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  185 |     localparam integer FLIT_TAG_LSB     = 52;   \n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:189:22: Parameter is not used: 'KIND_UNICAST'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  189 |     localparam [3:0] KIND_UNICAST  = 4'd0;\n      |                      ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:190:22: Parameter is not used: 'KIND_EXCHANGE'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  190 |     localparam [3:0] KIND_EXCHANGE = 4'd1;   \n      |                      ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:191:22: Parameter is not used: 'KIND_BARRIER'\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top'\n  191 |     localparam [3:0] KIND_BARRIER  = 4'd2;\n      |                      ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:208:28: Bits of function variable are not used: 'f'[63:32]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  208 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:213:28: Bits of function variable are not used: 'f'[63:36,31:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  213 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:218:28: Bits of function variable are not used: 'f'[63:40,35:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  218 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:223:28: Bits of function variable are not used: 'f'[63:44,39:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  223 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:228:28: Bits of function variable are not used: 'f'[63:48,43:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  228 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:233:28: Bits of function variable are not used: 'f'[63:52,47:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  233 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_pkg.sv:238:28: Bits of function variable are not used: 'f'[63:60,51:0]\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n  238 |         input [FLIT_W-1:0] f;\n      |                            ^\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:31:22: Parameter is not used: 'FMT_U8'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n   31 |     localparam [7:0] FMT_U8         = 8'h00;\n      |                      ^~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_format_pkg.sv:32:22: Parameter is not used: 'FMT_U32'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top'\n   32 |     localparam [7:0] FMT_U32        = 8'h04;\n      |                      ^~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:20:24: Parameter is not used: 'A3_INSTRUCTION_BYTES'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   20 |     localparam integer A3_INSTRUCTION_BYTES = 32;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:22:24: Parameter is not used: 'A3_DESCRIPTOR_HEADER_BYTES'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   22 |     localparam integer A3_DESCRIPTOR_HEADER_BYTES = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:23:24: Parameter is not used: 'A3_DESCRIPTOR_PAYLOAD_OFFSET'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   23 |     localparam integer A3_DESCRIPTOR_PAYLOAD_OFFSET = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:32:24: Parameter is not used: 'A3_HEADER_CRC_WORD'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   32 |     localparam integer A3_HEADER_CRC_WORD = A3_HEADER_WORDS - 1;\n      |                        ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:37:23: Parameter is not used: 'A3_TYPE_MINOR'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   37 |     localparam [7:0]  A3_TYPE_MINOR = 8'd0;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:39:23: Parameter is not used: 'A3_DESC_MEMORY_OBJECT'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   39 |     localparam [15:0] A3_DESC_MEMORY_OBJECT      = 16'h0001;\n      |                       ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:41:23: Parameter is not used: 'A3_DESC_NUMERIC'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   41 |     localparam [15:0] A3_DESC_NUMERIC            = 16'h0003;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:42:23: Parameter is not used: 'A3_DESC_SCHEDULE'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   42 |     localparam [15:0] A3_DESC_SCHEDULE           = 16'h0004;\n      |                       ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:43:23: Parameter is not used: 'A3_DESC_TOPOLOGY'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   43 |     localparam [15:0] A3_DESC_TOPOLOGY           = 16'h0005;\n      |                       ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:49:23: Parameter is not used: 'A3_DESC_GENERATION_POLICY'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   49 |     localparam [15:0] A3_DESC_GENERATION_POLICY  = 16'h000b;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:51:23: Parameter is not used: 'A3_DESC_ENTRYPOINT_TABLE'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   51 |     localparam [15:0] A3_DESC_ENTRYPOINT_TABLE   = 16'h000d;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:52:23: Parameter is not used: 'A3_DESC_SIGNATURE_METADATA'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   52 |     localparam [15:0] A3_DESC_SIGNATURE_METADATA = 16'h000e;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:62:24: Parameter is not used: 'A3_FLAG_TRANSACTION_SCOPED'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   62 |     localparam integer A3_FLAG_TRANSACTION_SCOPED= 4;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:63:24: Parameter is not used: 'A3_FLAG_GLOBAL_SCOPE'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   63 |     localparam integer A3_FLAG_GLOBAL_SCOPE      = 5;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:64:24: Parameter is not used: 'A3_FLAG_TRACE_BOUNDARY'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   64 |     localparam integer A3_FLAG_TRACE_BOUNDARY    = 6;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:65:24: Parameter is not used: 'A3_FLAG_OPTIONAL_FEATURE'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   65 |     localparam integer A3_FLAG_OPTIONAL_FEATURE  = 7;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:85:22: Parameter is not used: 'A3_CONTROL_LOOP_NEXT'\n                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top'\n   85 |     localparam [7:0] A3_CONTROL_LOOP_NEXT  = 8'h03;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:112:22: Parameter is not used: 'A3_RECOVERY_POISON'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  112 |     localparam [7:0] A3_RECOVERY_POISON = 8'h00;\n      |                      ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:114:22: Parameter is not used: 'A3_RECOVERY_DRAIN'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  114 |     localparam [7:0] A3_RECOVERY_DRAIN  = 8'h02;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:123:23: Parameter is not used: 'A3_TRAP_NUMERIC'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  123 |     localparam [15:0] A3_TRAP_NUMERIC         = 16'd6;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:128:23: Parameter is not used: 'A3_TRAP_LINK'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  128 |     localparam [15:0] A3_TRAP_LINK            = 16'd11;\n      |                       ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:129:23: Parameter is not used: 'A3_TRAP_POWER'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  129 |     localparam [15:0] A3_TRAP_POWER           = 16'd12;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:135:22: Parameter is not used: 'A3_SYMBOL_POSITION_START'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  135 |     localparam [3:0] A3_SYMBOL_POSITION_START    = 4'd1;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:136:22: Parameter is not used: 'A3_SYMBOL_POSITION_END'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  136 |     localparam [3:0] A3_SYMBOL_POSITION_END      = 4'd2;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:137:22: Parameter is not used: 'A3_SYMBOL_CONTEXT_LENGTH'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  137 |     localparam [3:0] A3_SYMBOL_CONTEXT_LENGTH    = 4'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:139:22: Parameter is not used: 'A3_SYMBOL_GENERATION_INDEX'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  139 |     localparam [3:0] A3_SYMBOL_GENERATION_INDEX  = 4'd5;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:145:22: Parameter is not used: 'A3_PRED_ENGINE_STATUS'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  145 |     localparam [7:0] A3_PRED_ENGINE_STATUS  = 8'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:146:22: Parameter is not used: 'A3_PRED_ROUTE_VALID'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  146 |     localparam [7:0] A3_PRED_ROUTE_VALID    = 8'd4;\n      |                      ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:158:22: Parameter is not used: 'A3_CMP_GE'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  158 |     localparam [7:0] A3_CMP_GE = 8'd5;\n      |                      ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:165:22: Parameter is not used: 'A3_ORDER_NONE'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  165 |     localparam [7:0] A3_ORDER_NONE            = 8'd0;\n      |                      ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:167:22: Parameter is not used: 'A3_ORDER_RELEASE'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  167 |     localparam [7:0] A3_ORDER_RELEASE         = 8'd2;\n      |                      ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:187:24: Parameter is not used: 'A3_WAIT_PRODUCERS'\n                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top'\n  187 |     localparam integer A3_WAIT_PRODUCERS = 12;  \n      |                        ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_pkg.sv:230:19: Bits of function variable are not used: 'bound'[7:0]\n                                                                                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top'\n  230 |         reg [8:0] bound;\n      |                   ^~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:206:16: Signal is not used: 'issue_descriptor_q'\n                                                                                                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  206 |     reg [31:0] issue_descriptor_q;\n      |                ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:207:16: Signal is not used: 'issue_index_q'\n                                                                                                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  207 |     reg [31:0] issue_index_q;\n      |                ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:222:16: Signal is not used: 'op_input0'\n                                                                                                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  222 |     reg [31:0] op_input0;\n      |                ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:240:24: Bits of function variable are not used: 'data'[1535:384,319:96]\n                                                                                                                                                                      : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n  240 |         input [1535:0] data;\n      |                        ^~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:1030:17: Signal is not used: 'array_saturation_count'\n                                                                                                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 1030 |     wire [31:0] array_saturation_count;\n      |                 ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:1032:17: Signal is not used: 'array_token'\n                                                                                                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 1032 |     wire [31:0] array_token;\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:1033:17: Signal is not used: 'array_tie_multiplicity'\n                                                                                                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 1033 |     wire [31:0] array_tie_multiplicity;\n      |                 ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv:1046:17: Signal is not used: 'rms_saturation_count'\n                                                                                                                                                                       : ... note: In instance 'ot_a3_shipped_prefix_top.bridge'\n 1046 |     wire [31:0] rms_saturation_count;\n      |                 ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:84:25: Signal is not used: 'cfg_output1_dims'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n   84 |     input  wire [127:0] cfg_output1_dims,\n      |                         ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:139:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  139 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:140:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  140 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:141:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  141 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:142:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  142 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:143:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  143 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:144:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  144 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:203:16: Signal is not used: 'desc_out1_dtype'\n                                                                                                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  203 |     wire [7:0] desc_out1_dtype = cfg_output_dtypes[15:8];\n      |                ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_engine_array.sv:209:16: Signal is not used: 'desc_out1_rank'\n                                                                                                                                                               : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines'\n  209 |     wire [3:0] desc_out1_rank = cfg_view_ranks[23:20];\n      |                ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:29:24: Bits of signal are not used: 'input_rd_data'[31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   29 |     input  wire [31:0] input_rd_data,\n      |                        ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv:32:24: Bits of signal are not used: 'weight_rd_data'[31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rms_norm'\n   32 |     input  wire [31:0] weight_rd_data,\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:30:24: Bits of signal are not used: 'input_rd_data'[31:16]\n                                                                                                                                                             : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n   30 |     input  wire [31:0] input_rd_data,\n      |                        ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:135:17: Bits of signal are not used: 'selected_input_offset'[63:33,0]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  135 |     wire [63:0] selected_input_offset = active_query\n      |                 ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:138:17: Bits of signal are not used: 'coefficient_offset'[63:33,0]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  138 |     wire [63:0] coefficient_offset =\n      |                 ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_rope.sv:172:17: Bits of signal are not used: 'selected_output_offset'[63:33,0]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope'\n  172 |     wire [63:0] selected_output_offset = active_query\n      |                 ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_wafer_multicast_adapter.sv:274:24: Bits of function variable are not used: 'record'[1023:768,735:544,535:512,287:256]\n                                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter'\n  274 |         input [1023:0] record;\n      |                        ^~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_wafer_multicast_adapter.sv:441:16: Bits of signal are not used: 'tree_destination_wide'[8]\n                                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter'\n  441 |     wire [8:0] tree_destination_wide = edges_this_round + {1'b0, tree_edge};\n      |                ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_wafer_multicast_adapter.sv:469:10: Signal is not used: 'endpoint_timeout'\n                                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter'\n  469 |     wire endpoint_timeout;\n      |          ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:95:26: Bits of signal are not used: 'desc_data'[511:352,319:56]\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n   95 |     input  wire [1535:0] desc_data,\n      |                          ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:197:16: Signal is not used: 'state_count'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  197 |     reg [31:0] state_count;\n      |                ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:211:17: Bits of signal are not used: 'pred_payload'[511:192,31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  211 |     reg [511:0] pred_payload;\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:212:17: Signal is not used: 'state_payload'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  212 |     reg [511:0] state_payload;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:274:18: Bits of signal are not used: 'loop_payload'[511:352,319:288,191:160,31:16,7:0]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  274 |     reg  [511:0] loop_payload;\n      |                  ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:352:17: Signal is not used: 'st_op_valid'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  352 |     reg         st_op_valid;\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:353:17: Signal is not used: 'st_commit_all'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  353 |     reg         st_commit_all;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:354:17: Signal is not used: 'st_discard_all'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  354 |     reg         st_discard_all;\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:410:19: Bits of signal are not used: 'op_payload'[511:384,191:0]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer'\n  410 |     reg  [511:0]  op_payload;\n      |                   ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:129:17: Bits of signal are not used: 'div_remainder'[33]\n                                                                                                                                                             : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  129 |     reg  [33:0] div_remainder;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:130:17: Bits of signal are not used: 'div_quotient'[33]\n                                                                                                                                                             : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  130 |     reg  [33:0] div_quotient;\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:211:16: Bits of signal are not used: 'top'[3:2]\n                                                                                                                                                             : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.loops'\n  211 |     wire [3:0] top = (stack_pointer == 4'd0) ? 4'd0 : (stack_pointer - 4'd1);\n      |                ^~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv:92:17: Bits of signal are not used: 'slot_bit'[15:9]\n                                                                                                                                                                  : ... note: In instance 'ot_a3_shipped_prefix_top.device.sequencer.events'\n   92 |     wire [15:0] slot_bit = 16'd64 + ({8'd0, slot} << 5);\n      |                 ^~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:63:24: Bits of signal are not used: 's_rd_data'[31:8]\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   63 |     input  wire [31:0] s_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:66:24: Bits of signal are not used: 't_rd_data'[31:8]\n                                                                                                                                                          : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   66 |     input  wire [31:0] t_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:92:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   92 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_mac_lane.sv:93:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mac'\n   93 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:58:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   58 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:59:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   59 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:60:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   60 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:61:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   61 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv:63:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.selection'\n   63 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:65:22: Parameter is not used: 'ERR_OPERAND_NONFINITE'\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   65 |     localparam [7:0] ERR_OPERAND_NONFINITE = ot_a3_engine_pkg::ERR_OPERAND_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:66:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   66 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:67:22: Parameter is not used: 'ERR_ACCUMULATE_RANGE'\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   67 |     localparam [7:0] ERR_ACCUMULATE_RANGE = ot_a3_engine_pkg::ERR_ACCUMULATE_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:69:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   69 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv:70:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                                                                                                : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mover'\n   70 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:29:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                                                                                            : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   29 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:32:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                                                                                            : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   32 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:55:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   55 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:57:22: Parameter is not used: 'ERR_INDEX_RANGE'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   57 |     localparam [7:0] ERR_INDEX_RANGE = ot_a3_engine_pkg::ERR_INDEX_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:58:22: Parameter is not used: 'ERR_SELECT_NONFINITE'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   58 |     localparam [7:0] ERR_SELECT_NONFINITE = ot_a3_engine_pkg::ERR_SELECT_NONFINITE;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_add.sv:59:22: Parameter is not used: 'ERR_SCALE_RANGE'\n                                                                                                                                                           : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.adder'\n   59 |     localparam [7:0] ERR_SCALE_RANGE = ot_a3_engine_pkg::ERR_SCALE_RANGE;\n      |                      ^~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:32:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.scaler'\n   32 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_scale.sv:35:24: Bits of signal are not used: 'b_rd_data'[31:16]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.scaler'\n   35 |     input  wire [31:0] b_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:28:24: Bits of signal are not used: 'a_rd_data'[31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.hadamard'\n   28 |     input  wire [31:0] a_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv:70:17: Bits of signal are not used: 'upper_index'[31:9]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.hadamard'\n   70 |     wire [31:0] upper_index = lower_index + {24'b0, stride};\n      |                 ^~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:41:24: Bits of signal are not used: 'q_rd_data'[31:16]\n                                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   41 |     input  wire [31:0] q_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:44:24: Bits of signal are not used: 'k_rd_data'[31:16]\n                                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   44 |     input  wire [31:0] k_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:47:24: Bits of signal are not used: 'w_rd_data'[31:16]\n                                                                                                                                                                    : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n   47 |     input  wire [31:0] w_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv:131:17: Bits of signal are not used: 'scan_decoded'[31:0]\n                                                                                                                                                                     : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.index_scorer'\n  131 |     wire [33:0] scan_decoded = (scan_kind == 0) ? decoded_q\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:37:24: Bits of signal are not used: 'h_rd_data'[31:16]\n                                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   37 |     input  wire [31:0] h_rd_data,\n      |                        ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:40:24: Bits of signal are not used: 'kv_rd_data'[31:16]\n                                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   40 |     input  wire [31:0] kv_rd_data,\n      |                        ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:43:24: Bits of signal are not used: 'gate_rd_data'[31:16]\n                                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   43 |     input  wire [31:0] gate_rd_data,\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:56:22: Parameter is not used: 'ERR_PRODUCT_RANGE'\n                                                                                                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   56 |     localparam [7:0] ERR_PRODUCT_RANGE = ot_a3_engine_pkg::ERR_PRODUCT_RANGE;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:90:17: Bits of signal are not used: 'decoded_hidden'[31:0]\n                                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   90 |     wire [33:0] decoded_hidden =\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv:96:17: Bits of signal are not used: 'decoded_weight'[31:0]\n                                                                                                                                                                         : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.compressor'\n   96 |     wire [33:0] decoded_weight = plane ? decoded_gate : decoded_kv;\n      |                 ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:41:24: Bits of signal are not used: 'branch_rd_data'[31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mhc_post'\n   41 |     input  wire [31:0] branch_rd_data,\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv:44:24: Bits of signal are not used: 'residual_rd_data'[31:16]\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.engines.mhc_post'\n   44 |     input  wire [31:0] residual_rd_data,\n      |                        ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_communication_decoder.sv:240:17: Bits of signal are not used: 'numeric_permissions'[6:5,2,0]\n                                                                                                                                                                        : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter.u_communication_decoder'\n  240 |     wire [31:0] numeric_permissions = numeric_descriptor_record[287:256];\n      |                 ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv:66:24: Parameter is not used: 'QUERY_ELEMENTS'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope.qualified_rope'\n   66 |     localparam integer QUERY_ELEMENTS = 4096;\n      |                        ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv:67:24: Parameter is not used: 'KEY_ELEMENTS'\n                                                                                                                                                                 : ... note: In instance 'ot_a3_shipped_prefix_top.bridge.rope.qualified_rope'\n   67 |     localparam integer KEY_ELEMENTS = 1024;\n      |                        ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_channel.sv:62:34: Bits of signal are not used: 'r_ack_seq'[7:4]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter.u_link_endpoint.u_tx'\n   62 |     input  wire [7:0]            r_ack_seq,\n      |                                  ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_link_channel.sv:65:34: Bits of signal are not used: 'r_nak_seq'[7:4]\n                                                                                                                                                              : ... note: In instance 'ot_a3_shipped_prefix_top.g_exact_multicast.u_multicast.u_adapter.u_link_endpoint.u_tx'\n   65 |     input  wire [7:0]            r_nak_seq,\n      |                                  ^~~~~~~~~\nmake: Entering directory '<BUILD>/obj_p3_multicast'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o a3_shipped_prefix_harness.o <ROOT>/rtl/test/a3_shipped_prefix_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_shipped_prefix_top__pch.h -o Vot_a3_shipped_prefix_top__pch.h.fast.gch\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__0.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__1.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__2.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__3.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.fast -c Vot_a3_shipped_prefix_top___024root__4.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -x c++-header Vot_a3_shipped_prefix_top__pch.h -o Vot_a3_shipped_prefix_top__pch.h.slow.gch\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top__ConstPool__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__0__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__1__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__2__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top___024root__3__Slow.cpp\ng++   -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -include Vot_a3_shipped_prefix_top__pch.h.slow -c Vot_a3_shipped_prefix_top__Syms__Slow.cpp\ng++    a3_shipped_prefix_harness.o verilated.o verilated_threads.o Vot_a3_shipped_prefix_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_shipped_prefix_top\nrm Vot_a3_shipped_prefix_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_p3_multicast'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 11.396 MB sources in 44 modules, into 6.617 MB in 13 C++ files needing 0.027 MB\n- Verilator: Walltime 19.188 s (elab=0.066, cvt=0.957, bld=17.962); cpu 1.213 s on 1 threads; allocated 100.195 MB\n",
+      "compile_returncode": 0,
+      "compile_verification_wall_seconds": 19.240485093090683,
+      "log_sha256": "f9c2a5a557d27778061178f293fe9db85bd3d89aa88725b5e18af745edb6f4d4",
+      "marker_present": true,
+      "name": "verilator_full_four_case",
+      "observed_cases": [
+        {
+          "fault": 32,
+          "fetched": 33,
+          "index": 0,
+          "issued": 11,
+          "launches": 10,
+          "multicast_launches": 0,
+          "responses": 11,
+          "retired": 32,
+          "trap": 4,
+          "views": 33,
+          "words": 24832
+        },
+        {
+          "fault": 32,
+          "fetched": 33,
+          "index": 1,
+          "issued": 11,
+          "launches": 10,
+          "multicast_launches": 0,
+          "responses": 11,
+          "retired": 32,
+          "trap": 4,
+          "views": 33,
+          "words": 24832
+        },
+        {
+          "fault": 15,
+          "fetched": 16,
+          "index": 2,
+          "issued": 6,
+          "launches": 5,
+          "multicast_launches": 1,
+          "responses": 6,
+          "retired": 15,
+          "trap": 4,
+          "views": 17,
+          "words": 20736
+        },
+        {
+          "fault": 14,
+          "fetched": 15,
+          "index": 3,
+          "issued": 5,
+          "launches": 4,
+          "multicast_launches": 0,
+          "responses": 5,
+          "retired": 14,
+          "trap": 4,
+          "views": 17,
+          "words": 20736
+        }
+      ],
+      "required_marker": "PASS: ABI3 shipped-prefix multicast integration cases=4 launches=29 words=91136 capability_faults=4 multicasts=1",
+      "run_command": "./obj_p3_multicast/Vot_a3_shipped_prefix_top",
+      "run_log": "CASE 0 OK launches=10 words=24832 responses=11 trap=4 fault=32 fetched=33 retired=32 issued=11 views=33 multicasts=0\nCASE 1 OK launches=10 words=24832 responses=11 trap=4 fault=32 fetched=33 retired=32 issued=11 views=33 multicasts=0\nCASE 2 OK launches=5 words=20736 responses=6 trap=4 fault=15 fetched=16 retired=15 issued=6 views=17 multicasts=1\nCASE 3 OK launches=4 words=20736 responses=5 trap=4 fault=14 fetched=15 retired=14 issued=5 views=17 multicasts=0\nPASS: ABI3 shipped-prefix multicast integration cases=4 launches=29 words=91136 capability_faults=4 multicasts=1 checks=12756653\n",
+      "run_returncode": 0,
+      "run_verification_wall_seconds": 959.9223800230538,
+      "status": "pass"
+    },
+    {
+      "checks": 12587599,
+      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_shipped_prefix_deepseek_rom -o deepseek_rom_multicast.vvp <ROOT>/rtl/lib/ot_crc_pkg.sv <ROOT>/rtl/ot_fp32_rne_pkg.sv <ROOT>/rtl/ot_fp32_rsqrt_rne.sv <ROOT>/rtl/ot_ta_command_decoder.sv <ROOT>/rtl/ot_ta_rope_bf16_sram_engine.sv <ROOT>/rtl/abi3/ot_a3_link_pkg.sv <ROOT>/rtl/abi3/ot_a3_format_pkg.sv <ROOT>/rtl/abi3/ot_a3_engine_pkg.sv <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/abi3/ot_a3_device_top.sv <ROOT>/rtl/abi3/ot_a3_mac_lane.sv <ROOT>/rtl/abi3/ot_a3_selection_argmax.sv <ROOT>/rtl/abi3/ot_a3_dma_index_mover.sv <ROOT>/rtl/abi3/ot_a3_vector_add.sv <ROOT>/rtl/abi3/ot_a3_vector_convert.sv <ROOT>/rtl/abi3/ot_a3_vector_scale.sv <ROOT>/rtl/abi3/ot_a3_vector_hadamard.sv <ROOT>/rtl/abi3/ot_a3_vector_index_score.sv <ROOT>/rtl/abi3/ot_a3_vector_compress_project.sv <ROOT>/rtl/abi3/ot_a3_vector_mhc_post.sv <ROOT>/rtl/abi3/ot_a3_engine_array.sv <ROOT>/rtl/abi3/ot_a3_vector_rms_norm.sv <ROOT>/rtl/abi3/ot_a3_vector_rope.sv <ROOT>/rtl/abi3/ot_a3_engine_issue_bridge.sv <ROOT>/rtl/abi3/ot_a3_communication_decoder.sv <ROOT>/rtl/abi3/ot_a3_link_channel.sv <ROOT>/rtl/abi3/ot_a3_link_endpoint.sv <ROOT>/rtl/abi3/ot_a3_link_node.sv <ROOT>/rtl/abi3/ot_a3_wafer_multicast_adapter.sv <ROOT>/rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv <ROOT>/rtl/test/a3_shipped_prefix_top.sv <ROOT>/rtl/test/tb_a3_shipped_prefix_deepseek_rom.sv",
+      "compile_log": "",
+      "compile_returncode": 0,
+      "compile_verification_wall_seconds": 0.07778108806814998,
+      "log_sha256": "c7fc9357df066b6192c2be1dc921535ece48ade936d198f35c3a4380a3d8a887",
+      "marker_present": true,
+      "name": "iverilog_deepseek_rom_only",
+      "observed_cases": [
+        {
+          "fault": 15,
+          "fetched": 16,
+          "index": 2,
+          "issued": 6,
+          "launches": 5,
+          "multicast_launches": 1,
+          "responses": 6,
+          "retired": 15,
+          "trap": 4,
+          "views": 17,
+          "words": 20736
+        }
+      ],
+      "required_marker": "PASS: ABI3 shipped-prefix DeepSeek-ROM multicast integration",
+      "run_command": "/usr/bin/vvp ./deepseek_rom_multicast.vvp",
+      "run_log": "CASE 2 OK launches=5 words=20736 responses=6 trap=4 fault=15 fetched=16 retired=15 issued=6 views=17 multicasts=1\nPASS: ABI3 shipped-prefix DeepSeek-ROM multicast integration checks=12587599 cycles=5706093\n",
+      "run_returncode": 0,
+      "run_verification_wall_seconds": 668.1330067579402,
+      "status": "pass"
+    }
+  ],
+  "compositional_mac_lane_qualification": {
+    "artifact": "results/rtl/abi3_engine_campaign.json",
+    "artifact_sha256": "91c312fec51fb6ebdbe61ccf4160e21991871f3168b910d933515575b8156d08",
+    "blocked_contract_limit": "only bf16_bf16_fp32_sequential_rne_v1 is correlated. The blocked contract's association is the executing implementation's declared one, so bit-exactness against it is not a well-posed claim about a different implementation and is not made",
+    "checks_per_simulator": {
+      "iverilog": 40878,
+      "verilator": 40878
+    },
+    "composition_boundary": "the exact shipped blocked-contract operation declares the same single-lane ascending-K arithmetic association and executes it completely in the integrated Verilator replay; the retained Icarus evidence qualifies that unchanged lane arithmetic on its bounded sequential-contract vectors, not the full shipped program, exact query/key/value shapes, or blocked descriptors",
+    "evidence_class": "public_open_tool_rtl_simulation",
+    "lane_source": "rtl/abi3/ot_a3_mac_lane.sv",
+    "lane_source_sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37",
+    "qualification_contract": "bf16_bf16_fp32_sequential_rne_v1",
+    "qualified_mac_count": 59868,
+    "schema": "opentallas.rtl.abi3_engine_campaign.v1",
+    "simulators_counted": [
+      "iverilog_vvp",
+      "verilator_cpp_executable"
+    ],
+    "status": "pass"
+  },
+  "compositional_multicast_qualification": {
+    "adapter_source_sha256": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb",
+    "artifact": "results/rtl/a3_wafer_multicast_campaign.json",
+    "artifact_sha256": "1329dc7dc18bce0a9e2bf87f56e937e041aeb6f8ef29759f81a778e7803e46cc",
+    "checks_per_simulator": 12583553,
+    "composition_boundary": "the unchanged adapter and complete records are qualified in 38 cases under both Icarus and Verilator; this campaign separately correlates its integration into the shipped sequencer prefix",
+    "exact_case": {
+      "admitted": 1,
+      "bytes": 16711680,
+      "crc_errors": 1,
+      "credit_stalls": 0,
+      "cycles": 4228354,
+      "index": 0,
+      "messages": 255,
+      "payload_flits": 4177920,
+      "reason": 0,
+      "replayed": 4,
+      "retries": 1,
+      "sequence_errors": 4,
+      "tx_flits": 4177925,
+      "writes": 4194304
+    },
+    "schema": "opentallas.rtl.a3_wafer_multicast_campaign.v1",
+    "simulators_agree": true,
+    "status": "pass"
+  },
+  "compositional_rope_qualification": {
+    "artifact": "results/tensor_accelerator/qwen3_rtl_rope_campaign.json",
+    "artifact_sha256": "be8466d89fb9666a4e846fdcfecd159cc5558a769681a858b34f93d1d4835430",
+    "composition_boundary": "the ABI 3.0 adapter narrows each declared FP32 coefficient to BF16 RNE and presents one declared query or key tensor to the unchanged fused core while the inactive side is internal zero; the retained Icarus-plus-Verilator campaign qualifies that core at positions 0 and 7999, while the integrated Verilator replay checks every position-16 result from the real ABI descriptors",
+    "core_source": "rtl/ot_ta_rope_bf16_sram_engine.sv",
+    "core_source_sha256": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369",
+    "qualification_contract": "qwen3_rope_fp32_bf16_v1",
+    "qualified_addition_count_per_position": 5120,
+    "qualified_element_count_per_position": 5120,
+    "qualified_multiplication_count_per_position": 10240,
+    "qualified_positions": [
+      0,
+      7999
+    ],
+    "schema": "opentallas.tensor_accelerator.qwen_rtl_rope_campaign.v1",
+    "simulators_counted": [
+      "iverilog",
+      "verilator"
+    ],
+    "status": "pass"
+  },
+  "evidence_class": "frozen_identity_public_open_tool_rtl_simulation",
+  "evidence_mode": "four_case_verilator_plus_deepseek_rom_icarus_correlation_plus_retained_multicast_mac_lane_and_rope_qualification",
+  "expected_cases": [
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 0,
+      "issued": 11,
+      "launches": 10,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-rom-single-chip/decode",
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 32,
+      "fetched": 33,
+      "index": 1,
+      "issued": 11,
+      "launches": 10,
+      "multicast_launches": 0,
+      "name": "qwen3-8b-hbm-single-chip/decode",
+      "responses": 11,
+      "retired": 32,
+      "trap": 4,
+      "views": 33,
+      "words": 24832
+    },
+    {
+      "fault": 15,
+      "fetched": 16,
+      "index": 2,
+      "issued": 6,
+      "launches": 5,
+      "multicast_launches": 1,
+      "name": "deepseek-v4-flash-rom-wafer/decode",
+      "responses": 6,
+      "retired": 15,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    },
+    {
+      "fault": 14,
+      "fetched": 15,
+      "index": 3,
+      "issued": 5,
+      "launches": 4,
+      "multicast_launches": 0,
+      "name": "deepseek-v4-flash-hbm-cluster/decode",
+      "responses": 5,
+      "retired": 14,
+      "trap": 4,
+      "views": 17,
+      "words": 20736
+    }
+  ],
+  "frozen_vector_overlay": {
+    "base_vector_set": {
+      "image_sha256": {
+        "p3_case.hex": "d818e3a37b180ae9711d41c9a72bccfd6b8c08eaae58c5d5ca0dbc9c3d3d838c",
+        "p3_expect.hex": "1cadfc3371d198704fc9f245e7d8e27b72b38e906eafa0cdbc576f1eb2f98327",
+        "p3_index.hex": "3782c32630334de6249983b67fe2fe6198815a3435ef977a8512dacb2292b2e0",
+        "p3_issue.hex": "529ba11d6bfaaae9d2bffc7ba1b56ac6d5ae9f6dc9ad174cc550884f7e66a7d1",
+        "p3_meta.hex": "d19f9c6c4fab9917eb7fac4ee14bf12c511c5f43d2c1492bf43f8b617f1eb8c6",
+        "p3_source.hex": "20eabb96e15b766c00e965e566021ef3f8944b823e26a15c46db6398d399e0b9"
+      },
+      "input_deployment_vectors": {
+        "images": {
+          "a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+          "a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+          "a3_symbol.hex": "aefea5f803c69340757eed992d1f3e691d4ca2f0b610256864a5bf1d0f757f38"
+        },
+        "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+        "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
+      },
+      "path": "testdata/compiler/abi3_shipped_prefix/abi3_shipped_prefix_vectors.json",
+      "schema": "opentallas.rtl.abi3_shipped_prefix_vectors.v1",
+      "sha256": "cd72fa9e711340095da1f8698abc7a810d2a82750d6bde43ec0144257a53b09d"
+    },
+    "image_sha256": {
+      "p3_case.hex": "bfce6caf6ba612ad0b7739f5036df3a152ae8b4166fc67013ffdcd0ee32906cb",
+      "p3_issue.hex": "62ad8a4e1d088a1c68f6554840a51bd3186e05dcc19e0e03fc781a55aebcc4bb",
+      "p3_meta.hex": "58a0131d2874613171dfadb9054d406ca4713f26bfe87aa8e8b86ac3c60748df",
+      "p3_multicast_communication.hex": "e287e85c3a8a194f5d129781e66471570039916ec5699ba8014160a84c36de85",
+      "p3_multicast_counter.hex": "8c935d68a2ce282595ac021b704a61a318f4b6442cd9c35c10df72b2e1db42f3",
+      "p3_multicast_local_object.hex": "6d0294ee77a9cc47fb59c04e9f27fc896a156ad5e3dc9213c05b49cd9df4f5b9",
+      "p3_multicast_remote_object.hex": "7f7e7adfff8c2dfd4ccbde061e1406f7a872faf9cfd3741fbd886d5f29ce7e17",
+      "p3_multicast_source.hex": "ead5d17dc074a54efbc058c1e6b2ebba995678d36527bdb4e7ce0262bf8f3308",
+      "p3_multicast_topology.hex": "856babd63bb69ab43b75920b473c42ce00d8e6b31439d8d18689db63f806d577"
+    },
+    "path": "testdata/compiler/abi3_shipped_prefix_multicast/abi3_shipped_prefix_multicast_vectors.json",
+    "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_vectors.v1",
+    "sha256": "e9eddc56be8a982ad27b73ff48457c6bbdba550845b0951e6bc60998579bf050"
+  },
+  "git": {
+    "commit": "08cc069a6c1ff221bd425aac0ae3235ea4408b7a",
+    "worktree_dirty": false
+  },
+  "integrated_replay_passed": true,
+  "integrated_simulator_checks": {
+    "iverilog_deepseek_rom_only": 12587599,
+    "verilator_full_four_case": 12756653
+  },
+  "multicast_launch_count": 1,
+  "next_unsupported": {
+    "descriptor_id": 381,
+    "family": 48,
+    "opcode": "VECTOR.MHC",
+    "pc": 15,
+    "sub": 9,
+    "trap_class": 4
+  },
+  "promotion_blocker": "the integrated programs stop at declared unsupported instructions before a complete model transaction or architectural token commit; this bounded witness cannot be promoted to generated-token, EOS, or TPOT evidence",
+  "promotion_status": "source_current_bounded_prefix_only",
+  "real_launch_count": 29,
+  "resolved_view_count": 100,
+  "result_word_count": 91136,
+  "schema": "opentallas.rtl.abi3_shipped_prefix_multicast_campaign.v1",
+  "scope": {
+    "architectural_tpot_claim": false,
+    "decoded_token_correctness_claim": false,
+    "does_not_establish": [
+      "execution beyond the exact bounded shipped-program prefixes",
+      "prefill, a whole model transaction, token selection, EOS, or decoded-token correctness",
+      "architectural TPOT, physical timing, area, power, HBM timing, or SRAM timing",
+      "simulator wall time as model performance"
+    ],
+    "establishes": [
+      "the frozen DeepSeek ROM shipped program retires exact PC-13 LINK.MULTICAST and then traps precisely at PC-15 VECTOR.MHC",
+      "all 4,194,304 destination writes reproduce the independent nonzero live-buffer payload in ascending order for every one of 256 participants",
+      "every non-root destination observes the exact binomial-tree parent relation",
+      "one injected CRC error causes bounded packet replay and exact final replication under deterministic source and destination backpressure",
+      "the normalized DeepSeek ROM case record agrees between Icarus and pinned Verilator",
+      "the full four-case replay preserves all 91,136 prior compact result words, including 10,240 exact Qwen RoPE codes, and every other precise unsupported boundary"
+    ],
+    "host_wall_time_is_verification_cost_only": true
+  },
+  "simulator_correlation": {
+    "deepseek_rom_cases_agree": true,
+    "exact_check_counts_match_retained_constants": true,
+    "verilator_cases_match": true
+  },
+  "source": {
+    "docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS.md": {
+      "bytes": 64185,
+      "sha256": "93c4a815ae2d9c0bc2ed3e8d15c9047821115f12af88b3e63fda037c3ee7c186"
+    },
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": {
+      "bytes": 134651,
+      "sha256": "049134df9f17befcd6855f8277420bba44afd83677526d40288c2f6d0f435bd9"
+    },
+    "rtl/abi3/ot_a3_communication_decoder.sv": {
+      "bytes": 25491,
+      "sha256": "c693a58478a06ec4efb0f7ba550c086d618327a4ca2b1a3849c5f965e63b7a2a"
+    },
+    "rtl/abi3/ot_a3_device_top.sv": {
+      "bytes": 16723,
+      "sha256": "56f2425e25cd9f294ceb1569e053fed497737d6ce202150a91202b43d66aa84f"
+    },
+    "rtl/abi3/ot_a3_dma_index_mover.sv": {
+      "bytes": 10361,
+      "sha256": "e254421fcba397e3db821c52b9acafaf3922af78653ab2d2e3029705ee166c64"
+    },
+    "rtl/abi3/ot_a3_engine_array.sv": {
+      "bytes": 43836,
+      "sha256": "35d10a5aa17ef82ba21fe30e98482cac6391407e8a5250494e4ef0a802672a2a"
+    },
+    "rtl/abi3/ot_a3_engine_issue_bridge.sv": {
+      "bytes": 60513,
+      "sha256": "b867fc2dc4d1e41499d361eadc72084dc41bf091acf332d3dae94cf37e45dfc8"
+    },
+    "rtl/abi3/ot_a3_engine_pkg.sv": {
+      "bytes": 3047,
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    "rtl/abi3/ot_a3_event_scoreboard.sv": {
+      "bytes": 8827,
+      "sha256": "576ee5a2301c1473c200e6f1c93f14b17c14acc895391d690856db9f054a9428"
+    },
+    "rtl/abi3/ot_a3_format_pkg.sv": {
+      "bytes": 7072,
+      "sha256": "dbea89ef9c450d1b9ffda1e578f1685b3e33d3b6f400e43c1784ec022de9e7f0"
+    },
+    "rtl/abi3/ot_a3_instruction_decoder.sv": {
+      "bytes": 8736,
+      "sha256": "ad04fbf87aaa69e2c5397f99f445c7b99b10d80e796f54ea2895624ebb840355"
+    },
+    "rtl/abi3/ot_a3_link_channel.sv": {
+      "bytes": 14630,
+      "sha256": "c8856fce3b899cced1d8991f3354b0cc1249f6ee0150dbf6a90635b1f7bdc9da"
+    },
+    "rtl/abi3/ot_a3_link_endpoint.sv": {
+      "bytes": 4524,
+      "sha256": "544994b3332313dc43d4ca84548d3946120a4957ec927751eaf9edc16baced0a"
+    },
+    "rtl/abi3/ot_a3_link_node.sv": {
+      "bytes": 13501,
+      "sha256": "2a1d8e6fbfc22fb310bb76b89e6e92de30adf32b596c38e019b79f5129779309"
+    },
+    "rtl/abi3/ot_a3_link_pkg.sv": {
+      "bytes": 12924,
+      "sha256": "d49c14b787d0af6ad803f46a19e0481155f196f893dc55a0019594dd6f3c3fcf"
+    },
+    "rtl/abi3/ot_a3_loop_stack.sv": {
+      "bytes": 17522,
+      "sha256": "55d3e7113a6196c20fa13133987f7c0f4b6fb721aec7ba455026a6ff4c9e61a8"
+    },
+    "rtl/abi3/ot_a3_mac_lane.sv": {
+      "bytes": 14028,
+      "sha256": "abbfa2b96164190c7730407cface079c728769be65d3188c2ad78f81ed1bbe37"
+    },
+    "rtl/abi3/ot_a3_microsequencer.sv": {
+      "bytes": 49815,
+      "sha256": "27a2c971ce63aa6a86a2f73b01e5459ddb93e847d0ace78e7446bff76d10b06c"
+    },
+    "rtl/abi3/ot_a3_pkg.sv": {
+      "bytes": 14629,
+      "sha256": "6fb71525b329497fe62145ab0d9b1b6eff03f1e0c95f3bc6a0c1dde5c6744054"
+    },
+    "rtl/abi3/ot_a3_program_header.sv": {
+      "bytes": 9455,
+      "sha256": "7a5c55cbcaa7f877923595b631334c04eb0c403aea3bf052de983eeccdd1a619"
+    },
+    "rtl/abi3/ot_a3_selection_argmax.sv": {
+      "bytes": 7021,
+      "sha256": "d6dfd8fb62d8b5715cd1a487b74a131c84eb4b73a33cfbbfe0af0919f135e543"
+    },
+    "rtl/abi3/ot_a3_state_controller.sv": {
+      "bytes": 17595,
+      "sha256": "0fe8d122267f9afbd05837399a4b4545e8b953f9481c7529cb6206d34d279006"
+    },
+    "rtl/abi3/ot_a3_vector_add.sv": {
+      "bytes": 6851,
+      "sha256": "a6a6516da202ad4dc26bd8a25c4fdac4f5c5b00fe0a934f93db06e04be5baac9"
+    },
+    "rtl/abi3/ot_a3_vector_compress_project.sv": {
+      "bytes": 11344,
+      "sha256": "e2c10b14c289b08732d5c1782dce092589804857beb610f8129973fc9f29fdf2"
+    },
+    "rtl/abi3/ot_a3_vector_convert.sv": {
+      "bytes": 8480,
+      "sha256": "1811d097cc27a8a99fbe462c2e88407cf36a9fcd92169cf49b6648bec0841ff6"
+    },
+    "rtl/abi3/ot_a3_vector_hadamard.sv": {
+      "bytes": 9005,
+      "sha256": "08ac916fc973f9c039eb251db20473a4e7c314b34fbe4f5b2254096b166b6162"
+    },
+    "rtl/abi3/ot_a3_vector_index_score.sv": {
+      "bytes": 15577,
+      "sha256": "8071dc6997e61f3b692affc3334c58a6a8393c97e4ebc493f68a37236d44f5eb"
+    },
+    "rtl/abi3/ot_a3_vector_mhc_post.sv": {
+      "bytes": 16104,
+      "sha256": "15a817e26affb1d090072d7061abbf92ab80d77bdce94e8d979a79a99a880071"
+    },
+    "rtl/abi3/ot_a3_vector_rms_norm.sv": {
+      "bytes": 15565,
+      "sha256": "7c1d174a678d2cd3bc6301b049fffb11d56862224fbf140105ed2aee0bed6769"
+    },
+    "rtl/abi3/ot_a3_vector_rope.sv": {
+      "bytes": 14473,
+      "sha256": "59cf5fa16c0079ef90e7a21fa051b44c1c5e9f7ce9df0db6df2e3bdd3019c5be"
+    },
+    "rtl/abi3/ot_a3_vector_scale.sv": {
+      "bytes": 7211,
+      "sha256": "1059ca471191e42a2b1b17b29ddf4479c6a0f63cdf63d0d0c5df5d532eb977f4"
+    },
+    "rtl/abi3/ot_a3_view_resolver.sv": {
+      "bytes": 31772,
+      "sha256": "9182acc5e439a9190a6d9f18c9855e9b9800c0b7a436e90305468f630857635e"
+    },
+    "rtl/abi3/ot_a3_wafer_multicast_adapter.sv": {
+      "bytes": 38092,
+      "sha256": "baf8bd310fdc7a25b4dfa9d464932f87a4a9c8f4c7e7074102488aeb5922b8bb"
+    },
+    "rtl/lib/ot_crc_pkg.sv": {
+      "bytes": 1930,
+      "sha256": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b"
+    },
+    "rtl/ot_fp32_rne_pkg.sv": {
+      "bytes": 29509,
+      "sha256": "39de679dd5f277d8a9cc2d5b6349eb1675e9397e64a8256bb1f53a34a054608c"
+    },
+    "rtl/ot_fp32_rsqrt_rne.sv": {
+      "bytes": 7397,
+      "sha256": "74ef534d4e0f8f18a74b6df39c885c10e1a12c1ee9c07b9e7bb4d8be9ec90f9b"
+    },
+    "rtl/ot_ta_command_decoder.sv": {
+      "bytes": 11949,
+      "sha256": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908"
+    },
+    "rtl/ot_ta_rope_bf16_sram_engine.sv": {
+      "bytes": 16894,
+      "sha256": "efa253668f42a3fc5cbac2f12bbe39ccaa8a3e6f1ac17a1e202c76fefe971369"
+    },
+    "rtl/test/a3_shipped_prefix_harness.cpp": {
+      "bytes": 26544,
+      "sha256": "84e25d823941017b9989a6b96c5afc9f0bbce33a3b982db7d0775c3b9e198c4d"
+    },
+    "rtl/test/a3_shipped_prefix_multicast_adapter_wrapper.sv": {
+      "bytes": 4746,
+      "sha256": "abc9d2d88a8809365811e44134c72fa110b2dfeb17ad483f5442b0b669358320"
+    },
+    "rtl/test/a3_shipped_prefix_top.sv": {
+      "bytes": 43611,
+      "sha256": "66918d06495fca5b0c6b3e662cc629504652cb041cc0efadd11e121eed950b08"
+    },
+    "rtl/test/tb_a3_shipped_prefix_deepseek_rom.sv": {
+      "bytes": 20077,
+      "sha256": "3a5c37d86dc47354b7929934ee4b2dfab6ae4cc544d81930e94dce31ee60550f"
+    },
+    "runtime/abi3/constants.py": {
+      "bytes": 14732,
+      "sha256": "b9a43d78ac4ce343cfd94704c186e641e71c53fb3709b092733b8d7d93d58ed7"
+    },
+    "runtime/abi3/deployment.py": {
+      "bytes": 37216,
+      "sha256": "e7aeac69a74590ded75ba34b603b23aa071f58ef7965e2f8f93d72a82dc35b61"
+    },
+    "runtime/abi3/descriptors.py": {
+      "bytes": 29207,
+      "sha256": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e"
+    },
+    "runtime/abi3/records.py": {
+      "bytes": 22120,
+      "sha256": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca"
+    },
+    "runtime/reference/tensor_accelerator_rmsnorm.py": {
+      "bytes": 8201,
+      "sha256": "a9e5cb021251f39269ba3a5703cd91aa428b9726316b05c88676607e6e79f6ae"
+    },
+    "runtime/reference/tensor_accelerator_rope.py": {
+      "bytes": 7330,
+      "sha256": "be71d1a65ba0fc3d98d52ad50e1783b326e9874d9a949b97acb75245454c51a7"
+    },
+    "runtime/sim/engines/dma.py": {
+      "bytes": 7603,
+      "sha256": "92ed01711032c0a2e1d9e4ca4c7e1eee735475246d4c30aa8621d05d1767fc45"
+    },
+    "runtime/sim/formats.py": {
+      "bytes": 7017,
+      "sha256": "f2c9d1e2a6c13eb1961e4d156a7a28fd0ee03e1bdb47018b8cb1d79c89448385"
+    },
+    "runtime/sim/generators.py": {
+      "bytes": 16660,
+      "sha256": "fb51190f1f3b432f6946d185bc4f8fd7864d8683d23bdf2d7da23a4d72c925fb"
+    },
+    "runtime/sim/memory.py": {
+      "bytes": 45863,
+      "sha256": "4c5fe565e07933f86f608902b1fbce5d92667d7036902f40e67e563b21c4f3f7"
+    },
+    "runtime/tensor_accelerator/bf16.py": {
+      "bytes": 15465,
+      "sha256": "75543479efffeb7a6806dd44178c8af1844276f87e3d01366b21e1cbccf68a34"
+    },
+    "runtime/tensor_accelerator/rope.py": {
+      "bytes": 8432,
+      "sha256": "86dabd538f77a9e7ff96a21f44bb14e1c3ef8176059c3e6d7cf05270131d265d"
+    },
+    "tools/build_abi3_deployment_rtl_vectors.py": {
+      "bytes": 61409,
+      "sha256": "c58b2b2d11d53414bdcba6c4dd78ec492015f6b877e806762f56cb1f9abce582"
+    },
+    "tools/build_abi3_shipped_prefix_multicast_vectors.py": {
+      "bytes": 14083,
+      "sha256": "ccdf469ee4dbb35494bcfd627e68fcb54b4b806ea1d4b5902a60d1f373b16521"
+    },
+    "tools/build_abi3_shipped_prefix_vectors.py": {
+      "bytes": 106286,
+      "sha256": "3de3c0d57a8464bab181c3ef2a7f46802e9bca9d06f3636904a81f9facdcf5fc"
+    },
+    "tools/rtl_abi3_shipped_prefix_campaign.py": {
+      "bytes": 38498,
+      "sha256": "8d18758c1534c34f1ebe1e77f6a37d8fe9fdbfe2d6b101268a22ba0710eb39b0"
+    },
+    "tools/rtl_abi3_shipped_prefix_multicast_campaign.py": {
+      "bytes": 21249,
+      "sha256": "b2d7765c71cdf85e278e6d0127bce8ba0dc13060de32e7bf15b2c14339ba6448"
+    }
+  },
+  "staged_matmul_weight": {
+    "bytes": 50331648,
+    "matrices": [
+      {
+        "base_words": 0,
+        "bytes": 33554432,
+        "pc": 11,
+        "sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1588618872,
+        "source_shard": "model-00001-of-00005.safetensors"
+      },
+      {
+        "base_words": 16777216,
+        "bytes": 8388608,
+        "pc": 14,
+        "sha256": "3ce9fdf6ee30ef2f24ad3629b506415ca91fe40f790e568a9ea3fea2978feee0",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1546675576,
+        "source_shard": "model-00001-of-00005.safetensors"
+      },
+      {
+        "base_words": 20971520,
+        "bytes": 8388608,
+        "pc": 17,
+        "sha256": "767a6c48457974bb02dd90aeec270f4d68289527a353c3c28964ab2069a966ee",
+        "source_checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+        "source_offset": 1622173304,
+        "source_shard": "model-00001-of-00005.safetensors"
+      }
+    ],
+    "path": "generated/p3_matmul_weight.bin",
+    "sha256": "2c8696111937aa85197cd2042dfed6cb3c5ef7f03fb80eba1fe3b93d40c1b87e"
+  },
+  "status": "pass",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  }
+}

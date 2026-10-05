@@ -1,0 +1,116 @@
+{
+  "status": "standalone_shared_timing_owner_exact_synthetic_reads",
+  "base": "9ac1d9be",
+  "scope": "One stack,32PC; not die or fourstack aggregation",
+  "cycles": 10000,
+  "offer_cycles": 8999,
+  "sector_bytes": 32,
+  "core_clock_ps": 1000,
+  "burst_ps": 1024,
+  "refpb": 3,
+  "queue_sectors_per_pc": 64,
+  "results": [
+    {
+      "mode": 0,
+      "w_num": 0,
+      "den": 5,
+      "sectors": 209989,
+      "refreshes": 2356,
+      "pc0_w": 0,
+      "pc0_k": 0,
+      "pc0_both": 0
+    },
+    {
+      "mode": 1,
+      "w_num": 0,
+      "den": 5,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 0,
+      "pc0_k": 0,
+      "pc0_both": 0
+    },
+    {
+      "mode": 2,
+      "w_num": 0,
+      "den": 5,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 0,
+      "pc0_k": 0,
+      "pc0_both": 0
+    },
+    {
+      "mode": 0,
+      "w_num": 3,
+      "den": 5,
+      "sectors": 78307,
+      "refreshes": 2373,
+      "pc0_w": 1224,
+      "pc0_k": 1225,
+      "pc0_both": 1970
+    },
+    {
+      "mode": 1,
+      "w_num": 3,
+      "den": 5,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 0,
+      "pc0_k": 3381,
+      "pc0_both": 0
+    },
+    {
+      "mode": 2,
+      "w_num": 3,
+      "den": 5,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 3381,
+      "pc0_k": 0,
+      "pc0_both": 0
+    },
+    {
+      "mode": 0,
+      "w_num": 5,
+      "den": 8,
+      "sectors": 86219,
+      "refreshes": 2373,
+      "pc0_w": 1348,
+      "pc0_k": 1349,
+      "pc0_both": 2335
+    },
+    {
+      "mode": 1,
+      "w_num": 5,
+      "den": 8,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 0,
+      "pc0_k": 3381,
+      "pc0_both": 0
+    },
+    {
+      "mode": 2,
+      "w_num": 5,
+      "den": 8,
+      "sectors": 108192,
+      "refreshes": 2373,
+      "pc0_w": 3381,
+      "pc0_k": 0,
+      "pc0_both": 0
+    }
+  ],
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/test/tb_v41_shared_pc_service.sv": "68271cab94fcd866776e3003fb216728c73fd8f5a0204724be0472c77ddda10b",
+    "tests/test_v41_shared_pc_service.py": "85c7644915083b5d50f21a685d29dd50bb88863f91fa1dc10a5322d79ade7ade"
+  },
+  "limits": [
+    "Saturated time-window workload, not identical fixed-count job latency",
+    "Address-derived nonzero synthetic reads, not checkpoint or production QE descriptors",
+    "No burst ingress adapter or reserved16KiB demux implemented",
+    "No writes, physical design, complete shared PHY, or fixed-latency QE admission claim",
+    "Separate services negative control is not implemented; legacy0 mode is common timing with originalFRFCFS scheduler"
+  ]
+}

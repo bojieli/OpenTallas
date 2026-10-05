@@ -1,0 +1,31 @@
+{
+  "command": [
+    "systemd-run",
+    "--user",
+    "--unit=w17-epoch9-producer-20261002-r1.service",
+    "--wait",
+    "--pipe",
+    "--property=MemoryMax=4294967296",
+    "--property=MemorySwapMax=0",
+    "--property=CPUAffinity=30 31",
+    "--property=RuntimeMaxSec=180",
+    "--property=KillMode=control-group",
+    "--property=KillSignal=SIGKILL",
+    "--property=OOMPolicy=kill",
+    "--property=LimitFSIZE=268435456",
+    "--property=LimitCORE=0",
+    "--property=Nice=10",
+    "--working-directory=/home/ubuntu/w17-window-epoch-candidate",
+    "/usr/bin/python3",
+    "/home/ubuntu/w17-window-epoch-candidate/tools/w17_window_epoch9_producer_run.py",
+    "--worker",
+    "--prepared",
+    "/tmp/window-epoch9-producer-prepared-20261001-r1",
+    "--out",
+    "/tmp/window-epoch9-producer-run-20261002-r1",
+    "--unit",
+    "w17-epoch9-producer-20261002-r1.service"
+  ],
+  "source_head": "0d1a0fb15c6301b7a4da08c8fef65485fe440546",
+  "no_fallback": true
+}

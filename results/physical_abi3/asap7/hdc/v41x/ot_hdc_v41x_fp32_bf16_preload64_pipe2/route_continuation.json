@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.physical.v41x_fp32_bf16_pipe2_route_continuation.v1",
+  "status": "pass_standalone_routed",
+  "claim_scope": "Standalone 64-lane FP32-to-BF16 RNE two-stage registered converter only. Generic top-port input delay 0.35-0.50ns and output delay 0.184ns; excludes actual four-bank VM read macro and shared activation store.",
+  "target_period_ns": 0.92,
+  "view": "ASAP7 TT RVT academic predictive",
+  "openroad_version": "26Q3-1510-g6cb3f2b704",
+  "detailed_route": {
+    "completed": true,
+    "drc_errors_by_iteration": [
+      1648,
+      112,
+      71,
+      0
+    ],
+    "drc_errors_final": 0,
+    "antenna_net_violations": 0,
+    "antenna_pin_violations": 0,
+    "standard_cell_area_um2": 2744.48,
+    "route_odb_sha256": "c697b6c5dbdc1f5f66bc5351355fd23e97b74fc86cf2f6d9b0a394f7a8b0138a",
+    "route_log_sha256": "86636da0612c65bf1f776c9d03231c0111f3e3eeb0444251b0f05afc549966bd"
+  },
+  "rc_extraction": {
+    "completed": true,
+    "spef_sha256": "09e97f35c94f04316800b17256c154ed7cee5ba3567c9afff11420d6a6aac2e3",
+    "nets": 22340,
+    "rc_segments": 151688
+  },
+  "power_grid": {
+    "vdd_v": 0.7,
+    "worst_ir_drop_v": 0.00202,
+    "worst_ir_drop_fraction": 0.0029
+  },
+  "routed_sta": {
+    "completed": true,
+    "setup_wns_ns": 0.0873402,
+    "hold_wns_ns": 0.0223412,
+    "minimum_period_ns": 0.83266,
+    "fmax_ghz": 1.20097,
+    "setup_tns_ns": 0,
+    "hold_tns_ns": 0,
+    "setup_violation_count": 0,
+    "hold_violation_count": 0,
+    "max_slew_violation_count": 0,
+    "max_capacitance_violation_count": 0,
+    "max_fanout_violation_count": 0,
+    "standard_cell_area_um2": 2744.48
+  },
+  "source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_fp32_bf16_preload64_pipe2.sv": "49629f6e1b4d45f51f5b309d005ecd9e658e454a38badf6b81515b3c57a9754a"
+  },
+  "flow_files_sha256": {
+    "config.mk": "d73136de6417968c46e51e521f7f694b9e35698c2be5b501163324058942d694",
+    "constraint.sdc": "b49601428983c9b320c1fb29698929849b6e2926903d11fc04fb3d7984afe322",
+    "detailed_route_metrics": "42c046c67fbe32a17896d48c7dadea59dd6a7e99d24365cccaed412bbce356b0",
+    "final_metrics": "b1b01336405715cb17985156bb026e2d1e3f6819f5e512821dc514df932fd78c",
+    "final_sta_report": "9ec32d2a2978c7d9db6c4bbe5933935ab48416912368606533b8d549274434a1"
+  }
+}

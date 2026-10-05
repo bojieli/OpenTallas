@@ -1,0 +1,215 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "capability_id": "hbm_sram_single_chip_n5_design_target_deepseek-v4-1-flash-engram-host__rom-n5-native-sramkv-array-hybrid-x51__b200-sxm-x26-tensor_v1",
+  "derived_from": {
+    "analytical_artifact": "results/roofline/candidates/deepseek-v41-flash-engram-host/n5_vs_b200/analytical.json",
+    "base_capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+    "changed": [
+      "technology_view",
+      "capability_id",
+      "engines.*.lanes",
+      "engines.*.queues",
+      "limits.max_outstanding_per_queue",
+      "memory.sram.banks",
+      "memory.sram.ports",
+      "memory.hbm.channels",
+      "topology_class",
+      "limits.max_nodes",
+      "memory.hbm.bytes",
+      "memory.sram.bytes",
+      "limits.max_context_positions"
+    ],
+    "design_point": "DeepSeek-V4.1-Flash-engram-host/b200_sxm-x26-tensor",
+    "generator": "tools/derive_cycle_machine.py",
+    "memory_capacity_provenance": {
+      "device_count": 26,
+      "kv_store": "hbm",
+      "parts": {
+        "memory.hbm.bytes": {
+          "base_bytes": 103079215104,
+          "base_source": "configs/hardware/abi3_capability/hbm_sram_single_chip.json#memory.hbm.bytes",
+          "device_count": 26,
+          "emitted_bytes": 2680059592704,
+          "kv_arena": null,
+          "scaled_bytes": 2680059592704
+        },
+        "memory.sram.bytes": {
+          "base_bytes": 134217728,
+          "base_source": "configs/hardware/abi3_capability/hbm_sram_single_chip.json#memory.sram.bytes",
+          "device_count": 26,
+          "emitted_bytes": 3489660928,
+          "kv_arena": null,
+          "scaled_bytes": 3489660928
+        }
+      },
+      "rule": "Every base capacity is one base device's, so the collapse to one logical device multiplies it by device_count.  A KV arena is the exception: the design point holds ONE of it for the session, so when its kv_store is 'sram' the SRAM capacity is the scaled scratchpad PLUS points[ROLE].kv_capacity_bytes, and memory.sram_kv names the second part.  The parts add because the consumer of memory.sram.bytes -- runtime/abi3/verifier.py _verify_address_map -- charges one space for every SRAM object the deployment declares."
+    },
+    "note": "technology_view n5_design_target is deliberately outside runtime/cycle/machine.py CHARACTERIZED_TECHNOLOGY_VIEWS, so every structural count this record advertises is graded `assumed` with no code change, and every run against it prints the not-a-performance-claim note.  topology_class is forced to SINGLE_CHIP because the derivation collapses the design point's devices into one logical device; this record is a MACHINE for that collapsed device and is not the deployment target of a multi-node backend."
+  },
+  "engines": {
+    "attention": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "dma": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "link": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "reduction": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "route": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "selection": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "state": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "tensor": {
+      "lanes": 32,
+      "queues": 16
+    },
+    "vector": {
+      "lanes": 32,
+      "queues": 16
+    }
+  },
+  "features": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    10
+  ],
+  "limits": {
+    "max_context_positions": 262144,
+    "max_descriptors": 65536,
+    "max_event_id": 1023,
+    "max_events": 1024,
+    "max_expert_ids": 4096,
+    "max_instructions": 65536,
+    "max_loop_depth": 4,
+    "max_loop_trip": 16777216,
+    "max_nodes": 1,
+    "max_outstanding_per_queue": 16,
+    "max_retired_work": 70368744177664,
+    "max_sessions": 8,
+    "max_state_resources": 16,
+    "max_topk": 16,
+    "max_vocabulary": 262144
+  },
+  "link": {
+    "bisection_links": 0,
+    "chunk_bytes": 65536,
+    "credit_bound": 32,
+    "endpoints_per_node": 8,
+    "peers_per_node": 0,
+    "retry_bound": 3,
+    "route_groups": 0,
+    "virtual_channels": 4
+  },
+  "memory": {
+    "hbm": {
+      "burst_bytes": 64,
+      "bytes": 2680059592704,
+      "channels": 1664
+    },
+    "sram": {
+      "bank_bytes": 4194304,
+      "banks": 32,
+      "bytes": 3489660928,
+      "ports": 4
+    }
+  },
+  "numeric_contracts": [
+    "attention_kv_view_bf16_v1",
+    "bf16_add_rne_v1",
+    "bf16_bf16_fp32_blocked_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+    "bf16_byte_preserving_state_v1",
+    "bf16_payload_lookup_v1",
+    "compressed_kv_valid_view_bf16_v1",
+    "compressed_kv_write_bf16_v1",
+    "compression_compress_project_bf16_v1",
+    "compression_pool_compress_pool_f32_v1",
+    "compression_state_compress_state_update_f32_raw_window_transaction_v1",
+    "conversion_binary32_tensor_to_bf16_rne_v1",
+    "deepseek_rmsnorm_binary32_v1",
+    "dispatch_reduce_expert_outputs_bf16_v1",
+    "dispatch_routed_experts_bf16_v1",
+    "exact_index_select_v1",
+    "exact_token_append_eos_v1",
+    "fp8_swiglu_bf16_activation_quantize_v1",
+    "fp8_swiglu_bf16_clamped_silu_product_v1",
+    "fp8_swiglu_bf16_down_contraction_v1",
+    "fp8_swiglu_bf16_gate_contraction_v1",
+    "fp8_swiglu_bf16_up_contraction_v1",
+    "greedy_lowest_token_id_argmax_v1",
+    "grouped_output_project_bf16_v1",
+    "hadamard_rotate_128_bf16_v1",
+    "hc_head_bf16_v1",
+    "hyper_connection_hc_pre_bf16_v1",
+    "index_score_bf16_v1",
+    "indexing_compressed_dense_indices_v1",
+    "indexing_window_indices_v1",
+    "kv_window_write_bf16_v1",
+    "lm_head_bf16_final_source_position_v1",
+    "lm_head_bf16_vocabulary_projection_v1",
+    "lookup_bf16_token_embedding_v1",
+    "lookup_hash_route_indices_v1",
+    "matrix_bf16_linear_bf16_v1",
+    "matrix_dense_fp8_linear_bf16_activation_quantize_v1",
+    "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
+    "mxfp4_swiglu_bf16_activation_quantize_v1",
+    "mxfp4_swiglu_bf16_clamped_silu_product_v1",
+    "mxfp4_swiglu_bf16_down_contraction_v1",
+    "mxfp4_swiglu_bf16_gate_contraction_v1",
+    "mxfp4_swiglu_bf16_routing_weight_product_v1",
+    "mxfp4_swiglu_bf16_up_contraction_v1",
+    "normalization_head_rms_norm_bf16_v1",
+    "quantization_fp4_qdq_bf16_quantize_v1",
+    "quantization_fp4_qdq_bf16_reconstruct_v1",
+    "quantization_fp8_qdq_bf16_quantize_v1",
+    "quantization_fp8_qdq_bf16_reconstruct_v1",
+    "qwen3_gqa_fp32_softmax_bf16_v1",
+    "qwen3_rmsnorm_fp32_bf16_v1",
+    "qwen3_rope_fp32_bf16_v1",
+    "qwen3_silu_mul_bf16_v1",
+    "rope_apply_bf16_v1",
+    "rope_inverse_bf16_v1",
+    "routing_normalize_routed_weight_codes_route_scale_v1",
+    "routing_normalize_routed_weight_codes_selected_sum_normalize_v1",
+    "routing_normalize_routed_weight_codes_unbiased_score_gather_v1",
+    "routing_router_score_bf16_v1",
+    "sampling_deepseek_v4_sample_binary32_greedy_argmax_v1",
+    "sampling_deepseek_v4_sample_binary32_temperature_v1",
+    "sampling_deepseek_v4_sample_binary32_token_append_v1",
+    "selection_biased_topk_route_indices_v1",
+    "selection_index_topk_indices_masked_topk_v1",
+    "sparse_attention_bf16_v1",
+    "sqrt_softplus_router_binary32_v1",
+    "structural_hc_expand_bf16_v1",
+    "vector_hc_post_bf16_v1"
+  ],
+  "schema": "opentallas.abi3.capability.v1",
+  "technology_view": "n5_design_target",
+  "topology_class": 0
+}

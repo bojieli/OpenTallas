@@ -1,0 +1,65 @@
+{
+  "CPU_affinity": [
+    0,
+    1
+  ],
+  "CPU_enforcement": "All children inherit affinity CPUs0,1: hard two-CPU capacity. CPUQuota200% requested, cpu.max unavailable/not delegated; no claim that a kernel quota controller was active.",
+  "OOM_triggered": false,
+  "automatic_retries": 0,
+  "build_delta_seconds": 3.117688039317727,
+  "build_remaining_seconds": 444.91682828450575,
+  "calibration_limit": "r2 simulation failed early; these simulations completed different coverage. No simulation speed comparison, hardware area/timing/rate or architecture gain is inferred.",
+  "cpu_max": null,
+  "deadline_kill_triggered": false,
+  "kernel_memory_max_bytes": 4294967296,
+  "kernel_swap_max_bytes": 0,
+  "limits_seconds": {
+    "build": 600,
+    "simulate": 60,
+    "whole": 660
+  },
+  "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "optional_mutant": "Not run",
+  "peak_memory_GiB": 2.3597793579101562,
+  "peak_memory_bytes": 2533793792,
+  "per_case": [
+    {
+      "case": "q",
+      "elapsed_seconds": 43.44812128134072,
+      "phase": "build",
+      "returncode": 0
+    },
+    {
+      "case": "q",
+      "elapsed_seconds": 0.15990715520456433,
+      "phase": "simulate",
+      "returncode": 0
+    },
+    {
+      "case": "bfcolumn",
+      "elapsed_seconds": 111.63505043415353,
+      "phase": "build",
+      "returncode": 0
+    },
+    {
+      "case": "bfcolumn",
+      "elapsed_seconds": 0.6374698150902987,
+      "phase": "simulate",
+      "returncode": 0
+    }
+  ],
+  "prior_r2_build_summed_seconds": 151.96548367617652,
+  "simulate_remaining_seconds": 59.20262302970514,
+  "status": "BUILD_SIM_RESOURCE_OBSERVATION_ONLY",
+  "used_seconds": {
+    "build": 155.08317171549425,
+    "simulate": 0.797376970294863
+  },
+  "versions": {
+    "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+    "g++": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0",
+    "make": "GNU Make 4.3",
+    "systemd-run": "systemd 249 (249.11-0ubuntu3.22)"
+  },
+  "whole_service": "RuntimeMaxSec660 with independent elapsed timer and immediate SIGTERM cgroup.kill handler; observed service runtime156.272s from immutable launcher log"
+}

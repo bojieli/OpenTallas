@@ -1,0 +1,4 @@
+W17_RECOVERY_WITNESS scalar_suppression cycles=72 fault_cycle=45 checking=1 pc=22 stopped_pc=22 rec_active=0 suffix_closed=1 qe_idle=1 win_idle=1 qe_accepts=1 terminals=16 vm_stores=16 sink_words=512 written_words=512 su_accepts=1 suppress=1 su_idle=0 xs_we=1 kv_we=0
+[75000] %Fatal: tb.sv:1305: Assertion failed in tb: accepted scalar suppression lost
+%Error: /tmp/DS-recovery-negative-successor-execution-20261002-r1/scalar_suppression/sources/tb.sv:1305: Verilog $stop
+Aborting...

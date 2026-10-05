@@ -1,0 +1,115 @@
+{
+ "ar_stream4": {
+  "chained_prefetch_token_cycles": 194498,
+  "isolated_layer_composition_cycles": 236603,
+  "tok_s": 6169.7,
+  "tok_s_isolated": 5071.8
+ },
+ "bound_if_draft_free": {
+  "speedup_vs_ar_chained": 0.969,
+  "tok_s": 5978.6
+ },
+ "commit_cycles": 65,
+ "draft_cycles_from_record": 169925.0,
+ "method": "the DSpark 8K record's composition (results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json: verify = 36 x verify layer L0 step 1 + verify head p4; step = verify + draft + commit; per-user = tau x clock / step) with the verify layer re-measured on the 4-stack full-bandwidth KV path",
+ "per_user_accepted_tok_s": 4710.4,
+ "realmem_record": {
+  "per_user": 3446.7987324858655,
+  "speedup_vs_ar": 1.5156234663164077
+ },
+ "schema": "opentallas.qwen-dspark-step-stream4.v1",
+ "speedup_vs_ar_stream4_chained": 0.763,
+ "speedup_vs_ar_stream4_isolated": 0.929,
+ "step_cycles": 801075.0,
+ "tau": 3.1445,
+ "tau_self_measured_superseded": 3.0375,
+ "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.qwen3_8b.by_draft_tokens.3 (DERIVED from published DSpark Table 1 (Qwen3-8B, gamma 7, T=1.0): per benchmark solve constant conditional acceptance r from tau7 = 1 + sum_{i<=7} r^i, then tau3 = 1 + sum_{i<=3} r^i; equal weight over the 9 benchmarks (3 math, 3 code, 3 chat))",
+ "unvalidated": [
+  "draft cycles (drafter layers measured on REAL_MEM tagged fill; drafter ingest/Markov priced, as in the record)",
+  "verify head and E/head from P255/record (position independent)",
+  "verify layer not prefetched (isolated); a chained verify with early_go would hide <= its 1,362-cycle fill"
+ ],
+ "verdict": "on the full-bandwidth KV path the 8K verify layer is compute bound (17,197 vs 6,489 plain): the DSpark step per user is below AR with prefetch even with a free draft",
+ "verify_cycles": 631085,
+ "verify_layer_realmem": {
+  "step1": 24320,
+  "step2": 25252
+ },
+ "verify_layer_stream4": {
+  "commit": [
+   "COMMIT 1 of block 8187..8190: committed_len=8188 (rollback 8188..8190)"
+  ],
+  "exact": true,
+  "fill_cycles_die0": {
+   "S1": 1362,
+   "S2": 1353
+  },
+  "step1_P8187_np4": 17197,
+  "step2_P8188_np4_after_rollback": 17188
+ },
+ "verify_op_breakdown": {
+  "all_reduces": {
+   "ar": [
+    1094,
+    949
+   ],
+   "excess": 1295,
+   "note": "4x payload on the same link: inherent to the collective bandwidth",
+   "verify": [
+    1621,
+    1717
+   ]
+  },
+  "attention_kv_passes": {
+   "ar": 1155,
+   "excess": 3490,
+   "lever": "share each K/V pass between block positions: the scores/PV ME op already serves a GQA group of 4 query heads per K word (me_jsh); 2 positions per pass = 8 queries (jsh 3 = IL) halves the passes (-2,322 a layer), program + golden change; causality: the extra key of the earlier position must be masked to an exact zero weight",
+   "verify": "4 x ~1,161 (QK/PV over 8K keys, one pass a position)"
+  },
+  "levers_ranked": [
+   "SU ops without a DYN term merged across positions (region-major VM layout so p copies are one op with nout x p): latency paid once",
+   "K/V pass sharing (above)",
+   "single weight pass for the block (needs p accumulators a lane, i.e. 4x MACs, or no gain: the ROM read rate equals the MAC rate)"
+  ],
+  "remaining_composition": "per-position stream-unit ops issued back to back (latency-bound: e.g. 8x64 ops take 30-42 cycles for 8 cycles of work) and the weight matvecs re-streamed once a position (qkv 4x152, gu 278+3x152, down 4x118, o 4x~40)",
+  "remaining_excess": 5933,
+  "source": "RT_OPTRACE instruction-fetch trace, die 0, P8187, STREAM4 (dspark_verify_P8187/optrace): verify np4 17,197 vs AR np1 6,479 (both exact)"
+ },
+ "verify_segment_breakdown": {
+  "ar": {
+   "attention_block_pc0": {
+    "cycles": 4404,
+    "me_busy": 2245
+   },
+   "me_busy_total": 3253,
+   "mlp_block_pc18": {
+    "cycles": 1839,
+    "me_busy": 1008
+   },
+   "residual_pc26": {
+    "cycles": 246,
+    "me_busy": 0
+   },
+   "total": 6489
+  },
+  "non_weight_excess": "the larger excess is non-ME per-position work: 17,197 - 6,489 - 2,144 = 8,564 cycles a layer (vector/SFU ops x4, all-reduce payload x4, write-bridge stalls 3,153 vs 425)",
+  "source": "per-cycle sequencer trace (RT_PROGRESS=1): verify S1L0 on STREAM4 (dspark_verify_P8187/s1_trace, exact) vs AR L0 isolated P8191 (runtime_P8191/L0_iso_p16)",
+  "verify_np4": {
+   "attention_block_pc0": {
+    "cycles": 11148,
+    "me_busy": 3293
+   },
+   "me_busy_total": 5397,
+   "mlp_block": {
+    "cycles": 5155,
+    "me_busy": 2104
+   },
+   "residual": {
+    "cycles": 894,
+    "me_busy": 0
+   },
+   "total": 17197
+  },
+  "weight_reuse_finding": "the weight engines are busy 1.47x (attention block) and 2.09x (MLP) of AR for 4 positions: weight words are NOT applied to all 4 positions in one pass (full reuse would keep ME-busy ~1.0x). Lever = one weight pass for the block: measured bound 2,144 ME-busy cycles a layer (1,048 attention + 1,096 MLP) = 77k cycles a token (9.6% of the verify step)"
+ }
+}

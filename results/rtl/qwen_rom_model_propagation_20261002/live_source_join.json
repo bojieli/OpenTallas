@@ -1,0 +1,171 @@
+{
+  "all_candidate_sources_current": true,
+  "all_seven_live_sources_unchanged": true,
+  "at": "2026-10-02T04:50:48.777331+00:00",
+  "die_count_selection_changed": false,
+  "identity_observation": {
+    "live_pids": [
+      1217332,
+      1220907
+    ],
+    "snapshot": {
+      "host": {
+        "boot_id": "296c347e-2abf-40a7-8599-3db2b655ab78",
+        "hostname": "ot-pve1"
+      },
+      "processes": {
+        "1217332": {
+          "argv": [
+            "python3",
+            "tools/qwen_rom_rt_token.py",
+            "--workdir",
+            "/home/ubuntu/w12/rt_tp4d",
+            "--stages",
+            "/home/ubuntu/w12/st_tp4_sw64/stages.txt",
+            "--token-oracle",
+            "/home/ubuntu/w12/oracle_tp4",
+            "--preload",
+            "/tmp/qwen-vocab-embed-token0/vm_x_fp32.hex",
+            "--tp",
+            "4",
+            "--coll-lat",
+            "339",
+            "--coll-depth",
+            "1024",
+            "--su-width",
+            "64",
+            "--lv",
+            "7",
+            "--smin",
+            "7",
+            "--smax",
+            "11",
+            "--tcut",
+            "7",
+            "--code-banks",
+            "5",
+            "--mem-extra",
+            "1",
+            "--bd",
+            "41",
+            "--xvm",
+            "1",
+            "--nws",
+            "5",
+            "--tws",
+            "38",
+            "--ord",
+            "7",
+            "--threads",
+            "14",
+            "--jobs",
+            "8",
+            "--result",
+            "/home/ubuntu/w12/rt_tp4d_token.json"
+          ],
+          "cwd": "/home/ubuntu/w12/wt4",
+          "pid": 1217332,
+          "ppid": 1124167,
+          "start_ticks": 38691497,
+          "state": "S"
+        },
+        "1220907": {
+          "argv": [
+            "/home/ubuntu/w12/rt_tp4d/qwen_rom_rt",
+            "--stages",
+            "/home/ubuntu/w12/st_tp4_sw64/stages.txt",
+            "/home/ubuntu/w12/rt_tp4d",
+            "/tmp/qwen-vocab-embed-token0/vm_x_fp32.hex"
+          ],
+          "cwd": "/home/ubuntu/w12/rt_tp4d",
+          "pid": 1220907,
+          "ppid": 1217332,
+          "start_ticks": 38723505,
+          "state": "R"
+        }
+      }
+    },
+    "state": "live"
+  },
+  "job_settings_changed": false,
+  "log_tail": "stage L27 loaded: code_words=1056 scale_words=50112 crom_words=541953\nprogress tick=126976 cyc=126977 pc_base=0/0 me_busy=55393/55393 wall=110378s passes=337171\nSTAGE L27 done cycles=4668 start_cyc=126071 end_cyc=130739 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=43008 su_writes=846608 wall=111837s\nstage L28 loaded: code_words=1056 scale_words=50112 crom_words=541953\nprogress tick=131072 cyc=131073 pc_base=0/0 me_busy=57014/57014 wall=112107s passes=348017\nprogress tick=135168 cyc=135169 pc_base=27/27 me_busy=58789/58789 wall=113964s passes=359005\nSTAGE L28 done cycles=4668 start_cyc=130740 end_cyc=135408 me_busy=2027/2027 next_token=0/0 next_val=00000000/00000000 seq_fault=0 core_fault=0 coll_fault=0 me_writes=44544 su_writes=876844 wall=113972s\nstage L29 loaded: code_words=1056 scale_words=50112 crom_words=541953\n",
+  "model_gate": "price_join_fail.json",
+  "new_checkpoint_captured": false,
+  "next_gate": "Price_join_fail rejects +54 for physicalMUL6; whole arithmetic propagation and macro-localKV gate remain required.",
+  "parent_intake_commit": "bb845172da8a3b290041b475fc02476de0e4afff",
+  "processes_signalled": [],
+  "reason": "L29 active; parent5723b2a94 already independently preserved all116 L0-L28 checkpoints. No duplicate archive.",
+  "scientific_jobs_started": 0,
+  "source_join": {
+    "rtl/hdc/ot_hdc_matvec.sv": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+      "candidate_sha256": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+      "live_sha256": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+      "prior_checkpoint_sha256": "a405904d794687047077208a7d3a8d2e1de88024303151e58b5909e093adec18"
+    },
+    "rtl/hdc/ot_qwen_me_array.sv": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+      "candidate_sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+      "live_sha256": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "17ef6b5f40353fc5d35e4402cf428391e3636a3b90e3e8e944bae52e64098388",
+      "prior_checkpoint_sha256": "dec28d11f13bd587788db4b6cb7cf90fad0a30f843a461c211006e6e62c5f218"
+    },
+    "rtl/hdc/ot_qwen_rom_tile.sv": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+      "candidate_sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a",
+      "live_sha256": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "37d04eb158322a7a5dfe925891f764d8122362c1ad439968140dde274319488e",
+      "prior_checkpoint_sha256": "a521b879ce3850e5c339dbf8e07aaf210c2632237c6d58b1364fac61f8c5a47b"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die.sv": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12.sv",
+      "candidate_sha256": "406739495be0f81dc326b91c3b69384869ecc1b7eccf7532bd3cdbe168ec7580",
+      "live_sha256": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "0e1305252163ed4e03bfa598f55a44e186526d4cacdad2e0de279875b69ec3a3",
+      "prior_checkpoint_sha256": "f3dd0c135949158ac32f37573133b246b4f1968f5778afc1faf7f6b6713a2bec"
+    },
+    "rtl/test/qwen_rom_runtime/qwen_rom_rt.cpp": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "rtl/test/qwen_rom_runtime/qwen_rom_rt_w12.cpp",
+      "candidate_sha256": "f0c44f4ed12d073326ac5128f5d8a995777ea119c90bcbcfbdfffe360b4b38ea",
+      "live_sha256": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "b591d49f7a6986de93852a31dd91712c5b44ff3f629c8ac0397580c432ba0d46",
+      "prior_checkpoint_sha256": "67a8511c367296d3b3184c5f51643d236766bf605f3c9e3652c65c94ddb81c1b"
+    },
+    "tools/qwen_rom_rt_core_emit.py": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "tools/qwen_rom_rt_core_emit_w12.py",
+      "candidate_sha256": "27c37931c74c7896e689f385d65e080ad43a3865f3c7c087ad860845de6df2f7",
+      "live_sha256": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "a50996906e3ae7981e59d2dac200abaa330f7f6505f5bbfbf8beb77c8164b801",
+      "prior_checkpoint_sha256": "54ccf9f14b1ef7c09ea248e91dc83447213d68a086a5a317ee013ac914f6df2f"
+    },
+    "tools/qwen_rom_rt_token.py": {
+      "candidate_matches_sidecar": true,
+      "candidate_path": "tools/qwen_rom_rt_token_w12.py",
+      "candidate_sha256": "fef075a94bfcb960383ccd1be7c468bc79544bbdd1c16a78dcb161a877200811",
+      "live_sha256": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f",
+      "live_unchanged": true,
+      "parent_joined": false,
+      "parent_sha256": "e96f25fee5794ab28a7e0c9feda78fcd88e91c1940a1ce0bef1be425a85f7652",
+      "prior_checkpoint_sha256": "00f08f7e327bb0b6239c6d0c0b211b68fb884350672b38472c225303e878ab2f"
+    }
+  }
+}

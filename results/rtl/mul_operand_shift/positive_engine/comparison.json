@@ -1,0 +1,93 @@
+{
+  "scope": "Matched complete positive range-pipeline engine; only multiplier implementation differs; identical SDC and current sources verified.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/range_pipeline_synth_sta_1ns.json",
+      "sha256": "6fa49cf7e7845c08a46e84069db480b9165021c8f68b3649ec8bca354d654126",
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "results/rtl/positive_range_pipeline/candidate.sv",
+          "sha256": "b460adeb02cb337e28654349bc263f60962107472358d2c7abd252325d2a6c8c",
+          "size_bytes": 28922
+        }
+      ],
+      "area_um2": 8399.686,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.04886380208886728,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 5020,
+            "setup_wns_ns": -4.259837832844647,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    },
+    {
+      "record": "results/physical_abi3/asap7/a3_fp32_exp_pos_cr_rne/range_operand_shift_synth_sta_1ns.json",
+      "sha256": "3e79c037478d17047bc877a830e93933e8f449b2f8c0804753b9f7b6e1eb9d82",
+      "sources": [
+        {
+          "path": "results/rtl/mul_operand_shift/candidate.sv",
+          "sha256": "2a3e1fba5444b1e82172969630551a46bea0266046f291fa43e3365c3631f1af",
+          "size_bytes": 11381
+        },
+        {
+          "path": "rtl/lib/ot_wide_div_small_seq.sv",
+          "sha256": "d0b8fef68ae4ec21617b472ec326e878b97eaec8c37b0e05716266d20a5e27f6",
+          "size_bytes": 6561
+        },
+        {
+          "path": "results/rtl/positive_range_pipeline/candidate.sv",
+          "sha256": "b460adeb02cb337e28654349bc263f60962107472358d2c7abd252325d2a6c8c",
+          "size_bytes": 28922
+        }
+      ],
+      "area_um2": 8286.368,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.048639890920587396,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 4948,
+            "setup_wns_ns": -3.3574156922218905,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      }
+    }
+  ],
+  "area_reduction_percent": 1.3490742392036958,
+  "baseline_slack_ns": -4.259837832844647,
+  "candidate_slack_ns": -3.3574156922218905,
+  "sdc_sha256": "f8e427f4180d8283555a7291c74fad8dfca70c125de49da5c6cf92ddccce6d07",
+  "latency_evidence": "results/rtl/mul_operand_shift/latency.json",
+  "decision": "Retain candidate for routed qualification. Both complete engines still fail prelayout 1 ns; no closure or energy claim."
+}

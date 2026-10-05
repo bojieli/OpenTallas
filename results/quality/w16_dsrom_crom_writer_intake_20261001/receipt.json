@@ -1,0 +1,114 @@
+{
+  "ISA_execution": false,
+  "actual64bit_CROM_image_binding": true,
+  "actual_headnorm_operand_binding": true,
+  "checked_tensor_rank_slices": 1636,
+  "checkpoint_reads": 0,
+  "evidence_commit": "70f73928f71cfef8089deba6976c49a136ecb0d3",
+  "existing_L0_positive_slices": [
+    {
+      "existing_name": "attn_sink",
+      "sha256": "832dc5cbce3770b5b4dddcd8393e0d53ee65eee016ea6b6b4e11f6a859598d05",
+      "tensor": "layers.0.attn.attn_sink"
+    },
+    {
+      "existing_name": "kv_norm",
+      "sha256": "606486f7aff905141b6eb365922ab20a8c8582b254ffb4b2e63fd8cb1b525eab",
+      "tensor": "layers.0.attn.kv_norm.weight"
+    },
+    {
+      "existing_name": "q_norm",
+      "sha256": "3b442420ff00b3783422ff96ac6eaa5044fb8235400789531f1a4bf67ca5f1d9",
+      "tensor": "layers.0.attn.q_norm.weight"
+    },
+    {
+      "existing_name": "attn_norm",
+      "sha256": "62f21e446cfedf7cbe5ba9957f472e9a487c7ea16ee549eb33155d133ab866b0",
+      "tensor": "layers.0.attn_norm.weight"
+    },
+    {
+      "existing_name": "gate.bias",
+      "sha256": "d8def311cf5748da7c29e3a70f15d2642f16690e8d7ccccb9be699be4129947c",
+      "tensor": "layers.0.ffn.gate.bias"
+    },
+    {
+      "existing_name": "ffn_norm",
+      "sha256": "771304c7348815854d0d3d8304db1296c23949d2872d2424aacd423476cfc216",
+      "tensor": "layers.0.ffn_norm.weight"
+    },
+    {
+      "existing_name": "hc_attn_base",
+      "sha256": "a15cd80e6cfa8df68c58bd9c11f1ecff874432075969c2cacf9042228c03df97",
+      "tensor": "layers.0.hc_attn_base"
+    },
+    {
+      "existing_name": "hc_attn_scale",
+      "sha256": "76ed01539b82314424d77c822d42498a0fef67d4fb778b427760fd57af5a0147",
+      "tensor": "layers.0.hc_attn_scale"
+    },
+    {
+      "existing_name": "hc_ffn_base",
+      "sha256": "a1cdf4b9dadcf5a721e81c3c7439bc96548da81672ea903191733fad49d90c22",
+      "tensor": "layers.0.hc_ffn_base"
+    },
+    {
+      "existing_name": "hc_ffn_scale",
+      "sha256": "eec8b43174d58e850653668665ccd31a8841e51e55ffa164f8e62ae77d4dba5f",
+      "tensor": "layers.0.hc_ffn_scale"
+    }
+  ],
+  "fullproduct_complete": false,
+  "generator_sha256": "051a2c290179653441be074c47eace4418abd7f51a3fb1c59271d6a322426d6f",
+  "hardware_admission": false,
+  "manifest_sha256": "ab0fd5fd354a4bf414f775e44c8025a4a292f77e2296e75c559412e5bf4ba65b",
+  "physical_allocation": false,
+  "rank_images": [
+    {
+      "bytes": 4070400,
+      "capacity_words": 524288,
+      "headnorm_base": 503680,
+      "rank": 0,
+      "sha256": "cf49b02d986a0d9651b5263df00a32843a72786a229fa9a0be6fa584b0d32270",
+      "spare_words": 15488,
+      "used_words": 508800
+    },
+    {
+      "bytes": 4070400,
+      "capacity_words": 524288,
+      "headnorm_base": 503680,
+      "rank": 1,
+      "sha256": "be6f4f6d4c54bfdc7971ce9c0148818fb03567c50d2754ff9dfba7080e621210",
+      "spare_words": 15488,
+      "used_words": 508800
+    },
+    {
+      "bytes": 4070400,
+      "capacity_words": 524288,
+      "headnorm_base": 503680,
+      "rank": 2,
+      "sha256": "28058caf2949ed5cb9812a1c6fbf749ec34b6571eb7d5e7a4180b0b3627c39a8",
+      "spare_words": 15488,
+      "used_words": 508800
+    },
+    {
+      "bytes": 4070400,
+      "capacity_words": 524288,
+      "headnorm_base": 503680,
+      "rank": 3,
+      "sha256": "cf9fa8f1c5c13a673e7594925b60b5bd5eec7d137bf1971bbefd8c6067a099de",
+      "spare_words": 15488,
+      "used_words": 508800
+    }
+  ],
+  "remaining": [
+    "RamCROMhome/port/3x64container assignment proof",
+    "full40instructionconstantbases+ISAexecution,notjustheadnormtemplates",
+    "embedding/headactualfieldimageproducer+allocator",
+    "Engramactual8scale codec andphysicalhomes"
+  ],
+  "schema": "opentallas.dsrom.actual-CROM-writer.independent-intake.v1",
+  "source_manifest_sha256": "dd123431a8f908362360d651a676760fcb716001e66d0229d772e93ed6ac340c",
+  "source_producer_binding": true,
+  "status": "PASS_BITWISE_SOURCE_TO_IMAGE_INTAKE",
+  "writer_commit": "676bdb433f8b125f631ae7e7a75189f144e86805"
+}

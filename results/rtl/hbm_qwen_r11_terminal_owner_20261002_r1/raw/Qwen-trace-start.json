@@ -1,0 +1,12 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "tools/check_hbm_rf_connected_trace.py",
+    "/tmp/hbm-qwen-connected-runtime-parent-20261002-r11-r1/Qwen/actual_sim.log",
+    "--out",
+    "/tmp/hbm-qwen-connected-runtime-parent-20261002-r11-r1/Qwen/trace_verdict.json"
+  ],
+  "name": "trace",
+  "target": "Qwen",
+  "wall_limit_s": 30
+}

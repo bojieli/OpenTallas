@@ -1,0 +1,11 @@
+{
+  "protect": [
+    "/tmp/claude-1000/wt/qcnam-run",
+    "/tmp/opentallas-qcnam-w16-recovery",
+    "/tmp/claude-1000/qcnam/runs"
+  ],
+  "retire_after_dirty_archive_and_live_cwd_check": [
+    "/tmp/claude-1000/wt/qcnam"
+  ],
+  "authorization": "QC owner dirty attribution source to preserve before retirement"
+}

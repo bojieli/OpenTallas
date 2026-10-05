@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.abi3.v41_divergence_causal_chain.v1",
+ "question": "what, exactly, makes the reduced V4.1 device emit a different token from the reference?",
+ "answer": "a one-ulp fp32 difference in the hyper-connection Sinkhorn coefficients, from a different summation order in a 640-term dot product, which rounds the BF16 residual to adjacent values on 5 of 8 tokens and is then amplified by a router whose cut is below one BF16 epsilon on 7.2% of its decisions.",
+ "every_link_measured": [
+  {"step": 1, "what": "the hyper-connection projection is a 640-term fp32 dot product. The device sums it in the ABI's declared order (_ordered_product_add); the vendor calls F.linear, whose order BLAS chooses and nothing specifies.", "measured": "L00.hc_ffn.post differs by 1.18e-07 relative = exactly 1 fp32 ulp"},
+  {"step": 2, "what": "hc_post returns y.type_as(x), so the residual stream is BF16 on BOTH sides. The fp32 coefficient difference pushes some elements across a BF16 rounding boundary.", "measured": "L00.hc_ffn.mixes_input -- the post-attention residual -- is bit-identical on tokens 5, 6, 7 and differs on 0, 1, 2, 3, 4 by 1.9e-05 to 2.4e-03, i.e. 0.005 to 0.607 of ONE BF16 ulp"},
+  {"step": 3, "what": "ffn_norm carries a subset of that forward", "measured": "bit-identical on 5 of 8 tokens; tokens 2, 3, 4 differ by 0.034 to 0.451 BF16 ulp"},
+  {"step": 4, "what": "expert selection survives two layers, then a near-tie flips", "measured": "layers 0 and 1 select identical expert sets at 8/8 positions; layer 2 position 0 swaps expert 1 for expert 7"},
+  {"step": 5, "what": "the router cannot be expected to survive it", "measured": "the gap between the 6th and 7th score is below one BF16 epsilon on 7.2% of all 320 (layer, position) decisions and below ten on 41.6%"},
+  {"step": 6, "what": "the difference compounds with depth", "measured": "relative L2 error 0.82% at block 0, 3.6% at block 1, 12.8% at block 2, 104% at block 39"},
+  {"step": 7, "what": "the argmax is decided by the accumulated difference, not by the model", "measured": "the device's own top-1 margin is 0.00515 against an accumulated 266 BF16 epsilons at the head"}
+ ],
+ "what_was_bit_exact": [
+  "the token embedding, 8/8 rows",
+  "the layer-0 block input, all four hyper-connection streams",
+  "the attention pre-mix collapse, attn_norm, and every attention projection: wq_a, q_norm, wq_b, wkv, kv_norm, wo_b",
+  "the layer-0 attention OUTPUT, 8/8 rows",
+  "the hc_attn mixes input, 8/8 rows",
+  "expert dispatch rows and their expert ids, slot for slot",
+  "the shared expert",
+  "the routing weights, to 4.3e-08 once route_scale is accounted for"
+ ],
+ "so_it_is_not_a_fault": "two independent implementations of a 640-term fp32 dot product are not required to agree bit-for-bit, and nothing specifies BLAS's summation order, so this difference cannot be removed by fixing the device.  It is the floor of agreement, and on this vehicle the floor is above the router's decision margin.",
+ "consequence_for_the_nine_cell_matrix": "the reduced V4.1 vehicle's emitted token is not a valid correctness oracle.  It cannot be made one by repair; it would need a vehicle whose router margin is wider than one BF16 ulp of its residual -- which a trained checkpoint has and a Philox-drawn fixture at top-6-of-12 does not.",
+ "instrument_notes": [
+  "the localiser scores candidates by HOW MANY ROWS MATCH EXACTLY, not by cosine.  A partial count between 1 and tokens-1 is a fingerprint; an unrelated tensor of the same size scores zero.",
+  "rows with 0 exact matches carry NO information -- the device may not materialise that tensor at all.  L00.hc_attn.comb reading 1.46-1.99 and L00.hc_attn.post reading 1e-05 are both 0/8 and are therefore not evidence of anything.",
+  "this whole result was invisible to cosine: every tensor named above reads .all = 1.0 at six printed digits while three rows of eight differ."
+ ],
+ "not_a_claim": [
+  "not an RTL measurement: the device is runtime.sim",
+  "the chain is measured link by link, but step 1 identifies summation order as the ONLY remaining explanation for a 1-ulp fp32 difference rather than demonstrating the two orders directly",
+  "this says nothing about the shipped-scale cells, which close on trained weights"
+ ]
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "Matched current workspace softmax; only DIV_BITS_PER_STEP differs. Tree16 and integrated scratch-reset removal shared. No production default change.",
+  "baseline": {
+    "cycles": 767158,
+    "physical_evals": 276,
+    "cache_hits": 121
+  },
+  "candidate": {
+    "cycles": 1144783,
+    "physical_evals": 276,
+    "cache_hits": 121
+  },
+  "cycle_increase_percent": 49.22388869046532,
+  "break_even_complete_engine_clock_ratio": 1.4922388869046532,
+  "decision": "Retain step10 until measured complete-engine frequency gain exceeds the cycle penalty and area/physical checks justify switching.",
+  "physical_pending": [
+    "results/physical_abi3/asap7/small_divider/unreset_step4_width168_cts12_1ns.json",
+    "results/physical_abi3/asap7/small_divider/unreset_step10_width168_cts12_1ns.json"
+  ],
+  "limitations": "Nine numerical cases plus two refusals; not full model throughput. Standalone divider timing cannot establish complete-engine clock. Engine snapshot includes pre-existing divisor-width tuning."
+}

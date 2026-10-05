@@ -1,0 +1,124 @@
+{
+  "schema": "opentallas.w13.effective_takeover.v1",
+  "observed_at": "2026-10-01T09:10:19.213152+00:00",
+  "takeover_key": "W13_CHAIN16_R2_EXCLUSIVE_GUARDED_SUCCESSOR",
+  "live_supervisor": {
+    "pid": 504803,
+    "start_ticks": "305058737",
+    "state": "S"
+  },
+  "cmdline": "python3 /tmp/claude-1000/w13jobs/chain16-r2/w13_chain_successor.py /tmp/claude-1000/w13jobs/chain16-r2/config.json ",
+  "source_commit": "46f5f75872d1b00766c8be6a1f4b49a539397cd2",
+  "config_sha256": "4f2b3bd79d572d4a69bc9631b1c061a8ab8e3c08b527110c6268682b07a57fba",
+  "live_bundle_source_hashes": {
+    "tools/w13_chain_successor.py": "e1f81454f457f4aed1a2899786bcd2497ee96364e78eab582a50e3ff4c53e338",
+    "tools/w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda",
+    "tools/w13_floorplan_receipt.py": "a6703363bc10930b57672086539eebbebed1280c16de6317a9b16868d6e79441"
+  },
+  "bundle_pins": {
+    "/tmp/claude-1000/w13jobs/chain16-r2/w13_chain_successor.py": "e1f81454f457f4aed1a2899786bcd2497ee96364e78eab582a50e3ff4c53e338",
+    "/tmp/claude-1000/w13jobs/chain16-r2/w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda",
+    "/tmp/claude-1000/w13jobs/chain16-r2/w13_floorplan_receipt.py": "a6703363bc10930b57672086539eebbebed1280c16de6317a9b16868d6e79441"
+  },
+  "all_source_hashes_match": true,
+  "parked_predecessors": [
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "T"
+    }
+  ],
+  "column_handles": [
+    {
+      "expected": {
+        "pid": 2089594,
+        "start_ticks": "302549468",
+        "state": "S"
+      },
+      "current": {
+        "pid": 2089594,
+        "start_ticks": "302549468",
+        "state": "S"
+      },
+      "same_live_identity": true
+    },
+    {
+      "expected": {
+        "pid": 1901598,
+        "start_ticks": "302086726",
+        "state": "S"
+      },
+      "current": {
+        "pid": 1901598,
+        "start_ticks": "302086726",
+        "state": "S"
+      },
+      "same_live_identity": true
+    }
+  ],
+  "events": [
+    {
+      "config_sha256": "4f2b3bd79d572d4a69bc9631b1c061a8ab8e3c08b527110c6268682b07a57fba",
+      "event": "successor_start",
+      "handle": {
+        "pid": 504803,
+        "start_ticks": "305058737",
+        "state": "R"
+      },
+      "utc": "2026-10-01T09:08:51.115652+00:00"
+    },
+    {
+      "branch": "q",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 2089594,
+          "start_ticks": "302549468",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:08:51.340706+00:00"
+    },
+    {
+      "branch": "v",
+      "event": "waiting",
+      "handles": [
+        {
+          "pid": 1901598,
+          "start_ticks": "302086726",
+          "state": "S"
+        }
+      ],
+      "utc": "2026-10-01T09:08:51.340995+00:00"
+    }
+  ],
+  "events_sha256": "4b81f9fd91617e1a701c6cd22245ae3ddd5ba29b4c6959caa4fe3db9912b1caa",
+  "effective_status": "Live same-identity supervisor waiting on same columns; predecessors stopped and no SM dispatch",
+  "queued_memory_guard": {
+    "minimum_gib": 60,
+    "validated_peak_gib": 60,
+    "existing_gate": "/tmp/claude-1000/remote_gate.sh",
+    "worker_preflight": "--local-memory before synth with && failure barrier",
+    "worker_receipt": "results/physical_abi3/asap7/chip/w13_chain16/<sm>_admission.json",
+    "executed": false,
+    "reason": "columns still live; no acquired SM worker lease yet"
+  },
+  "floorplan_requirement": "actual_sm_companion_receipt.json pins qualified actual SM LEFs and rejects pending fallback",
+  "previous_failure_retained": true,
+  "actor_receipt_sha256": "34935b77778ec14cbb0ec4c58a5040537b52ce2d15f6a964cacf7e1e7c092a93"
+}

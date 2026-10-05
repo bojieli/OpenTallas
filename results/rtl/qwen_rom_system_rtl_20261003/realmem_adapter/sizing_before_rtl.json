@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.qwen-nearhbm-memory-adapter-sizing.v1",
+  "default_off": true,
+  "actual_interfaces": "unchanged REAL_MEM kvd/kv_we and kv_ok/kv_write_drained; HBM tagged request/response + WR_ACK",
+  "layout": "canonical sector owner bits[9:8]; K 16-position tile/64 sectors, V four-position chunk/16 sectors",
+  "replicas": 4,
+  "row_engines_per_stack": 8,
+  "credits_per_engine": 32,
+  "storage": {
+    "k_tiles_per_stack": 32,
+    "v_chunks_per_stack": 128,
+    "queue_entries_per_stack": 256,
+    "coded_bits_die": 4970240
+  },
+  "protection": "SECDED72 per64 payload/control bits; no new ROM ECC; immutable tag/kind/gen/beat validation",
+  "compute": {
+    "macs_per_cycle": 0,
+    "macs_per_byte": 0
+  },
+  "ports_bytes_per_cycle": {
+    "HBM_per_stack_max": 1024,
+    "request_payload_max": 512,
+    "row_return_per_stack": 1024
+  },
+  "boundary_bits_per_cycle": {
+    "row_request": 480,
+    "row_return": 32800,
+    "HBM_return": 35200
+  },
+  "mux_bit_equivalents": 524288,
+  "fanout": "stack-local tile sharing; no new die-wide data bus",
+  "area_mm2_die_estimate": 1.5869475840000002,
+  "area_basis": "DFF upper bound and 0.2um2/mux bit; macro banking/loaded timing unmeasured",
+  "slot_mm2_each_estimate": 0.39673689600000006,
+  "slot_fit": "reserve in nearHBM stack slot; actual route/SSFF required",
+  "routing": {
+    "required_tracks_local": 8192,
+    "capacity_tracks": "requires physical owner measured channel; no fit claim"
+  },
+  "context": 8192,
+  "bytes_layer_die": 4194304,
+  "read_commands_layer_die": 8192,
+  "composed_latency": {
+    "layer_memory_lower_bound_hclk_cycles": 2048,
+    "first_K_tile": "4 accepted bursts + actual HBM bank/refresh latency, then registered exact row extraction",
+    "refill": "finite credits/coalesced landing; actual cycles required, no old ideal bucket timing credit",
+    "added_row_extract_cycles": 1,
+    "model_owner": "Peirce composes measured token contribution; unified model untouched"
+  },
+  "adoption": false
+}

@@ -1,0 +1,8 @@
+{
+  "status": "failed_elaboration",
+  "source_commit": "5e05bc469",
+  "rc": 1,
+  "reason": "Current main LAT adder requires ot_hdc_ksadd_k in ot_hdc_prefix.sv, omitted by recovered build source list",
+  "numeric_verdict": null,
+  "remedy": "Add existing prefix source to simulation build only; no RTL source edits"
+}

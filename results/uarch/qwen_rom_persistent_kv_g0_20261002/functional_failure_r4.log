@@ -1,0 +1,28 @@
+test_existing_persistent_memory_raw_bytes (test_qwen_rom_persistent_kv_g0.ActualProviderTests) ... ok
+test_absent_actual_backing_refused (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_byte_cost_charged_once (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_finite_write_and_exact_masked_delivery (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_owner_and_extent_nonalias (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_rmw_preserves_unwritten_bytes (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_single_writer_per_rank (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_source_calendar_is_finite (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_stale_duplicate_ack_and_early_publication (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_window_visibility_and_drain (test_qwen_rom_persistent_kv_g0.DeliveryTests) ... ok
+test_burst_credits_cover_source_destination_fanout (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+test_existing_actual_compiler_and_state_provider_join (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ERROR
+test_fill_destinations_follow_emitted_split_issue_order (test_qwen_rom_persistent_kv_source_join.SourceJoinTests) ... ok
+
+======================================================================
+ERROR: test_existing_actual_compiler_and_state_provider_join (test_qwen_rom_persistent_kv_source_join.SourceJoinTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-qwen-kv-g0-next/tests/test_qwen_rom_persistent_kv_source_join.py", line 40, in test_existing_actual_compiler_and_state_provider_join
+    graph=compile_program(tp=4,context=8192,groups=6144)
+  File "/home/ubuntu/OpenTallas-qwen-kv-g0-next/tools/qwen_hbm_complete_program.py", line 78, in compile_program
+    if tp!=2 or nh%tp or kv%tp or ff%tp or v%tp or nh%kv or context%16:raise ValueError('TP2/full-context shape contract')
+ValueError: TP2/full-context shape contract
+
+----------------------------------------------------------------------
+Ran 13 tests in 1.775s
+
+FAILED (errors=1)

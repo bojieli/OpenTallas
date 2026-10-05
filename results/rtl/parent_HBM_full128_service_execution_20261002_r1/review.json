@@ -1,0 +1,15 @@
+{
+  "verdict": "COMPILE_TIMEOUT_NO_SIMULATION",
+  "compile_seconds_cap": 180,
+  "exit_code": 124,
+  "valid_live_cgroup_samples": 69,
+  "observed_memory_peak_bytes": 404746240,
+  "binary_generated": false,
+  "arithmetic_simulated": false,
+  "source_sha256_manifest_sha256": "1b98d84e5350321a1792acf26b02e4c67c3011c1e524ff311d547a655ef569c5",
+  "monitor_limitation": "Terminal cgroup already removed; rawterminal cpu.stat inadvertently read rootcgroup. Ignoreterminalcpu.stat; only exactownedControlGroup livesamples included.",
+  "automatic_retry": false,
+  "next_action": "Fresh source-pinned Verilator compile proposal, unchanged actual128lane arithmetic",
+  "physical_adoption": false,
+  "fulltoken": false
+}

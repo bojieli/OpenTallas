@@ -1,0 +1,509 @@
+{
+  "geometry": {
+    "dbu": 1000,
+    "tracks": {
+      "M4": {
+        "y_origin_nm": 12,
+        "y_pitch_nm": 48,
+        "x_origin_nm": 45,
+        "x_pitch_nm": 36
+      },
+      "M5": {
+        "y_origin_nm": 12,
+        "y_pitch_nm": 48,
+        "x_origin_nm": 12,
+        "x_pitch_nm": 48
+      },
+      "M6": {
+        "y_origin_nm": 16,
+        "y_pitch_nm": 64,
+        "x_origin_nm": 60,
+        "x_pitch_nm": 48
+      },
+      "M7": {
+        "y_origin_nm": 16,
+        "y_pitch_nm": 64,
+        "x_origin_nm": 16,
+        "x_pitch_nm": 64
+      }
+    },
+    "macros": [
+      {
+        "name": "g_mac\\[0\\].g_pp.u_rom0",
+        "orientation": "R0",
+        "location_nm": [
+          14148,
+          6480
+        ],
+        "bbox_nm": [
+          14148,
+          6480,
+          139428,
+          69390
+        ]
+      },
+      {
+        "name": "g_mac\\[0\\].g_pp.u_rom1",
+        "orientation": "MX",
+        "location_nm": [
+          14148,
+          73440
+        ],
+        "bbox_nm": [
+          14148,
+          73440,
+          139428,
+          136350
+        ]
+      },
+      {
+        "name": "g_mac\\[1\\].g_pp.u_rom0",
+        "orientation": "MY",
+        "location_nm": [
+          863460,
+          6480
+        ],
+        "bbox_nm": [
+          863460,
+          6480,
+          988740,
+          69390
+        ]
+      },
+      {
+        "name": "g_mac\\[1\\].g_pp.u_rom1",
+        "orientation": "R180",
+        "location_nm": [
+          863460,
+          73440
+        ],
+        "bbox_nm": [
+          863460,
+          73440,
+          988740,
+          136350
+        ]
+      }
+    ],
+    "fanout": {
+      "g_mac\\[0\\].g_pp.u_rom0": {
+        "output_bits": 274,
+        "total_sinks": 272,
+        "max_fanout": 1
+      },
+      "g_mac\\[0\\].g_pp.u_rom1": {
+        "output_bits": 274,
+        "total_sinks": 272,
+        "max_fanout": 1
+      },
+      "g_mac\\[1\\].g_pp.u_rom0": {
+        "output_bits": 274,
+        "total_sinks": 272,
+        "max_fanout": 1
+      },
+      "g_mac\\[1\\].g_pp.u_rom1": {
+        "output_bits": 274,
+        "total_sinks": 272,
+        "max_fanout": 1
+      }
+    },
+    "failed_nets": [
+      {
+        "name": "g_mac\\[0\\].g_pp.rd1\\[171\\]",
+        "port": "rd_out[171]",
+        "fanout": 1
+      },
+      {
+        "name": "g_mac\\[0\\].g_pp.rd1\\[254\\]",
+        "port": "rd_out[254]",
+        "fanout": 1
+      }
+    ],
+    "center_warning_counts": {
+      "g_mac\\[0\\].g_pp.u_rom1": 288,
+      "g_mac\\[1\\].g_pp.u_rom1": 288
+    },
+    "cts": {
+      "cts__utilization__before__dpl": 69.8141,
+      "cts__negotiation__converge__phase_1__iteration": 86,
+      "cts__design__instance__displacement__total": 13536.1,
+      "cts__design__instance__displacement__mean": 0.027,
+      "cts__design__instance__displacement__max": 13.338,
+      "cts__route__wirelength__estimated": 2685330.0,
+      "cts__dpl__hpwl__delta": 9516010.0,
+      "cts__dpl__hpwl__delta__percent": 0,
+      "cts__design__instance__count__setup_buffer": 87,
+      "cts__design__instance__count__hold_buffer": 9805,
+      "cts__design__violations": 0,
+      "cts__timing__setup__tns": -2240300.0,
+      "cts__timing__hold__tns": -131.046,
+      "cts__timing__setup__ws": -582.891,
+      "cts__timing__hold__ws": -7.06762,
+      "cts__timing__fmax__clock:core_clk": 706269000.0,
+      "cts__timing__fmax": 706269000.0,
+      "cts__clock__skew__setup": 825.842,
+      "cts__clock__skew__hold": 690.27,
+      "cts__timing__drv__max_slew_limit": -0.402862,
+      "cts__timing__drv__max_slew": 4,
+      "cts__timing__drv__max_cap_limit": 0.482484,
+      "cts__timing__drv__max_cap": 0,
+      "cts__timing__drv__max_fanout_limit": 32,
+      "cts__timing__drv__max_fanout": 647,
+      "cts__timing__drv__setup_violation_count": 19717,
+      "cts__timing__drv__hold_violation_count": 80,
+      "cts__power__internal__total": 0.352782,
+      "cts__power__switching__total": 0.188559,
+      "cts__power__leakage__total": 0.00109051,
+      "cts__power__total": 0.542432,
+      "cts__design__io": 1804,
+      "cts__design__nets": 484073,
+      "cts__design__die__area": 142972,
+      "cts__design__core__area": 138042,
+      "cts__design__instance__count": 494362,
+      "cts__design__instance__area": 96372.8,
+      "cts__design__instance__count__stdcell": 494358,
+      "cts__design__instance__area__stdcell": 64847.4,
+      "cts__design__instance__count__macros": 4,
+      "cts__design__instance__area__macros": 31525.5,
+      "cts__design__instance__count__padcells": 0,
+      "cts__design__instance__area__padcells": 0,
+      "cts__design__instance__count__cover": 0,
+      "cts__design__instance__area__cover": 0,
+      "cts__design__instance__utilization": 0.698141,
+      "cts__design__instance__utilization__stdcell": 0.608801,
+      "cts__design__rows": 1506,
+      "cts__design__rows:asap7sc7p5t": 1506,
+      "cts__design__sites": 7086280,
+      "cts__design__sites:asap7sc7p5t": 7086280,
+      "cts__flow__warnings__count": 11,
+      "cts__flow__errors__count": 0,
+      "cts__flow__warnings__count:RSZ-0062": 1,
+      "cts__flow__warnings__count:STA-1212": 1001,
+      "cts__flow__warnings__type_count": 2
+    },
+    "canonical_terminal_archive": "47a010268:results/physical_abi3/asap7/chip/w18_bf16_c8_dependency_fail_20261001/",
+    "actual_global_route_database": "/home/ubuntu/w10qjobs/work/c8/orfs/results/asap7/opentallas_ot_v41_rom_elem_asap7_w10_wc_c8/base/5_1_grt.odb",
+    "macro_lef": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+    "macro_lef_sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "diagnostic_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "read_only": true,
+    "routed_final_available": false,
+    "site": {
+      "width_nm": 54,
+      "height_nm": 270,
+      "origin_nm": [
+        2160,
+        2160
+      ]
+    }
+  },
+  "wake": {
+    "schema": "opentallas.w10.wake.fullgoal_binding.v1",
+    "verdict": "PASS_SIZING_ONLY",
+    "kind": "MANDATORY_BASELINE_IMPLEMENTATION_CORRECTION",
+    "adopted": false,
+    "parameters": {
+      "WAKE_REG": 1,
+      "default": 0,
+      "FAST": 1,
+      "PP": 1,
+      "FRONT_PAR": 0,
+      "NB": 2,
+      "LAT": 8
+    },
+    "original_modules_preserved": true,
+    "compute": {
+      "fp4_macs_per_cycle": 128,
+      "fp8_macs_per_cycle": 64,
+      "fp4_weight_macs_per_byte": 1.8686131386861313,
+      "fp8_weight_macs_per_byte": 0.9343065693430657,
+      "bf16_modes": {
+        "columns": {
+          "bp": 0,
+          "hold": 1,
+          "macs": 32,
+          "bf16_weight_bytes_per_cycle": 64,
+          "activation_macs_per_byte": 0.5,
+          "status": "existing exact gate; contextual SS/FF pending"
+        },
+        "pair_option_iii": {
+          "bp": 1,
+          "hold": 4,
+          "macs": 8,
+          "bf16_weight_bytes_per_cycle": 16,
+          "activation_macs_per_byte": 0.5,
+          "status": "existing exact gate; contextual SS/FF pending"
+        },
+        "pair_option_ii": {
+          "bp": 2,
+          "hold": 8,
+          "macs": 4,
+          "bf16_weight_bytes_per_cycle": 8,
+          "activation_macs_per_byte": 0.5,
+          "status": "existing exact gate; contextual SS/FF pending"
+        }
+      }
+    },
+    "ports": {
+      "rom_effective_bytes_per_cycle": 68.5,
+      "physical_rom_ports": 4,
+      "bytes_per_port_per_two_cycle_read": 34.25,
+      "quantized_x_payload_bytes_per_cycle": 64,
+      "quantized_x_exponent_bits": 20,
+      "bf16_column_x_bytes_per_cycle": 128,
+      "partial_data_bytes_per_cycle": 8,
+      "partial_metadata_bits_per_cycle": 60
+    },
+    "latency": {
+      "boundary_cycles": 1,
+      "added_walker_cycles": 0,
+      "rationale": "go and x captured on free edge; registered wake opens next edge when existing go_e is consumed",
+      "actual_lat8": {
+        "ar_tokens_s": 2770.4,
+        "token_us": 360.9587063239965,
+        "dies": 208,
+        "element_adder_stages": 8
+      },
+      "one_added_cycle_fallback": "Must reprice and rerun exact gate before any build if protocol requires a cycle"
+    },
+    "full_size": {
+      "stages": 41,
+      "layer_dies": 164,
+      "maximum_pairs_per_die": 4773,
+      "bf16_column_pairs_per_die": 1024,
+      "macros_per_element": 4,
+      "local_icgs_per_element": 8,
+      "wake_ff_fanout_per_leaf": 1,
+      "wake_next_fanout": 8,
+      "external_port_fanout_delta": 0,
+      "mux_demux": "existing PP muxes and alternating bank enables unchanged; no FRONT_PAR",
+      "layer_die_clock_w_3x_estimate": 2.492408796667207,
+      "conservative_all_layer_dies_clock_w": 408.755042653422,
+      "layer_die_busy_fifo_clock_w_3x_estimate": 1.4010834640778036,
+      "layer_die_all_busy_clock_w_3x_estimate": 3.8934922607450106
+    },
+    "elements": {
+      "q": {
+        "outline_um": [
+          510.84,
+          126.9
+        ],
+        "tile_um2": 64825.596,
+        "existing_boundary_register_bits": 549,
+        "extra_register_bits": 8,
+        "extra_gate_count": 7,
+        "extra_area_um2_upper": 13.501080000000002,
+        "incremental_placement_um2_at_50pct": 27.002160000000003,
+        "incremental_slot_fraction": 0.00041653546848994654,
+        "allocated_slots_per_element": 1,
+        "boundary_bits_per_cycle": 549,
+        "local_signal_tracks_needed": 1113,
+        "channel_tracks_estimate": 2881.1376,
+        "track_fraction": 0.38630574256502015,
+        "additional_clock_pin_cap_ff": 263.221866,
+        "additional_clock_pin_w_ss": 0.00012536731033848002,
+        "additional_clock_w_3x_estimate": 0.0003761019310154401,
+        "fit": true
+      },
+      "column": {
+        "outline_um": [
+          1002.89,
+          142.56
+        ],
+        "tile_um2": 142971.9984,
+        "existing_boundary_register_bits": 1616,
+        "extra_register_bits": 2152,
+        "extra_gate_count": 7,
+        "extra_area_um2_upper": 1064.29148,
+        "incremental_placement_um2_at_50pct": 2128.58296,
+        "incremental_slot_fraction": 0.014888110845626957,
+        "allocated_slots_per_element": 1,
+        "boundary_bits_per_cycle": 1616,
+        "local_signal_tracks_needed": 4308,
+        "channel_tracks_estimate": 5656.299599999999,
+        "track_fraction": 0.7616286803478374,
+        "additional_clock_pin_cap_ff": 739.7846119999999,
+        "additional_clock_pin_w_ss": 0.00035234461500336,
+        "additional_clock_w_3x_estimate": 0.0010570338450100801,
+        "fit": true,
+        "baseline_core_um2": 138042,
+        "baseline_stdcell_um2": 65051.7,
+        "baseline_macro_um2": 31525.5,
+        "spare_placement_um2": 41464.8,
+        "additional_busy_fifo_clock_w_3x_estimate": 0.00136824557038848
+      }
+    },
+    "clock_power_basis": {
+      "voltage_ss": 0.63,
+      "clock_hz": 1200000000.0,
+      "dff_clk_ff": 0.446638,
+      "icg_clk_ff": 2.0635,
+      "lib_sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+      "margin": "3x pin C*V^2*f estimate, not measured CTS power; always-clocked activation stage",
+      "excludes": "Always-on upstream trunk already priced by model; actual internal/CTS power must replace estimate"
+    },
+    "boundaries": {
+      "hub_port_bits_delta": 0,
+      "shared_memory_bytes_delta": 0,
+      "clock_domains": "same source clock, local gated leaves; physical skew and min paths must close",
+      "layer_restriction": "local strip wiring; inherited hub layer contract unchanged, post-route audit required"
+    },
+    "gates": [
+      "exact startup/reset/idle-to-work, immediate beat, final partial and drain",
+      "leaf wake registers must survive synthesis, no raw go/reset path to ICG ENA",
+      "same fixed 0.833ns /60ps setup /25ps hold and original I/O delays",
+      "SS setup and FF hold with actual macro own-corner views",
+      "full-size macro pin access and clean route, ROM slew/fanout, measured power",
+      "actual abstracts then W18 composed root/region and die route/IR"
+    ],
+    "other_designs": {
+      "qwen_rom": "unchanged",
+      "qwen_hbm": "unchanged",
+      "v41_hbm": "unchanged"
+    },
+    "source_commit": "96aa908036a358f692e8a9b8eee11b83b2550fff",
+    "source_sha256": {
+      "tools/uarch_model.py": "bad304fbd4a3309abfe63a132e6d4532e21d110c07d142aa55a28f20602102a1",
+      "rtl/v41rom/ot_v41_rom_elem_w10.sv": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+      "results/arch/v41_stage_owner_product.json": "8b0196e6dbb9fb0420628b0942e75549ec91e9c61f35fbd1f432ab2453852b81",
+      "results/uarch/w10_baseline_main_prequalification_bb01.json": "e383f7cd89c88da71635f5ba1495b00d7c33e0a6d4781ac468ada2baad2837e9",
+      "results/quality/w10_parent_model_pin_refresh_20261001.json": "316c301c229aae8293aafcd72b922d33c4698052d22833ced92e6d850f0bed99",
+      "tools/w10_wake_prebuild.py": "eb073b8017f56ce723ebda1e9dfb0eabc1cfcf2c54e618528e50dd24260a1d26",
+      "tools/w10_wake_fullgoal.py": "819ab1e5c67dce04c651ca1b3887161d11901498da86ff8cad46f7f8053b91f1",
+      "results/uarch/w10_baseline_wake/prebuild.json": "f41cd67a72571d597ce81c617d252993ae867b820247a1ba4654aba2157c8bb9",
+      "results/uarch/w10_baseline_wake/qualification/golden_n4_r1.json": "b29ad7dce69b99426078c5d817fceb2c0b017d043883dd18e5cfa63d03f753b8",
+      "results/uarch/w10_baseline_wake/c8_area_anchor.json": "4dd30b8cdffb4297d307a65b257d6bde2609ecd684084a5ae48a5163e1b92b83"
+    },
+    "mode_binding": {
+      "q": {
+        "top": "ot_v41_rom_elem_q_wake_w10",
+        "BF16": 0,
+        "XF": 4,
+        "NB": 2,
+        "FAST": 1,
+        "PP": 1,
+        "WAKE_REG": 1
+      },
+      "column": {
+        "top": "ot_v41_rom_elem_wake_w10",
+        "BF16": 1,
+        "XF": 8,
+        "NB": 2,
+        "FAST": 1,
+        "PP": 1,
+        "WAKE_REG": 1
+      },
+      "common": {
+        "CUT": 379,
+        "LAT": 8,
+        "MTP": 1,
+        "EARLY": 1,
+        "FRONT_PAR": 0,
+        "BP": 0
+      }
+    },
+    "qualification_boundary": {
+      "N": 4,
+      "NB": 2,
+      "MTP_positions": 6,
+      "cases": 13,
+      "rows": 240,
+      "completion_cycle_delta": 0,
+      "note": "N2 failures retained separately, not qualified or recast as passing; composed full-field RTL pending"
+    },
+    "fifo_sizing": {
+      "column_original_depth": 4,
+      "column_qualified_depth": 8,
+      "extra_storage_bits": 2128,
+      "extra_storage_um2": 620.5248,
+      "extra_mux_control_um2_estimate": 430.2656,
+      "latency_delta_cycles": 0,
+      "read_bytes_per_cycle": 66.5,
+      "write_bytes_per_cycle": 66.5,
+      "spine_port_delta_bits": 0
+    }
+  },
+  "rules": {
+    "M4": {
+      "getWidth": 24.0,
+      "getSpacing": 24.0,
+      "getArea": 2000.0,
+      "getMinStep": 0.0
+    },
+    "M5": {
+      "getWidth": 24.0,
+      "getSpacing": 24.0,
+      "getArea": 2000.0,
+      "getMinStep": 0.0
+    },
+    "V4": {
+      "getWidth": 0.0,
+      "getSpacing": 0.0,
+      "getArea": 0.0,
+      "getMinStep": 0.0
+    }
+  },
+  "via45": {
+    "M4": [
+      -23,
+      -12,
+      23,
+      12
+    ],
+    "M5": [
+      -12,
+      -23,
+      12,
+      23
+    ],
+    "V4": [
+      -12,
+      -12,
+      12,
+      12
+    ]
+  },
+  "local_PG": [
+    {
+      "net": "VDD",
+      "layer": "M5",
+      "bbox_nm": [
+        140292,
+        2407,
+        140412,
+        140153
+      ]
+    },
+    {
+      "net": "VSS",
+      "layer": "M5",
+      "bbox_nm": [
+        140100,
+        2137,
+        140220,
+        140423
+      ]
+    }
+  ],
+  "owner": "w10-w18-recovery",
+  "owner_commits": [
+    "662e598e8",
+    "3dfbb2e81"
+  ],
+  "inspected_main": "f044702483b1d113303252c8cbb6894ef2e07139",
+  "sources_sha256": {
+    "physical/abi3/w10_wake_column_place.tcl": "61e3ab8de7ce257ad42700dd5924e1124fa47f5002b9bdd493cd8474eb20dfbd",
+    "physical/abi3/w10_wake_q_place.tcl": "08f2ffdbc3655594c2a245cab2fc9a88096f899e146427846f1f8c6bcc09cd54",
+    "physical/abi3/w10_wake_pdn.tcl": "ccfb2a247310f235fcb5d845b7c2745163ba180974c08578361b0d9c5668f3f3",
+    "tools/w10_wake_physical.py": "d20acc5b1d54fb569fad7f4482cd9c0d21ce1545861083cadd8ed55bd49a5ada",
+    "results/uarch/w10_baseline_wake/fullgoal_bound.json": "22ec42a393a34fb639d9ea8766b1da3b5682dfca761405ce5d0fb2c29c72be58",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+  },
+  "wake_macro_placement_body_matches_failed_c8": true,
+  "wake_column_capture_fix_flags": [
+    0,
+    0,
+    0,
+    0
+  ]
+}

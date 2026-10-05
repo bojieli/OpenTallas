@@ -1,0 +1,718 @@
+{
+ "basis": {
+  "bf16_stripe_macros": "2 x BF16_pairs_per_die (S58 row of partition_token_options.json)",
+  "candidate": "DS4096-TP4-S58 (base, no PAR2 term)",
+  "clock_hz": 1200000000.0,
+  "cycle_ns": 0.8333,
+  "elem_stages": 8,
+  "head_dies": 8,
+  "mtp": {
+   "draft_fraction_of_ar": 0.075,
+   "positions": 6,
+   "step": "verify pass (6 positions) + draft_fraction x AR token",
+   "tau": 3.649
+  },
+  "serial_domain_hz": 900000000.0,
+  "stages": 58,
+  "table_dies": 36
+ },
+ "git_head": "693a69076d206ca96949cea856a26f5facd37341",
+ "method": "Added cycles are injected as depth on each field matvec node of the scope (the element's fill latency; uarch_model._lat_cycles hook at the 1.2 GHz field clock), then cons_v41_rom re-solves the graph.  Depth is pure latency after issue in decode_critical_path.Graph.solve (f = max(start + issue, last input) + depth), so no element-op latency is hidden by streaming: each added cycle is paid once per matvec node on the critical path.  Element issue (II 1, throughput) is unchanged.",
+ "not_adopted": true,
+ "ops_per_token_derivation": "Counted from the solved critical path: matvec nodes (price_matvec _uarch) on g.path(token.return).  The per-layer field chain on the AR path is attn.a_proj -> attn.wq_b -> attn.wo_a (BF16) -> attn.wo_b, ffn.router (BF16) -> ffn.experts_gu -> ffn.down: 5 q-element ops + 2 BF16-column ops a layer x 40 layers, + head.lm_head (BF16) = 200 q + 81 BF16.  The MTP verify pass (same graph, issue x 6, one depth per node) puts ffn.shared_gu on the path too: 240 q + 81 BF16; the 3/40 draft adds 0.075 x the AR delta.  mHC hc.fn is a hub op, not a field element.  See rows[*].census (k = 0) for the solved counts; ar_exposed_ops_equiv = delta token time / (k x 0.833 ns) cross-checks them.",
+ "recurrence_sensitivity": [
+  {
+   "ar_delta_pct": -0.648,
+   "ar_tok_s": 2547.1,
+   "case": "one added cycle inside the chunk-8 adder recurrence (elem_stages 8 -> 9; every field element, issue floor 8 x LAT and K-split adder levels)",
+   "ctx": 1048576,
+   "mtp_delta_pct": -1.656,
+   "mtp_tok_s": 3746.3
+  },
+  {
+   "ar_delta_pct": -0.675,
+   "ar_tok_s": 2662.5,
+   "case": "one added cycle inside the chunk-8 adder recurrence (elem_stages 8 -> 9; every field element, issue floor 8 x LAT and K-split adder levels)",
+   "ctx": 200000,
+   "mtp_delta_pct": -1.817,
+   "mtp_tok_s": 4100.8
+  }
+ ],
+ "rows": [
+  {
+   "added_cycles_per_op": 0,
+   "ar_delta_pct": 0.0,
+   "ar_delta_tok_s": 0.0,
+   "ar_exposed_ops_equiv": null,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2563.7,
+   "ar_token_delta_ns": 0.0,
+   "ar_token_us": 390.0612,
+   "census": {
+    "1": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 390.0661,
+     "path_nodes": 1762,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 200
+    },
+    "6": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "ffn.shared_gu": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 928.6302,
+     "path_nodes": 1564,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 240
+    }
+   },
+   "ctx": 1048576,
+   "mtp_delta_pct": 0.0,
+   "mtp_delta_tok_s": 0.0,
+   "mtp_exposed_ops_equiv": null,
+   "mtp_step_delta_ns": 0.0,
+   "mtp_step_us": 957.8936,
+   "mtp_tok_s": 3809.4,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 1,
+   "ar_delta_pct": -0.043,
+   "ar_delta_tok_s": -1.1,
+   "ar_exposed_ops_equiv": 200.92,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2562.6,
+   "ar_token_delta_ns": 167.43,
+   "ar_token_us": 390.2287,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.021,
+   "mtp_delta_tok_s": -0.8,
+   "mtp_exposed_ops_equiv": 241.45,
+   "mtp_step_delta_ns": 201.21,
+   "mtp_step_us": 958.0948,
+   "mtp_tok_s": 3808.6,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 2,
+   "ar_delta_pct": -0.086,
+   "ar_delta_tok_s": -2.2,
+   "ar_exposed_ops_equiv": 201.01,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2561.5,
+   "ar_token_delta_ns": 335.01,
+   "ar_token_us": 390.3963,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.045,
+   "mtp_delta_tok_s": -1.7,
+   "mtp_exposed_ops_equiv": 256.6,
+   "mtp_step_delta_ns": 427.66,
+   "mtp_step_us": 958.3213,
+   "mtp_tok_s": 3807.7,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 3,
+   "ar_delta_pct": -0.129,
+   "ar_delta_tok_s": -3.3,
+   "ar_exposed_ops_equiv": 201.09,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2560.4,
+   "ar_token_delta_ns": 502.73,
+   "ar_token_us": 390.564,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.066,
+   "mtp_delta_tok_s": -2.5,
+   "mtp_exposed_ops_equiv": 251.62,
+   "mtp_step_delta_ns": 629.05,
+   "mtp_step_us": 958.5227,
+   "mtp_tok_s": 3806.9,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 4,
+   "ar_delta_pct": -0.172,
+   "ar_delta_tok_s": -4.4,
+   "ar_exposed_ops_equiv": 201.18,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2559.3,
+   "ar_token_delta_ns": 670.6,
+   "ar_token_us": 390.7318,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.087,
+   "mtp_delta_tok_s": -3.3,
+   "mtp_exposed_ops_equiv": 249.16,
+   "mtp_step_delta_ns": 830.52,
+   "mtp_step_us": 958.7242,
+   "mtp_tok_s": 3806.1,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 0,
+   "ar_delta_pct": 0.0,
+   "ar_delta_tok_s": 0.0,
+   "ar_exposed_ops_equiv": null,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2563.7,
+   "ar_token_delta_ns": 0.0,
+   "ar_token_us": 390.0612,
+   "census": {
+    "1": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 390.0661,
+     "path_nodes": 1762,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 200
+    },
+    "6": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "ffn.shared_gu": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 928.6302,
+     "path_nodes": 1564,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 240
+    }
+   },
+   "ctx": 1048576,
+   "mtp_delta_pct": 0.0,
+   "mtp_delta_tok_s": 0.0,
+   "mtp_exposed_ops_equiv": null,
+   "mtp_step_delta_ns": 0.0,
+   "mtp_step_us": 957.8936,
+   "mtp_tok_s": 3809.4,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 1,
+   "ar_delta_pct": -0.062,
+   "ar_delta_tok_s": -1.6,
+   "ar_exposed_ops_equiv": 292.31,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2562.1,
+   "ar_token_delta_ns": 243.59,
+   "ar_token_us": 390.3048,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.029,
+   "mtp_delta_tok_s": -1.1,
+   "mtp_exposed_ops_equiv": 332.02,
+   "mtp_step_delta_ns": 276.68,
+   "mtp_step_us": 958.1703,
+   "mtp_tok_s": 3808.3,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 2,
+   "ar_delta_pct": -0.121,
+   "ar_delta_tok_s": -3.1,
+   "ar_exposed_ops_equiv": 283.34,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2560.6,
+   "ar_token_delta_ns": 472.23,
+   "ar_token_us": 390.5335,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.058,
+   "mtp_delta_tok_s": -2.2,
+   "mtp_exposed_ops_equiv": 332.11,
+   "mtp_step_delta_ns": 553.52,
+   "mtp_step_us": 958.4472,
+   "mtp_tok_s": 3807.2,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 3,
+   "ar_delta_pct": -0.179,
+   "ar_delta_tok_s": -4.6,
+   "ar_exposed_ops_equiv": 280.46,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2559.1,
+   "ar_token_delta_ns": 701.14,
+   "ar_token_us": 390.7624,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.089,
+   "mtp_delta_tok_s": -3.4,
+   "mtp_exposed_ops_equiv": 342.28,
+   "mtp_step_delta_ns": 855.71,
+   "mtp_step_us": 958.7493,
+   "mtp_tok_s": 3806.0,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 4,
+   "ar_delta_pct": -0.242,
+   "ar_delta_tok_s": -6.2,
+   "ar_exposed_ops_equiv": 283.68,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2557.5,
+   "ar_token_delta_ns": 945.6,
+   "ar_token_us": 391.0068,
+   "ctx": 1048576,
+   "mtp_delta_pct": -0.118,
+   "mtp_delta_tok_s": -4.5,
+   "mtp_exposed_ops_equiv": 339.87,
+   "mtp_step_delta_ns": 1132.89,
+   "mtp_step_us": 959.0265,
+   "mtp_tok_s": 3804.9,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 0,
+   "ar_delta_pct": 0.0,
+   "ar_delta_tok_s": 0.0,
+   "ar_exposed_ops_equiv": null,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2680.6,
+   "ar_token_delta_ns": 0.0,
+   "ar_token_us": 373.0508,
+   "census": {
+    "1": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 373.0574,
+     "path_nodes": 1762,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 200
+    },
+    "6": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "ffn.shared_gu": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 845.6842,
+     "path_nodes": 1564,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 240
+    }
+   },
+   "ctx": 200000,
+   "mtp_delta_pct": 0.0,
+   "mtp_delta_tok_s": 0.0,
+   "mtp_exposed_ops_equiv": null,
+   "mtp_step_delta_ns": 0.0,
+   "mtp_step_us": 873.6562,
+   "mtp_tok_s": 4176.7,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 1,
+   "ar_delta_pct": -0.045,
+   "ar_delta_tok_s": -1.2,
+   "ar_exposed_ops_equiv": 200.49,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2679.4,
+   "ar_token_delta_ns": 167.08,
+   "ar_token_us": 373.2179,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.026,
+   "mtp_delta_tok_s": -1.1,
+   "mtp_exposed_ops_equiv": 276.18,
+   "mtp_step_delta_ns": 230.15,
+   "mtp_step_us": 873.8864,
+   "mtp_tok_s": 4175.6,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 2,
+   "ar_delta_pct": -0.09,
+   "ar_delta_tok_s": -2.4,
+   "ar_exposed_ops_equiv": 200.58,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2678.2,
+   "ar_token_delta_ns": 334.3,
+   "ar_token_us": 373.3851,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.05,
+   "mtp_delta_tok_s": -2.1,
+   "mtp_exposed_ops_equiv": 263.69,
+   "mtp_step_delta_ns": 439.49,
+   "mtp_step_us": 874.0957,
+   "mtp_tok_s": 4174.6,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 3,
+   "ar_delta_pct": -0.134,
+   "ar_delta_tok_s": -3.6,
+   "ar_exposed_ops_equiv": 200.67,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2677.0,
+   "ar_token_delta_ns": 501.67,
+   "ar_token_us": 373.5525,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.074,
+   "mtp_delta_tok_s": -3.1,
+   "mtp_exposed_ops_equiv": 259.57,
+   "mtp_step_delta_ns": 648.92,
+   "mtp_step_us": 874.3052,
+   "mtp_tok_s": 4173.6,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 4,
+   "ar_delta_pct": -0.179,
+   "ar_delta_tok_s": -4.8,
+   "ar_exposed_ops_equiv": 200.76,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2675.8,
+   "ar_token_delta_ns": 669.2,
+   "ar_token_us": 373.72,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.098,
+   "mtp_delta_tok_s": -4.1,
+   "mtp_exposed_ops_equiv": 257.54,
+   "mtp_step_delta_ns": 858.46,
+   "mtp_step_us": 874.5147,
+   "mtp_tok_s": 4172.6,
+   "scope": "q",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 0,
+   "ar_delta_pct": 0.0,
+   "ar_delta_tok_s": 0.0,
+   "ar_exposed_ops_equiv": null,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2680.6,
+   "ar_token_delta_ns": 0.0,
+   "ar_token_us": 373.0508,
+   "census": {
+    "1": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 373.0574,
+     "path_nodes": 1762,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 200
+    },
+    "6": {
+     "all_matvec_in_graph": 327,
+     "bf16_matvec_on_path": 81,
+     "families_on_path": {
+      "attn.a_proj": 40,
+      "attn.wo_a": 40,
+      "attn.wo_b": 40,
+      "attn.wq_b": 40,
+      "ffn.down": 40,
+      "ffn.experts_gu": 40,
+      "ffn.router": 40,
+      "ffn.shared_gu": 40,
+      "head.lm_head": 1
+     },
+     "pass_us": 845.6842,
+     "path_nodes": 1564,
+     "q_matvec_in_graph": 242,
+     "q_matvec_on_path": 240
+    }
+   },
+   "ctx": 200000,
+   "mtp_delta_pct": 0.0,
+   "mtp_delta_tok_s": 0.0,
+   "mtp_exposed_ops_equiv": null,
+   "mtp_step_delta_ns": 0.0,
+   "mtp_step_us": 873.6562,
+   "mtp_tok_s": 4176.7,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 1,
+   "ar_delta_pct": -0.063,
+   "ar_delta_tok_s": -1.7,
+   "ar_exposed_ops_equiv": 284.08,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2678.9,
+   "ar_token_delta_ns": 236.73,
+   "ar_token_us": 373.2875,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.034,
+   "mtp_delta_tok_s": -1.4,
+   "mtp_exposed_ops_equiv": 351.53,
+   "mtp_step_delta_ns": 292.94,
+   "mtp_step_us": 873.9492,
+   "mtp_tok_s": 4175.3,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 2,
+   "ar_delta_pct": -0.127,
+   "ar_delta_tok_s": -3.4,
+   "ar_exposed_ops_equiv": 284.26,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2677.2,
+   "ar_token_delta_ns": 473.77,
+   "ar_token_us": 373.5246,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.067,
+   "mtp_delta_tok_s": -2.8,
+   "mtp_exposed_ops_equiv": 351.65,
+   "mtp_step_delta_ns": 586.08,
+   "mtp_step_us": 874.2423,
+   "mtp_tok_s": 4173.9,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 3,
+   "ar_delta_pct": -0.19,
+   "ar_delta_tok_s": -5.1,
+   "ar_exposed_ops_equiv": 284.44,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2675.5,
+   "ar_token_delta_ns": 711.1,
+   "ar_token_us": 373.7619,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.098,
+   "mtp_delta_tok_s": -4.1,
+   "mtp_exposed_ops_equiv": 343.38,
+   "mtp_step_delta_ns": 858.46,
+   "mtp_step_us": 874.5147,
+   "mtp_tok_s": 4172.6,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  },
+  {
+   "added_cycles_per_op": 4,
+   "ar_delta_pct": -0.254,
+   "ar_delta_tok_s": -6.8,
+   "ar_exposed_ops_equiv": 284.62,
+   "ar_path": {
+    "bf16": 81,
+    "q": 200
+   },
+   "ar_tok_s": 2673.8,
+   "ar_token_delta_ns": 948.74,
+   "ar_token_us": 373.9996,
+   "ctx": 200000,
+   "mtp_delta_pct": -0.132,
+   "mtp_delta_tok_s": -5.5,
+   "mtp_exposed_ops_equiv": 345.59,
+   "mtp_step_delta_ns": 1151.97,
+   "mtp_step_us": 874.8082,
+   "mtp_tok_s": 4171.2,
+   "scope": "all",
+   "verify_path": {
+    "bf16": 81,
+    "q": 240
+   }
+  }
+ ],
+ "rtl_or_pnr": false,
+ "schema": "opentallas.dsrom_qelem_pipeline_pricing.v1",
+ "source_sha256": {
+  "configs/hardware/technology.json": "17bcb8af6dffcbbe1817c60600b4b6961a06a6c58a773f9e1eaba88741b36706",
+  "results/uarch/dsrom_4096_comparable_capacity_20261002/partition_token_options.json": "47c1fe8a2922c6351f3bacb19770c45fbbd197415e0da81ef211e9a0932c5154",
+  "rtl/v41rom/ot_v41_rom_elem_q_qt_w10.sv": "e962b7486e113a1df4660c6e7f18612f57a14b4bafa1aa22dd4424ac29e0d325",
+  "rtl/v41rom/ot_v41_rom_elem_qt_w10.sv": "c41cdf2ed00bb0a9d2c9c6128d67b8bcc1dbf626776a0952e2deedeca1c07759",
+  "tools/arch_budget_v41.py": "db67e6fb5dde786dccc1bb0dc17aa977b8331d16aa3f3ef392b6e39424d2c735",
+  "tools/decode_critical_path.py": "a6e46bcd78c84dfaa3bae975b9f6ada406d33a8144900ade46458cac573f4ebb",
+  "tools/dsrom_4096_partition_token_options.py": "131a0f88e4dfa56deefcb31a5b495ae183c82ea7158a3f59e84f68823d072289",
+  "tools/dsrom_qelem_pipeline_pricing.py": "13743fb4eda6756c02a697d2423b14a32d19b3d61de2859afc3c1e964ddb7bce",
+  "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+ },
+ "uncertainty": [
+  "The registered-go cycle is counted on every op.  It is hideable only if the sequencer issues go one cycle early (the x stream already leads go or the controller pre-asserts); the model does not credit that, so +1 is an upper bound for the go register.",
+  "The datapath cycles are priced as fill latency (outside the chunk-8 adder recurrence).  A cycle inside the recurrence also stretches issue (8 x LAT floor): see recurrence_sensitivity.",
+  "elem_fill 78 is inherited from W2 and not remeasured on the W10 element (w10_baseline_model pending); the per-cycle cost is independent of that absolute value as long as the critical path does not move.",
+  "Scope q excludes the BF16-column matrices; if the shared ot_v41_rom_elem_w10 base is pipelined for BF16 = 1 too, use scope all."
+ ]
+}

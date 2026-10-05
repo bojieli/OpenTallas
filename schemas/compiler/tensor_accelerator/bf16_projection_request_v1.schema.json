@@ -1,0 +1,36 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {"const": "bf16"},
+        "path": {"const": "input.bf16.bin"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "size_bytes": {"minimum": 2, "type": "integer"},
+        "source_row": {"minimum": 0, "type": "integer"},
+        "source_tensor": {"minLength": 1, "type": "string"}
+      },
+      "required": ["dtype", "path", "payload_sha256", "shape", "size_bytes", "source_row", "source_tensor"],
+      "type": "object"
+    },
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_request.v1"},
+    "source_operation_id": {"minLength": 1, "type": "string"}
+  },
+  "required": ["graph_id", "input", "request_id", "schema", "source_operation_id"],
+  "title": "OpenTallas BF16 projection execution request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

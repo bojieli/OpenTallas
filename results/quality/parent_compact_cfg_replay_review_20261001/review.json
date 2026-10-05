@@ -1,0 +1,22 @@
+{
+  "cfg_words": 224000,
+  "negative_cases": [
+    "w1:stale_segment_base",
+    "w1:stale_PP_base",
+    "w1:corrupt_row_tag",
+    "w3:stale_segment_base",
+    "w3:stale_PP_base",
+    "w3:corrupt_row_tag",
+    "w2:stale_segment_base",
+    "w2:stale_PP_base",
+    "w2:corrupt_row_tag",
+    "base_overflow"
+  ],
+  "physical_admission": false,
+  "receipt_identical": true,
+  "reviewed_commit": "a1aef63e850ca8f1b4263b19c91932ab52f2b83e",
+  "scope": "Exact immutable add_phase/phase_words encoding plus symbolic ROM address identities; no actual numeric checkpoint values, arithmetic RTL gate, SS/FF or complete residency proof",
+  "stream_words": 224,
+  "template_sha256": "a35eaa9221e9d59a11d13045d3d0718e8171f2de663eff5c9fdb7f53c08e9567",
+  "verdict": "PASS_INDEPENDENT_REGENERATION"
+}

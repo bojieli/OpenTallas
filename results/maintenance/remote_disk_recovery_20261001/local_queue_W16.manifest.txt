@@ -1,0 +1,16 @@
+W16 follow-up pass regeneration (tau sweep, 8K, calibration, Qwen sweeps) (detached, nohup), started on frozen tools/uarch_model.py
+  worktree: /tmp/claude-1000/wt/w16 (branch claude/w16-consolidation, merge of main 5aa6e609 uncommitted on top of e3674e5c)
+  code sha256: c4aa8f816880ef916dbdc2bf7993e8d7ed920637ebac7be31102a25adbaaf43a  (check: cd /tmp/claude-1000/wt/w16 && sha256sum -c /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/frozen12.sha)
+  consolidation pid 1677386 -> /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/cons_m.json (log /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/cons_m.log)
+  economics + levers (done when /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/lev_m.log contains ECON_OK) -> /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/econ_m.json, /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/lev_m.json
+TO LAND (if W16 is cut off):
+  cd /tmp/claude-1000/wt/w16
+  cp /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/cons_m.json results/uarch/consolidation.json
+  cp /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/econ_m.json results/uarch/economics.json; cp /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/lev_m.json results/uarch/economics_levers.json
+  python3 /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/gen_doc.py results/uarch/consolidation.json /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/doc_head.md docs/MICROARCH_MODEL.md
+  python3 -m pytest -q tests/test_uarch_consolidation.py tests/test_uarch_economics.py tests/test_uarch_model.py tests/test_uarch_dedicated.py
+  python3 tools/audit_prose_figure_coverage.py  # then sync the untriaged count in docs/EVIDENCE_LEDGER.md:35 and docs/UNIFIED_EXECUTION_CHECKLIST.md:1032
+  python3 tools/final_number_readiness.py; make check-figures
+  git add tools/uarch_model.py results/uarch/{consolidation,economics,economics_levers}.json tests/test_uarch_{consolidation,economics}.py docs/MICROARCH_MODEL.md docs/EVIDENCE_LEDGER.md docs/UNIFIED_EXECUTION_CHECKLIST.md results/abi3/prose_figure_coverage.json results/arch/final_number_readiness.json
+  git commit; git push https://github.com/bojieli/OpenTallas.git HEAD:refs/heads/claude/w16-consolidation
+NOT YET IN THE CODE (drafted in /tmp/claude-1000/-home-ubuntu-OpenTallas/1c91c0ff-ce71-4e3f-8c70-c973dc40b533/scratchpad/sect2.py): stage-owner file, tau sweep, 8K rows, GPU calibration, Qwen context sweep.

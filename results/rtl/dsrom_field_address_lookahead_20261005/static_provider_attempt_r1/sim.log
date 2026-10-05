@@ -1,0 +1,5 @@
+PASS static_provider stages=2 phase_word_assertions=4096 stream_word_assertions=32768
+- rtl/test/dsrom_sys/tb_dsrom_static_provider.sv:23: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17ns; walltime 0.022 s; speed 804.564 ns/s
+- Verilator: cpu 0.022 s on 1 threads; allocated 7 MB

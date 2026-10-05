@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.w19.retained-attention-fixture.v1",
+  "fixture_sha256": "68ba211d605a123946bd711154c7d1e291b2541ddf976b4c30de9268d457f3d3",
+  "source_files": {
+    "/home/ubuntu/w19work/mtp/dump_mtp_L02.pkl": "01dc6fb9cf502ea860eab94618440802510b528226922c6e0cb93f104febc3e9",
+    "/home/ubuntu/w19work/mtp/mtp_L00.npz": "98cfff994ee12b78cbfed51e115eb80d8666e02bef62d6446ce693b630c54647",
+    "/home/ubuntu/w19work/mtp/mtp_L02.npz": "5401c258c0b7942ccfd66231c2dd6b40f8644014e48db26e38883ee1bd61e427",
+    "/home/ubuntu/w17work/isa/scratch_s20260930/images/ctx1048576_L00_r0/kv.window.codes.bin": "ca687f540df9b0dfdf9cb0ce35ce7d5726e075d3fe489eb7103ea272984ecd54",
+    "/home/ubuntu/w17work/isa/scratch_s20260930/images/ctx1048576_L00_r0/kv.window.scale.bin": "f614cf6ae1089d342b3e80a06353f91ed50824476748dd6bf073b0564e1f8bd7",
+    "/home/ubuntu/w19-checkpoint-image-link/compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809"
+  },
+  "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+  "checkpoint_tensors": {
+    "layers.0.attn.attn_sink": {
+      "tensor_sha256": "8017bf7692016398f5b28fee5afe99d3f2f3a54cb68fc66d86a5b7a58c241457",
+      "dtype": "F32",
+      "shape": [
+        64
+      ],
+      "shard_identity": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/e1281f85d0ce4a3dfb63d41926fc4a47fa71f36ba20992e3597e702ead49d4c9",
+      "header_offsets": [
+        0,
+        256
+      ]
+    },
+    "layers.2.attn.attn_sink": {
+      "tensor_sha256": "fcf433c9435a3484908b9a4b9b76f6eb3f87c32e02df227fa9ab0c3157fdfdae",
+      "dtype": "F32",
+      "shape": [
+        64
+      ],
+      "shard_identity": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/blobs/4a42dc78698bee6b1a821aa01c9650749ef1f716143751f1cdb815c6400280a9",
+      "header_offsets": [
+        0,
+        256
+      ]
+    }
+  },
+  "query": "retained ISA rank0/head0 wq_b output; forwardRoPE software fixture generation at position1048575",
+  "initialKV": "retained W17 raw127window rows+retainedcheckpointnewrow, BF16 verified",
+  "rows640": "shape stress ONLY: L2query+L0initialwindow+512repeatedL2CKVrows; not actual selected512rows/modeltrajectory",
+  "coefficient_ports": "COS/SIN fixture inputs from golden software; production service unresolved",
+  "production_runtime": false,
+  "full_token_qualified": false
+}

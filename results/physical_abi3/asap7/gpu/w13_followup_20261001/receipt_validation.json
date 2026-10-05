@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    "Actual SM LEFs and corner/source pins produce companion hashes",
+    "Pending fallback rejected",
+    "Changed actual LEF rejected",
+    "59GiB availability rejects55GiB lease against60GiB modeled peak",
+    "60GiB availability passes memory prerequisite only"
+  ],
+  "scope": "Synthetic provenance controls and memory admission; no hardware run"
+}

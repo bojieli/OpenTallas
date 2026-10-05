@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "./obj_q/Vtb_q"
+  ],
+  "case": "q",
+  "elapsed_seconds": 0.0012398548424243927,
+  "explicit_DIFF": false,
+  "log": "positive_q_simulate.log",
+  "log_sha256": "a65434588083887ab64872fb9ee59d31b62562c8b1b41b44293ef88802399485",
+  "metrics": {
+    "cgroup.procs": "2515948",
+    "cpu.max": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "1122226176",
+    "memory.swap.max": "0"
+  },
+  "pass_marker": null,
+  "phase": "simulate",
+  "remaining_seconds_at_start": 60.0,
+  "returncode": 1,
+  "variant": "positive"
+}

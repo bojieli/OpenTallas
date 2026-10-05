@@ -1,0 +1,46 @@
+{
+  "actual_DUT_failure": false,
+  "actual_provider_credit": false,
+  "actual_test_returncode": 0,
+  "elapsed_seconds": 25.54,
+  "hardware_build_ready": false,
+  "historical_record_unchanged": "common36_drain_review_r1.json",
+  "negative_controls": [
+    "read completed but persistent RMW lock before merge",
+    "merge complete but WR absent",
+    "WR column before actual visibility",
+    "visible captured but ACK/consumer not retired",
+    "consumer retired but reversecredit outstanding",
+    "one WR complete remaining271 missing",
+    "partial write without RMW",
+    "wrong sector",
+    "duplicate completed sector",
+    "dependent issue before writer retirement"
+  ],
+  "schema": "Qwen_common36_writer_completion_review_r2",
+  "source_commit": "7f4e0f05ca08216eda8616437b7cafcb210d0ccf",
+  "source_pins": {
+    "tests/test_qwen_hbm_complete_common36.py": {
+      "commit": "7f4e0f05ca08216eda8616437b7cafcb210d0ccf",
+      "sha256": "2093ee26fc1aae0ef5f171a19ea5dd703b1932217bdbf2769ed3ff35837115b9"
+    },
+    "tools/qwen_hbm_complete_common36.py": {
+      "commit": "7f4e0f05ca08216eda8616437b7cafcb210d0ccf",
+      "sha256": "1e34e1b56ea08cd953aa2bf935e880494951c0679c015aa6d43a1aa9dffbe62e"
+    }
+  },
+  "synthetic_witness": {
+    "all_clients": 36,
+    "credit_returns": 304128,
+    "drains": 8,
+    "instructions_per_iteration": 1737,
+    "program_iterations": 8,
+    "read_requests": 147456,
+    "retired": 13896,
+    "write_requests": 156672
+  },
+  "test_command": "python3 -m pytest -q tests/test_qwen_hbm_complete_common36.py",
+  "tests_passed": 10,
+  "total_token_cycles": null,
+  "tracked_source_clean_before_test": true
+}

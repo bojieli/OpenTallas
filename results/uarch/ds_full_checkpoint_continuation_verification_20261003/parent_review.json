@@ -1,0 +1,14 @@
+{
+  "archive_hashes": 18,
+  "commit": "53e265356",
+  "external_auxiliary_paths": 67,
+  "external_availability_classifications": 119,
+  "first_remaining_affected_PC": 20,
+  "limitation": "From-source availability classifications depend on unarchived external auxiliary presence; preserve their identities before remote full-scope execution.",
+  "payload_read_or_substitution": false,
+  "repository_loaded_modules": 43,
+  "repository_read_files": 69,
+  "schema": "DS_CONTINUATION_DEPENDENCY_PARENT_REVIEW_V1",
+  "verdict": "PASS_REPLAY_WITH_EXPLICIT_EXTERNAL_PRESENCE_LIMITATION",
+  "whole_runtime_resource_admission": false
+}

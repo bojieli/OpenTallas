@@ -1,0 +1,92 @@
+{
+  "argv": [
+    "./obj/Vtb_dsrom_upstream_pair_cadence",
+    "+PROFILE=8",
+    "+OT_ROM_DIR=existing_fast8"
+  ],
+  "caps": {
+    "CPUQuota_property_is_enforced": false,
+    "cgroup.procs": "3905341",
+    "cgroup.threads": "3905341\n3905342\n3906375",
+    "cpu.max": null,
+    "cpu_affinity": [
+      0,
+      1
+    ],
+    "cpu_bound_policy": "KERNEL_INHERITED_TASK_AFFINITY_CPUS_0_1",
+    "cpu_quota_proof_accepted": false,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.oom.group": "1",
+    "memory.peak": "647495680",
+    "memory.swap.max": "0",
+    "metric_read_errors": {
+      "cpu.max": {
+        "errno": 2,
+        "message": "[Errno 2] No such file or directory: '/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dsrom-lat8-image-admission-3904315.service/cpu.max'",
+        "type": "FileNotFoundError"
+      }
+    },
+    "task_affinity_audit": {
+      "errors": [],
+      "gone_threads": [],
+      "tasks": {
+        "3905341": [
+          0,
+          1
+        ],
+        "3905342": [
+          0,
+          1
+        ],
+        "3906375": [
+          0,
+          1
+        ]
+      },
+      "valid": true,
+      "verification": "Every enumerated live thread, including descendants; background observations sampled0.1s. Kernel clone/exec inherit parent affinity; vanished short-lived threads are recorded, not falsely reported observed."
+    }
+  },
+  "case": "existing_fast8",
+  "completion": {
+    "edge_samples": 1029,
+    "emitted_slices": 16,
+    "errors": [],
+    "fatal": false,
+    "first_fault": [],
+    "first_fault_source": [],
+    "first_overflow_cycles": [],
+    "interpretation": "actual upstream selected full-row pair diagnostic only; no field/physical/fulltoken qualification",
+    "issues": 16,
+    "loader_samples": 1029,
+    "pops": 16,
+    "public_rows": [
+      [
+        256,
+        0,
+        1,
+        0,
+        1140850688,
+        0
+      ],
+      [
+        256,
+        0,
+        1,
+        1,
+        1140850688,
+        0
+      ]
+    ],
+    "pushes": 16,
+    "returncode": 0,
+    "valid": true,
+    "valid_config_writes": 25
+  },
+  "elapsed_seconds": 0.06225482281297445,
+  "log_sha256": "a978686beff9ade94039fa4a1877fff51519cd8ccc3d26a0acc1cd87ae96fe5b",
+  "phase": "simulate",
+  "remaining_seconds_at_start": 60.0,
+  "returncode": 0
+}

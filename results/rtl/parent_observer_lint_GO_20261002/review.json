@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.parent.observer-lint-GO.v1",
+  "owner_commit": "63e4c2bab5f8b4177aa5219a57448b0f5f4af16e",
+  "intake_commit": "53ca6d86d",
+  "independent_runner_tests": 24,
+  "artifact_hashes_checked": 34,
+  "plan_sha256": "f37c5d7e968ddcc90a2cb6d1bff4b0e7c7dcdf6a078c54784c2b529aa0daa175",
+  "authorization": "Exactly one unchanged reviewed lint-only gate: baseline WINDOW and CKV plus prescribed compiler mutants, serial direct frontend, fresh scratch. No retry, fallback, lifted cap, code build, simulator, live attachment or source selection. Preserve first failure and stop as runner specifies.",
+  "caps": {
+    "address_space_bytes": 4294967296,
+    "CPU_count": 2,
+    "max_frontends": 1,
+    "baseline_wall_seconds": 60,
+    "mutant_wall_seconds": 30,
+    "total_compiler_wall_budget_seconds": 245,
+    "compiler_log_total_bytes": 16777216
+  },
+  "scope": "Actual source hierarchy and binding only; BOUND_MISSING service contracts, no token/cycle/physical hardware credit",
+  "cumulative_distinct_focused_checks": 1240,
+  "hardware_admission": false
+}

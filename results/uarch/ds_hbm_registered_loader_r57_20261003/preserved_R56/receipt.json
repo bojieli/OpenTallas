@@ -1,0 +1,85 @@
+{
+  "checkpoint_boundary": 9,
+  "compact_install": {
+    "all_events_indexes_and_dictionary_required": true,
+    "changed_aliases": [
+      "ds_hbm_prefix_observed_outputs_r42:DiskEvents",
+      "h3_ds_checkpoint_provider_r30:BoundSectorProvider",
+      "h3_ds_checkpoint_provider_r30:JournalBudget",
+      "h3_ds_query_provider_r36:BoundSectorProvider",
+      "h4_c0_ds_expected_outputs:DiskEvents",
+      "h4_c0_ds_source_views:DiskEvents",
+      "hbm_bound_event_journal_r30:BoundSectorProvider",
+      "hbm_bound_event_journal_r30:DiskEvents",
+      "hbm_bound_event_journal_r30:JournalBudget"
+    ],
+    "existing_instances_modified": false,
+    "hardware_qualified": false,
+    "immutable_files_modified": false,
+    "original_constructor_object_retained": true,
+    "original_constructor_source_sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0",
+    "payload_checksums": "actual write admission/visibility and actual read capture bytes",
+    "production_factory_constructor_guard_preserved": true,
+    "schema": "H4_R46_COMPACT_EXACT_CONSTRUCTOR_INSTALL_V1",
+    "source_pins": {
+      "ds_hbm_prefix_observed_outputs_r42": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_prefix_observed_outputs_r42.py",
+        "sha256": "c1068f2e82ff8fb0b6ad4677eaadbbb28351e03631142bf05f850d577a38de74"
+      },
+      "h3_ds_checkpoint_provider_r30": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/h3_ds_checkpoint_provider_r30.py",
+        "sha256": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9"
+      },
+      "h3_ds_query_provider_r36": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/h3_ds_query_provider_r36.py",
+        "sha256": "717f127d48779d3552a1fc00aab25e2468d768d9a4cbcf6c690326959fdb78f9"
+      },
+      "h4_c0_ds_expected_outputs": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_expected_outputs.py",
+        "sha256": "7422dee1addad00a3292ed136b59eb98950978ceeaaf3fcbf8ce7d2d1fe218b9"
+      },
+      "h4_c0_ds_source_views": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_source_views.py",
+        "sha256": "35e642ba43dc9e4fcf90ed6dbbe759be2b7c84aff86f649b020b634ecdca4f66"
+      },
+      "hbm_bound_event_journal_r30": {
+        "path": "/tmp/kepler-ds-r50-current-main-20261002/tools/hbm_bound_event_journal_r30.py",
+        "sha256": "1efaea518056231512ebd1a59743d66ddedd775728183e70913a9755d53ba9f0"
+      }
+    }
+  },
+  "end_ns": 1790989278429570914,
+  "exception_type": "TypeError",
+  "full_token_GO": false,
+  "hardware_qualified": false,
+  "max_rss_KiB": 12994012,
+  "pid": 2548073,
+  "prefix_stop": 10,
+  "prelaunch_RAM_admission": {
+    "available_bytes": 143402057728,
+    "headroom_bytes": 23938929012,
+    "incremental_peak_bytes": 119463128716,
+    "process_memory_cap": false,
+    "producer_resident_already_excluded_from_available": false,
+    "producer_retained": false
+  },
+  "reason": "<class 'Sagan_committed_r39.NativeExecution'> is a built-in class",
+  "source_commit": "6f8ea7ec4ef66045fbf8c6a4e00604ce8d23f415",
+  "source_plan_sha256": "1c22f752f6d2bd8c49fa3f3a7dcbf74caef312c26e6beda948d526e6857a456f",
+  "start_ns": 1790989149288589202,
+  "status": "FAIL_CLOSED_PRESERVED",
+  "storage": {
+    "available_bytes": 806361673728,
+    "capacity_reservation_acquired": false,
+    "checkpoint_new_bytes": 1717585868,
+    "cold_and_restore_new_RAM_bytes": 90876965516,
+    "continuation_journal_new_bytes": 53710196720,
+    "headroom_bytes": 280792268640,
+    "journal_new_bytes": 523245138272,
+    "other_new_bytes": 606680948,
+    "producer_journal_new_bytes": 469534941552,
+    "producer_new_RAM_bytes": 28586163200,
+    "required_new_bytes": 525569405088,
+    "serialization_workspace_RAM_bytes": 90876965516
+  }
+}

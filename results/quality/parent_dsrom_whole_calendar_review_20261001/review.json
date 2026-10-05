@@ -1,0 +1,154 @@
+{
+  "artifact_byte_equal_replay": true,
+  "artifact_sha256": "dbf2455f7a5c3d601d074265f4f094bd18be41ca540746a7fa4809293e3278a8",
+  "candidate_schedules": [
+    {
+      "active_limit": 1024,
+      "per_expert_CFG_issue_cycles": 329,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 512,
+      "per_expert_CFG_issue_cycles": 658,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 256,
+      "per_expert_CFG_issue_cycles": 1415,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 64,
+      "per_expert_CFG_issue_cycles": 4903,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 32,
+      "per_expert_CFG_issue_cycles": 9608,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 16,
+      "per_expert_CFG_issue_cycles": 19612,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 8,
+      "per_expert_CFG_issue_cycles": 42112,
+      "q_pairs": 1024
+    },
+    {
+      "active_limit": 768,
+      "per_expert_CFG_issue_cycles": 332,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 384,
+      "per_expert_CFG_issue_cycles": 664,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 192,
+      "per_expert_CFG_issue_cycles": 1096,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 64,
+      "per_expert_CFG_issue_cycles": 3388,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 32,
+      "per_expert_CFG_issue_cycles": 6776,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 16,
+      "per_expert_CFG_issue_cycles": 14752,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 8,
+      "per_expert_CFG_issue_cycles": 29504,
+      "q_pairs": 768
+    },
+    {
+      "active_limit": 512,
+      "per_expert_CFG_issue_cycles": 348,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 256,
+      "per_expert_CFG_issue_cycles": 696,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 128,
+      "per_expert_CFG_issue_cycles": 1392,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 64,
+      "per_expert_CFG_issue_cycles": 2784,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 32,
+      "per_expert_CFG_issue_cycles": 5568,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 16,
+      "per_expert_CFG_issue_cycles": 11136,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 8,
+      "per_expert_CFG_issue_cycles": 22272,
+      "q_pairs": 512
+    },
+    {
+      "active_limit": 256,
+      "per_expert_CFG_issue_cycles": 615,
+      "q_pairs": 256
+    },
+    {
+      "active_limit": 128,
+      "per_expert_CFG_issue_cycles": 1102,
+      "q_pairs": 256
+    },
+    {
+      "active_limit": 64,
+      "per_expert_CFG_issue_cycles": 2076,
+      "q_pairs": 256
+    },
+    {
+      "active_limit": 32,
+      "per_expert_CFG_issue_cycles": 4152,
+      "q_pairs": 256
+    },
+    {
+      "active_limit": 16,
+      "per_expert_CFG_issue_cycles": 8304,
+      "q_pairs": 256
+    },
+    {
+      "active_limit": 8,
+      "per_expert_CFG_issue_cycles": 16608,
+      "q_pairs": 256
+    }
+  ],
+  "chosen_feasible_point": null,
+  "complete_token_latency_cycles": null,
+  "focused_tests": {
+    "passed": 3,
+    "scope": "Atomicoutput-rowwavecomponents, completeheadintegercapacity, finiteworstsixdispatch",
+    "seconds": 3.95
+  },
+  "hardware_admission": false,
+  "owner_commit": "2185eadf516c177d58eceb1aa8826d3c80dfdc45",
+  "remaining": "CurrentCROMcoefficientread/capture/cache/CDC; actualnonexpert/Engram/collectivehomes, wake/drain/visiblewrite/finalconsumers and contextualphysicalpower/routes",
+  "schema": "opentallas.parent.dsrom-whole-calendar-candidate-review.v1",
+  "scope": "Metadata-only fullmodel replay with exacttoolprerequisites; no checkpoint data, RTL/P&R launch or sourcejob changes. Fulltoken admission remains false. Partial CFG/issue cycles are not fulltoken latency.",
+  "verdict": "PASS_SOURCE_BOUND_PARTIAL_CALENDARS_NO_FEASIBLE_COMPLETE_POINT"
+}

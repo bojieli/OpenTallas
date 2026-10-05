@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.parent.ckv-raw-serial-payload-review.v1",
+  "candidate_commit": "b6697951477dc7cd2bf4788b2524f77fabf07948",
+  "model_sha256": "7fc4892c8ea5c091eea169bfcfc20033cc6f536ab489a6e381ec4e872c009f5e",
+  "existing_rtl_sha256": "c7a963dbcd146d2395a305d5145bf879d5557ea1d2646480973cf42e17f94166",
+  "extent_cases": 49,
+  "groups_checked": 145376,
+  "output_beats_checked": 2288,
+  "wire_edges_checked": 123840,
+  "reconstructed_payload_sha256": "8e06c9435f49384d3801e080991fbf7ddd3f5d6f621b10a3a81e55657bf6844c",
+  "verdict": "PASS_RAW_PAYLOAD_RECONSTRUCTION_ONLY",
+  "numerical_scope": "No arithmetic performed; codes/scales and existing 265-bit group layouts preserved.",
+  "exclusions": [
+    "actual header ABI",
+    "actual producer/consumer RTL",
+    "credit/calendar and CDC",
+    "consumer port/write enable cost",
+    "physical routing/SS/FF",
+    "full connected token"
+  ],
+  "engine_RTL_build_ready": false,
+  "physical_admission": false,
+  "adopt": false
+}

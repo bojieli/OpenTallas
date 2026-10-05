@@ -1,0 +1,222 @@
+{
+  "schema": "opentallas.w11-stalled-stream-recovery.v1",
+  "observed_at": "2026-10-01T07:43:42.083207+00:00",
+  "scope": "W11 only; W16b calibration and W17 sources unchanged",
+  "pin_fix_commit": "90b9681b",
+  "adoption": false,
+  "claim_boundary": "Checkpoint and failed-verdict evidence handoff. Functional single-step exactness is distinct from overall lint status and physical closure.",
+  "checkpoints": {
+    "attention_controller": {
+      "source_commit": "2f4820b9f1c52c996831870270f0c2ae16c9a88c",
+      "status": "aborted",
+      "evidence": "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/recovery.json",
+      "observed_sequential": 102065,
+      "required_sequential": 270418,
+      "next": "Restore a representative 64-tile vehicle without weakening the count guard before any restart."
+    },
+    "softplus": {
+      "source_commit": "5ab70cf8f7e2e6bf4f636f3c0de7c8b518e482d4",
+      "evidence": "results/rtl/w11_softplus_short.json on claude/w11-softplus",
+      "exactness": "Committed exhaustive short-unit pass; depth 162 -> 124, PCUT0 107; full-block routes still pending.",
+      "live_jobs": [
+        "ot-pve3:otjob-7ef52b148d sp4_softplus_s",
+        "ot-pve2:otjob-728fe3ca39 sp4f_softplus_s"
+      ],
+      "next": "Fetch the already-live full-block routes; no restart."
+    },
+    "rotate_memory": {
+      "source_commit": "193e020390a07ca6a290f4b868349a83614e2fb7",
+      "physical_commits": [
+        "99d4c082",
+        "5524db12"
+      ],
+      "status": "Committed M2-M5 and capped-M6 rotate slices closed; composed exact SU/die gates still live.",
+      "live_jobs": [
+        "ot-pve3:otjob-a1cd2e4dca strip_m5a4",
+        "ot-pve2:otjob-a4f05857ba square_m5a4",
+        "ot-pve2:otjob-ab8ab24dfa lat1024",
+        "155.103.253.16:otjob-48a11e3810 strip_small",
+        "155.103.253.191:otjob-c735ef8655 square_small"
+      ],
+      "next": "Collect exact and latency gates without duplicating them; retain rejected routes."
+    },
+    "kv_cache_selection": {
+      "source_commit": "e620ec7a0368a0d1839b2a4553db9e701c0f7b93",
+      "status": "Wide full-geometry 5-run exact record committed on refreshed sources.",
+      "live_jobs": [
+        "ot-pve3:pid1791454 ids5 route",
+        "ot-pve3:pid1950347 qphys4 waits for ids5 before merger"
+      ],
+      "next": "Fetch ids5 and queued merger results; wide3 manifest entry is obsolete, current wide record is committed."
+    },
+    "k_control": {
+      "source_commit": "a274edd419874a9178bb88c6957cba1ff35c9919",
+      "status": "Round11 CTS u35/u40 not_met; full route remains live.",
+      "evidence": [
+        "results/physical_abi3/asap7/hdc/w11_recovery_20261001/kc_c11u35.physical.json",
+        "results/physical_abi3/asap7/hdc/w11_recovery_20261001/kc_c11u40.physical.json"
+      ],
+      "live_jobs": [
+        "ot-pve1:otjob-54b496ec26 kc_r11u40",
+        "ot-pve2:otjob-09da4e5c27 kc_r10u30",
+        "ot-pve2:otjob-ce371ac105 kc_kdx1b",
+        "ot-pve3:otjob-567a8f67f9 kc_j2u30f",
+        "ot-pve3:otjob-dea7d958df kc_portn3"
+      ],
+      "next": "Fetch existing full-route results; CTS does not establish extracted SS/FF closure."
+    },
+    "fusion": {
+      "source_commit": "86e888364a6fdf2ca5d669e68ffcc8d079dad5cb",
+      "baseline_issue_traces_pending": true,
+      "live_jobs": [
+        "ot-pve1:otjob-dde78b9dc1 u00, compiling at /tmp/tmpvhsgm4pf/obj",
+        "ot-pve2:otjob-0fc287e708 u2517, compiling at /tmp/tmpnhnpjfls/obj",
+        "155.103.253.114:otjob-49f9252a34 fz_s20"
+      ],
+      "fused_runs": [
+        {
+          "name": "f00",
+          "record": "/tmp/claude-1000/w11s/fuse/die/f00.json",
+          "record_sha256": "2ea214fe89e76cb32e1ed45fa7bc7abbb028a66b289c9278db375a27fbf9a219",
+          "issue_trace": "/tmp/claude-1000/w11s/fuse/die/f00.issues.json",
+          "issue_trace_sha256": "470f9ed16368d7ff27d39608f09d130a7bab323a2b6e868796083df6787ce528",
+          "overall_status": "fail",
+          "single_step_pass": true,
+          "next_token": 3118,
+          "cycles": 318034,
+          "global_su_busy_cycles": 163005,
+          "per_region_su_busy_cycles": null,
+          "exposure_note": "Issue-to-issue attribution can be derived from tags; it is not measured per-region SU busy time. No per-region busy counters exist in these records.",
+          "committed_record": "results/rtl/w11_checkpoint_recovery_20261001/f00.fail.json",
+          "committed_issue_trace": "results/rtl/w11_checkpoint_recovery_20261001/f00.issues.json",
+          "su_issue_attributed_intervals_by_region": {
+            "attn": 14720,
+            "attn_norm": 10000,
+            "compressor": 2275,
+            "embed": 12,
+            "engram": 3642,
+            "experts": 1440,
+            "ffn_norm": 10000,
+            "gather": 900,
+            "hc_attn": 13024,
+            "hc_ffn": 10360,
+            "hc_post": 10100,
+            "head": 387,
+            "index_key": 1084,
+            "indexer": 4721,
+            "moe_sum": 3320,
+            "out": 79160,
+            "router": 14640,
+            "shared": 3160,
+            "softmax": 25150
+          },
+          "su_issue_attributed_intervals_total": 208095
+        },
+        {
+          "name": "f2517",
+          "record": "/tmp/claude-1000/w11s/fuse/die/f2517.json",
+          "record_sha256": "b1f3c43fb0308e0e7ccee3fc3264446b0435532188b2634976834173f6154abb",
+          "issue_trace": "/tmp/claude-1000/w11s/fuse/die/f2517.issues.json",
+          "issue_trace_sha256": "47db3a5c1fc6fb4928c984722c4dcebf8680b8599c0c7c9dd623b16d8d6a30a7",
+          "overall_status": "fail",
+          "single_step_pass": true,
+          "next_token": 3118,
+          "cycles": 376638,
+          "global_su_busy_cycles": 233937,
+          "per_region_su_busy_cycles": null,
+          "exposure_note": "Issue-to-issue attribution can be derived from tags; it is not measured per-region SU busy time. No per-region busy counters exist in these records.",
+          "committed_record": "results/rtl/w11_checkpoint_recovery_20261001/f2517.fail.json",
+          "committed_issue_trace": "results/rtl/w11_checkpoint_recovery_20261001/f2517.issues.json",
+          "su_issue_attributed_intervals_by_region": {
+            "attn": 23120,
+            "attn_norm": 14360,
+            "compressor": 3115,
+            "embed": 12,
+            "engram": 3970,
+            "experts": 1440,
+            "ffn_norm": 14360,
+            "gather": 900,
+            "hc_attn": 16748,
+            "hc_ffn": 13640,
+            "hc_post": 11540,
+            "head": 545,
+            "index_key": 1588,
+            "indexer": 4737,
+            "moe_sum": 3480,
+            "out": 79160,
+            "router": 19600,
+            "shared": 3440,
+            "softmax": 26330
+          },
+          "su_issue_attributed_intervals_total": 242085
+        }
+      ],
+      "next": "Wait for unfused traces before W16b per-region calibration; overall lint gate remains failed. No adoption until measured gain and SS/FF in context pass.",
+      "rejected_physical": "results/physical_abi3/asap7/hdc/w11_recovery_20261001/fz_l20.physical.json (GRT-0116, 666 congestion)",
+      "rejected_physical_kr8": "results/physical_abi3/asap7/hdc/w11_recovery_20261001/fz_l8.physical.json (GRT-0116; do not relaunch or tune the rejected lever)",
+      "pin_equivalence": {
+        "verdict": "pass",
+        "evidence": "results/rtl/w11_checkpoint_recovery_20261001/pin-equivalence.json",
+        "gate_tool_sha256": "56f876e7e9eb866b686a364070025e6fce33c30009b6ebccbb591ab6342a103c",
+        "executable_files_per_configuration": 278,
+        "strict_lint_overall": "fail",
+        "claim": "Both reduced fused configurations preserve executable code. No new token simulation or physical closure claimed; existing failed overall verdicts remain failed."
+      }
+    }
+  },
+  "cleanup": {
+    "removed": [
+      "w11-mainchk",
+      "w11-fzm"
+    ],
+    "estimated_reclaimed_GiB": 8.06,
+    "commit_refs": [
+      "codex/w11-retired-w11-mainchk",
+      "codex/w11-retired-w11-fzm"
+    ],
+    "audit": "/tmp/claude-1000/queue/W11.cleanup-audit.json",
+    "retained": [
+      "All live, dirty and historical queue-pinned W11 worktrees"
+    ],
+    "other_streams_touched": false,
+    "committed_audit": "results/rtl/w11_checkpoint_recovery_20261001/cleanup-audit.json"
+  },
+  "issue_attribution_definition": "For each unit=2 (SU) issue, charge cycle minus previous issue cycle to its program tag category, as tools/rtl_hdc_v41x_decode_campaign.py breakdown; this includes sequencer waits and is not a unit busy counter.",
+  "evidence_sha256": {
+    "results/rtl/w11_checkpoint_recovery_20261001/f00.fail.json": "2ea214fe89e76cb32e1ed45fa7bc7abbb028a66b289c9278db375a27fbf9a219",
+    "results/rtl/w11_checkpoint_recovery_20261001/f2517.issues.json": "47db3a5c1fc6fb4928c984722c4dcebf8680b8599c0c7c9dd623b16d8d6a30a7",
+    "results/rtl/w11_checkpoint_recovery_20261001/kr-pin-lint.log": "74657cc9c5bacc7eca8d413d5d5ab87539b29557d07e40b0db2575d59a8193af",
+    "results/rtl/w11_checkpoint_recovery_20261001/f2517.fail.json": "b1f3c43fb0308e0e7ccee3fc3264446b0435532188b2634976834173f6154abb",
+    "results/rtl/w11_checkpoint_recovery_20261001/cleanup-audit.json": "4330bbe0b33fb231dabec856f4a966e7f9f51e62a82e462dd6f748e6d3d0aa36",
+    "results/rtl/w11_checkpoint_recovery_20261001/f00.issues.json": "470f9ed16368d7ff27d39608f09d130a7bab323a2b6e868796083df6787ce528",
+    "results/rtl/w11_checkpoint_recovery_20261001/strict-lint.json": "7ec291f271a806217ecf0bb263e2dedb3a107eabf4229605bebd147692a2178f",
+    "results/physical_abi3/asap7/hdc/w11_recovery_20261001/kc_c11u35.physical.json": "78da050e7a1745cc5c205e74a41de35ca2c65bbb39a9cb2fc46941de18c42e07",
+    "results/physical_abi3/asap7/hdc/w11_recovery_20261001/fz_l8.physical.json": "5f2280c3326e8bd8628efd432295664565ad38c2349c3e80494fc07a6d674da7",
+    "results/physical_abi3/asap7/hdc/w11_recovery_20261001/fz_l20.physical.json": "b352a78c462f7985dba46d48d999fe1a6d0433f796d8c486ab0a99ad81523a4c",
+    "results/physical_abi3/asap7/hdc/w11_recovery_20261001/kc_c11u40.physical.json": "b4d2495bec2ead0379b0dca02f05ac149053703c5079fe4dc0a297ef3b4aa69a",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/finish.stat.txt": "d83c2a25fbf59ec7ef0801d31efdfc5f7b77a16dbbbafc48ea0ab3064946b8ad",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/harden_wc.sh": "7c059e72da9f338b6f859fa0481dd0ee0c2ab704f92c6dcbe81526d03bcc848e",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/recovery.json": "37698494dcdc750d25ebeb1956a88f4578d0969a7b99292cef518d7c68467aea",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/cts.queue.log": "c1fa1e22551215e8f2d1bb23de43e17cfa4072012075352c11bbe7b1157a489f",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/finish.guard.json": "4b417ac1a67cbbe23d1cdd9b09942998d9d2ca01cb1c7b18803ae4ba5d35e8c7",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/finish.queue.log": "612bca8dd3096a27228520dea3adfcece435a3cef54182de4d2d816e18f269f4",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/w11ctl_guard.sh": "b2bdf17d3ca6e537d81e095354fe56f0f88ff03cb2b5bcd738ec5a825e62343a",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/cts.guard.json": "4b417ac1a67cbbe23d1cdd9b09942998d9d2ca01cb1c7b18803ae4ba5d35e8c7",
+    "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/recovery_r2c_20261001/cts.stat.txt": "d83c2a25fbf59ec7ef0801d31efdfc5f7b77a16dbbbafc48ea0ab3064946b8ad",
+    "results/rtl/w11_checkpoint_recovery_20261001/pin-equivalence.json": "327284cbbcc98fed2986a7a9a5c57255ca2d5af0b25b668f7aae6f370297f5a0"
+  },
+  "unchanged_source_sha256": {
+    "rtl/hdc/v41x/ot_hdc_v41x_me_adapt.sv": "b9ca6695f1f6ecf9dcaa16c45aa3eaa276a641231e9f228b301c712ac42f4259",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/w18/die_route.py": "3cbfc35718ece27e3e506a47c64b2a70a9f02b8f5c02d8034ba0e9b389987cf2",
+    "tools/w18/die_pdn.py": "53f09d96c0b08e5c827169df37185b1458498273a91ebff8ece77ffff0da57c7",
+    "physical/abi3/v41x_karb_repair_buffer_cap.tcl": "a21e7c4950f165d8f17ffc480569e7ec27214eef8fd72e1e248f7a8e5f3dd976",
+    "tools/uarch_model.py": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee"
+  },
+  "routing_layer_boundary": "No new physical implementation or layer plan was adopted; floorplan, routing scripts, constraints and composed latency model are unchanged from the fusion baseline. The recovered M2-M5 controller guard attempts are aborted, not routed sign-off.",
+  "coordination": {
+    "W16b": "User owns calibration; no W16b files modified. Unfused issue traces pending.",
+    "W17": "W17 confirms tools/w11_ckvdie_src_l20.txt selects rtl/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv, not kr. No L20 source change or rank rebuild required for this patch."
+  }
+}

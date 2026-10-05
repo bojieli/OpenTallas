@@ -1,0 +1,14 @@
+{
+  "actual_RTL_cases": 4,
+  "actual_engine_latency_measured": false,
+  "attention_arithmetic_qualified": false,
+  "exact_permanent_busy_negative": "rows512 beats128 merger1 finaldone0; finite bound600cycles",
+  "fixture_engine_idle_delay_cycles": 7,
+  "full_token_RTL": false,
+  "hardware_admission": false,
+  "owner_source_commit": "43cb0e015",
+  "schema": "opentallas.parent.dsrom-consumer-descriptor-review.v1",
+  "synthetic_payload_zero": true,
+  "verdict": "PASS_actual_merger_and_descriptor_retirement_gate",
+  "whole_service_provider_qualified": false
+}

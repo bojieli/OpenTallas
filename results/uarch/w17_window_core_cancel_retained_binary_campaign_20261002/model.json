@@ -1,0 +1,342 @@
+{
+  "status": "PREPARED_RESOURCE_ADMISSION_NOT_EXECUTED",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_count": 163,
+  "source_digest": "37bd3a8035aea33568ac3cc3e27c537afd1f12b23434ba6d17231c8bd9c37aa4",
+  "geometry": {
+    "SUN": 256,
+    "SUM": 64,
+    "BL": 16,
+    "IL": 8,
+    "NBMAX": 192,
+    "CHUNK8": 1,
+    "MP": 1,
+    "AW": 30,
+    "NW": 21
+  },
+  "caps": {
+    "MemoryMax": 34359738368,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 1073741824,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 3600,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_shared_seconds": 2600,
+    "phase_compile_seconds": 650,
+    "frontend_phase_seconds": 300,
+    "runtime_shared_seconds": 720,
+    "short_case_seconds": 10,
+    "long_case_seconds": 120,
+    "supervision_reserve_seconds": 280,
+    "whole_seconds": 3600,
+    "aggregate_output_bytes": 8589934592,
+    "sample_interval_seconds": 0.25,
+    "compile_workers_max": 2,
+    "automatic_retries": 0,
+    "phase_count": 5,
+    "baseline_frontend_repeats": 0,
+    "baseline_CXX_repeats": 0,
+    "new_frontend_processes": 4,
+    "CXX_processes": 4
+  },
+  "measurements": {
+    "original_runtime_wall_cap_seconds": 0.9,
+    "original_runtime_timeout_seconds": 0.9125722139142454,
+    "baseline_CXX_seconds": 389.9724478130229,
+    "frontend_seconds": 99.84589488897473,
+    "baseline_compiled_bytes": 105489464,
+    "baseline_CXX_peak_cgroup_bytes": 7438536704,
+    "frontend_peak_cgroup_bytes": 5686992896,
+    "debugger_whole_ISSUE_seconds": 1.6115052783861756,
+    "debugger_model_summary_seconds": 1.09,
+    "debugger_marker_count": 16,
+    "debugger_next_slots": 45,
+    "debugger_finish_ns": 17
+  },
+  "runtime_pricing": {
+    "method": "Finite reservations for unmeasured native case durations. GDB includes debugger startup and breakpoint overhead; no subtraction, simulation-ns throughput extrapolation or native timing claim.",
+    "short_cases": 23,
+    "long_cases": 4,
+    "short_reservation_seconds": 10,
+    "long_reservation_seconds": 120,
+    "case_total_seconds": 710,
+    "shared_margin_seconds": 10,
+    "long_case_reason": "SU_SUFFIX/WC/WS preserve full SUN256/SUM64 work and backend drain; native duration not yet measured.",
+    "finite_cycle_limits_unchanged": {
+      "suffix": 4096,
+      "global": 250000
+    },
+    "cases": [
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=ISSUE"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=GO"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=POISON"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=SU_SUFFIX"
+        ],
+        "seconds": 120
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=WC"
+        ],
+        "seconds": 120
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=WS"
+        ],
+        "seconds": 120
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=0"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=1"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=2"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=3"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=4"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=5"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=6"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=7"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=8"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=9"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=10"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=11"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=12"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=13"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=14"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=15"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "baseline",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=16"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "physical_QE_gate",
+        "args": [
+          "+CUT=GO"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "PC_advance",
+        "args": [
+          "+CUT=GO"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "VM_frozen_store_drop",
+        "args": [
+          "+CUT=PREFIX",
+          "+PREFIX=0"
+        ],
+        "seconds": 10
+      },
+      {
+        "phase": "scalar_suppression",
+        "args": [
+          "+CUT=SU_SUFFIX"
+        ],
+        "seconds": 120
+      }
+    ],
+    "stop_first_timeout_or_semantic_failure": true
+  },
+  "compile_pricing": {
+    "baseline_frontend_and_CXX_processes": 0,
+    "mutant_frontend_processes": 4,
+    "mutant_CXX_processes": 4,
+    "measured_reference_front_plus_CXX_seconds": 489.8183427019976,
+    "four_reference_sum_seconds": 1959.2733708079904,
+    "aggregate_margin_seconds": 640.7266291920096,
+    "phase_margin_seconds": 160.1816572980024,
+    "reference_is_not_mutant_timing_measurement": true,
+    "front_phase_cap_seconds": 300,
+    "phase_front_plus_CXX_cap_seconds": 650,
+    "aggregate_never_reset_seconds": 2600
+  },
+  "outputs": {
+    "original_failed_r2_output_untouched": true,
+    "original_frontend_closure_untouched": true,
+    "baseline_new_owned_copy_bytes": 105489464,
+    "baseline_CXX_sampled_peak_output_bytes": 1367679243,
+    "frontend_generated_bytes": 706452911,
+    "aggregate_live_cap_bytes": 8589934592,
+    "single_file_cap_bytes": 1073741824,
+    "method": "Output monitoring enforces the cap across the owned fresh output. Measured reference sizes are admission evidence, not a bound on mutant output. Only successful new-owned phase obj is reclaimed after all semantics, source/binary/generated/log hashes and fsynced phase closure. Failure obj and all original closures remain retained."
+  },
+  "component_cost_unchanged": {
+    "provider_bits": 259,
+    "core_adapter_bits": 8,
+    "producer_ACK_token_bits": 2,
+    "concrete_bits": 269,
+    "conservative_envelope_bits": 278,
+    "uninstantiated_reserve_bits": 9,
+    "added_healthy_cycles": 0,
+    "new_RTL": false,
+    "ports_routes_replicas_area_latency": "Unchanged from pinned guard-feedback model/source preparation; diagnostic and runner introduce no hardware. Physical slot/route/SSFF qualification remains false."
+  },
+  "scope": {
+    "actual_core_FSM_DYN_decode_descriptor": true,
+    "SUN256_SUM64": true,
+    "full_QE": true,
+    "positive_cases": 23,
+    "executable_mutants": 4,
+    "fixture_QE_payload": "Synthetic BF16 inputs/poison delivered through actual WQR ports.",
+    "VM": "Finite masked full-address shadow sink, not actual production VM fabric.",
+    "SU_data": "Fixture-zero SU read ports; QE-to-SU numerical readback not qualified.",
+    "guard_fault": "Raw registered producer-DRAIN metadata observer in simulation hierarchy, not exported production signal.",
+    "owner": "STACK2 selected-owner WINDOW/mux/KARB/idx simulation only; competitor ownership preserved.",
+    "visibility": "h_tcol+CWL+BURST projected model deadline, not causal PHY completion.",
+    "causal_certificates": "Delivery/visibility/provenance default false; local cancelACK is not selected-owner retirement.",
+    "ghost": "Wire-identical ghost after512 epoch reuse requires provider suppression/fence; WINDOW cannot detect it from identical tag/payload.",
+    "physical_provider": false,
+    "producer_physical_cancel": false,
+    "full_program": "Finite selected-engine source slice; nonselected engine dispatch fatal.",
+    "fulltoken": false,
+    "adoption": false
+  }
+}

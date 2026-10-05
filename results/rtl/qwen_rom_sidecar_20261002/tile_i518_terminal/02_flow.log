@@ -1,0 +1,78 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 1477714.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 1415702.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 736970.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 109211.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 65935.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 38612.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 24471.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 15071.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 5213.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:48, elapsed time = 00:00:15, memory = 7151.33 (MB), peak = 7203.95 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 2310303 vertical wires in 19 frboxes and 1578596 horizontal wires in 14 frboxes.
+[INFO DRT-0186] Done with 266112 vertical wires in 19 frboxes and 447978 horizontal wires in 14 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:13:21, elapsed time = 00:04:02, memory = 12899.57 (MB), peak = 12999.68 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:07, elapsed time = 00:00:07, memory = 13274.43 (MB), peak = 13274.43 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 4499 violations.
+    elapsed time = 00:06:44, memory = 19862.15 (MB).
+    Completing 20% with 24619 violations.
+    elapsed time = 00:23:14, memory = 35639.99 (MB).
+    Completing 30% with 32023 violations.
+    elapsed time = 00:26:32, memory = 35409.01 (MB).
+    Completing 40% with 36997 violations.
+    elapsed time = 00:49:21, memory = 36729.70 (MB).
+    Completing 50% with 63095 violations.
+    elapsed time = 00:59:27, memory = 38189.24 (MB).
+    Completing 60% with 67167 violations.
+    elapsed time = 01:08:27, memory = 40045.66 (MB).
+    Completing 70% with 81568 violations.
+    elapsed time = 01:28:06, memory = 42743.87 (MB).
+    Completing 80% with 86593 violations.
+    elapsed time = 01:31:29, memory = 42834.72 (MB).
+    Completing 90% with 91102 violations.
+    elapsed time = 01:52:15, memory = 43763.73 (MB).
+
+Elapsed time: 0:58.10[h:]min:sec. CPU time: user 54.31 sys 3.37 (99%). Peak memory: 2058176KB.
+Elapsed time: 46:21.99[h:]min:sec. CPU time: user 2811.05 sys 10.12 (101%). Peak memory: 3142276KB.
+Elapsed time: 1:05:43.70[h:]min:sec. CPU time: user 1948.85 sys 504.95 (62%). Peak memory: 3216888KB.
+Elapsed time: 0:20.22[h:]min:sec. CPU time: user 17.24 sys 2.30 (96%). Peak memory: 979972KB.
+Elapsed time: 0:49.46[h:]min:sec. CPU time: user 45.66 sys 3.22 (98%). Peak memory: 1622136KB.
+Elapsed time: 18:34.48[h:]min:sec. CPU time: user 1515.51 sys 13.29 (137%). Peak memory: 2237048KB.
+Elapsed time: 0:20.63[h:]min:sec. CPU time: user 17.88 sys 2.15 (97%). Peak memory: 1377076KB.
+Elapsed time: 1:32:23.19[h:]min:sec. CPU time: user 6748.03 sys 79.45 (123%). Peak memory: 7092520KB.
+Elapsed time: 27:14.77[h:]min:sec. CPU time: user 1768.64 sys 33.35 (110%). Peak memory: 3980808KB.
+Elapsed time: 39:51.63[h:]min:sec. CPU time: user 2526.59 sys 28.19 (106%). Peak memory: 5121752KB.
+Elapsed time: 1:47:41.59[h:]min:sec. CPU time: user 7360.14 sys 145.05 (116%). Peak memory: 7174704KB.
+Elapsed time: 4:48:39.80[h:]min:sec. CPU time: user 47425.98 sys 522.39 (276%). Peak memory: 12503616KB.
+Elapsed time: 2:24:12.63[h:]min:sec. CPU time: user 87176.95 sys 673.98 (1015%). Peak memory: 47451340KB.
+make[1]: *** [Makefile:589: do-5_2_route] Error 247
+make: *** [Makefile:589: /work/results/asap7/opentallas_ot_qwen_rom_tile_asap7_w12_tile_i518/base/5_2_route.odb] Error 2
+
+partial record written to /home/ubuntu/w12bwork/src/results/physical_hdc/asap7/qwen_o4_w12/tile_i518/physical.json
+flow rc=1

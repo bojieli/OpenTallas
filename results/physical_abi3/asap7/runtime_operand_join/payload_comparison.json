@@ -1,0 +1,21 @@
+{
+  "scope": "Matched ASAP7 TT 1 ns standalone synthesis and ideal-clock STA; both fail timing.",
+  "records": [
+    {
+      "record": "prelayout_baseline_1ns.json",
+      "sha256": "d915a7e0b06ebd2cc097a2876d6c1031c9930ba9b007f7a873062c6980d91e18",
+      "area_um2": 429.248,
+      "sequential_area_um2": 218.729,
+      "setup_wns_ns": -2.2028736700634
+    },
+    {
+      "record": "prelayout_payload_1ns.json",
+      "sha256": "041b7ad91f62e6e120da1fade88135289f703f35e53d958678407bb062c57090",
+      "area_um2": 348.972,
+      "sequential_area_um2": 168.341,
+      "setup_wns_ns": -1.7695773805935617
+    }
+  ],
+  "change": "Reset only pending ownership; retain unreset reserved and delivered payload stages. No issue latency change.",
+  "contract": "Read data is unspecified without a valid lane token, including after reset/clear. Cancelled pending data must not be delivered."
+}

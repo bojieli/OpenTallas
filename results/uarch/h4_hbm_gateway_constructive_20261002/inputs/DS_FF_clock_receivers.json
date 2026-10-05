@@ -1,0 +1,12 @@
+{
+  "ODB_sha256": "5014f27a0ba5f3aaa15e3e4393f958320426e742ea7267a801226f5d5931a47d",
+  "clock_receiver_count": 77192,
+  "clock_receivers_by_source_master": {
+    "DFFASRHQNx1_ASAP7_75t_R": 26229,
+    "DFFHQNx1_ASAP7_75t_R": 50963
+  },
+  "model": "DS",
+  "original_geometry_sha256": "62502d2dddc54f1e76d7c107338f0b965be07033ef2c474757d47fd94dc4af90",
+  "original_source_path": "results/uarch/h4_v1_expanded_service_20261002/inputs/DS_geometry.json.gz",
+  "selector": "FF_instances[].master; actual unplaced source FF inventory, no placement credit"
+}

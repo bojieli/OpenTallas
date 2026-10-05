@@ -1,0 +1,126 @@
+{
+  "schema": "opentallas.w19.hc-residual.terminal-intake.v1",
+  "time": "2026-10-01T12:21:21.746654+00:00",
+  "source_commit": "c3fb0bc4596956e52f767d18718dbc702bfcf75f",
+  "observed_exit_code": 0,
+  "CPU_tests_passed": 11,
+  "replay": [
+    {
+      "fixture": 0,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 1,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 2,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 3,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 4,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 5,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 6,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 7,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 8,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    },
+    {
+      "fixture": 9,
+      "pre_boundaries": 8,
+      "post_boundaries": 37,
+      "carry_provenance": "PASS",
+      "oracle_replay": "PASS"
+    }
+  ],
+  "checked_parent_main": "d4dd93d05eb503fa5da5d2868e7c77185c5bdb52",
+  "golden_source_and_producer_proof_match_main": true,
+  "normative_shape": [
+    4,
+    5120
+  ],
+  "mixes_rerun": false,
+  "GPU_campaign_launched": false,
+  "model_gate_sha256": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+  "model_eligibility": "REFUSED_PENDING_GPU_LOWERING_AND_RESOURCES",
+  "Turing_acknowledgement": "not observed; request posted before source implementation",
+  "scope": "exact hc_pre/hc_post residual application only; synthetic identity block y=pre_output, not attention/FFN trajectory",
+  "carry_source": "four existing mixes NPZ artifacts loaded from immutable committed blobs, all producer artifact hashes validated, no mixes execution",
+  "instruction_counts_scope": "FP32/BF16 boundaries and array element counts, not hardware issue latency/ports or RF/shared fit",
+  "QC_NAM": "unchanged full original-rule FAIL/adoptfalse",
+  "remaining": [
+    "Turing composed register lifetime/warp/dataflow/RF/shared/load/barrier pricing",
+    "GPU campaign forbidden until priced",
+    "real attention/FFN output and end-to-end layer/token trajectory outside scope"
+  ],
+  "rate": null,
+  "adoption": false,
+  "artifacts": {
+    "Turing_coordination.json": "69544bf86013492f528ca113fd86ae33790b14caacad38e9a4330d57b3dfcb4b",
+    "boundaries_0.json": "44f59f1328d1d698ac9753e469039f62b7d39322c691d277fd63cf7cbe0810e1",
+    "boundaries_1.json": "eed86e4bfd7e13c0e6edaf4d258e18656c46ca94b224790f963da5cc0fb0bdde",
+    "boundaries_2.json": "afbf2f7f3a8298b6c26e21e0ef96ad514fb8568ba2c1bcc9404f27ffc36f7160",
+    "boundaries_3.json": "eed86e4bfd7e13c0e6edaf4d258e18656c46ca94b224790f963da5cc0fb0bdde",
+    "boundaries_4.json": "0b55938a12a415e6731c100db82b72fa0e1d4908b73198eb64eb1b72d88bb5fb",
+    "boundaries_5.json": "f83243571bdff8dfec4d0652656adda6308cca54af4643ad9c5f9caf52a09672",
+    "boundaries_6.json": "eed86e4bfd7e13c0e6edaf4d258e18656c46ca94b224790f963da5cc0fb0bdde",
+    "boundaries_7.json": "35039c1affd8f38220855273c4310d8f5b654300aa4b9b62a4469e5539650919",
+    "boundaries_8.json": "7af258c80fb2057e690dfe828b8d386712f5f5d7e9bcc5526aa7cc9c68eec01b",
+    "boundaries_9.json": "7788b9a9f5b7afd0b1472b6df88973e14c4c850cf30543b82e010a4707c86ae5",
+    "fixture_0.npz": "1f78ce4cb933782cbc33dab8c996b99679e70206652c8e18a2126f4faa761502",
+    "fixture_1.npz": "fdacb4e554b43f8cf52383523368aca6edd8efbe94e0d7ffdb2e1c14c73c8de2",
+    "fixture_2.npz": "7bb6914d3e51db44fd1d7140bbb1cb86b9790cf6936f8bed54c54c37d4dff404",
+    "fixture_3.npz": "39d35e7988c7708bb7878952cc0ca9f7bc7823ec4716d2ede27bd0b79475c7bb",
+    "fixture_4.npz": "5a964cd08276bdbb5f8ea8ebdb50ebcb593868fca7cf01dd7049e416ee447b07",
+    "fixture_5.npz": "7010e85ae7f342e527392ae0adbe36f7cc4fa303eb7a95c2fa9853d4879169e1",
+    "fixture_6.npz": "8139f4616a59105d2d1cfd23c98b50e51828c4f0adeb59a83460161b12e06239",
+    "fixture_7.npz": "ce7f4c1f81cd9a2c8029e78a4b89fbfe07324441fd86f07a2bfeb4d711433f08",
+    "fixture_8.npz": "8276d229266175ca41eb8737eeda782f88984d8fc35e80be4bef62792fc39901",
+    "fixture_9.npz": "7abd21b45e387099529965a622cc50d6c6a8754c308e86b66537a1f41ad2b99d",
+    "model_eligibility.json": "ad1f147c190cc3051a8d1729f659d596c207091091deccf266ba030c4b2d6270",
+    "proof.json": "74b06f9a4fdbfd08b4dfe5af0567df2e85a364eaf237e782106ca2f6d496ef11"
+  }
+}

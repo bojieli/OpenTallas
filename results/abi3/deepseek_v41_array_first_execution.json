@@ -1,0 +1,126 @@
+{
+  "answer": "at HEAD the shipped V4.1 array deployment does not BUILD; the earlier six-instruction halt was a stale artifact",
+  "contrast": "DeepSeek-V4-Flash's array-32 deployment does NOT have this defect: it walks 1,344 instructions across 32 nodes and emits a token that agrees with its own wafer.  So this is specific to the V4.1 array lowering, not to array topologies",
+  "device": {
+    "instruction_count": 4429,
+    "max_retired_work": 3906385,
+    "node_count": 64,
+    "target_id": "deepseek-v4.1-flash-rom-array-64",
+    "topology_class": 3
+  },
+  "localisation": {
+    "diagnosis": "the wafer opens TWO NESTED LOOPS around kernel 1 and the array opens NONE, while both lanes give that kernel's output view the same kind of LOOP_INDUCTION term.  So the array lowering emits the operator without the loops its own views name, and the device refuses at resolve time -- correctly.  This is a loop-EMISSION gap on the array path, not a bad view: the view is the same shape of view the wafer resolves fine",
+    "failing_view": {
+      "a18_extent": {
+        "bias": 0,
+        "numerator": 0,
+        "unit": 0
+      },
+      "bound_by": "descriptor 1100, TENSOR.EMBED_LOOKUP, source_kernel_id 1",
+      "dims": [
+        131072,
+        1
+      ],
+      "dynamic_terms": [
+        {
+          "kind": "LOOP_INDUCTION",
+          "loop": 1076,
+          "stride": 131072
+        }
+      ],
+      "kernel": "main.compressed_token_ids -- the Engram compressed-token-id lookup",
+      "rank": 2,
+      "view": 1097
+    },
+    "guard_already_exists_and_did_not_fire": {
+      "guard": "compiler/backends/rom/common/program.py::_loop_for_state_slot drops a state-slot loop term when that loop is not in builder.open_loop_stack(), and its comment names THIS failure verbatim: \"a prologue or epilogue kernel runs with no loop open at all ... Emitting the placement's loop regardless produces a view that both the resolver and runtime.sim.memory refuse -- 'loop M is not active'\"",
+      "how_to_tell_them_apart": "instrument _loop_for_state_slot and _view for this tensor in an array build and print the open-loop stack plus whether the view came from the cache.  The wafer build is the control: it opens two loops around the same kernel and resolves the same shape of view without complaint",
+      "loop_1076_is_opened": {
+        "at_pc": 243,
+        "operator_needing_it_at_pc": 6,
+        "total_loop_setups_in_program": 1365
+      },
+      "so": "the guard never fired for view 1097.  At the moment the view was built the builder's open-loop stack CONTAINED loop 1076, and in the emitted program that loop is opened at pc 243 while the operator that reads the view is at pc 6",
+      "suppression_records_in_this_deployment": 0,
+      "two_candidate_mechanisms": [
+        "the builder's open-loop stack and the emitted instruction order diverge on the array path, so a view built while a loop was notionally open is consumed by an operator emitted outside it",
+        "_view() deduplicates by key, and the key includes the dynamic terms -- so a layer-region kernel that legitimately built this view WITH the term could be handing it to the prologue kernel from the cache, which would bypass the guard because the guard runs per request and not per cache hit"
+      ]
+    },
+    "instruction_streams_compared": {
+      "rom_array_64": [
+        "pc 3 CONTROL.LOOP_SETUP",
+        "pc 4 TENSOR.EMBED_LOOKUP (kernel 0)",
+        "pc 5 CONTROL.LOOP_NEXT",
+        "pc 6 TENSOR.EMBED_LOOKUP (kernel 1) -- NO LOOP OPENED"
+      ],
+      "rom_wafer": [
+        "pc 3 CONTROL.LOOP_SETUP",
+        "pc 4 TENSOR.EMBED_LOOKUP (kernel 0)",
+        "pc 5 CONTROL.LOOP_NEXT",
+        "pc 6 CONTROL.LOOP_SETUP",
+        "pc 7 CONTROL.LOOP_SETUP",
+        "pc 8 TENSOR.EMBED_LOOKUP (kernel 1)",
+        "pc 9 CONTROL.LOOP_NEXT",
+        "pc 10 CONTROL.LOOP_NEXT"
+      ]
+    },
+    "loop_1076_is_a_region_loop": {
+      "loop_1075": {
+        "body_end": 242,
+        "body_start": 11,
+        "bound_divisor": 1,
+        "upper_bound": 1
+      },
+      "loop_1076": {
+        "body_end": 505,
+        "body_start": 244,
+        "bound_divisor": 1,
+        "lower_bound": 0,
+        "max_iterations": 1,
+        "step": 1,
+        "upper_bound": 1
+      },
+      "loop_1085_for_contrast": {
+        "body_end": 5,
+        "body_start": 4,
+        "bound_divisor": 512,
+        "note": "kernel 0's real per-operator context loop",
+        "upper_bound": 256
+      },
+      "reading": "1076 runs ONCE over a body of 262 instructions, which is a LAYER-RUN REGION and not a per-operator context loop.  So the term on view 1097 came from the run/state-slot path -- ``_loop_of_run.get(placement[0])`` -- which is exactly the path ``_loop_for_state_slot``'s guard governs.  That eliminates the other candidate: it is not the context loop this session's token_ring change introduces, whose loops look like 1085",
+      "the_anomaly_is_now_single": "the guard governs this term's source and the deployment records ZERO suppressions, while the operator that reads the view is at pc 6 and the loop's body begins at 244.  Either the guard's open-loop test saw 1076 as open when the view was built -- which body_start 244 contradicts -- or the view reached the prologue kernel without passing the guard.  ``_view()``'s dedup cache is the only route that bypasses a per-request guard, and it is keyed on the terms, so a hit would require the prologue's own request to have carried the term already.  Instrumenting ``_loop_for_state_slot`` and ``_view`` in an array build, with the wafer as control, is what separates those"
+    },
+    "why_it_surfaced_now": "kernel 1 writes a token_ring, and a token_ring's plane became request-sized earlier in this session so that DMA.NGRAM_HASH would be handed the committed prefix instead of the whole capacity.  That is what gives the view a resolving loop to need.  The wafer and single-chip lanes emit it; the array lane does not, and no execution had ever reached the array path to show that"
+  },
+  "not_a_claim": [
+    "that this is the only defect on the V4.1 array path -- it is the first, reached after six retired instructions",
+    "that emitting the loops is the whole fix -- six retired instructions is not a survey, and the array path has had no execution before this one"
+  ],
+  "producer": {
+    "git": {
+      "commit": "03ffc18cbeda4624493555bb99e768ff1ade3caa",
+      "worktree_dirty": true
+    }
+  },
+  "question": "does the shipped DeepSeek-V4.1-Flash ROM array-64 deployment execute?",
+  "reading": "the deployment is admitted and its program loads, so the array's placement, sharding and descriptor tables are consistent enough to start.  The stop is a LOOP SCOPING defect: a tensor view carries a LOOP_INDUCTION term naming a loop that is not open where the view resolves.  That is the array analogue of the request-extent and operand-row gaps the wafer and single-chip lanes needed, and it is the FIRST execution this topology has ever had for this model, so it is the first chance anything like it could surface",
+  "result": {
+    "emitted_token_ids": [],
+    "failure": "prefill failed: view 1097: loop 1076 is not active",
+    "retired_work": 6
+  },
+  "schema": "opentallas.abi3.v41_array_first_execution.v1",
+  "supersedes_itself": {
+    "fix_direction": "a single-trip resolving loop never advances -- ``_open_context_loop`` says so: 'it runs once, and the resolution it carries is the point of it' -- so the term's stride is never added to an address and need not be the whole-plane advance.  Either it becomes the plane's ROW stride, or the encoder's refusal is turned into a build-time diagnosis instead of a crash in the layout encoder.  Neither is landed here: both change how A18 extents resolve and the reduced vehicles that now work would have to be re-verified against them",
+    "so_the_regression_is_mine": "the token_ring rule that made DMA.NGRAM_HASH receive the committed prefix instead of the whole capacity is what attaches this term.  It is correct on the reduced vehicle, where the context is 128 and the product is 16,384, and it cannot be expressed at all on a 262,144-row ring",
+    "what_HEAD_does_instead": {
+      "arithmetic": "68,719,476,736 is 262144 squared.  The term this session attaches to a request-sized sequence plane carries stride ``_plane_row(tensor) * _dims(tensor)[0]``, and on the shipped V4.1 token ring both factors are the 262,144-row context, so the product overflows the 32-bit stride field",
+      "error": "tensor_view.term0_stride=68719476736 does not fit in 4 unsigned bytes",
+      "result": "the shipped V4.1 array build FAILS OUTRIGHT at HEAD",
+      "site": "_state_plane_view's extra_terms, reached from _operand_view's state branch"
+    },
+    "what_changed": "the deployment this artifact measured was NEVER REBUILT in this session -- it predates the token_ring request-extent change -- so the 'six instructions then loop 1076 is not active' result is against a STALE build, and its zero suppression records describe code that no longer runs"
+  },
+  "why_the_shipped_model": "the reduced V4.1 vehicle cannot be built for this topology at all -- its 12 routed experts do not divide 64 owners, and the ROM array backend refuses the shard rather than splitting a slot -- so the shipped deployment is the only route to a V4.1 array execution.  Its 384 experts divide 64 owners exactly six ways"
+}

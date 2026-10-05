@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.w19.production_continuation.v1",
+  "status": "bounded_pass_not_adopted",
+  "historical_exact_record": "results/rtl/w19_payload_transport_historical_3b15b18e.json",
+  "historical_record_sha256": "cf7cdd3889ff90afda0c93f545c71ae2f2c1414f27d8a493619cd9aa83f76858",
+  "fixtures_archive": "results/rtl/w19_payload_fixtures_3b15b18e.tar.gz",
+  "fixtures_archive_sha256": "074b59d3a7b4003df42d35d9da348ca52aa7819c6e6957d0a3d5b0fc134f0caf",
+  "fixture_files": 240,
+  "archive_bytes": 520305,
+  "replay_record": "results/rtl/w19_payload_recovery_20261001.json",
+  "replay_record_sha256": "1e4284a66ab00bb83a9845a1aa8eb70d7a5c05dc37e17a8ef4c5035585c6c35d",
+  "checks": {
+    "compact_historical_cases": 60,
+    "fresh_remote_output_replays": 6,
+    "protocol_scenarios": 8,
+    "pytest_passed": 12,
+    "yosys_check_problems": 0
+  },
+  "pinned_originals": "Historical receipt copied byte-identically; original RTL/golden/W13 sources and failed padded-gate evidence untouched.",
+  "runtime_prerequisites": [
+    "Git objects 3b15b18e997ad0a05cc7acf474a7329847e38845 and W13 000ba0898f5120a66d5905ccff333ebbbe28394d including prefix equivalence record",
+    "For recovery replay: extract committed fixture archive into a directory; use --fixtures on that directory, historical receipt, clean branch, Python/Numpy, SSH, remote Icarus compiler/runtime of matching versions",
+    "For independent golden regeneration: released DeepSeek-V4.1-Flash checkpoint, results/rtl/w19_sm_operands/ar_L0_oreduce.pkl, clean committed sources, Icarus and optional matching remote runtime",
+    "Sparse model imports require src/opentallas, configs, historical physical.json inputs and three campaign records, arch/uarch records and floorplan; sparse patterns recorded in current checkout",
+    "W13 SM snapshot reports existing SRAM address-port padding warnings (12 to 14 bits); unmodified snapshot retained, no new physical qualification"
+  ],
+  "open_gates": [
+    "production loader/swizzle and connected router/multi-SM scheduling",
+    "full 96-rank RTL AR/MTP token with realistic concurrent HBM traffic",
+    "in-context SS setup / FF hold 833ps 60/25ps uncertainties",
+    "physical hub routing-layer check; model channel fit is analytical only",
+    "measured composed single-user token latency and >=1% model gain before adoption"
+  ],
+  "priority": "Single-user decode latency primary; batching throughput secondary; Qwen other worker.",
+  "no_claims": [
+    "No current-main RTL/golden promotion of historical receipt",
+    "No full 96-rank result from bounded gate",
+    "No token rate, throughput or SS/FF adoption"
+  ],
+  "failed_prerequisites_preserved": [
+    "/tmp/claude-1000/w19/production-help.log",
+    "/tmp/claude-1000/w19/production-7f189f4cb.log"
+  ],
+  "source_compatibility_correction": "ece1a2538 preserved as f65fdd5de: arithmetic compatibility only; fresh unified preflight is a separate record."
+}

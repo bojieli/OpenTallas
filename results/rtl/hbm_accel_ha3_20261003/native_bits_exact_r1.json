@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.ha3.native_datapath_exact.v1",
+  "source_commit": "823b81cc26330b5f0be882e88ffa65fda056d421",
+  "host": "ubuntu",
+  "run_pid": 520369,
+  "input_sha256": {
+    "/home/ubuntu/ha3-hbm-epilogue-20261003/rtl/hbm_accel/epilogue/ot_hbm_accel_native_bits.sv": "8eb24d780622292006f8f749a62cc6691ae4db682485e8e3aa71279ccc71c27a",
+    "/home/ubuntu/ha3-hbm-epilogue-20261003/rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "/home/ubuntu/OpenTallas/results/uarch/c0_pc40_payload_lease_20261003/inputs/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "/tmp/ha3-native-bits-r1/vectors.txt": "fcad1d72faa7219a592a6230864f44750b5b13789d5f16cee2accd0707923399"
+  },
+  "build_returncode": 0,
+  "run_returncode": 0,
+  "status": "PASS_NUMERICAL_COMPONENT",
+  "cases": 3168,
+  "lanes": 4,
+  "opcodes": {
+    "COPY": 160,
+    "BITCAST_U": 224,
+    "BITCAST_F": 224,
+    "AND": 288,
+    "OR": 160,
+    "XOR": 160,
+    "IADD": 288,
+    "ISUB": 160,
+    "SHR": 224,
+    "SHL": 160,
+    "FCMP_GT": 160,
+    "FCMP_LT": 160,
+    "FCMP_EQ": 160,
+    "FCMP_NE": 160,
+    "SELECT": 160,
+    "FMAX": 160,
+    "FMIN": 160
+  },
+  "golden": "Pinned NativePrimitiveVM scalar/vector primitive only; no checkpoint or model inference",
+  "scope": "17 stateless beat datapaths including explicit BF16 integer stages; NOT Pauli wholeprimitive controller/realRF/Nashgrant/nativefactory/1737token",
+  "measured_controller_cycles": null,
+  "ss_wns": null,
+  "ff_wns": null,
+  "adopt": false
+}

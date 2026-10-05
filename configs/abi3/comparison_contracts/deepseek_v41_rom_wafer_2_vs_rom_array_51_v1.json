@@ -1,0 +1,263 @@
+{
+  "comparison_id": "deepseek_v41_rom_wafer_2_vs_rom_array_51",
+  "execution": {
+    "batch": 1,
+    "concurrency": 1,
+    "context_tokens": 200000,
+    "evidence_scope": "full_workload",
+    "generation": {
+      "eos_token_ids": [
+        1
+      ],
+      "include_eos_in_output": true,
+      "max_new_tokens": 256,
+      "selection_mode": "greedy_argmax_lowest_id",
+      "stop_condition": "first_official_eos_or_maximum_new_tokens",
+      "tie_rule": "lowest_token_id",
+      "vocabulary_size": 129280
+    },
+    "phases": [
+      "prefill",
+      "decode"
+    ]
+  },
+  "external_oracle": {
+    "evidence_class": "external_reference_comparator",
+    "path": "results/abi3/deepseek_v41_reference_oracle_context_ladder.json",
+    "producer": {
+      "source_sha256": null,
+      "tool": "tools/run_deepseek_v41_reference_oracle.py"
+    },
+    "schema": "opentallas.abi3.reference_oracle.v1",
+    "source_sha256": null,
+    "status": "pending"
+  },
+  "iso_area": {
+    "denominator_role": "rom",
+    "granularity_correction": {
+      "admissible_node_counts": [
+        {
+          "node_count": 112,
+          "ratio_to_denominator": 0.9873445105462412,
+          "silicon_area_mm2": 91280.0
+        },
+        {
+          "node_count": 113,
+          "ratio_to_denominator": 0.9961600865332613,
+          "silicon_area_mm2": 92095.0
+        },
+        {
+          "node_count": 114,
+          "ratio_to_denominator": 1.0049756625202813,
+          "silicon_area_mm2": 92910.0
+        },
+        {
+          "node_count": 115,
+          "ratio_to_denominator": 1.0137912385073014,
+          "silicon_area_mm2": 93725.0
+        }
+      ],
+      "built": false,
+      "corrected_role": "rom_array",
+      "nearest_node_count": 113,
+      "quantum_mm2": 815.0,
+      "rule": "Rule 2 of the iso-area rule: the iso-area array comparator is the reticle count whose silicon is within the tolerance of the denominator's, derived from the die quantum and not from the built node count. 92,450.0 / 815.0 = 113.43558282208589 dies, so four integer counts fall inside the 0.02 tolerance and the nearest is 113 dies at 92095.0 mm2. None of them is built, and none of them is this contract's 64.",
+      "what_the_built_pair_is": "The 64-node array against the two-wafer pipeline holds model, tile, weight tier and fabric fixed and varies packaging only. It is the PACKAGING control of plan section 3.2, it is not iso-area, and no ratio read from it is an iso-area ratio. The verdict does not turn on the node count: at the plan's inadmissible 51 the ratio would be 0.44959437533802055 and at 64 it is 0.5641968631692806, both far outside the 0.02 tolerance."
+    },
+    "note": "Both sides' silicon is derived from published die areas and a derived node count, so the ratio is computed and the verdict is recorded rather than assumed: 52,160.0 / 92,450.0 = 0.5641968631692806, far outside the 0.02 tolerance, so within_tolerance is false and the granularity correction is mandatory. The comparison this contract governs is therefore a packaging control at unequal area. Neither side is built and the model binding is pending, so nothing here is a measurement of either object.",
+    "numerator_role": "rom_array",
+    "ratio": 0.5641968631692806,
+    "rule": "Iso-area rule, DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17 as inherited by DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 3.5: area is accelerator die area per node times node count, on both sides, and nothing else enters the denominator. HBM stacks, package, switch silicon and board are reported beside the ratio and never inside it. Two sides are iso-area only when their silicon areas agree within the tolerance; when they do not, rule 2 requires the node count that would agree to be stated as a granularity correction, and the pair is published as the control it is rather than as an iso-area ratio.",
+    "status": "locked",
+    "tolerance": 0.02,
+    "within_tolerance": false
+  },
+  "model": {
+    "graph_id": null,
+    "kernel_ir_path": "build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json",
+    "kernel_ir_source_sha256": null,
+    "model_id": "deepseek-v4.1-flash",
+    "numeric_profile": "deepseek_v41_flash_target_precision_v1",
+    "pending_reason": "tools/build_deepseek_v4_kernel_ir_v3.py --model deepseek-v4.1-flash refuses to emit an IR: \"error: every deepseek-v4.1-flash checkpoint artifact is present and 96,085 tensor specs resolve, so the remainder of gate DS41-I2 is the node-by-node lowering itself, which this front end does not emit yet.  The plan that lowering must realise is complete and checkable now: 3,131 kernels from layer_source_plan(), lowering_plan() and planned_census().\"  Until WP-D emits build/ir-v3/deepseek-v4.1-flash/kernel_ir.v3.json there is no graph_id to bind, and inventing one would forge the identity every other lock in this contract is checked against.",
+    "status": "pending"
+  },
+  "policy": {
+    "clock": {
+      "comparison_frequency_hz": null,
+      "policy_id": "common_routed_minimum_fmax_v1",
+      "same_frequency_required": true
+    },
+    "evidence_class": "predictive_asap7_characterized_or_explicit_assumption_v1",
+    "external_fabric_policy": "source_locked_cluster_and_wafer_fabric_v1",
+    "external_memory_policy": "source_locked_distributed_hbm_phy_and_stack_v1",
+    "latency_boundary": "host_request_to_terminal_completion_v1",
+    "pvt": {
+      "corner_id": "asap7_tt_0p70v_25c",
+      "process": "TT",
+      "temperature_c": 25,
+      "voltage_v": 0.7
+    },
+    "state_boundary": "fresh_session_live_hbm_compressed_kv_prefill_decode_fail_stop_v1",
+    "technology_claim": "Predictive ASAP7 research view only; not foundry signoff, manufacturability, or an N4 claim. No DeepSeek-V4.1 token has been produced by any lane in this repository: this document is the pair identity, and every target lock in it is pending. The rom side is two wafer-scale logical devices in a pipeline with one inter-wafer crossing per token (plan section 3.1), carrying one deployment, one session, one event and transaction namespace and one submission, and registered as TopologyClass.WAFER_LOGICAL_DEVICE with node_class WAFER and node_count 2 -- the geometry configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json declares and compiler/backends/rom/deepseek_v41.py lowers against. It is not one wafer of silicon and may not be reported as one: master plan section 3 forbids relabelling a stage pipeline as one oversized chip, and a result carries the topology_class, node_class and node_count of the target that produced it. Its silicon is 2 x 46,225.0 mm2 = 92,450.0 mm2 from the published wafer-die area, which is also the area the roofline's iso-area GPU comparator is derived against for this model (results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended, device_count 2). The inter-wafer link stays an assumed 5 us hop with a 1-to-10 us sweep (plan risk 4) and is a reported sensitivity, not a point value. The rom_array side is 64 reticle-class ROM dies on the TA-DS-HBM fabric, a CLUSTER_N under AM-R1 with the Engram tables off ROM. 64 is derived, not chosen: the plan's 51-node design point cannot own whole experts because 384 % 51 = 27, and 64 is the smallest admissible count at or above it (targets.rom_array.node_count_derivation states the rule and its four inputs). Its silicon is 64 x 815.0 mm2 = 52,160.0 mm2 at the published Taalas HC1 die area. Plan risk 5 states the consequence the controlled experiment exists to measure: if the routed ROM density lands below the N5 analytical value the count rises again and the array falls further from parity, and the rounding already applied is in that direction. Iso-area rule, DEEPSEEK_V4_ROM_ARRAY_IMPLEMENTATION_PLAN.md sections 3.5 and 17 as inherited by DEEPSEEK_V41_FLASH_ROM_IMPLEMENTATION_PLAN.md section 3.5: area is accelerator die area per node times node count, on both sides, and nothing else enters the denominator. HBM stacks, package, switch silicon and board are reported beside the ratio and never inside it. Two sides are iso-area only when their silicon areas agree within the tolerance; when they do not, rule 2 requires the node count that would agree to be stated as a granularity correction, and the pair is published as the control it is rather than as an iso-area ratio.",
+    "technology_view": "asap7"
+  },
+  "reporting": {
+    "companion_sources": {
+      "binding_constraint": {
+        "analytical_antecedent": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.binding_constraint, and for the central iso-node envelope results/iso-node/leading_node_market/analytical.json#comparisons[model=DeepSeek-V4.1-Flash].wafer_binding_constraint; both analytical, neither executed",
+        "evidence_class": "executed_comparison_artifact",
+        "field": "binding_constraint",
+        "per_role": true
+      },
+      "resident_session_count": {
+        "analytical_antecedent": "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.max_resident_users, and for the central iso-node envelope results/iso-node/leading_node_market/analytical.json#comparisons[model=DeepSeek-V4.1-Flash].wafer_resident_users; both analytical, neither executed",
+        "evidence_class": "executed_comparison_artifact",
+        "field": "resident_session_count",
+        "per_role": true
+      }
+    },
+    "gate_id": "DS41-CMP11",
+    "published_ratios": [
+      "per_user_speed_ratio",
+      "aggregate_throughput_ratio",
+      "energy_per_token_ratio"
+    ],
+    "ratio_publication_rule": "Gate DS41-CMP11: every published ratio appears beside its binding constraint and its resident-session count, per role, in the executed comparison artifact that publishes it. A ratio whose two companions are not printed with it is not published. The companions are read from the executed artifact; the analytical antecedent named here is the roofline row the same quantity has at L0 and may be quoted only in a column labelled analytical -- master plan section 11.1 forbids reading it as an executed result, and plan section 1 forbids reading any of it as a TPOT. tools/build_comparison_report.py does not yet read a contract and emits neither companion field, and no V4.1 execution record exists, so this contract publishes no ratio today: iso_area.status and every target lock say so. This pair's area ratio is locked and outside tolerance, so a ratio published from it carries the granularity correction as well as the two companions, and is labelled a packaging control rather than an iso-area result.",
+    "required_companions": [
+      "binding_constraint",
+      "resident_session_count"
+    ]
+  },
+  "schema": "opentallas.abi3.comparison_contract.v2",
+  "targets": {
+    "rom": {
+      "backend": "rom.wafer_logical_device",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/asap7/rom_deepseek_v41_wafer_2_v1.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-wafer-v3",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_wafer_v3.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_v41_rom_wafer_2_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4.1-flash-rom-wafer-2-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_class": "WAFER",
+      "node_count": 2,
+      "node_count_derivation": {
+        "fixed_by_gate": "DS41-P3",
+        "fixed_by_work_package": "WP-E",
+        "inputs": [
+          "compiler/backends/rom/deepseek_v41.py module docstring: the V4 one-wafer product does not hold this model (307.5 GB of weights against a 192 GiB wafer ROM), so the primary target is two wafer-scale logical devices carrying one deployment, one session, one event and transaction namespace and one submission",
+          "configs/hardware/abi3_capability/rom_deepseek_v41_wafer.json: topology_class 2 (WAFER_LOGICAL_DEVICE), limits.max_nodes 2, fabric.node_class 1 (WAFER)",
+          "results/iso-node/leading_node_market/analytical.json: wafer_stages 2 for this model on the central N4-class envelope",
+          "results/roofline/candidates/deepseek-v41-flash/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4.1-Flash].recommended.device_count 2"
+        ],
+        "rule": "Two, recorded rather than assumed because it is the one geometry four independent artifacts agree on. The class is WAFER_LOGICAL_DEVICE and not CLUSTER_N: runtime/abi3/capability.py validates a class-2 record by feature bit 9 and its fabric rules admit node_class WAFER at two or more nodes (requiring bits 8 and 9 together), and the pair is one submission to one logical accelerator, which is what ADR-003 section 3.3's wafer contract requires. AM-R1's CLUSTER_N names a fabric between separately submitted devices, which this is not."
+      },
+      "role": "rom",
+      "silicon": {
+        "die_area_grade": "published",
+        "die_area_mm2_per_node": 46225.0,
+        "die_area_source": "configs/hardware/technology.json#wafer.area_mm2 (46,225.0 mm2, grade published, 215 mm x 215 mm wafer-scale die, https://www.cerebras.ai/chip)",
+        "excluded_from_denominator": [
+          "HBM stacks and their PHY",
+          "package and interposer",
+          "switch silicon and cabling",
+          "board and chassis"
+        ],
+        "silicon_area_mm2": 92450.0
+      },
+      "storage_class": "ROM",
+      "target_id": "deepseek-v4.1-flash-rom-wafer-2",
+      "topology_class": 2
+    },
+    "rom_array": {
+      "backend": "rom.cluster_n",
+      "capability": {
+        "digest": null,
+        "path": "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "cost_policy": {
+        "cost_table_id": "abi3-cost-rom-array-v3",
+        "lock": {
+          "digest": null,
+          "path": "configs/hardware/abi3_cost_rom_array_v3.json",
+          "source_sha256": null,
+          "status": "pending"
+        },
+        "policy_id": "deepseek_v41_rom_array_full_target_asap7_v1"
+      },
+      "deployment": {
+        "digest": null,
+        "path": "build/abi3/asap7/deepseek-v4.1-flash-rom-array-64-full-workload",
+        "source_sha256": null,
+        "status": "pending"
+      },
+      "node_class": "DIE",
+      "node_count": 64,
+      "node_count_derivation": {
+        "fixed_by_gate": "DS41-P3",
+        "fixed_by_work_package": "WP-F",
+        "inputs": [
+          "plan section 3.2 names N = 51, read off results/roofline/candidates/deepseek-v4.1-flash-engram-host/n5_vs_b200/analytical.json design ROM-N5-native-SRAMKV-array-hybrid-x51 at device_count 51; that is the analytical design point",
+          "plan section 3.2's own whole-expert ownership rule: the 384 routed experts of a layer must divide by the node count, and 384 % 51 = 27, so the design point cannot own whole experts and is inadmissible under the rule that names it",
+          "configs/hardware/abi3_capability/rom_deepseek_v41_array_64.json: topology_class 3 (CLUSTER_N), limits.max_nodes 64, fabric.cluster 8 domains of 8",
+          "compiler/backends/rom/deepseek_v41_array.py expert_parallel_node_count: the smallest admissible count at or above the design point, admissibility being 384 % n == 0, n == domains * domain_size and n != 32; the module records that it rounds UP because 48 would make the ROM side cheaper than the point it stands in for"
+        ],
+        "rule": "64, derived from the released 384-expert geometry and the declared 8 x 8 fabric rather than read off the plan. This contract's file name and comparison_id keep the plan's 51-node design-point name because plan section 13 WP-N registers those exact paths; the built node count is this field, and a reader who needs the geometry reads it here and not out of a filename. If WP-F's derivation changes before DS41-P3, target_rom_array_deployment_source_exact refuses the deployment instead of absorbing the difference."
+      },
+      "role": "rom_array",
+      "silicon": {
+        "die_area_grade": "published",
+        "die_area_mm2_per_node": 815.0,
+        "die_area_source": "configs/hardware/technology.json#reticle.area_mm2 (815.0 mm2, grade published, Taalas HC1 die area, https://taalas.com/products/); the ROM bytes this model places on one node imply a larger die at both the wafer backend's usable density and the roofline's N5 array density, which is why DS41-PHY10 may raise the node count again and is stated in iso_area.note rather than silently absorbed",
+        "excluded_from_denominator": [
+          "HBM stacks and their PHY",
+          "package and interposer",
+          "switch silicon and cabling",
+          "board and chassis"
+        ],
+        "silicon_area_mm2": 52160.0
+      },
+      "storage_class": "ROM",
+      "target_id": "deepseek-v4.1-flash-rom-array-64",
+      "topology_class": 3
+    }
+  },
+  "version": "1.0.0",
+  "workload": {
+    "digest": "8895f768adda9d31b8b6809bd01f32d4a6a2cae646177d74d9eac8810fe670a0",
+    "index_path": "build/workloads/deepseek-v4.1-flash/index.json",
+    "index_schema": "opentallas.workload_index.v1",
+    "index_source_sha256": "34f6324307ed8b3883cd55b431dc07adf320ab3ca9fe21f2d2eb8e6da60d1fc2",
+    "kind": "long_natural",
+    "max_new_tokens": 256,
+    "path": "build/workloads/deepseek-v4.1-flash/TA-DS41-CTX-200K-1.json",
+    "prompt_token_count": 200000,
+    "rendered_text_sha256": "6ad57114c426156f7e25341d6faa55d061033e6b98244d31ab1e8a395463527a",
+    "source_sha256": "7b2696ca041e544af3e473a605bd56e19fcbe9135eb8c77d0630c59b52fe416d",
+    "template": {
+      "mode": "none_plain_text",
+      "path": null,
+      "source_sha256": null,
+      "template_id": "none_plain_text"
+    },
+    "tokenizer_sha256": "c90dfa01249db1be4245780a052ede752e1361c612ac6d08e2bdada7d599476b",
+    "workload_id": "TA-DS41-CTX-200K-1"
+  }
+}

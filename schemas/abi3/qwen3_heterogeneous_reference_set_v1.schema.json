@@ -1,0 +1,102 @@
+{
+  "$id": "https://opentallas.org/schemas/abi3/qwen3_heterogeneous_reference_set_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "abi_version": {"const": "3.0"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerator_execution": {"const": false},
+        "external_oracles_validated": {"const": true},
+        "gate1_correctness_passed": {"const": false},
+        "runnable_batch_inputs_complete": {"const": true},
+        "tpot_claim": {"const": false}
+      },
+      "required": [
+        "accelerator_execution",
+        "external_oracles_validated",
+        "gate1_correctness_passed",
+        "runnable_batch_inputs_complete",
+        "tpot_claim"
+      ],
+      "type": "object"
+    },
+    "reference_set_id": {"$ref": "#/$defs/sha256"},
+    "references": {
+      "items": {"$ref": "#/$defs/reference"},
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.abi3.qwen3_heterogeneous_reference_set.v1"
+    },
+    "status": {"const": "production_ready"},
+    "workload_set": {"$ref": "#/$defs/workloadSet"}
+  },
+  "required": [
+    "abi_version",
+    "claim_boundary",
+    "reference_set_id",
+    "references",
+    "schema",
+    "status",
+    "workload_set"
+  ],
+  "title": "Qwen3-8B exact-8K heterogeneous external-reference set v1",
+  "type": "object",
+  "$defs": {
+    "campaignFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"$ref": "#/$defs/relativePath"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 192,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$",
+      "type": "string"
+    },
+    "reference": {
+      "additionalProperties": false,
+      "properties": {
+        "oracle_file": {"$ref": "#/$defs/campaignFile"},
+        "oracle_result_sha256": {"$ref": "#/$defs/sha256"},
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"},
+        "sequence_id": {"$ref": "#/$defs/identifier"},
+        "workload_digest": {"$ref": "#/$defs/sha256"},
+        "workload_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": [
+        "oracle_file",
+        "oracle_result_sha256",
+        "prompt_token_sha256",
+        "sequence_id",
+        "workload_digest",
+        "workload_id"
+      ],
+      "type": "object"
+    },
+    "relativePath": {
+      "minLength": 1,
+      "not": {"pattern": "(^/)|(^|/)\\.\\.?(/|$)|\\\\"},
+      "type": "string"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "workloadSet": {
+      "additionalProperties": false,
+      "properties": {
+        "file": {"$ref": "#/$defs/campaignFile"},
+        "workload_set_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["file", "workload_set_id"],
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "time_unix": 1790886303.51156,
+  "status": "ACTUAL_ALLRANK_PC9_CLEARED_NO_EXACTNESS_VERDICT",
+  "watcher_event": {
+    "watch_PID": 2080109,
+    "supervisor_PID": 1307359,
+    "supervisor_startticks": 307093847,
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "binary_SHA256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+    "watcher_SHA256": "ef910094ff3c870ad6baffc64ed1f26a596e0d35b2d380dd522844d3fbb0a136",
+    "scope": "Read-only polling; no signals/restart/binary/image/source changes; PC transition not exactness",
+    "output": "/home/ubuntu/w17-current-L0-pc9-watch-20261001",
+    "event": "PC9_CLEARED",
+    "time_unix": 1790886177.2512858,
+    "progress_tail": [
+      "CYC 9800 wall 3217.9 s pc 9 9 9 9",
+      "CYC 10000 wall 3301.2 s pc 9 9 9 9",
+      "CYC 10200 wall 3383.8 s pc 9 9 9 9",
+      "CYC 10400 wall 3466.1 s pc 9 9 9 9",
+      "CYC 10600 wall 3549.4 s pc 9 9 9 9",
+      "CYC 10800 wall 3633.8 s pc 10 10 10 10"
+    ],
+    "exactness_claim": false,
+    "next": "Inspect terminal all4DONE+524288VM/rank; if stillPC9 derive current-source HE row/run/credit observability without modifying or stopping binary."
+  },
+  "watcher_event_SHA256": "b301949d20fbf6e772fceb36e51830f0490c58dcf3df94448b9eb73bd4be7931",
+  "live_source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "live_source_clean": true,
+  "source_pins_checked": 145,
+  "mismatches": [],
+  "binary_SHA256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+  "source_pins": {
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3"
+    },
+    "rtl/chip/ot_chip_v41x_die.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "8682a572adc722b5c47f007b4ef7c20a6364b77e7c47bc6422b216c2e32349b2"
+    },
+    "rtl/chip/ot_chip_v41x_coll_dma.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3"
+    },
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260"
+    },
+    "rtl/rom/ot_w15_rom_oneshot_px.sv": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "988a50f900c011c2912f66166bcf01d46117c47a6e930c6186c202b5bbd03794"
+    },
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": {
+      "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+      "sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04"
+    }
+  },
+  "decoded_program": {
+    "8": {
+      "unit": 3,
+      "qe_xbase": 46464,
+      "qe_nb": 160,
+      "qe_nout": 128,
+      "qe_tiles": 1,
+      "qe_wbase": 3840,
+      "qe_obase": 420096
+    },
+    "9": {
+      "unit": 6,
+      "wait": 31,
+      "coll_op": 1,
+      "coll_src": 419776,
+      "coll_dst": 51648,
+      "coll_n": 320
+    },
+    "10": {
+      "unit": 6,
+      "wait": 31,
+      "coll_op": 1,
+      "coll_src": 420096,
+      "coll_dst": 54208,
+      "coll_n": 128,
+      "coll_seq": 1
+    },
+    "11": {
+      "unit": 2,
+      "su_nout": 8,
+      "su_nin": 160,
+      "a_base": 51648,
+      "a_so": 160,
+      "a_si": 1,
+      "red": 1,
+      "red_sq": 1,
+      "r_base": 51584,
+      "su_vec": 2,
+      "red_tree": 1
+    }
+  },
+  "next_PC10": {
+    "operation": "all-gather coll_op1 seq1 wait31",
+    "actual_producer": "PC8 QE nout128,tile1,nb160 result at419? actualqe_obase420096; DMA readsVM source420096 onlyafter allenginesidle and priorcollectiveDMA quiet",
+    "producer_VM_float_extent": [
+      420096,
+      420224
+    ],
+    "destination_VM_float_extent": [
+      54208,
+      54720
+    ],
+    "DMA_source_word": 26256,
+    "DMA_destination_word": 3388,
+    "local_input_words512bit": 8,
+    "expected_destination_words512bit": 32,
+    "expected_destination_floats": 512,
+    "GW": 4,
+    "transpose": "eight accepted four-rank outputs; local wordcount +4 eachbeat, busy cleared only tr_done via two commit_wait registers",
+    "collective_depth": 512,
+    "host_route_cycles_U": 48,
+    "host_route_cycles_X": 177,
+    "credit_phase": "Finite existing collectivecredits; eight words muchless512 depth, credit return routed through existing48/177queues. No CKVpeerACKqualification transferred.",
+    "PC_completion": "coreS_COLL_WAIT waits !coll_busy; PC9->10 means priorcollective retired and HEidle was required atPC9issue. HE rowcounter not directly observed.",
+    "deadline": "Demand-based nextinspection:8localacceptedTXwords+32destinationVMwords andtranspose commit->busy0. Absolute finite completion bound not yet source-extracted for shared collective scheduling; do notassign arbitrary timeout. IfPC10persistent inspect exportedcollectivebusy/words_in-out/state via existingterminal diagnostics or qualified noninterrupting observation.",
+    "following_consumer": "PC11SU reads precedingPC9gather51648 for reduction, not PC10destination; laterdependentconsumers mustobserve currentDUT outputs."
+  },
+  "latest_progress": [
+    "CYC 10400 wall 3466.1 s pc 9 9 9 9",
+    "CYC 10600 wall 3549.4 s pc 9 9 9 9",
+    "CYC 10800 wall 3633.8 s pc 10 10 10 10",
+    "CYC 11000 wall 3716.9 s pc 12 12 12 12"
+  ],
+  "result_present": false,
+  "required_terminal": "All4DONE and completeactual_words==words==524288 pluspass_exact for all4; L0only",
+  "restarted": false,
+  "sources_changed": false
+}

@@ -1,0 +1,18 @@
+{
+  "commits": [
+    "91585296546ff7bdfd702966745def11f67696b9",
+    "7eaf43a4553dd61d2e368828085c2264800a9e32"
+  ],
+  "driver_scope": "Prepared source-constraint stages only; execution requires terminal ODB, installed native API review and fresh measured reservation",
+  "failed_evidence_preserved": true,
+  "focused_tests_passed": 51,
+  "lifetime_cold_regeneration_identical": true,
+  "lifetime_scope": "18 selected outputs only; existing VM, no new credits; full context and absolute F unknown",
+  "native_job_launched": false,
+  "physical_fit_or_rate_qualified": false,
+  "schema": "PHYSICAL_CONTINUATION_AND_SELECTED_LIFETIME_PARENT_INTAKE_V1",
+  "source_artifact_manifest_counts": {
+    "results/rtl/pve1_odb_stage_driver_20261003/manifest.json": 12,
+    "results/uarch/dsrom_selected_context_lifetimes_20261003/manifest.json": 12
+  }
+}

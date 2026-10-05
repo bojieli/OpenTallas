@@ -1,0 +1,43 @@
+{
+  "artifact_hashes_verified": 32,
+  "focused_tests_passed": 20,
+  "hardware_PnR_admitted": false,
+  "identity_source_pins_verified": 2,
+  "independent_full_calendar_replay": "PASS: all36read layers and144writer calendars, byte-identical committed full_calendar_r8.json",
+  "independent_full_calendar_sha256": "c1618fe0c66f91549eb1b37675276d15fdf29a108d6e60b91b6890f4bc3abc92",
+  "literal_8K_addressed_tile_rows": 54,
+  "pinned_originals_byteidentical_to_parent": 28,
+  "production_policy_selected": false,
+  "remaining": {
+    "Euclid": [
+      "Bind actual producer PC/owner and raw FP8 result into identity() and Delivery; no host stage KV reset may qualify persistent state.",
+      "Join Homes.tile raw code/mask tuples to actual registered tile fill and macro visibility;54 addressed rows at8K, not historical44.",
+      "Require full reader drain and ACK/credit retirement before overwriting one active layer; no second numerical position requested."
+    ],
+    "Kepler": [
+      "Expose allocated physical tag receipt; retain owner until validated per-beat reverse credit and grant release.",
+      "Fix r14 early tag free and unconditional read credit grant; bind exact request455/return467/reverse404 interfaces and two package endpoints.",
+      "The candidate32sector/16burst credit inventory needs1024 worst-case assembly slots/stack; the serial reference exercises one sector at a time and cannot claim burst speed."
+    ],
+    "Maxwell": [
+      "Replace existing KV bound once with a selected production release/prefetch trace; current cold serial calendar does not require a refill policy.",
+      "Keep read150994944B/rank separate from actual RMW/write traffic; zero overlap is this conditional case only.",
+      "Finish service/control/CAM/mux/quarantine area, fill demux routing-layer capacity and source-matched slot placement; no architecture admission from macro sums."
+    ]
+  },
+  "schema": "opentallas.Qwen.persistent-KV-parent-review.v1",
+  "worker": "31292146b5d034b4776f48e1ae3fe56d6c8ebdfe",
+  "worker_full_calendar_summary": {
+    "conditional_cold_serial_seconds": 0.32294762833333335,
+    "conditional_cold_serial_token_cycles": 387537154,
+    "delivery_cycles": 387403068,
+    "headline_rate_adopted": false,
+    "read_bytes_charged_once": 150994944,
+    "read_layers": 36,
+    "selected_production_refill_policy": false,
+    "slower_than_legacy_32B_row_hit_diagnostic": true,
+    "write_cycles": 827319,
+    "writer_stack_calendars": 144
+  },
+  "worst_case_assembly_slots_per_stack": 1024
+}

@@ -1,0 +1,31 @@
+{
+  "status": "pass",
+  "scope": "Ordered gather credits: both simulators exercise arithmetic/data, full window, held requests, same-edge read acceptance and earlier fault retirement, foreign tags, fault drain, cancellation/restart",
+  "simulators": [
+    "Icarus 11",
+    "Verilator 5.050"
+  ],
+  "credits": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "workload_reads": 64,
+  "response_delay_cycles": 32,
+  "workload_cycles_each_simulator": [
+    2281,
+    1181,
+    661,
+    461
+  ],
+  "same_edge_fault_credits": [
+    2,
+    4,
+    8
+  ],
+  "sources": {
+    "rtl/abi3/ot_a3_bf16_weight_gather.sv": "cbe79cc217d9c52055195bf92f3f793cc9b5ba3885e82044e6b80ba1bd168cdb",
+    "tests/test_weight_gather_credits.py": "e93655e90faa34a272f2364708541b4a6299e09ea6f7f88ea07120ed25b52a99"
+  }
+}

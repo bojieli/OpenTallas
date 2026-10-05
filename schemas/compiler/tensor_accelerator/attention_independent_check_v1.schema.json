@@ -1,0 +1,35 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_independent_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "expected_counters": {"$ref": "attention_expectations_v1.schema.json#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm_image_sha256": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.attention_independent_check.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"},
+    "verified": {
+      "additionalProperties": false,
+      "properties": {
+        "abi_backward_boundary": {"const": "2.3 only; frozen 2.0, 2.1, and 2.2 artifacts remain separately replayed"},
+        "attention_state_causality": {"const": true},
+        "hbm_payload_reconstruction": {"const": true},
+        "neutral_kernel_no_physical_fields": {"const": true},
+        "state_commit_scope": {"const": "one_resource_qualification_of_36_resource_terminal_commit"}
+      },
+      "required": ["abi_backward_boundary", "attention_state_causality", "hbm_payload_reconstruction", "neutral_kernel_no_physical_fields", "state_commit_scope"],
+      "type": "object"
+    }
+  },
+  "required": ["capability_id", "check_id", "expected_counters", "graph_id", "hbm_image_sha256", "kernel_ir_id", "physical_plan_id", "qualification_report_id", "request_id", "schema", "source_lock_id", "status", "verified"],
+  "title": "Independent attention/KV deployment check v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

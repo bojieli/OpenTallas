@@ -1,0 +1,230 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-01T14:15:47.502762+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 174465.416,
+    "block": "ot_v41_attn_eng_ctl_phys",
+    "cells": 956495,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.0,
+    "parameters": {
+      "BREG": 1,
+      "D": 512,
+      "NSTAGE": 2,
+      "PHYS": 1,
+      "REPL": 2
+    },
+    "preserve_w11_controller_endpoints": true,
+    "sources": [
+      {
+        "path": "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+        "sha256": "7ae782292122ad0dbfc3d45574e53039517540a05cbe900678dafff76f090eb1",
+        "size_bytes": 12236
+      },
+      {
+        "path": "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+        "sha256": "44f91e6c2c065a6782ce646701ea2172e253e416fed27d0a378311a5c5f6ca6b",
+        "size_bytes": 51594
+      }
+    ],
+    "top": "ot_v41_attn_eng_ctl_phys"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\nHPWL        17544983.2 u\nlegalized HPWL       17568854.3 u\ndelta HPWL                    0 %\n\nTook 27 seconds: detailed_placement\nestimate_parasitics -placement\nTook 37 seconds: estimate_parasitics -placement\nReport metrics stage 4, cts final...\n\n==========================================================================\ncts final report_design_area\n--------------------------------------------------------------------------\nDesign area 213715 um^2 49% utilization.\nwrite_db /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.odb\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_cts.sdc\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n4_1_cts                   .odb         2358          13036 cdc0c99e1ae6be7096a0\ncp /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_1_cts.odb /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_cts.odb\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route\nRunning global_route.tcl, stage 5_1_grt\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_cts.odb\nread_sdc /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/4_cts.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nsource /work/hooks/pre_global_route_v41x_karb_repair_buffer_cap.tcl\npin_access\n[INFO DRT-0149] Reading tech and libs.\n\nUnits:                1000\nNumber of layers:     21\nNumber of macros:     212\nNumber of vias:       14\nNumber of viarulegen: 11\n\n[INFO DRT-0150] Reading design.\n[ERROR DRT-0305] Net one_ of signal type POWER is not routable by TritonRoute. Move to special nets.\nError: global_route.tcl, 175 DRT-0305\n\nElapsed time: 0:00.45[h:]min:sec. CPU time: user 0.02 sys 0.25 (59%). Peak memory: 27392KB.\nElapsed time: 0:00.20[h:]min:sec. CPU time: user 0.02 sys 0.18 (99%). Peak memory: 26880KB.\nElapsed time: 0:24.84[h:]min:sec. CPU time: user 23.77 sys 1.07 (99%). Peak memory: 2404516KB.\nElapsed time: 33:42.17[h:]min:sec. CPU time: user 2066.71 sys 7.24 (102%). Peak memory: 4584772KB.\nElapsed time: 0:09.04[h:]min:sec. CPU time: user 7.67 sys 1.28 (99%). Peak memory: 1724628KB.\nElapsed time: 0:07.19[h:]min:sec. CPU time: user 6.44 sys 0.73 (99%). Peak memory: 1180260KB.\nElapsed time: 0:18.61[h:]min:sec. CPU time: user 17.67 sys 0.91 (99%). Peak memory: 1862144KB.\nElapsed time: 7:47.68[h:]min:sec. CPU time: user 986.49 sys 2.62 (211%). Peak memory: 3254364KB.\nElapsed time: 0:10.63[h:]min:sec. CPU time: user 9.32 sys 1.16 (98%). Peak memory: 1859848KB.\nElapsed time: 3:11:01.35[h:]min:sec. CPU time: user 16368.35 sys 318.45 (145%). Peak memory: 11931112KB.\nElapsed time: 8:34.76[h:]min:sec. CPU time: user 620.12 sys 21.77 (124%). Peak memory: 6826140KB.\nElapsed time: 12:04.76[h:]min:sec. CPU time: user 806.59 sys 19.36 (113%). Peak memory: 9265892KB.\nElapsed time: 39:18.20[h:]min:sec. CPU time: user 3445.57 sys 81.28 (149%). Peak memory: 13348992KB.\nElapsed time: 0:07.58[h:]min:sec. CPU time: user 6.25 sys 1.32 (99%). Peak memory: 4061368KB.\nmake[1]: *** [Makefile:585: do-5_1_grt] Error 1\nmake: *** [Makefile:585: /work/results/asap7/opentallas_ot_v41_attn_eng_ctl_phys_asap7/base/5_1_grt.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-01T08:55:33.598631+00:00",
+  "git": {
+    "commit": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [
+      "results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8/"
+    ],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_v41_attn_eng_ctl_phys",
+      "--source",
+      "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv",
+      "--source",
+      "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+      "--clock-period-ns",
+      "0.833",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0",
+      "--false-path-from",
+      "rst_n",
+      "--slew-margin-percent",
+      "40",
+      "--hold-margin-ns",
+      "0.01",
+      "--routing-layers",
+      "M2",
+      "M5",
+      "--max-transition-ns",
+      "0.32",
+      "--purpose",
+      "characterization",
+      "--core-utilization",
+      "40",
+      "--place-density",
+      "0.6",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--preserve-w11-controller-endpoints",
+      "--pnr-stop-after",
+      "finish",
+      "--stages",
+      "synth,pnr",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--keep-workdir",
+      "/home/ubuntu/w11ctl_endpoint_e3e9e9b8/work",
+      "--output",
+      "/tmp/claude-1000/wt/w11-controller-recovery/results/physical_abi3/asap7/chip/w11_attn_eng_ctl/endpoint_e3e9e9b8/physical.json",
+      "--param",
+      "BREG=1",
+      "--param",
+      "D=512",
+      "--param",
+      "NSTAGE=2",
+      "--param",
+      "PHYS=1",
+      "--param",
+      "REPL=2"
+    ],
+    "driver": {
+      "commit": "e3e9e9b8a225d8d6fb5657fc6b33829ce803a040",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/tmp/claude-1000/wt/w11-controller-recovery/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "7202e2db930facc2e166f5a73a2cbdf114460d2c6d1b1925382b953373306a43",
+      "tree": "/tmp/claude-1000/wt/w11-controller-recovery"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12",
+    "source_root": "/tmp/claude-1000/wt/w11-controller-recovery"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 833.0,
+    "cell_area_um2": 174465.416,
+    "cell_count": 956495,
+    "cell_types_used": 38,
+    "chip_area_um2": 174446.94438,
+    "combinational_cell_count": 619411,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "30d002634273c1ab0be146f0dfdcc9e3d8c8e19641aaccd6fbae33ecbc3fc0ff",
+      "raw_netlist_sha256": "30d002634273c1ab0be146f0dfdcc9e3d8c8e19641aaccd6fbae33ecbc3fc0ff",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 98322.52,
+    "sequential_cell_count": 337084,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

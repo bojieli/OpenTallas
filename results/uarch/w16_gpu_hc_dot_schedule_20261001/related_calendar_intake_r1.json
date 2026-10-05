@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.w16.HC22_related_calendar_intake.v1",
+  "HC_graph_sha256": "de91824b4768041a2defe508a32c1d43a8a852153d890b5dd2d632b3800a6ff9",
+  "cost_receipt": "results/uarch/w16_gpu_hc_dot_schedule_20261001/cost_r1.json",
+  "cost_receipt_sha256": "f8d5a9ab72bbbe57806f341defaff4210b3e1aaaf353033f31d422b649e29414",
+  "resource_r2": "results/uarch/w16_gpu_hc_simt_contract_20261001/contract_r2.json",
+  "attention": {
+    "commit": "4613975e80936e3819bf19860be1e5465c1f5a4b",
+    "path": "results/rtl/w19_checkpoint_production_20261001/gpu-attention-dots-r1.json",
+    "sha256": "c881f50c04a6428120521dbde5212396e1284dcfc8321a0c0cf4570e0287663d",
+    "source_pins": {
+      "tools/w19_gpu_attention_dots.py": "705649029db93f577ffa2e95ae73b0afeb85cac1825453abc2feaad4b3b1d362",
+      "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+      "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+      "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+      "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b"
+    },
+    "source_attend_operations": 40,
+    "profiles": [
+      {
+        "rows": 128,
+        "QK_cycles": 280,
+        "PV_cycles": 252,
+        "shared_live_bytes_SM": 23040,
+        "RF_capacity_words_thread": 32,
+        "unpriced": [
+          "Q and EXP BF16round/widen instruction calendars",
+          "max/EXP/denominator,DIV512,outputBF16,inverseRoPE",
+          "KV decode/fetch,transpose bank arbitration/NoC,DMA,CDC,collector broadcast/fences",
+          "shared byteenable/ports/area/routes +RF/register allocation +fullshape physical admission"
+        ]
+      },
+      {
+        "rows": 640,
+        "QK_cycles": 1000,
+        "PV_cycles": 1011,
+        "shared_live_bytes_SM": 57856,
+        "RF_capacity_words_thread": 32,
+        "unpriced": [
+          "Q and EXP BF16round/widen instruction calendars",
+          "max/EXP/denominator,DIV512,outputBF16,inverseRoPE",
+          "KV decode/fetch,transpose bank arbitration/NoC,DMA,CDC,collector broadcast/fences",
+          "shared byteenable/ports/area/routes +RF/register allocation +fullshape physical admission"
+        ]
+      }
+    ],
+    "consumed_as": "Concrete dot/RF/shared input to40 remaining attention operators. Not a full attention cost provider; no completed graph phases claimed."
+  },
+  "norm": {
+    "path": "results/rtl/w19_checkpoint_production_20261001/gpu-norm-calendar-r1.json",
+    "sha256": "eb20e7d3e58a1fc75f97f18bbfc6da1aae12307d49ea19514e68803a7a83e49f",
+    "source_pre_post_final_operations": 161,
+    "calendars": {
+      "pre": {
+        "cycles": 122
+      },
+      "post": {
+        "cycles": 530
+      },
+      "norm_local": {
+        "cycles": 156
+      },
+      "norm_scalar": {
+        "cycles": 155
+      },
+      "scale": {
+        "cycles": 63
+      },
+      "norm_collector": {
+        "cycles": 62
+      }
+    },
+    "consumed_as": "HCmix scalar recipe reused with explicit20480 denominator;5120 pre/post/final norm calendars retained as distinct nonHCmix inputs."
+  },
+  "expanded_graph_reconciliation": "22HC phases all bound and actual committed cost evidence replayed. Remaining attention/prepost/norm phases remain separately unpriced until complete finite service contracts. No raw dot-ratio or rate promotion.",
+  "historical_bankmap_failure_scope": "Historical failed mapping only; excluded from currentHC pricing and architecture rate.",
+  "source_owner_acknowledgement": false,
+  "full_attention_cycles": null,
+  "headline_rate": null,
+  "physical_adopted": false
+}

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "scope": "Loaded G2 final-write error after arithmetic completion; removal of DRAIN service_fault capture must fail. Active RTL unchanged.",
+  "mutation": "Remove service_fault capture in lifetime DRAIN",
+  "mutant_exit_code": 1,
+  "stdout": "program phase=1 complete=1 trap=0 cycles=5922\nprogram phase=2 complete=0 trap=8 cycles=6492\nprogram phase=1 complete=1 trap=0 cycles=12264\nprogram phase=3 complete=0 trap=8 cycles=12436\nprogram phase=1 complete=1 trap=0 cycles=18185\nprogram phase=4 complete=0 trap=8 cycles=19155\nprogram phase=5 complete=0 trap=8 cycles=19338\nprogram phase=1 complete=1 trap=0 cycles=25087\n[308310000] %Fatal: tb_a3_g2_runtime_program.sv:287: Assertion failed in tb_a3_g2_runtime_program.drain: wrong completion error\n%Error: /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:287: Verilog $stop\nAborting...\n",
+  "baseline_record": "results/rtl/a3_g2_runtime_byte_transport_cols53_rolling_activation_auxdepth3_direct_object_writes_depth4.json",
+  "sources": {
+    "rtl/abi3/ot_a3_runtime_operation_lifetime.sv": "e539ece12cf73133845cc26526db03932ed35554305f328d074564a98b978775",
+    "rtl/abi3/ot_a3_output_object_writer.sv": "143b37b280b7e59a5e2c3d59f98fffc36e8b49d1ca78bc16a72e83efd204eff0",
+    "rtl/test/tb_a3_g2_runtime_program.sv": "102b2ddbe26b6bcb00e633b837a6530acc957b7b6aac3e05507c5e1be109611a"
+  },
+  "mutant_sha256": "120db534e9ea0d8e3bed5270a128bec52c941726f202e85a54f65c36bccc3e34",
+  "baseline_record_sha256": "397822ea41719b49694cda6a256461366814579167cb0460f74fdad3d937ab51"
+}

@@ -1,0 +1,8 @@
+`verilator_config
+// Internal registers read by rtl/test/a3_control_profile.h.  Used only by
+// tools/profile_abi3_control_path.py; the token campaign does not pass it.
+public_flat_rd -module "ot_a3_microsequencer" -var "state"
+public_flat_rd -module "a3_engine_completion_adapter" -var "state"
+public_flat_rd -module "ot_a3_engine_issue_bridge" -var "state"
+public_flat_rd -module "ot_a3_mac_lane_pipe" -var "iss_v"
+public_flat_rd -module "ot_a3_mac_lane" -var "busy"

@@ -1,0 +1,233 @@
+{
+  "schema": "opentallas.w13.independent-actual-callback-review.v1",
+  "utc": "2026-10-01T16:57:19.625778+00:00",
+  "exact_dependencies": {
+    "1d3c82ea6": "1d3c82ea60e1ac75d98131c63d7017a73dc5af75",
+    "0c588c80e": "0c588c80e885567ab7f3ec707bb2617977beee1c",
+    "24bb37197": "24bb37197e11445f017ee85c42f7080ac5e7102f",
+    "f104cf3db": "f104cf3dbc3fa6148ad0925f0391f49cd36e3405",
+    "21e97f3df": "21e97f3dfe1ed2f8e9d458f53f6d45ae74d5ea23",
+    "421d9adca": "421d9adcab80ebd2536c8d11592ecbc8d2e027c8"
+  },
+  "source_pins": [
+    {
+      "source_git": "421d9adcab80ebd2536c8d11592ecbc8d2e027c8",
+      "path": "results/quality/parent_hbm_actual_calendar_review_20261001/review.json",
+      "sha256": "09ab077309a1c6edfb1ee51c3db11594a6e65efa1abd0e5d35f697e5eb30c86d"
+    },
+    {
+      "source_git": "21e97f3dfe1ed2f8e9d458f53f6d45ae74d5ea23",
+      "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/fullprogram_admission_v2.json",
+      "sha256": "626f35c522bafe2a2763741dec19127c330120fc7c0b2778f21bb97e01762659"
+    },
+    {
+      "source_git": "2a648d7e258287e82903ea3ddbfebccb1972f11a",
+      "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/qwen_authoritative_dependencies.json",
+      "sha256": "2245a76c23f36e1da5949f59c6085783c8f8172ec727c0c9f3ef1d56145b7779"
+    },
+    {
+      "source_git": "9bf0bd05ee358fe986d334145e1df9ed838db24e",
+      "path": "results/rtl/qwen_hbm_complete_20261001/actual_token0_complete_r1/token0_execution.json",
+      "sha256": "a6b05229734fbe1bd4fc82b80e6d432b282d21694765e33c5e7d83aed5d37fe3"
+    },
+    {
+      "source_git": "21e97f3dfe1ed2f8e9d458f53f6d45ae74d5ea23",
+      "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/qwen_actual_fullgraph_admission_v2.json",
+      "sha256": "646d68636f70c7ac5b953e240e03f4bb66915a0a8bd02b9d0c0b62756fa7ce13"
+    },
+    {
+      "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+      "path": "results/rtl/deepseek_hbm_complete_20261001/whole-program-calendar-r2.json",
+      "sha256": "c86fbf9a33f7b8f90d246e81a3c6602d4289d972b806dc2f2756500e27977b04"
+    },
+    {
+      "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+      "path": "results/rtl/deepseek_hbm_complete_20261001/whole-program-calendar-r2.json",
+      "sha256": "c86fbf9a33f7b8f90d246e81a3c6602d4289d972b806dc2f2756500e27977b04"
+    },
+    {
+      "source_git": "21e97f3dfe1ed2f8e9d458f53f6d45ae74d5ea23",
+      "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/deepseek_actual_fullgraph_admission_v2.json",
+      "sha256": "abe152029920505d812d0310de2e9f24aae2811c61c83e0da3ca6eec15a99e76"
+    },
+    {
+      "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+      "path": "results/rtl/deepseek_hbm_complete_20261001/checkpoint-full-40-head-r1.json",
+      "sha256": "15ae3e9197c1ad4e2860cb3b127e7c045a5e61c7d15e3186b2b94f85e413e59e"
+    },
+    {
+      "source_git": "24bb37197e11445f017ee85c42f7080ac5e7102f",
+      "path": "tools/w13_gpu_calendar_gate.py",
+      "sha256": "079ed58229500351e3e058322ba8f6947af1b355e3839670f53532975678f250"
+    },
+    {
+      "source_git": "24bb37197e11445f017ee85c42f7080ac5e7102f",
+      "path": "tests/test_w13_gpu_calendar_gate.py",
+      "sha256": "d9e31cf78c56a0abec2f1620a80541381d22d05037ebd776679daa02ddde094b"
+    },
+    {
+      "source_git": "24bb37197e11445f017ee85c42f7080ac5e7102f",
+      "path": "tools/w13_gpu_row_placement.py",
+      "sha256": "cc1fb5e014be93419489d90ab941657a80b4e2ab9c6e044303e819e7096243bd"
+    },
+    {
+      "source_git": "24bb37197e11445f017ee85c42f7080ac5e7102f",
+      "path": "tests/test_w13_gpu_row_placement.py",
+      "sha256": "7db289a04d3eb2b8c8dd135437b7096182719e88ad1360aa0ea737b2d4209e00"
+    }
+  ],
+  "worktree": "/tmp/claude-1000/w13jobs/wt/actual-callback-review-24bb37197",
+  "test_command": "python3 -m pytest -q tests/test_w13_gpu_calendar_gate.py tests/test_w13_gpu_row_placement.py",
+  "focused_tests": {
+    "passed": 13,
+    "seconds_reported": 0.1,
+    "scope": "Original24bbcallback/f104row snapshot; laterDIVfixb61/877 separatelyretained andnot superseded bythis historicalreview."
+  },
+  "replays": [
+    {
+      "model": "qwen",
+      "graph_pin": {
+        "source_git": "2a648d7e258287e82903ea3ddbfebccb1972f11a",
+        "path": "results/physical_abi3/asap7/gpu/w13_calendar_v2_and_row_placement_20261001/qwen_authoritative_dependencies.json",
+        "sha256": "2245a76c23f36e1da5949f59c6085783c8f8172ec727c0c9f3ef1d56145b7779"
+      },
+      "callback_pin": {
+        "source_git": "9bf0bd05ee358fe986d334145e1df9ed838db24e",
+        "path": "results/rtl/qwen_hbm_complete_20261001/actual_token0_complete_r1/token0_execution.json",
+        "sha256": "a6b05229734fbe1bd4fc82b80e6d432b282d21694765e33c5e7d83aed5d37fe3"
+      },
+      "graph_ops": 1737,
+      "actual_trace_rows": 1737,
+      "actual_memory_or_collective_rows": 504,
+      "actual_memory_provider_trace_rows": 0,
+      "callback_dependency_matches": 1737,
+      "audit_body_exactly_replayed": true,
+      "archive_auditor_commit_and_hash_verified": true,
+      "parent_review_fields_equal": true,
+      "original_runtime_callback_pin": null,
+      "original_executed_receipt_sha_verified": false,
+      "hash_negative_controls": [
+        {
+          "tampered": "graph",
+          "rejected": true,
+          "reason": "graph_source_hash_mismatch"
+        },
+        {
+          "tampered": "callback",
+          "rejected": true,
+          "reason": "callback_source_hash_mismatch"
+        }
+      ],
+      "issues": [
+        "actual_physical_instruction_fabric_callbacks_unbound"
+      ],
+      "resource_calendar_audit": null,
+      "modeled_service_calendar_closed": false,
+      "physical_build_ready": false,
+      "speed_credit": 0
+    },
+    {
+      "model": "deepseek",
+      "graph_pin": {
+        "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+        "path": "results/rtl/deepseek_hbm_complete_20261001/whole-program-calendar-r2.json",
+        "sha256": "c86fbf9a33f7b8f90d246e81a3c6602d4289d972b806dc2f2756500e27977b04"
+      },
+      "callback_pin": {
+        "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+        "path": "results/rtl/deepseek_hbm_complete_20261001/whole-program-calendar-r2.json",
+        "sha256": "c86fbf9a33f7b8f90d246e81a3c6602d4289d972b806dc2f2756500e27977b04"
+      },
+      "graph_ops": 2213,
+      "actual_trace_rows": 2213,
+      "actual_memory_or_collective_rows": 270,
+      "actual_memory_provider_trace_rows": 256,
+      "callback_dependency_matches": 2213,
+      "audit_body_exactly_replayed": true,
+      "archive_auditor_commit_and_hash_verified": true,
+      "parent_review_fields_equal": true,
+      "original_runtime_callback_pin": {
+        "source_git": "1c37cdaa947faa4499c6a5dd6651cbe87416b1ae",
+        "path": "results/rtl/deepseek_hbm_complete_20261001/checkpoint-full-40-head-r1.json",
+        "sha256": "15ae3e9197c1ad4e2860cb3b127e7c045a5e61c7d15e3186b2b94f85e413e59e"
+      },
+      "original_executed_receipt_sha_verified": true,
+      "hash_negative_controls": [
+        {
+          "tampered": "graph",
+          "rejected": true,
+          "reason": "graph_source_hash_mismatch"
+        },
+        {
+          "tampered": "callback",
+          "rejected": true,
+          "reason": "callback_source_hash_mismatch"
+        }
+      ],
+      "issues": [
+        "actual_physical_instruction_fabric_callbacks_unbound"
+      ],
+      "resource_calendar_audit": null,
+      "modeled_service_calendar_closed": false,
+      "physical_build_ready": false,
+      "speed_credit": 0
+    }
+  ],
+  "comparison_scope": "Both returned auditbodies exactlymatch archivedpayloads; separatelyverify two addedauditorprovenancefields. No originalreceipt orcheckpoint rerun.",
+  "clock_qualification": {
+    "common_tick_hz": 3600000000,
+    "fast_cycle_ticks": 3,
+    "serial_cycle_ticks": 4,
+    "fast_target_hz": 1200000000,
+    "serial_target_hz": 900000000,
+    "units": "Candidatecalendar ticks only, not measuredclockqualification.",
+    "software_CPU_walltime_to_clock_conversion": false,
+    "actual_hardware_provider_bound": false,
+    "actual_issue_RF_shared_fabric_event_ticks_bound": false,
+    "contextual_SS_FF_qualified": false,
+    "hardware_token_latency": null,
+    "token_rate": null,
+    "speed_credit": 0
+  },
+  "verdict": "PASS_SOURCE_HASH_AND_SOFTWARE_CALLBACK_REPLAY_ONLY_PHYSICAL_CALENDAR_UNQUALIFIED",
+  "remaining_prerequisites": [
+    "Retain DIVcardinalityfixb61ffc224/parent877b98098 andoriginalfailurearchives; historical13testPASS doesnotwaiveit.",
+    "Bothprogramsneed genuinephysicalinstruction/RF/shared/SFU andtypedfabricrequest/response/writevisible/credit events tiedtoactualsource/globalIDs andauthoritative deps. Softwarecallback coverage cannotprovide hardwareticks.",
+    "Row-placement alternative needs perstackallstate capacity,descriptorissue/RFliveness,PC/bank coalescing/hotspots andfullprogramfinitearbitration/clock/CDC costs; no localityratio-to-rate transfer.",
+    "CompleteGPUwholeSM/RF/shared/L2/controller/ports/routingfit andcontextualSSsetup/FFhold atunchangedpolicy remainrequired. TC16SSFAIL no retry/tune; originalTCcol remainsprotected."
+  ],
+  "preservation": {
+    "retirement955_byte_identical": true,
+    "local_handles": [
+      {
+        "pid": 2089594,
+        "state": "S",
+        "start_ticks": "302549468"
+      },
+      {
+        "pid": 615596,
+        "state": "T",
+        "start_ticks": "305293450"
+      },
+      {
+        "pid": 626096,
+        "state": "S",
+        "start_ticks": "305314538"
+      },
+      {
+        "pid": 698869,
+        "state": "S",
+        "start_ticks": "305497198"
+      }
+    ],
+    "SM_launch_events": 0,
+    "main_TASKS_docs_modified": false,
+    "external_models_modified": false,
+    "checkpoint_rerun": false,
+    "heavy_jobs": false,
+    "signals_or_restarts": false
+  },
+  "engine_admission": false,
+  "physical_admission": false,
+  "new_dispatch": false
+}

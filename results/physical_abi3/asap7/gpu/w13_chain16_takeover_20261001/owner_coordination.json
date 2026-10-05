@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.w13.owner_coordination.v1",
+  "takeover_key": "W13_CHAIN16_R2_EXCLUSIVE_GUARDED_SUCCESSOR",
+  "updated_at": "2026-10-01T09:09:41.589294+00:00",
+  "owner_branch": "codex/w13-chain16-admission-20261001",
+  "active_successor": {
+    "pid": 504803,
+    "start_ticks": "305058737",
+    "state": "S"
+  },
+  "active_bundle": "/tmp/claude-1000/w13jobs/chain16-r2",
+  "source_commit": "46f5f75872d1b00766c8be6a1f4b49a539397cd2",
+  "config_sha256": "4f2b3bd79d572d4a69bc9631b1c061a8ab8e3c08b527110c6268682b07a57fba",
+  "parked_predecessors": [
+    {
+      "pid": 2089666,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089669,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 2089670,
+      "start_ticks": "302549576",
+      "state": "T"
+    },
+    {
+      "pid": 3047316,
+      "start_ticks": "304527912",
+      "state": "T"
+    }
+  ],
+  "DO_NOT_RESTART_OR_RESUME": [
+    "chain14 PGID2089666 and branches2089669/2089670",
+    "chain15 PID3047316 start304527912",
+    "failed chain16 PID495285 start305041193"
+  ],
+  "RULE": "Only chain16-r2 may dispatch SM jobs. Do not SIGCONT parked predecessors; do not start other successors. Verify PID+start and this key before recovery. If active predecessor changes, fail closed without dispatch.",
+  "column_handles": [
+    {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S"
+    },
+    {
+      "pid": 1901598,
+      "start_ticks": "302086726",
+      "state": "S"
+    }
+  ],
+  "preserve_all_column_and_remote_children": true,
+  "memory_gate": "minimum60GiB existing scheduler lease plus fresh worker guard BEFORE synth",
+  "floorplan_gate": "actual qualified SM LEF hashes; no pending fallback",
+  "actor_evidence": "w13_chain15_resume_20261001T090716Z.json + W13b.manifest09:07:16 entry documents pidfd SIGCONT by other owner; no unowned actors killed",
+  "parent_coordination": "Parent forwards no-resume notice to concurrent original W13 owner; main integration is not process ownership."
+}

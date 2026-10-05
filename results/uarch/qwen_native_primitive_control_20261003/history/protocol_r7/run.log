@@ -1,0 +1,7 @@
+PASS full128 I64 two-page RF read/write, hold, visibility, tuple/tag capture, separate reverse
+PASS actual FADD common four-lane ready/held response, scalar expansion, masked tail, owned RF output
+PASS stale owner ACK quarantines accepted debt
+PASS protected command fault holds debt
+PASS warm-reset quarantine retains debt
+PASS source canonical_zero mismatch refused before launch
+PASS controller directed protocol terminal cycles=157 reads=0 writes=0

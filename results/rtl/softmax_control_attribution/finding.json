@@ -1,0 +1,13 @@
+{
+  "scope": "Source attribution of retained current-softmax prelayout worst path; no new physical result.",
+  "timing_record": "results/physical_abi3/asap7/a3_attention_softmax_block/both_divider_updates_synth_sta_1ns.json",
+  "original_netlist_sha256": "0d40ae70157da9f15c435e5d72085ca4d0ff336bfeb02948afebcbae2bddca4a",
+  "attribute_rerun_netlist_sha256": "80670cdd8c35c47823b2cb4f07830d560bf884851ac3ee8a20ecaea3012a23d0",
+  "equivalence_check": "Sorted netlist lines exactly equal; only order of final continuous assignments differs. Same mapped cells and connectivity.",
+  "launch_cell": "_173011_",
+  "endpoint_cell": "_179089_",
+  "source": "rtl/lib/ot_wide_div_seq.sv:113-142",
+  "finding": "Both path endpoints originate in wide sigmoid-transform divider, retained in softmax despite constant EXP_NONPOS operation. Existing source binds operation but does not structurally eliminate unreachable transform states/hardware.",
+  "next_action": "Add explicit exp-only elaboration specialization while keeping full sigmoid engine default; verify outputs and refusals, then measure containing mapped and routed cost.",
+  "source_fragment": "results/rtl/softmax_control_attribution/path_source_cells.v.txt"
+}

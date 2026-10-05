@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/usr/bin/make",
+    "-C",
+    "/tmp/hbm-native-connected-calibration-parent-20261002-r2/DS/obj",
+    "-f",
+    "Vconnected.mk",
+    "-j16",
+    "CXX=/usr/bin/g++",
+    "LINK=/usr/bin/g++",
+    "OPT_FAST=-O0",
+    "OPT_SLOW=-O0",
+    "OPT_GLOBAL=-O0",
+    "-B",
+    "DEPS=",
+    "VM_USER_DIR=",
+    "OBJCACHE=",
+    "VPATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+    "PYTHON3=/usr/bin/python3",
+    "PERL=/usr/bin/perl"
+  ],
+  "name": "CXX",
+  "target": "DS",
+  "wall_limit_s": 1800
+}

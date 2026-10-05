@@ -1,0 +1,68 @@
+{
+  "schema": "opentallas.hbm_accel.ha4.verdict.v1",
+  "source_commit": "ff7e3e298",
+  "record": "results/rtl/hbm_accel_ha4_20261004/expert_first_access.json",
+  "R5a": {
+    "gate_ns": 140,
+    "measured_first_access_ns": {
+      "worst": 141.475,
+      "mean": 136.28,
+      "min": 132.469,
+      "over_gate": "8/64"
+    },
+    "same_bench_references": {
+      "refpb_without_notice": {
+        "cases": 64,
+        "passed": 64,
+        "max_ns": 371.098,
+        "mean_ns": 170.72,
+        "min_ns": 132.469,
+        "over_gate": 18
+      },
+      "refab_staggered": {
+        "cases": 64,
+        "passed": 64,
+        "max_ns": 503.878,
+        "mean_ns": 471.6,
+        "min_ns": 438.871,
+        "over_gate": 64
+      },
+      "note": "REFab mean 471.6 ns reproduces the c52 central 469.5 ns on an independent bench"
+    },
+    "exact": {
+      "verdict": "PASS",
+      "cases": 64,
+      "sectors_checked_per_case": 9408
+    },
+    "negative_controls": [
+      {
+        "case": "neg_corrupt_sector",
+        "verdict": "FAIL",
+        "bad": 1,
+        "viol": 0
+      },
+      {
+        "case": "neg_trcd_check_plus_1ns",
+        "verdict": "FAIL",
+        "bad": 0,
+        "viol": 682
+      }
+    ],
+    "modelled_gain_us": 13.46,
+    "measured_gain_us_worst": 13.381,
+    "measured_gain_us_mean": 13.589,
+    "diff_cause": "worst case 1.5 ns over the 140 ns gate: the in-order PC stream waits for the 4th bank-group ACT (TDM row slot + tRRD) before 33 sectors/PC of w1/w3 can flow, plus 25 ns of ASSUMED NoC/PHY path; the gain itself matches the model within 0.1 us",
+    "latency_gate": "MISS by 1.5 ns worst (141.5 vs 140); mean 136.3 PASS",
+    "area": "NOT PRICED: staging is a register array (8 SM x 512 x 1 KB), as in c52; needs SRAM macro mapping",
+    "route": "NOT_RUN",
+    "timing": "stream PC closes SS at CK/2 1.024 ns (52ce3, +19 ps); notice adds one mux before the registered keys (unscreened); new dispatch/landing logic unscreened; 1.2 GHz -4.7 ps owned by another agent",
+    "verdict": "LATENCY MEASURED, EXACT; gate missed by 1.5 ns worst; gain 13.38 us (3.1%) >= 1%; NOT ADOPTED pending area/route/timing"
+  },
+  "R4b": {
+    "modelled_gain_us": 3.41,
+    "modelled_pct": 0.96,
+    "measured_basis": "results/rtl/dsrom_edge_scorer_20261003/REPLAY.md: per-stack lists -> die selection hub adds 176 cycles (1M real-scaled 314->490), 157 worst (588->745), 170 at 200K",
+    "measured_component_gain_us": 2.24,
+    "verdict": "REJECT: the cross-stack hub merge the model omitted eats 176 of the 512 cycles saved per index layer; 2.24 us = 0.51% < 1%"
+  }
+}

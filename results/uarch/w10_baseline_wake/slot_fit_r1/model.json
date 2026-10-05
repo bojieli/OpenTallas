@@ -1,0 +1,107 @@
+{
+  "schema": "opentallas.w10.fullmap.slotfit.v1",
+  "verdict": "MODEL_ONLY_PHYSICAL_HOLD",
+  "adopt": false,
+  "physical_admission": false,
+  "source_sha256": {
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf",
+    "results/uarch/w10_baseline_wake/fullmap_r2/1_synth.json": "9c533c30b0b4d8d84c252ca90ab694b967d030557e19b8787b9056ebc272a616",
+    "results/uarch/w10_baseline_wake/fullmap_r2/strict_structure.json": "014ab430b67b6c1542f48d493893e01b6c47276dbcec73d8ad1c01df158b690b",
+    "results/uarch/w10_wake_pinaccess_contract_review/inputs.json": "714ccc241080a55d4649d1c3992610d3b26b5276eab75a3ea6162229add9a61c",
+    "tools/uarch_model.py": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+  },
+  "endpoint_trace_sha256": "e58e14a525d310b1ae3e629be53880e965188d5c739ae993b56fa82ffb646c86",
+  "fullmap_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea",
+  "ports": {
+    "west": 144,
+    "east": 144,
+    "capture_flops": 1088,
+    "per_macro_capture_flops": 272,
+    "logic_hops_to_capture": 2
+  },
+  "necessary_coordinate_bounds_nm": {
+    "escape_only_left_x": 15984,
+    "escape_only_right_x": 861624,
+    "capture_corridor_left_x": 22464,
+    "capture_corridor_right_x": 855144,
+    "bottom_y": 6480,
+    "mirrored_top_y": 74250,
+    "capture_corridor_width": 6480,
+    "capture_corridor_note": "Conditional local reservation within already-counted stdcell area; capture muxes and clocks not yet allocated."
+  },
+  "minimum_site_budget": {
+    "width_sites": 18492,
+    "rows": 617,
+    "macro_sites": 2162240,
+    "exclusive_escape_sites": 477184,
+    "exclusive_top_bottom_halo_sites": 153344,
+    "standard_cell_demand_sites": 4300817,
+    "free_sites": 8616796,
+    "density": 0.5,
+    "stdcell_capacity_um2": 62816.44284,
+    "core_um": [
+      998.568,
+      166.59
+    ],
+    "outline_um": [
+      1002.89,
+      170.91
+    ],
+    "additional_stdcell_reserve_um2": 0,
+    "composed_model": {
+      "stages": 45,
+      "dies": 224,
+      "usable_field_mm2": 457.96549650802586,
+      "required_field_mm2": 451.9271287884625,
+      "preceding_stage_field_mm2": 459.6979833619623,
+      "conditional_ar_tokens_s": 2745.0,
+      "conditional_token_us": 364.29872495446267,
+      "scope": "Unchanged LAT8; conditional no additional interface cycles. Redistribution, routes and exactness unqualified."
+    }
+  },
+  "historical_growth_sensitivity": {
+    "width_sites": 18492,
+    "rows": 651,
+    "macro_sites": 2162240,
+    "exclusive_escape_sites": 477184,
+    "exclusive_top_bottom_halo_sites": 153344,
+    "standard_cell_demand_sites": 4620803,
+    "free_sites": 9245524,
+    "density": 0.5,
+    "stdcell_capacity_um2": 67399.86996,
+    "core_um": [
+      998.568,
+      175.77
+    ],
+    "outline_um": [
+      1002.89,
+      180.09
+    ],
+    "additional_stdcell_reserve_um2": 4665.4,
+    "composed_model": {
+      "stages": 46,
+      "dies": 228,
+      "usable_field_mm2": 457.96549650802586,
+      "required_field_mm2": 453.8992948726784,
+      "preceding_stage_field_mm2": 461.35461571326243,
+      "conditional_ar_tokens_s": 2742.2,
+      "conditional_token_us": 364.6707023557728,
+      "scope": "Unchanged LAT8; conditional no additional interface cycles. Redistribution, routes and exactness unqualified."
+    }
+  },
+  "historical_growth_scope": "4665.4um2 is failed c8 GRT65051.7 minus synth60386.3; not a bound on wake CTS/hold/routing growth.",
+  "unresolved": [
+    "Root-owner all-port VIA/EOL/PG escape and obstruction legality",
+    "Actual capture mux/FF/clock buffer local assignment and track demand",
+    "PDN/tap/endcap blockages and final standard-cell growth",
+    "Eight physical ICG clock load/placement/CTS and exact clock/reset gates",
+    "Owner redistribution exactness, actual abstracts, SS/FF contextual timing and IR"
+  ],
+  "constraints": {
+    "density": 0.5,
+    "streaming_GHz": 1.2,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "jobs_launched": 0
+}

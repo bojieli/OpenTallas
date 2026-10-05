@@ -1,0 +1,186 @@
+{
+  "softmax": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "verilator_content_hash": "unhashed",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "verilator_content_hash": "OwxGLS0o5RR7t3JsBVVQ98hlSt22EpBeIXty7mHo",
+      "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "verilator_content_hash": "Gmi90xEIhUaKzWUEc5JRAzX4lp32HmgFrelMDc04",
+      "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "verilator_content_hash": "odZJFSgYMU6bOIXfNXY3Q70H4ZVeDkeoHcIE3s55",
+      "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "verilator_content_hash": "waCDiMXwmjiN9bL14tsrjzZNfpRIK6PA8YUGYuy9",
+      "sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/test/tb_a3_softmax_block.sv",
+      "verilator_content_hash": "SA9zU6BcgqPGFW2x9AAY0U4CnHJo8JzruPdNmLkh",
+      "sha256": "4bef7353a05c82a3c6156db1f7ef98d14e029c7268f09cebb8f74d98b921a181"
+    }
+  ],
+  "attention": [
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "verilator_content_hash": "unhashed",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std.sv",
+      "verilator_content_hash": "GHKtjooixli2UoUO8lV2aaG3kJaECJaR1UR8v0u6",
+      "sha256": "1872ad8e8a22c658b652850ef2557669a1b7909684089691d5447cbf4bbacf94"
+    },
+    {
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_std_waiver.vlt",
+      "verilator_content_hash": "Hydzkv9X77JH03JyZeFi7tBFnQaHV7yknXQxBZFr",
+      "sha256": "1f277392ff57efb247d3727265e162eed0459d068757bca49d743105916b7ce8"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_av_walk.sv",
+      "verilator_content_hash": "Ll1FAdy4AwPjtdRqyzemSjkfQp2Ml3v3UDEB7UxQ",
+      "sha256": "2e5d45f9dcb80303e3b5d46acb37a64a391f429d8c977bf7503101ed4c50e42e"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_denominator.sv",
+      "verilator_content_hash": "A0aqg3t9hg9qLMYGQGy8L3UGvoRBCkTGG4BAXh6J",
+      "sha256": "fb46aa837b7d860f6a2cc606406cbc2f7506be84410a44c61b80405e1e891eaa"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_epilogue.sv",
+      "verilator_content_hash": "yWHfETTfH3B9qIU4h0hpiteEqRMmnrRbB1PJcTwn",
+      "sha256": "c961df1134df1f7ffda885388748698ad784a913269eb45bff53c9713c27d421"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "verilator_content_hash": "WuBh1Ot8PSguyKO1uB35Ww5EC0TVJhhFxrd88Msz",
+      "sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_qk_walk.sv",
+      "verilator_content_hash": "bdRgNiwCU8rfrecdZZCkpz1hIPv1aGjKJHnS5aHO",
+      "sha256": "6dd460362c0253cadfade71d6590a4a73d6120fbf56868ca2479d2e5a1cebb8c"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_softmax_block.sv",
+      "verilator_content_hash": "OwxGLS0o5RR7t3JsBVVQ98hlSt22EpBeIXty7mHo",
+      "sha256": "3b0c462d2d28e5147bb7726cfd5550f7c8654addb612905e217b72ee61e81ee7"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_attention_sparse.sv",
+      "verilator_content_hash": "fVdv8sPlwLdzSAKWIBpwwyAowZmBneXNaPcWIcxu",
+      "sha256": "7d576ff2c3e5c0b7734be29623fa70c32fa8c199bf9de5cd68f71621cc6e8d84"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_engine_pkg.sv",
+      "verilator_content_hash": "EYbuzcgDIehACMlBuOHJobB4WE0Bk1NzbSNb9cyE",
+      "sha256": "1186eecdc80321e87e08c97fb8e1c9a1b078584d019353736d235bf5cc84d477"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_format_pkg.sv",
+      "verilator_content_hash": "BNALtyEUvA2d8pWO6RwxBsvbc3ttHDkMW0bJxfa5",
+      "sha256": "04df8bb72114bfed9df2958ee91c3106cbdb737b6d1c390c5b46c9c5f6b99536"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_div_rne.sv",
+      "verilator_content_hash": "8yIDEd05mwIYqapYKK0RyeT5Eh0pJLBnjvSzAVpA",
+      "sha256": "f3220311dd399b0218a9aa5828ad11c9e4f9121d2924b0678ef4b3f95a7e04c1"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_exp_pos_cr_rne.sv",
+      "verilator_content_hash": "mygfejO9p19ddnbAJyACbkOYmBxvwrRmiiRaERfA",
+      "sha256": "9b281f7a33bda75f5d7676fe2720026e43989bfc6fc2b4668a245a1117fe1117"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_fp32_transcendental_cr_rne.sv",
+      "verilator_content_hash": "Gmi90xEIhUaKzWUEc5JRAzX4lp32HmgFrelMDc04",
+      "sha256": "1a68bdd3110885468acd65047392510335f8969df61e6805ade94c0dcd3811e4"
+    },
+    {
+      "path": "rtl/abi3/ot_a3_reduction_balanced_sum.sv",
+      "verilator_content_hash": "UoIcAdAy1IfPLebM2exh1aTTu6R7Crn5lzp5tVIB",
+      "sha256": "52821cf9dfb2d487cf2de6ccd9ec61d5a4d3bba47b0ab9f9973a79b5523f3279"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_seq.sv",
+      "verilator_content_hash": "odZJFSgYMU6bOIXfNXY3Q70H4ZVeDkeoHcIE3s55",
+      "sha256": "a1d649152818314e9b3885df35763743bd07e1955e0e47a81dc204dece796978"
+    },
+    {
+      "path": "rtl/lib/ot_wide_div_small_seq.sv",
+      "verilator_content_hash": "waCDiMXwmjiN9bL14tsrjzZNfpRIK6PA8YUGYuy9",
+      "sha256": "c1a08388c5f09a388df5b2f5e2db2b8f364d7e94482ba3fef1850662ecbd8b81"
+    },
+    {
+      "path": "rtl/lib/ot_wide_mul_seq.sv",
+      "verilator_content_hash": "pQj5STrqBGRavsZc8yKJFsLFx3n8c44fmGkuCBkQ",
+      "sha256": "a508f9493aeafc645abec65cf3228916c2c5c779fc738e1f98692e0bf9109a6f"
+    },
+    {
+      "path": "rtl/ot_fp32_rne_pkg.sv",
+      "verilator_content_hash": "L5c0CMH9nsdAjdGORJN84NSuaA2Udq97Cy6wQLei",
+      "sha256": "2f973408c1fd9ec7408dd18e44937ce0d4ae680d9476af7b0b2eb040b7a2c3d4"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "verilator_content_hash": "7AbVCfuV9481U1IfUhUyyCiXMqUkDk8FAoR4JTA4",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_mul_rne_pipe.sv",
+      "verilator_content_hash": "HY6MdvK9q3UAjtxBtR70JkwJMtVR8LpSk5LIU8yj",
+      "sha256": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2"
+    },
+    {
+      "path": "rtl/proto/ot_mac_bf16_fp32_pipe.sv",
+      "verilator_content_hash": "UzAC4BOXPuXD6tuqRI5V5EDAT0CqeZaBSBm47AQe",
+      "sha256": "533f82e3f3973ee5c3eadbaa448e55e440fe4f40aa7996814819b8ec041e3949"
+    },
+    {
+      "path": "rtl/test/tb_a3_attention_sparse.sv",
+      "verilator_content_hash": "rD99ySwB1TTjNar3HHMIuTDjo6bojzsbihb5jNmG",
+      "sha256": "ac3f7dc92c3fd534e335aaf71c7308b930e3a3a6e88f3b1b8a16f98cd9862987"
+    }
+  ]
+}

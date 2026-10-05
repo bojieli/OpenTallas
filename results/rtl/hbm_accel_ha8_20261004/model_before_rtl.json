@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.hbm-accel-ha8-model-before-rtl.v1",
+ "basis": "HBM_ACCELERATOR study ladder_model.qwen_point (a3ed9c36d): per-user AR = stream bytes / sustained stack bandwidth + boundary; here per die, using the W12 TP image geometry (one stream word = one engine code word, 98,304 B)",
+ "points": {
+  "a_same_silicon_TP2@0.958TBps": {
+   "tp": 2,
+   "stacks_per_die": 4,
+   "sram_mib_per_die": 421.0,
+   "layer_words_per_die": 992,
+   "kv_words_per_layer_P1023": 11,
+   "sram_resident_words_beyond_head": 1162,
+   "resident_layers": 1.17,
+   "stream_words_per_token": 34946,
+   "stream_us": 896.5,
+   "per_layer_stream_cycles": 30538,
+   "rom_layer_cycles_same_datapath": 4080,
+   "token_cycles_est": 1081915,
+   "ar_tok_s_est": 1109.1
+  },
+  "a_same_silicon_TP2@0.842TBps": {
+   "tp": 2,
+   "stacks_per_die": 4,
+   "sram_mib_per_die": 421.0,
+   "layer_words_per_die": 992,
+   "kv_words_per_layer_P1023": 11,
+   "sram_resident_words_beyond_head": 1162,
+   "resident_layers": 1.17,
+   "stream_words_per_token": 34946,
+   "stream_us": 1020.0,
+   "per_layer_stream_cycles": 34745,
+   "rom_layer_cycles_same_datapath": 4080,
+   "token_cycles_est": 1230123,
+   "ar_tok_s_est": 975.5
+  },
+  "b_iso_silicon_TP4@0.958TBps": {
+   "tp": 4,
+   "stacks_per_die": 4,
+   "sram_mib_per_die": 421.5,
+   "layer_words_per_die": 512,
+   "kv_words_per_layer_P1023": 6,
+   "sram_resident_words_beyond_head": 2752,
+   "resident_layers": 5.38,
+   "stream_words_per_token": 15896,
+   "stream_us": 407.8,
+   "per_layer_stream_cycles": 15761,
+   "rom_layer_cycles_same_datapath": 4668,
+   "token_cycles_est": 493843,
+   "ar_tok_s_est": 2429.9
+  },
+  "b_iso_silicon_TP4@0.842TBps": {
+   "tp": 4,
+   "stacks_per_die": 4,
+   "sram_mib_per_die": 421.5,
+   "layer_words_per_die": 512,
+   "kv_words_per_layer_P1023": 6,
+   "sram_resident_words_beyond_head": 2752,
+   "resident_layers": 5.38,
+   "stream_words_per_token": 15896,
+   "stream_us": 464.0,
+   "per_layer_stream_cycles": 17933,
+   "rom_layer_cycles_same_datapath": 4668,
+   "token_cycles_est": 561258,
+   "ar_tok_s_est": 2138.1
+  }
+ }
+}

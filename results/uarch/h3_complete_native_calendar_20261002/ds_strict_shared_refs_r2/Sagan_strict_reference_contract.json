@@ -1,0 +1,40 @@
+{
+  "RF_alternative": "RF_operand_routes require resolved same refs, slot_first/vectors, two-mirror visible_ACK; RF_value_homes validate actual SSA liveness and32workspace slots",
+  "Sagan_owner_interface": "actual source IDs/operand/home refs from h4_c0_lower.py + existing bounded runtime leaf programs; WIP source not pinned or treated as completed producer",
+  "acquire_required": [
+    "source_step",
+    "event=acquire",
+    "lease",
+    "base",
+    "bytes",
+    "value",
+    "logical_byte_offset",
+    "payload_bytes"
+  ],
+  "coverage": "every source/destination operand of every actual source instruction exactly covered, no gaps/duplicates",
+  "exporter_strings_or_zero_proof_receipts_sufficient": false,
+  "hardware_qualification": false,
+  "movement_required": [
+    "source_step",
+    "event=read64 or write64_ACK",
+    "lease",
+    "byte_address",
+    "span_bytes",
+    "repetitions=1",
+    "native_instruction_ref"
+  ],
+  "native_reference": {
+    "attrs": "exact node attrs dictionary",
+    "code_index": "actual retained native code index",
+    "logical_byte_offset": "typed aligned offset within actual value",
+    "opcode": "exact node op",
+    "operand": "dst or src:N",
+    "payload_bytes": "positive typed span within actual value",
+    "result_shape": "exact node shape",
+    "template": "actual retained template id",
+    "value": "actual SSA symbol"
+  },
+  "schema": "H4_DS_STRICT_SHARED_SOURCE_RESOLUTION_CONTRACT_V2",
+  "supported_reference_domain": "source_order_live_range_stages original native code; forward paths remain UNKNOWN until pinned runtime leaf continuations are integrated",
+  "unknown_is_zero": false
+}

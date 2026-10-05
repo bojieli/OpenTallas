@@ -1,0 +1,2686 @@
+{
+  "MACs_per_cycle": 0,
+  "NAND_equivalent_allowance_ASSUMED": 18580,
+  "SMs_per_rank": 32,
+  "admission": "functional source component only; enclosing actual endpoint and full calendar joins remain required",
+  "both_ranks_mm2_50pct_ASSUMED": 0.0053198208,
+  "boundaries_bits": {
+    "KV_consumer": 87,
+    "cohort_request": 680,
+    "cohort_response": 688,
+    "drain_done": 92,
+    "drain_request": 92,
+    "native_accept": 230,
+    "native_completion": 230,
+    "native_reverse": 230
+  },
+  "cell_mm2_ASSUMED": 0.0013299552,
+  "clock": {
+    "CDC": "no new CDC inserted; request/reverse CDC cohorts supplied by actual existing CDC endpoints",
+    "SSFF": false,
+    "domain": "same streaming clock as actual lifecycle controller",
+    "hold_uncertainty_ps": 25,
+    "prospective_period_ns": 0.8333333333333334,
+    "setup_uncertainty_ps": 60.0
+  },
+  "compute_and_communication": "identity/control only; no arithmetic/payload port",
+  "existing_reader_table_reused": true,
+  "footprint_mm2_50pct_ASSUMED": 0.0026599104,
+  "latency": {
+    "bridge_serial_control_edges_upper_when_all_eligible": 792,
+    "completion_capture_edges": 1,
+    "consumer_after_later_completion_reverse_min_edges": 1,
+    "consumer_handshake_edges": 1,
+    "drain_after_last_actual_endpoint_min_edges": 1,
+    "drain_done_edges": 1,
+    "drain_request_edges": 1,
+    "eligibility_and_endpoint_wait": "actual backpressure; no time-based completion or finite bound invented",
+    "endpoint_response_capture_edges": 1,
+    "native_accept_to_context_edges": 1,
+    "paid_calendar_event_keys": [
+      "native-context-accept",
+      "native-output-capture",
+      "native-reverse-capture",
+      "KV-consumer-handshake",
+      "KV-drain-request",
+      "eight-endpoint-request-response",
+      "KV-drain-done"
+    ],
+    "per_token_native_pairs": 144,
+    "per_token_reader_drains": 72,
+    "physical_rate_qualified": false,
+    "reverse_capture_edges": 1,
+    "same_edges_ns_ASSUMED": 660.0,
+    "single_user_added_edges_no_contention": 7,
+    "whole_token": null
+  },
+  "mux_demux": {
+    "comparison_bits": 1132,
+    "drain_identity_fanout": 8,
+    "shared_state_write_router": "single composed next-state six coded words",
+    "state_mux_bits": 670
+  },
+  "native_context_bits": 230,
+  "new_SRAM_macros": 0,
+  "new_payload_bytes": 0,
+  "port_bytes_per_cycle": 0,
+  "ports": {
+    "cohort_response_match_parallel": 8,
+    "cohort_status_write_parallel": 8,
+    "drain_context_write": 1,
+    "native_completion_match": 1,
+    "native_context_write": 1,
+    "native_reverse_match": 1
+  },
+  "protected_FF_bits": 432,
+  "protected_words": 6,
+  "ranks": 2,
+  "raw_bits": 335,
+  "replicas_per_rank": 1,
+  "schema": "qwen-native-consumer-drain-r1",
+  "source": {
+    "operators": [
+      {
+        "events": {
+          "consumer_done": "op13.consumer_done",
+          "credit_return": "op13.credit_return",
+          "issue": "op13.issue",
+          "landing_accept": "op13.landing_accept",
+          "memory_read": "op13.memory_read",
+          "opcode_finish": "op13.opcode_finish",
+          "result_visible": "op13.result_visible",
+          "write_commit": "op13.write_commit"
+        },
+        "input_version": "Qwen.12.L0.d0.cacheK.16",
+        "layer": 0,
+        "output_version": "Qwen.13.L0.d0.scores.18",
+        "pc": 13,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op15.consumer_done",
+          "credit_return": "op15.credit_return",
+          "issue": "op15.issue",
+          "landing_accept": "op15.landing_accept",
+          "memory_read": "op15.memory_read",
+          "opcode_finish": "op15.opcode_finish",
+          "result_visible": "op15.result_visible",
+          "write_commit": "op15.write_commit"
+        },
+        "input_version": "Qwen.12.L0.d0.cacheV.17",
+        "layer": 0,
+        "output_version": "Qwen.15.L0.d0.pv.21",
+        "pc": 15,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op29.consumer_done",
+          "credit_return": "op29.credit_return",
+          "issue": "op29.issue",
+          "landing_accept": "op29.landing_accept",
+          "memory_read": "op29.memory_read",
+          "opcode_finish": "op29.opcode_finish",
+          "result_visible": "op29.result_visible",
+          "write_commit": "op29.write_commit"
+        },
+        "input_version": "Qwen.28.L0.d1.cacheK.36",
+        "layer": 0,
+        "output_version": "Qwen.29.L0.d1.scores.38",
+        "pc": 29,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op31.consumer_done",
+          "credit_return": "op31.credit_return",
+          "issue": "op31.issue",
+          "landing_accept": "op31.landing_accept",
+          "memory_read": "op31.memory_read",
+          "opcode_finish": "op31.opcode_finish",
+          "result_visible": "op31.result_visible",
+          "write_commit": "op31.write_commit"
+        },
+        "input_version": "Qwen.28.L0.d1.cacheV.37",
+        "layer": 0,
+        "output_version": "Qwen.31.L0.d1.pv.41",
+        "pc": 31,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op61.consumer_done",
+          "credit_return": "op61.credit_return",
+          "issue": "op61.issue",
+          "landing_accept": "op61.landing_accept",
+          "memory_read": "op61.memory_read",
+          "opcode_finish": "op61.opcode_finish",
+          "result_visible": "op61.result_visible",
+          "write_commit": "op61.write_commit"
+        },
+        "input_version": "Qwen.60.L1.d0.cacheK.72",
+        "layer": 1,
+        "output_version": "Qwen.61.L1.d0.scores.74",
+        "pc": 61,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op63.consumer_done",
+          "credit_return": "op63.credit_return",
+          "issue": "op63.issue",
+          "landing_accept": "op63.landing_accept",
+          "memory_read": "op63.memory_read",
+          "opcode_finish": "op63.opcode_finish",
+          "result_visible": "op63.result_visible",
+          "write_commit": "op63.write_commit"
+        },
+        "input_version": "Qwen.60.L1.d0.cacheV.73",
+        "layer": 1,
+        "output_version": "Qwen.63.L1.d0.pv.77",
+        "pc": 63,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op77.consumer_done",
+          "credit_return": "op77.credit_return",
+          "issue": "op77.issue",
+          "landing_accept": "op77.landing_accept",
+          "memory_read": "op77.memory_read",
+          "opcode_finish": "op77.opcode_finish",
+          "result_visible": "op77.result_visible",
+          "write_commit": "op77.write_commit"
+        },
+        "input_version": "Qwen.76.L1.d1.cacheK.92",
+        "layer": 1,
+        "output_version": "Qwen.77.L1.d1.scores.94",
+        "pc": 77,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op79.consumer_done",
+          "credit_return": "op79.credit_return",
+          "issue": "op79.issue",
+          "landing_accept": "op79.landing_accept",
+          "memory_read": "op79.memory_read",
+          "opcode_finish": "op79.opcode_finish",
+          "result_visible": "op79.result_visible",
+          "write_commit": "op79.write_commit"
+        },
+        "input_version": "Qwen.76.L1.d1.cacheV.93",
+        "layer": 1,
+        "output_version": "Qwen.79.L1.d1.pv.97",
+        "pc": 79,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op109.consumer_done",
+          "credit_return": "op109.credit_return",
+          "issue": "op109.issue",
+          "landing_accept": "op109.landing_accept",
+          "memory_read": "op109.memory_read",
+          "opcode_finish": "op109.opcode_finish",
+          "result_visible": "op109.result_visible",
+          "write_commit": "op109.write_commit"
+        },
+        "input_version": "Qwen.108.L2.d0.cacheK.128",
+        "layer": 2,
+        "output_version": "Qwen.109.L2.d0.scores.130",
+        "pc": 109,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op111.consumer_done",
+          "credit_return": "op111.credit_return",
+          "issue": "op111.issue",
+          "landing_accept": "op111.landing_accept",
+          "memory_read": "op111.memory_read",
+          "opcode_finish": "op111.opcode_finish",
+          "result_visible": "op111.result_visible",
+          "write_commit": "op111.write_commit"
+        },
+        "input_version": "Qwen.108.L2.d0.cacheV.129",
+        "layer": 2,
+        "output_version": "Qwen.111.L2.d0.pv.133",
+        "pc": 111,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op125.consumer_done",
+          "credit_return": "op125.credit_return",
+          "issue": "op125.issue",
+          "landing_accept": "op125.landing_accept",
+          "memory_read": "op125.memory_read",
+          "opcode_finish": "op125.opcode_finish",
+          "result_visible": "op125.result_visible",
+          "write_commit": "op125.write_commit"
+        },
+        "input_version": "Qwen.124.L2.d1.cacheK.148",
+        "layer": 2,
+        "output_version": "Qwen.125.L2.d1.scores.150",
+        "pc": 125,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op127.consumer_done",
+          "credit_return": "op127.credit_return",
+          "issue": "op127.issue",
+          "landing_accept": "op127.landing_accept",
+          "memory_read": "op127.memory_read",
+          "opcode_finish": "op127.opcode_finish",
+          "result_visible": "op127.result_visible",
+          "write_commit": "op127.write_commit"
+        },
+        "input_version": "Qwen.124.L2.d1.cacheV.149",
+        "layer": 2,
+        "output_version": "Qwen.127.L2.d1.pv.153",
+        "pc": 127,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op157.consumer_done",
+          "credit_return": "op157.credit_return",
+          "issue": "op157.issue",
+          "landing_accept": "op157.landing_accept",
+          "memory_read": "op157.memory_read",
+          "opcode_finish": "op157.opcode_finish",
+          "result_visible": "op157.result_visible",
+          "write_commit": "op157.write_commit"
+        },
+        "input_version": "Qwen.156.L3.d0.cacheK.184",
+        "layer": 3,
+        "output_version": "Qwen.157.L3.d0.scores.186",
+        "pc": 157,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op159.consumer_done",
+          "credit_return": "op159.credit_return",
+          "issue": "op159.issue",
+          "landing_accept": "op159.landing_accept",
+          "memory_read": "op159.memory_read",
+          "opcode_finish": "op159.opcode_finish",
+          "result_visible": "op159.result_visible",
+          "write_commit": "op159.write_commit"
+        },
+        "input_version": "Qwen.156.L3.d0.cacheV.185",
+        "layer": 3,
+        "output_version": "Qwen.159.L3.d0.pv.189",
+        "pc": 159,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op173.consumer_done",
+          "credit_return": "op173.credit_return",
+          "issue": "op173.issue",
+          "landing_accept": "op173.landing_accept",
+          "memory_read": "op173.memory_read",
+          "opcode_finish": "op173.opcode_finish",
+          "result_visible": "op173.result_visible",
+          "write_commit": "op173.write_commit"
+        },
+        "input_version": "Qwen.172.L3.d1.cacheK.204",
+        "layer": 3,
+        "output_version": "Qwen.173.L3.d1.scores.206",
+        "pc": 173,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op175.consumer_done",
+          "credit_return": "op175.credit_return",
+          "issue": "op175.issue",
+          "landing_accept": "op175.landing_accept",
+          "memory_read": "op175.memory_read",
+          "opcode_finish": "op175.opcode_finish",
+          "result_visible": "op175.result_visible",
+          "write_commit": "op175.write_commit"
+        },
+        "input_version": "Qwen.172.L3.d1.cacheV.205",
+        "layer": 3,
+        "output_version": "Qwen.175.L3.d1.pv.209",
+        "pc": 175,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op205.consumer_done",
+          "credit_return": "op205.credit_return",
+          "issue": "op205.issue",
+          "landing_accept": "op205.landing_accept",
+          "memory_read": "op205.memory_read",
+          "opcode_finish": "op205.opcode_finish",
+          "result_visible": "op205.result_visible",
+          "write_commit": "op205.write_commit"
+        },
+        "input_version": "Qwen.204.L4.d0.cacheK.240",
+        "layer": 4,
+        "output_version": "Qwen.205.L4.d0.scores.242",
+        "pc": 205,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op207.consumer_done",
+          "credit_return": "op207.credit_return",
+          "issue": "op207.issue",
+          "landing_accept": "op207.landing_accept",
+          "memory_read": "op207.memory_read",
+          "opcode_finish": "op207.opcode_finish",
+          "result_visible": "op207.result_visible",
+          "write_commit": "op207.write_commit"
+        },
+        "input_version": "Qwen.204.L4.d0.cacheV.241",
+        "layer": 4,
+        "output_version": "Qwen.207.L4.d0.pv.245",
+        "pc": 207,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op221.consumer_done",
+          "credit_return": "op221.credit_return",
+          "issue": "op221.issue",
+          "landing_accept": "op221.landing_accept",
+          "memory_read": "op221.memory_read",
+          "opcode_finish": "op221.opcode_finish",
+          "result_visible": "op221.result_visible",
+          "write_commit": "op221.write_commit"
+        },
+        "input_version": "Qwen.220.L4.d1.cacheK.260",
+        "layer": 4,
+        "output_version": "Qwen.221.L4.d1.scores.262",
+        "pc": 221,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op223.consumer_done",
+          "credit_return": "op223.credit_return",
+          "issue": "op223.issue",
+          "landing_accept": "op223.landing_accept",
+          "memory_read": "op223.memory_read",
+          "opcode_finish": "op223.opcode_finish",
+          "result_visible": "op223.result_visible",
+          "write_commit": "op223.write_commit"
+        },
+        "input_version": "Qwen.220.L4.d1.cacheV.261",
+        "layer": 4,
+        "output_version": "Qwen.223.L4.d1.pv.265",
+        "pc": 223,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op253.consumer_done",
+          "credit_return": "op253.credit_return",
+          "issue": "op253.issue",
+          "landing_accept": "op253.landing_accept",
+          "memory_read": "op253.memory_read",
+          "opcode_finish": "op253.opcode_finish",
+          "result_visible": "op253.result_visible",
+          "write_commit": "op253.write_commit"
+        },
+        "input_version": "Qwen.252.L5.d0.cacheK.296",
+        "layer": 5,
+        "output_version": "Qwen.253.L5.d0.scores.298",
+        "pc": 253,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op255.consumer_done",
+          "credit_return": "op255.credit_return",
+          "issue": "op255.issue",
+          "landing_accept": "op255.landing_accept",
+          "memory_read": "op255.memory_read",
+          "opcode_finish": "op255.opcode_finish",
+          "result_visible": "op255.result_visible",
+          "write_commit": "op255.write_commit"
+        },
+        "input_version": "Qwen.252.L5.d0.cacheV.297",
+        "layer": 5,
+        "output_version": "Qwen.255.L5.d0.pv.301",
+        "pc": 255,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op269.consumer_done",
+          "credit_return": "op269.credit_return",
+          "issue": "op269.issue",
+          "landing_accept": "op269.landing_accept",
+          "memory_read": "op269.memory_read",
+          "opcode_finish": "op269.opcode_finish",
+          "result_visible": "op269.result_visible",
+          "write_commit": "op269.write_commit"
+        },
+        "input_version": "Qwen.268.L5.d1.cacheK.316",
+        "layer": 5,
+        "output_version": "Qwen.269.L5.d1.scores.318",
+        "pc": 269,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op271.consumer_done",
+          "credit_return": "op271.credit_return",
+          "issue": "op271.issue",
+          "landing_accept": "op271.landing_accept",
+          "memory_read": "op271.memory_read",
+          "opcode_finish": "op271.opcode_finish",
+          "result_visible": "op271.result_visible",
+          "write_commit": "op271.write_commit"
+        },
+        "input_version": "Qwen.268.L5.d1.cacheV.317",
+        "layer": 5,
+        "output_version": "Qwen.271.L5.d1.pv.321",
+        "pc": 271,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op301.consumer_done",
+          "credit_return": "op301.credit_return",
+          "issue": "op301.issue",
+          "landing_accept": "op301.landing_accept",
+          "memory_read": "op301.memory_read",
+          "opcode_finish": "op301.opcode_finish",
+          "result_visible": "op301.result_visible",
+          "write_commit": "op301.write_commit"
+        },
+        "input_version": "Qwen.300.L6.d0.cacheK.352",
+        "layer": 6,
+        "output_version": "Qwen.301.L6.d0.scores.354",
+        "pc": 301,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op303.consumer_done",
+          "credit_return": "op303.credit_return",
+          "issue": "op303.issue",
+          "landing_accept": "op303.landing_accept",
+          "memory_read": "op303.memory_read",
+          "opcode_finish": "op303.opcode_finish",
+          "result_visible": "op303.result_visible",
+          "write_commit": "op303.write_commit"
+        },
+        "input_version": "Qwen.300.L6.d0.cacheV.353",
+        "layer": 6,
+        "output_version": "Qwen.303.L6.d0.pv.357",
+        "pc": 303,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op317.consumer_done",
+          "credit_return": "op317.credit_return",
+          "issue": "op317.issue",
+          "landing_accept": "op317.landing_accept",
+          "memory_read": "op317.memory_read",
+          "opcode_finish": "op317.opcode_finish",
+          "result_visible": "op317.result_visible",
+          "write_commit": "op317.write_commit"
+        },
+        "input_version": "Qwen.316.L6.d1.cacheK.372",
+        "layer": 6,
+        "output_version": "Qwen.317.L6.d1.scores.374",
+        "pc": 317,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op319.consumer_done",
+          "credit_return": "op319.credit_return",
+          "issue": "op319.issue",
+          "landing_accept": "op319.landing_accept",
+          "memory_read": "op319.memory_read",
+          "opcode_finish": "op319.opcode_finish",
+          "result_visible": "op319.result_visible",
+          "write_commit": "op319.write_commit"
+        },
+        "input_version": "Qwen.316.L6.d1.cacheV.373",
+        "layer": 6,
+        "output_version": "Qwen.319.L6.d1.pv.377",
+        "pc": 319,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op349.consumer_done",
+          "credit_return": "op349.credit_return",
+          "issue": "op349.issue",
+          "landing_accept": "op349.landing_accept",
+          "memory_read": "op349.memory_read",
+          "opcode_finish": "op349.opcode_finish",
+          "result_visible": "op349.result_visible",
+          "write_commit": "op349.write_commit"
+        },
+        "input_version": "Qwen.348.L7.d0.cacheK.408",
+        "layer": 7,
+        "output_version": "Qwen.349.L7.d0.scores.410",
+        "pc": 349,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op351.consumer_done",
+          "credit_return": "op351.credit_return",
+          "issue": "op351.issue",
+          "landing_accept": "op351.landing_accept",
+          "memory_read": "op351.memory_read",
+          "opcode_finish": "op351.opcode_finish",
+          "result_visible": "op351.result_visible",
+          "write_commit": "op351.write_commit"
+        },
+        "input_version": "Qwen.348.L7.d0.cacheV.409",
+        "layer": 7,
+        "output_version": "Qwen.351.L7.d0.pv.413",
+        "pc": 351,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op365.consumer_done",
+          "credit_return": "op365.credit_return",
+          "issue": "op365.issue",
+          "landing_accept": "op365.landing_accept",
+          "memory_read": "op365.memory_read",
+          "opcode_finish": "op365.opcode_finish",
+          "result_visible": "op365.result_visible",
+          "write_commit": "op365.write_commit"
+        },
+        "input_version": "Qwen.364.L7.d1.cacheK.428",
+        "layer": 7,
+        "output_version": "Qwen.365.L7.d1.scores.430",
+        "pc": 365,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op367.consumer_done",
+          "credit_return": "op367.credit_return",
+          "issue": "op367.issue",
+          "landing_accept": "op367.landing_accept",
+          "memory_read": "op367.memory_read",
+          "opcode_finish": "op367.opcode_finish",
+          "result_visible": "op367.result_visible",
+          "write_commit": "op367.write_commit"
+        },
+        "input_version": "Qwen.364.L7.d1.cacheV.429",
+        "layer": 7,
+        "output_version": "Qwen.367.L7.d1.pv.433",
+        "pc": 367,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op397.consumer_done",
+          "credit_return": "op397.credit_return",
+          "issue": "op397.issue",
+          "landing_accept": "op397.landing_accept",
+          "memory_read": "op397.memory_read",
+          "opcode_finish": "op397.opcode_finish",
+          "result_visible": "op397.result_visible",
+          "write_commit": "op397.write_commit"
+        },
+        "input_version": "Qwen.396.L8.d0.cacheK.464",
+        "layer": 8,
+        "output_version": "Qwen.397.L8.d0.scores.466",
+        "pc": 397,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op399.consumer_done",
+          "credit_return": "op399.credit_return",
+          "issue": "op399.issue",
+          "landing_accept": "op399.landing_accept",
+          "memory_read": "op399.memory_read",
+          "opcode_finish": "op399.opcode_finish",
+          "result_visible": "op399.result_visible",
+          "write_commit": "op399.write_commit"
+        },
+        "input_version": "Qwen.396.L8.d0.cacheV.465",
+        "layer": 8,
+        "output_version": "Qwen.399.L8.d0.pv.469",
+        "pc": 399,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op413.consumer_done",
+          "credit_return": "op413.credit_return",
+          "issue": "op413.issue",
+          "landing_accept": "op413.landing_accept",
+          "memory_read": "op413.memory_read",
+          "opcode_finish": "op413.opcode_finish",
+          "result_visible": "op413.result_visible",
+          "write_commit": "op413.write_commit"
+        },
+        "input_version": "Qwen.412.L8.d1.cacheK.484",
+        "layer": 8,
+        "output_version": "Qwen.413.L8.d1.scores.486",
+        "pc": 413,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op415.consumer_done",
+          "credit_return": "op415.credit_return",
+          "issue": "op415.issue",
+          "landing_accept": "op415.landing_accept",
+          "memory_read": "op415.memory_read",
+          "opcode_finish": "op415.opcode_finish",
+          "result_visible": "op415.result_visible",
+          "write_commit": "op415.write_commit"
+        },
+        "input_version": "Qwen.412.L8.d1.cacheV.485",
+        "layer": 8,
+        "output_version": "Qwen.415.L8.d1.pv.489",
+        "pc": 415,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op445.consumer_done",
+          "credit_return": "op445.credit_return",
+          "issue": "op445.issue",
+          "landing_accept": "op445.landing_accept",
+          "memory_read": "op445.memory_read",
+          "opcode_finish": "op445.opcode_finish",
+          "result_visible": "op445.result_visible",
+          "write_commit": "op445.write_commit"
+        },
+        "input_version": "Qwen.444.L9.d0.cacheK.520",
+        "layer": 9,
+        "output_version": "Qwen.445.L9.d0.scores.522",
+        "pc": 445,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op447.consumer_done",
+          "credit_return": "op447.credit_return",
+          "issue": "op447.issue",
+          "landing_accept": "op447.landing_accept",
+          "memory_read": "op447.memory_read",
+          "opcode_finish": "op447.opcode_finish",
+          "result_visible": "op447.result_visible",
+          "write_commit": "op447.write_commit"
+        },
+        "input_version": "Qwen.444.L9.d0.cacheV.521",
+        "layer": 9,
+        "output_version": "Qwen.447.L9.d0.pv.525",
+        "pc": 447,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op461.consumer_done",
+          "credit_return": "op461.credit_return",
+          "issue": "op461.issue",
+          "landing_accept": "op461.landing_accept",
+          "memory_read": "op461.memory_read",
+          "opcode_finish": "op461.opcode_finish",
+          "result_visible": "op461.result_visible",
+          "write_commit": "op461.write_commit"
+        },
+        "input_version": "Qwen.460.L9.d1.cacheK.540",
+        "layer": 9,
+        "output_version": "Qwen.461.L9.d1.scores.542",
+        "pc": 461,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op463.consumer_done",
+          "credit_return": "op463.credit_return",
+          "issue": "op463.issue",
+          "landing_accept": "op463.landing_accept",
+          "memory_read": "op463.memory_read",
+          "opcode_finish": "op463.opcode_finish",
+          "result_visible": "op463.result_visible",
+          "write_commit": "op463.write_commit"
+        },
+        "input_version": "Qwen.460.L9.d1.cacheV.541",
+        "layer": 9,
+        "output_version": "Qwen.463.L9.d1.pv.545",
+        "pc": 463,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op493.consumer_done",
+          "credit_return": "op493.credit_return",
+          "issue": "op493.issue",
+          "landing_accept": "op493.landing_accept",
+          "memory_read": "op493.memory_read",
+          "opcode_finish": "op493.opcode_finish",
+          "result_visible": "op493.result_visible",
+          "write_commit": "op493.write_commit"
+        },
+        "input_version": "Qwen.492.L10.d0.cacheK.576",
+        "layer": 10,
+        "output_version": "Qwen.493.L10.d0.scores.578",
+        "pc": 493,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op495.consumer_done",
+          "credit_return": "op495.credit_return",
+          "issue": "op495.issue",
+          "landing_accept": "op495.landing_accept",
+          "memory_read": "op495.memory_read",
+          "opcode_finish": "op495.opcode_finish",
+          "result_visible": "op495.result_visible",
+          "write_commit": "op495.write_commit"
+        },
+        "input_version": "Qwen.492.L10.d0.cacheV.577",
+        "layer": 10,
+        "output_version": "Qwen.495.L10.d0.pv.581",
+        "pc": 495,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op509.consumer_done",
+          "credit_return": "op509.credit_return",
+          "issue": "op509.issue",
+          "landing_accept": "op509.landing_accept",
+          "memory_read": "op509.memory_read",
+          "opcode_finish": "op509.opcode_finish",
+          "result_visible": "op509.result_visible",
+          "write_commit": "op509.write_commit"
+        },
+        "input_version": "Qwen.508.L10.d1.cacheK.596",
+        "layer": 10,
+        "output_version": "Qwen.509.L10.d1.scores.598",
+        "pc": 509,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op511.consumer_done",
+          "credit_return": "op511.credit_return",
+          "issue": "op511.issue",
+          "landing_accept": "op511.landing_accept",
+          "memory_read": "op511.memory_read",
+          "opcode_finish": "op511.opcode_finish",
+          "result_visible": "op511.result_visible",
+          "write_commit": "op511.write_commit"
+        },
+        "input_version": "Qwen.508.L10.d1.cacheV.597",
+        "layer": 10,
+        "output_version": "Qwen.511.L10.d1.pv.601",
+        "pc": 511,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op541.consumer_done",
+          "credit_return": "op541.credit_return",
+          "issue": "op541.issue",
+          "landing_accept": "op541.landing_accept",
+          "memory_read": "op541.memory_read",
+          "opcode_finish": "op541.opcode_finish",
+          "result_visible": "op541.result_visible",
+          "write_commit": "op541.write_commit"
+        },
+        "input_version": "Qwen.540.L11.d0.cacheK.632",
+        "layer": 11,
+        "output_version": "Qwen.541.L11.d0.scores.634",
+        "pc": 541,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op543.consumer_done",
+          "credit_return": "op543.credit_return",
+          "issue": "op543.issue",
+          "landing_accept": "op543.landing_accept",
+          "memory_read": "op543.memory_read",
+          "opcode_finish": "op543.opcode_finish",
+          "result_visible": "op543.result_visible",
+          "write_commit": "op543.write_commit"
+        },
+        "input_version": "Qwen.540.L11.d0.cacheV.633",
+        "layer": 11,
+        "output_version": "Qwen.543.L11.d0.pv.637",
+        "pc": 543,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op557.consumer_done",
+          "credit_return": "op557.credit_return",
+          "issue": "op557.issue",
+          "landing_accept": "op557.landing_accept",
+          "memory_read": "op557.memory_read",
+          "opcode_finish": "op557.opcode_finish",
+          "result_visible": "op557.result_visible",
+          "write_commit": "op557.write_commit"
+        },
+        "input_version": "Qwen.556.L11.d1.cacheK.652",
+        "layer": 11,
+        "output_version": "Qwen.557.L11.d1.scores.654",
+        "pc": 557,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op559.consumer_done",
+          "credit_return": "op559.credit_return",
+          "issue": "op559.issue",
+          "landing_accept": "op559.landing_accept",
+          "memory_read": "op559.memory_read",
+          "opcode_finish": "op559.opcode_finish",
+          "result_visible": "op559.result_visible",
+          "write_commit": "op559.write_commit"
+        },
+        "input_version": "Qwen.556.L11.d1.cacheV.653",
+        "layer": 11,
+        "output_version": "Qwen.559.L11.d1.pv.657",
+        "pc": 559,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op589.consumer_done",
+          "credit_return": "op589.credit_return",
+          "issue": "op589.issue",
+          "landing_accept": "op589.landing_accept",
+          "memory_read": "op589.memory_read",
+          "opcode_finish": "op589.opcode_finish",
+          "result_visible": "op589.result_visible",
+          "write_commit": "op589.write_commit"
+        },
+        "input_version": "Qwen.588.L12.d0.cacheK.688",
+        "layer": 12,
+        "output_version": "Qwen.589.L12.d0.scores.690",
+        "pc": 589,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op591.consumer_done",
+          "credit_return": "op591.credit_return",
+          "issue": "op591.issue",
+          "landing_accept": "op591.landing_accept",
+          "memory_read": "op591.memory_read",
+          "opcode_finish": "op591.opcode_finish",
+          "result_visible": "op591.result_visible",
+          "write_commit": "op591.write_commit"
+        },
+        "input_version": "Qwen.588.L12.d0.cacheV.689",
+        "layer": 12,
+        "output_version": "Qwen.591.L12.d0.pv.693",
+        "pc": 591,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op605.consumer_done",
+          "credit_return": "op605.credit_return",
+          "issue": "op605.issue",
+          "landing_accept": "op605.landing_accept",
+          "memory_read": "op605.memory_read",
+          "opcode_finish": "op605.opcode_finish",
+          "result_visible": "op605.result_visible",
+          "write_commit": "op605.write_commit"
+        },
+        "input_version": "Qwen.604.L12.d1.cacheK.708",
+        "layer": 12,
+        "output_version": "Qwen.605.L12.d1.scores.710",
+        "pc": 605,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op607.consumer_done",
+          "credit_return": "op607.credit_return",
+          "issue": "op607.issue",
+          "landing_accept": "op607.landing_accept",
+          "memory_read": "op607.memory_read",
+          "opcode_finish": "op607.opcode_finish",
+          "result_visible": "op607.result_visible",
+          "write_commit": "op607.write_commit"
+        },
+        "input_version": "Qwen.604.L12.d1.cacheV.709",
+        "layer": 12,
+        "output_version": "Qwen.607.L12.d1.pv.713",
+        "pc": 607,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op637.consumer_done",
+          "credit_return": "op637.credit_return",
+          "issue": "op637.issue",
+          "landing_accept": "op637.landing_accept",
+          "memory_read": "op637.memory_read",
+          "opcode_finish": "op637.opcode_finish",
+          "result_visible": "op637.result_visible",
+          "write_commit": "op637.write_commit"
+        },
+        "input_version": "Qwen.636.L13.d0.cacheK.744",
+        "layer": 13,
+        "output_version": "Qwen.637.L13.d0.scores.746",
+        "pc": 637,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op639.consumer_done",
+          "credit_return": "op639.credit_return",
+          "issue": "op639.issue",
+          "landing_accept": "op639.landing_accept",
+          "memory_read": "op639.memory_read",
+          "opcode_finish": "op639.opcode_finish",
+          "result_visible": "op639.result_visible",
+          "write_commit": "op639.write_commit"
+        },
+        "input_version": "Qwen.636.L13.d0.cacheV.745",
+        "layer": 13,
+        "output_version": "Qwen.639.L13.d0.pv.749",
+        "pc": 639,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op653.consumer_done",
+          "credit_return": "op653.credit_return",
+          "issue": "op653.issue",
+          "landing_accept": "op653.landing_accept",
+          "memory_read": "op653.memory_read",
+          "opcode_finish": "op653.opcode_finish",
+          "result_visible": "op653.result_visible",
+          "write_commit": "op653.write_commit"
+        },
+        "input_version": "Qwen.652.L13.d1.cacheK.764",
+        "layer": 13,
+        "output_version": "Qwen.653.L13.d1.scores.766",
+        "pc": 653,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op655.consumer_done",
+          "credit_return": "op655.credit_return",
+          "issue": "op655.issue",
+          "landing_accept": "op655.landing_accept",
+          "memory_read": "op655.memory_read",
+          "opcode_finish": "op655.opcode_finish",
+          "result_visible": "op655.result_visible",
+          "write_commit": "op655.write_commit"
+        },
+        "input_version": "Qwen.652.L13.d1.cacheV.765",
+        "layer": 13,
+        "output_version": "Qwen.655.L13.d1.pv.769",
+        "pc": 655,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op685.consumer_done",
+          "credit_return": "op685.credit_return",
+          "issue": "op685.issue",
+          "landing_accept": "op685.landing_accept",
+          "memory_read": "op685.memory_read",
+          "opcode_finish": "op685.opcode_finish",
+          "result_visible": "op685.result_visible",
+          "write_commit": "op685.write_commit"
+        },
+        "input_version": "Qwen.684.L14.d0.cacheK.800",
+        "layer": 14,
+        "output_version": "Qwen.685.L14.d0.scores.802",
+        "pc": 685,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op687.consumer_done",
+          "credit_return": "op687.credit_return",
+          "issue": "op687.issue",
+          "landing_accept": "op687.landing_accept",
+          "memory_read": "op687.memory_read",
+          "opcode_finish": "op687.opcode_finish",
+          "result_visible": "op687.result_visible",
+          "write_commit": "op687.write_commit"
+        },
+        "input_version": "Qwen.684.L14.d0.cacheV.801",
+        "layer": 14,
+        "output_version": "Qwen.687.L14.d0.pv.805",
+        "pc": 687,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op701.consumer_done",
+          "credit_return": "op701.credit_return",
+          "issue": "op701.issue",
+          "landing_accept": "op701.landing_accept",
+          "memory_read": "op701.memory_read",
+          "opcode_finish": "op701.opcode_finish",
+          "result_visible": "op701.result_visible",
+          "write_commit": "op701.write_commit"
+        },
+        "input_version": "Qwen.700.L14.d1.cacheK.820",
+        "layer": 14,
+        "output_version": "Qwen.701.L14.d1.scores.822",
+        "pc": 701,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op703.consumer_done",
+          "credit_return": "op703.credit_return",
+          "issue": "op703.issue",
+          "landing_accept": "op703.landing_accept",
+          "memory_read": "op703.memory_read",
+          "opcode_finish": "op703.opcode_finish",
+          "result_visible": "op703.result_visible",
+          "write_commit": "op703.write_commit"
+        },
+        "input_version": "Qwen.700.L14.d1.cacheV.821",
+        "layer": 14,
+        "output_version": "Qwen.703.L14.d1.pv.825",
+        "pc": 703,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op733.consumer_done",
+          "credit_return": "op733.credit_return",
+          "issue": "op733.issue",
+          "landing_accept": "op733.landing_accept",
+          "memory_read": "op733.memory_read",
+          "opcode_finish": "op733.opcode_finish",
+          "result_visible": "op733.result_visible",
+          "write_commit": "op733.write_commit"
+        },
+        "input_version": "Qwen.732.L15.d0.cacheK.856",
+        "layer": 15,
+        "output_version": "Qwen.733.L15.d0.scores.858",
+        "pc": 733,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op735.consumer_done",
+          "credit_return": "op735.credit_return",
+          "issue": "op735.issue",
+          "landing_accept": "op735.landing_accept",
+          "memory_read": "op735.memory_read",
+          "opcode_finish": "op735.opcode_finish",
+          "result_visible": "op735.result_visible",
+          "write_commit": "op735.write_commit"
+        },
+        "input_version": "Qwen.732.L15.d0.cacheV.857",
+        "layer": 15,
+        "output_version": "Qwen.735.L15.d0.pv.861",
+        "pc": 735,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op749.consumer_done",
+          "credit_return": "op749.credit_return",
+          "issue": "op749.issue",
+          "landing_accept": "op749.landing_accept",
+          "memory_read": "op749.memory_read",
+          "opcode_finish": "op749.opcode_finish",
+          "result_visible": "op749.result_visible",
+          "write_commit": "op749.write_commit"
+        },
+        "input_version": "Qwen.748.L15.d1.cacheK.876",
+        "layer": 15,
+        "output_version": "Qwen.749.L15.d1.scores.878",
+        "pc": 749,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op751.consumer_done",
+          "credit_return": "op751.credit_return",
+          "issue": "op751.issue",
+          "landing_accept": "op751.landing_accept",
+          "memory_read": "op751.memory_read",
+          "opcode_finish": "op751.opcode_finish",
+          "result_visible": "op751.result_visible",
+          "write_commit": "op751.write_commit"
+        },
+        "input_version": "Qwen.748.L15.d1.cacheV.877",
+        "layer": 15,
+        "output_version": "Qwen.751.L15.d1.pv.881",
+        "pc": 751,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op781.consumer_done",
+          "credit_return": "op781.credit_return",
+          "issue": "op781.issue",
+          "landing_accept": "op781.landing_accept",
+          "memory_read": "op781.memory_read",
+          "opcode_finish": "op781.opcode_finish",
+          "result_visible": "op781.result_visible",
+          "write_commit": "op781.write_commit"
+        },
+        "input_version": "Qwen.780.L16.d0.cacheK.912",
+        "layer": 16,
+        "output_version": "Qwen.781.L16.d0.scores.914",
+        "pc": 781,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op783.consumer_done",
+          "credit_return": "op783.credit_return",
+          "issue": "op783.issue",
+          "landing_accept": "op783.landing_accept",
+          "memory_read": "op783.memory_read",
+          "opcode_finish": "op783.opcode_finish",
+          "result_visible": "op783.result_visible",
+          "write_commit": "op783.write_commit"
+        },
+        "input_version": "Qwen.780.L16.d0.cacheV.913",
+        "layer": 16,
+        "output_version": "Qwen.783.L16.d0.pv.917",
+        "pc": 783,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op797.consumer_done",
+          "credit_return": "op797.credit_return",
+          "issue": "op797.issue",
+          "landing_accept": "op797.landing_accept",
+          "memory_read": "op797.memory_read",
+          "opcode_finish": "op797.opcode_finish",
+          "result_visible": "op797.result_visible",
+          "write_commit": "op797.write_commit"
+        },
+        "input_version": "Qwen.796.L16.d1.cacheK.932",
+        "layer": 16,
+        "output_version": "Qwen.797.L16.d1.scores.934",
+        "pc": 797,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op799.consumer_done",
+          "credit_return": "op799.credit_return",
+          "issue": "op799.issue",
+          "landing_accept": "op799.landing_accept",
+          "memory_read": "op799.memory_read",
+          "opcode_finish": "op799.opcode_finish",
+          "result_visible": "op799.result_visible",
+          "write_commit": "op799.write_commit"
+        },
+        "input_version": "Qwen.796.L16.d1.cacheV.933",
+        "layer": 16,
+        "output_version": "Qwen.799.L16.d1.pv.937",
+        "pc": 799,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op829.consumer_done",
+          "credit_return": "op829.credit_return",
+          "issue": "op829.issue",
+          "landing_accept": "op829.landing_accept",
+          "memory_read": "op829.memory_read",
+          "opcode_finish": "op829.opcode_finish",
+          "result_visible": "op829.result_visible",
+          "write_commit": "op829.write_commit"
+        },
+        "input_version": "Qwen.828.L17.d0.cacheK.968",
+        "layer": 17,
+        "output_version": "Qwen.829.L17.d0.scores.970",
+        "pc": 829,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op831.consumer_done",
+          "credit_return": "op831.credit_return",
+          "issue": "op831.issue",
+          "landing_accept": "op831.landing_accept",
+          "memory_read": "op831.memory_read",
+          "opcode_finish": "op831.opcode_finish",
+          "result_visible": "op831.result_visible",
+          "write_commit": "op831.write_commit"
+        },
+        "input_version": "Qwen.828.L17.d0.cacheV.969",
+        "layer": 17,
+        "output_version": "Qwen.831.L17.d0.pv.973",
+        "pc": 831,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op845.consumer_done",
+          "credit_return": "op845.credit_return",
+          "issue": "op845.issue",
+          "landing_accept": "op845.landing_accept",
+          "memory_read": "op845.memory_read",
+          "opcode_finish": "op845.opcode_finish",
+          "result_visible": "op845.result_visible",
+          "write_commit": "op845.write_commit"
+        },
+        "input_version": "Qwen.844.L17.d1.cacheK.988",
+        "layer": 17,
+        "output_version": "Qwen.845.L17.d1.scores.990",
+        "pc": 845,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op847.consumer_done",
+          "credit_return": "op847.credit_return",
+          "issue": "op847.issue",
+          "landing_accept": "op847.landing_accept",
+          "memory_read": "op847.memory_read",
+          "opcode_finish": "op847.opcode_finish",
+          "result_visible": "op847.result_visible",
+          "write_commit": "op847.write_commit"
+        },
+        "input_version": "Qwen.844.L17.d1.cacheV.989",
+        "layer": 17,
+        "output_version": "Qwen.847.L17.d1.pv.993",
+        "pc": 847,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op877.consumer_done",
+          "credit_return": "op877.credit_return",
+          "issue": "op877.issue",
+          "landing_accept": "op877.landing_accept",
+          "memory_read": "op877.memory_read",
+          "opcode_finish": "op877.opcode_finish",
+          "result_visible": "op877.result_visible",
+          "write_commit": "op877.write_commit"
+        },
+        "input_version": "Qwen.876.L18.d0.cacheK.1024",
+        "layer": 18,
+        "output_version": "Qwen.877.L18.d0.scores.1026",
+        "pc": 877,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op879.consumer_done",
+          "credit_return": "op879.credit_return",
+          "issue": "op879.issue",
+          "landing_accept": "op879.landing_accept",
+          "memory_read": "op879.memory_read",
+          "opcode_finish": "op879.opcode_finish",
+          "result_visible": "op879.result_visible",
+          "write_commit": "op879.write_commit"
+        },
+        "input_version": "Qwen.876.L18.d0.cacheV.1025",
+        "layer": 18,
+        "output_version": "Qwen.879.L18.d0.pv.1029",
+        "pc": 879,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op893.consumer_done",
+          "credit_return": "op893.credit_return",
+          "issue": "op893.issue",
+          "landing_accept": "op893.landing_accept",
+          "memory_read": "op893.memory_read",
+          "opcode_finish": "op893.opcode_finish",
+          "result_visible": "op893.result_visible",
+          "write_commit": "op893.write_commit"
+        },
+        "input_version": "Qwen.892.L18.d1.cacheK.1044",
+        "layer": 18,
+        "output_version": "Qwen.893.L18.d1.scores.1046",
+        "pc": 893,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op895.consumer_done",
+          "credit_return": "op895.credit_return",
+          "issue": "op895.issue",
+          "landing_accept": "op895.landing_accept",
+          "memory_read": "op895.memory_read",
+          "opcode_finish": "op895.opcode_finish",
+          "result_visible": "op895.result_visible",
+          "write_commit": "op895.write_commit"
+        },
+        "input_version": "Qwen.892.L18.d1.cacheV.1045",
+        "layer": 18,
+        "output_version": "Qwen.895.L18.d1.pv.1049",
+        "pc": 895,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op925.consumer_done",
+          "credit_return": "op925.credit_return",
+          "issue": "op925.issue",
+          "landing_accept": "op925.landing_accept",
+          "memory_read": "op925.memory_read",
+          "opcode_finish": "op925.opcode_finish",
+          "result_visible": "op925.result_visible",
+          "write_commit": "op925.write_commit"
+        },
+        "input_version": "Qwen.924.L19.d0.cacheK.1080",
+        "layer": 19,
+        "output_version": "Qwen.925.L19.d0.scores.1082",
+        "pc": 925,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op927.consumer_done",
+          "credit_return": "op927.credit_return",
+          "issue": "op927.issue",
+          "landing_accept": "op927.landing_accept",
+          "memory_read": "op927.memory_read",
+          "opcode_finish": "op927.opcode_finish",
+          "result_visible": "op927.result_visible",
+          "write_commit": "op927.write_commit"
+        },
+        "input_version": "Qwen.924.L19.d0.cacheV.1081",
+        "layer": 19,
+        "output_version": "Qwen.927.L19.d0.pv.1085",
+        "pc": 927,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op941.consumer_done",
+          "credit_return": "op941.credit_return",
+          "issue": "op941.issue",
+          "landing_accept": "op941.landing_accept",
+          "memory_read": "op941.memory_read",
+          "opcode_finish": "op941.opcode_finish",
+          "result_visible": "op941.result_visible",
+          "write_commit": "op941.write_commit"
+        },
+        "input_version": "Qwen.940.L19.d1.cacheK.1100",
+        "layer": 19,
+        "output_version": "Qwen.941.L19.d1.scores.1102",
+        "pc": 941,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op943.consumer_done",
+          "credit_return": "op943.credit_return",
+          "issue": "op943.issue",
+          "landing_accept": "op943.landing_accept",
+          "memory_read": "op943.memory_read",
+          "opcode_finish": "op943.opcode_finish",
+          "result_visible": "op943.result_visible",
+          "write_commit": "op943.write_commit"
+        },
+        "input_version": "Qwen.940.L19.d1.cacheV.1101",
+        "layer": 19,
+        "output_version": "Qwen.943.L19.d1.pv.1105",
+        "pc": 943,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op973.consumer_done",
+          "credit_return": "op973.credit_return",
+          "issue": "op973.issue",
+          "landing_accept": "op973.landing_accept",
+          "memory_read": "op973.memory_read",
+          "opcode_finish": "op973.opcode_finish",
+          "result_visible": "op973.result_visible",
+          "write_commit": "op973.write_commit"
+        },
+        "input_version": "Qwen.972.L20.d0.cacheK.1136",
+        "layer": 20,
+        "output_version": "Qwen.973.L20.d0.scores.1138",
+        "pc": 973,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op975.consumer_done",
+          "credit_return": "op975.credit_return",
+          "issue": "op975.issue",
+          "landing_accept": "op975.landing_accept",
+          "memory_read": "op975.memory_read",
+          "opcode_finish": "op975.opcode_finish",
+          "result_visible": "op975.result_visible",
+          "write_commit": "op975.write_commit"
+        },
+        "input_version": "Qwen.972.L20.d0.cacheV.1137",
+        "layer": 20,
+        "output_version": "Qwen.975.L20.d0.pv.1141",
+        "pc": 975,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op989.consumer_done",
+          "credit_return": "op989.credit_return",
+          "issue": "op989.issue",
+          "landing_accept": "op989.landing_accept",
+          "memory_read": "op989.memory_read",
+          "opcode_finish": "op989.opcode_finish",
+          "result_visible": "op989.result_visible",
+          "write_commit": "op989.write_commit"
+        },
+        "input_version": "Qwen.988.L20.d1.cacheK.1156",
+        "layer": 20,
+        "output_version": "Qwen.989.L20.d1.scores.1158",
+        "pc": 989,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op991.consumer_done",
+          "credit_return": "op991.credit_return",
+          "issue": "op991.issue",
+          "landing_accept": "op991.landing_accept",
+          "memory_read": "op991.memory_read",
+          "opcode_finish": "op991.opcode_finish",
+          "result_visible": "op991.result_visible",
+          "write_commit": "op991.write_commit"
+        },
+        "input_version": "Qwen.988.L20.d1.cacheV.1157",
+        "layer": 20,
+        "output_version": "Qwen.991.L20.d1.pv.1161",
+        "pc": 991,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1021.consumer_done",
+          "credit_return": "op1021.credit_return",
+          "issue": "op1021.issue",
+          "landing_accept": "op1021.landing_accept",
+          "memory_read": "op1021.memory_read",
+          "opcode_finish": "op1021.opcode_finish",
+          "result_visible": "op1021.result_visible",
+          "write_commit": "op1021.write_commit"
+        },
+        "input_version": "Qwen.1020.L21.d0.cacheK.1192",
+        "layer": 21,
+        "output_version": "Qwen.1021.L21.d0.scores.1194",
+        "pc": 1021,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1023.consumer_done",
+          "credit_return": "op1023.credit_return",
+          "issue": "op1023.issue",
+          "landing_accept": "op1023.landing_accept",
+          "memory_read": "op1023.memory_read",
+          "opcode_finish": "op1023.opcode_finish",
+          "result_visible": "op1023.result_visible",
+          "write_commit": "op1023.write_commit"
+        },
+        "input_version": "Qwen.1020.L21.d0.cacheV.1193",
+        "layer": 21,
+        "output_version": "Qwen.1023.L21.d0.pv.1197",
+        "pc": 1023,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1037.consumer_done",
+          "credit_return": "op1037.credit_return",
+          "issue": "op1037.issue",
+          "landing_accept": "op1037.landing_accept",
+          "memory_read": "op1037.memory_read",
+          "opcode_finish": "op1037.opcode_finish",
+          "result_visible": "op1037.result_visible",
+          "write_commit": "op1037.write_commit"
+        },
+        "input_version": "Qwen.1036.L21.d1.cacheK.1212",
+        "layer": 21,
+        "output_version": "Qwen.1037.L21.d1.scores.1214",
+        "pc": 1037,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1039.consumer_done",
+          "credit_return": "op1039.credit_return",
+          "issue": "op1039.issue",
+          "landing_accept": "op1039.landing_accept",
+          "memory_read": "op1039.memory_read",
+          "opcode_finish": "op1039.opcode_finish",
+          "result_visible": "op1039.result_visible",
+          "write_commit": "op1039.write_commit"
+        },
+        "input_version": "Qwen.1036.L21.d1.cacheV.1213",
+        "layer": 21,
+        "output_version": "Qwen.1039.L21.d1.pv.1217",
+        "pc": 1039,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1069.consumer_done",
+          "credit_return": "op1069.credit_return",
+          "issue": "op1069.issue",
+          "landing_accept": "op1069.landing_accept",
+          "memory_read": "op1069.memory_read",
+          "opcode_finish": "op1069.opcode_finish",
+          "result_visible": "op1069.result_visible",
+          "write_commit": "op1069.write_commit"
+        },
+        "input_version": "Qwen.1068.L22.d0.cacheK.1248",
+        "layer": 22,
+        "output_version": "Qwen.1069.L22.d0.scores.1250",
+        "pc": 1069,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1071.consumer_done",
+          "credit_return": "op1071.credit_return",
+          "issue": "op1071.issue",
+          "landing_accept": "op1071.landing_accept",
+          "memory_read": "op1071.memory_read",
+          "opcode_finish": "op1071.opcode_finish",
+          "result_visible": "op1071.result_visible",
+          "write_commit": "op1071.write_commit"
+        },
+        "input_version": "Qwen.1068.L22.d0.cacheV.1249",
+        "layer": 22,
+        "output_version": "Qwen.1071.L22.d0.pv.1253",
+        "pc": 1071,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1085.consumer_done",
+          "credit_return": "op1085.credit_return",
+          "issue": "op1085.issue",
+          "landing_accept": "op1085.landing_accept",
+          "memory_read": "op1085.memory_read",
+          "opcode_finish": "op1085.opcode_finish",
+          "result_visible": "op1085.result_visible",
+          "write_commit": "op1085.write_commit"
+        },
+        "input_version": "Qwen.1084.L22.d1.cacheK.1268",
+        "layer": 22,
+        "output_version": "Qwen.1085.L22.d1.scores.1270",
+        "pc": 1085,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1087.consumer_done",
+          "credit_return": "op1087.credit_return",
+          "issue": "op1087.issue",
+          "landing_accept": "op1087.landing_accept",
+          "memory_read": "op1087.memory_read",
+          "opcode_finish": "op1087.opcode_finish",
+          "result_visible": "op1087.result_visible",
+          "write_commit": "op1087.write_commit"
+        },
+        "input_version": "Qwen.1084.L22.d1.cacheV.1269",
+        "layer": 22,
+        "output_version": "Qwen.1087.L22.d1.pv.1273",
+        "pc": 1087,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1117.consumer_done",
+          "credit_return": "op1117.credit_return",
+          "issue": "op1117.issue",
+          "landing_accept": "op1117.landing_accept",
+          "memory_read": "op1117.memory_read",
+          "opcode_finish": "op1117.opcode_finish",
+          "result_visible": "op1117.result_visible",
+          "write_commit": "op1117.write_commit"
+        },
+        "input_version": "Qwen.1116.L23.d0.cacheK.1304",
+        "layer": 23,
+        "output_version": "Qwen.1117.L23.d0.scores.1306",
+        "pc": 1117,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1119.consumer_done",
+          "credit_return": "op1119.credit_return",
+          "issue": "op1119.issue",
+          "landing_accept": "op1119.landing_accept",
+          "memory_read": "op1119.memory_read",
+          "opcode_finish": "op1119.opcode_finish",
+          "result_visible": "op1119.result_visible",
+          "write_commit": "op1119.write_commit"
+        },
+        "input_version": "Qwen.1116.L23.d0.cacheV.1305",
+        "layer": 23,
+        "output_version": "Qwen.1119.L23.d0.pv.1309",
+        "pc": 1119,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1133.consumer_done",
+          "credit_return": "op1133.credit_return",
+          "issue": "op1133.issue",
+          "landing_accept": "op1133.landing_accept",
+          "memory_read": "op1133.memory_read",
+          "opcode_finish": "op1133.opcode_finish",
+          "result_visible": "op1133.result_visible",
+          "write_commit": "op1133.write_commit"
+        },
+        "input_version": "Qwen.1132.L23.d1.cacheK.1324",
+        "layer": 23,
+        "output_version": "Qwen.1133.L23.d1.scores.1326",
+        "pc": 1133,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1135.consumer_done",
+          "credit_return": "op1135.credit_return",
+          "issue": "op1135.issue",
+          "landing_accept": "op1135.landing_accept",
+          "memory_read": "op1135.memory_read",
+          "opcode_finish": "op1135.opcode_finish",
+          "result_visible": "op1135.result_visible",
+          "write_commit": "op1135.write_commit"
+        },
+        "input_version": "Qwen.1132.L23.d1.cacheV.1325",
+        "layer": 23,
+        "output_version": "Qwen.1135.L23.d1.pv.1329",
+        "pc": 1135,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1165.consumer_done",
+          "credit_return": "op1165.credit_return",
+          "issue": "op1165.issue",
+          "landing_accept": "op1165.landing_accept",
+          "memory_read": "op1165.memory_read",
+          "opcode_finish": "op1165.opcode_finish",
+          "result_visible": "op1165.result_visible",
+          "write_commit": "op1165.write_commit"
+        },
+        "input_version": "Qwen.1164.L24.d0.cacheK.1360",
+        "layer": 24,
+        "output_version": "Qwen.1165.L24.d0.scores.1362",
+        "pc": 1165,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1167.consumer_done",
+          "credit_return": "op1167.credit_return",
+          "issue": "op1167.issue",
+          "landing_accept": "op1167.landing_accept",
+          "memory_read": "op1167.memory_read",
+          "opcode_finish": "op1167.opcode_finish",
+          "result_visible": "op1167.result_visible",
+          "write_commit": "op1167.write_commit"
+        },
+        "input_version": "Qwen.1164.L24.d0.cacheV.1361",
+        "layer": 24,
+        "output_version": "Qwen.1167.L24.d0.pv.1365",
+        "pc": 1167,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1181.consumer_done",
+          "credit_return": "op1181.credit_return",
+          "issue": "op1181.issue",
+          "landing_accept": "op1181.landing_accept",
+          "memory_read": "op1181.memory_read",
+          "opcode_finish": "op1181.opcode_finish",
+          "result_visible": "op1181.result_visible",
+          "write_commit": "op1181.write_commit"
+        },
+        "input_version": "Qwen.1180.L24.d1.cacheK.1380",
+        "layer": 24,
+        "output_version": "Qwen.1181.L24.d1.scores.1382",
+        "pc": 1181,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1183.consumer_done",
+          "credit_return": "op1183.credit_return",
+          "issue": "op1183.issue",
+          "landing_accept": "op1183.landing_accept",
+          "memory_read": "op1183.memory_read",
+          "opcode_finish": "op1183.opcode_finish",
+          "result_visible": "op1183.result_visible",
+          "write_commit": "op1183.write_commit"
+        },
+        "input_version": "Qwen.1180.L24.d1.cacheV.1381",
+        "layer": 24,
+        "output_version": "Qwen.1183.L24.d1.pv.1385",
+        "pc": 1183,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1213.consumer_done",
+          "credit_return": "op1213.credit_return",
+          "issue": "op1213.issue",
+          "landing_accept": "op1213.landing_accept",
+          "memory_read": "op1213.memory_read",
+          "opcode_finish": "op1213.opcode_finish",
+          "result_visible": "op1213.result_visible",
+          "write_commit": "op1213.write_commit"
+        },
+        "input_version": "Qwen.1212.L25.d0.cacheK.1416",
+        "layer": 25,
+        "output_version": "Qwen.1213.L25.d0.scores.1418",
+        "pc": 1213,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1215.consumer_done",
+          "credit_return": "op1215.credit_return",
+          "issue": "op1215.issue",
+          "landing_accept": "op1215.landing_accept",
+          "memory_read": "op1215.memory_read",
+          "opcode_finish": "op1215.opcode_finish",
+          "result_visible": "op1215.result_visible",
+          "write_commit": "op1215.write_commit"
+        },
+        "input_version": "Qwen.1212.L25.d0.cacheV.1417",
+        "layer": 25,
+        "output_version": "Qwen.1215.L25.d0.pv.1421",
+        "pc": 1215,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1229.consumer_done",
+          "credit_return": "op1229.credit_return",
+          "issue": "op1229.issue",
+          "landing_accept": "op1229.landing_accept",
+          "memory_read": "op1229.memory_read",
+          "opcode_finish": "op1229.opcode_finish",
+          "result_visible": "op1229.result_visible",
+          "write_commit": "op1229.write_commit"
+        },
+        "input_version": "Qwen.1228.L25.d1.cacheK.1436",
+        "layer": 25,
+        "output_version": "Qwen.1229.L25.d1.scores.1438",
+        "pc": 1229,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1231.consumer_done",
+          "credit_return": "op1231.credit_return",
+          "issue": "op1231.issue",
+          "landing_accept": "op1231.landing_accept",
+          "memory_read": "op1231.memory_read",
+          "opcode_finish": "op1231.opcode_finish",
+          "result_visible": "op1231.result_visible",
+          "write_commit": "op1231.write_commit"
+        },
+        "input_version": "Qwen.1228.L25.d1.cacheV.1437",
+        "layer": 25,
+        "output_version": "Qwen.1231.L25.d1.pv.1441",
+        "pc": 1231,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1261.consumer_done",
+          "credit_return": "op1261.credit_return",
+          "issue": "op1261.issue",
+          "landing_accept": "op1261.landing_accept",
+          "memory_read": "op1261.memory_read",
+          "opcode_finish": "op1261.opcode_finish",
+          "result_visible": "op1261.result_visible",
+          "write_commit": "op1261.write_commit"
+        },
+        "input_version": "Qwen.1260.L26.d0.cacheK.1472",
+        "layer": 26,
+        "output_version": "Qwen.1261.L26.d0.scores.1474",
+        "pc": 1261,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1263.consumer_done",
+          "credit_return": "op1263.credit_return",
+          "issue": "op1263.issue",
+          "landing_accept": "op1263.landing_accept",
+          "memory_read": "op1263.memory_read",
+          "opcode_finish": "op1263.opcode_finish",
+          "result_visible": "op1263.result_visible",
+          "write_commit": "op1263.write_commit"
+        },
+        "input_version": "Qwen.1260.L26.d0.cacheV.1473",
+        "layer": 26,
+        "output_version": "Qwen.1263.L26.d0.pv.1477",
+        "pc": 1263,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1277.consumer_done",
+          "credit_return": "op1277.credit_return",
+          "issue": "op1277.issue",
+          "landing_accept": "op1277.landing_accept",
+          "memory_read": "op1277.memory_read",
+          "opcode_finish": "op1277.opcode_finish",
+          "result_visible": "op1277.result_visible",
+          "write_commit": "op1277.write_commit"
+        },
+        "input_version": "Qwen.1276.L26.d1.cacheK.1492",
+        "layer": 26,
+        "output_version": "Qwen.1277.L26.d1.scores.1494",
+        "pc": 1277,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1279.consumer_done",
+          "credit_return": "op1279.credit_return",
+          "issue": "op1279.issue",
+          "landing_accept": "op1279.landing_accept",
+          "memory_read": "op1279.memory_read",
+          "opcode_finish": "op1279.opcode_finish",
+          "result_visible": "op1279.result_visible",
+          "write_commit": "op1279.write_commit"
+        },
+        "input_version": "Qwen.1276.L26.d1.cacheV.1493",
+        "layer": 26,
+        "output_version": "Qwen.1279.L26.d1.pv.1497",
+        "pc": 1279,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1309.consumer_done",
+          "credit_return": "op1309.credit_return",
+          "issue": "op1309.issue",
+          "landing_accept": "op1309.landing_accept",
+          "memory_read": "op1309.memory_read",
+          "opcode_finish": "op1309.opcode_finish",
+          "result_visible": "op1309.result_visible",
+          "write_commit": "op1309.write_commit"
+        },
+        "input_version": "Qwen.1308.L27.d0.cacheK.1528",
+        "layer": 27,
+        "output_version": "Qwen.1309.L27.d0.scores.1530",
+        "pc": 1309,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1311.consumer_done",
+          "credit_return": "op1311.credit_return",
+          "issue": "op1311.issue",
+          "landing_accept": "op1311.landing_accept",
+          "memory_read": "op1311.memory_read",
+          "opcode_finish": "op1311.opcode_finish",
+          "result_visible": "op1311.result_visible",
+          "write_commit": "op1311.write_commit"
+        },
+        "input_version": "Qwen.1308.L27.d0.cacheV.1529",
+        "layer": 27,
+        "output_version": "Qwen.1311.L27.d0.pv.1533",
+        "pc": 1311,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1325.consumer_done",
+          "credit_return": "op1325.credit_return",
+          "issue": "op1325.issue",
+          "landing_accept": "op1325.landing_accept",
+          "memory_read": "op1325.memory_read",
+          "opcode_finish": "op1325.opcode_finish",
+          "result_visible": "op1325.result_visible",
+          "write_commit": "op1325.write_commit"
+        },
+        "input_version": "Qwen.1324.L27.d1.cacheK.1548",
+        "layer": 27,
+        "output_version": "Qwen.1325.L27.d1.scores.1550",
+        "pc": 1325,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1327.consumer_done",
+          "credit_return": "op1327.credit_return",
+          "issue": "op1327.issue",
+          "landing_accept": "op1327.landing_accept",
+          "memory_read": "op1327.memory_read",
+          "opcode_finish": "op1327.opcode_finish",
+          "result_visible": "op1327.result_visible",
+          "write_commit": "op1327.write_commit"
+        },
+        "input_version": "Qwen.1324.L27.d1.cacheV.1549",
+        "layer": 27,
+        "output_version": "Qwen.1327.L27.d1.pv.1553",
+        "pc": 1327,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1357.consumer_done",
+          "credit_return": "op1357.credit_return",
+          "issue": "op1357.issue",
+          "landing_accept": "op1357.landing_accept",
+          "memory_read": "op1357.memory_read",
+          "opcode_finish": "op1357.opcode_finish",
+          "result_visible": "op1357.result_visible",
+          "write_commit": "op1357.write_commit"
+        },
+        "input_version": "Qwen.1356.L28.d0.cacheK.1584",
+        "layer": 28,
+        "output_version": "Qwen.1357.L28.d0.scores.1586",
+        "pc": 1357,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1359.consumer_done",
+          "credit_return": "op1359.credit_return",
+          "issue": "op1359.issue",
+          "landing_accept": "op1359.landing_accept",
+          "memory_read": "op1359.memory_read",
+          "opcode_finish": "op1359.opcode_finish",
+          "result_visible": "op1359.result_visible",
+          "write_commit": "op1359.write_commit"
+        },
+        "input_version": "Qwen.1356.L28.d0.cacheV.1585",
+        "layer": 28,
+        "output_version": "Qwen.1359.L28.d0.pv.1589",
+        "pc": 1359,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1373.consumer_done",
+          "credit_return": "op1373.credit_return",
+          "issue": "op1373.issue",
+          "landing_accept": "op1373.landing_accept",
+          "memory_read": "op1373.memory_read",
+          "opcode_finish": "op1373.opcode_finish",
+          "result_visible": "op1373.result_visible",
+          "write_commit": "op1373.write_commit"
+        },
+        "input_version": "Qwen.1372.L28.d1.cacheK.1604",
+        "layer": 28,
+        "output_version": "Qwen.1373.L28.d1.scores.1606",
+        "pc": 1373,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1375.consumer_done",
+          "credit_return": "op1375.credit_return",
+          "issue": "op1375.issue",
+          "landing_accept": "op1375.landing_accept",
+          "memory_read": "op1375.memory_read",
+          "opcode_finish": "op1375.opcode_finish",
+          "result_visible": "op1375.result_visible",
+          "write_commit": "op1375.write_commit"
+        },
+        "input_version": "Qwen.1372.L28.d1.cacheV.1605",
+        "layer": 28,
+        "output_version": "Qwen.1375.L28.d1.pv.1609",
+        "pc": 1375,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1405.consumer_done",
+          "credit_return": "op1405.credit_return",
+          "issue": "op1405.issue",
+          "landing_accept": "op1405.landing_accept",
+          "memory_read": "op1405.memory_read",
+          "opcode_finish": "op1405.opcode_finish",
+          "result_visible": "op1405.result_visible",
+          "write_commit": "op1405.write_commit"
+        },
+        "input_version": "Qwen.1404.L29.d0.cacheK.1640",
+        "layer": 29,
+        "output_version": "Qwen.1405.L29.d0.scores.1642",
+        "pc": 1405,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1407.consumer_done",
+          "credit_return": "op1407.credit_return",
+          "issue": "op1407.issue",
+          "landing_accept": "op1407.landing_accept",
+          "memory_read": "op1407.memory_read",
+          "opcode_finish": "op1407.opcode_finish",
+          "result_visible": "op1407.result_visible",
+          "write_commit": "op1407.write_commit"
+        },
+        "input_version": "Qwen.1404.L29.d0.cacheV.1641",
+        "layer": 29,
+        "output_version": "Qwen.1407.L29.d0.pv.1645",
+        "pc": 1407,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1421.consumer_done",
+          "credit_return": "op1421.credit_return",
+          "issue": "op1421.issue",
+          "landing_accept": "op1421.landing_accept",
+          "memory_read": "op1421.memory_read",
+          "opcode_finish": "op1421.opcode_finish",
+          "result_visible": "op1421.result_visible",
+          "write_commit": "op1421.write_commit"
+        },
+        "input_version": "Qwen.1420.L29.d1.cacheK.1660",
+        "layer": 29,
+        "output_version": "Qwen.1421.L29.d1.scores.1662",
+        "pc": 1421,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1423.consumer_done",
+          "credit_return": "op1423.credit_return",
+          "issue": "op1423.issue",
+          "landing_accept": "op1423.landing_accept",
+          "memory_read": "op1423.memory_read",
+          "opcode_finish": "op1423.opcode_finish",
+          "result_visible": "op1423.result_visible",
+          "write_commit": "op1423.write_commit"
+        },
+        "input_version": "Qwen.1420.L29.d1.cacheV.1661",
+        "layer": 29,
+        "output_version": "Qwen.1423.L29.d1.pv.1665",
+        "pc": 1423,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1453.consumer_done",
+          "credit_return": "op1453.credit_return",
+          "issue": "op1453.issue",
+          "landing_accept": "op1453.landing_accept",
+          "memory_read": "op1453.memory_read",
+          "opcode_finish": "op1453.opcode_finish",
+          "result_visible": "op1453.result_visible",
+          "write_commit": "op1453.write_commit"
+        },
+        "input_version": "Qwen.1452.L30.d0.cacheK.1696",
+        "layer": 30,
+        "output_version": "Qwen.1453.L30.d0.scores.1698",
+        "pc": 1453,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1455.consumer_done",
+          "credit_return": "op1455.credit_return",
+          "issue": "op1455.issue",
+          "landing_accept": "op1455.landing_accept",
+          "memory_read": "op1455.memory_read",
+          "opcode_finish": "op1455.opcode_finish",
+          "result_visible": "op1455.result_visible",
+          "write_commit": "op1455.write_commit"
+        },
+        "input_version": "Qwen.1452.L30.d0.cacheV.1697",
+        "layer": 30,
+        "output_version": "Qwen.1455.L30.d0.pv.1701",
+        "pc": 1455,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1469.consumer_done",
+          "credit_return": "op1469.credit_return",
+          "issue": "op1469.issue",
+          "landing_accept": "op1469.landing_accept",
+          "memory_read": "op1469.memory_read",
+          "opcode_finish": "op1469.opcode_finish",
+          "result_visible": "op1469.result_visible",
+          "write_commit": "op1469.write_commit"
+        },
+        "input_version": "Qwen.1468.L30.d1.cacheK.1716",
+        "layer": 30,
+        "output_version": "Qwen.1469.L30.d1.scores.1718",
+        "pc": 1469,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1471.consumer_done",
+          "credit_return": "op1471.credit_return",
+          "issue": "op1471.issue",
+          "landing_accept": "op1471.landing_accept",
+          "memory_read": "op1471.memory_read",
+          "opcode_finish": "op1471.opcode_finish",
+          "result_visible": "op1471.result_visible",
+          "write_commit": "op1471.write_commit"
+        },
+        "input_version": "Qwen.1468.L30.d1.cacheV.1717",
+        "layer": 30,
+        "output_version": "Qwen.1471.L30.d1.pv.1721",
+        "pc": 1471,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1501.consumer_done",
+          "credit_return": "op1501.credit_return",
+          "issue": "op1501.issue",
+          "landing_accept": "op1501.landing_accept",
+          "memory_read": "op1501.memory_read",
+          "opcode_finish": "op1501.opcode_finish",
+          "result_visible": "op1501.result_visible",
+          "write_commit": "op1501.write_commit"
+        },
+        "input_version": "Qwen.1500.L31.d0.cacheK.1752",
+        "layer": 31,
+        "output_version": "Qwen.1501.L31.d0.scores.1754",
+        "pc": 1501,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1503.consumer_done",
+          "credit_return": "op1503.credit_return",
+          "issue": "op1503.issue",
+          "landing_accept": "op1503.landing_accept",
+          "memory_read": "op1503.memory_read",
+          "opcode_finish": "op1503.opcode_finish",
+          "result_visible": "op1503.result_visible",
+          "write_commit": "op1503.write_commit"
+        },
+        "input_version": "Qwen.1500.L31.d0.cacheV.1753",
+        "layer": 31,
+        "output_version": "Qwen.1503.L31.d0.pv.1757",
+        "pc": 1503,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1517.consumer_done",
+          "credit_return": "op1517.credit_return",
+          "issue": "op1517.issue",
+          "landing_accept": "op1517.landing_accept",
+          "memory_read": "op1517.memory_read",
+          "opcode_finish": "op1517.opcode_finish",
+          "result_visible": "op1517.result_visible",
+          "write_commit": "op1517.write_commit"
+        },
+        "input_version": "Qwen.1516.L31.d1.cacheK.1772",
+        "layer": 31,
+        "output_version": "Qwen.1517.L31.d1.scores.1774",
+        "pc": 1517,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1519.consumer_done",
+          "credit_return": "op1519.credit_return",
+          "issue": "op1519.issue",
+          "landing_accept": "op1519.landing_accept",
+          "memory_read": "op1519.memory_read",
+          "opcode_finish": "op1519.opcode_finish",
+          "result_visible": "op1519.result_visible",
+          "write_commit": "op1519.write_commit"
+        },
+        "input_version": "Qwen.1516.L31.d1.cacheV.1773",
+        "layer": 31,
+        "output_version": "Qwen.1519.L31.d1.pv.1777",
+        "pc": 1519,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1549.consumer_done",
+          "credit_return": "op1549.credit_return",
+          "issue": "op1549.issue",
+          "landing_accept": "op1549.landing_accept",
+          "memory_read": "op1549.memory_read",
+          "opcode_finish": "op1549.opcode_finish",
+          "result_visible": "op1549.result_visible",
+          "write_commit": "op1549.write_commit"
+        },
+        "input_version": "Qwen.1548.L32.d0.cacheK.1808",
+        "layer": 32,
+        "output_version": "Qwen.1549.L32.d0.scores.1810",
+        "pc": 1549,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1551.consumer_done",
+          "credit_return": "op1551.credit_return",
+          "issue": "op1551.issue",
+          "landing_accept": "op1551.landing_accept",
+          "memory_read": "op1551.memory_read",
+          "opcode_finish": "op1551.opcode_finish",
+          "result_visible": "op1551.result_visible",
+          "write_commit": "op1551.write_commit"
+        },
+        "input_version": "Qwen.1548.L32.d0.cacheV.1809",
+        "layer": 32,
+        "output_version": "Qwen.1551.L32.d0.pv.1813",
+        "pc": 1551,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1565.consumer_done",
+          "credit_return": "op1565.credit_return",
+          "issue": "op1565.issue",
+          "landing_accept": "op1565.landing_accept",
+          "memory_read": "op1565.memory_read",
+          "opcode_finish": "op1565.opcode_finish",
+          "result_visible": "op1565.result_visible",
+          "write_commit": "op1565.write_commit"
+        },
+        "input_version": "Qwen.1564.L32.d1.cacheK.1828",
+        "layer": 32,
+        "output_version": "Qwen.1565.L32.d1.scores.1830",
+        "pc": 1565,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1567.consumer_done",
+          "credit_return": "op1567.credit_return",
+          "issue": "op1567.issue",
+          "landing_accept": "op1567.landing_accept",
+          "memory_read": "op1567.memory_read",
+          "opcode_finish": "op1567.opcode_finish",
+          "result_visible": "op1567.result_visible",
+          "write_commit": "op1567.write_commit"
+        },
+        "input_version": "Qwen.1564.L32.d1.cacheV.1829",
+        "layer": 32,
+        "output_version": "Qwen.1567.L32.d1.pv.1833",
+        "pc": 1567,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1597.consumer_done",
+          "credit_return": "op1597.credit_return",
+          "issue": "op1597.issue",
+          "landing_accept": "op1597.landing_accept",
+          "memory_read": "op1597.memory_read",
+          "opcode_finish": "op1597.opcode_finish",
+          "result_visible": "op1597.result_visible",
+          "write_commit": "op1597.write_commit"
+        },
+        "input_version": "Qwen.1596.L33.d0.cacheK.1864",
+        "layer": 33,
+        "output_version": "Qwen.1597.L33.d0.scores.1866",
+        "pc": 1597,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1599.consumer_done",
+          "credit_return": "op1599.credit_return",
+          "issue": "op1599.issue",
+          "landing_accept": "op1599.landing_accept",
+          "memory_read": "op1599.memory_read",
+          "opcode_finish": "op1599.opcode_finish",
+          "result_visible": "op1599.result_visible",
+          "write_commit": "op1599.write_commit"
+        },
+        "input_version": "Qwen.1596.L33.d0.cacheV.1865",
+        "layer": 33,
+        "output_version": "Qwen.1599.L33.d0.pv.1869",
+        "pc": 1599,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1613.consumer_done",
+          "credit_return": "op1613.credit_return",
+          "issue": "op1613.issue",
+          "landing_accept": "op1613.landing_accept",
+          "memory_read": "op1613.memory_read",
+          "opcode_finish": "op1613.opcode_finish",
+          "result_visible": "op1613.result_visible",
+          "write_commit": "op1613.write_commit"
+        },
+        "input_version": "Qwen.1612.L33.d1.cacheK.1884",
+        "layer": 33,
+        "output_version": "Qwen.1613.L33.d1.scores.1886",
+        "pc": 1613,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1615.consumer_done",
+          "credit_return": "op1615.credit_return",
+          "issue": "op1615.issue",
+          "landing_accept": "op1615.landing_accept",
+          "memory_read": "op1615.memory_read",
+          "opcode_finish": "op1615.opcode_finish",
+          "result_visible": "op1615.result_visible",
+          "write_commit": "op1615.write_commit"
+        },
+        "input_version": "Qwen.1612.L33.d1.cacheV.1885",
+        "layer": 33,
+        "output_version": "Qwen.1615.L33.d1.pv.1889",
+        "pc": 1615,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1645.consumer_done",
+          "credit_return": "op1645.credit_return",
+          "issue": "op1645.issue",
+          "landing_accept": "op1645.landing_accept",
+          "memory_read": "op1645.memory_read",
+          "opcode_finish": "op1645.opcode_finish",
+          "result_visible": "op1645.result_visible",
+          "write_commit": "op1645.write_commit"
+        },
+        "input_version": "Qwen.1644.L34.d0.cacheK.1920",
+        "layer": 34,
+        "output_version": "Qwen.1645.L34.d0.scores.1922",
+        "pc": 1645,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1647.consumer_done",
+          "credit_return": "op1647.credit_return",
+          "issue": "op1647.issue",
+          "landing_accept": "op1647.landing_accept",
+          "memory_read": "op1647.memory_read",
+          "opcode_finish": "op1647.opcode_finish",
+          "result_visible": "op1647.result_visible",
+          "write_commit": "op1647.write_commit"
+        },
+        "input_version": "Qwen.1644.L34.d0.cacheV.1921",
+        "layer": 34,
+        "output_version": "Qwen.1647.L34.d0.pv.1925",
+        "pc": 1647,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1661.consumer_done",
+          "credit_return": "op1661.credit_return",
+          "issue": "op1661.issue",
+          "landing_accept": "op1661.landing_accept",
+          "memory_read": "op1661.memory_read",
+          "opcode_finish": "op1661.opcode_finish",
+          "result_visible": "op1661.result_visible",
+          "write_commit": "op1661.write_commit"
+        },
+        "input_version": "Qwen.1660.L34.d1.cacheK.1940",
+        "layer": 34,
+        "output_version": "Qwen.1661.L34.d1.scores.1942",
+        "pc": 1661,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1663.consumer_done",
+          "credit_return": "op1663.credit_return",
+          "issue": "op1663.issue",
+          "landing_accept": "op1663.landing_accept",
+          "memory_read": "op1663.memory_read",
+          "opcode_finish": "op1663.opcode_finish",
+          "result_visible": "op1663.result_visible",
+          "write_commit": "op1663.write_commit"
+        },
+        "input_version": "Qwen.1660.L34.d1.cacheV.1941",
+        "layer": 34,
+        "output_version": "Qwen.1663.L34.d1.pv.1945",
+        "pc": 1663,
+        "rank": 1,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1693.consumer_done",
+          "credit_return": "op1693.credit_return",
+          "issue": "op1693.issue",
+          "landing_accept": "op1693.landing_accept",
+          "memory_read": "op1693.memory_read",
+          "opcode_finish": "op1693.opcode_finish",
+          "result_visible": "op1693.result_visible",
+          "write_commit": "op1693.write_commit"
+        },
+        "input_version": "Qwen.1692.L35.d0.cacheK.1976",
+        "layer": 35,
+        "output_version": "Qwen.1693.L35.d0.scores.1978",
+        "pc": 1693,
+        "rank": 0,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1695.consumer_done",
+          "credit_return": "op1695.credit_return",
+          "issue": "op1695.issue",
+          "landing_accept": "op1695.landing_accept",
+          "memory_read": "op1695.memory_read",
+          "opcode_finish": "op1695.opcode_finish",
+          "result_visible": "op1695.result_visible",
+          "write_commit": "op1695.write_commit"
+        },
+        "input_version": "Qwen.1692.L35.d0.cacheV.1977",
+        "layer": 35,
+        "output_version": "Qwen.1695.L35.d0.pv.1981",
+        "pc": 1695,
+        "rank": 0,
+        "stage": 1
+      },
+      {
+        "events": {
+          "consumer_done": "op1709.consumer_done",
+          "credit_return": "op1709.credit_return",
+          "issue": "op1709.issue",
+          "landing_accept": "op1709.landing_accept",
+          "memory_read": "op1709.memory_read",
+          "opcode_finish": "op1709.opcode_finish",
+          "result_visible": "op1709.result_visible",
+          "write_commit": "op1709.write_commit"
+        },
+        "input_version": "Qwen.1708.L35.d1.cacheK.1996",
+        "layer": 35,
+        "output_version": "Qwen.1709.L35.d1.scores.1998",
+        "pc": 1709,
+        "rank": 1,
+        "stage": 0
+      },
+      {
+        "events": {
+          "consumer_done": "op1711.consumer_done",
+          "credit_return": "op1711.credit_return",
+          "issue": "op1711.issue",
+          "landing_accept": "op1711.landing_accept",
+          "memory_read": "op1711.memory_read",
+          "opcode_finish": "op1711.opcode_finish",
+          "result_visible": "op1711.result_visible",
+          "write_commit": "op1711.write_commit"
+        },
+        "input_version": "Qwen.1708.L35.d1.cacheV.1997",
+        "layer": 35,
+        "output_version": "Qwen.1711.L35.d1.pv.2001",
+        "pc": 1711,
+        "rank": 1,
+        "stage": 1
+      }
+    ],
+    "path": "results/uarch/h3_complete_native_calendar_20261002/inputs/Qwen_native.json.gz",
+    "sha256": "2348ff89f8c1967090c554edb75bb44432a7045711d0678ed6943c4725bdeb9c"
+  },
+  "source_binding": "actual opPC.issue/result_visible/credit_return, not a primitive or partial PC40 fragment; real reader lease tuple",
+  "tracks": {
+    "channel_capacity": null,
+    "new_control_signal_bits": 2329,
+    "placement": "one controller-local bridge per rank; eight actual endpoint taps retained until drain release",
+    "route_fit": false
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "asap7": {
+    "corner": "TT",
+    "liberty_capacitive_load_unit": "1ff",
+    "liberty_time_unit": "1ps",
+    "license": "BSD-3-Clause",
+    "pdk_upstream_revision": "58d72c9d291e186a77468586ab0c43d8a21eda6a",
+    "temperature_c": 0.0,
+    "upstream_revision": "d24f8b857ff74cf5b21ab18a7e1b11a3954c449b",
+    "version": "1.7",
+    "voltage_v": 0.7,
+    "vt_flavour": "RVT"
+  },
+  "consumed_by": {
+    "note": "The place-and-route stage for this view reads the container's own platform files (including LEF and GDS, which are NOT mirrored here), not this root.",
+    "stages": [
+      "synth",
+      "sta"
+    ],
+    "tool": "tools/run_abi3_physical.py",
+    "view": "asap7"
+  },
+  "evidence_class": "predictive 7 nm FinFET academic PDK; not a foundry PDK, not manufacturable, and never a target-node scaling anchor",
+  "files": {
+    "lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": {
+      "container_source_gzip_compressed": true,
+      "container_source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "container_source_sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+      "container_source_sha256_matches_asap7_physical_lock": true,
+      "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+      "size_bytes": 22136706
+    },
+    "lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": {
+      "container_source_gzip_compressed": true,
+      "container_source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "container_source_sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+      "container_source_sha256_matches_asap7_physical_lock": true,
+      "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+      "size_bytes": 309886
+    },
+    "lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": {
+      "container_source_gzip_compressed": true,
+      "container_source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "container_source_sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+      "container_source_sha256_matches_asap7_physical_lock": true,
+      "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+      "size_bytes": 19915253
+    },
+    "lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": {
+      "container_source_gzip_compressed": false,
+      "container_source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "container_source_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "container_source_sha256_matches_asap7_physical_lock": true,
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "size_bytes": 1512690
+    },
+    "lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": {
+      "container_source_gzip_compressed": true,
+      "container_source_path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "container_source_sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+      "container_source_sha256_matches_asap7_physical_lock": true,
+      "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "size_bytes": 2306883
+    }
+  },
+  "forbidden_inferences": [
+    "N7 or N4 foundry density, delay, energy, leakage, yield, or cost",
+    "target-foundry availability or mask economics",
+    "whole-wafer inference throughput or GPU speedup"
+  ],
+  "not_mirrored_locally": [
+    "lef/asap7_tech_1x_201209.lef",
+    "lef/asap7sc7p5t_28_R_1x_220121a.lef",
+    "gds/asap7sc7p5t_28_R_220121a.gds",
+    "drc/asap7.lydrc",
+    "KLayout/asap7.lyt"
+  ],
+  "provenance": {
+    "container_image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "container_platform_root": "/OpenROAD-flow-scripts/flow/platforms/asap7",
+    "extracted_from_container": "openroad/orfs:latest",
+    "extraction": "docker run --rm -v ~/.local/opentallas-pdk-asap7:/out openroad/orfs:latest cp of the five RVT TT NLDM liberty objects, then gunzip of the four gzip-compressed ones; content is otherwise unmodified",
+    "verification": "every container source object's sha256 was compared against the corresponding entry in configs/pdk/asap7_physical_lock.json and matched"
+  },
+  "purpose": "host-local uncompressed copy of the ASAP7 RVT typical-corner NLDM liberty set, so the pinned host Yosys and OpenSTA can characterise ABI 3.0 blocks in the predictive 7 nm view without entering the container",
+  "root": "/home/ubuntu/.local/opentallas-pdk-asap7",
+  "schema_version": 1
+}

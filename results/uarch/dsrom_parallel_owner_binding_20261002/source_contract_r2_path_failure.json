@@ -1,0 +1,7 @@
+{
+  "verdict": "FAIL_SOFTWARE_PATH_NORMALIZATION_BEFORE_READBACK",
+  "tool_sha256": "ad03a1fb53f59467c300b4f7463b079acb1285057c2a5898f33c244d0526acf1",
+  "reason": "relative CLI output path passed to relative_to absolute ROOT",
+  "runtime_or_architecture_comparison_reached": false,
+  "prior_binding_r1_unchanged": true
+}

@@ -1,0 +1,5 @@
+{
+  "scope": "model development, no compiler/runtime/physical attempt",
+  "initial_collection": "SyntaxError: invalid syntax at return= keyword in dict construction",
+  "repair": "rename model field to return_match; no source geometry or measured expectation changed"
+}

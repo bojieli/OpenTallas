@@ -1,0 +1,126 @@
+{
+  "schema": "DS_NATIVE_EXECUTION_PC0_PARENT_REVIEW_V1",
+  "owner_commits": [
+    "087f064f0b652ed502586b1067b913c098c01a58",
+    "32c46d78947a21dcff05d9cab2ec0b7c39c3745f"
+  ],
+  "parent_base": "aa9604fa4",
+  "artifact_hashes_verified": 27,
+  "current_source_pins_verified": 60,
+  "draft_interface_tests_passed": 8,
+  "independent_reviews": {
+    "DS-PC0-independent-golden-comparison-20261002.json": {
+      "sha256": "d620d990f06cd3db3842cc66e27b9069377e41cfcd2018d1b1e8c832215bfaa4",
+      "review": {
+        "PC": 0,
+        "arith": "chunk8",
+        "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+        "elements_compared": 20504,
+        "full_token_qualified": false,
+        "hardware_qualified": false,
+        "independently_bound_sources_and_inputs": {
+          "/home/ubuntu/OpenTallas/tools/h3_ds_checkpoint_provider_r30.py": "4b7a74d246f8a594062ddc27a1c23038484342838cd1ae9fef173eab605722b9",
+          "/home/ubuntu/OpenTallas/tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+          "/tmp/kepler-ds-r37-ready-connected/provider_manifest.json": "51c27a4428d467ad0b7625c06d854bf7efd2921ce18249aaf281af4661a3a341",
+          "/tmp/opentallas-C0-production-execution-20261002/results/uarch/h4_c0_ds_native_execution_20261002/r2/checkpoint_PC0/native_outputs.npz": "dd9206ae93451c1c68ba75cae32814544eca3831eab907abed699c2f101bf989",
+          "/tmp/opentallas-C0-production-execution-20261002/results/uarch/h4_c0_ds_native_execution_20261002/r2/checkpoint_PC0/record.json": "a0833faf63a77af59ea0c1184dcf76d59c1e0f3a000e34f7af6f646ccd6d0b3a",
+          "/tmp/opentallas-C0-production-execution-20261002/tools/h4_c0_ds_checkpoint_first_producer.py": "29920f3cea51206b9c2b90cf4fc073003786e490d12ed454172cd50d8ce31173"
+        },
+        "provider_publication": false,
+        "qualification_scope": "rank0 PC0 arithmetic only; actual released coefficients and initial embedding; no provider publication or full token",
+        "rank": 0,
+        "released_config_fields": {
+          "hc_eps": 1e-06,
+          "hc_mult": 4,
+          "hc_sinkhorn_iters": 20,
+          "rms_norm_eps": 1e-20
+        },
+        "results": {
+          "comb": {
+            "elements": 16,
+            "golden_sha256": "fe64dc59d832714c84030f69988630fda9140088240552e6285d4105f2b04743",
+            "mismatches": 0,
+            "native_sha256": "fe64dc59d832714c84030f69988630fda9140088240552e6285d4105f2b04743",
+            "shape": [
+              4,
+              4
+            ]
+          },
+          "post": {
+            "elements": 4,
+            "golden_sha256": "15d0e08888fb92de9cfc0ec6daa713eed1c2146f432e9fee4fe3f73f136722c0",
+            "mismatches": 0,
+            "native_sha256": "15d0e08888fb92de9cfc0ec6daa713eed1c2146f432e9fee4fe3f73f136722c0",
+            "shape": [
+              4
+            ]
+          },
+          "pre": {
+            "elements": 4,
+            "golden_sha256": "75d66f1b2a9133db7c6215b5d39eca9bca99dc9b8dc5348d310f4074a508083d",
+            "mismatches": 0,
+            "native_sha256": "75d66f1b2a9133db7c6215b5d39eca9bca99dc9b8dc5348d310f4074a508083d",
+            "shape": [
+              4
+            ]
+          },
+          "res": {
+            "elements": 20480,
+            "golden_sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931",
+            "mismatches": 0,
+            "native_sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931",
+            "shape": [
+              4,
+              5120
+            ]
+          }
+        },
+        "status": "PASS_PC0_GOLDEN_EXACT"
+      }
+    },
+    "DS-PC0-parent-publication-review-20261002.json": {
+      "sha256": "20170e3eeee6306b5aa6aff2a8ee6b0be88f6807ece3766a1600bd7935d73235",
+      "review": {
+        "scope": "Independent archived rank0 PC0 output-publication journal check only",
+        "status": "PASS_SCOPED_TRANSACTION_LIFECYCLES_AND_OUTPUT_HASHES",
+        "events": 59000,
+        "transactions": 7696,
+        "directions": {
+          "software_read_capture": 2568,
+          "software_backing_visible": 5128
+        },
+        "all_matching_reverse_grants": true,
+        "integrated_operand_acquisition_proven": false,
+        "full_token_qualified": false,
+        "hardware_qualified": false,
+        "journal_sha256": "31c34bc9d4b145b85a4b5a6f735726a24f02d955e9dfe4de29037189caf75f6d",
+        "record_sha256": "8ace48eb2f07636fc4e9adaea1a74ea14bb9447813e68dbfdad7a556e49e7742"
+      }
+    },
+    "DS-HBM-parent-draft-witness-review-20261002.json": {
+      "sha256": "65620af7f5dc66fc4156babe22e2218c98684c6f72ffb2ca99f5d5ab59e54352",
+      "review": {
+        "scope": "parent review of current draft software witness and driver interfaces only",
+        "tests": "8 passed",
+        "full_token_qualified": false,
+        "hardware_qualified": false,
+        "source_sha256": {
+          "tools/h4_c0_ds_expected_outputs.py": "f0c847bc0f4d9518243fa643aabbd84783650a946e78c8f6feb19816c3fcdae3",
+          "tools/test_h4_c0_ds_expected_outputs.py": "423fccaf399907baa9bd9040e72f7677af23dac43030fa8aed5fa96d0785e641",
+          "tools/h4_c0_ds_native_execution.py": "555b403b6e720d87862f69b97edd07a09e848dc17efba0c7f56695a21196b1b3",
+          "tools/test_h4_c0_ds_native_execution.py": "4f914dbfe7498b4cac8ebd8754baf57b7697892aa0ddc1d383650557afa21777"
+        },
+        "remaining": "Actual production providers and independent complete expected output generation; finite accepted movement and physical qualification"
+      }
+    }
+  },
+  "actual_initializer_operand_acquisition_proven": false,
+  "production_group_calls_closed": 0,
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "next_required": "Source-bound actual initializer/operand constructor and prefix input GO, then execute PC0-9 into corrected PC10; preserve independent full-logit/token comparison for full numerical qualification",
+  "continuation_and_movement_tests_passed": 13,
+  "total_focused_tests_passed": 21,
+  "successor_review_link_hashes_verified": 4,
+  "check_figures": "PASS; all four targets G0-G5 still blocked"
+}

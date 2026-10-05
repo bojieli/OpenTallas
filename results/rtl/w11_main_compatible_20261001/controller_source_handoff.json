@@ -1,0 +1,20 @@
+{
+  "main_base": "518363bd15436faf64846f2f6ec7a004731151ae",
+  "kind": "Optional characterization implementation, original files untouched",
+  "sources": {
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_endpoint_phys.sv": "7ae782292122ad0dbfc3d45574e53039517540a05cbe900678dafff76f090eb1",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_ctl_phys.sv": "44f91e6c2c065a6782ce646701ea2172e253e416fed27d0a378311a5c5f6ca6b"
+  },
+  "legacy_pins": {
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv": "4380ed702860131a9e2efc0aead3031bbdeff0491c4c8cb2820d7745a0bfff74",
+    "rtl/chip/physical/ot_v41_attn_eng_ctl_phys.sv": "676be336ffd721ae2e9c9cdd7ed64c5742671abc3952911acdd4cdfcb0b58463",
+    "rtl/hdc/v41x/ot_hdc_core_v41x.sv": "afc6354c70821467e4072ab21ba3c892bc76776cb9b4388dfd5602982f5ea08a",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3"
+  },
+  "source_identity": "New characterization files byte-identical to the 2f4820b9 controller attempt sources; separately selected by new runner. No production RTL replaced.",
+  "default": "preserve-w11-controller-endpoints remains false; existing synthesis/config unchanged",
+  "validation": "46 focused tests PASS; prior full-model profile, attribute identity and cached6-position golden gates apply to byte-identical RTL",
+  "hardware_gate": "Live e3e9e9b8a PID460201; original 338023/270418 guard and SS/FF constraints; pending",
+  "model": "H16 D512 TD32 NL4 64tiles 32768products/cycle, REPL2 NSTAGE2; added latency0cycles",
+  "prerequisites": "None beyond recorded main_base. Does not require raw W11 history or any baseline file replacement."
+}

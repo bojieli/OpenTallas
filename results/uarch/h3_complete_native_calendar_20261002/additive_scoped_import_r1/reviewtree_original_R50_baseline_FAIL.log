@@ -1,0 +1,24 @@
+........................................................................ [ 75%]
+.................F......                                                 [100%]
+=================================== FAILURES ===================================
+______________________ test_current_source_guard_positive ______________________
+
+    def test_current_source_guard_positive():
+     import h3_complete_native_calendar as c
+>    assert a.current_source_mismatch(c.execute_ds_provider_group128) is False
+
+tests/test_ds_hbm_current_calendar_adapter_r50.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+fn = <function execute_ds_provider_group128 at 0x79576ad4d1b0>
+
+    def current_source_mismatch(fn):
+        import h3_complete_native_calendar as c
+        source=ROOT/'tools/h3_complete_native_calendar.py'
+        verify_current_source(source.read_bytes(),inputs()['calendar.py'])
+>       if fn is not c.execute_ds_provider_group128 or Path(fn.__code__.co_filename).resolve()!=source.resolve():raise ValueError('exact current runtime executor function required')
+E       ValueError: exact current runtime executor function required
+
+tools/ds_hbm_current_calendar_adapter_r50.py:25: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_ds_hbm_current_calendar_adapter_r50.py::test_current_source_guard_positive

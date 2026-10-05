@@ -1,0 +1,107 @@
+{
+  "APIs": [
+    "compile_commands",
+    "CausalGrantLedger.observe",
+    "verify_shared_journal_source",
+    "compile_qwen_kv_extension",
+    "schedule_finite_extension",
+    "replace_provider_interval_once"
+  ],
+  "CPU_elapsed_to_cycles": false,
+  "DS": {
+    "scope": "retained PC10 rank0 directed control; native c65 immutable archive; no current-r33 mix",
+    "shared_children": 9216,
+    "shared_events": 138240,
+    "source_resolved_calls": 1152
+  },
+  "Popper_dependency": "4466270448",
+  "Qwen": {
+    "KV_groups": 72,
+    "complete_72_group_finite_software_extension_control": true,
+    "finite_DAG_nodes": 198594,
+    "frontier_delays_require_native_retiming": true,
+    "metadata_RMW32_sector_model": 144,
+    "native_PC_dependency_frontiers": 1737,
+    "native_frontier_reference_only": true,
+    "partial_K_old_sector_captures": 18432
+  },
+  "TP96_wide_rate_credit": false,
+  "agentic_MTP_headline_unchanged": true,
+  "artifact_hashes": {
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal/Qwen_KV_finite_DAG.json.gz": "5e1bbf94ddf9826f99ade5bb7ad610680546f04b6ef9eedd4a641e7606a3082e",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal/bindings.json.gz": "2787f5174a011c80b90e8accb63a4cbeb17c2fe6b2641e88ee3c8fdaef764ecc",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal/summary.json": "de32ca2223f4ea8b1699824b9b8ff443c5272444da96860cc67ee0d8683ceb2a",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/h3_complete_native_calendar_grants_r1.py.failure_snapshot.gz": "d57962d7c5e260ce4ee71e35b23e4b24fb2226ab147711ae1a2cd46f27fa0931",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/metadata_expansion_old_test_FAIL.log": "8fb96cc673a8e255cece95ff8e15bf720fa2972b0c1c60ac9d8d1bc6c0486515",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/replay_PASS.log": "bd48eb103f021c16b07853db119e4b48f4bb84b716ccf7ae2ca7c614d076ca84",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/test_h3_complete_native_calendar_grants_r1.py.failure_snapshot.gz": "409dbb8c4f799b042a8e80920f05c259b6d8f4fb22b034549ff6ce3fb9402b98",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/tests_PASS.log": "b908f3090b6e0199d3c450c10382d81b6721a6f626f5bfca92ebaea79e8a999d",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1_inputs/directory.json.gz": "9f0d0371f5568c7540969336a88acc7a2cdd1037f98d4d7d29b16632b5dc8624",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1_inputs/manifest.json": "e340825eccb2ad66dab51fc3d20f49590b4280246cb3ed52be0e6314e7aee616",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1_inputs/model.json": "7db51d60f5a6db01b1a5ad826472fddf752f53861741c9b87e4ad7cd236288b8",
+    "results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1_inputs/owner.py": "9e82c6800ca30721fc2f9c6a102a8b22f235e7be6da337b9bf7d2484e9a276d3"
+  },
+  "artifact_source_summary": "final_causal/summary.json",
+  "commands": [
+    "PYTHONDONTWRITEBYTECODE=1 python -m pytest -o addopts='' -q tests/test_h3_complete_native_calendar_grants_r1.py tests/test_h4_hbm_production_owner.py tests/test_h4_hbm_selected_cache_rmw.py tests/test_ds_hbm_additive_endpoint_join_r54.py",
+    "PYTHONDONTWRITEBYTECODE=1 python tools/h3_complete_native_calendar_grants_r1.py --out results/uarch/h3_complete_native_calendar_20261002/causal_grants_r1/final_causal --verify"
+  ],
+  "complete_ports_area_cuts": false,
+  "constructor_to_Kepler": {
+    "API": "engine_class(prefix,finite_pc10=True,retire_unconsumed=True); install(explicit_alias_modules) before providers/budget; exclude R54 immutable OriginalSectorProvider anchor",
+    "actual_checkpoint_and_constructor_GO": false,
+    "calendar": "tools/h3_complete_native_calendar_successor_r1.py",
+    "calendar_sha256": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21",
+    "module": "tools/ds_hbm_additive_endpoint_join_r54.py",
+    "remaining": "Peirce additive role helper must source-enroll compact JournalBudget exact class/allocator/codec; V2 ROLE_PINS currently rejects successor filename. Do not patch pinned V2/R50 or weaken enrollment.",
+    "retained_constructor": true
+  },
+  "engine_build_ready": false,
+  "missing_service_costs": [
+    "KV_PV_consumer",
+    "KV_SCORES_consumer",
+    "KV_metadata_consumer",
+    "KV_metadata_grant",
+    "KV_metadata_mask_merge",
+    "KV_metadata_old_capture",
+    "KV_metadata_reverse",
+    "KV_metadata_write_visible",
+    "KV_parent_grant",
+    "KV_parent_reverse",
+    "KV_reader_acquire",
+    "KV_sector_consumer",
+    "KV_sector_mask_merge",
+    "KV_sector_old_capture",
+    "KV_sector_read_capture",
+    "KV_sector_reverse",
+    "KV_sector_write_visible",
+    "KV_state_bitmap_visible",
+    "KV_state_record_bitmap_fence",
+    "KV_state_record_visible",
+    "sector_grant"
+  ],
+  "new_numerical_jobs": false,
+  "physical_credit_proof": "exact SRAM copy/bank/page/row go acceptance; causal read capture; common ACK; child reverse; parent fence/consumer/reverse; no always-ready or timeout-success",
+  "production_physical_calls_closed": 0,
+  "remaining": [
+    "actual SRAM/owner traces; issuing SM and producer RF mirror ACKs",
+    "actual old-sector validity/refill from entering checkpoint",
+    "installed L2 reservation and all matrix/cache contender DAG/resource intervals",
+    "bounded consumer/reverse/CDC/HBM backend terms; contextual ports/area/cuts",
+    "existing source-native completion interval attachment and once-only provider replacement",
+    "remaining DS193316 production shared calls; complete DS/Qwen physical service calendar"
+  ],
+  "schema": "HBM_CAUSAL_ACCEPTANCE_KV_FINITE_EXTENSION_HANDOFF_R1",
+  "source_base": "75a3e0c0d6fb89bdd833a089af1a2b652968c88d",
+  "source_native_arithmetic_executed": false,
+  "source_pins": {
+    "tests/test_h3_complete_native_calendar.py": "0aabf43fe6565e625db665584c99791b98ba644f8e97c90462c98772d2f86636",
+    "tests/test_h3_complete_native_calendar_grants_r1.py": "6060e63d146e667d63729350392a67db2716cfa6c8f4c7e058ba4dcc5e2ef59f",
+    "tools/ds_hbm_current_calendar_adapter_r50.py": "839765749577fabbed3ffeca27ba996d6f3727f9efacc3b2b725d1709e991e1a",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817",
+    "tools/h3_complete_native_calendar_grants_r1.py": "4bbd9ce96f4cf0afef069d6b0a94379d04a0e054e337477d125ed6cf999d6dbd",
+    "tools/h3_complete_native_calendar_successor_r1.py": "dc04ddb7da27b7a1230691a01bba6af6bdd45bacf59b8afc58b0ad853c6c0a21"
+  },
+  "tests_passed": 58,
+  "unknown_whole_token_latency": null
+}

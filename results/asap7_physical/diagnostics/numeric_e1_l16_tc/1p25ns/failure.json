@@ -1,0 +1,501 @@
+{
+  "acceptance_failures": [
+    "setup_wns_ns=-2.1213800000000003 < 0.0",
+    "setup_tns_ns=-50.0845 < 0.0",
+    "setup_violations=31.0 > 0.0"
+  ],
+  "campaign_id": "opentallas-asap7-predictive-physical-v1",
+  "canonical": false,
+  "case": {
+    "async_reset_ports": [
+      "rst_n"
+    ],
+    "clock_period_ns": 1.25,
+    "clock_port": "clk",
+    "core_utilization_percent": 35,
+    "corner": "TC",
+    "description": "One-expert, 16-lane signed integer-DV dot product; control and physical-scaling representative, not an FP8/MXFP4 implementation.",
+    "equivalence_method": "feedforward_output_register_next_state_cec",
+    "name": "numeric_e1_l16_tc",
+    "parameters": {
+      "ACC_W": 32,
+      "ACT_W": 8,
+      "LANES": 16,
+      "NUM_EXPERTS": 1,
+      "REPORT_SATURATION_RISK": 1,
+      "WEIGHT_W": 4
+    },
+    "place_density": 0.6,
+    "primary_vt": "RVT",
+    "sources": {
+      "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c"
+    },
+    "temperature_c": 0,
+    "top": "ot_numeric_dot",
+    "voltage_v": 0.7
+  },
+  "claim_boundary": [
+    "ASAP7 is a predictive research PDK and is not tied to a foundry.",
+    "The three cases contain no ROM or SRAM macro; bundled ASAP7 FakeRAM collateral is forbidden and unused.",
+    "The numeric cases implement signed integer DV only, not OpenTallas target MXFP4 x FP8, FP8 x FP8, BF16, or FP32 arithmetic.",
+    "Passing results constrain public digital-cell and routed-wire plausibility only; they do not validate target ROM density, energy, sense margin, power delivery, package, HBM, yield, or manufacturability.",
+    "The reported TC model is the ASAP7 library's nominal model condition and has no calibrated error bar against TSMC N7 or N4."
+  ],
+  "copied_artifacts": {
+    "1_2_yosys.raw.v": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/1_2_yosys.raw.v",
+      "sha256": "598df32ecf73fa1a1545a04e7385c2e040d75db3f4dc95bf61cebada78061aa0",
+      "size_bytes": 1180137
+    },
+    "5_route_drc.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/5_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "6_finish.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/6_finish.rpt",
+      "sha256": "dab5eee44bd8ca9a6852415cc4a1fcdd498895d898bf58a80e525af9d062b4f6",
+      "size_bytes": 61571
+    },
+    "config.mk": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/config.mk",
+      "sha256": "3ec2411c81bba88d196ae00be94dde59e1a8d8423bceb90afd73c655e8b04cb6",
+      "size_bytes": 767
+    },
+    "constraint.sdc": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/constraint.sdc",
+      "sha256": "dcaec96632f667e999e495de2d72c360854f36be10de46154623cf8388f1dd36",
+      "size_bytes": 379
+    },
+    "equivalence_mapped_abc_cec.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_abc_cec.log",
+      "sha256": "696c8662d13a273c951ff51e8c2dd0e9d35c299afd01fd87ce921faf55a630ce",
+      "size_bytes": 146
+    },
+    "equivalence_mapped_gate.aag": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gate.aag",
+      "sha256": "f03ad4f27644a98d5219d3b1e545027c5058608e8410650347a09df9da5545a0",
+      "size_bytes": 105998
+    },
+    "equivalence_mapped_gate.aig": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gate.aig",
+      "sha256": "03f32d3678934deb65148e0d848e2611322a8bb02f58f085a40430f8f0cd4090",
+      "size_bytes": 21426
+    },
+    "equivalence_mapped_gate.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gate.log",
+      "sha256": "4c66110fe2b9e6564db8c02fef682bda2213948421775256ede6369d69b98c68",
+      "size_bytes": 76532
+    },
+    "equivalence_mapped_gate.ys": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gate.ys",
+      "sha256": "0f2759cac5da974afc85f3e0355a91ea067a3ce581ff66343b0fb31c5990d504",
+      "size_bytes": 1605
+    },
+    "equivalence_mapped_gate_state.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gate_state.json",
+      "sha256": "3027590377b0cc2bc7bc1ab38b14d3e0ca53b1f578ceb28a6e2863697abbe436",
+      "size_bytes": 1489
+    },
+    "equivalence_mapped_gold.aag": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gold.aag",
+      "sha256": "fe633345d1e564a16771114934221da18f41c113f3e374287c85d22250fcb4da",
+      "size_bytes": 84373
+    },
+    "equivalence_mapped_gold.aig": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gold.aig",
+      "sha256": "32706bd30cdf26e1f3959ee0b78aa60cdc339020a5d67799cb18fc41b3354720",
+      "size_bytes": 17971
+    },
+    "equivalence_mapped_gold.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gold.log",
+      "sha256": "52a3639bf55ed67ad40327ab7b7f6a916a36d082d632fdb736a5c2c073001f03",
+      "size_bytes": 26571
+    },
+    "equivalence_mapped_gold.ys": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gold.ys",
+      "sha256": "cd4bd7d593ca5bdddcae738ea4e2416761b5bab680c9f66a3cfd2e33ce5a0608",
+      "size_bytes": 961
+    },
+    "equivalence_mapped_gold_state.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/equivalence_mapped_gold_state.json",
+      "sha256": "2a3110a67296c8fe3d4577a2658f37955b2e3b9030f3088eed6ba46eaf41a8f6",
+      "size_bytes": 1583
+    },
+    "metadata.json": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/metadata.json",
+      "sha256": "1383c399724a87187c85a522164fe318180ae6c1f0042a264a82568f1d53167a",
+      "size_bytes": 23746
+    },
+    "openroad_flow.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/openroad_flow.log",
+      "sha256": "b5599d86bed42d46da50d990e5ea3ef8c925e0113fcb1c8a8736218b7d5b59e7",
+      "size_bytes": 160027
+    },
+    "openroad_synthesis.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/openroad_synthesis.log",
+      "sha256": "70ccd444f67e675f50b143e6bfea6f01af368a2cb0ab12a0c13820d89fc45181",
+      "size_bytes": 17506
+    },
+    "unconstrained_check.log": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "unconstrained_check.tcl": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/unconstrained_check.tcl",
+      "sha256": "7c67f723525cae06ec46fb636c4f1d33c0c40636108b31e7f298211d87ea66a3",
+      "size_bytes": 839
+    },
+    "unconstrained_endpoints.rpt": {
+      "path": "results/asap7_physical/diagnostics/numeric_e1_l16_tc/1p25ns/artifacts/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "final_artifact_manifests": {
+    "6_final.def": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.def",
+      "sha256": "1e35b34fd3d80955ff0a9f94175750d9612707dbdad2a97a90df045c5cd95d63",
+      "size_bytes": 5759667
+    },
+    "6_final.gds": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.gds",
+      "sha256": "b09bc991d67a37a6ae7e17c36a789da533ec310c59aac6dc392518ae4f87a9ab",
+      "size_bytes": 6690830
+    },
+    "6_final.odb": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.odb",
+      "sha256": "9d84e20d4d96cafd8d93fdf1d65b977627f17732f3c3ae10e799f1da9df3b238",
+      "size_bytes": 12050812
+    },
+    "6_final.sdc": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.sdc",
+      "sha256": "cb569b99523ddb2c82d1e15c7b789957f5ccdfcaa15fc805f0fd05d1e7d23d33",
+      "size_bytes": 25122
+    },
+    "6_final.spef": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.spef",
+      "sha256": "725dd61a4250bb9a129543bf077ccc8e52c0122aefbccfd86878cbfdf5b2d18a",
+      "size_bytes": 5135043
+    },
+    "6_final.v": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.v",
+      "sha256": "e02195e35d69d89777e3872805d9fd83f500b6298d1fdc28442a68bc8c5de681",
+      "size_bytes": 689040
+    }
+  },
+  "generated_at": "2026-08-28T09:43:15+00:00",
+  "git": {
+    "dirty_paths": [
+      " M Makefile",
+      " M README.md",
+      " M configs/hardware/architectures.json",
+      " M configs/models/deepseek-v4-flash-0731.json",
+      " M configs/models/deepseek-v4-pro-0813.json",
+      " M configs/models/kimi-k3.json",
+      " M configs/models/qwen3-8b.json",
+      " M data/inventory/deepseek-v4-flash-0731.json",
+      " M data/inventory/deepseek-v4-pro-0813.json",
+      " M decide.py",
+      " M docs/ASSUMPTIONS.md",
+      " M docs/SOURCES.md",
+      " M results/DECISION.md",
+      " M results/sensitivity/REPORT.md",
+      " M results/sensitivity/claim-audit.json",
+      " M results/sensitivity/tornado.csv",
+      " M results/standard/QWEN3_8B_ADDENDUM.md",
+      " M results/standard/REPORT.md",
+      " M results/standard/analytical.json",
+      " M results/standard/sweep.csv",
+      " M rom-inference-brief.md",
+      " M rom-inference-program-plan.md",
+      " M run.py",
+      " M spec/ARCHITECTURE.md",
+      " M spec/ARCHITECTURE_REVIEW.md",
+      " M spec/CHANGE_CONTROL.md",
+      " M spec/CLOCK_RESET_POWER.md",
+      " M spec/FIRMWARE_COMPILER.md",
+      " M spec/FLOORPLAN_PPA.md",
+      " M spec/RAS_REPAIR_DFT.md",
+      " M spec/README.md",
+      " M spec/SYSTEM_REQUIREMENTS.md",
+      " M spec/TRACEABILITY.md",
+      " M spec/VERIFICATION_PLAN.md",
+      " M spec/budgets.json",
+      " M spec/manifest.json",
+      " M spec/requirements.json",
+      " M spec/verification.json",
+      " M spice/Makefile",
+      " M spice/README.md",
+      " M src/opentallas/analytical.py",
+      " M src/opentallas/config.py",
+      " M src/opentallas/noc.py",
+      " M src/opentallas/profiling.py",
+      " M src/opentallas/schema.py",
+      " M tests/test_analytical.py",
+      " M tests/test_noc.py",
+      " M tests/test_spec.py",
+      " M tests/test_standard.py",
+      " M tests/test_workload.py",
+      " M tools/check_spec.py",
+      " M tornado.py",
+      "?? configs/hardware/leading_node_market.json",
+      "?? configs/hardware/n7_architecture_attribution.json",
+      "?? configs/hardware/technology_inputs.json",
+      "?? configs/pdk/asap7_physical_lock.json",
+      "?? configs/pdk/ihp_sg13g2_physical_lock.json",
+      "?? configs/pdk/sky130_physical_lock.json",
+      "?? docs/ASAP7_PHYSICAL.md",
+      "?? docs/METHODOLOGY.md",
+      "?? docs/OPEN_PDK_SELECTION.md",
+      "?? results/PRE_NDA_READINESS.md",
+      "?? results/REQUIREMENT_AUDIT.md",
+      "?? results/iso-node/leading_node_market/REPORT.md",
+      "?? results/iso-node/leading_node_market/analytical.json",
+      "?? results/iso-node/leading_node_market/sweep.csv",
+      "?? results/iso-node/n7_architecture_attribution/REPORT.md",
+      "?? results/iso-node/n7_architecture_attribution/analytical.json",
+      "?? results/iso-node/n7_architecture_attribution/sweep.csv",
+      "?? results/model-traffic/REPORT.md",
+      "?? results/model-traffic/analytical.json",
+      "?? results/model-traffic/sweep.csv",
+      "?? results/rtl/IMPLEMENTATION_STATUS.md",
+      "?? results/spice/IHP_SG13G2_EXTRACTED_PVT_REPORT.md",
+      "?? results/spice/ROM_READ_REPORT.md",
+      "?? results/spice/SKY130_EXTRACTED_MISMATCH_REPORT.md",
+      "?? results/spice/SKY130_EXTRACTED_PVT_REPORT.md",
+      "?? results/spice/ihp_device_smoke/REPORT.md",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_primary_mosvar.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_primary_psp103.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_primary_psp103_nqs.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_primary_r3_cmc.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_replay_mosvar.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_replay_psp103.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_replay_psp103_nqs.log",
+      "?? results/spice/ihp_device_smoke/artifacts/compile_replay_r3_cmc.log",
+      "?? results/spice/ihp_device_smoke/artifacts/ngspice_device_smoke.log",
+      "?? results/spice/ihp_device_smoke/device_smoke.json",
+      "?? results/spice/ihp_sg13g2_extracted_pvt.json",
+      "?? results/spice/ihp_sg13g2_physical/REPORT.md",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.ext",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.extracted.spice",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.gds",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.mag",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.pex.spice",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/lvs.log",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/magic.log",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/netgen.stdout",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_nmos_3CGW2K.ext",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_nmos_3CGW2K.mag",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_pmos_GBCT8S.ext",
+      "?? results/spice/ihp_sg13g2_physical/artifacts/sg13_lv_pmos_GBCT8S.mag",
+      "?? results/spice/ihp_sg13g2_physical/physical.json",
+      "?? results/spice/sky130_extracted_mismatch.json",
+      "?? results/spice/sky130_extracted_pvt.json",
+      "?? results/spice/sky130_physical/REPORT.md",
+      "?? results/spice/sky130_physical/artifacts/lvs.log",
+      "?? results/spice/sky130_physical/artifacts/magic.log",
+      "?? results/spice/sky130_physical/artifacts/netgen.stdout",
+      "?? results/spice/sky130_physical/artifacts/sky130_fd_pr__nfet_01v8_MJJGZY.ext",
+      "?? results/spice/sky130_physical/artifacts/sky130_fd_pr__nfet_01v8_MJJGZY.mag",
+      "?? results/spice/sky130_physical/artifacts/sky130_fd_pr__pfet_01v8_WWEVP9.ext",
+      "?? results/spice/sky130_physical/artifacts/sky130_fd_pr__pfet_01v8_WWEVP9.mag",
+      "?? results/spice/sky130_physical/artifacts/sky130_rom_slice.ext",
+      "?? results/spice/sky130_physical/artifacts/sky130_rom_slice.extracted.spice",
+      "?? results/spice/sky130_physical/artifacts/sky130_rom_slice.gds",
+      "?? results/spice/sky130_physical/artifacts/sky130_rom_slice.mag",
+      "?? results/spice/sky130_physical/artifacts/sky130_rom_slice.pex.spice",
+      "?? results/spice/sky130_physical/physical.json",
+      "?? results/spice/sky130_resistance/REPORT.md",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.primary.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.primary.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.primary.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.primary.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.primary.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.replay.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.replay.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.replay.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.replay.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_high_c.replay.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.primary.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.primary.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.primary.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.primary.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.primary.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.replay.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.replay.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.replay.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.replay.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/high_r_low_c.replay.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.primary.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.primary.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.primary.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.primary.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.primary.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.replay.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.replay.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.replay.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.replay.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_high_c.replay.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.primary.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.primary.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.primary.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.primary.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.primary.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.replay.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.replay.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.replay.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.replay.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/low_r_low_c.replay.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/nominal.primary.ext",
+      "?? results/spice/sky130_resistance/artifacts/nominal.primary.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/nominal.primary.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/nominal.primary.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/nominal.primary.res.lump",
+      "?? results/spice/sky130_resistance/artifacts/nominal.replay.ext",
+      "?? results/spice/sky130_resistance/artifacts/nominal.replay.magic.log",
+      "?? results/spice/sky130_resistance/artifacts/nominal.replay.rc.pex.spice",
+      "?? results/spice/sky130_resistance/artifacts/nominal.replay.res.ext",
+      "?? results/spice/sky130_resistance/artifacts/nominal.replay.res.lump",
+      "?? results/spice/sky130_resistance/resistance.json",
+      "?? results/spice/sky130_rom_read.json",
+      "?? results/standard/DECISION_LEGACY.md",
+      "?? sm01.aig",
+      "?? spec/implementation_proxy.json",
+      "?? spice/ihp_sg13g2/device_smoke/.spiceinit",
+      "?? spice/ihp_sg13g2/device_smoke/device_smoke.spice",
+      "?? spice/ihp_sg13g2/device_smoke/device_smoke_contract.json",
+      "?? spice/ihp_sg13g2/rom_slice/extract_resistance.tcl",
+      "?? spice/ihp_sg13g2/rom_slice/extracted_pvt_contract.json",
+      "?? spice/ihp_sg13g2/rom_slice/extracted_testbench.spice.in",
+      "?? spice/ihp_sg13g2/rom_slice/generate_layout.tcl",
+      "?? spice/ihp_sg13g2/rom_slice/physical_contract.json",
+      "?? spice/ihp_sg13g2/rom_slice/resistance_contract.json",
+      "?? spice/ihp_sg13g2/rom_slice/schematic.spice",
+      "?? spice/run_sky130_rom_read.py",
+      "?? spice/sky130_rom_read_contract.json",
+      "?? spice/sky130_rom_slice/extract_resistance.tcl",
+      "?? spice/sky130_rom_slice/extracted_mismatch_contract.json",
+      "?? spice/sky130_rom_slice/extracted_pvt_contract.json",
+      "?? spice/sky130_rom_slice/extracted_testbench.spice.in",
+      "?? spice/sky130_rom_slice/generate_layout.tcl",
+      "?? spice/sky130_rom_slice/physical_contract.json",
+      "?? spice/sky130_rom_slice/resistance_contract.json",
+      "?? spice/sky130_rom_slice/schematic.spice",
+      "?? src/opentallas/deployment.py",
+      "?? src/opentallas/operations.py",
+      "?? src/opentallas/technology.py",
+      "?? tests/test_asap7_physical.py",
+      "?? tests/test_deployment.py",
+      "?? tests/test_iso_node_studies.py",
+      "?? tests/test_model_traffic_screen.py",
+      "?? tests/test_operations.py",
+      "?? tests/test_spice_evidence.py",
+      "?? tests/test_technology.py",
+      "?? tools/bootstrap_ihp_model_tools.sh",
+      "?? tools/bootstrap_ihp_pdk.sh",
+      "?? tools/bootstrap_sky130_pdk.sh",
+      "?? tools/bootstrap_sky130_physical_tools.sh",
+      "?? tools/build_iso_node_studies.py",
+      "?? tools/patches/openvaf-23.5.0-target-cpu.patch",
+      "?? tools/rtl_implementation_campaign.py",
+      "?? tools/run_asap7_physical.py",
+      "?? tools/run_ihp_device_smoke.py",
+      "?? tools/run_ihp_extracted_pvt.py",
+      "?? tools/run_ihp_physical.py",
+      "?? tools/run_ihp_resistance.py",
+      "?? tools/run_iso_node_studies.py",
+      "?? tools/run_model_traffic_screen.py",
+      "?? tools/run_sky130_extracted_mismatch.py",
+      "?? tools/run_sky130_extracted_pvt.py",
+      "?? tools/run_sky130_physical.py",
+      "?? tools/run_sky130_resistance.py",
+      "?? tools/verify_ihp_pdk.py",
+      "?? tools/verify_sky130_pdk.py"
+    ],
+    "head": "0934214398127a6dd383bd9888c9ca54f72f366e",
+    "selected_sources": [
+      "rtl/ot_numeric_dot.sv"
+    ],
+    "selected_sources_match_index": true,
+    "worktree_clean": false
+  },
+  "lock": {
+    "path": "configs/pdk/asap7_physical_lock.json",
+    "sha256": "4267c160c80202a8182531b8e233db8d1016d68a6bcd9baa646286d8dd463689",
+    "size_bytes": 8331
+  },
+  "metrics": {
+    "antenna_violating_nets": 0.0,
+    "antenna_violating_pins": 0.0,
+    "clock_count": 1.0,
+    "clock_period_ns": 1.25,
+    "core_area_um2": 1644.62,
+    "die_area_um2": 1996.3,
+    "drc_errors": 0.0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_hz": 296614000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0.0,
+    "hold_wns_ns": 0.202679,
+    "raw_timing_ps": {
+      "hold_tns_ns": 0.0,
+      "hold_wns_ns": 202.679,
+      "setup_tns_ns": -50084.5,
+      "setup_wns_ns": -2121.38
+    },
+    "sdc_clock_period_ps": 1250.0,
+    "setup_tns_ns": -50.0845,
+    "setup_violations": 31.0,
+    "setup_wns_ns": -2.1213800000000003,
+    "standard_cell_area_um2": 734.876,
+    "utilization_fraction": 0.446835,
+    "vias": 47712.0,
+    "wirelength_um": 11170.0
+  },
+  "runner": {
+    "path": "tools/run_asap7_physical.py",
+    "sha256": "5c8cc66bd9fb362594705323ce3570fc4e97c03ff1368d9054cf8032b39b8acc",
+    "size_bytes": 78525
+  },
+  "schema_version": 1,
+  "source_inventory": [
+    {
+      "path": "rtl/ot_numeric_dot.sv",
+      "sha256": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+      "size_bytes": 3914
+    }
+  ],
+  "status": "fail",
+  "unconstrained_endpoint_audit": {
+    "acceptance_max": 0,
+    "artifact": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "log": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "script": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_check.tcl",
+      "sha256": "7c67f723525cae06ec46fb636c4f1d33c0c40636108b31e7f298211d87ea66a3",
+      "size_bytes": 839
+    },
+    "status": "pass",
+    "unconstrained_endpoint_report_lines": 0
+  }
+}

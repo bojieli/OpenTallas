@@ -1,0 +1,3153 @@
+{
+  "aggregate_accounting_bytes": 9969444,
+  "all_actual_events_retained": true,
+  "all_source_lifecycles_drained": true,
+  "archive_SHA256": "88d46d0aa2fcdaddb87f733911701f0de7ce8d89d16ccaeb6026f27c5f8b6f50",
+  "compact_files_bytes": 6726624,
+  "events": 285184,
+  "extent_admission_from_sample_ratio": false,
+  "files": {
+    "00000000.events": {
+      "bytes": 34576,
+      "sha256": "a4a4ef8089101ba42bfc567b6925e125ac60e3724f414f2fa28b5bd71f7e65b8"
+    },
+    "00000000.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000001.events": {
+      "bytes": 34576,
+      "sha256": "510b02a4658f3787e0b9df6cf711149590c320dd2c238ccb5c279272a54854aa"
+    },
+    "00000001.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000002.events": {
+      "bytes": 34576,
+      "sha256": "788d872dfb3482bf705a69dd2de87729bf103a154a17820dede4d43aa7fb3f3d"
+    },
+    "00000002.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000003.events": {
+      "bytes": 34576,
+      "sha256": "22197fb86d4b81d1bfea850ca1fb94cc5e8a10eef7a9138e6e21ff6e321a9e60"
+    },
+    "00000003.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000004.events": {
+      "bytes": 34576,
+      "sha256": "90727d17eb9f925e046cfb96e457a9d315f976618baca06d309c6720f53c93ed"
+    },
+    "00000004.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000005.events": {
+      "bytes": 34576,
+      "sha256": "ace01e3a36e240c48c76fea6c4b38541249fe887738767f92bd777b1b0b7e569"
+    },
+    "00000005.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000006.events": {
+      "bytes": 34576,
+      "sha256": "127557e05b55c8f7eef4cce2a8f395486abc6a5822ff317b01a22c67cbcb973d"
+    },
+    "00000006.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000007.events": {
+      "bytes": 34576,
+      "sha256": "34e71c37c8f94cc4000111546dba181911519359f17deea285761924a4ea5b13"
+    },
+    "00000007.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000008.events": {
+      "bytes": 34576,
+      "sha256": "1eef6900393284c11eb106d212b28f941b0ed4e5dc591a9d33df958c534dcc3d"
+    },
+    "00000008.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000009.events": {
+      "bytes": 34576,
+      "sha256": "3009f65f19a24f4a713352901acba948e368572cb819ec769d130b551290853c"
+    },
+    "00000009.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000010.events": {
+      "bytes": 34576,
+      "sha256": "c86ac4cdaaad0b8ea41f78097185678f4b094ad754ab9fe39260c164ad9a971c"
+    },
+    "00000010.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000011.events": {
+      "bytes": 34576,
+      "sha256": "1dc6931d99d177dd47a61265aef22956cbf5e28a30e2a7fafde914ee2960ba98"
+    },
+    "00000011.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000012.events": {
+      "bytes": 34576,
+      "sha256": "862d11722249c6832be416c1bdc123dd9ba051da5712b46e7b755e7b9cc109c3"
+    },
+    "00000012.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000013.events": {
+      "bytes": 34576,
+      "sha256": "35df1c809e3348df0877f1c53d3f89bd040cf62d6bb978456a93daa89dcbb63e"
+    },
+    "00000013.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000014.events": {
+      "bytes": 34576,
+      "sha256": "da7c65040b211844572d7f48d435df45c9102d39e5d5366d315b683dfa36ea1f"
+    },
+    "00000014.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000015.events": {
+      "bytes": 34576,
+      "sha256": "7eaccc6f513ff2cfc3acff82e9188de27ddb86aac2e4d1bf1e50d702438945c4"
+    },
+    "00000015.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000016.events": {
+      "bytes": 34576,
+      "sha256": "014ff9903023eb660b1e97f97f18eb09aaf119f821cbd5413f7ffb19088b51c4"
+    },
+    "00000016.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000017.events": {
+      "bytes": 34576,
+      "sha256": "8d996f4f5be071bd5fb935adc9863a1f1c7f3ecce4485e3e055431a04318881f"
+    },
+    "00000017.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000018.events": {
+      "bytes": 34576,
+      "sha256": "31907fa3c17f9f0c22d401ab6c2cfeef586218fa970cbbaa6ddcc388c5515f6c"
+    },
+    "00000018.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000019.events": {
+      "bytes": 34576,
+      "sha256": "8a85caaa151372b871f807ed908b8494a62f1556ae2c0262787134eabe87bce0"
+    },
+    "00000019.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000020.events": {
+      "bytes": 34576,
+      "sha256": "3b6ab29457c1ed34867ba6f25ab2237276ffc969bca3f73781bce2986d8d2cfb"
+    },
+    "00000020.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000021.events": {
+      "bytes": 34576,
+      "sha256": "2bbd859cff63ee02c9014fc4e00b45660ef08e37befedbf589e5898f04b48088"
+    },
+    "00000021.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000022.events": {
+      "bytes": 34576,
+      "sha256": "aa934dec0c0f8f9a5bc63e6b682aea386141f2136040642d025ae675a47e701b"
+    },
+    "00000022.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000023.events": {
+      "bytes": 34576,
+      "sha256": "7c8c81926ec0a9820e3166479905c60ed13c8347176118d982eee652ed6850d7"
+    },
+    "00000023.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000024.events": {
+      "bytes": 34576,
+      "sha256": "9d12c2622bbf4d87af59f5998faceb06ec851ca9087e1efd65d41326da5c9138"
+    },
+    "00000024.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000025.events": {
+      "bytes": 34576,
+      "sha256": "0f2da62d528428a19f9e512534f174101f426068668786a26d65e72a051dcb95"
+    },
+    "00000025.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000026.events": {
+      "bytes": 34576,
+      "sha256": "4cf93fd8c92a7603bd23c6a349ec5fd27006c7bbcbd8d92842c10e4f7fcf0146"
+    },
+    "00000026.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000027.events": {
+      "bytes": 34576,
+      "sha256": "95b6b53c05ae41edea01ffcffe0460c50045002e116fd5f997f4c4c8c9998404"
+    },
+    "00000027.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000028.events": {
+      "bytes": 34576,
+      "sha256": "79225958a7761680921f86b90759d5a81b1915a1e23cab23c317bf9cc7668e58"
+    },
+    "00000028.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000029.events": {
+      "bytes": 34576,
+      "sha256": "1be4afc33ded5acf4fdfd278476eb9ab4343852d54e6068acd8dfbbed107f189"
+    },
+    "00000029.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000030.events": {
+      "bytes": 34576,
+      "sha256": "4c44d4fd8e8913c32ce83b202ae8bd9a88d2f3f8e162ede60bd25b496c885ff6"
+    },
+    "00000030.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000031.events": {
+      "bytes": 34576,
+      "sha256": "890d11cb21872dd99e12bb88efb7bd346ad62b9ea6ae6dfaa603ad4914ddcd98"
+    },
+    "00000031.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000032.events": {
+      "bytes": 34576,
+      "sha256": "2d96f4f2d29aaf1eec6a9ec3d8dc1bcbbdc9ba0b9d567e5470e0ae090034b816"
+    },
+    "00000032.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000033.events": {
+      "bytes": 34576,
+      "sha256": "7bdad61345145d3741d367a360fddf01649c3c0b0d02f0020d984d27e1fe7be6"
+    },
+    "00000033.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000034.events": {
+      "bytes": 34576,
+      "sha256": "46a5711273f40ea128f5d6989a12f5b5af2026c69d19520f1af456bf64c776d5"
+    },
+    "00000034.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000035.events": {
+      "bytes": 34576,
+      "sha256": "54c4a4d26f049450e5960309906027fdadacba92ad4c69951a9a663c9701c889"
+    },
+    "00000035.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000036.events": {
+      "bytes": 34576,
+      "sha256": "9d48880260405f73c4373a0c23c1c67a2d11b2da51d832c3e2873bf53a1ff15e"
+    },
+    "00000036.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000037.events": {
+      "bytes": 34576,
+      "sha256": "8f18fada50f5f9ed52a1da49528f18f206cbd26c47c54ccbc49ba682fe6addee"
+    },
+    "00000037.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000038.events": {
+      "bytes": 34576,
+      "sha256": "a80646f1dd08688b5bc96f9ddba0d8a72de8a15b56f4b6ef67b4c1fe305b1f34"
+    },
+    "00000038.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000039.events": {
+      "bytes": 34576,
+      "sha256": "ed2f55f7f2774a464af31a926bd3031f067f533a53ccfdc9181906bb79737eb9"
+    },
+    "00000039.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000040.events": {
+      "bytes": 34576,
+      "sha256": "6f8dc1041edb6753369c76d624c70db32422ab2b6f3211026c6055ae408749a4"
+    },
+    "00000040.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000041.events": {
+      "bytes": 34576,
+      "sha256": "e51a61e92a7f6d995cfaa988bc7f912cc246d7e49dbbfcb6c479551f810144ed"
+    },
+    "00000041.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000042.events": {
+      "bytes": 34576,
+      "sha256": "b56fa2ac90455a4184b8c4bac21cbb6e240cdd8071afa67b91c5931382925030"
+    },
+    "00000042.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000043.events": {
+      "bytes": 34576,
+      "sha256": "3d1d7c1c0a92a806704952c529753cb49bc044b1e47cd6a5c4a595a2343a247c"
+    },
+    "00000043.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000044.events": {
+      "bytes": 34576,
+      "sha256": "d9dfb075ae947ff8b0949c901dd4b8f4b875fe1c171eabe0bc4950d210cc093c"
+    },
+    "00000044.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000045.events": {
+      "bytes": 34576,
+      "sha256": "9c59382db483616941361a40a71eeb506f6e89fe212ddb928634afd977900c5a"
+    },
+    "00000045.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000046.events": {
+      "bytes": 34576,
+      "sha256": "6499d26a546a1f078856bc3a51025530b8342c6b1166e91c802b3de69b8c6822"
+    },
+    "00000046.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000047.events": {
+      "bytes": 34576,
+      "sha256": "d4c2820ee543325d430213279d7be4164320d6243052eb9676d56507f0a8c1f6"
+    },
+    "00000047.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000048.events": {
+      "bytes": 34576,
+      "sha256": "d5d8d47ed247c638f8f19b6f4f5456825413f8c78a319f8398ad3d9af3b0a123"
+    },
+    "00000048.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000049.events": {
+      "bytes": 34576,
+      "sha256": "7258822a28d960c5af9646e13f2164c41ea10397e66a6be54731900db6363841"
+    },
+    "00000049.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000050.events": {
+      "bytes": 34576,
+      "sha256": "cdb64c93624db1d2a9688f4f21f9163ad47c2fb2781cb628c2f24b78b7c5efd5"
+    },
+    "00000050.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000051.events": {
+      "bytes": 34576,
+      "sha256": "8d84274797f70a95c130e63526396827b85b84c7b67fd83405a7ff2bbcdf8e14"
+    },
+    "00000051.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000052.events": {
+      "bytes": 34576,
+      "sha256": "a52a8d4c831f7699fe1b68a08c2c261e4d07c176cada02227b331ae5023d6821"
+    },
+    "00000052.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000053.events": {
+      "bytes": 34576,
+      "sha256": "a30a749d51bbd558163585e133e3842e04cdf2adaf977eed5cbc09bb0139740d"
+    },
+    "00000053.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000054.events": {
+      "bytes": 34576,
+      "sha256": "c6904c3b78b1b543b0c1f3d22f3693fb92214b33b77a2640b3354fd0be9c64a6"
+    },
+    "00000054.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000055.events": {
+      "bytes": 34576,
+      "sha256": "edb75c996eb1b89b58912ec0d7da0c599595404d6f2e6d764a1c2a8ab3bc3e42"
+    },
+    "00000055.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000056.events": {
+      "bytes": 34576,
+      "sha256": "3cc02279627bc2e2dbd918441cda1539402dfe3548275c81d7a7d8ba730387c9"
+    },
+    "00000056.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000057.events": {
+      "bytes": 34576,
+      "sha256": "ade761494f41a4503b53587822781302a290bc5ad6b725c1063928dc58281098"
+    },
+    "00000057.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000058.events": {
+      "bytes": 34576,
+      "sha256": "948a459f403815db8be11aaf2425a4dbce3c7b085d6c6f0a56daa01daf4f9ca5"
+    },
+    "00000058.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000059.events": {
+      "bytes": 34576,
+      "sha256": "fda1fe0a477ef37ad2e9226d1ad0e7cf9ea4e053266291c2344a191dae216fdf"
+    },
+    "00000059.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000060.events": {
+      "bytes": 34576,
+      "sha256": "00b547dc9a75905b5e4d2b43c3ec87b32cd6eca6eac25f7433f8d414d4c938ef"
+    },
+    "00000060.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000061.events": {
+      "bytes": 34576,
+      "sha256": "2d7a475ae1ff33ee2a99f3979eb2523b6f37cb358bdc4b68be2a02e70d18aeed"
+    },
+    "00000061.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000062.events": {
+      "bytes": 34576,
+      "sha256": "07ee3889e83bad9b7225d4ca105c0a95d1c3657590f95466e2a41089872ac5e9"
+    },
+    "00000062.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000063.events": {
+      "bytes": 34576,
+      "sha256": "af0dbd63b2f018ad86c16ec091ccace4c9e4174ee4efd1d436fd669652912b30"
+    },
+    "00000063.index": {
+      "bytes": 240,
+      "sha256": "4c2067babb85936bd66d23ef8a485527f7fb8ef1060ac3ae930645e08fcb7f09"
+    },
+    "00000064.events": {
+      "bytes": 23440,
+      "sha256": "00e32f7907bebf8b7d4742fd292428118d577f649937dd935d1dcaebc4d275e9"
+    },
+    "00000064.index": {
+      "bytes": 64,
+      "sha256": "4efa9949091ff74e930c5506d31c3a7bff085d4b1201c161e4906ae81e0da3e3"
+    },
+    "00000065.events": {
+      "bytes": 96695,
+      "sha256": "10285df16eb5434649485ce7891bff929e31eb355eb36c137ab06155a08faa8e"
+    },
+    "00000065.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000066.events": {
+      "bytes": 96695,
+      "sha256": "a04fd7c3cb6f76f40756c27389cf45fa4403bccd4238dc943a574f76c50a261c"
+    },
+    "00000066.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000067.events": {
+      "bytes": 96695,
+      "sha256": "6f5ebf462419ed37e368fc785acaf1d6dba970308dff0e0ead1878310fc58f93"
+    },
+    "00000067.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000068.events": {
+      "bytes": 96695,
+      "sha256": "463d0364c548074a3e7960e4b6c9dc1a908617466cc13ec99b560b5cc9ca229c"
+    },
+    "00000068.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000069.events": {
+      "bytes": 96695,
+      "sha256": "754c24e33f920c8ab3772100b0cac8a76995acfd39117db8417c52909bf69b91"
+    },
+    "00000069.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000070.events": {
+      "bytes": 96695,
+      "sha256": "944d618e377e7f417b10f34e6914f7963359e8f8a46a79d04e5619926244258a"
+    },
+    "00000070.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000071.events": {
+      "bytes": 96695,
+      "sha256": "d98410b48d2d0e22b7cfcee101b128ba3aeabe1fd365f7d654edc52b6313a06f"
+    },
+    "00000071.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000072.events": {
+      "bytes": 96695,
+      "sha256": "8f2a78c005d9095419ec1c2f51f0409a681e3a927d9b525323c19c3877e423c8"
+    },
+    "00000072.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000073.events": {
+      "bytes": 96695,
+      "sha256": "ccf63fc0dad0b561c3db7afbc15d50624d4ace76488b0f50bc481008e485532e"
+    },
+    "00000073.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000074.events": {
+      "bytes": 96695,
+      "sha256": "bb2f0f5ccab9b5acb513ad0d5f70d91a36b5018241122208263dd445470ddfa4"
+    },
+    "00000074.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000075.events": {
+      "bytes": 96695,
+      "sha256": "a6d742310774804e31ebdf0ceeb8bddda815c7761fdfdd4aac77e032394d3cb3"
+    },
+    "00000075.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000076.events": {
+      "bytes": 96695,
+      "sha256": "a5755845b86b31e7f03a58a18fa4dd8526517729a8aa9f38fb6b2c7cf71a9107"
+    },
+    "00000076.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000077.events": {
+      "bytes": 96695,
+      "sha256": "699b12987a292d013e5230333ebe11bcb671097e95188fbfbad01e41706e6f09"
+    },
+    "00000077.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000078.events": {
+      "bytes": 96695,
+      "sha256": "9ea3cfb1cfc6aa9986e403530dd6fa5b510e9fd6afa5b8c578ead45816716259"
+    },
+    "00000078.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000079.events": {
+      "bytes": 96695,
+      "sha256": "b8d6f46173b079254602730d946bc4c4fed96f23d6154acf7bb56943389bb0d2"
+    },
+    "00000079.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000080.events": {
+      "bytes": 96695,
+      "sha256": "06ac68a876eda097a7dec1d1fa191543735b74b14645a4f370ed6ba252ca6066"
+    },
+    "00000080.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000081.events": {
+      "bytes": 96695,
+      "sha256": "d0609cd6e26ec8563f42769f52b1c7866a448378fc06cb603f59eac604f1a7a0"
+    },
+    "00000081.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000082.events": {
+      "bytes": 96695,
+      "sha256": "19383780132d2ff4a04c6b4e00cec35b74236571012e5345e15e6cb682797189"
+    },
+    "00000082.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000083.events": {
+      "bytes": 96695,
+      "sha256": "59559c0bc127b6be61ee8f7ecdb0ff36706a52fb31393c25bbddd82b23f6c6b1"
+    },
+    "00000083.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000084.events": {
+      "bytes": 96695,
+      "sha256": "030c4d614e7e4f0f35725b01cced68f38699251183e1599ccc1e19f76c6fbb02"
+    },
+    "00000084.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000085.events": {
+      "bytes": 96695,
+      "sha256": "e444da72a50b0b0536fc93fc68a2928399d787db6173530f29be28d3b0114b37"
+    },
+    "00000085.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000086.events": {
+      "bytes": 96695,
+      "sha256": "22657bc1f360acb0964ffcee43d77d46ca22c770f41952d001e0b1bdc7ce7be5"
+    },
+    "00000086.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000087.events": {
+      "bytes": 96695,
+      "sha256": "e7377fc68fdcae493e36bfd46753a5c27304883fb07ed554945471dac4ef923d"
+    },
+    "00000087.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000088.events": {
+      "bytes": 96695,
+      "sha256": "4ee66dd374a84194c37a47bb91e317abaca292f10101864356911b58d4fa82a1"
+    },
+    "00000088.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000089.events": {
+      "bytes": 96695,
+      "sha256": "8dfa72de4bcaa9cd2b81c18457b3546d865e44823a9c393cad7ab75897ea7b8b"
+    },
+    "00000089.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000090.events": {
+      "bytes": 96695,
+      "sha256": "c5707fc4f6eba02e83152fe6da49e01bfc51c8d4e763137ceac7e652913980ac"
+    },
+    "00000090.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000091.events": {
+      "bytes": 96695,
+      "sha256": "5b7b44694aa1a0d9372bf64a7b0fc9cf9627d6d8c7488c34f17a5cbcf529297f"
+    },
+    "00000091.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000092.events": {
+      "bytes": 96695,
+      "sha256": "ba2369c64206eb23f385578f7de3defd8fa2b82ab14e3211c1243a59148b2522"
+    },
+    "00000092.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000093.events": {
+      "bytes": 96695,
+      "sha256": "90a5b50c2a0de0c95f2fc381854000b9f6b6b1dbeb7e820078aa67cdfacdb543"
+    },
+    "00000093.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000094.events": {
+      "bytes": 96695,
+      "sha256": "d474d354924d21541d09a015961d48632443d350ac931c1d77864bf6d0080b89"
+    },
+    "00000094.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000095.events": {
+      "bytes": 96695,
+      "sha256": "fb3b753552712f707c60ccb4aea9d6b827fa639dbb428b667e2e6d44cb3d831a"
+    },
+    "00000095.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000096.events": {
+      "bytes": 96695,
+      "sha256": "fe750b18145b411a9c2a09db9d43aa31ab94d4d0cd65d61161902be42b05c9ef"
+    },
+    "00000096.index": {
+      "bytes": 544,
+      "sha256": "6442142d7bb608a0cd280aaf31c03bbd92df380a86489aaac04af60552a7834e"
+    },
+    "00000097.events": {
+      "bytes": 537008,
+      "sha256": "21e20764a5ee8fa323965acdaf8f8690e12738b5222b338d5ede729b18631fae"
+    },
+    "00000097.index": {
+      "bytes": 2944,
+      "sha256": "8d6af25565aedb5aaa83cd50040e18d32bcb593c8ea0d6c724854f18734d4f07"
+    },
+    "dictionary.sqlite": {
+      "bytes": 823296,
+      "sha256": "100f0fa6d1ba56447f32f64a4ce40fac23f506150c43674abdd2e17b0dda7137"
+    }
+  },
+  "hardware_qualified": false,
+  "journals": [
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "f4bbe0ceb99f3e6ea663da0dbcc33228cf0e70742d735de3a068dde9914c4fe1",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 0,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "f4bbe0ceb99f3e6ea663da0dbcc33228cf0e70742d735de3a068dde9914c4fe1"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "40edc2d9c78baf1e26db7880a997f0019e5375ce70feb0dd507b59bf81af75cf",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 1,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "40edc2d9c78baf1e26db7880a997f0019e5375ce70feb0dd507b59bf81af75cf"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "784aa6ad55111676fa8987c5fae84df4093c8a07c71458c3c0d7af432ae83b0a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 2,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "784aa6ad55111676fa8987c5fae84df4093c8a07c71458c3c0d7af432ae83b0a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "6785d8f28c5a43bdaa2e945fc20aa6e52fd3c256bead520ae908abbe24573750",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 3,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "6785d8f28c5a43bdaa2e945fc20aa6e52fd3c256bead520ae908abbe24573750"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "b73252617f5b87fd1656fe12107bda7a642deb8b442f2c99b95f321a40bcbbce",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 4,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "b73252617f5b87fd1656fe12107bda7a642deb8b442f2c99b95f321a40bcbbce"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "d633a9b37637107665c68c2a50bd5ab5f28820e953e1fbccc825e230284f391d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 5,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "d633a9b37637107665c68c2a50bd5ab5f28820e953e1fbccc825e230284f391d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "36a9c310b5a26d5d653fd05c29859781b8ad0e85806292ccea5ba7cc8f0e59c0",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 6,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "36a9c310b5a26d5d653fd05c29859781b8ad0e85806292ccea5ba7cc8f0e59c0"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "767f31bd81395d2b1a446099052c16128abdfc31bd03fd61ed02601911feacd9",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 7,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "767f31bd81395d2b1a446099052c16128abdfc31bd03fd61ed02601911feacd9"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "0ae8aad197b9c55043afca74d7f74f4113e5fd4d853edc0e5df10cd167fedfa5",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 8,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "0ae8aad197b9c55043afca74d7f74f4113e5fd4d853edc0e5df10cd167fedfa5"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "03807377b9b331f26a7a709c927ac66b169f53afca3f8659d9fa32be1628be0d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 9,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "03807377b9b331f26a7a709c927ac66b169f53afca3f8659d9fa32be1628be0d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "6062d0bccfe16f5dd9cabe207d9f9990e1ee2cb475818304b1c87b19a830f91e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 10,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "6062d0bccfe16f5dd9cabe207d9f9990e1ee2cb475818304b1c87b19a830f91e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "a77a369b917ba3e1dc6f020d9ee493d14abd7638cc44cc7c3eb01596b3155eac",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 11,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "a77a369b917ba3e1dc6f020d9ee493d14abd7638cc44cc7c3eb01596b3155eac"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "58c7ecc93fea93f879e2b464a46fb9b0f919661f962fe6d35f5e52c0f7813bfd",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 12,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "58c7ecc93fea93f879e2b464a46fb9b0f919661f962fe6d35f5e52c0f7813bfd"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "847d14c278350e5c67b57df7c5a901a70b8f8e560e322bdb1fafb096f1083f0d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 13,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "847d14c278350e5c67b57df7c5a901a70b8f8e560e322bdb1fafb096f1083f0d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "bdbabf72a26f654337e89a380495ce635f82cda41146f6610d0aec1d742ed0ae",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 14,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "bdbabf72a26f654337e89a380495ce635f82cda41146f6610d0aec1d742ed0ae"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "54c295d2ffc2f8fb5b2193010dd7a5ca3afa0386f0a498bd195409fd68ab7583",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 15,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "54c295d2ffc2f8fb5b2193010dd7a5ca3afa0386f0a498bd195409fd68ab7583"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "45d8fbb293ccc4102e36bf671781f98f910a573400c78fd6dc0d0deb9ed91301",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 16,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "45d8fbb293ccc4102e36bf671781f98f910a573400c78fd6dc0d0deb9ed91301"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "1753d835121b5d7ceda72cb9ccf8e442750c5047c518c78a6ae0f40e579bc26d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 17,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "1753d835121b5d7ceda72cb9ccf8e442750c5047c518c78a6ae0f40e579bc26d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "e0c117ca1be6e813a8e352a02f08ea24bdd4f1054d7be921ba0c2d38f490d280",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 18,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "e0c117ca1be6e813a8e352a02f08ea24bdd4f1054d7be921ba0c2d38f490d280"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "a5fa0e075c2251f0e0ef3a339bdc245921552ec2bf451a728d74f9f8c723181d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 19,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "a5fa0e075c2251f0e0ef3a339bdc245921552ec2bf451a728d74f9f8c723181d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "82f65f2300a8f8261df267396a4c7b9477059a3d63fa7e250491a5dd4c3e7eea",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 20,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "82f65f2300a8f8261df267396a4c7b9477059a3d63fa7e250491a5dd4c3e7eea"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "584f4ddacff07a742829e408aecc561d0e8172d9e024737328e753e00a7a61a4",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 21,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "584f4ddacff07a742829e408aecc561d0e8172d9e024737328e753e00a7a61a4"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "464fe74f4d24ff7ad31d5d63b0b589782e83d3097574c93a8befe56f0ae48441",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 22,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "464fe74f4d24ff7ad31d5d63b0b589782e83d3097574c93a8befe56f0ae48441"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "1f11c3402b24464704832b42f0df35dbff07fdb687c7335ac4f156301502854a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 23,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "1f11c3402b24464704832b42f0df35dbff07fdb687c7335ac4f156301502854a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "5a03fdec00a1f15abb1c9aec7ae124a8eb5b3ef9a1f5f414506e85f1e51ce40c",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 24,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "5a03fdec00a1f15abb1c9aec7ae124a8eb5b3ef9a1f5f414506e85f1e51ce40c"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "cc6298f035e2e98011a6645c4731cb7a7e28e3c90c2a604196f1be8f36d53de8",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 25,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "cc6298f035e2e98011a6645c4731cb7a7e28e3c90c2a604196f1be8f36d53de8"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "8af7db95a439154cd3429092ab6f8c48cdb53fbf9a0722cc04920e27f6844d1a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 26,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "8af7db95a439154cd3429092ab6f8c48cdb53fbf9a0722cc04920e27f6844d1a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "0a3e168c48c9a8d6e51f024577d8a138dc9641185521421673c662d2dbc2f5a5",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 27,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "0a3e168c48c9a8d6e51f024577d8a138dc9641185521421673c662d2dbc2f5a5"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "01fd72ad0c4bfbdee4b59e6be0a3d10c388d6441c2a9cddece620c9637165e7b",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 28,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "01fd72ad0c4bfbdee4b59e6be0a3d10c388d6441c2a9cddece620c9637165e7b"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "1459dfd56eff089a2b1c9c6a4a0a82f9bc533329aa698bd4db5c1b73913b3ec9",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 29,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "1459dfd56eff089a2b1c9c6a4a0a82f9bc533329aa698bd4db5c1b73913b3ec9"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "2bfb4e4b71bd0e5642391fd294d7b65a66e5a378f708ad06f71abc9a8e2e27c6",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 30,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "2bfb4e4b71bd0e5642391fd294d7b65a66e5a378f708ad06f71abc9a8e2e27c6"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "23eacf93e1477e8d9e4484844c86b9469abec25c6ac3cefa48a1bce0b60f67ee",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 31,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "23eacf93e1477e8d9e4484844c86b9469abec25c6ac3cefa48a1bce0b60f67ee"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "7bdeb813cfb12715204b79beb57388fdadded976384ae382fac9c687b6e22c77",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 32,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "7bdeb813cfb12715204b79beb57388fdadded976384ae382fac9c687b6e22c77"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "a83678b9b329b7200497dc91c55c39824bd5c73881e5703609701c3f9e0d3ae7",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 33,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "a83678b9b329b7200497dc91c55c39824bd5c73881e5703609701c3f9e0d3ae7"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "f88205c8ea317cec849351192087c4e2749a3711341497649b17fa7c185e9896",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 34,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "f88205c8ea317cec849351192087c4e2749a3711341497649b17fa7c185e9896"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "4ecfebe626cffdc7bb1f2cb763564c37606feb88401bdc6beb7689456677bcf5",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 35,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "4ecfebe626cffdc7bb1f2cb763564c37606feb88401bdc6beb7689456677bcf5"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "a5d849ca308b97ca848bcd9ddffa9e498ad365e6abd02067b2c3e980fc2d8248",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 36,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "a5d849ca308b97ca848bcd9ddffa9e498ad365e6abd02067b2c3e980fc2d8248"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "e8660ad0aef1201a383d8ed941099cdef8d5ff50c170ea3eb0a8809f0de12c03",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 37,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "e8660ad0aef1201a383d8ed941099cdef8d5ff50c170ea3eb0a8809f0de12c03"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "247e4cb818794736220fdb5e38ca3ab53cd9ac64a644c6726e6dbbc07d7cd71a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 38,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "247e4cb818794736220fdb5e38ca3ab53cd9ac64a644c6726e6dbbc07d7cd71a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "93602a509044e4cff246685cfbad415bd49b801d55c82f227fd5d5e49b821580",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 39,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "93602a509044e4cff246685cfbad415bd49b801d55c82f227fd5d5e49b821580"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "0e9fdf39c4974828b3af4f5bb225fe0720d6ac1937c294413f2adac7cd10852d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 40,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "0e9fdf39c4974828b3af4f5bb225fe0720d6ac1937c294413f2adac7cd10852d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "14e391cb1996447bcdbaf5b030cf1fb51e73e59991d1a25012c0e5efdbf421ac",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 41,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "14e391cb1996447bcdbaf5b030cf1fb51e73e59991d1a25012c0e5efdbf421ac"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "2de06c0253e5ba1465b6fdd8e432c2751bc6a691c1eb2e4cc877da88ba6e30c7",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 42,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "2de06c0253e5ba1465b6fdd8e432c2751bc6a691c1eb2e4cc877da88ba6e30c7"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "f83e1b4a0a9d8f0ca821f9360d5b94e68c2b8b2790ecf93b2e39ac0507f5d040",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 43,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "f83e1b4a0a9d8f0ca821f9360d5b94e68c2b8b2790ecf93b2e39ac0507f5d040"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "249e93680e86e4c2e167f89f84fc1a23352b23c01a9d0d71ef2d16fb91decfba",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 44,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "249e93680e86e4c2e167f89f84fc1a23352b23c01a9d0d71ef2d16fb91decfba"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "be79a92a5ef2ea35da00faa1905c21afd3ab66c80e983ddfe6f422d6bb36f5f9",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 45,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "be79a92a5ef2ea35da00faa1905c21afd3ab66c80e983ddfe6f422d6bb36f5f9"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "6ce449fe3e7103995e9fd3145477b97b750dec4c6dbe91fc1531e3682fa62c86",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 46,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "6ce449fe3e7103995e9fd3145477b97b750dec4c6dbe91fc1531e3682fa62c86"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "237fbedabfae2347b07c5624948bf7c6cc18066056dd04176473317d29c34cf8",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 47,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "237fbedabfae2347b07c5624948bf7c6cc18066056dd04176473317d29c34cf8"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "05a7eb47ed9250d4b46fc6aece6d741365a64a32ab909d60323f9364ca69105f",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 48,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "05a7eb47ed9250d4b46fc6aece6d741365a64a32ab909d60323f9364ca69105f"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "d543798e2ee442de6c30bad00bd58c39fe1a8c15cd3daa0bf4c7442ad619c2c5",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 49,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "d543798e2ee442de6c30bad00bd58c39fe1a8c15cd3daa0bf4c7442ad619c2c5"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "5e6cad223e77b034eb04c9f9f27ab37b35548b59736fa4b2271ab9da1844ff2e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 50,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "5e6cad223e77b034eb04c9f9f27ab37b35548b59736fa4b2271ab9da1844ff2e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "9406a07587441a0fe84bdd9a3b0c7cb41bd9ed1386d83e80a9d7b2e1fdca5bcb",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 51,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "9406a07587441a0fe84bdd9a3b0c7cb41bd9ed1386d83e80a9d7b2e1fdca5bcb"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "2f0de1c1a6f8a5b3dc39a39738075dedbf0f8e8105eb0f8b8005794c83804ef2",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 52,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "2f0de1c1a6f8a5b3dc39a39738075dedbf0f8e8105eb0f8b8005794c83804ef2"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "bdf30a0479a85f8d5a5d07942251bc25743c8637c011f5030f6076b5b414a273",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 53,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "bdf30a0479a85f8d5a5d07942251bc25743c8637c011f5030f6076b5b414a273"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "a9712a914132fc8575741fb3cc8a217290e00f78fb539c1822a476f76c5ae316",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 54,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "a9712a914132fc8575741fb3cc8a217290e00f78fb539c1822a476f76c5ae316"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "4b938927f4d35078e4a2b9dd85569f2904a9e9b866c0a2f91f2441b66a21c049",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 55,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "4b938927f4d35078e4a2b9dd85569f2904a9e9b866c0a2f91f2441b66a21c049"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "8fca0d11024a356cb1ad6d9e4c7230f5f544289c67cd64d0896764e5438fb02e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 56,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "8fca0d11024a356cb1ad6d9e4c7230f5f544289c67cd64d0896764e5438fb02e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "ca45845499f82ed4e0b9d6b3b85cb6d562ac1fd939648e25f2c72965596e549a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 57,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ca45845499f82ed4e0b9d6b3b85cb6d562ac1fd939648e25f2c72965596e549a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "11499be9f5a0f21bcd044f94a0921696186a6422c637608534ed981c5ab79c68",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 58,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "11499be9f5a0f21bcd044f94a0921696186a6422c637608534ed981c5ab79c68"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "707d6ec7e26387a1968de828d7c78b25edcfd48edb025e7fa432e3936c37c63d",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 59,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "707d6ec7e26387a1968de828d7c78b25edcfd48edb025e7fa432e3936c37c63d"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "f6a8451aaf15d4591c4e4dbb5a1551bd6008945040ba0039578ac9669cd56be4",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 60,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "f6a8451aaf15d4591c4e4dbb5a1551bd6008945040ba0039578ac9669cd56be4"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "033521c2c013ff7ad4835dbd4d54be557fd8e764aa97bc2f1682e63fcf72f67e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 61,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "033521c2c013ff7ad4835dbd4d54be557fd8e764aa97bc2f1682e63fcf72f67e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "03a07f6da3a2d6d504a53e7ddaa3a5f3aaf8da18013c66ad45a9798ff07de280",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 62,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "03a07f6da3a2d6d504a53e7ddaa3a5f3aaf8da18013c66ad45a9798ff07de280"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 34576,
+      "event_counts": {
+        "consumer_accept": 256,
+        "request_accept": 256,
+        "reverse_credit_accept": 256,
+        "software_backing_visible": 128,
+        "software_owned_issue": 256,
+        "software_read_capture": 128,
+        "software_service_phases_reserved": 256,
+        "validated_reverse_grant": 256,
+        "write_residence_reserved": 128
+      },
+      "events": 1920,
+      "fault": null,
+      "framed_event_SHA256": "27eeed1d25fdae09c242605d772a77e8779c88a416568e15fb42c65279c7cef1",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 240,
+      "journal_id": 63,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "27eeed1d25fdae09c242605d772a77e8779c88a416568e15fb42c65279c7cef1"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 23440,
+      "event_counts": {
+        "C0_software_source_read_receipt": 512
+      },
+      "events": 512,
+      "fault": null,
+      "framed_event_SHA256": "3646f279166c96fcc9ea04c9f2e2c2c913cdb0b0040552ca8aa864ac708c7120",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 64,
+      "journal_id": 64,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "3646f279166c96fcc9ea04c9f2e2c2c913cdb0b0040552ca8aa864ac708c7120"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "ca9ef5bcebad1785bb9e6517c510080900044b9ebd5bb50decc7022ac0614f14",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 65,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ca9ef5bcebad1785bb9e6517c510080900044b9ebd5bb50decc7022ac0614f14"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "b1cac4e7e60ad48a6b2207dd7a77d899c4a38cc8771a2ae1e45fd14681a68077",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 66,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "b1cac4e7e60ad48a6b2207dd7a77d899c4a38cc8771a2ae1e45fd14681a68077"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "051e93b7d5e6bcde5fd8584fd70d755b1ae670824ade35bf8d96e93938939280",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 67,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "051e93b7d5e6bcde5fd8584fd70d755b1ae670824ade35bf8d96e93938939280"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "e2a3b7514a3cb13de11b6c5a096ed0d6fce664ccb77fae838397a42d1ae2ca68",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 68,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "e2a3b7514a3cb13de11b6c5a096ed0d6fce664ccb77fae838397a42d1ae2ca68"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "5bea2b1bd6558cd2530b0efbe0323d41a5635775c6b594d7d7012e30b14c8533",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 69,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "5bea2b1bd6558cd2530b0efbe0323d41a5635775c6b594d7d7012e30b14c8533"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "53a060e7796899a631e7fc74041f7c89c8d3eef44eb447db0054dd436d567163",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 70,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "53a060e7796899a631e7fc74041f7c89c8d3eef44eb447db0054dd436d567163"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "55c2d95813fc926d481a753e04aab5f61a9694817e06263940de5477a8f91f58",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 71,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "55c2d95813fc926d481a753e04aab5f61a9694817e06263940de5477a8f91f58"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "d4c0624c0ffae49b148cddf18753a7e6f514afec4b816ea2dc707247b9341ee1",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 72,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "d4c0624c0ffae49b148cddf18753a7e6f514afec4b816ea2dc707247b9341ee1"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "1e2846483caa874f45f2653a5eabdb1ef0efd386c0c38fe0ae1f085a8c8ba4c4",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 73,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "1e2846483caa874f45f2653a5eabdb1ef0efd386c0c38fe0ae1f085a8c8ba4c4"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "be87a456839f4b92e97f55bad378efe93171668f5629817a330bce1601633858",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 74,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "be87a456839f4b92e97f55bad378efe93171668f5629817a330bce1601633858"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "349625bd7ac1645d9107ba544cff9fdfd2f3a49293ab8ff8d634a65701ff87fb",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 75,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "349625bd7ac1645d9107ba544cff9fdfd2f3a49293ab8ff8d634a65701ff87fb"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "aff53d6aaf8574161f70c9b76e3eaa7593a4c5265d5fe4cbe1b104141ebd3d14",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 76,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "aff53d6aaf8574161f70c9b76e3eaa7593a4c5265d5fe4cbe1b104141ebd3d14"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "edb303ccc1f86e7936c0ef74f1f1d4dc93aca5d5852434e8ce9e5159a4a95b9b",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 77,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "edb303ccc1f86e7936c0ef74f1f1d4dc93aca5d5852434e8ce9e5159a4a95b9b"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "44950783495eb4358e7fbf2cca607add5172f55e2db14c5c563a5acaccea6bec",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 78,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "44950783495eb4358e7fbf2cca607add5172f55e2db14c5c563a5acaccea6bec"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "4d0b3c0ea962841d1ef15f38eed24f385c72fa8694c2aa062c22b763310a35f9",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 79,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "4d0b3c0ea962841d1ef15f38eed24f385c72fa8694c2aa062c22b763310a35f9"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "5c557a53d286cf6da3f87fd593c34d536ef4bd64275043489348d4972f4c3ae3",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 80,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "5c557a53d286cf6da3f87fd593c34d536ef4bd64275043489348d4972f4c3ae3"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "e6799a63a8bf3d12afde2130fbc372a80b5563dc77c1913074bbb67ad82fac5f",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 81,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "e6799a63a8bf3d12afde2130fbc372a80b5563dc77c1913074bbb67ad82fac5f"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "ab27dbe9153d2979d0fbb679dd6ee16ac64968af9a59f6f962cd2e23d571aa34",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 82,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ab27dbe9153d2979d0fbb679dd6ee16ac64968af9a59f6f962cd2e23d571aa34"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "6f7df132c90376146a40492c3b7d260e7a5204a6de27c7d44a83a8b3515f908f",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 83,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "6f7df132c90376146a40492c3b7d260e7a5204a6de27c7d44a83a8b3515f908f"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "3955091449fb1902ef42604765dc2c025abf890153333a39f58d32d5dca4bbe3",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 84,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "3955091449fb1902ef42604765dc2c025abf890153333a39f58d32d5dca4bbe3"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "9e70759c3c6c52c9588eedc8c140641418140438e6a672aab532a49e140ef82e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 85,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "9e70759c3c6c52c9588eedc8c140641418140438e6a672aab532a49e140ef82e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "4296b2b4acfd809ee292737e39382240fb5bc713cd418292b6166e1f2dbae49b",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 86,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "4296b2b4acfd809ee292737e39382240fb5bc713cd418292b6166e1f2dbae49b"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "f517fe39e1b9358c342a1f3e966f1284affa53c2df71c1e9e0c461e87e216921",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 87,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "f517fe39e1b9358c342a1f3e966f1284affa53c2df71c1e9e0c461e87e216921"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "ade803b815e98c1e872c1cad8e248150e348da7c9db475d9132d0098c0f152f8",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 88,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ade803b815e98c1e872c1cad8e248150e348da7c9db475d9132d0098c0f152f8"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "bee372c85a2ae2594f4efbd7342a9c08b535f0b370d9e16ae48313ada347fafd",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 89,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "bee372c85a2ae2594f4efbd7342a9c08b535f0b370d9e16ae48313ada347fafd"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "35e18f268fac2e86442b93d6d00c08370ec1ad384975fc3a4816d643f1ae008e",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 90,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "35e18f268fac2e86442b93d6d00c08370ec1ad384975fc3a4816d643f1ae008e"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "ae1d9c0e5b454a1e145b6a4837f42b9913bcf98f353a0d1d077b28f07a79f567",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 91,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ae1d9c0e5b454a1e145b6a4837f42b9913bcf98f353a0d1d077b28f07a79f567"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "26c20fa4cc512de7def861376881851ec3c78af5dda5f78d0e1b68058a53788a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 92,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "26c20fa4cc512de7def861376881851ec3c78af5dda5f78d0e1b68058a53788a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "ff9113a52bc767afaf3cba5e525b2a8d938de5345bd345c53578aa4b081dd0ac",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 93,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "ff9113a52bc767afaf3cba5e525b2a8d938de5345bd345c53578aa4b081dd0ac"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "0de92073580d93df09fbfe8d4fe7102ba1ec592c3a9ea255f9f0bf5e12328142",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 94,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "0de92073580d93df09fbfe8d4fe7102ba1ec592c3a9ea255f9f0bf5e12328142"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "640798ab7047614eddac6c994a2e898d2702d113e47e72b1cf31467eda6b1c57",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 95,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "640798ab7047614eddac6c994a2e898d2702d113e47e72b1cf31467eda6b1c57"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 96695,
+      "event_counts": {
+        "consumer_accept": 576,
+        "request_accept": 576,
+        "reverse_credit_accept": 576,
+        "software_backing_visible": 288,
+        "software_owned_issue": 576,
+        "software_read_capture": 288,
+        "software_service_phases_reserved": 576,
+        "validated_reverse_grant": 576,
+        "write_residence_reserved": 288
+      },
+      "events": 4320,
+      "fault": null,
+      "framed_event_SHA256": "800bf8707ed577c18b36bc236cacf8cc7c0f055d4391b94e39398ee5f134130a",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 544,
+      "journal_id": 96,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "800bf8707ed577c18b36bc236cacf8cc7c0f055d4391b94e39398ee5f134130a"
+    },
+    {
+      "byteexact_canonical_replay": true,
+      "event_bytes": 537008,
+      "event_counts": {
+        "consumer_accept": 3072,
+        "request_accept": 3072,
+        "reverse_credit_accept": 3072,
+        "software_backing_visible": 2048,
+        "software_owned_issue": 3072,
+        "software_read_capture": 1024,
+        "software_service_phases_reserved": 3072,
+        "validated_reverse_grant": 3072,
+        "write_residence_reserved": 2048
+      },
+      "events": 23552,
+      "fault": null,
+      "framed_event_SHA256": "c4f2cb62f8d78772726e859227e99d815a4c62b7afc82a2067d2a28389a5cba4",
+      "hardware_qualified": false,
+      "in_memory_event_list": false,
+      "index_bytes": 2944,
+      "journal_id": 97,
+      "live_lifecycle_tags": 0,
+      "source_framed_SHA256": "c4f2cb62f8d78772726e859227e99d815a4c62b7afc82a2067d2a28389a5cba4"
+    }
+  ],
+  "production_calls_closed": 0,
+  "production_unknown_shared_calls": 193316,
+  "schema": "H4_LOSSLESS_PARENT_JOINED_STREAM_COMPACT_REPLAY_V1",
+  "scope": "all source events of reviewed provider/shared/writer join, no disconnected replacement payload or fewer-rank qualification",
+  "sector_transactions": 37888,
+  "source_gzip_SHA256": "1aa442d1ff6c7d40360ebf23b63142c01c74f29a3b891fa045b39ff8ef03f297",
+  "source_version_ownership_unchanged": true
+}

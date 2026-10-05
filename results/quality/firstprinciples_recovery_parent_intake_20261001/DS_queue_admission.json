@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.deepseek.complete.software-job-admission.v1",
+  "source_commit": "066dad0094fbba015d447eeea9593ce1cf57bd0a",
+  "worktree": "/home/ubuntu/w19-complete-functional-pin-066",
+  "runner_sha256": "60a331736df107d7750145fd1fe8e2cf4440f819a17fb4da9b1ffcc9d5f74911",
+  "memory_available_bytes": 176975978496,
+  "disk_free_bytes": 209666506752,
+  "cpu_count": 32,
+  "loadavg": [
+    14.54541015625,
+    13.9404296875,
+    12.49462890625
+  ],
+  "OMP_OPENBLAS_threads": 1,
+  "nice": 15,
+  "decoded_initialKV_bytes_estimate": 6710886400,
+  "decoded_six_experts_plus_shared_layer_cache_estimate_bytes": 2300000000,
+  "private_heap_reserve_bytes": 25769803776,
+  "RSS_guard_bytes_including_readonly_checkpoint_mmap_pages": 103079215104,
+  "output_disk_reserve_bytes": 2147483648,
+  "checkpoint_payload_copies": false,
+  "jobs": "fullL0compare53ops thenfull40+head2213ops sequential",
+  "ordinary_GPU_lowering_complete": false,
+  "DUT_executed": false,
+  "physical_backend_bound": false,
+  "sparse_checkout_intake": "no-checkout add then sparse set required read-tree --reset -u HEAD to populate; no full checkout created"
+}

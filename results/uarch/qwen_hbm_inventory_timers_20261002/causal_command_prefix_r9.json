@@ -1,0 +1,318 @@
+{
+  "WR_commands": 0,
+  "blocked_reader_sectors": 288,
+  "command_timing_audit": {
+    "PCs": 32,
+    "banks_per_PC": 32,
+    "events": 8,
+    "status": "PASS_COMMAND_TIMING_INEQUALITIES"
+  },
+  "commands": [
+    {
+      "bank": 7,
+      "kind": "ACT",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "50000/3",
+      "sector": 5618364,
+      "tag": 0,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 7,
+      "kind": "RD",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "110000/3",
+      "sector": 5618364,
+      "tag": 0,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 6,
+      "kind": "ACT",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "52500",
+      "sector": 5618365,
+      "tag": 1,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 6,
+      "kind": "RD",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "72500",
+      "sector": 5618365,
+      "tag": 1,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 5,
+      "kind": "ACT",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "265000/3",
+      "sector": 5618366,
+      "tag": 2,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 5,
+      "kind": "RD",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "325000/3",
+      "sector": 5618366,
+      "tag": 2,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 4,
+      "kind": "ACT",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "372500/3",
+      "sector": 5618367,
+      "tag": 3,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 4,
+      "kind": "RD",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "432500/3",
+      "sector": 5618367,
+      "tag": 3,
+      "transport_epoch": 8
+    }
+  ],
+  "controller_period_ps": "2500/3",
+  "critical_path": "max(each modeled RF landing, actual result visibility, actual owned retirement); latter two absent",
+  "hardware_credit": 0,
+  "held_sector_owners": 4,
+  "lease_ACKs": 0,
+  "modeled_service_events": [
+    {
+      "bank": 7,
+      "kind": "ACT",
+      "observe_ps": "50000/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "50000/3",
+      "sector": 5618364,
+      "tag": 0,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 7,
+      "kind": "RD",
+      "observe_ps": "110000/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "110000/3",
+      "sector": 5618364,
+      "tag": 0,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 6,
+      "kind": "ACT",
+      "observe_ps": "52500",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "52500",
+      "sector": 5618365,
+      "tag": 1,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 6,
+      "kind": "RD",
+      "observe_ps": "72500",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "72500",
+      "sector": 5618365,
+      "tag": 1,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 5,
+      "kind": "ACT",
+      "observe_ps": "265000/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "265000/3",
+      "sector": 5618366,
+      "tag": 2,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 5,
+      "kind": "RD",
+      "observe_ps": "325000/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "325000/3",
+      "sector": 5618366,
+      "tag": 2,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 4,
+      "kind": "ACT",
+      "observe_ps": "372500/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "372500/3",
+      "sector": 5618367,
+      "tag": 3,
+      "transport_epoch": 8
+    },
+    {
+      "bank": 4,
+      "kind": "RD",
+      "observe_ps": "432500/3",
+      "pc": 1,
+      "producer_epoch": 7,
+      "ps": "432500/3",
+      "sector": 5618367,
+      "tag": 3,
+      "transport_epoch": 8
+    }
+  ],
+  "queue_journal": [
+    {
+      "bank": {
+        "bank": 7,
+        "bg": 3,
+        "pc": 1,
+        "row": 171
+      },
+      "identity_scope": "SYNTHETIC_FIXTURE_EPOCH7_TRANSPORT8_NOT_ACTUAL",
+      "kind": "candidate_accept",
+      "ps": "0",
+      "sector": 5618364
+    },
+    {
+      "bank": {
+        "bank": 6,
+        "bg": 2,
+        "pc": 1,
+        "row": 171
+      },
+      "identity_scope": "SYNTHETIC_FIXTURE_EPOCH7_TRANSPORT8_NOT_ACTUAL",
+      "kind": "candidate_accept",
+      "ps": "2500/3",
+      "sector": 5618365
+    },
+    {
+      "edges": 18,
+      "kind": "scan_freeze",
+      "ps": "5000/3",
+      "sector": 5618364
+    },
+    {
+      "kind": "calendar_provider_start",
+      "ps": "50000/3",
+      "sector": 5618364
+    },
+    {
+      "bank": {
+        "bank": 5,
+        "bg": 1,
+        "pc": 1,
+        "row": 171
+      },
+      "identity_scope": "SYNTHETIC_FIXTURE_EPOCH7_TRANSPORT8_NOT_ACTUAL",
+      "kind": "candidate_accept",
+      "ps": "110000/3",
+      "sector": 5618366
+    },
+    {
+      "edges": 18,
+      "kind": "scan_freeze",
+      "ps": "37500",
+      "sector": 5618365
+    },
+    {
+      "kind": "calendar_provider_start",
+      "ps": "52500",
+      "sector": 5618365
+    },
+    {
+      "bank": {
+        "bank": 4,
+        "bg": 0,
+        "pc": 1,
+        "row": 171
+      },
+      "identity_scope": "SYNTHETIC_FIXTURE_EPOCH7_TRANSPORT8_NOT_ACTUAL",
+      "kind": "candidate_accept",
+      "ps": "72500",
+      "sector": 5618367
+    },
+    {
+      "edges": 18,
+      "kind": "scan_freeze",
+      "ps": "220000/3",
+      "sector": 5618366
+    },
+    {
+      "kind": "calendar_provider_start",
+      "ps": "265000/3",
+      "sector": 5618366
+    },
+    {
+      "edges": 18,
+      "kind": "scan_freeze",
+      "ps": "327500/3",
+      "sector": 5618367
+    },
+    {
+      "kind": "calendar_provider_start",
+      "ps": "372500/3",
+      "sector": 5618367
+    }
+  ],
+  "read_boundaries": [
+    {
+      "actual_RMW_result": null,
+      "actual_owned_retirement": null,
+      "candidate_RF_landing_ps": "890000/9",
+      "data_ready_ps": "182500/3",
+      "sector": 5618364
+    },
+    {
+      "actual_RMW_result": null,
+      "actual_owned_retirement": null,
+      "candidate_RF_landing_ps": "1210000/9",
+      "data_ready_ps": "290000/3",
+      "sector": 5618365
+    },
+    {
+      "actual_RMW_result": null,
+      "actual_owned_retirement": null,
+      "candidate_RF_landing_ps": "170000",
+      "data_ready_ps": "132500",
+      "sector": 5618366
+    },
+    {
+      "actual_RMW_result": null,
+      "actual_owned_retirement": null,
+      "candidate_RF_landing_ps": "620000/3",
+      "data_ready_ps": "505000/3",
+      "sector": 5618367
+    }
+  ],
+  "refresh": "512edge prefix ends before earliest REFI; bounded current-refresh countdown contract in timer record, not waived",
+  "remaining_writer_sectors": 268,
+  "retirement_events": 0,
+  "scope": "Explicit synthetic acceptance fixture on actual four metadata addresses; no observed timestamp/epoch or fullprogram timing transfer",
+  "status": "CAUSAL_STRUCTURAL_PREFIX_BLOCKED_ACTUAL_RMW_PROVIDER_ABSENT",
+  "weight_commands": 0,
+  "weight_reason": "actual matrix17 dependency16 unavailable; no granted prefetch"
+}

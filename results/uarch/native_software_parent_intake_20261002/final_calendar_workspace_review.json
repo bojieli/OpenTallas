@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "calendar_and_current_readiness_tests": "PASS_38_TESTS",
+    "make_check_figures": "PASS",
+    "portable_DS_input_restore": "PASS_18_FILES"
+  },
+  "final_rate_credit": false,
+  "inspected_proofs": {
+    "results/uarch/h3_complete_native_calendar_20261002/final_ds_bed325f89/calendar_r1/proof.json": "d987af653760c58047c6fa70ef6c0c45e5fcc7ee0c68bdceda1d9bb3933f1ac1",
+    "results/uarch/h3_complete_native_calendar_20261002/workspace_r20_33b741b4e/calendar_r1/proof.json": "ba7965fa7d87cb2bdfd19988f0cfef08727ccbd32f8ae08c3fb2f4fe9a1a3ae2"
+  },
+  "numerical_full_token_credit": false,
+  "owner_milestone": "0b0db0c4bce054fdc7f5de9a92b04e466492b3f1",
+  "parent_pre_review_commit": "cbc5d160bd7b08753feda75b2d40ea113423e363",
+  "physical_credit": false,
+  "remaining": [
+    "DS scratch physical bases and bounded tiling",
+    "Qwen bounded temporary fit and whole-program I64 transport",
+    "Measured provider and endpoint costs",
+    "Full-checkpoint numerical execution",
+    "Contextual physical closure and calibrated full-token latency"
+  ],
+  "scope": "Final native primitive counts and finite software calendar/workspace intervals; source-pinned replay is owner evidence, independently inspected. Positive software ticks are not hardware cycles."
+}

@@ -1,0 +1,229 @@
+{
+  "actual_checkpoint_codec_verdict": "FAIL",
+  "admission_claim": false,
+  "bench_path": "rtl/test/tb_engram_eight_scale_counterexample.sv",
+  "bench_sha256": "92d7e821632441ec4d87613ac80b6cf1c6acf7ba033ef2fc053eb9415d09ada4",
+  "checkpoint_payload_reads": 0,
+  "compile_command_template": [
+    "iverilog",
+    "-g2012",
+    "-s",
+    "tb_engram_eight_scale_counterexample",
+    "-o",
+    "<temp>/sim",
+    "<pinned shipped package>",
+    "<pinned unchanged gather>",
+    "rtl/test/tb_engram_eight_scale_counterexample.sv"
+  ],
+  "compile_returncode": 0,
+  "completion_verified": true,
+  "corrected_SS_FF_timing_credit": false,
+  "correction_requires": "Ram full port/area/route budget admission before engine change; mandatory correctness, no optional1% gate",
+  "cycles_per_row": 8,
+  "direct_decoder": {
+    "code": "0x38",
+    "passed": true,
+    "scale127_BF16": "3f80",
+    "scale128_BF16": "4000"
+  },
+  "engine_RTL_modified": false,
+  "golden_function_sha256": {
+    "tools/hdc_golden.py:bits": "32601334bc460a22c1aaa52387405f5519c2f5c398a9b9f16bd51272547ddaeb",
+    "tools/hdc_golden.py:from_bits": "98667e639ad904b61a1e8c0620bf65688289e47117510ed1e160042fc4472d12",
+    "tools/hdc_golden.py:to_bf16": "bf65038a21d2a8015977b0ae84e9e25d9cf63d3ca6c868da6f4e7964ac2871a4",
+    "tools/hdc_golden_v41.py:_e4m3_table": "a72d9fdb2638e378898ea5dd73a811b44040838cd0dfb3577b1abbed39d8e147",
+    "tools/hdc_golden_v41.py:decode_engram_rows": "993adcd39f7e457d2f95af2e7d5865d18bca1507a22b76da427652561343c6b2"
+  },
+  "mismatched_BF16_elements": 224,
+  "old_campaign_scope": "Existing row_bytes returns256codes and one scalar scale; old verdict retained unchanged and scoped to that synthetic one-scale-row contract.",
+  "parameters": {
+    "BEATS": 8,
+    "LANES": 32,
+    "NC": 2,
+    "NL": 1,
+    "beat_bits": 264
+  },
+  "place_and_route": false,
+  "required_baseline_codec": "All8beats carry32E4M3codes plus the matching UE8M0 exponent for that block; decode each beat using its own side byte.",
+  "root_cause": "scl bank latches side byte only on beat0; s1_s selects s1_scl forbeats1..7 despite differing perblock side bytes",
+  "runner_sha256": "200e8684df6de0ca600681b69b9059f46369d54803a5802c9ff4502e0cfe3402",
+  "schema": "opentallas.engram.eight-block-scale.unchanged-rtl-counterexample.v1",
+  "shipped24_column_response_beats_per_layer": 192,
+  "simulation_returncode": 0,
+  "simulator": "iverilog/vvp",
+  "source_commit": "ca863a38debfefb8968cacfb5beb2f8815a9cc2e",
+  "source_sha256": {
+    "results/rtl/hdc_v41_engram_gather_campaign.json": "ba17a33a73098e0a2a910ceeb6f48a063a2ab61b4777672545fe52df325d67f7",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_v41_engram_shipped.py": "28713b421c5a350166598b35ea111df98a0c86ce61094f96d4ee979b2fe2c5b5",
+    "tools/rtl_hdc_v41_engram_gather_campaign.py": "a3978bd09c2b12323c489daa8fe5eca4cbd477ee42c800dde7c401c7d73020f6"
+  },
+  "synthetic_only": true,
+  "uniform_scale_control_elements": 256,
+  "witness_verdict": "PASS_COUNTEREXAMPLE_REPRODUCED",
+  "writes": [
+    {
+      "actual_BF16": "3f80",
+      "beat": 0,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 1,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "4000",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 128
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 2,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "3f00",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 126
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 3,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "4080",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 129
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 4,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "3e80",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 125
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 5,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "4100",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 130
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 6,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "3e00",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 124
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 7,
+      "code": "0x38",
+      "column": 0,
+      "golden_BF16": "4180",
+      "lanes": 32,
+      "matched": false,
+      "side_scale": 131
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 0,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 1,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 2,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 3,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 4,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 5,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 6,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    },
+    {
+      "actual_BF16": "3f80",
+      "beat": 7,
+      "code": "0x38",
+      "column": 1,
+      "golden_BF16": "3f80",
+      "lanes": 32,
+      "matched": true,
+      "side_scale": 127
+    }
+  ]
+}

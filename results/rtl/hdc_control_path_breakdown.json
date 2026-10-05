@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.hdc-control-path-breakdown.v1",
+  "method": "tools/hdc_timing.py (constants fitted to the RTL issue trace; a test pins the vehicle within 0.5%). issue_gap_share is the sequencer's fetch/decode/issue cost -- the control path proper; unit busy shares are element-issue cycles; the remainder is pipeline latency exposed between dependent ops.",
+  "rows": [
+    {
+      "case": "vehicle (reduced Qwen3, 4 groups, position 15)",
+      "cycles_per_token": 32241,
+      "instructions": 112,
+      "issue_gap_share": 0.01737,
+      "matrix_engine_busy_share": 0.667,
+      "stream_unit_busy_share": 0.2328,
+      "su_width": 1,
+      "groups": 4,
+      "position": 15
+    },
+    {
+      "case": "Qwen3-8B shapes, 64 groups, position 1024",
+      "cycles_per_token": 15081669,
+      "instructions": 4540,
+      "issue_gap_share": 0.00151,
+      "matrix_engine_busy_share": 0.6662,
+      "stream_unit_busy_share": 0.3431,
+      "su_width": 1,
+      "groups": 64,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 64 groups, position 1024, PROJECTED stream width 16",
+      "cycles_per_token": 10426668,
+      "instructions": 4540,
+      "issue_gap_share": 0.00218,
+      "matrix_engine_busy_share": 0.9636,
+      "stream_unit_busy_share": 0.031,
+      "su_width": 16,
+      "groups": 64,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 1024 groups, position 1024",
+      "cycles_per_token": 8198529,
+      "instructions": 4540,
+      "issue_gap_share": 0.00277,
+      "matrix_engine_busy_share": 0.3624,
+      "stream_unit_busy_share": 0.6312,
+      "su_width": 1,
+      "groups": 1024,
+      "position": 1024
+    },
+    {
+      "case": "Qwen3-8B shapes, 1024 groups, position 1024, PROJECTED stream width 16",
+      "cycles_per_token": 3362568,
+      "instructions": 4540,
+      "issue_gap_share": 0.00675,
+      "matrix_engine_busy_share": 0.8835,
+      "stream_unit_busy_share": 0.0962,
+      "su_width": 16,
+      "groups": 1024,
+      "position": 1024
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.w13.parent_chain17_identity.v1",
+  "observed_at": "2026-10-01T10:17:19.223845+00:00",
+  "host_boot_id": "dd8d7231-d8d5-4f25-bfd4-f3390877d2eb",
+  "status": "LIVE_EXCLUSIVE_WAIT",
+  "main_matches_measured_control_sources": {
+    "w13_chain_successor.py": "e1f81454f457f4aed1a2899786bcd2497ee96364e78eab582a50e3ff4c53e338",
+    "w13_column_corner_gate.py": "829f271ed92351faebe44c901c9ffdb1abc4098d3b2f63f5bed903b0af7aacda",
+    "w13_floorplan_receipt.py": "d472794efb42cc7219455f248892374daa21a2df712b73edcdcc232294c9669e"
+  },
+  "owner_watch_sha256": "15560482aee24be11c8d750bf67d9f9cdb75d77432afebf9d5c18ee1749ccf4f",
+  "config_sha256": "29d8cb7b980ee71950effde47b49b48153d0daa70f2627caa90a64b4d6991ea3",
+  "handles": [
+    {
+      "pid": 615596,
+      "start_ticks": "305293450",
+      "state": "S",
+      "argv": "python3 /tmp/claude-1000/w13jobs/chain17/w13_chain_successor.py /tmp/claude-1000/w13jobs/chain17/config.json"
+    },
+    {
+      "pid": 626096,
+      "start_ticks": "305314538",
+      "state": "S",
+      "argv": "python3 /tmp/claude-1000/w13jobs/chain17/w13_owner_watch.py --coordination /tmp/claude-1000/queue/W13b.owner_coordination.json --takeover-key W13_CHAIN17_CPU_RAM_EXCLUSIVE --events /tmp/claude-1000/w13jobs/chain17/owner_events.jsonl"
+    },
+    {
+      "pid": 2089594,
+      "start_ticks": "302549468",
+      "state": "S",
+      "argv": "bash jobs/hcol.sh /home/ubuntu/w13wt/tc tc_col gpu_sm_qwen 155.103.253.78,155.103.253.133,155.103.253.191,155.103.253.16,155.103.253.39,155.103.253.114 31 tc_col_13"
+    },
+    {
+      "pid": 1901598,
+      "start_ticks": "302086726",
+      "state": "S",
+      "argv": "bash jobs/hcol.sh w13-t16 tc16 gpu_sm_v41 155.103.253.78,155.103.253.133,155.103.253.191,155.103.253.16,155.103.253.39,155.103.253.114,ot-pve3 31"
+    }
+  ],
+  "latest_owner_event": {
+    "active_successor": {
+      "pid": 615596,
+      "start_ticks": "305293450",
+      "state": "S"
+    },
+    "issues": [],
+    "status": "EXCLUSIVE",
+    "utc": "2026-10-01T10:17:11.164673+00:00"
+  },
+  "control_tests": {
+    "passed": 9,
+    "exit_code": 0
+  },
+  "column_restart": false,
+  "sm_launched": false,
+  "physical_acceptance": false,
+  "scope": "Bounded source and process-identity handoff audit; no column closure or full-SM timing claim."
+}

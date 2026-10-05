@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/home/ubuntu/bin/python",
+    "-m",
+    "pytest",
+    "-q",
+    "tests/test_ds_hbm_checkpoint_boundary_r62.py"
+  ],
+  "exit_code": 0,
+  "tests_PASS": 5,
+  "numerical_prefix_jobs_launched": 0,
+  "fixture_scope": "actual finite r34 provider + native primitive Machine + exact V3 capture/restore, not full source NativeExecution"
+}

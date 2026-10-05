@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL_STATIC_STORAGE_SUM_NO_COMPILE",
+  "model_sha256": "e606d6841ab842af72819703c92886bde530bfc42461ccb521ae55bb00c617ce",
+  "cause": "Manual pipeline storage sum was12898 not12998; scale multiply registers sum372 not370. No timing/event/stimulus or RTL change. Host user latch belongs die step_user, tile forwards it.",
+  "action": "Preserve attempt2. Correct source census and ownership wording before final preparation; no build/runtime."
+}

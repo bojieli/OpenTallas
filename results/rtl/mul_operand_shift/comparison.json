@@ -1,0 +1,73 @@
+{
+  "scope": "Standalone matched WIDTH163x161 LOW160 CHUNK16, prelayout only; private operand reset/idle-hold removal.",
+  "records": [
+    {
+      "record": "results/physical_abi3/asap7/wide_mul_tree/operand_shift_baseline_synth_sta_1ns.json",
+      "sha256": "ef4ee54fdc40934f878c7b58628cca4ba5635e44d0f2a2a240d1cbb9dd124853",
+      "area_um2": 2049.919,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.05787448321503242,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 825,
+            "setup_wns_ns": -2.58939581922967,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "sources": [
+        {
+          "path": "rtl/lib/ot_wide_mul_seq.sv",
+          "sha256": "15c321df75cb3ea66234e143b662b0da59019a1173b054f87878879e64bbec82",
+          "size_bytes": 11118
+        }
+      ]
+    },
+    {
+      "record": "results/physical_abi3/asap7/wide_mul_tree/operand_shift_synth_sta_1ns.json",
+      "sha256": "145c51891c35cd48466f6bfc219ea3d166d3e2ab1365e44eae09fb0b8b2d97e5",
+      "area_um2": 2021.505,
+      "acceptance": {
+        "checks": [
+          {
+            "hold_met": true,
+            "hold_violating_paths": 0,
+            "hold_wns_ns": 0.055106055355893704,
+            "met": false,
+            "scope": "pre-layout, ideal clock",
+            "setup_met": false,
+            "setup_violating_paths": 808,
+            "setup_wns_ns": -2.3692563561352618,
+            "stage": "static_timing"
+          }
+        ],
+        "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+        "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+        "reason": "did not meet in: static_timing",
+        "status": "not_met"
+      },
+      "sources": [
+        {
+          "path": "results/rtl/mul_operand_shift/candidate.sv",
+          "sha256": "2a3e1fba5444b1e82172969630551a46bea0266046f291fa43e3365c3631f1af",
+          "size_bytes": 11381
+        }
+      ]
+    }
+  ],
+  "area_reduction_percent": 1.3861035484816653,
+  "containing_engine_cycles": 5962513,
+  "containing_engine_cycle_change": 0,
+  "physical_pending": "results/physical_abi3/asap7/wide_mul_tree/operand_shift_cts12_1ns.json",
+  "decision": "Candidate only pending physical qualification; no production or clock-win claim.",
+  "test_sha256": "ae31ae117d1cfab052c6e81e78997a5345a4b5dbd1cc21d9f93e237df4101c47"
+}

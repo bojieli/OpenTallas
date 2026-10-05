@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "checks": [
+    "All reduced/full original field offsets and all-ones encodings unchanged by idempotent opt-in install",
+    "W17 NEWBLK/coll_d_stride retained",
+    "SUKR/SUBCAST/SURET defaults0",
+    "All die-wrapper swapped source paths present"
+  ],
+  "claim": "ISA/source-list/default compatibility only; integrated strict RTL gate pending"
+}

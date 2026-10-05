@@ -1,0 +1,83 @@
+[remote_gate] worker 155.103.253.114 (floor 16 GB), job 3751823665: /tmp/claude-1000/w15p/jobs/harden.sh port_board
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+0028]   Complete Pad.
+  complete 100000 nets.
+  complete 200000 nets.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0029]   Complete 100000 nets (guide).
+[INFO DRT-0029]   Complete 200000 nets (guide).
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 733558.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 608372.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 343072.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 129582.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 114549.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 100863.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 49524.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:09, elapsed time = 00:00:03, memory = 3858.18 (MB), peak = 3856.91 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 1240703 vertical wires in 12 frboxes and 838817 horizontal wires in 12 frboxes.
+[INFO DRT-0186] Done with 74001 vertical wires in 12 frboxes and 144951 horizontal wires in 12 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:02:32, elapsed time = 00:00:34, memory = 6950.79 (MB), peak = 6949.21 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:02, elapsed time = 00:00:02, memory = 7248.22 (MB), peak = 7246.71 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:49, memory = 15836.04 (MB).
+
+Elapsed time: 0:09.74[h:]min:sec. CPU time: user 9.08 sys 0.63 (99%). Peak memory: 874804KB.
+Elapsed time: 1:56.77[h:]min:sec. CPU time: user 138.26 sys 20.69 (136%). Peak memory: 1459192KB.
+Elapsed time: 0:05.12[h:]min:sec. CPU time: user 4.59 sys 0.53 (100%). Peak memory: 700260KB.
+Elapsed time: 0:04.66[h:]min:sec. CPU time: user 4.18 sys 0.48 (100%). Peak memory: 554608KB.
+Elapsed time: 0:08.82[h:]min:sec. CPU time: user 8.26 sys 0.56 (99%). Peak memory: 738700KB.
+Elapsed time: 1:28.20[h:]min:sec. CPU time: user 723.80 sys 1.46 (822%). Peak memory: 1125008KB.
+Elapsed time: 0:05.80[h:]min:sec. CPU time: user 5.25 sys 0.55 (100%). Peak memory: 741528KB.
+Elapsed time: 11:41.88[h:]min:sec. CPU time: user 2255.39 sys 215.85 (352%). Peak memory: 3557752KB.
+Elapsed time: 4:12.58[h:]min:sec. CPU time: user 339.39 sys 67.61 (161%). Peak memory: 1996524KB.
+Elapsed time: 4:52.36[h:]min:sec. CPU time: user 366.19 sys 53.39 (143%). Peak memory: 2488332KB.
+Elapsed time: 11:19.21[h:]min:sec. CPU time: user 1914.20 sys 394.53 (339%). Peak memory: 3305056KB.
+Elapsed time: 1:07:49.25[h:]min:sec. CPU time: user 10695.12 sys 906.76 (285%). Peak memory: 6103000KB.
+Elapsed time: 5:33.85[h:]min:sec. CPU time: user 3807.98 sys 37.52 (1151%). Peak memory: 17635160KB.
+make[1]: *** [Makefile:589: do-5_2_route] Error 247
+make: *** [Makefile:589: /work/results/asap7/opentallas_ot_w15_link_port_harden_asap7_w15port_board/base/5_2_route.odb] Error 2
+
+partial record written to /tmp/claude-1000/w15p/out/port_board/physical.json
+[remote_gate] worker 155.103.253.114 job 3751823665 finished rc=0; 0 worktree files returned

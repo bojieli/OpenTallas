@@ -1,0 +1,42 @@
+{
+  "path": "/tmp/claude-1000/w19/runtime-fetch-db86e1ff",
+  "owner": "W19 owner retired checkpoints",
+  "ready_commit": "f1a463bf2",
+  "timestamp": 1790844437.5657718,
+  "live_pids": [],
+  "files": [
+    {
+      "relative_path": "debug/model_preflight.json",
+      "bytes": 1979,
+      "sha256": "0a01a5415bfcdcca6bc973e1b4d3316cf048e1a8703eb47f5c089e84e90e43d0",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "debug/s_2w0vc526/cfg.hex",
+      "bytes": 72,
+      "sha256": "ca0229a554504605e7e3f3807f49dd4b3c1a50e68c6d65e9771b50d4f6843174",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "debug/s_2w0vc526/lines.hex",
+      "bytes": 6552,
+      "sha256": "48254f5da15eb2a20fb028829b7c746a3c1a7d7183073aafa3f2371ea245fcd4",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    },
+    {
+      "relative_path": "debug/s_2w0vc526/x.hex",
+      "bytes": 100992,
+      "sha256": "7250b826f04a43faf540d3c244dc062153924be65a5f9377d553ef4c27bbcc9c",
+      "preserved": true,
+      "reason": "preserve all other checkpoint contents"
+    }
+  ],
+  "metadata_archive": "runtime-fetch-db86e1ff_checkpoint_metadata.tar.gz",
+  "metadata_blob": "4ecbfba265d97c5a74b09df9e0af1c7430d8df96",
+  "preserved_ref": "refs/maintenance/disk-recovery-20261001/checkpoint-runtime-fetch-db86e1ff",
+  "allocated_bytes_before": 135168,
+  "free_before": 219445731328
+}

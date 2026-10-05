@@ -1,0 +1,20 @@
+{
+  "actual_initializer_failure_receipt_sha256": "022b09467a67160b5db623ce293638ba5e8e4e272e608cb883d12d7e3c0194fe",
+  "actual_numerical_successor_status": "FAIL_CLOSED_PRESERVED: reference input source changed view_bindings",
+  "additional_macro_capacity_credit_bytes": 0,
+  "artifact_pins_verified": 21,
+  "complete_reference_output_identities": 1568,
+  "focused_tests_passed": 17,
+  "full_state_directory_rows": 4616,
+  "full_token_qualified": false,
+  "hardware_qualified": false,
+  "maximum_existing_state_reservation_bytes_per_rank": 29355520,
+  "missing_window_bound": true,
+  "model_replay": "PC0-9, PC0-10 and comparison journal models exact after JSON key representation normalization",
+  "original_RF_homes_unchanged": true,
+  "physical_state_placement_qualified": false,
+  "schema": "opentallas.parent.ds-state-home-repair-review.v1",
+  "scope": "Addressed software output binding, unchanged native arithmetic and complete golden comparison witness; live initializer path-provenance repair and physical/laterPC gates remain open",
+  "source_arithmetic_unchanged": true,
+  "successor_failure_cause": "Inherited r33 initializer resolves relative source paths into absolute paths; witness compares declaration to resolved path representation. Source content verification remains mandatory."
+}

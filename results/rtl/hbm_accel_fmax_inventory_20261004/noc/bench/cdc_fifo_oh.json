@@ -1,0 +1,630 @@
+{
+ "schema": "opentallas.gpu_sys.cdc_fifo.v1",
+ "verdict": "FAIL",
+ "failures": [
+  "lint ENABLE=0",
+  "lint ENABLE=1"
+ ],
+ "git_head": "",
+ "simulator": {
+  "name": "verilator",
+  "version": "Verilator 5.050 2026-07-01 rev v5.050",
+  "flags": "--binary --timing -j 2"
+ },
+ "sources": {
+  "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "835a3bdc2cb5ee07ce949e238d06ef8320870df5cb322830f61748a033087477",
+  "_cdcx/tb_gpu_cdc_fifo.sv": "c0f190f4cee41c408377f4dbb0bacfe17287f6a14934335f0dda5798864e213e",
+  "tools/gpu_sys/cdc_sizing.py": "3cde2e65509f7206e9fe2a8153cd41f8f3fb72c8e3a44e1e9b3abafb17de2dec",
+  "tools/gpu_sys/run_cdc_fifo.py": "03d729be7a8259dd6b76325cb04d730aef2f73180d82f3ac4ca2163cf1b3bf5c"
+ },
+ "sync": 2,
+ "rate_pass_threshold": 0.99,
+ "bench": {
+  "entries_per_integrity_fifo": 20000,
+  "throughput_window_slow_cycles": 20000,
+  "pass_lines": [
+   "PASS integrity pair=833/1000 depth=4 entries=20000 full_stall_cycles=27412",
+   "PASS integrity pair=833/1000 depth=8 entries=20000 full_stall_cycles=20142",
+   "PASS integrity pair=833/1000 depth=16 entries=20000 full_stall_cycles=18401",
+   "PASS throughput pair=833/1000 predicted_depth=8 rate=1.000000",
+   "PASS model pair=833/1000 predicted_depth=8 smallest_measured_depth=8",
+   "PASS integrity pair=1000/833 depth=4 entries=20000 full_stall_cycles=14980",
+   "PASS integrity pair=1000/833 depth=8 entries=20000 full_stall_cycles=15468",
+   "PASS integrity pair=1000/833 depth=16 entries=20000 full_stall_cycles=13960",
+   "PASS throughput pair=1000/833 predicted_depth=8 rate=0.999983",
+   "PASS model pair=1000/833 predicted_depth=8 smallest_measured_depth=8",
+   "PASS integrity pair=833/900 depth=4 entries=20000 full_stall_cycles=20082",
+   "PASS integrity pair=833/900 depth=8 entries=20000 full_stall_cycles=15245",
+   "PASS integrity pair=833/900 depth=16 entries=20000 full_stall_cycles=15773",
+   "PASS throughput pair=833/900 predicted_depth=8 rate=1.000000",
+   "PASS model pair=833/900 predicted_depth=8 smallest_measured_depth=8",
+   "PASS integrity pair=4000/833 depth=4 entries=20000 full_stall_cycles=3776",
+   "PASS integrity pair=4000/833 depth=8 entries=20000 full_stall_cycles=2982",
+   "PASS integrity pair=4000/833 depth=16 entries=20000 full_stall_cycles=1940",
+   "PASS throughput pair=4000/833 predicted_depth=4 rate=0.999993",
+   "PASS model pair=4000/833 predicted_depth=4 smallest_measured_depth=4",
+   "PASS integrity pair=833/4000 depth=4 entries=20000 full_stall_cycles=137364",
+   "PASS integrity pair=833/4000 depth=8 entries=20000 full_stall_cycles=126841",
+   "PASS integrity pair=833/4000 depth=16 entries=20000 full_stall_cycles=121339",
+   "PASS throughput pair=833/4000 predicted_depth=4 rate=1.000000",
+   "PASS model pair=833/4000 predicted_depth=4 smallest_measured_depth=4",
+   "PASS ovf_fault stays 0 (30 instances)",
+   "PASS enable0 outputs all zero",
+   "TB_GPU_CDC_FIFO PASS"
+  ]
+ },
+ "predictions": [
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 1000,
+   "predicted_depth": 8,
+   "predicted_aw": 3,
+   "depth_needed_unrounded": 5.499,
+   "predicted_mean_rate": {
+    "4": 0.8729,
+    "8": 1.0,
+    "16": 1.0
+   },
+   "predicted_worst_rate": {
+    "4": 0.7274,
+    "8": 1.0,
+    "16": 1.0
+   }
+  },
+  {
+   "write_period_ps": 1000,
+   "read_period_ps": 833,
+   "predicted_depth": 8,
+   "predicted_aw": 3,
+   "depth_needed_unrounded": 5.499,
+   "predicted_mean_rate": {
+    "4": 0.8729,
+    "8": 1.0,
+    "16": 1.0
+   },
+   "predicted_worst_rate": {
+    "4": 0.7274,
+    "8": 1.0,
+    "16": 1.0
+   }
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 900,
+   "predicted_depth": 8,
+   "predicted_aw": 3,
+   "depth_needed_unrounded": 5.7767,
+   "predicted_mean_rate": {
+    "4": 0.8309,
+    "8": 1.0,
+    "16": 1.0
+   },
+   "predicted_worst_rate": {
+    "4": 0.6924,
+    "8": 1.0,
+    "16": 1.0
+   }
+  },
+  {
+   "write_period_ps": 4000,
+   "read_period_ps": 833,
+   "predicted_depth": 4,
+   "predicted_aw": 2,
+   "depth_needed_unrounded": 3.6248,
+   "predicted_mean_rate": {
+    "4": 1.0,
+    "8": 1.0,
+    "16": 1.0
+   },
+   "predicted_worst_rate": {
+    "4": 1.0,
+    "8": 1.0,
+    "16": 1.0
+   }
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 4000,
+   "predicted_depth": 4,
+   "predicted_aw": 2,
+   "depth_needed_unrounded": 3.6248,
+   "predicted_mean_rate": {
+    "4": 1.0,
+    "8": 1.0,
+    "16": 1.0
+   },
+   "predicted_worst_rate": {
+    "4": 1.0,
+    "8": 1.0,
+    "16": 1.0
+   }
+  }
+ ],
+ "cases": [
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 1000,
+   "depth": 4,
+   "aw": 2,
+   "measured_entries_per_slow_cycle": 0.8003,
+   "model_mean_rate": 0.8729,
+   "model_worst_rate": 0.7274,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 27412
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 1000,
+   "depth": 8,
+   "aw": 3,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 20142
+   },
+   "is_predicted_depth": true,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 1000,
+   "depth": 16,
+   "aw": 4,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 18401
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 1000,
+   "read_period_ps": 833,
+   "depth": 4,
+   "aw": 2,
+   "measured_entries_per_slow_cycle": 0.800286,
+   "model_mean_rate": 0.8729,
+   "model_worst_rate": 0.7274,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 14980
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 1000,
+   "read_period_ps": 833,
+   "depth": 8,
+   "aw": 3,
+   "measured_entries_per_slow_cycle": 0.999983,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 15468
+   },
+   "is_predicted_depth": true,
+   "pass": true
+  },
+  {
+   "write_period_ps": 1000,
+   "read_period_ps": 833,
+   "depth": 16,
+   "aw": 4,
+   "measured_entries_per_slow_cycle": 0.999983,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 13960
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 900,
+   "depth": 4,
+   "aw": 2,
+   "measured_entries_per_slow_cycle": 0.8043,
+   "model_mean_rate": 0.8309,
+   "model_worst_rate": 0.6924,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 20082
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 900,
+   "depth": 8,
+   "aw": 3,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 15245
+   },
+   "is_predicted_depth": true,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 900,
+   "depth": 16,
+   "aw": 4,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 15773
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 4000,
+   "read_period_ps": 833,
+   "depth": 4,
+   "aw": 2,
+   "measured_entries_per_slow_cycle": 0.999993,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 3776
+   },
+   "is_predicted_depth": true,
+   "pass": true
+  },
+  {
+   "write_period_ps": 4000,
+   "read_period_ps": 833,
+   "depth": 8,
+   "aw": 3,
+   "measured_entries_per_slow_cycle": 0.999993,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 2982
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 4000,
+   "read_period_ps": 833,
+   "depth": 16,
+   "aw": 4,
+   "measured_entries_per_slow_cycle": 0.999993,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 1940
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 4000,
+   "depth": 4,
+   "aw": 2,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 137364
+   },
+   "is_predicted_depth": true,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 4000,
+   "depth": 8,
+   "aw": 3,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 126841
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  },
+  {
+   "write_period_ps": 833,
+   "read_period_ps": 4000,
+   "depth": 16,
+   "aw": 4,
+   "measured_entries_per_slow_cycle": 1.0,
+   "model_mean_rate": 1.0,
+   "model_worst_rate": 1.0,
+   "worst_rate_bound_holds": true,
+   "integrity": {
+    "pass": true,
+    "entries": 20000,
+    "full_stall_cycles": 121339
+   },
+   "is_predicted_depth": false,
+   "pass": true
+  }
+ ],
+ "checks": {
+  "ovf_fault_stays_0": true,
+  "enable0_outputs_zero": true,
+  "bench_pass": true
+ },
+ "lint": [
+  {
+   "enable": 0,
+   "pass": false,
+   "waived_unused": [
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:21:25: Signal is not used: 'wclk'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:22:25: Signal is not used: 'wrst_n'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:23:25: Signal is not used: 'in_v'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:25:25: Signal is not used: 'in_d'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:26:25: Signal is not used: 'rclk'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:27:25: Signal is not used: 'rrst_n'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:29:25: Signal is not used: 'out_rdy'"
+   ],
+   "violations": [
+    "%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv:54:8: Filename 'ot_gpu_cdc_fifo_oh' does not match MODULE name: 'ot_link_afifo_oh'"
+   ]
+  },
+  {
+   "enable": 1,
+   "pass": false,
+   "waived_unused": [
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:35:21: Signal is not used: 'wfreed'",
+    "/srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo.sv:35:29: Signal is not used: 'rcount'"
+   ],
+   "violations": [
+    "%Warning-DECLFILENAME: /srv/opentallas-scratch/claude/hbm-fmax-noc/src/rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv:54:8: Filename 'ot_gpu_cdc_fifo_oh' does not match MODULE name: 'ot_link_afifo_oh'"
+   ]
+  }
+ ],
+ "boundaries": [
+  {
+   "boundary": "sm_to_mem_request",
+   "write_period_ps": 833,
+   "read_period_ps": 1000,
+   "entry_width_bits": 337,
+   "width_note": "MREQ: we 1 + addr 32 + wdata 256 + wstrb 32 + tag 16",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 5499,
+   "round_trip_mean_ps": 4582.5,
+   "depth_needed_unrounded": 5.499,
+   "depth": 8,
+   "aw": 3,
+   "flop_bits": 2737,
+   "bandwidth_gbit_s": 337.0
+  },
+  {
+   "boundary": "mem_to_sm_response",
+   "write_period_ps": 1000,
+   "read_period_ps": 833,
+   "entry_width_bits": 273,
+   "width_note": "MRSP: tag 16 + we 1 + data 256",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 5499,
+   "round_trip_mean_ps": 4582.5,
+   "depth_needed_unrounded": 5.499,
+   "depth": 8,
+   "aw": 3,
+   "flop_bits": 2225,
+   "bandwidth_gbit_s": 273.0
+  },
+  {
+   "boundary": "sm_to_link_collective",
+   "write_period_ps": 833,
+   "read_period_ps": 900,
+   "entry_width_bits": 521,
+   "width_note": "16 lanes x 32 + mode 1 + count 8",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 5199,
+   "round_trip_mean_ps": 4332.5,
+   "depth_needed_unrounded": 5.7767,
+   "depth": 8,
+   "aw": 3,
+   "flop_bits": 4209,
+   "bandwidth_gbit_s": 578.889
+  },
+  {
+   "boundary": "link_to_sm_collective",
+   "write_period_ps": 900,
+   "read_period_ps": 833,
+   "entry_width_bits": 512,
+   "width_note": "16 lanes x 32",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 5199,
+   "round_trip_mean_ps": 4332.5,
+   "depth_needed_unrounded": 5.7767,
+   "depth": 8,
+   "aw": 3,
+   "flop_bits": 4137,
+   "bandwidth_gbit_s": 568.889
+  },
+  {
+   "boundary": "host_to_sm_doorbell",
+   "write_period_ps": 4000,
+   "read_period_ps": 833,
+   "entry_width_bits": 32,
+   "width_note": "32-bit doorbell / command word",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 14499,
+   "round_trip_mean_ps": 12082.5,
+   "depth_needed_unrounded": 3.6248,
+   "depth": 4,
+   "aw": 2,
+   "flop_bits": 159,
+   "bandwidth_gbit_s": 8.0
+  },
+  {
+   "boundary": "sm_to_host_completion",
+   "write_period_ps": 833,
+   "read_period_ps": 4000,
+   "entry_width_bits": 48,
+   "width_note": "16-bit token tag + 32-bit RESULT payload",
+   "sync": 2,
+   "required_entries_per_slow_cycle": 1.0,
+   "round_trip_worst_ps": 14499,
+   "round_trip_mean_ps": 12082.5,
+   "depth_needed_unrounded": 3.6248,
+   "depth": 4,
+   "aw": 2,
+   "flop_bits": 223,
+   "bandwidth_gbit_s": 12.0
+  }
+ ],
+ "full_shape_ingress": {
+  "label": "FULL-SHAPE SIZING MODEL OUTPUT -- NOT ADOPTED",
+  "source": "/tmp/claude-review-20261003/hbm_bridge_dependency_and_fields.md section 3 (new finding)",
+  "restated_finding": "The priced ingress CDC is 32 pairs x 320 bits at one entry per cycle, carrying one 32-byte sector per pair: 1,024 B/cycle/die, which is 37% of the 2,763 B/cycle/die service ceiling and 25% of the 32 x 128 B/clk SM ingest. It must be re-priced before W10.",
+  "priced_bytes_per_cycle": 1024,
+  "service_ceiling_bytes_per_cycle": 2763,
+  "priced_fraction_of_ceiling": 0.3706,
+  "priced_fraction_of_sm_ingest": 0.25,
+  "options": [
+   {
+    "crossing": "sm_1200MHz_to_service_1200MHz",
+    "write_period_ps": 833,
+    "read_period_ps": 833,
+    "sectors_per_entry": 1,
+    "entry_width_bits": 320,
+    "pairs": 87,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 2763.0,
+    "bytes_per_slow_cycle_carried": 2784,
+    "flop_bits_per_die": 226287,
+    "data_flop_bits_per_die": 222720
+   },
+   {
+    "crossing": "sm_1200MHz_to_service_1200MHz",
+    "write_period_ps": 833,
+    "read_period_ps": 833,
+    "sectors_per_entry": 2,
+    "entry_width_bits": 576,
+    "pairs": 44,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 2763.0,
+    "bytes_per_slow_cycle_carried": 2816,
+    "flop_bits_per_die": 204556,
+    "data_flop_bits_per_die": 202752
+   },
+   {
+    "crossing": "sm_1200MHz_to_service_1200MHz",
+    "write_period_ps": 833,
+    "read_period_ps": 833,
+    "sectors_per_entry": 4,
+    "entry_width_bits": 1088,
+    "pairs": 22,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 2763.0,
+    "bytes_per_slow_cycle_carried": 2816,
+    "flop_bits_per_die": 192390,
+    "data_flop_bits_per_die": 191488
+   },
+   {
+    "crossing": "sm_833ps_to_mem_1000ps",
+    "write_period_ps": 833,
+    "read_period_ps": 1000,
+    "sectors_per_entry": 1,
+    "entry_width_bits": 320,
+    "pairs": 104,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 3316.9,
+    "bytes_per_slow_cycle_carried": 3328,
+    "flop_bits_per_die": 270504,
+    "data_flop_bits_per_die": 266240
+   },
+   {
+    "crossing": "sm_833ps_to_mem_1000ps",
+    "write_period_ps": 833,
+    "read_period_ps": 1000,
+    "sectors_per_entry": 2,
+    "entry_width_bits": 576,
+    "pairs": 52,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 3316.9,
+    "bytes_per_slow_cycle_carried": 3328,
+    "flop_bits_per_die": 241748,
+    "data_flop_bits_per_die": 239616
+   },
+   {
+    "crossing": "sm_833ps_to_mem_1000ps",
+    "write_period_ps": 833,
+    "read_period_ps": 1000,
+    "sectors_per_entry": 4,
+    "entry_width_bits": 1088,
+    "pairs": 26,
+    "depth": 8,
+    "aw": 3,
+    "bytes_per_slow_cycle_needed": 3316.9,
+    "bytes_per_slow_cycle_carried": 3328,
+    "flop_bits_per_die": 227370,
+    "data_flop_bits_per_die": 226304
+   }
+  ]
+ },
+ "note": "Depth model: D >= (SYNC+1)(Tw+Tr)/T_slow (worst phase), 2^AW, AW>=2. The mean-phase rate estimate (SYNC+1/2)(Tw+Tr) is optimistic for undersized FIFOs (depth 4 measures ~0.80 vs 0.83-0.87 estimated); the worst-phase rate is a lower bound on every measurement and the predicted depth is the smallest measured depth reaching 0.99."
+}

@@ -1,0 +1,43 @@
+{
+  "status": "PARENT_WINDOW_RECOVERY_CONNECTED_SINGLE_GATE_GO",
+  "plan_sha256": "78badad2b83de19b116f064dffc5144003b8ea623fd129ba0b6bde0d6094966b",
+  "runner_sha256": "f9f236d74b5f5e8d338e538418b80d3b8aac27a0ee3ddcad0b033e33299f9951",
+  "model_sha256": "1b7fb7a6173107d2f94093b4d4dcd9c0e8fb93d64bec4cf3c899f02e5992b8c8",
+  "record_sha256": "c73c9a38387ea3bb6628699141747fa47e894bd29f444debc76bdf62608f804f",
+  "manifest_sha256": "9b653f026041e0b3521ba32e7254cf5167562d55af43f78076838e78107878d3",
+  "command_sha256": "c79bbceddf139af12c028a3ffa4697077e071407f2ffbfea37d4b31ff1d651cf",
+  "caps": {
+    "MemoryMax": 4294967296,
+    "MemorySwapMax": 0,
+    "CPUAffinity": [
+      30,
+      31
+    ],
+    "LimitFSIZE": 268435456,
+    "LimitCORE": 0,
+    "RuntimeMaxSec": 180,
+    "KillMode": "control-group",
+    "KillSignal": 9,
+    "OOMPolicy": "stop"
+  },
+  "budget": {
+    "compile_jobs_max": 2,
+    "compile_steps": 5,
+    "connected_compile_seconds_each": 30,
+    "ghost_compile_seconds": 10,
+    "positive_case_seconds_each": 4,
+    "negative_case_seconds_each": 4,
+    "ghost_case_seconds_each": 1,
+    "declared_compile_total_seconds": 130,
+    "declared_runtime_total_seconds": 26,
+    "supervision_reserve_seconds": 24,
+    "service_hardstop_seconds": 180,
+    "generated_output_total_bytes": 268435456,
+    "cycles_per_connected_case": 250000,
+    "discard_control_watchdog_cycles": 4096,
+    "automatic_retries": 0
+  },
+  "reviewed_model_composition_sha256": "d38e0e8eeeb1ea171443d263f92d63a973bc0679d228e81867cdd28ffa7b7595",
+  "reviewed_source_diff_budget": true,
+  "reviewed_connected_oracle_and_negative_controls": true
+}

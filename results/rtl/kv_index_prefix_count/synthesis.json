@@ -1,0 +1,29 @@
+{
+  "scope": "Matched 1 ns CTS12 flow synthesis checkpoint only; final timing, area and containing sparse-attention qualification remain separate.",
+  "records": [
+    {
+      "name": "popcount_baseline",
+      "mapped_cell_area_um2": 707.61114,
+      "source": "results/rtl/kv_index_prefix_count/before.sv",
+      "source_sha256": "b819f251012bb9f1e325969b24940c809b97a500f6d460a3cef32ceea4e6aff9",
+      "artifacts": {
+        "results/rtl/kv_index_prefix_count/popcount_baseline/synth_stat.txt": "0c5f57453860918d6a6a4b222d49d893b650fb9b44c362bd6e1656441b68af58",
+        "results/rtl/kv_index_prefix_count/popcount_baseline/synth_check.txt": "91f095390b6716b3e20f336564692a839dfcd4465971fa434c6a34dd9f16e987",
+        "results/rtl/kv_index_prefix_count/popcount_baseline/config.mk": "61c1fccff7f4eaa21bbd277a1bc5d06a9067a85d0c4c1b1c32a354051a914eac",
+        "results/rtl/kv_index_prefix_count/popcount_baseline/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      }
+    },
+    {
+      "name": "prefix_count",
+      "mapped_cell_area_um2": 708.6609,
+      "source": "rtl/abi3/ot_a3_attention_kv_index.sv",
+      "source_sha256": "5ae061d4eb7c3d282ec8a3b5bbfdf95b0e440b44d5261845c6b77cf0cb330f9d",
+      "artifacts": {
+        "results/rtl/kv_index_prefix_count/prefix_count/synth_stat.txt": "64260fefc0ec2bc9a3642942cbaf2aebfee2a31b4f4cbe759684325c742b0c27",
+        "results/rtl/kv_index_prefix_count/prefix_count/synth_check.txt": "91f095390b6716b3e20f336564692a839dfcd4465971fa434c6a34dd9f16e987",
+        "results/rtl/kv_index_prefix_count/prefix_count/config.mk": "3cde84d2320b13a9366bf5fe59872e0e86cf66054076686819b17b10596105c7",
+        "results/rtl/kv_index_prefix_count/prefix_count/constraint.sdc": "4eee5a556c5de8d0474653347846de99579d3da98a6c38020bd79a9eba18299d"
+      }
+    }
+  ]
+}

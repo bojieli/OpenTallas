@@ -1,0 +1,42 @@
+{
+  "binary_help_lines": [
+    "    verilator --binary -j 0 [options] [source_files.v]... [opt_c_files.cpp/c/cc/a/o/so]",
+    "    --binary                    Build model binary"
+  ],
+  "checks": [
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--version"
+      ],
+      "exit_code": 0,
+      "sha256": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+    },
+    {
+      "command": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--help"
+      ],
+      "exit_code": 0,
+      "sha256": "04e6e70a5a23e5ce05a00df93d2238b423b05425ee53a5acbc6986005a7e8ef1"
+    }
+  ],
+  "compile_invoked": false,
+  "executable": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+  "files": [
+    {
+      "bytes": 32093,
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "resolved": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf"
+    },
+    {
+      "bytes": 19505384,
+      "path": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "resolved": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator_bin",
+      "sha256": "d3f42fa3b523cf1d7e38827134ac8560ac03b52466392eaf0001141ed4d9fe41"
+    }
+  ],
+  "simulation_invoked": false,
+  "version": "Verilator 5.050 2026-07-01 rev v5.050"
+}

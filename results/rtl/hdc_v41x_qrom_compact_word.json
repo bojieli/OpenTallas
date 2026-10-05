@@ -1,0 +1,49 @@
+{
+  "claim_scope": "Checkpoint-exact 16-lane FP8 and compact-FP4 ROM word decode into QE's logical 16x272 operand for wq_a and expert110.w1. No 274-bit tile bank-address integration, complete die capacity, timing, or token verdict.",
+  "fixtures": {
+    "exp110.w1": {
+      "bytes_per_physical_word": 288,
+      "logical_sha256": "4d28ae46e1080ca68dbdba05429281e59e35b530dfe48afc090592f2ba089f76",
+      "physical_sha256": "aba7fbc2800cc3f9e53245e8e67c2fece7d29c9b15a175e7b8bf4988340b5dd9",
+      "words": 6400
+    },
+    "wq_a": {
+      "bytes_per_physical_word": 544,
+      "logical_sha256": "a38c2a1245bc65e676226f04712f8abc6c300000fb513c1146850cb9fabcf66d",
+      "physical_sha256": "a38c2a1245bc65e676226f04712f8abc6c300000fb513c1146850cb9fabcf66d",
+      "words": 3840
+    }
+  },
+  "memory_cap_bytes": 3221225472,
+  "schema": "opentallas.rtl.v41x_qrom_compact_word.v1",
+  "source_sha256": {
+    "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901",
+    "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb",
+    "rtl/hdc/v41x/ot_hdc_v41x_qrom_compact_word.sv": "6068c69a7a201eb8efcd5378fd5f1d402983314f121cd26caafca3a8702597d2",
+    "rtl/test/tb_hdc_v41x_qrom_compact_word.sv": "85e7bdd9ea5a82fda2e4fc48d087fd63c74583e309845e3f4ae1f1430baf6be7",
+    "tools/rtl_v41x_qrom_compact_word.py": "d89dc8e2f32c0d6da363ea46007bca7bee0383c5d834b26bccaef651d8561556",
+    "tools/v41_fullshape_qe_stream_image.py": "d82cb1ee6081978353e4041d83cacac8a020ba69d7a35e8a3ed50e604fee8700"
+  },
+  "status": "pass",
+  "words_checked": 10240,
+  "repin_20260930": {
+    "label": "stale: program changed",
+    "reason": "The L0 program/bind/ROM layout this record pins was regenerated on claude/w17-isa (placeholder immediates replaced from results/rtl/v41_program_constants.json; attn_sink sliced per rank, gate.bias/pre0 CROM bases -12..48 words). This record was NOT re-run: its evidence was produced on the old program/layout; pins below moved so source-currency checks point at the current files. Re-run to refresh.",
+    "rerun": false,
+    "changed_pins": {
+      "results/rtl/hdc_v41x_fullshape_qe_stream_200k_l0_rank0.json": {
+        "old": "e049806a52898fad344f4b8fcc30def1d082ada2cde86569271167aa4bed59e6",
+        "new": "f069de06f0cae6e64404d56dd6542394bdcf19961643543e1731ba663ec546fb"
+      },
+      "results/rtl/hdc_v41x_fullshape_200k_l0_rank0_image.json": {
+        "old": "a2d20adbf8b973c2dd9eb59180fe4676709ae6939f8877634e29fa95afbe0c57",
+        "new": "9bd1071cc4f189178ad5bc027d77faa006d98871b5abeef30b43e2a6a44d3901"
+      },
+      "tools/v41_fullshape_qe_stream_image.py": {
+        "old": "d16ec9ad3fe0a7be56d6af8af7ec36c773e6bc45b5fa60e04a80b3e5dbfbc5dd",
+        "new": "d82cb1ee6081978353e4041d83cacac8a020ba69d7a35e8a3ed50e604fee8700"
+      }
+    },
+    "historical_copy": "hdc_v41x_qrom_compact_word_historical_before_w17_isa.json"
+  }
+}

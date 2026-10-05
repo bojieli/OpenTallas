@@ -1,0 +1,84 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/connected_layer_source_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_execution": {"$ref": "#/$defs/artifact"},
+        "attention_qualification": {"$ref": "#/$defs/artifact"},
+        "checkpoint_lock": {"$ref": "#/$defs/artifact"},
+        "downstream_execution": {"$ref": "#/$defs/artifact"},
+        "downstream_qualification": {"$ref": "#/$defs/artifact"},
+        "model_graph": {"$ref": "#/$defs/artifact"},
+        "qkv_execution": {"$ref": "#/$defs/artifact"},
+        "qkv_qualification": {"$ref": "#/$defs/artifact"}
+      },
+      "required": [
+        "attention_execution",
+        "attention_qualification",
+        "checkpoint_lock",
+        "downstream_execution",
+        "downstream_qualification",
+        "model_graph",
+        "qkv_execution",
+        "qkv_qualification"
+      ],
+      "type": "object"
+    },
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "compiler_version": {"const": "tensor-accelerator-production-connected-layer-0.1.0"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "qualification_bundle": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_execution_report_id": {"$ref": "#/$defs/sha256"},
+        "attention_qualification_report_id": {"$ref": "#/$defs/sha256"},
+        "downstream_execution_report_id": {"$ref": "#/$defs/sha256"},
+        "downstream_qualification_report_id": {"$ref": "#/$defs/sha256"},
+        "qualification_bundle_id": {"$ref": "#/$defs/sha256"},
+        "qkv_execution_report_id": {"$ref": "#/$defs/sha256"},
+        "qkv_qualification_report_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "attention_execution_report_id",
+        "attention_qualification_report_id",
+        "downstream_execution_report_id",
+        "downstream_qualification_report_id",
+        "qualification_bundle_id",
+        "qkv_execution_report_id",
+        "qkv_qualification_report_id"
+      ],
+      "type": "object"
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.connected_layer_source_lock.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "artifacts",
+    "capability_id",
+    "checkpoint_lock_id",
+    "compiler_version",
+    "graph_id",
+    "qualification_bundle",
+    "schema",
+    "source_lock_id"
+  ],
+  "title": "Connected Qwen layer authenticated source lock v1",
+  "type": "object",
+  "$defs": {
+    "artifact": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

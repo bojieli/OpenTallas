@@ -1,0 +1,489 @@
+{
+  "authority_records": [
+    {
+      "commit": "237283498a907285259d75b681502983c4570ead",
+      "path": "results/rtl/dsrom_common_prefix_sat_4e38326d_20261001/r1/parent_review.json",
+      "sha256": "fd78afcb26872cf38960e2e2fec67353565cf29b839ade5d7f067aa186536d21"
+    },
+    {
+      "commit": "0917adb00edfeb82afd3ae5c360c98b4004ad22e",
+      "path": "results/rtl/w11_field_prefix_sequential_gate_20261001/parent_review.json",
+      "sha256": "7e51c6e8235c525598d6dbcc827525dabffa4d6c07814b2aaddb93d9b5603199"
+    },
+    {
+      "commit": "67ca5443f1f1ffa835350bff2ccda3dc263e0877",
+      "path": "results/rtl/field_common_wrapper_prepare_4e383_20261001/parent_review.json",
+      "sha256": "ee2ff2a2e3748df78731e2cbd195bcb0fb8a8cce57dd58eed71e66912524bedf"
+    },
+    {
+      "commit": "167069aaedf978d4436b81f980c65c9b6ef91829",
+      "path": "results/rtl/w11_field_common_prefix_coverage_gap_20261001/parent_review.json",
+      "sha256": "7d220b74098a1cc113d135d3d4057f633f819089865697eee8f16a6b735df944"
+    }
+  ],
+  "bench_path": "rtl/test/tb_dsrom_actual_element_gate_rowfix.sv",
+  "cases": {
+    "bfcolumn": {
+      "BF16": 1,
+      "XF": 8
+    },
+    "q": {
+      "BF16": 0,
+      "XF": 4
+    }
+  },
+  "claims": {
+    "adoption": false,
+    "arithmetic": false,
+    "decoder_static_only": true,
+    "full_element_PASS": false,
+    "hardware_timing": false,
+    "rate_credit": 0
+  },
+  "decoder_contract": {
+    "address": "2*NSEG+1+s, 0<=s<NSEG",
+    "enabled_guard": "cfg_v_e and NB>1 and 2*NSEG<cfg_a_e<=3*NSEG",
+    "invalid_secondary": "Enabled fix ignores out-of-range secondary addresses and NB1 secondary writes; default-off original branch byte-preserved",
+    "legal_domain": {
+      "FAST1_full_element_NSEG": [
+        8
+      ],
+      "exclusions": "NSEG1 has zero-width SW slices; nonpowers have unrelated first/class decode aliases; NSEG>8 exceeds class segment IDs; NSEG>10 exceeds 5bit secondary address. Superset mapping proof is not whole-element support.",
+      "first_and_class_low_SW_canonical_NSEG": [
+        2,
+        4,
+        8
+      ],
+      "mapping_superset_NSEG": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "source_format_max": 8
+    },
+    "option": "FIX_SECOND_ROW_INDEX=0 default; bench explicitly sets 1 on both sides",
+    "range": "2*NSEG+1..3*NSEG inclusive",
+    "target": "NSEG+s = cfg_a-(NSEG+1)"
+  },
+  "execution_gate": "Separate parent review of model, source diffs, oracle and artifact hashes followed by a fresh GO. Earlier GO is invalid for these sources.",
+  "generated_files_sha256": {
+    "cand_ot_fp32_add_rne_pipe.sv": "eadad417dae81b948b34300b1093bc453c2514646895add625ad314c1c55bdcc",
+    "cand_ot_hdc_cg.sv": "274545aac587448b2f2679bd64861d1dc3b179c10f6cd8f0640b902b1601f707",
+    "cand_ot_hdc_delay.sv": "65b45a5a3ee1f6891611fe7e8eeb5c3ca3a208aef93edb4236625bc52629e9b0",
+    "cand_ot_hdc_fp32_mul_pipe.sv": "f5c33c705eaf5d99393ed26610693d4ccd0405b56c3d5cb1594cafd50aeb259e",
+    "cand_ot_hdc_fpu.sv": "985067f36ffbe5ef096f9011ae273ff7a8181b8a0b1d90e2748afbba81bd5f86",
+    "cand_ot_prefix.sv": "7cbc3fb75b85c059f6611063cecb2474fb658da49335a232a5062da9cdfa1358",
+    "cand_ot_rom_4096x274_m8_rt.sv": "09a7e0b3a511627f5852a510530c7ab5bca67a9275836aa20112b755e07d8a84",
+    "cand_ot_rom_8192x274_m8_rt.sv": "61dfb97dbb1b22ea59783e6b11a6782b209dae75d65bedbb5c2933171b32d043",
+    "cand_ot_v41_bf16_lanes.sv": "ea3454706e16309995099bc5f29e899cdd66bfe84bbff367503a732bc44a4a74",
+    "cand_ot_v41_bf16_lanes2.sv": "aa223ab324a6c53851d23b9c615d27dbe853f186a70d7a476d9930d2e2381153",
+    "cand_ot_v41_bmul2.sv": "1ee56c40e7f02f9a16c5e54bfafe29e1c9dbea49dfe0c78f3b1eae8bc9eab436",
+    "cand_ot_v41_bterm.sv": "ad54c59cef04f58a0944e65afadd147e9c709d550b8d5b161c4887ef901e2d5a",
+    "cand_ot_v41_bterm2_w10.sv": "99a7c4a6ecf2ce67b509fc98a78fa6e4a5d192edb74fb51351e22373f0a65c6d",
+    "cand_ot_v41_chain.sv": "fb36dd471eea562951b5c4d7bf205b0dd3859c3c4fffd182398233a55cbdd0a3",
+    "cand_ot_v41_chain2.sv": "e8360b2ddafb8f861dddfadbdda5ae03f57ed2369c8c6c19678d840d3e1ee9fe",
+    "cand_ot_v41_fadd.sv": "7b1300d48f075755435036d5a03e62cba15415656d232641c0d4e47fd410c281",
+    "cand_ot_v41_pair_w17w10.sv": "d525c72d30275c7e5284d7650bcfb20ed780abf79688f0495cf99b8c43f70010",
+    "cand_ot_v41_rom_elem_w10.sv": "080a408f66d91cb3e20133c1e543b8324a3a150793dda2f35f59c9f44de7c257",
+    "cand_ot_v41_segtree.sv": "57e2eb56dfd217df5c3807f7168971fadbf9f7eadea4456b6dadf380b2d436e8",
+    "cand_ot_v41_segtree2.sv": "0e047cdb6fd66eaa511c471420c3ca5ea9030b262bf42799e3291c962bc0f65c",
+    "dsrom_actual_element_rom.cpp": "7ae2d6c4445c418a42cdbeb4d534d5374fc55f0293f5f30832e72031a3a1f1e8",
+    "ref_ot_fp32_add_rne_pipe.sv": "08ef143051d3724fefd2162823b4f768ef2f51acbd79128aeadf643b0d6e30ae",
+    "ref_ot_hdc_cg.sv": "18792ec6c66af1fa145dcb5000471e67d333eee6b3cbc4312ba51a725c57a95e",
+    "ref_ot_hdc_delay.sv": "f4f302f97da6ae3da701f573be14c853eee07e1eac49bc498b6e059e61ed2965",
+    "ref_ot_hdc_fp32_mul_pipe.sv": "14343c8348199b011cf5444a8a282bfde964f90cf30d5715acecfdd36aeff404",
+    "ref_ot_hdc_fpu.sv": "89d70392ffc0bde77b53d23cda70a39f5f106d4a6268299a1e529f84443dc2ab",
+    "ref_ot_prefix.sv": "d3df0d2991f705e3290da076dc9793598bdaeaeacf6b91e59660b0e2f80543c9",
+    "ref_ot_rom_4096x274_m8_rt.sv": "a1f6731e78f99115aa5dd743d657a3228afb863239048b7034d43318e523dd1a",
+    "ref_ot_rom_8192x274_m8_rt.sv": "03b1a952960cbfebea239fa21bf6d4a05df9498f7e63c145a8170de7bceab3a1",
+    "ref_ot_v41_bf16_lanes.sv": "974ea2f0b6220121f4949e3b7da6faee18903157f49c38edb14ea30440cacc68",
+    "ref_ot_v41_bf16_lanes2.sv": "0170dae5f137849c8b419ef9fac48a1e32c624ffe31afa5792c5310691277d62",
+    "ref_ot_v41_bmul2.sv": "1962cba049379f71228c12108a6b529a93684272971a3d79284f0fb46e9d0ab3",
+    "ref_ot_v41_bterm.sv": "1f03e7f7f6536dd64a32c1f1b591c1e658e3a03d7837df2e547cbbd849cea13d",
+    "ref_ot_v41_bterm2_w10.sv": "698cc3174a79fbc7deb3f8b32c6f2adb4eaeac8b1fd21e2bca77938e33d6739d",
+    "ref_ot_v41_chain.sv": "a94552de5606e6f1600ee837b6ee7e12ba44427db777f9949ad79c5dff6da5b1",
+    "ref_ot_v41_chain2.sv": "03f7018a0a9a9a0045831385cb1aeb71eecf4bea67861ae852bbbe1d2dcf9603",
+    "ref_ot_v41_fadd.sv": "60fe1d1857b986ad15cc7ed24664e02691f835e96d102d40a43971a4eadb67f3",
+    "ref_ot_v41_pair_w17w10.sv": "0b7bbf7959eaa492bef70d25285a88996e2b7c94be0ad1f12c3faadbd6c746c4",
+    "ref_ot_v41_rom_elem_w10.sv": "867ae8b4d8ec80dbde19aa5104d6b91922bf20316a66d048170a221ce9c42311",
+    "ref_ot_v41_segtree.sv": "0604d1d74ff2fbceab05f42096f954cd3846e286f2a65fafefbf0a7c63ab2670",
+    "ref_ot_v41_segtree2.sv": "5c9a5da0c1fd5b1cd4b191bba51b4e59a450c9db5304e9f2379c6b80555c2e43",
+    "tb_dsrom_actual_element_gate_rowfix.sv": "7e12b88d719b2915eba25c07f802cde6fbdf15c572ba2b5675558756e0269f59"
+  },
+  "geometry": {
+    "BP": 0,
+    "CG": 1,
+    "CUT": 379,
+    "DRAIN": 127,
+    "EARLY": 1,
+    "FAST": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8,
+    "LV": 5,
+    "MTP": 1,
+    "NB": 2,
+    "NCH": 16,
+    "NCHB": 8,
+    "NSEG": 8,
+    "PHW": 6,
+    "PP": 1
+  },
+  "immutable_synthetic_rom": {
+    "banks": {
+      "bf": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "d160a56668baf245366e35ba6ee09df5ff82239fc79c4ca5464d6690d40be19f"
+      },
+      "bfb": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "1f32447c67d10a66c27732e0fe20c06e3d97f8d9a81f6e314e95bdeeae2a0beb"
+      },
+      "q": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "f79e849d2d60e1c13e0a09663ecd0ad38aa3a551274093867f11742bfd18044a"
+      },
+      "qb": {
+        "logical_words": 8192,
+        "sha256_35byte_little_endian_words": "b2d69e24c298917b3a7969b0e9f252ac637058e399a58038c87abfb39460dc49"
+      }
+    },
+    "payload": "deterministic synthetic weights only; no activation/golden/checkpoint files; cfg word formula in pinned new C++ host",
+    "port_behavior": "Pinned V41_RT adapters unchanged: one rising gated edge with ce reads logical 2*addr+parity; disabled holds; live element PP capture remains unchanged"
+  },
+  "model_binding": {
+    "added_stages": 0,
+    "combinational_pricing": {
+      "area_proxy_cell_um2": 0.2916,
+      "combined_area_allowance_um2_both_sides": 46.656,
+      "combined_area_allowance_um2_per_side": 23.328,
+      "constant_subtract_and_range_enable_NAND2_equivalent_allowance": 64,
+      "logic_area_proxy_um2_per_side": 18.6624,
+      "placement_allowance_um2_per_side_at_50pct": 46.656,
+      "potential_restored_flop_area_um2_per_side": 4.6656,
+      "proxy_source": "Pinned tools/uarch_model.py DFF_UM2; conservative analytical proxy per logic equivalent, NOT measured NAND area or physical upper bound",
+      "width_bits": 5
+    },
+    "config_data_bytes_per_cycle": 6,
+    "config_port_bits_per_cycle": 54,
+    "config_words": 25,
+    "declared_added_state_bits": 0,
+    "declared_row_register_bits": 256,
+    "delta_latency_cycles": 0,
+    "function": "w10_baseline_model",
+    "latency": "Same free-clock config edge and CW+2 loader cycles. No new clock gate/reset/state/stage; LAT8 and 833ps fixture unchanged. Subtract/range path timing unqualified.",
+    "loader_cycles": 27,
+    "method": "Inherited full-goal model plus first-principles mandatory decoder correction delta; not an architecture lever",
+    "new_MACs": 0,
+    "new_boundary_bits": 0,
+    "new_ports": 0,
+    "path": "tools/uarch_model.py",
+    "potential_restored_flops_per_side": 16,
+    "replicas_per_case": 2,
+    "routing": "Local free-clock configuration decode only; reuse row write selection, up to16 entry enables/256 row bit endpoints; no new inter-element tracks. Local fanout/slot fit unmeasured; allowance requires later physical validation.",
+    "secondary_write_bits_per_cycle": 16,
+    "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45",
+    "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274"
+  },
+  "negative_witness": {
+    "NB": 2,
+    "NSEG": 8,
+    "cfg_a": 24,
+    "cfg_d_hex": "0x207",
+    "diagnosis_commit": "2fc1da640486d3571918bf59c8df26b8f984216e",
+    "old_index": 7,
+    "original_terminal_commit": "3ebb47abb5be4ce4e58edeff48fcfeae6bbd9fc9",
+    "previous_row7_hex": "0x107",
+    "required_index": 15
+  },
+  "new_artifact_pins": {
+    "rtl/test/tb_dsrom_actual_element_gate_rowfix.sv": "7e12b88d719b2915eba25c07f802cde6fbdf15c572ba2b5675558756e0269f59",
+    "rtl/v41die/ot_v41_pair_w17w10_rowfix_prepare.sv": "853f4a091daf6ccf5bfde4337b05a582fb50a607179c026cc803b998b0fa587f",
+    "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv": "78a12b5ef83a2a18fb3e4e521c65425dfc215b9eb816e01075d806a8576babe5",
+    "tests/test_dsrom_actual_element_rowfix.py": "9b69df6df44eb96eb43bb1d2decc78489dc078eb6dcc990ca28d23964cb20727",
+    "tools/prepare_dsrom_actual_element_rowfix.py": "50f6ba87416f6130d16684232e1613cbb063a92bd691c83221c77e69b5e2dfde"
+  },
+  "prerequisites": {
+    "actual_tag_widths": {
+      "BF_TRW": 7,
+      "bterm_TW": 17,
+      "chain_TW": 8,
+      "segment_tree_id": 4
+    },
+    "all_input_or_connected_element_coverage": false,
+    "basis": "NCH16 chain16; NT16 LV5 EARLY1 QD8 tree16; NCHB8 BF16 physical lanes16 TRW7 equals actual TG7. BF16 names lane count, not slot count.",
+    "widening_required": false,
+    "wrapper_bench_sha256": "67dab3b4ce647750cdd714bce8169db43a4e8687f64f738b75b6be35397d26ea"
+  },
+  "preserved_commit": "2fc1da640486d3571918bf59c8df26b8f984216e",
+  "preserved_files_sha256": {
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/bfcolumn_fixture_diagnosis.json": "aa5a07e6e43258c29f6e1de994cc263fdd88d781cd17faf568434776974a69ed",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/bfcolumn_generated_falling_edge_excerpt.cpp.txt": "f3cf1d644b5e8b8b5582423f25101b3774427400233e6e410cacb986084a86ff",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/cap_snapshot.json": "031b600dea9ba96c0c3040a0ef25508ba702cdeb8c96c2c318b8eda6f5d2d376",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/execution_review.json": "3e4b76de82b1638bc0c9e1e8adc27a9b3a81ee99805b80ec53b3e10572d78715",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/launcher.json": "03496cf9aec10af60693f36f8b1350f18173f2877da0628a8bf49837574be27f",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/launcher.log": "773d9dd20f25995d6641da45024cfaad1f8e27caab61b0962acea1105e96a71b",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_bfcolumn_build.log": "1c0a3fb271c529d1b31848ecef837dc3839187f214d54acef9754f5c25ec75c8",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_bfcolumn_build_receipt.json": "57a66bbca629e6864cbda2f208bc928825a19f148eb816b36232bbdb191d7c2f",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_bfcolumn_simulate.log": "d8bfdae492282dff2ad2388e8461af288725e5cb2cfdff35225b8ceb8ebbcfa1",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_bfcolumn_simulate_receipt.json": "c12a52e64dd9d7f197e515c2bfc655023dac6e7f93d9e9d5bf469245b4fa0377",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_q_build.log": "d3a5094434a7c3f1b04afa9d4ea45cd0f98185ba7df70d6b41213aa1c8a588e7",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_q_build_receipt.json": "06a8b7ac5f4ec5d630e28d76bad9020c8b7e2e0d1d6fb06e23e51c3922f1a4b4",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_q_simulate.log": "a65434588083887ab64872fb9ee59d31b62562c8b1b41b44293ef88802399485",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/positive_q_simulate_receipt.json": "9bb78723357fd2f6323571b78304712f902ce17270307b7592a8fb108c0bf4e9",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/post_execution_integrity.json": "249b4b15b57bf1629bc8a27a9b865ce4b67dbc80839dbc140c0647b6deae2070",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/q_fixture_diagnosis.json": "f9d487725b2dbc40e649cc3339f10eddc724313260edc5a514d3297a633257a3",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/q_generated_falling_edge_excerpt.cpp.txt": "b5996eb68f954ae0254d160b4159dea61cfdcfa63dd6aa78b344522f7c5a8198",
+    "results/rtl/dsrom_actual_element_gate_20261001/r1/record.json": "8c544c6cc570deccc9097f3ba671df86ee8141a7d403e253f816fe2d2094a26b",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/analysis_excerpt_failure_r1.json": "c72bb4b65da9fdfbf750381323eca265960576cd0a475392cd86afc40b98f625",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/analysis_parser_failure_r1.json": "e460c07ab7d60fbbee1f4a912eec2affb4bdd565c3f793939c14a8133607afab",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/bfcolumn_cand_dut_config_index_excerpt.cpp.txt": "0de5969cf6fa2ae5ae3fceaf904be59eba802453623b7a0f0c537c182f81a3ba",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/bfcolumn_generated_score_predicate.cpp.txt": "1f9e611a565cda92f3e6ca4b17c7ebec16502af0d5813357b4c50c53c6f1ecf2",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/bfcolumn_ref_dut_config_index_excerpt.cpp.txt": "4b42408aba0821822c39766cfcd05cd668ad2e14d2f5c49ad3036aec84ca7dfd",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/diagnosis.json": "221f438fa16e666bfc7af8ef757b4fffb1713c1dcaa7a4f9865b3b6ca6cbaeaa",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/pinned_element_contract_and_tag_path.sv.txt": "3cb34677ea698611cbed578d15ef1794f62f2043710d4ccc83b924c565803be5",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/pinned_loader_contract.sv.txt": "56cd26b041ba12001190016a50408d4c8fab3515425f2a6dd87edc7cdaecb315",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/q_cand_dut_config_index_excerpt.cpp.txt": "fc06e76830fc0b73ba83c9114800ac60458ecb158c52b4a60a127fc37fac17cb",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/q_generated_score_predicate.cpp.txt": "c52702416c2f020edbe8cc9511b88b3a597e3acf310200713f12c49cc2d25dfa",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/q_ref_dut_config_index_excerpt.cpp.txt": "f06811d0d507bc8ba5a8976d17d72a4c98e95e55ee4787a09757c4be0f63ec36",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/source_contract_audit.json": "f8b5e35dd97198fb26cfa06f8348460aff2a0e5a08e7496f3ccaf34cae75001d",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/source_contract_audit.py": "cafa9b134666d14e19cb6d9947c01ede525ca613542399e7fba1696076fb19ec",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/diagnosis_r1/source_contract_audit_r2.py": "cda80d6bbd78928d62c99f3844e12895432ece9c296c7d2c430edbe2f2f6d980",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/artifact_integrity.json": "5f069eac4f824d9d4f83c0c3ce29e49532bd71e35feba9061ffa23414e7a2e7b",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/cap_snapshot_q.json": "af7c93c52cfc6984e2dc64280c039ca6934cf03f8b88cb1312bd34183ee312aa",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/launcher.json": "6ad8997cc5777e77748b12d0f1fa8d4f1ac4ff7b5da0c5133de732650bb02a53",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/launcher.log": "695c0ed3ae5e7cd9862df53b805272acabaa8a3e8fd8404ea0f75717afdb4183",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_bfcolumn_build.log": "f9d5a670f9cefca1e153e6c5fa38dac4933066a3c174eb5da857accd71920a44",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_bfcolumn_build_receipt.json": "558793b7bd3487b974452cce54f7d1a8375781217f9a76e6540b5947539814b7",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_bfcolumn_simulate.log": "e6382cfabc0b9363e336a9a7ef681ee91aa369d48177abe74a6a169ba771b13b",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_bfcolumn_simulate_receipt.json": "068b7caea0fcf96f06c98c0d30d631675e894bd86d456a6913fd2758db544caf",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_q_build.log": "b1751b9051588ab41b556d40df2ae21c02cd2bc55af421d77be56b3635a75c1b",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_q_build_receipt.json": "e8acf18d5d057f9b790a89cb215d74d3ca5b12ecf8362067038d898f53fa9159",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_q_simulate.log": "e49c7a54ef12c0a76182a8796c4667bad22b2f1ba87c401ef2af5475e84ca5b8",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/positive_q_simulate_receipt.json": "1a401ea1855a434104849e277c51e7f2257f6c89eab81b02f30e9ec1703da097",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/record.json": "94746b5bfd6b2716f2debdcd8e1aa8c5b16c68e78763b5e5b6651c8068aa5eab",
+    "results/rtl/dsrom_actual_element_gate_r2_20261002/r1/terminal_failure.json": "56d6853eb9d02dd63465633dd201a6ef3bf73b1bcb2ae14dc2b46d8fbbf16588",
+    "results/rtl/dsrom_actual_element_prepare_20261001/model.json": "0284c3f6e9501c2c2716d47211726e8b5ea1a618fa6b8619e19060fcbb1059ad",
+    "results/rtl/dsrom_actual_element_prepare_20261001/preparation_failure_r1.json": "ebd842c489e0835fa7d06444f6146c48007cd2df5c1f48ceaafd9d27d239fca3",
+    "results/rtl/dsrom_actual_element_prepare_20261001/preparation_review.json": "9e46b71f3719bbed8fe774eb19941e9488290c3136026cbd584c2b42b30cda51",
+    "results/rtl/dsrom_actual_element_prepare_r2_20261001/model.json": "6ee5c330dd07d81e6ee953a31c2b98b99367eabce8b3393045973cc1ac221f92",
+    "results/rtl/dsrom_actual_element_prepare_r2_20261001/parent_GO.json": "a7c29004cd1cbcdcc3e728f421dfacd7eb6a5d421efe0967321a61b55ac87fd9",
+    "results/rtl/dsrom_actual_element_prepare_r2_20261001/preparation_review.json": "f6e3227250bb869112411aa613bc398a3b9e9b3756613815f88ffa00230fe639",
+    "rtl/test/dsrom_actual_element_rom.cpp": "7ae2d6c4445c418a42cdbeb4d534d5374fc55f0293f5f30832e72031a3a1f1e8",
+    "rtl/test/tb_dsrom_actual_element_gate.sv": "11a9edc5cebb855b1ae824e86036b04344cafa6b0f0465e2a36567d0ce5d10b1",
+    "rtl/test/tb_dsrom_actual_element_gate_r2.sv": "a149aa0d0d53dd4e9d293f253ec6eea99af28baa29ebda43be6ea08c54316681",
+    "tests/test_dsrom_actual_element_fixture_r2.py": "0b8a8dcec20fc554a5c3a4b30895f177e135a0ba09e8edad732acb5ff22e4d06",
+    "tests/test_prepare_dsrom_actual_element_gate.py": "37e72a355c38dde4170654b9901f0dc11d8f9e47d561084eeea584ad241f59e3",
+    "tools/prepare_dsrom_actual_element_gate.py": "3e5b6cc9f5ceeb0860c3d9295c9e894c321e848d976a95a1bfb73a8be6734237",
+    "tools/prepare_dsrom_actual_element_gate_r2.py": "72bced851471c99c62e6dcf8fe933d112f7dec3083f0f9f1d83e6c4936acea07",
+    "tools/run_dsrom_actual_element_gate.py": "59b57ee3d729b96ffce652152ccc77d1e7fa940e3a04285bdb9e3fceef45cc59",
+    "tools/run_dsrom_actual_element_gate_r2.py": "f22ddcd9c391ab9325ae5793cd3313da1ce0049a2c566dc8eb13c57a4c6853ba"
+  },
+  "protocol": {
+    "bf_payload_bits": 1024,
+    "bf_pipeline_cycles": 46,
+    "bterm_cycles": 11,
+    "channel_area_slot_fit": "Inherited exact pinned w10_baseline_model geometry; no new routing or floorplan qualification",
+    "config_bytes": 9600,
+    "config_depth": 1600,
+    "config_words": 25,
+    "issue_capture_cycles": 3,
+    "macs_per_pair_cycle": {
+      "bf16": 32,
+      "fp4": 128,
+      "fp8": 64
+    },
+    "minimum_chunk_round_cycles": 64,
+    "partial_metadata_bits": 60,
+    "partial_payload_bits": 64,
+    "per_port_read_bytes": 34.25,
+    "physical_read_ports": 4,
+    "pp_mux_bits": 548,
+    "pp_select_fanout": 274,
+    "quantized_payload_bits": 512,
+    "replicas_in_bench_per_case": 2,
+    "rom_bits_per_pair_cycle": 548,
+    "rom_bytes_per_pair_cycle": 68.5,
+    "single_user_latency_contribution": "unchanged LAT8 audit only; no measured full token or rate credit"
+  },
+  "resources": {
+    "aggregate_memory_bytes": 4294967296,
+    "automatic_retries": 0,
+    "basis": "per macro: 2 bterms + 2 chains + pair adder + one shared LV5 segment-tree adder. BF adds 16 multipliers,16 chains,15 reduction adders per macro. Q fadd=2*(2+1+1)=8; BF fadd=8+2*(16+15)=70.",
+    "build_seconds": 600,
+    "confidence": "Unmeasured actual element compilation; budget failure must stop without reducing geometry or retrying.",
+    "cpu_max": 2,
+    "estimate_not_measured": true,
+    "expected_peak_GiB": [
+      1,
+      4
+    ],
+    "run_cases_serially": true,
+    "simulation_seconds": 60,
+    "static_per_side_per_pair": {
+      "bmul2_bfcolumn": 32,
+      "bterm2": 4,
+      "chain2_bfcolumn": 36,
+      "chain2_q": 4,
+      "fadd_bfcolumn": 70,
+      "fadd_q": 8,
+      "rom4096": 4
+    },
+    "swap_bytes": 0
+  },
+  "schema": "opentallas.actual_element_second_row_correctness_prepare.v1",
+  "source_case_driver": {
+    "case": "pq BF0 XF4 / pb BF1 XF8; FAST1 PP1 BP0 PHW6; pair fixes FRONT_PAR0",
+    "commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+    "path": "tools/w17_current_fastpp_die_rt.py",
+    "sha256": "0673907bef97ea383144e7aadb10b4c79b7807cf4453867aa074a7d965c27d70"
+  },
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_copies": {
+    "rtl/v41die/ot_v41_pair_w17w10.sv": "rtl/v41die/ot_v41_pair_w17w10_rowfix_prepare.sv",
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": "rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv"
+  },
+  "source_pins": {
+    "rtl/common/ot_prefix.sv": {
+      "bytes": 2757,
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    "rtl/hdc/ot_hdc_cg.sv": {
+      "bytes": 2051,
+      "sha256": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047"
+    },
+    "rtl/hdc/ot_hdc_delay.sv": {
+      "bytes": 1395,
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": {
+      "bytes": 10519,
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    "rtl/hdc/ot_hdc_fpu.sv": {
+      "bytes": 5251,
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": {
+      "bytes": 11904,
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    "rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv": {
+      "bytes": 1209,
+      "sha256": "49850d3745c25fb695cb586b9e9767c88bdf7398758b991cf3ab5bfc643e6c92"
+    },
+    "rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv": {
+      "bytes": 1161,
+      "sha256": "226c65a86629682eae7932ab122b317f5dd6f3025ee919ca6c1c1af298bc7c1f"
+    },
+    "rtl/v41die/ot_v41_pair_w17w10.sv": {
+      "bytes": 6753,
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes.sv": {
+      "bytes": 4653,
+      "sha256": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040"
+    },
+    "rtl/v41rom/ot_v41_bf16_lanes2.sv": {
+      "bytes": 5704,
+      "sha256": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd"
+    },
+    "rtl/v41rom/ot_v41_bmul2.sv": {
+      "bytes": 4494,
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    "rtl/v41rom/ot_v41_bterm.sv": {
+      "bytes": 11773,
+      "sha256": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b"
+    },
+    "rtl/v41rom/ot_v41_bterm2_w10.sv": {
+      "bytes": 10621,
+      "sha256": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e"
+    },
+    "rtl/v41rom/ot_v41_chain.sv": {
+      "bytes": 4723,
+      "sha256": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3"
+    },
+    "rtl/v41rom/ot_v41_chain2.sv": {
+      "bytes": 5120,
+      "sha256": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2"
+    },
+    "rtl/v41rom/ot_v41_fadd.sv": {
+      "bytes": 11535,
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    "rtl/v41rom/ot_v41_rom_elem_w10.sv": {
+      "bytes": 57081,
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4"
+    },
+    "rtl/v41rom/ot_v41_segtree.sv": {
+      "bytes": 6931,
+      "sha256": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17"
+    },
+    "rtl/v41rom/ot_v41_segtree2.sv": {
+      "bytes": 8798,
+      "sha256": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3"
+    }
+  },
+  "source_plan": {
+    "future_execution": "Single q then BF attempt, same full geometry, 2CPU affinity/4GiB aggregate/swap0, summed build600s/sim60s whole-cgroup kill; no fallback/retry/reduction",
+    "resource_basis": "Previous identical geometry measured151.965483676s build and2526990336B peak; added decoder estimate only, same hard caps, no guarantee of fit",
+    "sequence": [
+      "Write model first",
+      "Added opt-in copies of exactly two pinned sources",
+      "Same fix in ref/candidate; candidate only ksadd/inc behavioral body substitution; CSA and all other sources unchanged",
+      "Independent segment-enumeration static oracle and immutable-ROM row oracle in bench",
+      "Preserve 72 DIFF predicates and every existing score/PASS expectation; diagnostics only",
+      "Fresh generated directory and authoritative hashes; prepare-only Python tests",
+      "Parent review and new GO before any compiler or simulator"
+    ],
+    "wrapper_binding": "Inherited prerequisites: BF physical16 lanes equals8 slots/TRW7; chain16/TW8; tree16 LV5 EARLY1. No widening from this index-only correction. Connected gate remains failed/unqualified."
+  },
+  "status": "MODEL_PREPARE_ONLY_NO_BUILD_GO",
+  "timing": {
+    "old": {
+      "fall_sample_settle": 0,
+      "falling_offset": 833,
+      "high": 417,
+      "low": 416,
+      "rising_offset": 416,
+      "tick_delays": [
+        416,
+        1,
+        416
+      ],
+      "total_tick": 833
+    },
+    "phase_price": {
+      "added_RTL_latency_cycles": 0,
+      "added_hardware_area": 0,
+      "high_ps_delta": -1,
+      "low_ps_delta": 1,
+      "period_ps_delta": 0,
+      "rate_credit": false,
+      "timing_qualification": false
+    },
+    "r2": {
+      "fall_sample_settle": 1,
+      "falling_offset": 832,
+      "high": 416,
+      "low": 417,
+      "rising_offset": 416,
+      "tick_delays": [
+        416,
+        1,
+        415,
+        1
+      ],
+      "total_tick": 833
+    },
+    "reset_policy": "Existing asynchronous assertion settles1ps before comparison. Deassertion occurs at a settled low phase and next tick entry compares both sides; next rising sample settles1ps. Reset transitions are not retimed, masked, or given new RTL resets.",
+    "units": "ps"
+  }
+}

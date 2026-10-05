@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.Qwen.native-terminal-coverage-handoff.v1",
+  "UTC": "2026-10-02T18:04:00.101033+00:00",
+  "base_commit": "9d4a0d9d8358ece04b6102cab2886d381528f2d4",
+  "executing_source_commit": "870c5fe581b768df28dd2998b2d0aecc24510c23",
+  "executing_GO_commit": "026847e37d735d7dcdc1d0bda8bb332d9dfd233d",
+  "status": "ADDITIVE_OFFLINE_COVERAGE_GATE_READY_ACTUAL_TERMINAL_PENDING",
+  "collector_unchanged_sha256": "0ec1b444630cfa89fba6f9ef91034f0c1740cad42e257f3186e469275c1417ab",
+  "collector_PID": 1042940,
+  "collector_PID_present": true,
+  "model_sha256": "d6bec8451bc07882c4cdb6bbb56f3e2f558358fbaa970d83ab9f1c939df0738f",
+  "PC_map_sha256": "9cf13d4d0cd8efbe76db6d28f92623d57e0e186674eefd33fe272d9e0cbe0c43",
+  "parser_sha256": "740e828dd6be2990839883b477c7aedbcabc8110afe857bc2e6013ea2686bf7d",
+  "test_sha256": "40f53164b4093f4b1768bcee9c2badbfda4db77b1610535e1343c9e09d62ceab",
+  "post_comparisons": 39,
+  "post_values": 303488,
+  "all1737PCs_in_source_storage_map": true,
+  "direct_intermediate_PC_numeric_comparison": false,
+  "transitive_boundary_map_is_not_intermediate_numeric_proof": true,
+  "unrecoverable_from_current_outputs": [
+    "actual432orderedKVaccept/publication/acquisition/consumer/releaseevents",
+    "independentFP8KVpayloadbitcomparison"
+  ],
+  "collector_fixable_gaps": [
+    "sourceoutputshapes",
+    "perregistercomparisonextents",
+    "capturedheadargmaxandretirednexttokenhash",
+    "admittedimagequalificationandmanifest",
+    "referencecheckpointrevision/shards/tensorrowcoverage",
+    "lockedtensorindexshardmappingwhenexactindexarchived"
+  ],
+  "requested_Goodall_collection_only": [
+    "Preserve current numerical job and collector unchanged",
+    "After owned terminal collector completes, run independent offline gate on actual packet",
+    "If available, add released model.safetensors.index.json byteexact as checkpoint_index.json with pinned SHA f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc; no checkpoint conversion or numerical execution",
+    "Do not synthesize missing KV journals from program PCs or label valid structure as observed provenance"
+  ],
+  "next_executable_gate": [
+    "python3",
+    "tools/qwen_native_terminal_coverage.py",
+    "--archive",
+    "/home/ubuntu/OpenTallas-hbm-r6-archive/results/rtl/qwen_trained_native_PVE1_20261002_r1/terminal",
+    "--repo",
+    "/home/ubuntu/OpenTallas",
+    "--qualified-images",
+    "/tmp/h1-qwen-trained-native-execution-20261002/qualified_images.json"
+  ],
+  "writes_by_gate": false,
+  "automatic_retries": false,
+  "actual_numerical_execution": false,
+  "actual_job_restart": false,
+  "actual_job_source_mutation": false,
+  "existing_reduced_geometry_driver_fixture_tests_only": true,
+  "actual_RTL": false,
+  "physical_credit": false,
+  "rate_credit": false,
+  "fulltoken_KV_comparison_qualified": false
+}

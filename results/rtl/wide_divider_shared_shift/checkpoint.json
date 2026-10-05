@@ -1,0 +1,73 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Wide-divider shift storage reuse; physical qualification pending. Do not treat timing as closed.",
+  "mapped_area_before_um2": 626.633,
+  "mapped_area_after_um2": 546.518,
+  "mapped_sequential_cells_before": 829,
+  "mapped_sequential_cells_after": 667,
+  "containing_summary": {
+    "cases": 4200,
+    "exp": 2100,
+    "sigmoid": 2100,
+    "accepted": 4155,
+    "refused": 45,
+    "stalls": 1534,
+    "max_cycles": 3212,
+    "reset_cycles": 23
+  },
+  "containing_checks": 6637132,
+  "unit_initial": "8 passed, 2 Icarus large-width cases hit 120-second wall timeout; simulation progress confirmed; retry limit now 600 seconds.",
+  "unit_retry_log": "results/rtl/wide_divider_shared_shift/retry_tests.log",
+  "route_session": 86162,
+  "route_output": "results/physical_abi3/asap7/wide_divider/shared_shift_cts12_1ns.json",
+  "rtl_sha256": "3bce4ec0d345b50f2190edbbc2007cd767878e20fdd3eafa6d57d40ea286204a",
+  "test_sha256": "a82012afb6ac4f13db97f40b1eea538d526139b7dd47df8c3bbe9da11ffd423e",
+  "containing_synthesis_pending": {
+    "session": 52840,
+    "record": "results/physical_abi3/asap7/a3_attention_softmax_block/both_divider_updates_synth_sta_1ns.json"
+  },
+  "unit_validation": {
+    "total_configurations_passed": 10,
+    "initial_passed": 8,
+    "timeout_retries_passed": 2,
+    "simulators": [
+      "Icarus",
+      "Verilator 5.050"
+    ],
+    "operand_configurations": [
+      [
+        328,
+        164,
+        163,
+        1
+      ],
+      [
+        328,
+        164,
+        163,
+        4
+      ],
+      [
+        17,
+        9,
+        17,
+        4
+      ],
+      [
+        17,
+        9,
+        24,
+        4
+      ],
+      [
+        17,
+        9,
+        7,
+        2
+      ]
+    ],
+    "completed_transactions_per_configuration": 146,
+    "reset_interrupted_transactions_per_configuration": 14,
+    "checks": "Compare every public output each cycle with old RTL plus independent division/modulo oracle at completion; includes padded chunks, truncated quotient, full quotient, and wider quotient fallback."
+  }
+}

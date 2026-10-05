@@ -1,0 +1,18 @@
+{
+  "sha256": {
+    "results/uarch/qwen_rom_current_reset_construction_20261002/mapped-sink-census-r1.json.gz": "bf4c7d2c6b83f73116a160c9f9193944eae9daa0e2b2d9fa60060fad671ad7fc",
+    "results/uarch/qwen_rom_current_reset_construction_20261002/sourcepins-r1.json": "b228d127d513683db0b1c6abf75ca88ea13aeb9492ea36b688f1bd3a485d4f13",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/inputs/reset-control-liberty.json": "564d8884dec80aea0a3134da3b2fad4709f02a0dd9b2013c313a00533757fca6",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/inputs/retained-r3.sv": "77dfbb108424d639dc16bcbc824f5e00533bd405c6922265070b2359d7a91f41",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/inputs/retained-source-model-handoff.json": "d304b19c66edca72e4bbb6ad65adf45fc0522f7eaceb379af8e56ccb4d7ce1b2",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/model-r1.json": "0c23f7c8a400d4f074a39e9f44d747e0511452ce619f3b457bea44186ef88084",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/root-bound-allocation-r1.json.gz": "5b5a59c02eca634b350bdfad526c489c802c70df6e41431510dbdb1fc52737e1",
+    "results/uarch/qwen_rom_mapped_root_pg_context_20261002/sourcepins-r1.json": "5eec23b46594c134f2ac1025ef5de120c63912f1d1748620ffebeca704c70a6e",
+    "rtl/physical/ot_qwen_rom_reset_parent_provider.sv": "b761cf522e05f2421d752dba6a234e117b796f40f4737593abae63763cda66ec",
+    "tests/test_qwen_rom_retention_physical_allocation.py": "c861fdcb6dbc6d38bbc16f87daff722b73d19b686b7b4c8d2808424c57cecdbc",
+    "tools/qwen_rom_current_reset_construction.py": "997c6903e07872b52f65f5a77119a4df437d07717b78d892bbcb53a3e676bea3",
+    "tools/qwen_rom_mapped_root_pg_context.py": "7a99a6d86306d47cf0316211e52e56ab0fc46ded43648b84aea9656f1c377659",
+    "tools/qwen_rom_retention_physical_allocation.py": "565421dcc702d54c7d00219e8e0e1fda1e35b9353ff5f27c83c9a1806afb5fad",
+    "tools/uarch_model_qwen_mapped_context.py": "7826e0c7100eab036f91d9066542044cf1df1de6a7fa8170a52e86697ab9de67"
+  }
+}

@@ -1,0 +1,2 @@
+PASS SU_KV_VISIBLE cases=3 SUN=256 macros=8 writes=260 grant_not_retirement=1 WQD128_backpressure=1 reset_debt_preserved=1
+/tmp/ds-su-kv-visible-epyc-r3/sources/0_tb.sv:89: $finish called at 10420000 (1ps)

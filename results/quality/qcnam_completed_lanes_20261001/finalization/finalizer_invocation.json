@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-01T11:17:54.007717+00:00",
+  "guard_worktree": "/tmp/claude-1000/wt/qcnam-admission-watch",
+  "guard_pin": "0a7d9daed2ab72cde68cec5ab900e6f30eef8206",
+  "command": [
+    "python3",
+    "/tmp/claude-1000/wt/qcnam-admission-watch/tools/qcnam_finalize_guard.py",
+    "--observation",
+    "/tmp/claude-1000/wt/qcnam-admission-watch/results/quality/qcnam_orchestration_observation.json",
+    "--finalize",
+    "--out",
+    "/tmp/claude-1000/qcnam/finalization-exclusive/verdict.json"
+  ],
+  "readiness": true
+}

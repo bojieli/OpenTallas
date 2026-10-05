@@ -1,0 +1,58 @@
+{
+  "active_owners": [
+    "Hubble",
+    "Archimedes",
+    "Epicurus",
+    "Maxwell",
+    "Nash",
+    "Euclid",
+    "Russell",
+    "Goodall",
+    "Kepler",
+    "Sagan",
+    "Dewey",
+    "Popper"
+  ],
+  "all_targets_qualified": false,
+  "baseline_main": "5cb27e946",
+  "goal": "G0-G5 for all four model/design combinations; single-user first",
+  "headroom_not_unreserved_admission": true,
+  "headroom_observation_GiB": {
+    "PVE1_available": 162,
+    "VM_available": 110,
+    "local_available": 157
+  },
+  "parallel_lanes": 7,
+  "polls": {
+    "PVE2_old_route": {
+      "PID": 551255,
+      "live": true,
+      "new_jobs_allowed": false
+    },
+    "PVE3": {
+      "matching_build_simulation_PR_processes": 0,
+      "new_jobs_allowed": false
+    },
+    "Qwen_HBM": {
+      "PID": 2027296,
+      "host": "ot-pve1",
+      "last_retired_PC": 329,
+      "live": true
+    },
+    "VM_D1": {
+      "PID": 93589,
+      "live": true,
+      "total_objects_not_owned_receipt": 1958
+    },
+    "local_D1": {
+      "compiler_PID": 1098508,
+      "live": true,
+      "make_PID": 841223,
+      "objects": 1285,
+      "owned_target": 1286
+    }
+  },
+  "preserve_active_source_and_checkpoints": true,
+  "schedule_path": "TASKS.md",
+  "schema": "opentallas.parallel-completion-schedule.v1"
+}

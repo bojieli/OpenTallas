@@ -1,0 +1,93 @@
+{
+  "algorithm": {
+    "nonfinite": "Retain current y0/fault1 refusal (even if other operand zero).",
+    "normal": "Existing 16-bit BF significand product is exact if result normal; keep split8x4 products/prefix sum and normal encoding.",
+    "overflow": "Retain biased>254 refusal y0/fault1.",
+    "subnormal": "sig24={1,s3_f}. Full signed sh=1-s3_be; for1..24 retained=sig24>>sh, guard=sig24[sh-1], sticky=OR sig24[sh-2:0] (empty=0), increment=guard&&(sticky||retained[0]). Round once. Rounding carry tobit23 encodesminimum normal; roundedzero canonical+0; fault0. sh>=25 returns canonical+0/fault0 because sig24<2^24 implies less than halfFP32subnormalULP.",
+    "zero": "Finite input zero yields canonical+0/fault0."
+  },
+  "claims": {
+    "RTL_PASS": false,
+    "adoption": false,
+    "fulltoken": false,
+    "physical": false
+  },
+  "clock_context": {
+    "FF_hold_uncertainty_ps": 25,
+    "SS_setup_uncertainty_ps": 60,
+    "closure": "OPEN; added barrel/guard/sticky/rounding/canonicalzero delay must be measured in actual full BF context with existing wake ICG and ROM macro own SSclkq. No fixture833ps/oldmul timing credit. Distinct WAKE1 join OPEN.",
+    "stage": "u_bf.g_l[*].u_m stage3 registers through RNE encoder to existing stage4_y/bad registers",
+    "target_period_ps": 833.3333333333334
+  },
+  "interfaces_and_composition": {
+    "BF_activation_slice_bits": 256,
+    "BF_weight_slice_bits": 256,
+    "MACs_per_cycle_change": 0,
+    "ROM_read_word_bits": 274,
+    "composed_latency_condition": "No cycle credit; unchanged5-cycle multiplier contract. If stage4 cannotclose, model must be revised before any addedstage/source adoption. Fulltoken arithmetic and return-context gates remain open.",
+    "extra_compute_cycles": 0,
+    "new_boundary_bits_per_cycle": 0,
+    "new_memory_ports": 0,
+    "per_lane_input_bits": 64,
+    "per_lane_output_bits": 33,
+    "proposed_composed_token_latency_change_cycles": 0,
+    "replica_fanout_change": 0
+  },
+  "logic_pricing": {
+    "basis": "Analytical coarse proxy:2cell/mux, sticky24AND+23OR,24bit rounding48cell,36 decode/sign/zero cells. Not netlist area, floorplan fit, hard area bound, rate or timing evidence. Existing slots/wires/ports unchanged; route and contextual slot fit pending.",
+    "incremental_proxy_um2_at_parent_field_BF_count": 1710371.6352000001,
+    "incremental_proxy_um2_per_BF_pair": 1670.2848000000001,
+    "incremental_proxy_um2_per_lane": 52.196400000000004,
+    "old_24bit_4layer_barrel_mux_bits": 96,
+    "proposed_24bit_5layer_barrel_mux_bits": 120,
+    "proxy_cell_area_um2": 0.2916,
+    "proxy_equivalent_cells_new": 371,
+    "proxy_equivalent_cells_old": 192
+  },
+  "opt_in_source_proposal": {
+    "concept_parameter": "GRADUAL_RNE_BF_PRODUCT",
+    "default": 0,
+    "future_gates": [
+      "Independent flags derived from corrected finite/nonfinite/overflow contract, not from observed DUT. Preserve old fault negative witnesses.",
+      "Primitive RTL gate for decode/subnormal/product rounding/sign/nonfinite/overflow/zero and truncation/offbyone/tie/flag mutants after separate GO.",
+      "Full q/BF actualword/walker FASTPP numerical rerun with all72DIFF/exact tags/counters/reset/drain/gating; new diagnostics optional, no expectation loosening; fresh reviewed capped runner/newGO.",
+      "Contextual SSsetup/FFhold/ICG/ROMclkq/route/slot fit gate and composed microarchitecture model before physical adoption; parent return/reduction/fulltoken closure remains separate."
+    ],
+    "join": "After model review: added bmul2 copy with guarded old/new encoder; added pair+element copies/generator select explicit repair, both reference and candidate same mandatory fix; helperdiff remains only original qualified commonadder substitution; CSA untouched. Keep original bmul/fpu/pair/element/bench/expected/failure files pinned."
+  },
+  "proof": {
+    "classification": "Static exhaustive reduced categories, not compiled RTL or full arithmetic/field qualification",
+    "path": "results/rtl/dsrom_numerical_bf_error_diagnosis_20261002/subnormal_category_proof.json",
+    "sha256": "6645ba1a1d2ed68bb24f76fc42c58828a3f13faf510d9f613651a15142ae3ec8"
+  },
+  "repair": "Mandatory classA finite BF16 product gradual-underflow RNE; preserve baseline/default-off path and existing golden reduction/rounding order.",
+  "replication": {
+    "BF_multipliers_per_pair": 32,
+    "count_scope": "Parent fullfield configuration context only; no field build/route or physical occupancy qualification",
+    "macros_per_full_pair": 2,
+    "parent_field_BF_macros": 2048,
+    "parent_field_BF_multiplier_sites": 32768,
+    "parent_field_BF_pair_slots": 1024,
+    "physicalBF_lanes_per_macro": 16,
+    "qBF16_disabled": true
+  },
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "state_ports_latency": {
+    "added_register_bits": 0,
+    "baseline_multiplier_latency": 5,
+    "implementation_status": "Not written/compiled/measured; combinational stage4 expansion must close contextual SS/FF or remain unqualified. No silent stageaddition allowed.",
+    "new_engine_ports": 0,
+    "new_pipeline_stages": 0,
+    "proposed_multiplier_latency": 5
+  },
+  "status": "MODEL_ONLY_PARENT_REVIEW_BEFORE_ADDITIVE_RTL_PREPARATION_OR_COMPILE",
+  "widths": {
+    "existing_s3_biased_signed": 11,
+    "existing_s3_fraction": 23,
+    "existing_sig24": 24,
+    "full_shift_classification": "Use signed11-bit comparison before narrowing. Only valid range1..24 narrows to5bits; >=25 has explicitzero path. Minimum finiteBF product floor-266 givesbiased-139/shift140, within signed11bits.",
+    "old_shift": 4,
+    "proposed_shift": 5,
+    "rounded_significand": 24
+  }
+}

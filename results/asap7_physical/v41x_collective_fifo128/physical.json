@@ -1,0 +1,229 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-09-28T12:13:15.312507+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 176184.631,
+    "block": "ot_rom_oneshot_die_px",
+    "cells": 1268591,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ADD_LAT": 3,
+      "DEPTH": 128,
+      "FW": 512,
+      "GW": 1,
+      "LANES": 16,
+      "N": 4,
+      "PAIRWISE": 1,
+      "RANK": 0,
+      "RELAY": 1,
+      "TAGW": 32
+    },
+    "sources": [
+      {
+        "path": "rtl/rom/ot_rom_oneshot_px.sv",
+        "sha256": "4a14585915d7c0ac0202d9c92cff6cc5bc4c918d63b43af81f0b7bd87a3da2ff",
+        "size_bytes": 18782
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+        "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+        "size_bytes": 11904
+      }
+    ],
+    "top": "ot_rom_oneshot_die_px"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 143:\ned: 243870, deleted: 91514\n[INFO GPL-0110] Timing-driven: new target density: 0.41808143\n[INFO GPL-0038] Routability snapshot saved at iter = 296\n      295 |   0.5786 |  1.447280e+07 |          |           |      \nIteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group\n---------------------------------------------------------------\n      300 |   0.4668 |  1.483910e+07 |  +95.96% |  1.10e-08 |      \n      310 |   0.5332 |  1.358101e+07 |   -8.48% |  1.58e-08 |      \n      320 |   0.5816 |  1.180036e+07 |  -13.11% |  2.58e-08 |      \n      330 |   0.5581 |  1.094305e+07 |   -7.27% |  4.20e-08 |      \n      340 |   0.5112 |  1.118030e+07 |   +2.17% |  6.65e-08 |      \n      350 |   0.4682 |  1.120879e+07 |   +0.25% |  1.07e-07 |      \n      360 |   0.4179 |  1.158264e+07 |   +3.34% |  1.68e-07 |      \n      370 |   0.3741 |  1.156092e+07 |   -0.19% |  2.67e-07 |      \n      380 |   0.3336 |  1.114479e+07 |   -3.60% |  4.27e-07 |      \n      390 |   0.3030 |  1.088238e+07 |   -2.35% |  6.28e-07 |      \n[INFO GPL-0040] Routability iteration: 1\n[WARNING GRT-0281] Net clk has a large fanout of 292228 terminals.\n[INFO GPL-0041] Total routing overflow: 1.6017\n[INFO GPL-0042] Number of overflowed tiles: 26 (0.00%)\n[INFO GPL-0043] Average top 0.5% routing congestion: 0.7133\n[INFO GPL-0044] Average top 1.0% routing congestion: 0.6812\n[INFO GPL-0045] Average top 2.0% routing congestion: 0.6503\n[INFO GPL-0046] Average top 5.0% routing congestion: 0.6100\n[INFO GPL-0047] Routability iteration weighted routing congestion: 0.6972\n[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.\n[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.\nIteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group\n---------------------------------------------------------------\n      400 |   0.2825 |  1.050968e+07 |   -3.42% |  9.26e-07 |      \n      410 |   0.2582 |  1.017115e+07 |   -3.22% |  1.36e-06 |      \n      420 |   0.2385 |  9.858958e+06 |   -3.07% |  2.01e-06 |      \n      430 |   0.2173 |  9.608842e+06 |   -2.54% |  2.96e-06 |      \n      440 |   0.1966 |  9.396322e+06 |   -2.21% |  4.36e-06 |      \n[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.\n[INFO GPL-0101]    Iter: 442, overflow: 0.194, keep resizer changes at: 1, HPWL: 9378139923\nIteration |   Area    | Resized | Buffers | Nets repaired | Remaining\n---------------------------------------------------------------------\n        0 |     +0.0% |       0 |       0 |             0 |   1685961\n    final |     +0.7% |     346 |    5305 |          3846 |         0\n---------------------------------------------------------------------\n[INFO RSZ-0034] Found 1718 slew violations.\n[INFO RSZ-0035] Found 1 fanout violations.\n[INFO RSZ-0036] Found 93 capacitance violations.\n[INFO RSZ-0037] Found 3766 long wires.\n[INFO RSZ-0039] Resized 346 instances.\n[INFO RSZ-0038] Inserted 5305 buffers in 3846 nets.\n\nElapsed time: 0:52.42[h:]min:sec. CPU time: user 49.45 sys 2.96 (99%). Peak memory: 4069804KB.\nElapsed time: 13:21.05[h:]min:sec. CPU time: user 866.16 sys 15.34 (110%). Peak memory: 6601848KB.\nElapsed time: 0:13.15[h:]min:sec. CPU time: user 10.76 sys 2.38 (99%). Peak memory: 2815284KB.\nElapsed time: 0:09.86[h:]min:sec. CPU time: user 7.96 sys 1.90 (99%). Peak memory: 1845600KB.\nElapsed time: 0:41.27[h:]min:sec. CPU time: user 38.45 sys 2.81 (99%). Peak memory: 3028484KB.\nElapsed time: 9:20.71[h:]min:sec. CPU time: user 1102.40 sys 6.84 (197%). Peak memory: 5605824KB.\nElapsed time: 0:12.16[h:]min:sec. CPU time: user 9.73 sys 2.42 (99%). Peak memory: 3024740KB.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-09-28T10:19:38.334004+00:00",
+  "git": {
+    "commit": "43b55c36285f182ebe9a31da6da94c83029ec117",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_rom_oneshot_die_px",
+      "--source",
+      "rtl/rom/ot_rom_oneshot_px.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "--param",
+      "N=4",
+      "--param",
+      "RANK=0",
+      "--param",
+      "LANES=16",
+      "--param",
+      "DEPTH=128",
+      "--param",
+      "RELAY=1",
+      "--param",
+      "ADD_LAT=3",
+      "--param",
+      "PAIRWISE=1",
+      "--param",
+      "GW=1",
+      "--param",
+      "FW=512",
+      "--param",
+      "TAGW=32",
+      "--clock-period-ns",
+      "0.92",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "850",
+      "850",
+      "--core-area",
+      "20",
+      "20",
+      "830",
+      "830",
+      "--place-density",
+      "0.60",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--nickname-tag",
+      "codex_v41x_collective_fifo128",
+      "--output",
+      "results/asap7_physical/v41x_collective_fifo128/physical.json",
+      "--keep-workdir",
+      "/home/ubuntu/v41dpnr/workFifo/collective_fifo128",
+      "--force"
+    ],
+    "driver": {
+      "commit": "43b55c36285f182ebe9a31da6da94c83029ec117",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/home/ubuntu/v41dpnr/wtFifo/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "3123afc4f0b388749566bb52ffcbb0932d7a393dd37f52c08c7599c8a6c5ef85",
+      "tree": "/home/ubuntu/v41dpnr/wtFifo"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/home/ubuntu/v41dpnr/wtFifo"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 920.0,
+    "cell_area_um2": 176184.631,
+    "cell_count": 1268591,
+    "cell_types_used": 39,
+    "chip_area_um2": 176152.629419,
+    "combinational_cell_count": 976364,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "40aa050c5e50b5a318b27403c112d2469b97d8d964518d3d546890989b951eab",
+      "raw_netlist_sha256": "40aa050c5e50b5a318b27403c112d2469b97d8d964518d3d546890989b951eab",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 85413.429,
+    "sequential_cell_count": 292227,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.92,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

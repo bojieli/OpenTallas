@@ -1,0 +1,303 @@
+{
+  "$defs": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "call_index": {"minimum": 1, "type": "integer"},
+        "command": {"minLength": 1, "type": "string"},
+        "exit_code": {"type": ["integer", "null"]},
+        "stderr": {"type": "string"},
+        "stdout": {"type": "string"},
+        "timed_out": {"type": "boolean"},
+        "truncated": {"type": "boolean"},
+        "turn": {"minimum": 1, "type": "integer"},
+        "type": {"const": "bash_action"}
+      },
+      "required": ["call_index", "command", "exit_code", "stderr", "stdout", "timed_out", "truncated", "turn", "type"],
+      "type": "object"
+    },
+    "agent_call": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "additionalProperties": false,
+          "properties": {"command": {"minLength": 1, "maxLength": 8192, "type": "string"}},
+          "required": ["command"],
+          "type": "object"
+        },
+        "name": {"const": "bash"}
+      },
+      "required": ["arguments", "name"],
+      "type": "object"
+    },
+    "file_record": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {"minLength": 1, "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "message": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {"minLength": 1, "type": "string"},
+        "role": {"enum": ["assistant", "system", "tool", "user"]}
+      },
+      "required": ["content", "role"],
+      "type": "object"
+    },
+    "prompt": {
+      "additionalProperties": false,
+      "properties": {
+        "prompt_text": {"minLength": 1, "type": "string"},
+        "prompt_text_utf8_sha256": {"$ref": "#/$defs/sha256"},
+        "prompt_token_count": {"minimum": 1, "maximum": 8000, "type": "integer"},
+        "prompt_token_ids": {
+          "items": {"minimum": 0, "maximum": 151668, "type": "integer"},
+          "minItems": 1,
+          "maxItems": 8000,
+          "type": "array"
+        },
+        "prompt_token_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["prompt_text", "prompt_text_utf8_sha256", "prompt_token_count", "prompt_token_ids", "prompt_token_sha256"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source_inventory": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"},
+        "path": {"minLength": 1, "type": "string"},
+        "role": {"pattern": "^[a-z][a-z0-9_]*$", "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["commit", "path", "role", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "source_task": {
+      "additionalProperties": false,
+      "properties": {
+        "dockerfile_sha256": {"$ref": "#/$defs/sha256"},
+        "id": {"pattern": "^[a-z][a-z0-9-]{0,63}$", "type": "string"},
+        "instruction": {"minLength": 1, "type": "string"},
+        "runtime_files": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "path": {"pattern": "^[A-Za-z0-9][A-Za-z0-9._/-]{0,127}$", "type": "string"},
+              "sha256": {"$ref": "#/$defs/sha256"}
+            },
+            "required": ["path", "sha256"],
+            "type": "object"
+          },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "task_yaml_sha256": {"$ref": "#/$defs/sha256"},
+        "test_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["dockerfile_sha256", "id", "instruction", "runtime_files", "task_yaml_sha256", "test_sha256"],
+      "type": "object"
+    },
+    "turn": {
+      "additionalProperties": false,
+      "properties": {
+        "expected": {
+          "additionalProperties": false,
+          "properties": {
+            "calls": {"items": {"$ref": "#/$defs/agent_call"}, "type": "array"},
+            "content": {"type": "string"},
+            "generated_text_raw": {"minLength": 1, "type": "string"},
+            "generated_text_visible": {"type": "string"},
+            "generated_token_count": {"minimum": 1, "maximum": 800, "type": "integer"},
+            "generated_token_ids": {
+              "items": {"minimum": 0, "maximum": 151668, "type": "integer"},
+              "minItems": 1,
+              "maxItems": 800,
+              "type": "array"
+            },
+            "reasoning": {"type": "string"},
+            "rom_result_id": {"$ref": "#/$defs/sha256"},
+            "termination": {"const": "eos"}
+          },
+          "required": ["calls", "content", "generated_text_raw", "generated_text_visible", "generated_token_count", "generated_token_ids", "reasoning", "rom_result_id", "termination"],
+          "type": "object"
+        },
+        "prompt": {"$ref": "#/$defs/prompt"},
+        "turn": {"minimum": 1, "maximum": 8, "type": "integer"}
+      },
+      "required": ["expected", "prompt", "turn"],
+      "type": "object"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_shared_workload_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent": {
+      "additionalProperties": false,
+      "properties": {
+        "bash_tool": {
+          "const": {
+            "function": {
+              "description": "Run a shell command inside the isolated TerminalBench task container.",
+              "name": "bash",
+              "parameters": {
+                "additionalProperties": false,
+                "properties": {"command": {"type": "string"}},
+                "required": ["command"],
+                "type": "object"
+              }
+            },
+            "type": "function"
+          }
+        },
+        "bash_tool_sha256": {"$ref": "#/$defs/sha256"},
+        "enable_thinking": {"const": false},
+        "generation_mode": {"const": "greedy"},
+        "maximum_agent_turns": {"const": 4},
+        "maximum_new_tokens_per_turn": {"const": 800},
+        "rom_campaign_id": {"$ref": "#/$defs/sha256"},
+        "rom_suite_id": {"$ref": "#/$defs/sha256"},
+        "system_prompt": {"minLength": 1, "type": "string"},
+        "tasks": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "expected": {
+                "additionalProperties": false,
+                "properties": {
+                  "agent_termination": {"const": "eos"},
+                  "commands": {"items": {"$ref": "#/$defs/action"}, "minItems": 1, "type": "array"},
+                  "final_answer": {"minLength": 1, "type": "string"},
+                  "rom_image_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+                  "rom_test_stderr": {"type": "string"},
+                  "rom_test_stdout": {"type": "string"},
+                  "test_exit_code": {"const": 0},
+                  "turns": {"items": {"$ref": "#/$defs/turn"}, "minItems": 1, "maxItems": 8, "type": "array"}
+                },
+                "required": ["agent_termination", "commands", "final_answer", "rom_image_id", "rom_test_stderr", "rom_test_stdout", "test_exit_code", "turns"],
+                "type": "object"
+              },
+              "id": {"pattern": "^[a-z][a-z0-9-]{0,63}$", "type": "string"},
+              "source": {"$ref": "#/$defs/source_task"}
+            },
+            "required": ["expected", "id", "source"],
+            "type": "object"
+          },
+          "minItems": 1,
+          "maxItems": 8,
+          "type": "array"
+        },
+        "terminalbench_commit": {"pattern": "^[0-9a-f]{40}$", "type": "string"}
+      },
+      "required": ["bash_tool", "bash_tool_sha256", "enable_thinking", "generation_mode", "maximum_agent_turns", "maximum_new_tokens_per_turn", "rom_campaign_id", "rom_suite_id", "system_prompt", "tasks", "terminalbench_commit"],
+      "type": "object"
+    },
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "accelerator_execution_proven": {"const": false},
+        "agent_environment_replayed": {"const": false},
+        "rom_goldens_imported": {"const": true},
+        "semantic_goldens_frozen_before_accelerator_execution": {"const": true},
+        "timing_or_performance": {"const": false}
+      },
+      "required": ["accelerator_execution_proven", "agent_environment_replayed", "rom_goldens_imported", "semantic_goldens_frozen_before_accelerator_execution", "timing_or_performance"],
+      "type": "object"
+    },
+    "generation": {
+      "additionalProperties": false,
+      "properties": {
+        "eos_token_ids": {"const": [151645, 151643]},
+        "eos_token_included": {"const": true},
+        "padded_output_rows": {
+          "additionalProperties": false,
+          "properties": {
+            "end_exclusive": {"const": 151936},
+            "policy": {"const": "reject_if_selected"},
+            "start": {"const": 151669}
+          },
+          "required": ["end_exclusive", "policy", "start"],
+          "type": "object"
+        },
+        "selection": {"const": "greedy_lowest_token_id_argmax"},
+        "stop_rule": {"const": "first_eos_or_maximum_generated_token_count"}
+      },
+      "required": ["eos_token_ids", "eos_token_included", "padded_output_rows", "selection", "stop_rule"],
+      "type": "object"
+    },
+    "model": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+        "id": {"const": "qwen3-8b"},
+        "repository": {"const": "Qwen/Qwen3-8B"},
+        "revision": {"const": "b968826d9c46dd6066d109eabc6255188de91218"},
+        "source_files": {
+          "additionalProperties": false,
+          "properties": {
+            "config": {"$ref": "#/$defs/file_record"},
+            "generation_config": {"$ref": "#/$defs/file_record"},
+            "tokenizer": {"$ref": "#/$defs/file_record"},
+            "tokenizer_config": {"$ref": "#/$defs/file_record"}
+          },
+          "required": ["config", "generation_config", "tokenizer", "tokenizer_config"],
+          "type": "object"
+        }
+      },
+      "required": ["checkpoint_lock_id", "id", "repository", "revision", "source_files"],
+      "type": "object"
+    },
+    "natural_questions": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "enable_thinking": {"type": "boolean"},
+          "expected": {
+            "additionalProperties": false,
+            "properties": {
+              "context_tokens_committed": {"minimum": 1, "maximum": 8000, "type": "integer"},
+              "eos_token_id": {"enum": [151643, 151645]},
+              "generated_text_raw": {"minLength": 1, "type": "string"},
+              "generated_text_visible": {"type": "string"},
+              "generated_token_count": {"minimum": 1, "maximum": 8000, "type": "integer"},
+              "generated_token_ids": {
+                "items": {"minimum": 0, "maximum": 151668, "type": "integer"},
+                "minItems": 1,
+                "maxItems": 8000,
+                "type": "array"
+              },
+              "rom_logits_sha256": {"items": {"$ref": "#/$defs/sha256"}, "minItems": 1, "maxItems": 8000, "type": "array"},
+              "rom_result_id": {"$ref": "#/$defs/sha256"},
+              "termination": {"const": "eos"}
+            },
+            "required": ["context_tokens_committed", "eos_token_id", "generated_text_raw", "generated_text_visible", "generated_token_count", "generated_token_ids", "rom_logits_sha256", "rom_result_id", "termination"],
+            "type": "object"
+          },
+          "id": {"pattern": "^[a-z][a-z0-9_]{0,63}$", "type": "string"},
+          "messages": {"items": {"$ref": "#/$defs/message"}, "minItems": 1, "maxItems": 8, "type": "array"},
+          "prompt": {"$ref": "#/$defs/prompt"}
+        },
+        "required": ["enable_thinking", "expected", "id", "messages", "prompt"],
+        "type": "object"
+      },
+      "minItems": 6,
+      "maxItems": 16,
+      "type": "array"
+    },
+    "official_chat_template_sha256": {"const": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"},
+    "rom_source_inventory": {"items": {"$ref": "#/$defs/source_inventory"}, "minItems": 6, "type": "array"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_shared_workload.v1"},
+    "workload_id": {"$ref": "#/$defs/sha256"},
+    "workload_version": {"const": "tensor-accelerator-qwen-shared-workload-0.1.0"}
+  },
+  "required": ["agent", "claim_boundary", "generation", "model", "natural_questions", "official_chat_template_sha256", "rom_source_inventory", "schema", "workload_id", "workload_version"],
+  "title": "OpenTallas shared ROM and HBM/SRAM Qwen natural workload v1",
+  "type": "object"
+}

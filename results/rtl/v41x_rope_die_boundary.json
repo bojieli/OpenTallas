@@ -1,0 +1,53 @@
+{
+  "claim": "Reduced/full die port elaboration with read-only RoPE cache sharing packed-KV K mux; exact tile/HBM PHY headers blackboxed, no full token or physical timing claim",
+  "modes": {
+    "full": {
+      "diagnostics": [],
+      "returncode": 0
+    },
+    "full_window_hbm": {
+      "diagnostics": [],
+      "returncode": 0
+    },
+    "reduced": {
+      "diagnostics": [],
+      "returncode": 0
+    },
+    "tag_bus_widths": {
+      "diagnostics": [
+        "DIE_TAG_WIDTHS_PASS stacks=4 tag_bits=16 buses=4"
+      ],
+      "returncode": 0
+    }
+  },
+  "pass": true,
+  "schema": "opentallas.rtl.v41x_rope_die_boundary.v1",
+  "sources_sha256": {
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/chip/ot_chip_v41x_attn_row_merge.sv": "92e535bd659f4957d343aa6cc7ea9988a247cf8bfd08b193cd94a2e4e0a1cafd",
+    "rtl/chip/ot_chip_v41x_coll_dma.sv": "2e5f33b74ef8f59996287e82f86b9cf238380b5da432c5c903a0bd191e6eede3",
+    "rtl/chip/ot_chip_v41x_coll_transpose.sv": "6adadd16101ea35f3740bf6e351f1374532c893a53715167d18ff2b63634b260",
+    "rtl/chip/ot_chip_v41x_die.sv": "bd4fe023f9386fdbf9c9ae5548750d3d3a19370599c354ff8e5ad6252629127f",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "4db1866158de8b8bb377631a0ec6fda53e6eb512a84b81ee049788534d523f14",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "72e06e1fe533c491c13260ddea0462254a32821af44a2ad3726fbd553fd19f74",
+    "rtl/chip/ot_chip_v41x_kv_prefetch.sv": "00d58240e144e13bd5a721ac019a5c7d343aea7deaa48d0f7a8f0e7d227ad63d",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/chip/ot_chip_v41x_rope_hbm_cache.sv": "18a90665039d2f6b87d312e11496c47262383c9801d9edbf60d34b7cd4f37dee",
+    "rtl/chip/ot_chip_v41x_rope_region_guard.sv": "239c4a1f6ffa3f62022d27da2ecdbf9e6d406e190c0e0ab253c56bf593f1fbcb",
+    "rtl/chip/ot_chip_v41x_tile.sv": "ee8046f5f871bb6923a1781805ae691a009494c5f671c02d1639d10ff7edc856",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "5a1e9d2b7115dfdc559ad441fc0352ad6764003c86b3f102e7bf243166178908",
+    "rtl/chip/ot_chip_v41x_window_block_guard.sv": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "4731fa1dfd492bdf792d87349e73f231f123752b674144663097d7a506e463eb",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "17a627d2dbfea1c5e4116438b90076ab78d18377b0fba461474881217bcca724",
+    "rtl/chip/ot_chip_v41x_window_row_codec.sv": "3715ab11770911937f49a0ac7723f1242995ef9f3268a4fe45fcbfc8b016f042",
+    "rtl/chip/ot_chip_v41x_window_stage4.sv": "834fa2f45c3e92ae103bf963e86292182934a053319dd31168723b51f150d11d",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/rom/ot_rom_fabric_router.sv": "327b720da88dbdd08289d5e7f599a1c779b91459189a25c0629e7ca2e2a45c1c",
+    "rtl/rom/ot_rom_oneshot_px.sv": "ae8fbfdf6a478e10d20325ebdbaac060bdf6fd9c970f293a80dd5bdedc17ca37",
+    "rtl/rom/ot_rom_pkg_ctrl_x.sv": "49da28d745d47ce2793829a5f06c8446388b22a68087c418e2a8e7e3231715d2",
+    "tools/rtl_chip_v41x_packed_die_boundary.py": "a2e8933615c9431316c0e9d216a8d200b47adb71394effa490cf92789edced43",
+    "tools/rtl_v41x_rope_die_boundary.py": "2a07f0f36e6bcbccb610c97f2d648b7d50cba3c4b6e756d2282cac1d702d291b"
+  },
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

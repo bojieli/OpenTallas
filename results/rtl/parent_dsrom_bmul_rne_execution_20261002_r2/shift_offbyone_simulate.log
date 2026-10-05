@@ -1,0 +1,6 @@
+DIFF primitive mutant=3 product_vector=0 expected=000008000 actual=00004000/0
+PASS primitive RNE mode=3 product_assertions=1416 encoder_assertions=840 baseline_witnesses=2
+- tb_dsrom_bmul_rne_primitive.sv:91: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 0.001 s; speed 6.622 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 6 MB

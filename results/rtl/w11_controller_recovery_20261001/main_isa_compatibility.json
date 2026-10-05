@@ -1,0 +1,11 @@
+{
+  "verdict": "PASS",
+  "main": "1be527dbc",
+  "fusion": "90b9681b",
+  "check": "Every pre-existing reduced/full field offset and all-ones instruction preserved by optional fusion install; W17 NEWBLK and coll_d_stride retained",
+  "inputs_sha256": {
+    "hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "hdc_isa_v41_fuse.py": "7e9931ed2ef98b79b2f6f1eba46ac5d17d044443520a08f19e3fdf3141126fde"
+  },
+  "claim": "Python ISA extension compatibility only; no main-current RTL build or timing qualification."
+}

@@ -1,0 +1,226 @@
+{
+  "checkpoint_binding": {
+    "checkpoint_output_u32le_sha256": "51684cad947f996d08e01b7674b2be7b864874bed137eff03582012af8f3e63b",
+    "final_t320_output_u32le_sha256": "dbdc4f90828960793c1a5f31bd0d223c402df6d77e1939f314648a9c4d4684bd",
+    "first_t512_output": {
+      "byte_identical_to_authenticated_functional_output": true,
+      "qualified_path": "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le",
+      "qualified_sha256": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+      "sha256": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa"
+    },
+    "prompt_token_count": 200000,
+    "repository": "deepseek-ai/DeepSeek-V4-Flash-0731",
+    "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+    "segments": [
+      {
+        "logits_u32le_sha256": "a5a64176489044d2f9191ed1b7ed1b2af0028b75671ff416b89252c9ca506ae0",
+        "matrix_offset": 0,
+        "name": "first_prefill_t512",
+        "position_start": 0,
+        "token_count": 512,
+        "token_ids_u32le_sha256": "10af7f8081114dfec2da97e9cb7d70ffe739b8d9be1ed9e14255b5402983697f"
+      },
+      {
+        "logits_u32le_sha256": "c44ed0476527f4217e0cafd90cfa841c9226c882f9aa1116799c2d3146e524f6",
+        "matrix_offset": 512,
+        "name": "final_prefill_t320",
+        "position_start": 199680,
+        "token_count": 320,
+        "token_ids_u32le_sha256": "4812a304dd03fd4e1e0cad93c3f339ac6369e871cbcd2d99ca462bac7a7dd335"
+      }
+    ],
+    "t1_shape_witness": {
+      "case_index": 0,
+      "output_u32le_sha256": "d9149ca4dd7b4ab7c063144b2e10d93c62f5a11b42f8c51f34b35fabcffe31c0",
+      "position": 0,
+      "token_id": 18042
+    },
+    "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+    "workload_id": "TA-DS-CTX-200K-1"
+  },
+  "claim_boundary": {
+    "architectural_timing": false,
+    "descriptor_execution": false,
+    "descriptor_identity_bound": true,
+    "eos": false,
+    "first_t512_and_final_t320_checkpoint_blocks": true,
+    "full_200k_checkpoint_domain": false,
+    "full_hc_pre": false,
+    "model_token_generation": false,
+    "stable_softmax_sinkhorn20_composition_vectors": true,
+    "t1_shape_witness": true,
+    "technology_timing": false,
+    "token_correctness": false,
+    "tpot": false
+  },
+  "counts": {
+    "cases": 853,
+    "categories": {
+      "checkpoint_final_t320": 320,
+      "checkpoint_first_t512": 512,
+      "directed_extreme": 2,
+      "directed_ordering": 7,
+      "directed_overflow": 1,
+      "directed_rounding": 4,
+      "directed_underflow": 2,
+      "nonfinite_refusal": 5
+    },
+    "checkpoint_cases": 832,
+    "directed_cases": 21,
+    "errors": {
+      "0": 847,
+      "1": 5,
+      "2": 1
+    },
+    "refused_cases": 6,
+    "sinkhorn_successes": 847,
+    "stable_softmax_successes": 847,
+    "successful_cases": 847,
+    "successful_sinkhorn_divisions": 528528
+  },
+  "current_deployment_manifest_sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+  "descriptor_binding": {
+    "abi": {
+      "major": 3,
+      "minor": 0
+    },
+    "authenticated_functional_qualification": {
+      "all_output_words_bitwise_compared": true,
+      "checkpoint": {
+        "repository": "deepseek-ai/DeepSeek-V4-Flash-0731",
+        "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+      },
+      "combination_output_sha256": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+      "eos": false,
+      "model_token_generation": false,
+      "path": "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json",
+      "record_sha256": "10641764a78e45b32c0228592822a070f33e4a6b89fe0aad350d6162cb7d4c5e",
+      "sha256": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+      "tpot": false,
+      "vector_manifest": {
+        "manifest_sha256": "f5612e0b7f58eff035918a2a210d9ffcf7fd2fb4990490bea51806350315959e",
+        "path": "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json",
+        "sha256": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1"
+      },
+      "workload": {
+        "file_sha256": "b00dd2f461329c14e0a8c0863dbef78e066950bee0aba053aa651f91890418bb",
+        "prompt_token_count": 200000,
+        "rendered_text_sha256": "6ad57114c426156f7e25341d6faa55d061033e6b98244d31ab1e8a395463527a",
+        "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd",
+        "workload_id": "TA-DS-CTX-200K-1"
+      }
+    },
+    "current_deployment_vector_manifest": {
+      "descriptor_image_sha256": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+      "path": "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json",
+      "program_image_sha256": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+      "sha256": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638"
+    },
+    "numeric_contract": {
+      "accumulator_dtype": 18,
+      "contract_digest": "202e8be635a9cf690f3d81f322698168c72912faf735bd5b76fd29fd462cd586",
+      "epsilon_bits": 897988541,
+      "flags": 0,
+      "input_dtype": 16,
+      "nan_policy": 0,
+      "output_dtype": 18,
+      "reduction_order": 1,
+      "rounding_mode": 0,
+      "saturate": 0,
+      "scale_bits": 0,
+      "second_input_dtype": 18
+    },
+    "profiles": {
+      "deepseek-v4-flash-hbm-cluster": {
+        "combination_capacity_tokens": 512,
+        "combination_output_descriptor_id": 542,
+        "combination_output_descriptor_sha256": "4d931b855abc201a36ecef7c6873951774b9c2c7a7d76213f1c0ef42565c59fb",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/hbm_deepseek_deployment_certificate.json",
+          "artifact_sha256": "16cd6a8673fa4e20c09f2a9690758d2748fd3ad98484014b325135eed9a72587",
+          "case": "deepseek-v4-flash-hbm-cluster"
+        },
+        "deployment_identity_evidence_hash_verified": true,
+        "deployment_sha256": "ec7cff231a7df4e1a652d421c81b853f0b1809b4fa5f0d197231f9e72da9f341",
+        "descriptor_table_sha256": "7e07d29a8bb5159ab61d893407fdba4cf9c1514ca2e996534cce3814fb30f383",
+        "instruction_sha256": "1495e79701542b0ef97e414465a67b323fa24c8d793a58b176dd3ee2d164c8ec",
+        "numeric_descriptor_id": 543,
+        "numeric_descriptor_sha256": "74f3014cee7e6761309889e815ff4181b80fbcc5abf4bab1d327382a605c3add",
+        "operator_descriptor_id": 545,
+        "operator_descriptor_sha256": "179046a9bdc622251863c21d1d0cce87c656960c570b932078c7f52e6a9b43de",
+        "profile": 1,
+        "program_counter": 14,
+        "program_sha256": "6f938cb5b68ef9b445a2fbbcf622b9573b44a913345cef903368793e98f87d8c"
+      },
+      "deepseek-v4-flash-rom-wafer": {
+        "combination_capacity_tokens": 131072,
+        "combination_output_descriptor_id": 377,
+        "combination_output_descriptor_sha256": "a0d2f3aaafc32c9874835f0fb1bbaf8fa113a3a74dc112396b26c9528b640d98",
+        "deployment_identity_evidence": {
+          "artifact": "results/abi3/rom_schedule_checks.json",
+          "artifact_sha256": "ae930fee14e53ac86668289266f8b7838f367b2ceb99c707b4a21bf939218044",
+          "case": "deepseek-v4-flash-rom-wafer"
+        },
+        "deployment_identity_evidence_hash_verified": true,
+        "deployment_sha256": "34ca189cd4082b21260c0c27920f6e46d821f6709003b84cacd86cd867ed3e42",
+        "descriptor_table_sha256": "e324895066074c7da80422cc6a9388c392038d0ce721b6ad7124a4e1af38f40d",
+        "instruction_sha256": "bc5a265299499d7851804b9730ea32ce8f4c1597e0f9ea3884984a6fd85c44ab",
+        "numeric_descriptor_id": 378,
+        "numeric_descriptor_sha256": "74f3014cee7e6761309889e815ff4181b80fbcc5abf4bab1d327382a605c3add",
+        "operator_descriptor_id": 381,
+        "operator_descriptor_sha256": "dae04486ed37c804c564c54c01f459ef2d50eaf8c6417fbcbcb0b314f9e45a69",
+        "profile": 0,
+        "program_counter": 15,
+        "program_sha256": "5d94950fce838bd6aa50c7b29e9e85ac67498a3efa5d858b1c1bead22c2a2ec8"
+      }
+    }
+  },
+  "evidence_sha256": {
+    "results/abi3/deepseek_hbm_hc_pre_t512_functional_qualification.json": "3a37a973339cf7abe6e06b595f17445a4a80307a8c87773f7f1950d66a5c9c60",
+    "results/abi3/hbm_deepseek_deployment_certificate.json": "16cd6a8673fa4e20c09f2a9690758d2748fd3ad98484014b325135eed9a72587",
+    "results/abi3/rom_schedule_checks.json": "ae930fee14e53ac86668289266f8b7838f367b2ceb99c707b4a21bf939218044",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "e2af94bbccaaa4e1a4b3d7d67a384d86a80769a37d06f38d622850fb116dd616",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "9a86572ef8fbfb0eb6c175cd528c8e39164d0f315cec889d9c85a4ddf227c505",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "06977e3d3be02282c5076fa269f8fe5a25dec320f4b0ec7840b4429d09945638",
+    "testdata/rtl/a3_hc_stable_softmax/index.json": "a28708a98cfad7fbd6016304dca583c430f871f250d1c32278fe387e0021cc9c",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/expected_pc14_combination.u32le": "5d9a46a955239c39d423edcdfa0d3cce4b51b93aeebd585fb357ecd7eba186fa",
+    "testdata/runtime/deepseek_hbm_hc_pre_t512/qualification_vector.json": "21dbb02b406cb4cdf39d5d140e5bcaa6b6014946a5af4228f0c3e646757642f1"
+  },
+  "expected_words_per_case": 17,
+  "files": {
+    "matrix_expected.hex": "a99c3198850e427bfbd13159e271c759260f7dff9e34a667a3c8628294faf1b6",
+    "meta.hex": "04f2c0762a9249646c39f4ddda9680d201548adc526e5fc9d12e665310594e70"
+  },
+  "input_binding": {
+    "path": "testdata/rtl/a3_hc_stable_softmax/matrix_input.hex",
+    "sha256": "3bba884fa1ac8b0c3dcf903b2ceb3bb10cf95237e0f425dd50c4cf49d185cf66",
+    "stable_softmax_manifest_path": "testdata/rtl/a3_hc_stable_softmax/index.json",
+    "stable_softmax_manifest_sha256": "a28708a98cfad7fbd6016304dca583c430f871f250d1c32278fe387e0021cc9c",
+    "stable_softmax_vector_set_id": "f788517728a22c8a24bac7bec59c737bbc07a67bdc24596cb874f6a5fa23cb8d"
+  },
+  "input_words_per_case": 16,
+  "numeric_contract": {
+    "atomicity": "all sixteen final coefficients commit together or all zero with nonzero error",
+    "epsilon_binary32": "358637bd",
+    "rounding": "binary32 round-to-nearest ties-to-even after every named operation",
+    "sinkhorn": "initial column normalization then nineteen row/column pairs; balanced RN32 four-sum; RN32 epsilon denominator; RN32 divide",
+    "stable_softmax": "source-major row max; RN32 subtraction; CR32 nonpositive exp; balanced RN32 four-sum; RN32 divide; RN32 epsilon addition"
+  },
+  "oracle": {
+    "exponential": "independent exact-rational adaptive interval",
+    "host_floating_point": false,
+    "rtl_implementation_imported": false,
+    "service_arithmetic_imported": false,
+    "sinkhorn_binary32": "self-contained exact Fraction arithmetic and integer RNE encoding",
+    "stable_softmax_binary32": "self-contained exact Fraction arithmetic and integer RNE encoding"
+  },
+  "schema": "opentallas.rtl.a3_hc_softmax_sinkhorn20_vectors.v1",
+  "source_sha256": {
+    "runtime/reference/hyper_connection.py": "08876748899568abd7ad58ba33e734e381ed9a65a79419bc7b65b070284113f1",
+    "tools/build_a3_hc_numeric_vectors.py": "08f0f9450d00a804974a77ad3cfde9367039443354dea4b2e6659e68573cfc2f",
+    "tools/build_a3_hc_softmax_sinkhorn20_vectors.py": "9ab407e54744ae3d31f30289bf8ad4e8ea215e4c68c3f06ec8898e77218e320f",
+    "tools/build_a3_hc_stable_softmax_vectors.py": "17000780d540bb74fd7a03ebeaae927e09e93cbf8e5ef9ed03796b6ca3e0f637"
+  },
+  "status": "descriptor_bound_independent_exact_vectors",
+  "vector_set_id": "6736227f84e76c4562f34359e59e18235443ace972c1310389a826f13e0d95ec"
+}

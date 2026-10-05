@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_dma_campaign_v1.schema.json",
+  "title": "Qwen authentic HBM-to-SRAM DMA RTL campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "build_id",
+    "campaign_id",
+    "cases",
+    "claim_boundary",
+    "command_program_sha256",
+    "correlation",
+    "schema",
+    "simulators",
+    "source_sha256",
+    "status",
+    "tools",
+    "vector_set_id"
+  ],
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "cases": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/case"}
+    },
+    "claim_boundary": {
+      "const": {
+        "complete_dma_command": true,
+        "complete_layer_execution": false,
+        "external_hbm_response_boundary": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "correlation": {
+      "const": {
+        "command_index": 1,
+        "expected_payload_sha256": "00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530",
+        "hbm_address": 1244659712,
+        "hbm_burst_bytes": 64,
+        "hbm_bytes_read": 8192,
+        "hbm_error_cases": 1,
+        "hbm_request_count": 128,
+        "maximum_outstanding_hbm_requests": 1,
+        "sram_address": 2097152,
+        "sram_bytes_written": 8192,
+        "sram_word_bytes": 16,
+        "sram_write_count": 512
+      }
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_rtl_dma_campaign.v1"},
+    "simulators": {"const": ["iverilog", "verilator"]},
+    "source_sha256": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 10
+    },
+    "status": {"enum": ["fail", "pass"]},
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["iverilog", "verilator"],
+      "properties": {
+        "iverilog": {"minLength": 1, "type": "string"},
+        "verilator": {"minLength": 1, "type": "string"}
+      }
+    },
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "compile_log",
+        "compile_returncode",
+        "log_sha256",
+        "name",
+        "run_log",
+        "run_returncode",
+        "status"
+      ],
+      "properties": {
+        "command": {"minLength": 1, "type": "string"},
+        "compile_log": {"type": "string"},
+        "compile_returncode": {"type": "integer"},
+        "log_sha256": {"$ref": "#/$defs/sha256"},
+        "name": {"enum": ["iverilog", "verilator"]},
+        "run_log": {"type": "string"},
+        "run_returncode": {"type": ["integer", "null"]},
+        "status": {"enum": ["fail", "pass"]}
+      }
+    }
+  }
+}

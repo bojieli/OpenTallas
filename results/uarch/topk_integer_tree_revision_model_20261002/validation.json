@@ -1,0 +1,9 @@
+{
+  "direct_command": "python3 tests/test_uarch_topk_integer_tree_model.py -v",
+  "direct_result": "PASS",
+  "tests": 10,
+  "discovery_failure": "unrelated tests/abi3 import requires absent runtime.abi3; original log retained in static_tests_checkpoint.log",
+  "hardware_execution": false,
+  "RTL_admitted": false,
+  "PR_admitted": false
+}

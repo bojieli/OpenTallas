@@ -1,0 +1,1079 @@
+{
+  "RTL_builds": 0,
+  "accepted_input_boundary": {
+    "absolute_phase_start_origin_bound": false,
+    "actual_parent_source_accept_capture_deadline_ACK_trace_available": false,
+    "epicurus_parent_cfg_activation_root_ownership_preserved": true,
+    "parent_r3_offered_NOT_accepted": true
+  },
+  "actual_source_admission": {
+    "ECC_credit_ready_in_predicate": false,
+    "ECC_terminal_guard_in_predicate": false,
+    "actual_field_ack_or_ECC_stall_provider_exists": false,
+    "existing_main_read_ce": "issue && a_ctr bank parity; unchanged originalsource",
+    "predicate": "wire issue = w_run && f_cnt != 0 && !hazard && !pp_block && !(BP != 0 && bp_hold != 3'd0);"
+  },
+  "checker": {
+    "SS_main_clean_ps": 555.61792,
+    "SS_raw_clean_ps": 525.730774,
+    "held_II_cycles": 2,
+    "held_latency_cycles": 2,
+    "one_cycle_service_selected": false,
+    "registered_SSFF_closed": false
+  },
+  "edge_semantics": "integer sourceclock, samplebeforeNBA: availabilityatN is usableafterN; no coincident terminal/consumer orACK/newslot reuse.",
+  "event_contract": [
+    "main_accept with element.issue/twoMBCE, exact owner/address, claimedslot0..127",
+    "raw_accept with exact subscriber word/leaf/nonce",
+    "enabled rawcapture",
+    "rawchecker launch aftercapture; completed2cycle cleanterminal",
+    "matching gatheredparity delivery afterterminal",
+    "pairedmaincapture",
+    "twoMB mainchecker launch after maincapture+paritydelivery; completed2cycle terminal",
+    "arithmetic accept by actualsource deadline",
+    "ownerACK after arithmeticaccept; slotreuse onlyfollowingedge"
+  ],
+  "finite": {
+    "effective_accepted_raw_jobs_max": 128,
+    "extra_prefetch_cache_NOT_selected": true,
+    "main_checkers_two_perpairedseat": true,
+    "paired_request_seats": 128,
+    "raw_leaf_one_held_word": true,
+    "raw_physical_capture_locations": 412
+  },
+  "generator_sha256": "9b58c8aa158284cc5c40766d55519d3e0642bcf9f059a4c3e7a692ce99348ae6",
+  "no_token_loss_proven": false,
+  "physical_GO": false,
+  "rare_path": "686ad25 finite correction contract: dirtyword/address/fulltransaction held until correction/fault+deliveryfence; raw4/main3 held fullcorrector lowerbounds are NOT clean path cost.",
+  "remaining": "Need parent source-owned accepted CE/capture/requireddeadline events and candidate causal ACK interface; cannot label offered r3 as accepted or add hidden source stalls.",
+  "result": "READY_PARITY_SPECIFIC_ACCEPTED_EVENT_CONSUMER_FAIL_EXISTING_ECC_ADMISSION_BINDING",
+  "schema": "opentallas.dsrom.PAR2.actual-accepted-held-service.v1",
+  "source_legal_local_CE_capacity_witness": {
+    "actual_parent_cfg_input_accepted_timing_and_consumer_deadline_proven": false,
+    "alias": "exp0.w1",
+    "assumes_parity_ALREADY_qualified_and_gathered": true,
+    "causal_cost_cycles": {
+      "ACK_after_accept": 1,
+      "arithmetic_after_terminal": 1,
+      "oldcredit_reuse_afterACK": 1,
+      "oldedge_checker_launch": 1,
+      "retained_main_checker": 2,
+      "source_PP_capture": 2
+    },
+    "consecutive_source_CE_edges": 16,
+    "current_request_slots": 128,
+    "decoder_replica_count_NOT_increased_by_this_buffer_price": true,
+    "extra_held_slots_required_for_this_feed": 384,
+    "extra_slot_FF50_proxy_mm2": 0.19942640639999998,
+    "extra_slot_state_allowance_bits": 263040,
+    "first_issue_origin": "pinned pair_issue fieldinput waveform reference; firstsourceCE is relative, absolutephaseoriginUNBOUND",
+    "first_word_identity_witness": [
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2061
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2092
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2122
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2154
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2188
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2218
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2250
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2284
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2314
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2346
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2380
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2409
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2442
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2476
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2505
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2538
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2572
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2601
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2637
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2668
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2697
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2733
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2764
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2793
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2829
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2860
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2889
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2925
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2956
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 2986
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3020
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3050
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3082
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3116
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3146
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3178
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3212
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3242
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3274
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3308
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3338
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3370
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3404
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3433
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3466
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3500
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3529
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3562
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3596
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3625
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3661
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3692
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3721
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3757
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3788
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3817
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3853
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3884
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3913
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3949
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 3980
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 4010
+      },
+      {
+        "PP": 0,
+        "physical_row": 64,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 4044
+      },
+      {
+        "PP": 0,
+        "physical_row": 60,
+        "source_CE_model_edge": 7,
+        "source_global_pair": 4074
+      }
+    ],
+    "independent_pairs": 64,
+    "layer": 0,
+    "matrix_journal_ordinal": 10,
+    "maximum_live_source_request_slots_under_this_conditional_feed": 512,
+    "minimum_slot_reuse_interval_under_retained_checker_and_explicit_ACK": 8,
+    "mode": "CONDITIONAL_LOCAL_SOURCE_CE_MODEL_READY_ACTIVATIONS_NOT_UPSTREAM_ACCEPT_TRACE",
+    "mux_ready_ACK_routes_and_source_newports_UNPRICED": true,
+    "no_change_to_upstream_accept_edges_or_predicate": true,
+    "pair_FIFO_receipts": [
+      {
+        "pair": 2061,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2092,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2122,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2154,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2188,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2218,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2250,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2284,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2314,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2346,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2380,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2409,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2442,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2476,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2505,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2538,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2572,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2601,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2637,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2668,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2697,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2733,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2764,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2793,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2829,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2860,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2889,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2925,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2956,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 2986,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3020,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3050,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3082,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3116,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3146,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3178,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3212,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3242,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3274,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3308,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3338,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3370,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3404,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3433,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3466,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3500,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3529,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3562,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3596,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3625,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3661,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3692,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3721,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3757,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3788,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3817,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3853,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3884,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3913,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3949,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 3980,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 4010,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 4044,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      },
+      {
+        "pair": 4074,
+        "peak_XFIFO": 1,
+        "source_words": 160
+      }
+    ],
+    "source_PP_base_by_pair": [
+      {
+        "base": 128,
+        "pair": 2061
+      },
+      {
+        "base": 128,
+        "pair": 2092
+      },
+      {
+        "base": 120,
+        "pair": 2122
+      },
+      {
+        "base": 120,
+        "pair": 2154
+      },
+      {
+        "base": 128,
+        "pair": 2188
+      },
+      {
+        "base": 120,
+        "pair": 2218
+      },
+      {
+        "base": 120,
+        "pair": 2250
+      },
+      {
+        "base": 128,
+        "pair": 2284
+      },
+      {
+        "base": 120,
+        "pair": 2314
+      },
+      {
+        "base": 120,
+        "pair": 2346
+      },
+      {
+        "base": 128,
+        "pair": 2380
+      },
+      {
+        "base": 120,
+        "pair": 2409
+      },
+      {
+        "base": 120,
+        "pair": 2442
+      },
+      {
+        "base": 128,
+        "pair": 2476
+      },
+      {
+        "base": 120,
+        "pair": 2505
+      },
+      {
+        "base": 120,
+        "pair": 2538
+      },
+      {
+        "base": 128,
+        "pair": 2572
+      },
+      {
+        "base": 120,
+        "pair": 2601
+      },
+      {
+        "base": 128,
+        "pair": 2637
+      },
+      {
+        "base": 128,
+        "pair": 2668
+      },
+      {
+        "base": 120,
+        "pair": 2697
+      },
+      {
+        "base": 128,
+        "pair": 2733
+      },
+      {
+        "base": 128,
+        "pair": 2764
+      },
+      {
+        "base": 120,
+        "pair": 2793
+      },
+      {
+        "base": 128,
+        "pair": 2829
+      },
+      {
+        "base": 128,
+        "pair": 2860
+      },
+      {
+        "base": 120,
+        "pair": 2889
+      },
+      {
+        "base": 128,
+        "pair": 2925
+      },
+      {
+        "base": 128,
+        "pair": 2956
+      },
+      {
+        "base": 120,
+        "pair": 2986
+      },
+      {
+        "base": 128,
+        "pair": 3020
+      },
+      {
+        "base": 120,
+        "pair": 3050
+      },
+      {
+        "base": 120,
+        "pair": 3082
+      },
+      {
+        "base": 128,
+        "pair": 3116
+      },
+      {
+        "base": 120,
+        "pair": 3146
+      },
+      {
+        "base": 120,
+        "pair": 3178
+      },
+      {
+        "base": 128,
+        "pair": 3212
+      },
+      {
+        "base": 120,
+        "pair": 3242
+      },
+      {
+        "base": 120,
+        "pair": 3274
+      },
+      {
+        "base": 128,
+        "pair": 3308
+      },
+      {
+        "base": 120,
+        "pair": 3338
+      },
+      {
+        "base": 120,
+        "pair": 3370
+      },
+      {
+        "base": 128,
+        "pair": 3404
+      },
+      {
+        "base": 120,
+        "pair": 3433
+      },
+      {
+        "base": 120,
+        "pair": 3466
+      },
+      {
+        "base": 128,
+        "pair": 3500
+      },
+      {
+        "base": 120,
+        "pair": 3529
+      },
+      {
+        "base": 120,
+        "pair": 3562
+      },
+      {
+        "base": 128,
+        "pair": 3596
+      },
+      {
+        "base": 120,
+        "pair": 3625
+      },
+      {
+        "base": 128,
+        "pair": 3661
+      },
+      {
+        "base": 128,
+        "pair": 3692
+      },
+      {
+        "base": 120,
+        "pair": 3721
+      },
+      {
+        "base": 128,
+        "pair": 3757
+      },
+      {
+        "base": 128,
+        "pair": 3788
+      },
+      {
+        "base": 120,
+        "pair": 3817
+      },
+      {
+        "base": 128,
+        "pair": 3853
+      },
+      {
+        "base": 128,
+        "pair": 3884
+      },
+      {
+        "base": 120,
+        "pair": 3913
+      },
+      {
+        "base": 128,
+        "pair": 3949
+      },
+      {
+        "base": 128,
+        "pair": 3980
+      },
+      {
+        "base": 120,
+        "pair": 4010
+      },
+      {
+        "base": 128,
+        "pair": 4044
+      },
+      {
+        "base": 120,
+        "pair": 4074
+      }
+    ],
+    "source_model_accepted_CE_reads_per_edge": 64,
+    "verdict": "FAIL_CURRENT128_SLOTS_UNDER_SOURCE_LEGAL_READY_FEED"
+  },
+  "source_pins": [
+    {
+      "archive": "clean_checker_measured.json",
+      "sha256": "044ac60cbea3b0ad55e57e7ccb1d8086053f6861fbe5e646877581b2bec17ec3",
+      "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+      "source_path": "results/uarch/dsrom_secded_clean_checker_20261002/terminal_r1/record.json"
+    },
+    {
+      "archive": "parent_STA_review.json",
+      "sha256": "e6089974abbd5e8344f1bac3e03b8ea98a292b4e3fc13446051996af95e526ca",
+      "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+      "source_path": "results/uarch/native_software_parent_intake_20261002/DS_clean_checker_parent_STA_review.json"
+    },
+    {
+      "archive": "element_source.sv",
+      "sha256": "5f28650afc04597c5ca9f4fc08f54e3ee3827431489be9bd0f9f4aebe0c2c8a4",
+      "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+      "source_path": "rtl/v41rom/ot_v41_rom_elem_w10.sv"
+    },
+    {
+      "archive": "pair_source.sv",
+      "sha256": "bfc330ba7252a110b7b641b21f14198183a4b6c2c0f054c0da675d39f9c2f4a4",
+      "source_commit": "2033ded0c2d3b5054dcf3b75e779bd753790f10b",
+      "source_path": "rtl/v41die/ot_v41_pair_w17w10.sv"
+    },
+    {
+      "archive": "source_pair_calendar.py",
+      "sha256": "2c2764dff035ce8231045456449256099a603ac8ee112a8a87f5d867eb214b21",
+      "source_commit": "f9b61212bf257269645dc2a666e590d0089719c3",
+      "source_path": "tools/model_dsrom_issue_return_calendar.py"
+    }
+  ]
+}

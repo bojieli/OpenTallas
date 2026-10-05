@@ -1,0 +1,25 @@
+{
+  "model_id": "tensor-accelerator-linear-fixture",
+  "outputs": [
+    {
+      "dtype": "i32",
+      "id": "output",
+      "payload_sha256": "7261114c19e964956a352132b4f38d5436f8f8d1d6ccaea5b42547d8c4789baa",
+      "shape": [
+        2,
+        3
+      ],
+      "values": [
+        0,
+        -1,
+        4,
+        3,
+        3,
+        0
+      ]
+    }
+  ],
+  "request_sha256": "e4e169be55f9be71bf8ec40c489b1d8aecddae515ec690c517db9a52c8cde631",
+  "schema": "opentallas.tensor_accelerator.known_answers.v1",
+  "semantic_sha256": "4dddd5eacfef1ac5287bc203a84326153d7c9c5ddc6090919de4338507e996d4"
+}

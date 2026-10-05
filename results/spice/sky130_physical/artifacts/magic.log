@@ -1,0 +1,55 @@
+
+Magic 8.3 revision 674 - Compiled on Fri Aug 28 06:53:01 UTC 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology sky130A ...
+2 Magic internal units = 1 Lambda
+Input style sky130(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    ubm 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading sky130A Device Generator Menu ...
+Loading "generate_layout.tcl" from command line.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9849999779835343 (um)
+Moving label "B" from nsubdiff to nsubdiffcont in cell sky130_fd_pr__pfet_01v8_WWEVP9.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9849999779835343 (um)
+Moving label "B" from nsubdiff to nsubdiffcont in cell sky130_fd_pr__pfet_01v8_WWEVP9.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9399999789893627 (um)
+Moving label "B" from psubdiff to psubdiffcont in cell sky130_fd_pr__nfet_01v8_MJJGZY.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9849999779835343 (um)
+Moving label "B" from nsubdiff to nsubdiffcont in cell sky130_fd_pr__pfet_01v8_WWEVP9.
+Diagnostic: Device bounding box e -0.36499999184161425 -0.6299999859184027 0.36499999184161425 0.9849999779835343 (um)
+Moving label "B" from nsubdiff to nsubdiffcont in cell sky130_fd_pr__pfet_01v8_WWEVP9.
+Loading DRC CIF style.
+OT_DRC_COUNT_BEGIN
+Total DRC errors found: 0
+No errors found.
+OT_DRC_DETAILS=
+OT_DRC_COUNT_END
+   Generating output for cell sky130_fd_pr__nfet_01v8_MJJGZY
+   Generating output for cell sky130_fd_pr__pfet_01v8_WWEVP9
+   Generating output for cell sky130_rom_slice
+Extracting sky130_fd_pr__nfet_01v8_MJJGZY into sky130_fd_pr__nfet_01v8_MJJGZY.ext:
+Processing sky130_fd_pr__nfet_01v8_MJJGZY
+Extracting sky130_fd_pr__pfet_01v8_WWEVP9 into sky130_fd_pr__pfet_01v8_WWEVP9.ext:
+Processing sky130_fd_pr__pfet_01v8_WWEVP9
+Extracting sky130_rom_slice into sky130_rom_slice.ext:
+Processing sky130_rom_slice
+exttospice finished.
+exttospice finished.

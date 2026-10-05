@@ -1,0 +1,148 @@
+{
+  "channels": [
+    {
+      "capture": "Actual request acceptance; producer epoch supplied by issuing owner, never receiver-stamped.",
+      "domain": "controller",
+      "name": "accept_owner",
+      "pins": {
+        "owner": 265,
+        "ready": 1,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "Actual conventional GPU RF/shared commit; owned opcode completion must refer to this result.",
+      "domain": "consumer",
+      "name": "result_commit",
+      "pins": {
+        "IRS_serial": 32,
+        "IRS_slot": 5,
+        "owner": 265,
+        "ready": 1,
+        "result_visible_ps": 64,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "Actual matching addressed bit-store visible handshake; producer held until ready.",
+      "domain": "consumer",
+      "name": "sector_store",
+      "pins": {
+        "completion_bit": 1,
+        "owner": 265,
+        "ready": 1,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "Additive finite memory-tracker registered retirement after actual store visibility, separate from whole-opcode IRS completion.",
+      "domain": "consumer",
+      "name": "sector_retire",
+      "pins": {
+        "event": 404,
+        "ready": 1,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "Snapshot actual IRS output; reserve capture at owner issue because source IRS output has no ready. Filter mapped ownership, no fabricated pulse.",
+      "domain": "consumer",
+      "name": "opcode_retire_capture",
+      "pins": {
+        "event": 404,
+        "existing_IRS_fault": 1,
+        "existing_IRS_retire_valid": 1,
+        "existing_IRS_serial": 32,
+        "existing_IRS_slot": 5,
+        "held_ready": 1,
+        "held_valid": 1
+      }
+    },
+    {
+      "capture": "After272 sector retirement/reversecredit and true prior-generation availability.",
+      "domain": "consumer",
+      "name": "lease_acquire",
+      "pins": {
+        "event": 350,
+        "ready": 1,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "After actual SCORES and PV result-visible+IRS-retire snapshots and dependent operations.",
+      "domain": "consumer",
+      "name": "lease_release",
+      "pins": {
+        "event": 350,
+        "ready": 1,
+        "valid": 1
+      }
+    },
+    {
+      "capture": "Finite4 FIFO, three destination edges plus explicit route/capture readiness; no release on ACK/store alone.",
+      "domain": "consumer_to_controller",
+      "name": "reversecredit",
+      "pins": {
+        "event": 404,
+        "ready": 1,
+        "valid": 1
+      }
+    }
+  ],
+  "compile_GO": false,
+  "domains": {
+    "consumer": {
+      "actual_Qwen_IRS_domain_mapping": "REQUIRED_PROVIDER_INPUT",
+      "candidate_period_ps": "10000/9"
+    },
+    "controller": {
+      "actual_instantiation": "source_r5only",
+      "candidate_period_ps": 1000
+    },
+    "hub": {
+      "actual_stitched_endpoint": "ABSENT",
+      "candidate_period_ps": "2500/3"
+    }
+  },
+  "fields": {
+    "IRS": {
+      "event_id": 32,
+      "serial": 32,
+      "slot": 5
+    },
+    "event_width": 404,
+    "lease_width": 350,
+    "owner": {
+      "beat": 5,
+      "client": 6,
+      "die": 1,
+      "logical_tag": 64,
+      "ordinal": 9,
+      "physical_tag": 16,
+      "position": 21,
+      "producer_epoch": 64,
+      "sector": 34,
+      "stack": 2,
+      "transport_epoch": 32,
+      "writer": 11
+    }
+  },
+  "geometry": {
+    "all_FIFO_control_instances": 8,
+    "capture_FIFO_depth_per_channel_per_die": 4,
+    "held_outputs_per_channel_per_die": 1,
+    "lease_shared_event_FIFO_per_die": 1,
+    "owned_opcode_contexts_per_die": 4,
+    "owned_sectors_per_die": 4,
+    "retire_channels_per_die": 2,
+    "reversecredit_FIFO_per_die": 1,
+    "source_IRS_is_pulse_capture_reserved_before_issue": true
+  },
+  "hardware_admission": false,
+  "source_endpoint_presence": false,
+  "status": "ADDITIVE_INTERFACE_PROPOSAL_SOURCE_ENDPOINT_ABSENT_NO_RTL",
+  "unsupported_legacy_paths": [
+    "Tag-only p_wr_done_v with no ready/epoch/address cannot carry these contracts.",
+    "KV adapter HAW32/PCS128 addr[6:0] selection differs from actual AW34 XOR PC map; no direct prototype capacity/identity transfer."
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/eos_question_suite_v1.schema.json",
+  "title": "OpenTallas Qwen3 multi-question EOS suite v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eos_token_ids",
+    "maximum_new_tokens",
+    "questions",
+    "schema",
+    "suite_id",
+    "warning_token_threshold"
+  ],
+  "properties": {
+    "eos_token_ids": {
+      "prefixItems": [
+        {
+          "const": 151645
+        },
+        {
+          "const": 151643
+        }
+      ],
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "maximum_new_tokens": {
+      "const": 8000
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/question"
+      },
+      "maxItems": 16,
+      "minItems": 4,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.qwen3.eos_question_suite.v1"
+    },
+    "suite_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "warning_token_threshold": {
+      "const": 800
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "message": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content",
+        "role"
+      ],
+      "properties": {
+        "content": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "assistant",
+            "system",
+            "tool",
+            "user"
+          ]
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enable_thinking",
+        "id",
+        "messages"
+      ],
+      "properties": {
+        "enable_thinking": {
+          "type": "boolean"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{0,63}$",
+          "type": "string"
+        },
+        "messages": {
+          "items": {
+            "$ref": "#/$defs/message"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array"
+        }
+      }
+    }
+  }
+}

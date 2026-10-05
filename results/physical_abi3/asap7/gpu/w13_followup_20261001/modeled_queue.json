@@ -1,0 +1,32 @@
+{
+  "chain15_source_commit": "413b5d096b467f0bdf0d6c6088140bc03c5af11b",
+  "historical_source_pins": {
+    "tools/uarch_model.py": "9c9819e21f167e425ad89ae84b84249627fb8d28a1ca625a3274fe7c495119ee",
+    "tools/hbm_gpu_floorplan.py": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205",
+    "tools/chip_assembly/floorplans.py": "e32ba6e29ab13c9bee3fe6c6237af13a321ed5b2418699f375c3bfff206095a2"
+  },
+  "model_basis": "Existing hbm_gpu_design(qwen/v41) sizing referenced by BLOCKS; no new hardware or model change. Current model import requires broader calibration fixtures than sparse checkout; no regenerated model claim.",
+  "largest_queued_sm": {
+    "block": "ot_gpu_sm_q",
+    "slot_um": [
+      1900,
+      2150
+    ],
+    "area_mm2": 4.085,
+    "columns": 64,
+    "notes": "4 subpartitions x16 columns, model-sized GPU SM; already queued by chain15"
+  },
+  "other_queued_sm": {
+    "block": "ot_gpu_sm_v",
+    "slot_um": [
+      1400,
+      1640
+    ],
+    "area_mm2": 2.296,
+    "notes": "32 BF16 and32 block-dot columns; already queued by chain15"
+  },
+  "critical_live_block": "TC16 detail route and TC-column global route; both prerequisites executing on pve1",
+  "lease_policy": "Reuse chain15 floor55GB remote_gate request restricted to pve1/2. BLOCKS SM peak_gb60.0. No new host ownership assumption; remeasure on dispatch.",
+  "new_jobs_queued": [],
+  "floorplan_policy": "Actual SM LEF hashes qualify through copied block records. Floorplan INPUTS omits actual SM LEFs; preserve companion pins before any consumption. Pending fallback analytical only."
+}

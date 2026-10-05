@@ -1,0 +1,25 @@
+test_all_M8_negative_not_overwritten_or_adopted (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_connected_hold_shape (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_exact_frozen_source_and_units (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_independent_station_bodies_and_row_sites (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... FAIL
+test_literal_pin_translation_independently (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_loaded_root_table_and_positive_conditional_timing (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_native_pin_landing_contained_and_real_M2_minarea_extension (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_native_vias_retain_actual_cut_planes (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_no_build_or_selector_PG_transfer (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_six_already_priced_cells_and_no_ff_or_latency_change (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_source_grid_two_plane_routes_and_wire_bounds (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+test_wire_lengths_count_geometry_and_positive_lower_access (test_dsrom_noECC_hold_station_geometry.HoldGeometry) ... ok
+
+======================================================================
+FAIL: test_independent_station_bodies_and_row_sites (test_dsrom_noECC_hold_station_geometry.HoldGeometry)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/w17-noecc-complete-map-receipt/tests/test_dsrom_noECC_hold_station_geometry.py", line 23, in test_independent_station_bodies_and_row_sites
+    b=p['bbox_DBU'];self.assertTrue(region[0]<=b[0]<b[2]<=region[2] and region[1]<=b[1]<b[3]<=region[3])
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.013s
+
+FAILED (failures=1)

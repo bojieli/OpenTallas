@@ -1,0 +1,339 @@
+diff --git a/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv b/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv
+index 8b7f7bf4..78660ecb 100644
+--- a/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv
++++ b/rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv
+@@ -70,6 +70,11 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
+     reg [29:0] physical, local_key, global_key, relative, key_beat;
+     reg future;
+     reg [63:0] collected;
++    reg [63:0] next_expect, next_filled;
++    reg [3:0] next_last;
++    reg [29:0] next_beat, next_qlen, wanted_local, source_physical;
++    integer next_stack, source_i;
++    reg source_found, source_held;
+     reg [543:0] key_word;
+     always @(posedge clk or negedge rst_n) begin
+         if(!rst_n) begin
+@@ -107,7 +112,70 @@ module ot_hdc_v41x_idx_shard_quarter_collect (
+                     o_valid<=0; filled<=0; o_kv<=0; o_last<=0;
+                     o_key<=0; o_ref<=0;
+                     if(beat==((qlen3-1'b1)>>4)) run<=0;
+-                    else beat<=beat+1'b1;
++                    else begin
++                        beat<=beat+1'b1;
++                        // At a 16-key-aligned quarter boundary every output
++                        // quarter comes from exactly one physical input beat.
++                        // Reuse the vacated output register at the handshake
++                        // edge.  The just-accepted input is bypassed when its
++                        // per-stream holding register was empty.  Incomplete
++                        // beats fall through to the ordinary bounded collector
++                        // on following cycles.
++                        if(qs[3:0]==0) begin
++                            next_beat=beat+1'b1;
++                            next_expect=0;next_last=0;next_filled=0;
++                            for(quarter=0;quarter<4;quarter=quarter+1) begin
++                                next_qlen=(quarter==3) ? qlen3 : qs;
++                                next_last[quarter]=(next_qlen==0) ? (next_beat==0) :
++                                                   (next_beat==((next_qlen-1'b1)>>4));
++                                next_stack=(((30'(quarter)*qs)>>4)+32'(next_beat))&3;
++                                source_i=4*next_stack+quarter;
++                                wanted_local=rank(30'(quarter)*qs+(next_beat<<4),next_stack);
++                                source_found=0;source_held=0;
++                                if((next_beat<<4)<next_qlen && have[source_i]) begin
++                                    source_physical=(first[source_i]&30'h3ffffc00)+
++                                                    ((seq[source_i]-1'b1)<<4);
++                                    source_found=(source_physical==wanted_local);
++                                    source_held=1;
++                                end else if((next_beat<<4)<next_qlen &&
++                                            i_valid[source_i] && i_ready[source_i]) begin
++                                    source_physical=(first[source_i]&30'h3ffffc00)+
++                                                    (seq[source_i]<<4);
++                                    source_found=(source_physical==wanted_local);
++                                end
++                                for(j=0;j<16;j=j+1) begin
++                                    slot=quarter*16+j;
++                                    if((next_beat<<4)+30'(j)<next_qlen) begin
++                                        next_expect[slot]=1;
++                                        if(source_found) begin
++                                            if(source_held) begin
++                                                if(!held_kv[source_i][j]) fault<=1;
++                                                else begin
++                                                    key_word=held_key[source_i][j*544 +:544];
++                                                    o_key[slot*544 +:544]<=key_word;
++                                                    o_ref[slot]<=ref_key(key_word[543:512]);
++                                                    next_filled[slot]=1;
++                                                end
++                                            end else if(!i_kv[source_i*16+j]) fault<=1;
++                                            else begin
++                                                key_word=i_key[(source_i*16+j)*544 +:544];
++                                                o_key[slot*544 +:544]<=key_word;
++                                                o_ref[slot]<=ref_key(key_word[543:512]);
++                                                next_filled[slot]=1;
++                                            end
++                                        end
++                                    end
++                                end
++                                if(source_found) have[source_i]<=0;
++                            end
++                            filled<=next_filled;
++                            if(next_filled==next_expect) begin
++                                o_kv<=next_expect;
++                                o_last<=next_last;
++                                o_valid<=1;
++                            end
++                        end
++                    end
+                 end
+             end else begin
+                 // The keys captured at this edge are already in o_key/o_ref
+diff --git a/rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv b/rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv
+index 58fc7c95..f437040c 100644
+--- a/rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv
++++ b/rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv
+@@ -139,7 +139,8 @@ module tb_hdc_v41x_idx_four_stack_verilator #(
+     localparam integer EXPECTED_SECTORS=sector_total(NKEYS);
+     integer cycle=0,received=0,checked=0,expected_beats,qs,qlen,pos,g;
+     integer stalled_cycles=0,request_stall_cycles=0,output_stall_cycles=0;
+-    integer i,j,qidx,first,cnt,hits;
++    integer i,j,cx,qidx,first,cnt,hits;
++    integer stack_sectors[0:3];
+     reg [543:0] want;
+     reg done=0;
+     reg [2:0] finish_wait=0;
+@@ -158,7 +159,13 @@ module tb_hdc_v41x_idx_four_stack_verilator #(
+         if(j!=EXPECTED_SECTORS) $fatal(1,"sectors got=%0d expected=%0d",j,EXPECTED_SECTORS);
+         if(collect_fault || checked!=NKEYS || received!=expected_beats)
+             $fatal(1,"final fault=%b checked=%0d received=%0d",collect_fault,checked,received);
++        for(i=0;i<4;i=i+1) begin
++            stack_sectors[i]=0;
++            for(cx=0;cx<4;cx=cx+1)
++                stack_sectors[i]=stack_sectors[i]+int'(stream_beats[(4*i+cx)*48 +:48]);
++        end
+         $display("V41X_FOUR_STACK_PASS n=%0d quantum=%0d checked=%0d sectors=%0d cycles=%0d stalled=%0d request_stalls=%0d output_stalls=%0d",NKEYS,QUANTUM,checked,j,cycle,stalled_cycles,request_stall_cycles,output_stall_cycles);
++        $display("V41X_STACK_DIAG sectors=%0d,%0d,%0d,%0d grants=%0d,%0d,%0d,%0d",stack_sectors[0],stack_sectors[1],stack_sectors[2],stack_sectors[3],grants[0 +:32],grants[32 +:32],grants[64 +:32],grants[96 +:32]);
+         $finish;
+         end
+     end
+diff --git a/rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv b/rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv
+index 9a21d959..a256a60d 100644
+--- a/rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv
++++ b/rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv
+@@ -16,7 +16,7 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
+         .i_valid(i_valid),.i_ready(i_ready),.i_kv(i_kv),.i_key(i_key),
+         .o_valid(o_valid),.o_ready(o_ready),.o_kv(o_kv),.o_last(o_last),.o_key(o_key),.o_ref(o_ref));
+     integer first[0:15],cnt[0:15],src[0:15],total[0:15],delay_ctr[0:15];
+-    integer n,qs,received,expected_beats,cycles,seed=32'h31415926;
++    integer n,qs,received,expected_beats,cycles,seed=32'h31415926,single_n;
+     integer max_gap,last_accept_cycle;
+     reg fast;
+     integer s,q,j,i,physical,local_key,global_key,qlen,pos;
+@@ -82,8 +82,8 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
+             @(negedge clk);
+             if(busy || fault) $fatal(1,"busy/fault after n=%0d busy=%b fault=%b",n,busy,fault);
+             $display("PASS n=%0d beats=%0d cycles=%0d",n,received,cycles);
+-            if(fast && keys==5000) begin
+-                if(max_gap>2) $fatal(1,"fast output gap=%0d exceeds 2 cycles",max_gap);
++            if(fast && keys>=5000) begin
++                if(max_gap>1) $fatal(1,"fast output gap=%0d exceeds 1 cycle n=%0d",max_gap,n);
+                 $display("FAST_PASS n=%0d beats=%0d cycles=%0d max_gap=%0d",n,received,cycles,max_gap);
+             end
+         end
+@@ -132,10 +132,13 @@ module tb_hdc_v41x_idx_shard_quarter_collect;
+     initial begin
+         fast=$test$plusargs("fast");
+         repeat(4) @(negedge clk);rst_n=1;
+-        start_case(1);start_case(7);start_case(8);start_case(16);
+-        start_case(31);start_case(32);start_case(64);start_case(96);
+-        start_case(160);start_case(1000);start_case(1032);
+-        start_case(2048);start_case(2080);start_case(5000);
++        if($value$plusargs("single=%d",single_n)) start_case(single_n);
++        else begin
++            start_case(1);start_case(7);start_case(8);start_case(16);
++            start_case(31);start_case(32);start_case(64);start_case(65);start_case(96);
++            start_case(160);start_case(1000);start_case(1032);start_case(1040);
++            start_case(2048);start_case(2080);start_case(5000);
++        end
+         $display("PASS quarter collector campaign");$finish;
+     end
+ endmodule
+diff --git a/tools/rtl_v41x_idx_four_stack_gate.py b/tools/rtl_v41x_idx_four_stack_gate.py
+index a6cf41bb..00c68ef9 100644
+--- a/tools/rtl_v41x_idx_four_stack_gate.py
++++ b/tools/rtl_v41x_idx_four_stack_gate.py
+@@ -86,8 +86,8 @@ def main() -> None:
+     rec = {
+         "schema": "opentallas.hdc-v41x-idx-four-stack-gate.v1",
+         "status": "pass",
+-        "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
+-        "collector_source_commits": ["a1843d61", "c00a0141"],
++        "source_baseline": "a510bc4ce7dc27647cf32454860eca1b274c2b24",
++        "collector_source_commits": ["fa249d47", "5b6e7042"],
+         "configuration": {
+             "stacks": 4, "quarter_contexts_per_stack": 4,
+             "physical_pseudo_channels_per_stack": 32,
+diff --git a/tools/rtl_v41x_idx_four_stack_verilator.py b/tools/rtl_v41x_idx_four_stack_verilator.py
+index 2f5a5d45..537f3423 100644
+--- a/tools/rtl_v41x_idx_four_stack_verilator.py
++++ b/tools/rtl_v41x_idx_four_stack_verilator.py
+@@ -21,8 +21,9 @@ SOURCES = [ROOT / p for p in (
+     "rtl/test/tb_hdc_v41x_idx_four_stack_verilator.sv",
+ )]
+ CPP = ROOT / "rtl/test/hdc_v41x_idx_four_stack_verilator.cpp"
+-OUT = ROOT / "results/rtl/hdc_v41x_idx_four_stack_verilator.json"
++OUT = ROOT / "results/rtl/hdc_v41x_idx_four_stack_verilator_collector_aligned.json"
+ PAT = re.compile(r"V41X_FOUR_STACK_PASS n=(\d+) quantum=(\d+) checked=(\d+) sectors=(\d+) cycles=(\d+) stalled=(\d+) request_stalls=(\d+) output_stalls=(\d+)")
++DIAG = re.compile(r"V41X_STACK_DIAG sectors=(\d+),(\d+),(\d+),(\d+) grants=(\d+),(\d+),(\d+),(\d+)")
+ 
+ 
+ def rank(x: int, s: int) -> int:
+@@ -42,6 +43,17 @@ def sectors(n: int) -> int:
+     return result
+ 
+ 
++def stack_sectors(n: int, s: int) -> int:
++    qs = 8 * (n // 32)
++    result = 0
++    for q in range(4):
++        lo = rank(q * qs, s)
++        hi = rank(n if q == 3 else (q + 1) * qs, s)
++        if hi > lo:
++            result += 2 * (hi - lo) + (hi + 7) // 8 - lo // 8
++    return result
++
++
+ def main() -> None:
+     rows = []
+     with tempfile.TemporaryDirectory(prefix="v41-four-vlt-") as td:
+@@ -70,28 +82,39 @@ def main() -> None:
+             m = PAT.search(run.stdout)
+             if not m:
+                 raise RuntimeError(f"Verilator N{n} missing pass marker:\n{run.stdout[-4000:]}")
++            d = DIAG.search(run.stdout)
++            if not d:
++                raise RuntimeError(f"Verilator N{n} missing stack diagnostic:\n{run.stdout[-4000:]}")
+             keys, quantum, checked, got_sectors, cycles, stalled, req_stalls, out_stalls = map(int, m.groups())
++            diag = list(map(int, d.groups()))
+             print(run.stdout.strip(), flush=True)
+             assert (keys, quantum, checked, got_sectors) == (n, 64, n, sectors(n))
++            assert diag[:4] == [stack_sectors(n, s) for s in range(4)], (n, diag)
+             if n in (65, 1040):
+-                assert cycles == {65: 82, 1040: 149}[n], (n, cycles)
++                short = json.loads((ROOT / "results/rtl/hdc_v41x_idx_four_stack_aligned_q64_short.json").read_text())
++                expected_cycles = {r["keys"]: r["cycles"] for r in short["cases"]}
++                assert cycles == expected_cycles[n], (n, cycles, expected_cycles[n])
+             row = {"keys": n, "checked": checked, "sectors": got_sectors,
+                    "cycles": cycles, "sector_per_cycle": round(got_sectors / cycles, 6),
+                    "collector_empty_cycles": stalled, "request_stall_cycles": req_stalls,
+                    "response_stall_cycles": out_stalls,
++                   "per_stack": [{"stack": s, "sectors": diag[s], "pc_request_grants": diag[4+s]}
++                                 for s in range(4)],
+                    "build_wall_seconds": build_wall, "simulation_wall_seconds": sim_wall}
+             rows.append(row)
+     script = Path(__file__).resolve()
+     rec = {
+         "schema": "opentallas.hdc-v41x-idx-four-stack-verilator.v1",
+         "status": "pass", "source_baseline": "6e2b7ae38fe3019e38d2574ffad9df89538bd08a",
++        "collector_fix_commit": "5b6e7042",
+         "simulator": "Verilator", "configuration": {"stacks": 4, "contexts_per_stack": 4,
+             "WB": 32, "GA": 24, "quantum": 64, "hbm_QD": 64, "hbm_RQD": 32, "hbm_REFPB": 3},
+         "cases": rows,
+         "coverage": "Same six RTL modules and exact key/mask/last/reference-bit testbench checks as Icarus gate; external C++ clock/reset/command driver; short-case cycle equality required before full run.",
+         "limitation": "Behavioral timed HBM; no physical or model throughput claim.",
+         "input_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+-                         for p in [*SOURCES, CPP, script]},
++                         for p in [*SOURCES, CPP, script,
++                                   ROOT / "results/rtl/hdc_v41x_idx_four_stack_aligned_q64_short.json"]},
+     }
+     OUT.parent.mkdir(parents=True, exist_ok=True)
+     OUT.write_text(json.dumps(rec, indent=2) + "\n")
+diff --git a/tools/rtl_v41x_idx_shard_quarter_collect.py b/tools/rtl_v41x_idx_shard_quarter_collect.py
+index 8152efb9..716ad39d 100644
+--- a/tools/rtl_v41x_idx_shard_quarter_collect.py
++++ b/tools/rtl_v41x_idx_shard_quarter_collect.py
+@@ -15,20 +15,44 @@ SOURCES = [ROOT / p for p in (
+     "rtl/test/tb_hdc_v41x_idx_shard_quarter_collect.sv",
+ )]
+ OUT = ROOT / "results/rtl/hdc_v41x_idx_shard_quarter_collect.json"
+-LENGTHS = (1, 7, 8, 16, 31, 32, 64, 96, 160, 1000, 1032, 2048, 2080, 5000)
++LENGTHS = (1, 7, 8, 16, 31, 32, 64, 65, 96, 160, 1000, 1032, 1040, 2048, 2080, 5000)
++BASE_REV = "fa249d4769b24b50a1705f92377eec22a72f19b0"
+ PAT = re.compile(r"^PASS n=(\d+) beats=(\d+) cycles=(\d+)$", re.MULTILINE)
+ FAST = re.compile(r"^FAST_PASS n=(\d+) beats=(\d+) cycles=(\d+) max_gap=(\d+)$", re.MULTILINE)
+ 
+ 
+ def main() -> None:
+     with tempfile.TemporaryDirectory(prefix="v41-quarter-collect-") as t:
+-        binary = Path(t) / "sim.vvp"
++        tmp = Path(t)
++        binary = tmp / "sim.vvp"
+         subprocess.run(["iverilog", "-g2012", "-s", "tb_hdc_v41x_idx_shard_quarter_collect",
+                         "-o", str(binary), *map(str, SOURCES)], check=True, cwd=ROOT)
+         run = subprocess.run(["vvp", str(binary)], check=True, capture_output=True,
+                              text=True, timeout=180, cwd=ROOT)
+         fast_run = subprocess.run(["vvp", str(binary), "+fast"], check=True,
+                                   capture_output=True, text=True, timeout=180, cwd=ROOT)
++        long_runs = [subprocess.run(["vvp", str(binary), "+fast", f"+single={n}"],
++                                    check=True, capture_output=True, text=True,
++                                    timeout=180, cwd=ROOT)
++                     for n in (50_000, 262_144)]
++        base_text = subprocess.run(["git", "show", f"{BASE_REV}:"
++                                    "rtl/hdc/v41x/ot_hdc_v41x_idx_shard_quarter_collect.sv"],
++                                   check=True, capture_output=True, text=True, cwd=ROOT).stdout
++        base_rtl = tmp / "baseline.sv"
++        base_rtl.write_text(base_text)
++        for name, source in (("base", base_rtl), ("fast", SOURCES[0])):
++            outdir = tmp / name
++            subprocess.run(["verilator", "--xml-only", "--stats-vars", "-Wno-fatal",
++                            "--Mdir", str(outdir), "--top-module",
++                            "ot_hdc_v41x_idx_shard_quarter_collect", str(source)],
++                           check=True, capture_output=True, text=True, cwd=ROOT)
++            stats = next(outdir.glob("*__stats.txt")).read_text()
++            widths = {key: int(re.search(rf"Vars, width\s+(\d+) {key}\s", stats).group(1))
++                      for key in ("held_key", "o_key")}
++            if name == "base":
++                base_widths = widths
++            else:
++                fast_widths = widths
+     assert "PASS quarter collector campaign" in run.stdout, run.stdout
+     rows = [{"keys": int(n), "output_beats": int(beats), "cycles": int(cycles)}
+             for n, beats, cycles in PAT.findall(run.stdout)]
+@@ -40,17 +64,34 @@ def main() -> None:
+     match = FAST.search(fast_run.stdout)
+     assert match and "PASS quarter collector campaign" in fast_run.stdout, fast_run.stdout
+     fast_n, fast_beats, fast_cycles, max_gap = map(int, match.groups())
+-    assert (fast_n, fast_beats, max_gap) == (5000, 79, 2)
++    assert (fast_n, fast_beats, max_gap) == (5000, 79, 1)
++    long_rows = []
++    for n, long_run in zip((50_000, 262_144), long_runs):
++        match = FAST.search(long_run.stdout)
++        assert match and "PASS quarter collector campaign" in long_run.stdout, long_run.stdout
++        got_n, beats, cycles, gap = map(int, match.groups())
++        qs = 8 * (n // 32)
++        assert (got_n, beats, gap) == (n, (n - 3 * qs + 15) // 16, 1)
++        long_rows.append({"keys": n, "output_beats": beats,
++                          "cycles_including_prefix": cycles, "maximum_output_gap_cycles": gap})
++    assert base_widths == fast_widths == {"held_key": 8704, "o_key": 34816}
+     script = Path(__file__).resolve()
+     rec = {
+         "schema": "opentallas.hdc-v41x-idx-shard-quarter-collect.v1",
+         "status": "pass",
+         "cases": rows,
+         "total_output_beats_checked": sum(row["output_beats"] for row in rows),
+-        "continuous_input": {"keys": fast_n, "output_beats": fast_beats,
+-                             "cycles_including_prefix": fast_cycles,
+-                             "maximum_output_gap_cycles": max_gap},
+-        "coverage": "Four-stack 16-stream sampled HBM-like keys with independent stream delays and random output backpressure; exact 64-key kv/last/key/ref/padding, stable stalled output, leading placeholders, Qs mod16=8, 1024-key boundaries and repeated commands. Continuous-input, always-ready mode proves no more than two cycles between output beats after the first of a 5000-key scan.",
++        "continuous_input": [{"keys": fast_n, "output_beats": fast_beats,
++                              "cycles_including_prefix": fast_cycles,
++                              "maximum_output_gap_cycles": max_gap}, *long_rows],
++        "elaboration_key_storage": {"base_commit": BASE_REV,
++                                    "baseline_rtl_sha256": hashlib.sha256(base_text.encode()).hexdigest(),
++                                    "held_key_bits_per_context": fast_widths["held_key"],
++                                    "contexts": 16,
++                                    "output_key_bits": fast_widths["o_key"],
++                                    "additional_key_state_bits": 0,
++                                    "method": "Verilator --xml-only --stats-vars comparison of baseline and aligned-path RTL; variable width is an elaboration estimate, not cell area or routed timing."},
++        "coverage": "Four-stack 16-stream sampled HBM-like keys with independent stream delays and random output backpressure; exact 64-key kv/last/key/ref/padding, stable stalled output, leading placeholders, Qs mod16=8, 1024-key boundaries and repeated commands. Continuous-input, always-ready N5000/N50000/N262144 scans prove a one-cycle maximum gap after their first output beats.",
+         "limitation": "Sampled stream input only; timed HBM and per-PC four-context arbiter are gated separately. No four-stack bandwidth or physical closure claim.",
+         "input_sha256": {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in [*SOURCES, script]},

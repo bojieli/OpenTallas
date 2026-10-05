@@ -1,0 +1,49 @@
+{
+  "verdict": "WHOLE_L0_INCOMPLETE_PC_WATCHDOG_TIMEOUT",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "original_PID": 1968071,
+  "terminal_process_missing": true,
+  "source_supervisor_returncode": 1,
+  "cycles": 112357,
+  "runtime_seconds": 35597.4,
+  "setup_seconds": 21.2,
+  "max_settle": 1,
+  "maxrss_kib": 12791784,
+  "all_ranks": {
+    "PC": 24,
+    "unit_busy_hex": "00",
+    "last_issue_unit": 0,
+    "fault_hex": "00",
+    "done": false,
+    "state_hex": "063f5200",
+    "CDMA_words_hex": "001c0070"
+  },
+  "source_bound_public_state_decode": {
+    "core_state": 6,
+    "decoded_unit": 1,
+    "idles": 31,
+    "waited": true
+  },
+  "decode_limits": "State6=S_ISSUE, decodedunit1=ME, allunitsidle and waited1. This rules out SU-busy as terminal blocker. Exact unitready/kv_ok/kvd_v/win_idle signals are absent; no proof of healthy refill movement or deadlock. CDMA_words are not WINDOW sectorread counts.",
+  "watchdog_bound": [
+    112202,
+    112401
+  ],
+  "conditional_cold_window_refill_endpoints": [
+    136671,
+    138146
+  ],
+  "watchdog_can_precede_conditional_refill": true,
+  "exactness_checked": false,
+  "full_layer_completed": false,
+  "full_token_completed": false,
+  "physical_qualified": false,
+  "next": "Diagnostic existing public-port trace can now be considered under fresh source-bound GO; never overwrite failure or restart original job. Bind owned service callbacks and exact per-PC analytical schedule before new completion claim.",
+  "copied_artifact_sha256": {
+    "launch.json": "f741a93a13aacad45efd7d18fea86f7891de9c35ee44d6854dafd3bee3eceecc",
+    "connected_L0.log": "e803c83a66a225e5be743bef5f33b59e10c6cbcd01204626ee1db18ab90364e2",
+    "L0_output/progress.log": "2b27876244e07b2391cb2edcb69b3e4f406f9e200ce88cbb34d6b02762f918b1",
+    "L0_output/run.log": "785fd3cb73066c85dba19bf64eaab4569043ead98fcb02a6f6e625efe3ebf475",
+    "L0_output/result.json": "46371bb2cbd9252bb34fb65577b96ce0abd2b2b2c7ff5ddd09bd008cdbe1f37b"
+  }
+}

@@ -1,0 +1,6 @@
+[remote_gate] worker 155.103.253.39 (floor 12 GB), job e137d12f3d: /tmp/claude-1000/w15b_codex_sram_20261001/run2.sh /tmp/claude-1000/w15b_codex_sram_20261001/vec /tmp/claude-1000/w15b_codex_sram_20261001/validate2.py
+INPUT_PREFLIGHT_PASS
+v41ss_lm_w32 {"release_delay_cycles": {"U_DREL": 84, "X_DREL": 225}, "arrival_hub_to_hub_cycles": {"board": {"min": 215, "max": 222}, "ucie": {"min": 78, "max": 81}}} det timings 1 free timings 26
+v41ss_lm_w32_sweep {"release_delay_cycles": {"U_DREL": 85, "X_DREL": 225}, "arrival_hub_to_hub_cycles": {"board": {"min": 215, "max": 222}, "ucie": {"min": 78, "max": 82}}} det timings 1 free timings 26
+EXACT_BINDING_PASS f449a0d9ac9a4b6f227bab636cd8d6156fbd8f0d
+[remote_gate] worker 155.103.253.39 job e137d12f3d finished rc=0; 82 worktree files returned

@@ -1,0 +1,16 @@
+test_mocked_success_all_eight_phase_receipts (__main__.Caps) ... ERROR
+
+======================================================================
+ERROR: test_mocked_success_all_eight_phase_receipts (__main__.Caps)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-hbm-rf-service/tools/test_hbm_rf_connected_runner.py", line 97, in test_mocked_success_all_eight_phase_receipts
+    R.execute(proposalpath,gopath,'go',out)
+  File "/home/ubuntu/OpenTallas-hbm-rf-service/tools/run_hbm_rf_connected_gate.py", line 137, in execute
+    if receipt['verdict']!='PASS_DIRECTED_NATIVE_DS_QWEN_CONNECTED_ONLY':raise RuntimeError(receipt.get('failure','incomplete'))
+RuntimeError: unsupported operand type(s) for +: 'PosixPath' and 'str'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (errors=1)

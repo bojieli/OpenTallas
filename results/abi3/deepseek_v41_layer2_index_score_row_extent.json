@@ -1,0 +1,749 @@
+{
+  "answer": "ONE OPERATOR EARLIER, AND IT IS THE INDEX SCORE. Every input to it carries ten query rows and its own output view carries ONE. The compressed side is correct too: the compressor produced five latents from the ten-token span at ratio 2, which is exactly what the vendor produces. So this is neither a compression fault nor a predicate nor a symbol: the INDEX_SCORE operator's output view resolves its token axis to 1 where the kernel declares span_tokens, and the selection, the sparse attention and the layer's whole output inherit that single row.",
+  "not_a_claim": [
+    "this is runtime.sim, not RTL",
+    "naming the operator is not naming the line: the resolver, the lowering that emitted the view and the descriptor itself are all still candidates, and this record narrows the search to one operator's output view rather than closing it",
+    "the two taps that bracket this window are RMS_NORM operators 2959 and 3646, so every record here is inside layer 2's attention by construction"
+  ],
+  "producer": {
+    "device_probe": "tools/probe_deepseek_v41_device_operator_window.py",
+    "git": {
+      "commit": "30a29e5b62cf78f3f0e5be8b32fd0484acc14833"
+    }
+  },
+  "question": "layer 2's index selection comes back [1, 512] all-padding where the vendor's is [10, 5]. The runtime symbol table at that operator is correct -- SPAN_TOKENS 10, CONTEXT_LENGTH 10 -- so where are the nine query rows lost?",
+  "reading_it": {
+    "op_3280": "the quantised index query: [10, 32, 128] -- ten query rows, thirty-two heads, the index head dimension. CORRECT.",
+    "op_3305": "the per-head weights: [10, 32] -- ten query rows. CORRECT.",
+    "op_3313_area": "the compressor's own outputs earlier in the window are [1, 5, 2, 512] and [1, 5, 512]: FIVE completed groups from ten tokens at ratio 2, which is what the vendor computes.",
+    "op_3315": "the INDEX SCORE: [1, 1, 5]. One batch, ONE query row, five candidates. The kernel declares [span_tokens, context_groups_ratio2] and span_tokens is 10. THIS IS THE FAULT.",
+    "op_3322": "the selection: [1, 512], every slot the padding index. Correct behaviour for one query row whose single compressed group has not completed before it -- the causal mask leaves nothing to select.",
+    "op_3640": "one row of the model width just before the FFN norm: the layer's attention output, also a single row."
+  },
+  "schema": "opentallas.result.v41_layer2_index_score_row_extent.v1",
+  "the_chain_as_measured": [
+    {
+      "dims": [
+        10,
+        1280
+      ],
+      "dtype": "32",
+      "major": 48,
+      "operator": 3243,
+      "sub": 5
+    },
+    {
+      "dims": [
+        10,
+        512
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3248,
+      "sub": 0
+    },
+    {
+      "dims": [
+        512,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3252,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        512,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3258,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "18",
+      "major": 16,
+      "operator": 3263,
+      "sub": 2
+    },
+    {
+      "dims": [
+        10,
+        32,
+        128
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3268,
+      "sub": 2
+    },
+    {
+      "dims": [
+        10,
+        32,
+        128
+      ],
+      "dtype": "48",
+      "major": 48,
+      "operator": 3274,
+      "sub": 5
+    },
+    {
+      "dims": [
+        10,
+        32,
+        128
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3280,
+      "sub": 5
+    },
+    {
+      "dims": [
+        10,
+        4
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3287,
+      "sub": 0
+    },
+    {
+      "dims": [
+        4,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3291,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        4,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3298,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        32
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3305,
+      "sub": 6
+    },
+    {
+      "dims": [
+        1,
+        1,
+        5
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3315,
+      "sub": 11
+    },
+    {
+      "dims": [
+        1,
+        512
+      ],
+      "dtype": "4",
+      "major": 80,
+      "operator": 3322,
+      "sub": 4
+    },
+    {
+      "dims": [
+        10,
+        640
+      ],
+      "dtype": "4",
+      "major": 96,
+      "operator": 3333,
+      "sub": 3
+    },
+    {
+      "dims": [
+        5,
+        128
+      ],
+      "dtype": "18",
+      "major": 16,
+      "operator": 3338,
+      "sub": 2
+    },
+    {
+      "dims": [
+        5,
+        512
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3345,
+      "sub": 2
+    },
+    {
+      "dims": [
+        5,
+        512
+      ],
+      "dtype": "50",
+      "major": 48,
+      "operator": 3354,
+      "sub": 5
+    },
+    {
+      "dims": [
+        5,
+        512
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3365,
+      "sub": 5
+    },
+    {
+      "dims": [
+        256,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3377,
+      "sub": 3
+    },
+    {
+      "dims": [
+        15,
+        512
+      ],
+      "dtype": "16",
+      "major": 96,
+      "operator": 3392,
+      "sub": 3
+    },
+    {
+      "dims": [
+        15,
+        64
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3425,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        15,
+        64
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3430,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        64,
+        512
+      ],
+      "dtype": "16",
+      "major": 64,
+      "operator": 3432,
+      "sub": 2
+    },
+    {
+      "dims": [
+        10,
+        64,
+        512
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3439,
+      "sub": 2
+    },
+    {
+      "dims": [
+        10,
+        8,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3443,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3447,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3452,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3455,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3460,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3464,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3468,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3471,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3476,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3480,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3484,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3487,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3492,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3496,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3500,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3503,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3508,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3512,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3516,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3519,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3524,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3528,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3532,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3535,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3540,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3544,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3548,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3551,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3556,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3560,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        128
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3564,
+      "sub": 0
+    },
+    {
+      "dims": [
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3567,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        128,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3572,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 96,
+      "operator": 3579,
+      "sub": 3
+    },
+    {
+      "dims": [
+        10,
+        4096
+      ],
+      "dtype": "16",
+      "major": 96,
+      "operator": 3586,
+      "sub": 3
+    },
+    {
+      "dims": [
+        10,
+        8192
+      ],
+      "dtype": "16",
+      "major": 96,
+      "operator": 3591,
+      "sub": 3
+    },
+    {
+      "dims": [
+        10,
+        8192
+      ],
+      "dtype": "32",
+      "major": 48,
+      "operator": 3596,
+      "sub": 5
+    },
+    {
+      "dims": [
+        10,
+        640
+      ],
+      "dtype": "16",
+      "major": 32,
+      "operator": 3601,
+      "sub": 0
+    },
+    {
+      "dims": [
+        640,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3604,
+      "sub": 0
+    },
+    {
+      "dims": [
+        8,
+        640,
+        512
+      ],
+      "dtype": "16",
+      "major": 16,
+      "operator": 3609,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        1,
+        4,
+        5120
+      ],
+      "dtype": "16",
+      "major": 48,
+      "operator": 3616,
+      "sub": 9
+    },
+    {
+      "dims": [
+        10,
+        2,
+        4
+      ],
+      "dtype": "18",
+      "major": 48,
+      "operator": 3625,
+      "sub": 9
+    },
+    {
+      "dims": [
+        10,
+        4
+      ],
+      "dtype": "18",
+      "major": 16,
+      "operator": 3630,
+      "sub": 0
+    },
+    {
+      "dims": [
+        10,
+        4
+      ],
+      "dtype": "18",
+      "major": 16,
+      "operator": 3635,
+      "sub": 0
+    },
+    {
+      "dims": [
+        1,
+        5120
+      ],
+      "dtype": "16",
+      "major": 96,
+      "operator": 3640,
+      "sub": 1
+    }
+  ],
+  "where_to_look": "a view whose declared axis is shortened by the resolver is a defect this repository has already had once: runtime/sim/memory.py's loop-bound axis test shortened DeepSeek-V4.1's compressor gather from a 2-row key/value pair to ONE row, because a loop term's stride happened to match a block of some axis, and the fix was to require that the axis can hold one whole iteration (``dim[axis] >= step``). The shape here is the same -- a declared extent of ten resolving to one -- on the index score's output rather than on a gather's."
+}

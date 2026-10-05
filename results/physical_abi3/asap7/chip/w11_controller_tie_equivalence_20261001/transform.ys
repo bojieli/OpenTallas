@@ -1,0 +1,11 @@
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -lib /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib
+read_verilog /home/ubuntu/w11-controller-tie-proof-20261001/original.v
+select ot_v41_attn_eng_ctl_phys
+write_json /home/ubuntu/w11-controller-tie-proof-20261001/before.json
+hilomap -singleton -hicell TIEHIx1_ASAP7_75t_R H -locell TIELOx1_ASAP7_75t_R L
+write_json /home/ubuntu/w11-controller-tie-proof-20261001/after.json
+write_verilog -noattr -noexpr /home/ubuntu/w11-controller-tie-proof-20261001/tied.v

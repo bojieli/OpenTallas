@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.w19.norm-opcode.coordination.v1",
+  "time": "2026-10-01T12:26:25.657913+00:00",
+  "owner": "QC/W19 isolated typed opcode CPU interpreter",
+  "paths": [
+    "tools/w19_norm_opcode_proof.py",
+    "tests/test_w19_norm_opcode_proof.py",
+    "results/quality/w19_norm_opcode_proof_20261001/"
+  ],
+  "calendar_source": "/home/ubuntu/OpenTallas/tools/w19_gpu_norm_calendar.py",
+  "source_sha256": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+  "calendar_artifact": "/home/ubuntu/OpenTallas/results/rtl/w19_checkpoint_production_20261001/gpu-norm-calendar-r1.json",
+  "calendar_sha256": "eb20e7d3e58a1fc75f97f18bbfc6da1aae12307d49ea19514e68803a7a83e49f",
+  "phases": [
+    "pre5120",
+    "post20480",
+    "norm_scalar5120",
+    "scale5120"
+  ],
+  "Turing_request": "Consume actual opcode PC/type/RAW/liveness traces and bit-exact CPU results for pre8warps/post32warps/normscalar1active lane/scale8warps. Current scalar denominator5120 must stay5120; 20480 is postshape, not permission to change denominator. Enforce32 RFregisters including8 address/loop, F32/U32 typedbitviews, U16 memory WIDEN, no readbeforewrite, rounding after FMUL/FADD/DIV, BF16 STORE16 byteenabled. Retained producer carries sourcepinned. Bind phase dependency scalarpublication->scale; no hardware timing or freeRF/shared claim.",
+  "scope": "Direct recipe opcode execution, not manual software replay; goldennorm chunk8sum provided at declared LOAD boundary, collector/chunk schedule not newly qualified",
+  "full_cycles": null,
+  "physical_qualified": false,
+  "GPU_campaign_authorized": false,
+  "model_adoption": false,
+  "QC": "original completeFAIL unchanged",
+  "Turing_acknowledgement": "not observed"
+}

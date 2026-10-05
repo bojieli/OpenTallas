@@ -1,0 +1,228 @@
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:141:43: Instance pin connected by name with empty reference: 'encoded_word'
+  141 |     .payload(44'b0),.current_word(cw[w]),.encoded_word(),
+      |                                           ^~~~~~~~~~~~
+                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050
+                          ... Use "/* verilator lint_off PINCONNECTEMPTY */" and lint_on around source to disable this message.
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:142:6: Instance pin connected by name with empty reference: 'syndrome'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:142:18: Instance pin connected by name with empty reference: 'overall_odd'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:142:33: Instance pin connected by name with empty reference: 'clean'
+  142 |     .syndrome(),.overall_odd(),.clean(),.correctable(ce[w]),.uncorrectable(uncorrectable),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:150:6: Instance pin connected by name with empty reference: 'syndrome'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |      ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:150:18: Instance pin connected by name with empty reference: 'overall_odd'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                  ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:150:33: Instance pin connected by name with empty reference: 'clean'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                 ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:150:42: Instance pin connected by name with empty reference: 'correctable'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                          ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:150:57: Instance pin connected by name with empty reference: 'uncorrectable'
+  150 |     .syndrome(),.overall_odd(),.clean(),.correctable(),.uncorrectable(),
+      |                                                         ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:151:6: Instance pin connected by name with empty reference: 'seal_ok'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |      ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:151:17: Instance pin connected by name with empty reference: 'padding_ok'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                 ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:151:31: Instance pin connected by name with empty reference: 'release_clean'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                               ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:151:48: Instance pin connected by name with empty reference: 'repaired_payload'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:151:68: Instance pin connected by name with empty reference: 'repaired_word'
+  151 |     .seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                    ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:958:40: Instance pin connected by name with empty reference: 'encoded_word'
+  958 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                        ^~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:958:56: Instance pin connected by name with empty reference: 'syndrome'
+  958 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                        ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:958:68: Instance pin connected by name with empty reference: 'overall_odd'
+  958 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                                    ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:958:83: Instance pin connected by name with empty reference: 'clean'
+  958 |  .payload(44'b0),.current_word(cw[l]),.encoded_word(),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                   ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:962:68: Instance pin connected by name with empty reference: 'syndrome'
+  962 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                    ^~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:962:80: Instance pin connected by name with empty reference: 'overall_odd'
+  962 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:962:95: Instance pin connected by name with empty reference: 'clean'
+  962 |  .payload(bounded),.current_word(72'b0),.encoded_word(encoded[l]),.syndrome(),.overall_odd(),.clean(),
+      |                                                                                               ^~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:3: Instance pin connected by name with empty reference: 'correctable'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |   ^~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:18: Instance pin connected by name with empty reference: 'uncorrectable'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                  ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:35: Instance pin connected by name with empty reference: 'seal_ok'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                   ^~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:46: Instance pin connected by name with empty reference: 'padding_ok'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                              ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:60: Instance pin connected by name with empty reference: 'release_clean'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                            ^~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:77: Instance pin connected by name with empty reference: 'repaired_payload'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                             ^~~~~~~~~~~~~~~~
+%Warning-PINCONNECTEMPTY: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:963:97: Instance pin connected by name with empty reference: 'repaired_word'
+  963 |  .correctable(),.uncorrectable(),.seal_ok(),.padding_ok(),.release_clean(),.repaired_payload(),.repaired_word());
+      |                                                                                                 ^~~~~~~~~~~~~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1117:22: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+ 1117 |  if(permit&&!core_bad&&OPT_EXACT&&rst_n)begin
+      |                      ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1125:34: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+ 1125 |  if(all_core_clean&&!context_live&&OPT_EXACT&&rst_n)begin
+      |                                  ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1247:24: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+ 1247 |  if(!permit||core_bad||!OPT_EXACT||!rst_n)begin
+      |                        ^
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1252:14: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+ 1252 |  if(OPT_EXACT&&rst_n&&!any_core_bad&&!correction_error)begin
+      |              ^~
+%Warning-WIDTHTRUNC: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1274:7: Logical operator IF expects 1 bit on the If, but If's VARREF 'OPT_EXACT' generates 32 bits.
+                                                                                                                                                         : ... note: In instance 'ot_w2_nc6_protected_completion'
+ 1274 |  else if(OPT_EXACT)begin for(integer x=0;x<NW;x=x+1)if(WE[x])cw[x]<=encoded[x];end
+      |       ^~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:49:14: Signal is not used: 'committed'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   49 |  wire [17:0] committed;
+      |              ^~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050
+                       ... Use "/* verilator lint_off UNUSEDSIGNAL */" and lint_on around source to disable this message.
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:59:22: Signal is not used: 'Xn'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   59 |  logic [95:0] X[0:7],Xn[0:7];
+      |                      ^~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:60:28: Signal is not used: 'context_changed'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   60 |  logic [7:0] context_clean,context_changed,peer_repaired;
+      |                            ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:60:44: Signal is not used: 'peer_repaired'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   60 |  logic [7:0] context_clean,context_changed,peer_repaired;
+      |                                            ^~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:72:7: Signal is not used: 'correction_busy'
+                                                                                                                                                         : ... note: In instance 'ot_w2_nc6_protected_completion'
+   72 |  wire correction_busy,correction_error;
+      |       ^~~~~~~~~~~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:32: Signal is not used: 'choice'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                ^~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:39: Signal is not used: 'rc'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                       ^~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:42: Signal is not used: 'wc'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                          ^~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:45: Signal is not used: 'bank'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                             ^~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:50: Signal is not used: 'offset'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                                  ^~~~~~
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:81:61: Signal is not used: 'owner'
+                                                                                                                                                          : ... note: In instance 'ot_w2_nc6_protected_completion'
+   81 |  integer i,j,k,c,a,n,slot,hits,choice,rc,wc,bank,offset,eng,owner;
+      |                                                             ^~~~~
+%Warning-UNUSEDSIGNAL: /tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv:27:12: Signal is not used: 'f'
+                                                                                                                                                         : ... note: In instance 'ot_w2_nc6_protected_completion.correction'
+   27 |  integer e,f,g,t,a,b,ph,status,owner,pass,chosen;
+      |            ^
+%Warning-UNUSEDSIGNAL: /tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv:27:20: Signal is not used: 'b'
+                                                                                                                                                         : ... note: In instance 'ot_w2_nc6_protected_completion.correction'
+   27 |  integer e,f,g,t,a,b,ph,status,owner,pass,chosen;
+      |                    ^
+%Warning-UNUSEDSIGNAL: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:49:15: Bits of signal are not used: 'target_data'[63:44]
+                                                                                                                                                       : ... note: In instance 'ot_w2_nc6_protected_completion.secondary'
+   49 |  logic [63:0] target_data;
+      |               ^~~~~~~~~~~
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:71:14: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.repair_retire_ready'
+   71 |  logic [7:0] repair_retire_ready;
+      |              ^~~~~~~~~~~~~~~~~~~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:71:14:      Example path: ot_w2_nc6_protected_completion.repair_retire_ready
+                    /tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv:53:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:67:31:      Example path: ot_w2_nc6_protected_completion.context_next
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:60:14: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.context_clean'
+   60 |  logic [7:0] context_clean,context_changed,peer_repaired;
+      |              ^~~~~~~~~~~~~
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:60:14:      Example path: ot_w2_nc6_protected_completion.context_clean
+                    /tmp/Hubble-W2-corrector-rescue-20261003/rtl/experimental/w2_nc6_correction_control_20261003/ot_w2_nc6_correction_control.sv:53:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:67:31:      Example path: ot_w2_nc6_protected_completion.context_next
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:51:7: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.permit'
+   51 |  wire permit,secondary_idle,secondary_rearm;
+      |       ^~~~~~
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:51:7:      Example path: ot_w2_nc6_protected_completion.permit
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.request_open'
+   50 |  wire [5:0] request_open,completion_open;
+      |             ^~~~~~~~~~~~
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:26: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.completion_open'
+   50 |  wire [5:0] request_open,completion_open;
+      |                          ^~~~~~~~~~~~~~~
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:26:      Example path: ot_w2_nc6_protected_completion.completion_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+%Warning-UNOPTFLAT: /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:64:13: Signal unoptimizable: Circular combinational logic: 'ot_w2_nc6_protected_completion.scrub_ready'
+   64 |  wire [1:0] scrub_ready;
+      |             ^~~~~~~~~~~
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:64:13:      Example path: ot_w2_nc6_protected_completion.scrub_ready
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:52:36:      Example path: ot_w2_nc6_protected_completion.core_bad
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_secondary_20261003/ot_w2_nc6_coded_secondary.sv:161:2:      Example path: ALWAYS
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:50:13:      Example path: ot_w2_nc6_protected_completion.request_open
+                    /home/ubuntu/w2-pc-exact-completion-model-20261003/rtl/experimental/w2_nc6_primary_20261003/ot_w2_nc6_protected_completion.sv:1037:2:      Example path: ALWAYS
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.187 MB sources in 5 modules, into 30.711 MB in 37 C++ files needing 0.000 MB
+- Verilator: Walltime 67.898 s (elab=1.188, cvt=65.030, bld=0.000); cpu 19.936 s on 1 threads; allocated 378.152 MB

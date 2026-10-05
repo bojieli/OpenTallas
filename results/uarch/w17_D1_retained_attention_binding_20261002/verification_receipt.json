@@ -1,0 +1,13 @@
+{
+  "new_files_only": true,
+  "old_receipts_changed": false,
+  "review_command": "python tools/w17_D1_retained_attention_binding.py",
+  "review_status": "METADATA_SOURCE_ABI_FULL_ENGINE_REVIEW_PASS",
+  "runtime_admitted": false,
+  "scope": "Read-only retained metadata/source/ABI review; no compiler or simulation",
+  "tests": {
+    "command": "python -m pytest -q tests/test_w17_D1_retained_attention_binding.py",
+    "failed": 0,
+    "passed": 32
+  }
+}

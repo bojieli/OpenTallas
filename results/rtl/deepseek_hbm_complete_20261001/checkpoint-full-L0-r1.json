@@ -1,0 +1,4046 @@
+{
+  "schema": "opentallas.deepseek.hbm.complete-execution.v1",
+  "source_commit": "066dad0094fbba015d447eeea9593ce1cf57bd0a",
+  "program_sha256": "846288a9b912af3357499e4cc26400190eeadf1eb8df354a72ff18465849c279",
+  "source_pins": {
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/rtl/w19_checkpoint_production_20261001/resident-service-candidate-r1.json": "00f369307f174a3aa25bb6251b056d78b5df26cd091f460f573d6cd298d991f3",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/rtl_v41_fullshape_layer_campaign.py": "700ea9c44ef3c11e881ebab666fffea02fc5f47b7a43e0ff8283fb6acc25f9f8",
+    "tools/deepseek_hbm_complete_program.py": "d96755a19121c431e46c91d6c40f3f850e8128aa57375b3d827818966b72ec22",
+    "tools/deepseek_hbm_complete_executor.py": "3a412d7293a6e2837ac7b5a5a37a4e5ca8b60cca0954a05c4164a66a626fa71c",
+    "tools/deepseek_hbm_complete_memory.py": "b4ad602a41fd34104ad5bee220d7a3f54435fc0649110d5c6453b50974b609f3",
+    "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+    "results/rtl/w17_v41_1m_reference_token.json": "ea7256eb1ac7a7895441f5a31dfb8ce5d05224d7c860e21c4b9c6ce1e6da8e56",
+    "tools/w19_attention_lowered_proof.py": "82cdc54513e0fc88fb87a2f5a3af06c4025a9028e17d459e915de987e050677c",
+    "tools/w19_gpu_attention_dots.py": "705649029db93f577ffa2e95ae73b0afeb85cac1825453abc2feaad4b3b1d362",
+    "tools/w19_gpu_compare_lowering.py": "bdd8fbb87a132bdd0c81e8b7f917e0f8abb86197fb12b4ae61386c86ef69a986",
+    "tools/w19_gpu_norm_calendar.py": "3fbfe8ff5d012426da56f791df32cda7dbd2b8fc76b2c77fd6f752d6e8e1b966",
+    "tools/w19_gpu_simd_contract.py": "1d77387d045422d78a68e613e5bcba79506a563cc265dab73667ae37eadff920",
+    "tools/w19_index32_integer_kernel.py": "8775ae6ff271dee79a5304bfb1653c3875e4d6c1e059f8d823fabbf3e8ba9fa4"
+  },
+  "entry_activation": "actual checkpoint embedding currenttoken, replicatedHC4",
+  "perlayer_reference_injection": false,
+  "ordinary_GPU_lowering_complete": false,
+  "DUT_RTL_executed": false,
+  "physical_qualified": false,
+  "provider": "finite synchronous CPU backing commit/consume events, no DRAM cycle credit",
+  "KV_representation": "decoded F32 software fixture/produced rows; packed production bridge unbound",
+  "initial_state_sha256": "814e9deddcade4549843abfaf11e134333ddd111b1390932565aa2c7c220799e",
+  "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+  "entry_sha256": "05a98a7bbdd2902cca51139c839c039e49000f9ecc3970af06a7458cca55a931",
+  "full_token_software_executed": false,
+  "verdict": "PASS",
+  "failure": null,
+  "layers": [
+    {
+      "layer": 0,
+      "prefix_complete": true,
+      "h_sha256": "47353c300b5d5600a7707683d06485d0832b4091c2bde3f142ade22cea01fb61",
+      "h_bit_exact": true,
+      "pre_bit_exact": true
+    }
+  ],
+  "CPU_wall_s": 23.177,
+  "operator_receipts": [
+    {
+      "pc": 0,
+      "layer": 0,
+      "source_op_id": 0,
+      "function": "hc_mixes",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 2.84091,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 1,
+      "layer": 0,
+      "source_op_id": 1,
+      "function": "hc_pre_norm",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.04652,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 2,
+      "layer": 0,
+      "source_op_id": 2,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.303842,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 3,
+      "layer": 0,
+      "source_op_id": 3,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.198378,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 4,
+      "layer": 0,
+      "source_op_id": 4,
+      "function": "all_gather",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.003079,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 5,
+      "layer": 0,
+      "source_op_id": 5,
+      "function": "q_norm_kv_row",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.046351,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 6,
+      "layer": 0,
+      "source_op_id": 6,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 1.695653,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 7,
+      "layer": 0,
+      "source_op_id": 7,
+      "function": "q_rope",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.001872,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 8,
+      "layer": 0,
+      "source_op_id": 8,
+      "function": "attend",
+      "numerical_backend": "TYPED_GPU_RECIPE_CPU",
+      "completed": true,
+      "CPU_wall_s": 0.687493,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 9,
+      "layer": 0,
+      "source_op_id": 9,
+      "function": "wo_a_part",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 5.403381,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 10,
+      "layer": 0,
+      "source_op_id": 10,
+      "function": "all_reduce",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.004646,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 11,
+      "layer": 0,
+      "source_op_id": 11,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.279237,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 12,
+      "layer": 0,
+      "source_op_id": 12,
+      "function": "all_gather",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.002103,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 13,
+      "layer": 0,
+      "source_op_id": 13,
+      "function": "hc_post",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.022979,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 14,
+      "layer": 0,
+      "source_op_id": 14,
+      "function": "hc_mixes",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 1.246605,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 15,
+      "layer": 0,
+      "source_op_id": 15,
+      "function": "hc_pre_norm",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.043919,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 16,
+      "layer": 0,
+      "source_op_id": 16,
+      "function": "mv",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.048567,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 17,
+      "layer": 0,
+      "source_op_id": 17,
+      "function": "router_act",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.009765,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 18,
+      "layer": 0,
+      "source_op_id": 18,
+      "function": "all_gather",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.001196,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 19,
+      "layer": 0,
+      "source_op_id": 19,
+      "function": "route",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.006054,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 20,
+      "layer": 0,
+      "source_op_id": 20,
+      "function": "expert_fetch",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.000115,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 21,
+      "layer": 0,
+      "source_op_id": 21,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.132109,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 22,
+      "layer": 0,
+      "source_op_id": 22,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.1326,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 23,
+      "layer": 0,
+      "source_op_id": 23,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.008289,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 24,
+      "layer": 0,
+      "source_op_id": 24,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.132929,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 25,
+      "layer": 0,
+      "source_op_id": 25,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.13254,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 26,
+      "layer": 0,
+      "source_op_id": 26,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.007255,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 27,
+      "layer": 0,
+      "source_op_id": 27,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.332695,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 28,
+      "layer": 0,
+      "source_op_id": 28,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.771878,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 29,
+      "layer": 0,
+      "source_op_id": 29,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.007551,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 30,
+      "layer": 0,
+      "source_op_id": 30,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.812089,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 31,
+      "layer": 0,
+      "source_op_id": 31,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.869924,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 32,
+      "layer": 0,
+      "source_op_id": 32,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.007427,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 33,
+      "layer": 0,
+      "source_op_id": 33,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.721614,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 34,
+      "layer": 0,
+      "source_op_id": 34,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.848348,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 35,
+      "layer": 0,
+      "source_op_id": 35,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.007153,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 36,
+      "layer": 0,
+      "source_op_id": 36,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.891421,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 37,
+      "layer": 0,
+      "source_op_id": 37,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 1.061485,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 38,
+      "layer": 0,
+      "source_op_id": 38,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.007308,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 39,
+      "layer": 0,
+      "source_op_id": 39,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.59792,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 40,
+      "layer": 0,
+      "source_op_id": 40,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.632067,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 41,
+      "layer": 0,
+      "source_op_id": 41,
+      "function": "swiglu",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.006721,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 42,
+      "layer": 0,
+      "source_op_id": 42,
+      "function": "all_gather",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.009222,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 43,
+      "layer": 0,
+      "source_op_id": 43,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.681479,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 44,
+      "layer": 0,
+      "source_op_id": 44,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.291271,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 45,
+      "layer": 0,
+      "source_op_id": 45,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.158625,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 46,
+      "layer": 0,
+      "source_op_id": 46,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.152151,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 47,
+      "layer": 0,
+      "source_op_id": 47,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.149526,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 48,
+      "layer": 0,
+      "source_op_id": 48,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.151543,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 49,
+      "layer": 0,
+      "source_op_id": 49,
+      "function": "linear_q",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.127886,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 50,
+      "layer": 0,
+      "source_op_id": 50,
+      "function": "moe_sum",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.003885,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 51,
+      "layer": 0,
+      "source_op_id": 51,
+      "function": "all_gather",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.002828,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    },
+    {
+      "pc": 52,
+      "layer": 0,
+      "source_op_id": 52,
+      "function": "hc_post",
+      "numerical_backend": "REFERENCE_SEMANTICS_CPU_NOT_GPU_LOWERED",
+      "completed": true,
+      "CPU_wall_s": 0.022757,
+      "GPU_cycles": null,
+      "DUT_executed": false
+    }
+  ],
+  "primitive_counts": {
+    "LDS32": 1024,
+    "LDS_PACKED_BF16": 512,
+    "BF16_WIDEN": 1024,
+    "FMUL": 2496,
+    "FADD": 4032,
+    "SHFL_PAIR": 576,
+    "STS_PARTIAL": 128,
+    "LOAD": 1600,
+    "STORE32": 512,
+    "SHFL": 704,
+    "AND": 6848,
+    "IEQ": 1408,
+    "INE": 1408,
+    "FCMP_GT": 576,
+    "XOR": 1856,
+    "OR": 1408,
+    "ISUB": 704,
+    "FCMP_LT": 128,
+    "F2I": 128,
+    "SHL": 128,
+    "IADD": 640,
+    "SHR": 256,
+    "STORE16": 256,
+    "DIV": 64,
+    "WIDEN": 128
+  },
+  "memory": {
+    "events": {
+      "fence": 149,
+      "accepted": 768,
+      "software_backing_store_write_commit": 384,
+      "consumer_done": 768,
+      "software_backing_store_read_return": 384
+    },
+    "outstanding": 0,
+    "trace": [
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 0,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 0,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 0,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 1,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 1,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 1,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 2,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 2,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 2,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 3,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 3,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 3,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 4,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 4,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 4,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 5,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 5,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 5,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 6,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 6,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 6,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 7,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 7,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 7,
+        "key": [
+          "window",
+          0,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 8,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 8,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 8,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 9,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 9,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 9,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 10,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 10,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 10,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 11,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 11,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 11,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 12,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 12,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 12,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 13,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 13,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 13,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 14,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 14,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 14,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 15,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 15,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 15,
+        "key": [
+          "window",
+          1,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 16,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 16,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 16,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 17,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 17,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 17,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 18,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 18,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 18,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 19,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 19,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 19,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 20,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 20,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 20,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 21,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 21,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 21,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 22,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 22,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 22,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 23,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 23,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 23,
+        "key": [
+          "window",
+          2,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 24,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 24,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 24,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 25,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 25,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 25,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 26,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 26,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 26,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 27,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 27,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 27,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 28,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 28,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 28,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 29,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 29,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 29,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 30,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 30,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 30,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 31,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 31,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 31,
+        "key": [
+          "window",
+          3,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 32,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 32,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 32,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 33,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 33,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 33,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 34,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 34,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 34,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 35,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 35,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 35,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 36,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 36,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 36,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 37,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 37,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 37,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 38,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 38,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 38,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 39,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 39,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 39,
+        "key": [
+          "window",
+          4,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 40,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 40,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 40,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 41,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 41,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 41,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 42,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 42,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 42,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 43,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 43,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 43,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 44,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 44,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 44,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 45,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 45,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 45,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 46,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 46,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 46,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 47,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 47,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 47,
+        "key": [
+          "window",
+          5,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 48,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 48,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 48,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 49,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 49,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 49,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 50,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 50,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 50,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 51,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 51,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 51,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 52,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 52,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 52,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 53,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 53,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 53,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 54,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 54,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 54,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 55,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 55,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 55,
+        "key": [
+          "window",
+          6,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 56,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 56,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 56,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 57,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 57,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 57,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 58,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 58,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 58,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 59,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 59,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 59,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 60,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 60,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 60,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 61,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 61,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 61,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 62,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 62,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 62,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 63,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 63,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 63,
+        "key": [
+          "window",
+          7,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 64,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 64,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 64,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 65,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 65,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 65,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 66,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 66,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 66,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 67,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 67,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 67,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 68,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 68,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 68,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 69,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 69,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 69,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 70,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 70,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 70,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 71,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 71,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 71,
+        "key": [
+          "window",
+          8,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 72,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 72,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 72,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 73,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 73,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 73,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 74,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 74,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 74,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 75,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 75,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 75,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 76,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 76,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 76,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 77,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 77,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 77,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 78,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 78,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 78,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 79,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 79,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 79,
+        "key": [
+          "window",
+          9,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 80,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 80,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 80,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 81,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 81,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 81,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 82,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 82,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 82,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1024
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 83,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "software_backing_store_write_commit",
+        "tag": 0,
+        "epoch": 83,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 83,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          1536
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 84,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "software_backing_store_read_return",
+        "tag": 0,
+        "epoch": 84,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "consumer_done",
+        "tag": 0,
+        "epoch": 84,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          0
+        ]
+      },
+      {
+        "event": "accepted",
+        "tag": 0,
+        "epoch": 85,
+        "key": [
+          "window",
+          10,
+          0,
+          1048575,
+          "part",
+          512
+        ]
+      }
+    ],
+    "timing_cycles": null,
+    "physical_backend_bound": false
+  },
+  "collective_events": [
+    {
+      "sequence": 0,
+      "kind": "all_gather",
+      "bytes": 7168,
+      "consumer_done": true,
+      "cycles": null
+    },
+    {
+      "sequence": 1,
+      "kind": "all_reduce",
+      "bytes": 262144,
+      "consumer_done": true,
+      "cycles": null
+    },
+    {
+      "sequence": 2,
+      "kind": "all_gather",
+      "bytes": 20480,
+      "consumer_done": true,
+      "cycles": null
+    },
+    {
+      "sequence": 3,
+      "kind": "all_gather",
+      "bytes": 1536,
+      "consumer_done": true,
+      "cycles": null
+    },
+    {
+      "sequence": 4,
+      "kind": "all_gather",
+      "bytes": 64512,
+      "consumer_done": true,
+      "cycles": null
+    },
+    {
+      "sequence": 5,
+      "kind": "all_gather",
+      "bytes": 20480,
+      "consumer_done": true,
+      "cycles": null
+    }
+  ],
+  "coefficient_initial_fixture_loads": 224
+}

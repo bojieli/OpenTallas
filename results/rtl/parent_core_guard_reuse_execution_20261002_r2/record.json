@@ -1,0 +1,13 @@
+{
+  "verdict": "FAIL_CLOSED_PRESERVED_NO_BUILD",
+  "stage": "baseline/runtime_0",
+  "error": "RuntimeError('stage_time_cap; no retry')",
+  "requested_out": "/tmp/opentallas-core-guard-reuse-campaign-result-20261002-r2",
+  "receipt_out": "/tmp/opentallas-core-guard-reuse-campaign-result-20261002-r2",
+  "plan_sha256": "bf0a97628ee9cf354fa7f1a6b6e7e7d1baa14a2f913cdfe2fc54b6c69ae108b3",
+  "unit": "w17-recovery-resource-guard-parent-20261002-r2",
+  "GO_commit": "04d2feab5f77e0a5baec74c10452b4322741b181",
+  "no_retry": true,
+  "physical_provider": false,
+  "runtime_qualification": false
+}

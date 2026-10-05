@@ -1,0 +1,114 @@
+{
+  "scope": "EXPERIMENTAL_HAND_PAIRED_FIXTURE_NATIVE_COMPILE_LINK_ONLY",
+  "runtime_authorized": false,
+  "source_commit": "bcbd8675a647962ecce4e52592c74ed0a30eaa1e",
+  "pid": 1608986,
+  "admission": {
+    "available_memory": 191145132032,
+    "required_memory": 60129542144,
+    "available_disk": 1124491030528,
+    "peer_reserved": 17179869184,
+    "capacity_is_not_limit": true
+  },
+  "steps": [
+    {
+      "argv": [
+        "/usr/bin/g++-11",
+        "-O0",
+        "-I.",
+        "-MMD",
+        "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+        "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+        "-DVERILATOR=1",
+        "-DVM_COVERAGE=0",
+        "-DVM_SC=0",
+        "-DVM_TIMING=1",
+        "-DVM_TRACE=0",
+        "-DVM_TRACE_FST=0",
+        "-DVM_TRACE_VCD=0",
+        "-DVM_TRACE_SAIF=0",
+        "-DVM_VPI=0",
+        "-faligned-new",
+        "-fcf-protection=none",
+        "-Wno-bool-operation",
+        "-Wno-int-in-bool-context",
+        "-Wno-shadow",
+        "-Wno-sign-compare",
+        "-Wno-subobject-linkage",
+        "-Wno-tautological-compare",
+        "-Wno-uninitialized",
+        "-Wno-unused-but-set-parameter",
+        "-Wno-unused-but-set-variable",
+        "-Wno-unused-parameter",
+        "-Wno-unused-variable",
+        "-fcoroutines",
+        "-include",
+        "Vtb_D1_scope_core__pch.h.fast",
+        "-H",
+        "-c",
+        "/tmp/opentallas-D1-reset-qualified-fixture-20261002/rtl/test/w17_D1_reset_qualified_fixture/Vtb_D1_scope_core___024root__0.cpp",
+        "-o",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core___024root__0.o",
+        "-MF",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core___024root__0.d"
+      ],
+      "pid": 1609226,
+      "log": "/tmp/w17-D1-reset-qualified-native-20261002-r1/compile.log",
+      "exit_code": 0,
+      "wall_s": 471.04843065328896
+    },
+    {
+      "argv": [
+        "/usr/bin/ar",
+        "rD",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core__ALL.a",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core___024root__0.o"
+      ],
+      "pid": 1627181,
+      "log": "/tmp/w17-D1-reset-qualified-native-20261002-r1/archive.log",
+      "exit_code": 0,
+      "wall_s": 1.437168296892196
+    },
+    {
+      "argv": [
+        "/usr/bin/ar",
+        "sD",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core__ALL.a"
+      ],
+      "pid": 1627341,
+      "log": "/tmp/w17-D1-reset-qualified-native-20261002-r1/archive_index.log",
+      "exit_code": 0,
+      "wall_s": 1.2440449087880552
+    },
+    {
+      "argv": [
+        "/usr/bin/g++-11",
+        "-std=c++20",
+        "-O2",
+        "-fcoroutines",
+        "-pthread",
+        "-I/tmp/w17-D1-native-joined-20261002-r1/obj",
+        "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include",
+        "-I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd",
+        "/tmp/opentallas-D1-native-r2-execution-20261002/rtl/test/w17_D1_scope_corrected_probe/native_main_scope.cpp",
+        "-Wl,--start-group",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/Vtb_D1_scope_core__ALL.a",
+        "-Wl,--end-group",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp",
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_dpi.cpp",
+        "-o",
+        "/tmp/w17-D1-reset-qualified-native-20261002-r1/D1_reset_qualified_prefix"
+      ],
+      "pid": 1627395,
+      "log": "/tmp/w17-D1-reset-qualified-native-20261002-r1/link.log",
+      "exit_code": 0,
+      "wall_s": 7.255932915024459
+    }
+  ],
+  "status": "PASS_EXPERIMENTAL_NATIVE_COMPILE_LINK_ONLY",
+  "archive_reused_members_verified": 3828,
+  "binary_SHA256": "dcbb334df6bd62990f7731c2254cd59aa33aeff0c20b61641edf8345d81e2482",
+  "input_postcheck": true
+}

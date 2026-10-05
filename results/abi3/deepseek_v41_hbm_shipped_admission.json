@@ -1,0 +1,57 @@
+{
+  "gate_no_shipped_digest_moves": {
+    "also_unmoved": "profile 'cluster-n' still publishes max_events 1024 and ten feature bits: the two new cluster_n_capability parameters default to None, which means 'the shipped chip', so the shipped record reproduces the previous call exactly.",
+    "deepseek_v4_flash_cluster_32": {
+      "head": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "patched": "e9a79c60e862617787449125b52f2e463a0c7aee826990e3c7037cde42b1ff42",
+      "unmoved": true
+    },
+    "method": "The same two shipped HBM deployments built at HEAD (unpatched) and on this change, and compared.  A worktree at HEAD supplies the unpatched planner so the comparison is A/B on one machine with one set of IRs.",
+    "qwen3_8b_single_chip": {
+      "head": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "patched": "3e99df5f9ce879065275c51ecb74e05773d4086f550c060f5411f598ba9ccd16",
+      "unmoved": true
+    },
+    "tests": "tests/compiler/test_hbm_sram_backend.py passes 112/112.  Two failures elsewhere (test_rom_backend.py::test_a_state_read_representation_does_not_reserve_a_second_column and test_deepseek_v41_hbm_comparator.py::test_the_comparator_declares_the_four_am_e10_contracts_and_no_others) were confirmed to FAIL AT HEAD in a clean worktree, so they are not from this change."
+  },
+  "not_a_claim": "This is not a token.  No V4.1 HBM deployment was executed here; the build is refused by the frozen verifier, so nothing ran.",
+  "question": "Can the SHIPPED DeepSeek-V4.1-Flash release be admitted on the shared HBM/SRAM machine -- the ninth cell of the {Qwen3, V4-Flash, V4.1-Flash} x {HBM, ROM wafer, ROM array} matrix?  Not yet.  This records how far it now gets, what two things stop it, and which of those is a hardware bound rather than a declaration.",
+  "schema": "opentallas.result.v41_hbm_shipped_admission.v1",
+  "what_this_commit_fixed": {
+    "1_the_cluster_comparator_was_a_different_machine": {
+      "consequence": "The shipped V4.1 graph was refused 'capability does not implement required feature bits [13]' (AM-E10's FP4_E2M1_S16_E4M3_TENSOR, which every node's ot_a3_vector_convert.sv decodes) and held to a 1,024-event board by the cluster record, and admitted by the one-chip record -- same graph, same chip.",
+      "now": "all four comparator fields, so the two comparator records describe one machine",
+      "was": "capability_for('cluster-n-comparator') passed the comparator's numeric contracts and memory but NOT its features or limits, while single_chip_comparator_capability passes all four."
+    },
+    "2_a_conditional_compressor_path_cannot_carry_a_transfer": {
+      "cost": "128 output columns each, replicated on 8 nodes; HBM still fits with 52 GB spare",
+      "kernels_replicated": [
+        "main.layer02.attention.indexer.key_project",
+        "main.layer14.attention.indexer.key_project"
+      ],
+      "refusal_it_removes": "kernel main.layer02.attention.indexer.key_project: a rolling-compressor conditional path cannot also carry link class 'activation_transfer'",
+      "stated_twice_on_purpose": "compiler/backends/hbm_sram/plan.py decides it and compiler/backends/hbm_sram/check.py re-derives it from the graph.  The checker must not read the planner's answer, so it reads the same kernel attributes the lowering uses to find the path at all.",
+      "why_replication": "A rolling compressor's conditional path carries two guarded physical instructions -- the prefill-many form and the boundary-decode-one form -- that converge only after the compressed-cache append, and neither is the place to put one all-gather of a result the other did not produce.  Replication is what this planner already does with a contraction a node count cannot cut, so it is what a conditional path gets."
+    }
+  },
+  "where_it_stops_now": {
+    "capacity": "fits -- HBM 50.41 GB of 103.08 GB per node, SRAM 33.6 MB of 134.2 MB, at 8 nodes",
+    "lowering": "completes -- 3,250 kernels over 40 layers, 4,759 instructions, 163,723 retired work",
+    "remaining_refusals": [
+      {
+        "hardware_board": 2048,
+        "kind": "HARDWARE BOUND, not a declaration",
+        "measured_events": 2442,
+        "refusal": "program signals 2442 distinct events, capability admits 2048",
+        "short_by": 394,
+        "why": "2,048 is the largest event board the implemented hardware expresses: rtl/abi3/ot_a3_event_scoreboard.sv follows ot_a3_pkg.sv's A3_EVENT_COUNT = 2048 and its index width follows that.  The two V4.1 ROM records already publish that number and reach it with margin (1,490 and 1,544 events).  The shipped release at eight nodes needs 2,442, so this is not fixable by widening a record -- it needs either event recycling in the lowering or a wider scoreboard in RTL with the microsequencer re-qualified."
+      },
+      {
+        "kind": "resolved in this commit",
+        "refusal": "checker: kernel main.layer{02,14}.attention.indexer.key_project weight has the wrong NODE_ID selection for its reconstructed physical materialization",
+        "why": "The planner now replicates a contraction on a rolling compressor's conditional path and the independent checker restates the same rule from the graph, so the two agree.  Before, the planner replicated and the checker's own geometry reconstruction still expected a node selection."
+      }
+    ],
+    "weights": "824 objects, 501.38 GB, zero-copy, of which 204.08 GB moved to the host image"
+  }
+}

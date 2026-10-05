@@ -1,0 +1,8 @@
+{
+ "check": "sequential cells after host synthesis (stat.txt) vs expected",
+ "expected_sequential": 338023,
+ "threshold": 270418,
+ "observed_sequential": 102065,
+ "verdict": "aborted",
+ "reason": "flops below 80% of expected: the stubbed datapath was optimised away; flow killed"
+}

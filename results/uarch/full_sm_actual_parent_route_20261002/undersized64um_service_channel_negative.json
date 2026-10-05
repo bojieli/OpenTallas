@@ -1,0 +1,2992 @@
+{
+  "full_SM_build_GO": false,
+  "models": {
+    "DS": {
+      "RF_mirrored_physical_write_bits_pc": 8192,
+      "RF_read_payload_bits_pc": 8192,
+      "RF_visible_write_ack_and_bank_arbitration_provider_bound": false,
+      "RF_write_logical_bits_pc": 4096,
+      "ROM_transfer": false,
+      "SM_replicas": 32,
+      "actual_parent_placed": false,
+      "added_transport_cycles": null,
+      "additional_service_halo_rectangles": [
+        {
+          "halo_bbox_um": [
+            1464.0,
+            0.0,
+            1566.824,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            0.0,
+            1669.6480000000001,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_1",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            0.0,
+            1772.472,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_2",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            0.0,
+            1875.296,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_3",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            0.0,
+            1978.1200000000001,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_4",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            0.0,
+            2080.944,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_5",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            0.0,
+            2183.768,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_6",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            0.0,
+            2286.592,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_7",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            49.04,
+            1566.824,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_8",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            49.04,
+            1669.6480000000001,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_9",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            49.04,
+            1772.472,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_10",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            49.04,
+            1875.296,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_11",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            49.04,
+            1978.1200000000001,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_12",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            49.04,
+            2080.944,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_13",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            49.04,
+            2183.768,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_14",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            49.04,
+            2286.592,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_15",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            98.08,
+            1566.824,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_16",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            98.08,
+            1669.6480000000001,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_17",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            98.08,
+            1772.472,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_18",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            98.08,
+            1875.296,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_19",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            98.08,
+            1978.1200000000001,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_20",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            98.08,
+            2080.944,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_21",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            98.08,
+            2183.768,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_22",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            98.08,
+            2286.592,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_23",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            147.12,
+            1566.824,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_24",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            147.12,
+            1669.6480000000001,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_25",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            147.12,
+            1772.472,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_26",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            147.12,
+            1875.296,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_27",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            147.12,
+            1978.1200000000001,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_28",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            147.12,
+            2080.944,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_29",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            147.12,
+            2183.768,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_30",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            147.12,
+            2286.592,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_31",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            196.16,
+            1566.824,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_32",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            196.16,
+            1669.6480000000001,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_33",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            196.16,
+            1772.472,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_34",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            196.16,
+            1875.296,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_35",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            196.16,
+            1978.1200000000001,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_36",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            196.16,
+            2080.944,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_37",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            196.16,
+            2183.768,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_38",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            196.16,
+            2286.592,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_39",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            245.2,
+            1566.824,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_40",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            245.2,
+            1669.6480000000001,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_41",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            245.2,
+            1772.472,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_42",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            245.2,
+            1875.296,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_43",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            245.2,
+            1978.1200000000001,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_44",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            245.2,
+            2080.944,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_45",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            245.2,
+            2183.768,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_46",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            245.2,
+            2286.592,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_47",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            294.24,
+            1566.824,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_48",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            294.24,
+            1669.6480000000001,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_49",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            294.24,
+            1772.472,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_50",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            294.24,
+            1875.296,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_51",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            294.24,
+            1978.1200000000001,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_52",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            294.24,
+            2080.944,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_53",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            294.24,
+            2183.768,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_54",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            294.24,
+            2286.592,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_55",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            343.28,
+            1566.824,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_56",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            343.28,
+            1669.6480000000001,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_57",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            343.28,
+            1772.472,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_58",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            343.28,
+            1875.296,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_59",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            343.28,
+            1978.1200000000001,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_60",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            343.28,
+            2080.944,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_61",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            343.28,
+            2183.768,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_62",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            343.28,
+            2286.592,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_63",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            392.32,
+            1566.824,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_64",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            392.32,
+            1669.6480000000001,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_65",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            392.32,
+            1772.472,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_66",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            392.32,
+            1875.296,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_67",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            392.32,
+            1978.1200000000001,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_68",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            392.32,
+            2080.944,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_69",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            392.32,
+            2183.768,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_70",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            392.32,
+            2286.592,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_71",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            441.36,
+            1566.824,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_72",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            441.36,
+            1669.6480000000001,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_73",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            441.36,
+            1772.472,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_74",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            441.36,
+            1875.296,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_75",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            441.36,
+            1978.1200000000001,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_76",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            441.36,
+            2080.944,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_77",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            441.36,
+            2183.768,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_78",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            441.36,
+            2286.592,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_79",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            490.4,
+            1566.824,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_80",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            490.4,
+            1669.6480000000001,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_81",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            490.4,
+            1772.472,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_82",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            490.4,
+            1875.296,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_83",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            490.4,
+            1978.1200000000001,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_84",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            490.4,
+            2080.944,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_85",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            490.4,
+            2183.768,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_86",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            490.4,
+            2286.592,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_87",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            539.4399999999999,
+            1566.824,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_88",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            539.4399999999999,
+            1669.6480000000001,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_89",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            539.4399999999999,
+            1772.472,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_90",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            539.4399999999999,
+            1875.296,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_91",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            539.4399999999999,
+            1978.1200000000001,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_92",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            539.4399999999999,
+            2080.944,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_93",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            539.4399999999999,
+            2183.768,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_94",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            539.4399999999999,
+            2286.592,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_95",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            588.48,
+            1566.824,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_96",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            588.48,
+            1669.6480000000001,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_97",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            588.48,
+            1772.472,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_98",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            588.48,
+            1875.296,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_99",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            588.48,
+            1978.1200000000001,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_100",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            588.48,
+            2080.944,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_101",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            588.48,
+            2183.768,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_102",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            588.48,
+            2286.592,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_103",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            637.52,
+            1566.824,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_104",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            637.52,
+            1669.6480000000001,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_105",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            637.52,
+            1772.472,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_106",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            637.52,
+            1875.296,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_107",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            637.52,
+            1978.1200000000001,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_108",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            637.52,
+            2080.944,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_109",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            637.52,
+            2183.768,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_110",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            637.52,
+            2286.592,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_111",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            686.56,
+            1566.824,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_112",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            686.56,
+            1669.6480000000001,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_113",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            686.56,
+            1772.472,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_114",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            686.56,
+            1875.296,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_115",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            686.56,
+            1978.1200000000001,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_116",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            686.56,
+            2080.944,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_117",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            686.56,
+            2183.768,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_118",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            686.56,
+            2286.592,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_119",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            735.6,
+            1566.824,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_120",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1566.824,
+            735.6,
+            1669.6480000000001,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_121",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1669.648,
+            735.6,
+            1772.472,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_122",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1772.472,
+            735.6,
+            1875.296,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_123",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1875.296,
+            735.6,
+            1978.1200000000001,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_124",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1978.12,
+            735.6,
+            2080.944,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_125",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2080.944,
+            735.6,
+            2183.768,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_126",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2183.768,
+            735.6,
+            2286.592,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_127",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1464.0,
+            848.64,
+            1646.744,
+            927.11
+          ],
+          "master": "ot_sram_1024x256",
+          "name": "proposed_scratch_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            1646.744,
+            848.64,
+            1829.4879999999998,
+            927.11
+          ],
+          "master": "ot_sram_1024x256",
+          "name": "proposed_scratch_1",
+          "provider_bound": false
+        }
+      ],
+      "array_columns": 8,
+      "array_gross_mm2": 120.16196812800001,
+      "array_outline_um": [
+        18299.52,
+        6566.400000000001
+      ],
+      "array_rows": 4,
+      "channel_M7_M9_50pct_track_budget": 900,
+      "channel_demand_bound": false,
+      "current_shared_RNE_integrated": false,
+      "dedicated_service_channel_um": [
+        1400.0,
+        0,
+        1464.0,
+        1641.6000000000001
+      ],
+      "element_gross_mm2": 3.7550615040000004,
+      "element_outline_um": [
+        2287.44,
+        1641.6000000000001
+      ],
+      "existing_native_OBS_capacity_file": "actual_geometry_capacity.json",
+      "four_target_applicability": {
+        "DS_HBM": true,
+        "DS_ROM": false,
+        "Qwen_HBM": false,
+        "Qwen_ROM": false
+      },
+      "macro_pin_escape_qualified": false,
+      "retained_macro_body_um": [
+        0,
+        0,
+        1400.0,
+        1640.0
+      ],
+      "retained_parent_cells_use_actual_postcut_ROW_sites": true,
+      "reticle_area_screen": true,
+      "reticle_source": "e72abea5ae169d3167dddc89543013f0e6bb3a7a:tools/uarch_model.py HBM_SHORE.reticle_mm; parent54d46eff8 corroborates",
+      "reticle_um": [
+        26000,
+        33000
+      ],
+      "service_logic_50pct_rectangle_um": [
+        1464.0,
+        991.11,
+        2286.96,
+        1377.75
+      ],
+      "token_admission": false,
+      "verdict": "AREA_AND_RETICLE_FIT_ONLY: source-native parent placement and finite service route schedule still required; not an admissible routed layout"
+    },
+    "Qwen": {
+      "RF_mirrored_physical_write_bits_pc": 8192,
+      "RF_read_payload_bits_pc": 8192,
+      "RF_visible_write_ack_and_bank_arbitration_provider_bound": false,
+      "RF_write_logical_bits_pc": 4096,
+      "ROM_transfer": false,
+      "SM_replicas": 32,
+      "actual_parent_placed": false,
+      "added_transport_cycles": null,
+      "additional_service_halo_rectangles": [
+        {
+          "halo_bbox_um": [
+            2264.0,
+            0.0,
+            2366.824,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            0.0,
+            2469.648,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_1",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            0.0,
+            2572.472,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_2",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            0.0,
+            2675.296,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_3",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            0.0,
+            2778.12,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_4",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            0.0,
+            2880.944,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_5",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            0.0,
+            2983.768,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_6",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            0.0,
+            3086.592,
+            49.04
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_7",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            49.04,
+            2366.824,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_8",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            49.04,
+            2469.648,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_9",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            49.04,
+            2572.472,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_10",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            49.04,
+            2675.296,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_11",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            49.04,
+            2778.12,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_12",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            49.04,
+            2880.944,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_13",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            49.04,
+            2983.768,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_14",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            49.04,
+            3086.592,
+            98.08
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_15",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            98.08,
+            2366.824,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_16",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            98.08,
+            2469.648,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_17",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            98.08,
+            2572.472,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_18",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            98.08,
+            2675.296,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_19",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            98.08,
+            2778.12,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_20",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            98.08,
+            2880.944,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_21",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            98.08,
+            2983.768,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_22",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            98.08,
+            3086.592,
+            147.12
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_23",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            147.12,
+            2366.824,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_24",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            147.12,
+            2469.648,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_25",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            147.12,
+            2572.472,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_26",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            147.12,
+            2675.296,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_27",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            147.12,
+            2778.12,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_28",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            147.12,
+            2880.944,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_29",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            147.12,
+            2983.768,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_30",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            147.12,
+            3086.592,
+            196.16
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_31",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            196.16,
+            2366.824,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_32",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            196.16,
+            2469.648,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_33",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            196.16,
+            2572.472,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_34",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            196.16,
+            2675.296,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_35",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            196.16,
+            2778.12,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_36",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            196.16,
+            2880.944,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_37",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            196.16,
+            2983.768,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_38",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            196.16,
+            3086.592,
+            245.2
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_39",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            245.2,
+            2366.824,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_40",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            245.2,
+            2469.648,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_41",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            245.2,
+            2572.472,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_42",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            245.2,
+            2675.296,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_43",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            245.2,
+            2778.12,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_44",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            245.2,
+            2880.944,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_45",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            245.2,
+            2983.768,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_46",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            245.2,
+            3086.592,
+            294.24
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_47",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            294.24,
+            2366.824,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_48",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            294.24,
+            2469.648,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_49",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            294.24,
+            2572.472,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_50",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            294.24,
+            2675.296,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_51",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            294.24,
+            2778.12,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_52",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            294.24,
+            2880.944,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_53",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            294.24,
+            2983.768,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_54",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            294.24,
+            3086.592,
+            343.28000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_55",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            343.28,
+            2366.824,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_56",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            343.28,
+            2469.648,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_57",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            343.28,
+            2572.472,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_58",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            343.28,
+            2675.296,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_59",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            343.28,
+            2778.12,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_60",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            343.28,
+            2880.944,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_61",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            343.28,
+            2983.768,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_62",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            343.28,
+            3086.592,
+            392.32
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_63",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            392.32,
+            2366.824,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_64",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            392.32,
+            2469.648,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_65",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            392.32,
+            2572.472,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_66",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            392.32,
+            2675.296,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_67",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            392.32,
+            2778.12,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_68",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            392.32,
+            2880.944,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_69",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            392.32,
+            2983.768,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_70",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            392.32,
+            3086.592,
+            441.36
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_71",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            441.36,
+            2366.824,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_72",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            441.36,
+            2469.648,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_73",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            441.36,
+            2572.472,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_74",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            441.36,
+            2675.296,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_75",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            441.36,
+            2778.12,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_76",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            441.36,
+            2880.944,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_77",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            441.36,
+            2983.768,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_78",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            441.36,
+            3086.592,
+            490.40000000000003
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_79",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            490.4,
+            2366.824,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_80",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            490.4,
+            2469.648,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_81",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            490.4,
+            2572.472,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_82",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            490.4,
+            2675.296,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_83",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            490.4,
+            2778.12,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_84",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            490.4,
+            2880.944,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_85",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            490.4,
+            2983.768,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_86",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            490.4,
+            3086.592,
+            539.4399999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_87",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            539.4399999999999,
+            2366.824,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_88",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            539.4399999999999,
+            2469.648,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_89",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            539.4399999999999,
+            2572.472,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_90",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            539.4399999999999,
+            2675.296,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_91",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            539.4399999999999,
+            2778.12,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_92",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            539.4399999999999,
+            2880.944,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_93",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            539.4399999999999,
+            2983.768,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_94",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            539.4399999999999,
+            3086.592,
+            588.4799999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_95",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            588.48,
+            2366.824,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_96",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            588.48,
+            2469.648,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_97",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            588.48,
+            2572.472,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_98",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            588.48,
+            2675.296,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_99",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            588.48,
+            2778.12,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_100",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            588.48,
+            2880.944,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_101",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            588.48,
+            2983.768,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_102",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            588.48,
+            3086.592,
+            637.52
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_103",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            637.52,
+            2366.824,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_104",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            637.52,
+            2469.648,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_105",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            637.52,
+            2572.472,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_106",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            637.52,
+            2675.296,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_107",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            637.52,
+            2778.12,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_108",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            637.52,
+            2880.944,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_109",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            637.52,
+            2983.768,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_110",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            637.52,
+            3086.592,
+            686.56
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_111",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            686.56,
+            2366.824,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_112",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            686.56,
+            2469.648,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_113",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            686.56,
+            2572.472,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_114",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            686.56,
+            2675.296,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_115",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            686.56,
+            2778.12,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_116",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            686.56,
+            2880.944,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_117",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            686.56,
+            2983.768,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_118",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            686.56,
+            3086.592,
+            735.5999999999999
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_119",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            735.6,
+            2366.824,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_120",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2366.824,
+            735.6,
+            2469.648,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_121",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2469.648,
+            735.6,
+            2572.472,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_122",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2572.4719999999998,
+            735.6,
+            2675.296,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_123",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2675.296,
+            735.6,
+            2778.12,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_124",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2778.12,
+            735.6,
+            2880.944,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_125",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2880.944,
+            735.6,
+            2983.768,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_126",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2983.768,
+            735.6,
+            3086.592,
+            784.64
+          ],
+          "master": "ot_sram_128x256",
+          "name": "proposed_RF_readcopy_page_127",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2264.0,
+            848.64,
+            2446.744,
+            927.11
+          ],
+          "master": "ot_sram_1024x256",
+          "name": "proposed_scratch_0",
+          "provider_bound": false
+        },
+        {
+          "halo_bbox_um": [
+            2446.744,
+            848.64,
+            2629.4880000000003,
+            927.11
+          ],
+          "master": "ot_sram_1024x256",
+          "name": "proposed_scratch_1",
+          "provider_bound": false
+        }
+      ],
+      "array_columns": 8,
+      "array_gross_mm2": 247.230517248,
+      "array_outline_um": [
+        24710.4,
+        10005.12
+      ],
+      "array_rows": 4,
+      "channel_M7_M9_50pct_track_budget": 900,
+      "channel_demand_bound": false,
+      "current_shared_RNE_integrated": false,
+      "dedicated_service_channel_um": [
+        2200.0,
+        0,
+        2264.0,
+        2501.28
+      ],
+      "element_gross_mm2": 7.725953664,
+      "element_outline_um": [
+        3088.8,
+        2501.28
+      ],
+      "existing_native_OBS_capacity_file": "actual_geometry_capacity.json",
+      "four_target_applicability": {
+        "DS_HBM": false,
+        "DS_ROM": false,
+        "Qwen_HBM": true,
+        "Qwen_ROM": false
+      },
+      "macro_pin_escape_qualified": false,
+      "retained_macro_body_um": [
+        0,
+        0,
+        2200.0,
+        2500.0
+      ],
+      "retained_parent_cells_use_actual_postcut_ROW_sites": true,
+      "reticle_area_screen": true,
+      "reticle_source": "e72abea5ae169d3167dddc89543013f0e6bb3a7a:tools/uarch_model.py HBM_SHORE.reticle_mm; parent54d46eff8 corroborates",
+      "reticle_um": [
+        26000,
+        33000
+      ],
+      "service_logic_50pct_rectangle_um": [
+        2264.0,
+        991.11,
+        3086.96,
+        1377.75
+      ],
+      "token_admission": false,
+      "verdict": "AREA_AND_RETICLE_FIT_ONLY: source-native parent placement and finite service route schedule still required; not an admissible routed layout"
+    }
+  },
+  "new_OpenROAD_invocations": 0,
+  "original_failures_unchanged": true,
+  "schema": "opentallas.fullSM.native-parent-area-outline.v1"
+}

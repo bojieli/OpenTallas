@@ -1,0 +1,10 @@
+schedule policy: {"pass_first": false, "pass_columns": 3, "reason": "complete weight row fits resident banks", "packed_row_words": 14, "packed_pass_words": null, "capacity_words": 1024}
+Traceback (most recent call last):
+  File "/tmp/g2_before_coalescing_probe.py", line 355, in <module>
+    assert r.returncode == 0, r.stdout + r.stderr
+AssertionError: program phase=1 complete=1 trap=0 cycles=849
+phase latency phase=1 elapsed_cycles=698
+[13455000] %Fatal: tb_a3_g2_runtime_program.sv:353: Assertion failed in tb_a3_g2_runtime_program.unnamedblk4: wrong result or write after abort
+%Error: /home/ubuntu/OpenTallas/rtl/test/tb_a3_g2_runtime_program.sv:353: Verilog $stop
+Aborting...
+

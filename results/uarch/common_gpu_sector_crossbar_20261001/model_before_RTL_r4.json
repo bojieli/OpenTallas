@@ -1,0 +1,628 @@
+{
+  "schema": "opentallas.common-gpu-sector-crossbar-model.v1",
+  "status": "MODEL_ONLY_FULL_ROUTING_AND_CONSUMER_COMPOSITION_BLOCKED",
+  "opt_in": true,
+  "default_enabled": false,
+  "adoption": false,
+  "full_token": false,
+  "engine_RTL_build_ready": false,
+  "physical_build_ready": false,
+  "headline": false,
+  "source_sha256": {
+    "macro": {
+      "revision": "8ddd7c50dcc1e3c24313cd87a730d0d98d30ec8b",
+      "path": "results/uarch/qwen_hbm_connected_20261001/real_macro_ports_before_RTL.json",
+      "sha256": "312778c83aa9e88cc2301789f820da7d34d637aa7e2ee2ff157f5e6bd70e82f4"
+    },
+    "ports_v1": {
+      "revision": "86c7a2ea58e9d48ab79ea95277e365b9ce1f031c",
+      "path": "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract.json",
+      "sha256": "2c599f89a24b22fc40665c18dd52e2969b675f291f104cf48c39fc86a8063b6f"
+    },
+    "ports": {
+      "revision": "07a07ec5d5c48a6498ac8bed6f6b6abc30937858",
+      "path": "results/uarch/qwen_hbm_connected_20261001/common_GPU_WRACK_port_contract_r2.json",
+      "sha256": "88658188ff337d72552796eb6f74efba428e2b9f39d375c2df502496471e3979"
+    },
+    "ingress": {
+      "revision": "4535be1001d69bc43669e0fdf0401896be4034a6",
+      "path": "results/uarch/qwen_hbm_connected_20261001/HBM_ingress_before_RTL_r2.json",
+      "sha256": "fb70742365a23ba728f000ef4c23dc4f4f681f1128c483e00d5259083536cbcf"
+    },
+    "unified_model": {
+      "revision": "4535be1001d69bc43669e0fdf0401896be4034a6",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "publication": {
+      "revision": "66aa67ed1",
+      "path": "results/uarch/qwen_hbm_connected_20261001/publication_model_negative_gate.json",
+      "sha256": "287d997d2a5aefe6267b58f3f6b4a853067e1df6fb430e29fd67ccaef3c92b19"
+    },
+    "generator": {
+      "path": "tools/uarch_common_gpu_sector_crossbar.py",
+      "sha256": "9f433ace549473dee990aba6d0c3aeb85b056747f1b4d03179acf5ded292f79e"
+    }
+  },
+  "geometry": {
+    "stacks": 4,
+    "PCs_per_stack": 32,
+    "Qwen_clients": 36,
+    "sector_banks_per_client": 4,
+    "arbiters": 144,
+    "candidates_per_arbiter": 128,
+    "PC_landing_entries": 2,
+    "PC_landing_entry_bits": 312,
+    "client_sector_landing_entries": 2,
+    "client_sector_entry_bits": 320,
+    "macro_writes_per_bank_cycle": 1,
+    "write_credits_per_controller": 4,
+    "ACK_reserved_entries_per_controller": 4,
+    "transaction_entry_bits": 512,
+    "ACK_entry_bits": 80,
+    "transaction_layout": "384 request/state bits including data256 mask32 AW34 tag16 client6 epoch16; two64bit scheduled/visible timestamps",
+    "PC_layout": "data256+AW34+tag16+client6=312; no publication proof in echoed tag",
+    "client_layout": "data256+tag16+client6+epoch16+row9+sector2+control15=320",
+    "DeepSeek_scope": "Only reusable service topology; actual client population and global publication map require owner composition"
+  },
+  "compute": {
+    "MACs_per_cycle": 0,
+    "bytes_per_sector": 32,
+    "communication_only": true,
+    "intensity_MACs_per_byte": 0
+  },
+  "structure": {
+    "mux_2to1_bit_equivalents": {
+      "local_PC32_to_each_client_sector": 5571072,
+      "four_stack_merge": 134784,
+      "PC_two_entry_head_select": 39936,
+      "destination_two_entry_head_select": 46080,
+      "client_patch_to_four_controllers": 53760,
+      "ACK_controller_to_every_client": 8640,
+      "four_transaction_slot_select": 6144,
+      "four_ACK_slot_select": 960
+    },
+    "register_bits": {
+      "PC_landing_payload": 79872,
+      "PC_landing_control": 768,
+      "client_sector_landing_payload": 92160,
+      "client_sector_landing_control": 864,
+      "source_capture_pipeline": 40064,
+      "local_stack_mux_pipeline": 180288,
+      "global_mux_pipeline": 45072,
+      "destination_reservation_and_registered_credit": 720,
+      "bank_RR_pointer": 1008,
+      "PC_saturating_skip_age": 640,
+      "pipelined_local_select": 3456,
+      "pipelined_global_select": 432,
+      "write_transactions": 8192,
+      "ACK_reserved_slots": 1280,
+      "controller_request_CDC": 6144,
+      "controller_ACK_CDC": 1280,
+      "consumer_completion_return_CDC": 256,
+      "CDC_pointer_synchronizers": 288,
+      "CDC_free_running_phase": 8
+    },
+    "control_2input_gate_equivalents": {
+      "destination_decode_and_eligibility": 202752,
+      "RR_pointer_compare": 129024,
+      "two_priority_prefix_passes": 73728,
+      "aged_group_selection": 36864,
+      "age_saturating_increment": 3200,
+      "landing_FIFO_control": 17408,
+      "reservation_control": 9216,
+      "ACK_and_write_credit_control": 2048,
+      "all_shared_requests_sector_lock_compare": 89216
+    },
+    "arbitration": "One destination per PC head; per-bank saturated age16 priority, RR within eligible aged group. Reservation precedes source pop; no second selection of captured head.",
+    "reservation": "Two credits include all in-flight and occupied destination slots. Macro write returns credit through a register one cycle later; backpressure cannot revoke a reserved slot.",
+    "pipeline": "t reserve/capture; t+1 local32 mux register; t+2 stack4 mux register; t+3 landing; t+4 actual macro write; t+5 credit usable",
+    "stage_timing": "Analytical four-cycle route assumes all wire segments <=504um and local mux timing closes; neither is physically proven",
+    "fanout": {
+      "PC_payload_targets": 144,
+      "local_stack_outputs": 576,
+      "per_bank_request_candidates": 128,
+      "controller_ACK_client_targets": 36,
+      "no_broadcast_is_free": true
+    }
+  },
+  "area": {
+    "register_bits": 462792,
+    "mux_bit_equivalents": 5861376,
+    "control_gate_equivalents": 563456,
+    "DFF_um2": 0.2916,
+    "assumed_mux_or_gate_um2": 0.2,
+    "logic_utilization": 0.5,
+    "additive_footprint_mm2": 2.8398330944000003,
+    "prior_storage_corrected_die_mm2": 162.2839675218048,
+    "composed_die_estimate_mm2": 165.12380061620482,
+    "SM_slot_fit": false,
+    "legal_floorplan": false,
+    "composition_policy": "Conservatively add all listed costs; no subtraction from old aggregate mux/CDC allowance. Owner must prove exact resource overlap before any deduplication.",
+    "not_priced": "Data-dependent timing, buffer cell sizing, clock tree, placement-specific additional wire registers, publication storage/lookup addon, full backing-address publication mapping, RF/vector/TP consumers"
+  },
+  "publication": {
+    "owner": "common controller publication model",
+    "admission": false,
+    "source": "66aa67ed1:results/uarch/qwen_hbm_connected_20261001/publication_model_negative_gate.json",
+    "banks": 32,
+    "rows_per_bank": 256,
+    "readers_per_bank": 36,
+    "descriptor_bits_per_bank": 42,
+    "storage_bits_owner_record": 373312,
+    "storage_footprint_mm2_owner_record": 0.2177155584,
+    "storage_not_recharged_here": true,
+    "mux_bit_equivalents": {
+      "row_tuple_lookup": 285600,
+      "reader_ticket_lookup": 82880,
+      "one_client_request_per_bank": 82880
+    },
+    "control_gate_equivalents": {
+      "row_producer_match_and_committed": 573440,
+      "reader_ticket_epoch_identity_match": 168192,
+      "descriptor_epoch_match": 992,
+      "bitmap_and_reader_update_control": 88064,
+      "client_RR_prefix_control": 4608
+    },
+    "lookup_pipeline_register_bits": {
+      "request_capture": 2400,
+      "row_and_reader_match_capture": 9376,
+      "intermediate_row_reader_mux": 36864,
+      "final_row_reader_mux": 3520,
+      "update_capture": 2560,
+      "client_RR_pointer": 192
+    },
+    "additional_lookup_control_footprint_mm2": 0.5466870784,
+    "physical_lookup_ports_per_bank": 1,
+    "aggregate_physical_lookup_ports": 32,
+    "latency": "registeredrequest decode1 + parallel row/reader equality1 + tuple/ticket mux2 + publication/reader update1 =5fast cycles before read admission; producer drain and consumer completion fences additional",
+    "matched_row_mux_levels": 8,
+    "matched_reader_mux_levels": 6,
+    "worst_case_client_RR_grants": 36,
+    "bounded_lookup_wait_cycles_if_ready": 180,
+    "serialized_port": "One lookup transaction/bank per5cycles in this conservative model; 32banks/5=6.4transactions/cycle. Pipelining needs separately priced hazard/forwarding and reservation qualification.",
+    "tracks_per_bank": 11742,
+    "parallel_64um_corridors_per_bank": 4,
+    "lookup_full_fanout": "Request row/id to256tuple comparators, reader request to36ticket comparators perbank; all32banks instantiated",
+    "separate_addon": true,
+    "no_full_consumer_or_global_publication_admission": true,
+    "requirement": "Owner composes finite windows with instructions and matching controller writes; echoed312bit route metadata cannot prove publication"
+  },
+  "complete_known_addons": {
+    "frozen_die_mm2": 165.8882032530048,
+    "independent_route_candidate_die_mm2": 166.0891271442048,
+    "floorplan_PASS": false,
+    "timing_PASS": false
+  },
+  "routing": {
+    "one_stack_PC_to_local_mux": {
+      "signal_tracks": 10880,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 4,
+      "single_corridor_fit": false
+    },
+    "all_stack_local_mux_to_merge": {
+      "signal_tracks": 180288,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 57,
+      "single_corridor_fit": false
+    },
+    "merge_to_all_client_sector_landing": {
+      "signal_tracks": 46224,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 15,
+      "single_corridor_fit": false
+    },
+    "all_client_full_line_reads": {
+      "signal_tracks": 39240,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 13,
+      "single_corridor_fit": false
+    },
+    "client_patch_inputs": {
+      "signal_tracks": 13896,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 5,
+      "single_corridor_fit": false
+    },
+    "controller_ACK_to_client_branches": {
+      "signal_tracks": 11808,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 4,
+      "single_corridor_fit": false
+    },
+    "all_bank_request_grant_reservation_controls": {
+      "signal_tracks": 36864,
+      "channel_tracks": 3200,
+      "corridor_width_um": 64,
+      "assumed_signal_layers": 4,
+      "assumed_pitch_um": 0.08,
+      "parallel_corridors_required": 12,
+      "single_corridor_fit": false
+    }
+  },
+  "calendar": {
+    "no_stall_all_128_PC_heads_two_sectors_one_bank": {
+      "done": true,
+      "sectors_written": 256,
+      "max_reserved": 2,
+      "last_write_cycle": 640,
+      "final_credit_cycle": 641,
+      "first_events": [
+        {
+          "cycle": 0,
+          "event": "reserve_launch",
+          "pc": 0
+        },
+        {
+          "cycle": 1,
+          "event": "reserve_launch",
+          "pc": 1
+        },
+        {
+          "cycle": 4,
+          "event": "macro_write",
+          "pc": 0,
+          "launch": 0
+        },
+        {
+          "cycle": 5,
+          "event": "macro_write",
+          "pc": 1,
+          "launch": 1
+        },
+        {
+          "cycle": 5,
+          "event": "reserve_launch",
+          "pc": 2
+        },
+        {
+          "cycle": 6,
+          "event": "reserve_launch",
+          "pc": 3
+        },
+        {
+          "cycle": 9,
+          "event": "macro_write",
+          "pc": 2,
+          "launch": 5
+        },
+        {
+          "cycle": 10,
+          "event": "macro_write",
+          "pc": 3,
+          "launch": 6
+        },
+        {
+          "cycle": 10,
+          "event": "reserve_launch",
+          "pc": 4
+        },
+        {
+          "cycle": 11,
+          "event": "reserve_launch",
+          "pc": 5
+        },
+        {
+          "cycle": 14,
+          "event": "macro_write",
+          "pc": 4,
+          "launch": 10
+        },
+        {
+          "cycle": 15,
+          "event": "macro_write",
+          "pc": 5,
+          "launch": 11
+        },
+        {
+          "cycle": 15,
+          "event": "reserve_launch",
+          "pc": 6
+        },
+        {
+          "cycle": 16,
+          "event": "reserve_launch",
+          "pc": 7
+        }
+      ],
+      "last_events": [
+        {
+          "cycle": 634,
+          "event": "macro_write",
+          "pc": 124,
+          "launch": 630
+        },
+        {
+          "cycle": 635,
+          "event": "macro_write",
+          "pc": 125,
+          "launch": 631
+        },
+        {
+          "cycle": 635,
+          "event": "reserve_launch",
+          "pc": 126
+        },
+        {
+          "cycle": 636,
+          "event": "reserve_launch",
+          "pc": 127
+        },
+        {
+          "cycle": 639,
+          "event": "macro_write",
+          "pc": 126,
+          "launch": 635
+        },
+        {
+          "cycle": 640,
+          "event": "macro_write",
+          "pc": 127,
+          "launch": 636
+        }
+      ]
+    },
+    "macro_ready_held_until_cycle100": {
+      "done": true,
+      "sectors_written": 256,
+      "max_reserved": 2,
+      "last_write_cycle": 736,
+      "final_credit_cycle": 737,
+      "first_events": [
+        {
+          "cycle": 0,
+          "event": "reserve_launch",
+          "pc": 0
+        },
+        {
+          "cycle": 1,
+          "event": "reserve_launch",
+          "pc": 1
+        },
+        {
+          "cycle": 100,
+          "event": "macro_write",
+          "pc": 0,
+          "launch": 0
+        },
+        {
+          "cycle": 101,
+          "event": "macro_write",
+          "pc": 1,
+          "launch": 1
+        },
+        {
+          "cycle": 101,
+          "event": "reserve_launch",
+          "pc": 2
+        },
+        {
+          "cycle": 102,
+          "event": "reserve_launch",
+          "pc": 3
+        },
+        {
+          "cycle": 105,
+          "event": "macro_write",
+          "pc": 2,
+          "launch": 101
+        },
+        {
+          "cycle": 106,
+          "event": "macro_write",
+          "pc": 3,
+          "launch": 102
+        },
+        {
+          "cycle": 106,
+          "event": "reserve_launch",
+          "pc": 4
+        },
+        {
+          "cycle": 107,
+          "event": "reserve_launch",
+          "pc": 5
+        },
+        {
+          "cycle": 110,
+          "event": "macro_write",
+          "pc": 4,
+          "launch": 106
+        },
+        {
+          "cycle": 111,
+          "event": "macro_write",
+          "pc": 5,
+          "launch": 107
+        },
+        {
+          "cycle": 111,
+          "event": "reserve_launch",
+          "pc": 6
+        },
+        {
+          "cycle": 112,
+          "event": "reserve_launch",
+          "pc": 7
+        }
+      ],
+      "last_events": [
+        {
+          "cycle": 730,
+          "event": "macro_write",
+          "pc": 124,
+          "launch": 726
+        },
+        {
+          "cycle": 731,
+          "event": "macro_write",
+          "pc": 125,
+          "launch": 727
+        },
+        {
+          "cycle": 731,
+          "event": "reserve_launch",
+          "pc": 126
+        },
+        {
+          "cycle": 732,
+          "event": "reserve_launch",
+          "pc": 127
+        },
+        {
+          "cycle": 735,
+          "event": "macro_write",
+          "pc": 126,
+          "launch": 731
+        },
+        {
+          "cycle": 736,
+          "event": "macro_write",
+          "pc": 127,
+          "launch": 732
+        }
+      ]
+    },
+    "indefinitely_blocked_finite_prefix": {
+      "done": false,
+      "sectors_written": 0,
+      "max_reserved": 2,
+      "last_write_cycle": null,
+      "final_credit_cycle": null,
+      "first_events": [
+        {
+          "cycle": 0,
+          "event": "reserve_launch",
+          "pc": 0
+        },
+        {
+          "cycle": 1,
+          "event": "reserve_launch",
+          "pc": 1
+        }
+      ],
+      "last_events": [
+        {
+          "cycle": 0,
+          "event": "reserve_launch",
+          "pc": 0
+        },
+        {
+          "cycle": 1,
+          "event": "reserve_launch",
+          "pc": 1
+        }
+      ]
+    },
+    "conditional_bound": "Continuously eligible head: <=16+128 competing grants. If macro-ready gap <=H cycles, conservative grant gap <=H+5; first write <=144*(H+5)+4 fast cycles after head eligibility. Earlier PC FIFO heads each add the same bound. Bank/refresh/return latency and producer waits additional.",
+    "MAXSKIP16_is_not_cycle_bound": true,
+    "arbitrary_backpressure_bound": null,
+    "phase": "Fast phase advances every cycle; serial opportunities floor(3*(t+1)/4)-floor(3*t/4), independent of valid. Each 2-flop pointer crossing allowance4 fast cycles, roundtrip8 plus <=2fast phase alignment; real CDC qualification pending.",
+    "serial_stall": "Add actual serial consumer stalls converted by ceil(4*S/3); no finite ACK-credit rate if readiness unbounded"
+  },
+  "service": {
+    "stack_shared_byte_budget_Bpc": 750,
+    "controller_command_slots_per_cycle": 1,
+    "mixed_command_constraint": "read_bytes/1024+write_bytes/32<=1 per stack; every read/write/RMW sector also consumes the same750B/cycle bucket",
+    "token_bucket_capacity_B": 1024,
+    "token_initial_B": 0,
+    "finite_bucket_rule": "min(1024, previous+750), subtract actual sectors; finite accumulated burst is not sustained bandwidth",
+    "read_ingress_upper_Bpc": 4096,
+    "prior_credit_upper_Bpc": 2763.046113306983,
+    "destination_two_credit_ceiling_Bpc": 1843.2,
+    "composed_upper_Bpc": 1843.2,
+    "single_conflicted_bank_upper_Bpc": 12.8,
+    "ACK_credit_bound": "Per controller writes/cycle <=min(1,750/32,4/Lack). Lack starts at reservation and includes scheduler/CWL/burst/visibility, forwardCDC, ready stall and completionCDC. RMW charges one read plus one write and holds same lock/credit. Infinite Lack gives zero guaranteed rate.",
+    "budget_not_double_charged": "Charge backend DRAM sectors once; crossbar routing moves those bytes and constrains service without a second DRAM debit.",
+    "full_Qwen_transfer_only_lower_cycles": 2217821,
+    "prior_transfer_only_lower_cycles": 1479486,
+    "token_rate": null,
+    "speed_credit": 0,
+    "latency_overlap": "Owner replaces old3 gather cycles with4 route+1 registered credit turnaround; do not add to entire87 boundary estimate without a matched old-stage map. Conflict stalls are additional actual service cycles."
+  },
+  "separately_priced_candidate": {
+    "status": "MODEL_CANDIDATE_NOT_ADOPTED",
+    "frozen_landing_entries_per_bank": 2,
+    "independently_credited_route_entries_per_bank": 4,
+    "route_entry_bits": 320,
+    "aggregate_capacity_per_bank": 6,
+    "extra_register_bits": 192816,
+    "extra_gate_equivalents": 36864,
+    "extra_mux_bit_equivalents": 184320,
+    "extra_footprint_mm2": 0.2009238912,
+    "candidate_die_estimate_mm2": 165.32472450740482,
+    "stage_layout": "Each of4 bank-local elastic stages has320payload+valid+reserved+registeredreturnedcredit+3occupancy+7source-ticket bits; bank aggregate adds3occupancy+3returnedcount+1valid",
+    "no_overlap_credit": "Conservatively additional to shared local/global capture pipeline registers; no free reuse, no implicit capacity growth in frozen variant",
+    "pipeline": "Four elastic stages and two landing slots; reserve only an actually available stage, retain packet on ready stall; stall wave propagates, global outstanding never exceeds6/bank",
+    "no_stall_II_cycles": 1,
+    "reservation_to_macro_min_cycles": 4,
+    "registered_credit_return_cycles": 1,
+    "no_stall_all_bank_ceiling_Bpc": 4608,
+    "composed_no_stall_upper_Bpc": 2763.046113306983,
+    "arbitration_and_full_fanout": "Same full128PC->144bank mux/arbiters as frozen variant; no omitted client; extra144x4 elastic ready/valid/credit branches",
+    "extra_route_payload_track_segments": 184896,
+    "extra_handshake_credit_track_segments": 2880,
+    "executable_stall_calendar_owner": "Ram01a0f697-9c82-7572-8900-dd7b15d59ebf",
+    "calendar_and_full_token_PASS": false,
+    "adoption": false,
+    "engine_RTL_build_ready": false
+  },
+  "wire_depth_sensitivity": [
+    {
+      "route_cycles": 4,
+      "credit_turnaround_cycles": 5,
+      "bank_Bpc": 12.8,
+      "die_all_banks_Bpc": 1843.2,
+      "extra_pipeline_register_bits": 0
+    },
+    {
+      "route_cycles": 8,
+      "credit_turnaround_cycles": 9,
+      "bank_Bpc": 7.111111111111111,
+      "die_all_banks_Bpc": 1024.0,
+      "extra_pipeline_register_bits": 184896
+    },
+    {
+      "route_cycles": 16,
+      "credit_turnaround_cycles": 17,
+      "bank_Bpc": 3.764705882352941,
+      "die_all_banks_Bpc": 542.1176470588235,
+      "extra_pipeline_register_bits": 554688
+    },
+    {
+      "route_cycles": 32,
+      "credit_turnaround_cycles": 33,
+      "bank_Bpc": 1.9393939393939394,
+      "die_all_banks_Bpc": 279.27272727272725,
+      "extra_pipeline_register_bits": 1294272
+    }
+  ],
+  "gate_summary": {
+    "calendar_invariants_PASS": true,
+    "source_bound": true,
+    "routing_single_corridor_PASS": false,
+    "full_floorplan_PASS": false,
+    "controller_publication_and_consumer_calendars_PASS": false,
+    "contextual_SS_FF_PASS": false,
+    "exact_RTL_PASS": false
+  }
+}

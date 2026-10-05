@@ -1,0 +1,41 @@
+{
+  "observed_utc": "2026-10-01T15:08:49.629125+00:00",
+  "focused_tests_passed": 31,
+  "byte_identical_regenerations": [
+    "clock physical qualification",
+    "fullslot composition",
+    "final q footprint ceilings",
+    "full nonexpert census and companions",
+    "actual CKV mux blocker receipt",
+    "compact cfg encoder replay",
+    "compact deterministic gzip template"
+  ],
+  "controller": {
+    "source": "b819b7d2963875b1a8f99f1506b6307044b3caf0",
+    "clean": true,
+    "launcher": 1327771,
+    "driver": 1327895,
+    "native_artifact_hashes_verified": true,
+    "stage_terminal": false,
+    "closure": null
+  },
+  "L0": {
+    "supervisor": 1307359,
+    "admitted": 1307441,
+    "stage": "build_attention",
+    "terminal": false,
+    "numeric_verdict": null
+  },
+  "physical_admission_new_engine": false,
+  "full_model_rates_qualified": false,
+  "preserved_failures": [
+    "original controller80534",
+    "CKV a332 nonclosure",
+    "L0 r3 preelaboration argv failure"
+  ],
+  "scope": "Bounded parent replay and live-process observation, not full design/token/physical qualification.",
+  "sha256": {
+    "L0_state_observation.json": "17e0b626cd085828ba2bd860bcc5618f1d5fe4bc2d209ff509d9d72aa408388c",
+    "controller_launch.json": "e1efbe0e2c9b09c8351328a27765a62ad0a3a53181fa1cfb7902d6e5633842b1"
+  }
+}

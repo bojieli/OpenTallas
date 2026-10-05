@@ -1,0 +1,25 @@
+{
+  "model_id": "tensor-accelerator-linear-fixture",
+  "schema": "opentallas.tensor_accelerator.execution_request.v1",
+  "symbols": {},
+  "tensors": [
+    {
+      "dtype": "i8",
+      "id": "input",
+      "shape": [
+        2,
+        4
+      ],
+      "values": [
+        1,
+        2,
+        -1,
+        0,
+        0,
+        -1,
+        3,
+        2
+      ]
+    }
+  ]
+}

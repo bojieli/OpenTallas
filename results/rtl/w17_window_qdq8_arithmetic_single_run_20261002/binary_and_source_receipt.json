@@ -1,0 +1,172 @@
+{
+  "path": "/tmp/window-qdq8-arithmetic-prepared-20261002-r4/obj/Vtb",
+  "sha256": "98099a6b33dc2e7ca5e2bdd607d6b05eb698bc0a7b13a833a40f305fd2bf72e5",
+  "bytes": 1395776,
+  "all_generated_bytes": 165788101,
+  "max_generated_file_bytes": 73889882,
+  "generated_file_count": 66,
+  "compiler_options_unchanged": true,
+  "snapshot_manifest_checks": [
+    {
+      "path": "model.json",
+      "sha256": "17f4412fb65c77c8b9efc5c7af7ad907b0da3a6a6cd5d9ea95b8ea38c389caa7",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "calendar.svh",
+      "sha256": "07586f53fcc60573ee6f4f336fdf15532fdef1db9874948bb6156fc2d3762094",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/bf16.mem",
+      "sha256": "0fa7012cfe3df154c0522ce42bc44e4688cfc4b5a880a1a2392691943399ffb4",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/codes.mem",
+      "sha256": "833cb3dae682a8fee49eab10f2d1173353d4c0c05072b0f653ffa166c7c357ea",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/input.mem",
+      "sha256": "d31ae34d25ad606641e9d688c1dce2f726db4a15dec72f67ad3f3848169f7a3e",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/oracle.json",
+      "sha256": "123510d15df6115e7a0842d0ffd3411bdc2f553c55f3d12291f4c55900713db4",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/scale.mem",
+      "sha256": "9bd362d869ed6eea482011de306244ce3e44173be70a4efebc6656583be56d4b",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "bf16_input/block_cycles.mem",
+      "sha256": "ccae24e31bebe1fbad84272683ca3ee512246b0d2ac0aab6fb241a67f1db4d70",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/bf16.mem",
+      "sha256": "d347cadfb8d90b7d929d2be9b71299a1523e5ee8cdd58c0f4c82dd3d1fead6b0",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/codes.mem",
+      "sha256": "fb9115b9b0f14b5f6a714018f020c9584914e5dd73b92df580a4210df440ad65",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/input.mem",
+      "sha256": "9ccdbc47cddc935a4ed393a077b4a5b4e432c3f03ee2b619130eb909d7d09736",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/oracle.json",
+      "sha256": "1e5b47a0ddc00955a08af64215442fade29b8c70ba8d96efba1bd9c950ca798b",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/scale.mem",
+      "sha256": "3a50146c4f620299f1c17ad3d040f240ce3622b2e827a1bc817fe94688eff68f",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "nonfinite_flags/block_cycles.mem",
+      "sha256": "ccae24e31bebe1fbad84272683ca3ee512246b0d2ac0aab6fb241a67f1db4d70",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_v41_qe.sv",
+      "sha256": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_chunk8_stack.sv",
+      "sha256": "0860ac77c1868da11452a7368afec9a2bf320744b09719e676c57160c6c4312b",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_fp4qdq.sv",
+      "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_blockdot.sv",
+      "sha256": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/tb.sv",
+      "sha256": "3ea06e352d0627e4b414ae0e1f7ae5860ab013410b6424093933e58a0fc42c9b",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_actquant.sv",
+      "sha256": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_chip_v41x_window_block_guard.sv",
+      "sha256": "f39a8936e9f0a3e0efa8994e28e1a6954b542e470e9ff1c43a5fb8fd26c3b791",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "sources/ot_hdc_v41x_window_kv_blocks.sv",
+      "sha256": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/bf16.mem",
+      "sha256": "c0efef40af3af48e0ccc4d6452fa24c4ac054941283e355f59771875edb0a9b0",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/codes.mem",
+      "sha256": "d5df07de25756034c2bedf4f572c4b6b123565e343901e5e3399e7f9ebf62128",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/input.mem",
+      "sha256": "c7b3cd58c206de9192e75d459df679d71a2480e4d725936fffa72043a0d33b7c",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/oracle.json",
+      "sha256": "7b366af8dfb8895f08fbb0a31331477bd5ef5dcc33f3100ab10fba67c8ad4944",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/scale.mem",
+      "sha256": "7aec6dad8bb4f8cc7f1c34def35a48fb8e2e26fad644e096179daa07ca73f732",
+      "unchanged_after_run": true
+    },
+    {
+      "path": "fp32_rounding/block_cycles.mem",
+      "sha256": "ccae24e31bebe1fbad84272683ca3ee512246b0d2ac0aab6fb241a67f1db4d70",
+      "unchanged_after_run": true
+    }
+  ],
+  "note": "Binary retained at isolated prepared path; hash committed. No subsequent simulation or build."
+}

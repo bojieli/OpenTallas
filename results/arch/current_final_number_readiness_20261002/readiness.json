@@ -1,0 +1,858 @@
+{
+  "captured_qwen_TP4_numeric": {
+    "current_G2_credit": false,
+    "current_source_joined": false,
+    "cycles": 171090,
+    "exact_rank_vectors": 144,
+    "logit_bits": "419c72b5",
+    "physical_or_rate_credit": false,
+    "qualification": "Receipt consistency of independently reviewed captured numeric PASS; no payload replay or successor transfer.",
+    "remaining_gates": [
+      "Q2 current seven-source join and source-current +55 bridge",
+      "Persistent HBM per-layer ownership/lifetimes/finite fill and visibility calendar, reconciled to existing read bytes",
+      "Macro-local KV connected numerical checks and Q3 current-source full token",
+      "G3 contextual SS/FF macro/tile/spine/collective/die routing/clock/power",
+      "G4 same-program service/stall/collective/physical latency calibration"
+    ],
+    "scope": "Original TP4/G6144/SU64/LV7 position-zero token, MEM_EXTRA1, host stage/image service, embedding preload and zero KV reset.",
+    "status": "pass",
+    "token": 50994
+  },
+  "certificate_validation_scope": "Review-receipt schema/hash/scope checks; generic certificates are not automatic raw timing, route or functional proof. Add source-extracted artifact adapters as campaigns become available.",
+  "claim_boundary": "Current G0-G5 all four targets required. Numerical, directed, software, inventory, TT and outline evidence never substitute for contextual physical/token service gates.",
+  "clock_policy": {
+    "TT_credit": false,
+    "deepseek_serial_hz": 900000000,
+    "hold_corner": "FF",
+    "hold_uncertainty_ps": 25,
+    "setup_corner": "SS",
+    "setup_uncertainty_ps": 60,
+    "streaming_hz": 1200000000
+  },
+  "current_scoped_observations": {
+    "qwen_hbm_software_native": {
+      "PCs": 1737,
+      "current_full_token_G1_G2_credit": false,
+      "hardware_or_rate_credit": false,
+      "parent_tests": 31,
+      "status": "PASS_PARENT_SOFTWARE_NATIVE_REVIEW_ONLY"
+    },
+    "qwen_hbm_workspace": {
+      "final_native_calendar_source_match": false,
+      "hardware_or_rate_or_physical_credit": false,
+      "status": "PASS_FINAL_NATIVE_WORKSPACE_ADDRESS_BINDING_BLOCKED_FINAL_CALENDAR_MATCH"
+    },
+    "qwen_rom_current_KV_physical": {
+      "required": [
+        "Current seven-source/parameter join",
+        "Persistent finite KV fill/ownership/write visibility",
+        "Macro-local KV connected numerical checks",
+        "Contextual tile/spine/die SS/FF",
+        "Same-program physical/service latency calibration"
+      ],
+      "status": "blocked"
+    }
+  },
+  "deepseek_S58_physical_screen": {
+    "budget_consistent": true,
+    "candidate": "DS4096-TP4-S58-PAIR1",
+    "complete_area_mm2": 924.2886185238459,
+    "legal_envelope_mm2": 858,
+    "margin_mm2": -66.28861852384591,
+    "physical_credit": false,
+    "qualification": "Conservative source-pinned reservation FAIL, not a fundamental minimum or impossibility proof; not legal placement or SS/FF closure.",
+    "status": "blocked",
+    "unpriced_positive_terms": [
+      "qFP4 separateECC provider/decoder",
+      "actualHE/CROM/shared dispatch provider",
+      "cfgmux/capture/PHW fanout decode area and routes",
+      "currentRNEWAKE dualcompute outline growth",
+      "service macro halo/pins/clockPG/hold costs not proven by inherited debit"
+    ]
+  },
+  "deepseek_current_bound_budget": {
+    "blockers": [
+      "explicit current physical budget binding missing"
+    ],
+    "status": "blocked"
+  },
+  "historical_report_is_current_authority": false,
+  "objective": "Minimum single-user AR latency; speculative modes conditional on claimed performance.",
+  "schema": "opentallas.current-final-number-readiness.v1",
+  "source_sha256": {
+    "AGENTS.md": "2492aecef5f083181b68e8db932f2eb0332b87523f17a184bd2080dffdaeb08e",
+    "docs/INTEGRATED_PHYSICAL_PLAN.md": "cadce1b264e66992a8e7f2ba0bd716ac40448800f54e3752a821e4f38e9d28e6",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G0.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G1.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G2.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G3.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G4.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_hbm_G5.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G0.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G1.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G2.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G3.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G4.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/deepseek_rom_G5.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G0.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G1.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G2.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G3.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G4.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_hbm_G5.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G0.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G1.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G2.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G3.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G4.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/certificates/qwen_rom_G5.json": "missing",
+    "results/arch/current_final_number_readiness_20261002/target_bindings.json": "7f97800ddeecc12b680aa0338f538218f77afaea28619e205a227f737a74800d",
+    "results/arch/final_number_readiness.json": "662d5f61e1372f1354547100f035ccb8b0f236a30a72910904625911cc09204e",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/capture.json": "d71d6d8a6d724b8f48c77ec90dd9027935d5d8f90d50b54be3a941b680f9beab",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/original_terminal.json": "0da7a39272da4a4c404321c3fd6d0102384fe1b931f5ffe4ee19c710ecce99de",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/terminal_manifest.json": "3aa197d53a24e4d2e5590f0666700395ba60cdca45ed9c05e224d1b13fa2ed54",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/verification_capture.json": "f8c846e2ee3812e3cfd0345172483fe499039c7f730d5d7814a2d329a54b046b",
+    "results/rtl/qwen_rom_TP4_terminal_20261002/verification_replay.json": "f8c846e2ee3812e3cfd0345172483fe499039c7f730d5d7814a2d329a54b046b",
+    "results/uarch/dsrom_full_product_binding_20261002/compiled_whole_budget-r6.json": "821b5c4a8bb2f64c8ecdc4b0f508e8f0b8e704393aba7e6e2e2f5e0d91c14e0d",
+    "results/uarch/h3_qwen_complete_native_20261002/parent_review.json": "bacdcd9750d25a9fba7acf685286ca1e58105306e66aba01dbac4c929a986def",
+    "results/uarch/qwen_native_workspace_provider_r20_20261002/output/join.json": "ee7ba8f1d817271fac12164781c5359be41c8a39a5d5febca131237a22070488",
+    "tools/current_final_number_readiness.py": "2ecdf940482e27a01a5ce8fc30481fe60bc9cdcd99abd7496dd78fb0010bcffd",
+    "tools/final_number_readiness.py": "41be794bf458d8e5e2a56a7ea543beca8f0bbbd0adc591713961ee84717bbe3f"
+  },
+  "targets": {
+    "deepseek_hbm": {
+      "claimed_modes": [
+        "AR"
+      ],
+      "gates": {
+        "G0": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_program not qualified",
+            "legal_addresses_storage not qualified",
+            "source_owned_producers_consumers not qualified",
+            "finite_buffers_ports_tags_credits not qualified",
+            "write_visibility_lifetimes not qualified",
+            "whole_token_model not qualified",
+            "HBM GPU organisation not bound"
+          ],
+          "required_checks": [
+            "complete_program",
+            "legal_addresses_storage",
+            "source_owned_producers_consumers",
+            "finite_buffers_ports_tags_credits",
+            "write_visibility_lifetimes",
+            "whole_token_model"
+          ],
+          "status": "blocked"
+        },
+        "G1": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "full_token_golden_ISA not qualified",
+            "arithmetic_reduction_order not qualified",
+            "representative_context_input_coverage not qualified"
+          ],
+          "required_checks": [
+            "full_token_golden_ISA",
+            "arithmetic_reduction_order",
+            "representative_context_input_coverage"
+          ],
+          "status": "blocked"
+        },
+        "G2": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "connected_full_token not qualified",
+            "numerical_state_comparison not qualified",
+            "finite_actual_memory_service not qualified",
+            "backpressure_reset_drain_CDC not qualified",
+            "persistent_KV_state not qualified",
+            "qualified_checker_raw_return not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "connected_full_token",
+            "numerical_state_comparison",
+            "finite_actual_memory_service",
+            "backpressure_reset_drain_CDC",
+            "persistent_KV_state",
+            "qualified_checker_raw_return"
+          ],
+          "status": "blocked"
+        },
+        "G3": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_element_SM_hub not qualified",
+            "real_macro_abstracts_timing not qualified",
+            "parent_integration not qualified",
+            "OBS_halos_routes_clock_PG not qualified",
+            "disjoint_source_instance_ledger not qualified",
+            "pin_via_escape_exclusions not qualified",
+            "actual_routing_layer_capacity not qualified",
+            "storage_ownership_binding not qualified",
+            "detailed_route_extracted not qualified",
+            "DRC_pass not qualified",
+            "workload_power_IR not qualified",
+            "timing is not contextual parent extracted",
+            "streaming setup requires SS/60ps",
+            "streaming setup period must match 1.2e+09Hz",
+            "streaming setup slack missing/negative",
+            "streaming setup unconstrained/violating paths",
+            "streaming hold requires FF/25ps",
+            "streaming hold period must match 1.2e+09Hz",
+            "streaming hold slack missing/negative",
+            "streaming hold unconstrained/violating paths",
+            "serial_chain setup requires SS/60ps",
+            "serial_chain setup period must match 9e+08Hz",
+            "serial_chain setup slack missing/negative",
+            "serial_chain setup unconstrained/violating paths",
+            "serial_chain hold requires FF/25ps",
+            "serial_chain hold period must match 9e+08Hz",
+            "serial_chain hold slack missing/negative",
+            "serial_chain hold unconstrained/violating paths",
+            "routing capacity must subtract actual OBS/PG/pin/via exclusions; percentage reserves are not closure",
+            "inherited area debit is not a disjoint source instance union",
+            "macro SS clock-to-q not bound",
+            "outline must fit 26x33mm without stitching",
+            "complete area missing or exceeds legal outline",
+            "HBM shoreline/PHY boundary not qualified"
+          ],
+          "required_checks": [
+            "complete_element_SM_hub",
+            "real_macro_abstracts_timing",
+            "parent_integration",
+            "OBS_halos_routes_clock_PG",
+            "disjoint_source_instance_ledger",
+            "pin_via_escape_exclusions",
+            "actual_routing_layer_capacity",
+            "storage_ownership_binding",
+            "detailed_route_extracted",
+            "DRC_pass",
+            "workload_power_IR"
+          ],
+          "status": "blocked"
+        },
+        "G4": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "same_program_RTL_cycle_reconciliation not qualified",
+            "measured_stalls_service_collectives not qualified",
+            "physical_crossings_frequency not qualified",
+            "critical_path_discrepancies_resolved not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "same_program_RTL_cycle_reconciliation",
+            "measured_stalls_service_collectives",
+            "physical_crossings_frequency",
+            "critical_path_discrepancies_resolved"
+          ],
+          "status": "blocked"
+        },
+        "G5": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "optimized_matched_baseline not qualified",
+            "single_user_primary not qualified",
+            "batching_no_single_user_degradation not qualified",
+            "ablations_sensitivities not qualified",
+            "immutable_versions_commands_fresh_recipe not qualified"
+          ],
+          "required_checks": [
+            "optimized_matched_baseline",
+            "single_user_primary",
+            "batching_no_single_user_degradation",
+            "ablations_sensitivities",
+            "immutable_versions_commands_fresh_recipe"
+          ],
+          "status": "blocked"
+        }
+      },
+      "ready": false
+    },
+    "deepseek_rom": {
+      "claimed_modes": [
+        "AR"
+      ],
+      "gates": {
+        "G0": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_program not qualified",
+            "legal_addresses_storage not qualified",
+            "source_owned_producers_consumers not qualified",
+            "finite_buffers_ports_tags_credits not qualified",
+            "write_visibility_lifetimes not qualified",
+            "whole_token_model not qualified"
+          ],
+          "required_checks": [
+            "complete_program",
+            "legal_addresses_storage",
+            "source_owned_producers_consumers",
+            "finite_buffers_ports_tags_credits",
+            "write_visibility_lifetimes",
+            "whole_token_model"
+          ],
+          "status": "blocked"
+        },
+        "G1": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "full_token_golden_ISA not qualified",
+            "arithmetic_reduction_order not qualified",
+            "representative_context_input_coverage not qualified"
+          ],
+          "required_checks": [
+            "full_token_golden_ISA",
+            "arithmetic_reduction_order",
+            "representative_context_input_coverage"
+          ],
+          "status": "blocked"
+        },
+        "G2": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "connected_full_token not qualified",
+            "numerical_state_comparison not qualified",
+            "finite_actual_memory_service not qualified",
+            "backpressure_reset_drain_CDC not qualified",
+            "persistent_KV_state not qualified",
+            "qualified_checker_raw_return not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "connected_full_token",
+            "numerical_state_comparison",
+            "finite_actual_memory_service",
+            "backpressure_reset_drain_CDC",
+            "persistent_KV_state",
+            "qualified_checker_raw_return"
+          ],
+          "status": "blocked"
+        },
+        "G3": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_element_SM_hub not qualified",
+            "real_macro_abstracts_timing not qualified",
+            "parent_integration not qualified",
+            "OBS_halos_routes_clock_PG not qualified",
+            "disjoint_source_instance_ledger not qualified",
+            "pin_via_escape_exclusions not qualified",
+            "actual_routing_layer_capacity not qualified",
+            "storage_ownership_binding not qualified",
+            "detailed_route_extracted not qualified",
+            "DRC_pass not qualified",
+            "workload_power_IR not qualified",
+            "timing is not contextual parent extracted",
+            "streaming setup requires SS/60ps",
+            "streaming setup period must match 1.2e+09Hz",
+            "streaming setup slack missing/negative",
+            "streaming setup unconstrained/violating paths",
+            "streaming hold requires FF/25ps",
+            "streaming hold period must match 1.2e+09Hz",
+            "streaming hold slack missing/negative",
+            "streaming hold unconstrained/violating paths",
+            "serial_chain setup requires SS/60ps",
+            "serial_chain setup period must match 9e+08Hz",
+            "serial_chain setup slack missing/negative",
+            "serial_chain setup unconstrained/violating paths",
+            "serial_chain hold requires FF/25ps",
+            "serial_chain hold period must match 9e+08Hz",
+            "serial_chain hold slack missing/negative",
+            "serial_chain hold unconstrained/violating paths",
+            "routing capacity must subtract actual OBS/PG/pin/via exclusions; percentage reserves are not closure",
+            "inherited area debit is not a disjoint source instance union",
+            "macro SS clock-to-q not bound",
+            "outline must fit 26x33mm without stitching",
+            "complete area missing or exceeds legal outline",
+            "explicit current physical budget binding missing"
+          ],
+          "required_checks": [
+            "complete_element_SM_hub",
+            "real_macro_abstracts_timing",
+            "parent_integration",
+            "OBS_halos_routes_clock_PG",
+            "disjoint_source_instance_ledger",
+            "pin_via_escape_exclusions",
+            "actual_routing_layer_capacity",
+            "storage_ownership_binding",
+            "detailed_route_extracted",
+            "DRC_pass",
+            "workload_power_IR"
+          ],
+          "status": "blocked"
+        },
+        "G4": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "same_program_RTL_cycle_reconciliation not qualified",
+            "measured_stalls_service_collectives not qualified",
+            "physical_crossings_frequency not qualified",
+            "critical_path_discrepancies_resolved not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "same_program_RTL_cycle_reconciliation",
+            "measured_stalls_service_collectives",
+            "physical_crossings_frequency",
+            "critical_path_discrepancies_resolved"
+          ],
+          "status": "blocked"
+        },
+        "G5": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "optimized_matched_baseline not qualified",
+            "single_user_primary not qualified",
+            "batching_no_single_user_degradation not qualified",
+            "ablations_sensitivities not qualified",
+            "immutable_versions_commands_fresh_recipe not qualified"
+          ],
+          "required_checks": [
+            "optimized_matched_baseline",
+            "single_user_primary",
+            "batching_no_single_user_degradation",
+            "ablations_sensitivities",
+            "immutable_versions_commands_fresh_recipe"
+          ],
+          "status": "blocked"
+        }
+      },
+      "ready": false
+    },
+    "qwen_hbm": {
+      "claimed_modes": [
+        "AR"
+      ],
+      "gates": {
+        "G0": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_program not qualified",
+            "legal_addresses_storage not qualified",
+            "source_owned_producers_consumers not qualified",
+            "finite_buffers_ports_tags_credits not qualified",
+            "write_visibility_lifetimes not qualified",
+            "whole_token_model not qualified",
+            "HBM GPU organisation not bound"
+          ],
+          "required_checks": [
+            "complete_program",
+            "legal_addresses_storage",
+            "source_owned_producers_consumers",
+            "finite_buffers_ports_tags_credits",
+            "write_visibility_lifetimes",
+            "whole_token_model"
+          ],
+          "status": "blocked"
+        },
+        "G1": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "full_token_golden_ISA not qualified",
+            "arithmetic_reduction_order not qualified",
+            "representative_context_input_coverage not qualified"
+          ],
+          "required_checks": [
+            "full_token_golden_ISA",
+            "arithmetic_reduction_order",
+            "representative_context_input_coverage"
+          ],
+          "status": "blocked"
+        },
+        "G2": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "connected_full_token not qualified",
+            "numerical_state_comparison not qualified",
+            "finite_actual_memory_service not qualified",
+            "backpressure_reset_drain_CDC not qualified",
+            "persistent_KV_state not qualified",
+            "qualified_checker_raw_return not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "connected_full_token",
+            "numerical_state_comparison",
+            "finite_actual_memory_service",
+            "backpressure_reset_drain_CDC",
+            "persistent_KV_state",
+            "qualified_checker_raw_return"
+          ],
+          "status": "blocked"
+        },
+        "G3": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_element_SM_hub not qualified",
+            "real_macro_abstracts_timing not qualified",
+            "parent_integration not qualified",
+            "OBS_halos_routes_clock_PG not qualified",
+            "disjoint_source_instance_ledger not qualified",
+            "pin_via_escape_exclusions not qualified",
+            "actual_routing_layer_capacity not qualified",
+            "storage_ownership_binding not qualified",
+            "detailed_route_extracted not qualified",
+            "DRC_pass not qualified",
+            "workload_power_IR not qualified",
+            "timing is not contextual parent extracted",
+            "streaming setup requires SS/60ps",
+            "streaming setup period must match 1.2e+09Hz",
+            "streaming setup slack missing/negative",
+            "streaming setup unconstrained/violating paths",
+            "streaming hold requires FF/25ps",
+            "streaming hold period must match 1.2e+09Hz",
+            "streaming hold slack missing/negative",
+            "streaming hold unconstrained/violating paths",
+            "routing capacity must subtract actual OBS/PG/pin/via exclusions; percentage reserves are not closure",
+            "inherited area debit is not a disjoint source instance union",
+            "macro SS clock-to-q not bound",
+            "outline must fit 26x33mm without stitching",
+            "complete area missing or exceeds legal outline",
+            "HBM shoreline/PHY boundary not qualified"
+          ],
+          "required_checks": [
+            "complete_element_SM_hub",
+            "real_macro_abstracts_timing",
+            "parent_integration",
+            "OBS_halos_routes_clock_PG",
+            "disjoint_source_instance_ledger",
+            "pin_via_escape_exclusions",
+            "actual_routing_layer_capacity",
+            "storage_ownership_binding",
+            "detailed_route_extracted",
+            "DRC_pass",
+            "workload_power_IR"
+          ],
+          "status": "blocked"
+        },
+        "G4": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "same_program_RTL_cycle_reconciliation not qualified",
+            "measured_stalls_service_collectives not qualified",
+            "physical_crossings_frequency not qualified",
+            "critical_path_discrepancies_resolved not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "same_program_RTL_cycle_reconciliation",
+            "measured_stalls_service_collectives",
+            "physical_crossings_frequency",
+            "critical_path_discrepancies_resolved"
+          ],
+          "status": "blocked"
+        },
+        "G5": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "optimized_matched_baseline not qualified",
+            "single_user_primary not qualified",
+            "batching_no_single_user_degradation not qualified",
+            "ablations_sensitivities not qualified",
+            "immutable_versions_commands_fresh_recipe not qualified"
+          ],
+          "required_checks": [
+            "optimized_matched_baseline",
+            "single_user_primary",
+            "batching_no_single_user_degradation",
+            "ablations_sensitivities",
+            "immutable_versions_commands_fresh_recipe"
+          ],
+          "status": "blocked"
+        }
+      },
+      "ready": false
+    },
+    "qwen_rom": {
+      "claimed_modes": [
+        "AR"
+      ],
+      "gates": {
+        "G0": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_program not qualified",
+            "legal_addresses_storage not qualified",
+            "source_owned_producers_consumers not qualified",
+            "finite_buffers_ports_tags_credits not qualified",
+            "write_visibility_lifetimes not qualified",
+            "whole_token_model not qualified"
+          ],
+          "required_checks": [
+            "complete_program",
+            "legal_addresses_storage",
+            "source_owned_producers_consumers",
+            "finite_buffers_ports_tags_credits",
+            "write_visibility_lifetimes",
+            "whole_token_model"
+          ],
+          "status": "blocked"
+        },
+        "G1": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "full_token_golden_ISA not qualified",
+            "arithmetic_reduction_order not qualified",
+            "representative_context_input_coverage not qualified"
+          ],
+          "required_checks": [
+            "full_token_golden_ISA",
+            "arithmetic_reduction_order",
+            "representative_context_input_coverage"
+          ],
+          "status": "blocked"
+        },
+        "G2": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "connected_full_token not qualified",
+            "numerical_state_comparison not qualified",
+            "finite_actual_memory_service not qualified",
+            "backpressure_reset_drain_CDC not qualified",
+            "persistent_KV_state not qualified",
+            "qualified_checker_raw_return not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "connected_full_token",
+            "numerical_state_comparison",
+            "finite_actual_memory_service",
+            "backpressure_reset_drain_CDC",
+            "persistent_KV_state",
+            "qualified_checker_raw_return"
+          ],
+          "status": "blocked"
+        },
+        "G3": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "complete_element_SM_hub not qualified",
+            "real_macro_abstracts_timing not qualified",
+            "parent_integration not qualified",
+            "OBS_halos_routes_clock_PG not qualified",
+            "disjoint_source_instance_ledger not qualified",
+            "pin_via_escape_exclusions not qualified",
+            "actual_routing_layer_capacity not qualified",
+            "storage_ownership_binding not qualified",
+            "detailed_route_extracted not qualified",
+            "DRC_pass not qualified",
+            "workload_power_IR not qualified",
+            "timing is not contextual parent extracted",
+            "streaming setup requires SS/60ps",
+            "streaming setup period must match 1.2e+09Hz",
+            "streaming setup slack missing/negative",
+            "streaming setup unconstrained/violating paths",
+            "streaming hold requires FF/25ps",
+            "streaming hold period must match 1.2e+09Hz",
+            "streaming hold slack missing/negative",
+            "streaming hold unconstrained/violating paths",
+            "routing capacity must subtract actual OBS/PG/pin/via exclusions; percentage reserves are not closure",
+            "inherited area debit is not a disjoint source instance union",
+            "macro SS clock-to-q not bound",
+            "outline must fit 26x33mm without stitching",
+            "complete area missing or exceeds legal outline"
+          ],
+          "required_checks": [
+            "complete_element_SM_hub",
+            "real_macro_abstracts_timing",
+            "parent_integration",
+            "OBS_halos_routes_clock_PG",
+            "disjoint_source_instance_ledger",
+            "pin_via_escape_exclusions",
+            "actual_routing_layer_capacity",
+            "storage_ownership_binding",
+            "detailed_route_extracted",
+            "DRC_pass",
+            "workload_power_IR"
+          ],
+          "status": "blocked"
+        },
+        "G4": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "same_program_RTL_cycle_reconciliation not qualified",
+            "measured_stalls_service_collectives not qualified",
+            "physical_crossings_frequency not qualified",
+            "critical_path_discrepancies_resolved not qualified",
+            "claimed mode missing exactness/calibration receipt"
+          ],
+          "required_checks": [
+            "same_program_RTL_cycle_reconciliation",
+            "measured_stalls_service_collectives",
+            "physical_crossings_frequency",
+            "critical_path_discrepancies_resolved"
+          ],
+          "status": "blocked"
+        },
+        "G5": {
+          "blockers": [
+            "current complete configuration identity unbound",
+            "review certificate missing/wrong schema",
+            "target/gate/AR scope mismatch",
+            "configuration identity mismatch",
+            "not reviewed current full-goal pass",
+            "source manifest missing",
+            "supporting evidence receipts missing",
+            "optimized_matched_baseline not qualified",
+            "single_user_primary not qualified",
+            "batching_no_single_user_degradation not qualified",
+            "ablations_sensitivities not qualified",
+            "immutable_versions_commands_fresh_recipe not qualified"
+          ],
+          "required_checks": [
+            "optimized_matched_baseline",
+            "single_user_primary",
+            "batching_no_single_user_degradation",
+            "ablations_sensitivities",
+            "immutable_versions_commands_fresh_recipe"
+          ],
+          "status": "blocked"
+        }
+      },
+      "ready": false
+    }
+  },
+  "terminal_ready": false
+}

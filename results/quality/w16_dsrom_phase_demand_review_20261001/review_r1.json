@@ -1,0 +1,4586 @@
+{
+  "CROM": {
+    "automatic_power_transfer": false,
+    "candidate_rank_macros": 45,
+    "historical_phase_macros": 512,
+    "macro_capture_margin_ps": 4,
+    "margin_scope": "Predictive macro plus assumed capture setup; excludes wire/skew, mux and contextual SS/FF closure.",
+    "one_logical_response_per_fast_cycle": true,
+    "required_staging_contract": [
+      "Exact logical-to-striped-bank/lane mapping and golden coefficient order",
+      "Per-bank issue calendar with all constant consumers and generated operand producers",
+      "Finite command/burst buffers, write/read ports, capture/select stages, FF/mux/fanout area",
+      "Fast-to-serial CDC, destination lane capture, backpressure leases, reverse credit and progress deadline",
+      "Per-phase bank/clock/data/wire energy, routing tracks and physical slot budget",
+      "Issue-to-last-consumer absolute intervals composed with existing compute; no free prefetch overlap"
+    ]
+  },
+  "Engram": {
+    "codec": "All eight actual scale bytes; reassembly and decoded destination writes require service costs.",
+    "current_sector_address_bits": 24,
+    "flat_sector_address_bits": 33,
+    "region_home_TP_replica_binding": null,
+    "sectors_per_token": 432,
+    "shared_controller_service_and_deadline": null,
+    "transfer_bytes_per_token": 13824
+  },
+  "Q_OR_repricing": {
+    "additional_50pct_placement_um2": "3293.97192",
+    "additional_NAND2": 18827,
+    "additional_q1024_reservation_mm2": "3.37302724608",
+    "additional_standard_cell_um2": "1646.98596",
+    "hypothetical_OR_only_adjusted_pair_mm2": "0.24984048888",
+    "qualification": "Replace generic OR2 coefficient by OR3 only. Not a complete corrected construction, actual netlist minimum, power or timing qualification."
+  },
+  "Q_OR_scope": "OR2 is not an established generic independent-input NAND construction; OR3 sensitivity requires separate complete area/power/phase repricing, not blind correction credit.",
+  "Q_inactive_root_credit": 0,
+  "capacity": {
+    "banks": 45,
+    "capacity_is_bandwidth": false,
+    "capacity_words": 552960,
+    "logical_address_bits": 20,
+    "required_words": 549760,
+    "spare_words": 3200
+  },
+  "demand_scope": "Static source-bound coefficient demand at command execution, not dynamic token timing. Predicated commands tabulated even if skipped. Generated Engram coefficients use symbolic command-local addresses, not physical binding. RoPE held-cache excluded.",
+  "dependency_resolution": "Exact e793 power code/receipt and e61 geometry hash resolved; external library/argv full replay NOT performed.",
+  "engine_RTL_build_ready": false,
+  "frozen_git_source_integrity": true,
+  "full_HBM_scope": "Original actual callback-closed software token evidence supplies no hardware clock, port, latency or admission credit.",
+  "full_program_cost_bound": false,
+  "headline_rate": null,
+  "jobs_launched": 0,
+  "latency_scope": "458133.333...ns is static one-port issue service including predicated commands, not additive token slowdown or measured token latency.",
+  "main_replay_claim": false,
+  "owner_phase_numerical_replay": false,
+  "phase_scope": "fea is conditional instantaneous power reservations, not a full-program feasible schedule.",
+  "physical_admission": false,
+  "prefetch_overlap_credit": 0,
+  "rank_reviews": [
+    {
+      "bound_cycles": 508800,
+      "commands": 491,
+      "continuous_serial_emit_required_values_per_fast_cycle": "768",
+      "generated_cycles": 40960,
+      "one_port_min_issue_cycles_for_peak": 1024,
+      "operand_descriptors": 729,
+      "peak_same_bank_values": 1024,
+      "peak_witnesses": [
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 6,
+          "instruction": 6,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 13,
+          "instruction": 13,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 52,
+          "instruction": 52,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 129,
+          "instruction": 16,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 136,
+          "instruction": 23,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 175,
+          "instruction": 62,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 242,
+          "instruction": 6,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 249,
+          "instruction": 13,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 320,
+          "instruction": 84,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 387,
+          "instruction": 6,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 394,
+          "instruction": 13,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 435,
+          "instruction": 54,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 502,
+          "instruction": 6,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 509,
+          "instruction": 13,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 550,
+          "instruction": 54,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 617,
+          "instruction": 6,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 624,
+          "instruction": 13,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 665,
+          "instruction": 54,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 732,
+          "instruction": 6,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 739,
+          "instruction": 13,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 780,
+          "instruction": 54,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 847,
+          "instruction": 6,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 895,
+          "instruction": 54,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 962,
+          "instruction": 6,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1040,
+          "instruction": 84,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1107,
+          "instruction": 6,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1114,
+          "instruction": 13,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1155,
+          "instruction": 54,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1222,
+          "instruction": 6,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1229,
+          "instruction": 13,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1270,
+          "instruction": 54,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1337,
+          "instruction": 6,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1344,
+          "instruction": 13,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1385,
+          "instruction": 54,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1452,
+          "instruction": 6,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1459,
+          "instruction": 13,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1500,
+          "instruction": 54,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1567,
+          "instruction": 6,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1574,
+          "instruction": 13,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1615,
+          "instruction": 54,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1692,
+          "instruction": 16,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1699,
+          "instruction": 23,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1770,
+          "instruction": 94,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1837,
+          "instruction": 6,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1844,
+          "instruction": 13,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1885,
+          "instruction": 54,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1952,
+          "instruction": 6,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1959,
+          "instruction": 13,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2000,
+          "instruction": 54,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2067,
+          "instruction": 6,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2074,
+          "instruction": 13,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2115,
+          "instruction": 54,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2182,
+          "instruction": 6,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2189,
+          "instruction": 13,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2230,
+          "instruction": 54,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2297,
+          "instruction": 6,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2304,
+          "instruction": 13,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2345,
+          "instruction": 54,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2412,
+          "instruction": 6,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2419,
+          "instruction": 13,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2489,
+          "instruction": 83,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2556,
+          "instruction": 6,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2563,
+          "instruction": 13,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2604,
+          "instruction": 54,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2671,
+          "instruction": 6,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2678,
+          "instruction": 13,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2719,
+          "instruction": 54,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2786,
+          "instruction": 6,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2793,
+          "instruction": 13,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2834,
+          "instruction": 54,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2901,
+          "instruction": 6,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2908,
+          "instruction": 13,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2958,
+          "instruction": 63,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3025,
+          "instruction": 6,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3032,
+          "instruction": 13,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3073,
+          "instruction": 54,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3140,
+          "instruction": 6,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3147,
+          "instruction": 13,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3188,
+          "instruction": 54,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3255,
+          "instruction": 6,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3262,
+          "instruction": 13,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3303,
+          "instruction": 54,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3370,
+          "instruction": 6,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3377,
+          "instruction": 13,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3427,
+          "instruction": 63,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3494,
+          "instruction": 6,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3501,
+          "instruction": 13,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3542,
+          "instruction": 54,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3609,
+          "instruction": 6,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3616,
+          "instruction": 13,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3657,
+          "instruction": 54,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3724,
+          "instruction": 6,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3731,
+          "instruction": 13,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3772,
+          "instruction": 54,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3839,
+          "instruction": 6,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3846,
+          "instruction": 13,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3896,
+          "instruction": 63,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3963,
+          "instruction": 6,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3970,
+          "instruction": 13,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4011,
+          "instruction": 54,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4078,
+          "instruction": 6,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4085,
+          "instruction": 13,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4126,
+          "instruction": 54,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4193,
+          "instruction": 6,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4200,
+          "instruction": 13,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4241,
+          "instruction": 54,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4308,
+          "instruction": 6,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4315,
+          "instruction": 13,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4365,
+          "instruction": 63,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4432,
+          "instruction": 6,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4439,
+          "instruction": 13,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4480,
+          "instruction": 54,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4547,
+          "instruction": 6,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4554,
+          "instruction": 13,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4595,
+          "instruction": 54,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4662,
+          "instruction": 6,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4669,
+          "instruction": 13,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4710,
+          "instruction": 54,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4775,
+          "instruction": 4,
+          "layer": "head",
+          "values": 1024
+        }
+      ],
+      "rank": 0,
+      "response_peak_bits": 65536,
+      "static_issue_cycles": 549760,
+      "static_issue_ns": "458133.3333333333333333333333",
+      "useful_peak_bits": 32768
+    },
+    {
+      "bound_cycles": 508800,
+      "commands": 491,
+      "continuous_serial_emit_required_values_per_fast_cycle": "768",
+      "generated_cycles": 40960,
+      "one_port_min_issue_cycles_for_peak": 1024,
+      "operand_descriptors": 729,
+      "peak_same_bank_values": 1024,
+      "peak_witnesses": [
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 6,
+          "instruction": 6,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 13,
+          "instruction": 13,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 52,
+          "instruction": 52,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 129,
+          "instruction": 16,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 136,
+          "instruction": 23,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 175,
+          "instruction": 62,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 242,
+          "instruction": 6,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 249,
+          "instruction": 13,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 320,
+          "instruction": 84,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 387,
+          "instruction": 6,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 394,
+          "instruction": 13,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 435,
+          "instruction": 54,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 502,
+          "instruction": 6,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 509,
+          "instruction": 13,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 550,
+          "instruction": 54,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 617,
+          "instruction": 6,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 624,
+          "instruction": 13,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 665,
+          "instruction": 54,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 732,
+          "instruction": 6,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 739,
+          "instruction": 13,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 780,
+          "instruction": 54,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 847,
+          "instruction": 6,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 895,
+          "instruction": 54,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 962,
+          "instruction": 6,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1040,
+          "instruction": 84,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1107,
+          "instruction": 6,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1114,
+          "instruction": 13,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1155,
+          "instruction": 54,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1222,
+          "instruction": 6,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1229,
+          "instruction": 13,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1270,
+          "instruction": 54,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1337,
+          "instruction": 6,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1344,
+          "instruction": 13,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1385,
+          "instruction": 54,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1452,
+          "instruction": 6,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1459,
+          "instruction": 13,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1500,
+          "instruction": 54,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1567,
+          "instruction": 6,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1574,
+          "instruction": 13,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1615,
+          "instruction": 54,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1692,
+          "instruction": 16,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1699,
+          "instruction": 23,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1770,
+          "instruction": 94,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1837,
+          "instruction": 6,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1844,
+          "instruction": 13,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1885,
+          "instruction": 54,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1952,
+          "instruction": 6,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1959,
+          "instruction": 13,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2000,
+          "instruction": 54,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2067,
+          "instruction": 6,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2074,
+          "instruction": 13,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2115,
+          "instruction": 54,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2182,
+          "instruction": 6,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2189,
+          "instruction": 13,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2230,
+          "instruction": 54,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2297,
+          "instruction": 6,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2304,
+          "instruction": 13,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2345,
+          "instruction": 54,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2412,
+          "instruction": 6,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2419,
+          "instruction": 13,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2489,
+          "instruction": 83,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2556,
+          "instruction": 6,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2563,
+          "instruction": 13,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2604,
+          "instruction": 54,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2671,
+          "instruction": 6,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2678,
+          "instruction": 13,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2719,
+          "instruction": 54,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2786,
+          "instruction": 6,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2793,
+          "instruction": 13,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2834,
+          "instruction": 54,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2901,
+          "instruction": 6,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2908,
+          "instruction": 13,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2958,
+          "instruction": 63,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3025,
+          "instruction": 6,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3032,
+          "instruction": 13,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3073,
+          "instruction": 54,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3140,
+          "instruction": 6,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3147,
+          "instruction": 13,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3188,
+          "instruction": 54,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3255,
+          "instruction": 6,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3262,
+          "instruction": 13,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3303,
+          "instruction": 54,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3370,
+          "instruction": 6,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3377,
+          "instruction": 13,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3427,
+          "instruction": 63,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3494,
+          "instruction": 6,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3501,
+          "instruction": 13,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3542,
+          "instruction": 54,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3609,
+          "instruction": 6,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3616,
+          "instruction": 13,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3657,
+          "instruction": 54,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3724,
+          "instruction": 6,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3731,
+          "instruction": 13,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3772,
+          "instruction": 54,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3839,
+          "instruction": 6,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3846,
+          "instruction": 13,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3896,
+          "instruction": 63,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3963,
+          "instruction": 6,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3970,
+          "instruction": 13,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4011,
+          "instruction": 54,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4078,
+          "instruction": 6,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4085,
+          "instruction": 13,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4126,
+          "instruction": 54,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4193,
+          "instruction": 6,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4200,
+          "instruction": 13,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4241,
+          "instruction": 54,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4308,
+          "instruction": 6,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4315,
+          "instruction": 13,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4365,
+          "instruction": 63,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4432,
+          "instruction": 6,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4439,
+          "instruction": 13,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4480,
+          "instruction": 54,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4547,
+          "instruction": 6,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4554,
+          "instruction": 13,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4595,
+          "instruction": 54,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4662,
+          "instruction": 6,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4669,
+          "instruction": 13,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4710,
+          "instruction": 54,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4775,
+          "instruction": 4,
+          "layer": "head",
+          "values": 1024
+        }
+      ],
+      "rank": 1,
+      "response_peak_bits": 65536,
+      "static_issue_cycles": 549760,
+      "static_issue_ns": "458133.3333333333333333333333",
+      "useful_peak_bits": 32768
+    },
+    {
+      "bound_cycles": 508800,
+      "commands": 491,
+      "continuous_serial_emit_required_values_per_fast_cycle": "768",
+      "generated_cycles": 40960,
+      "one_port_min_issue_cycles_for_peak": 1024,
+      "operand_descriptors": 729,
+      "peak_same_bank_values": 1024,
+      "peak_witnesses": [
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 6,
+          "instruction": 6,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 13,
+          "instruction": 13,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 52,
+          "instruction": 52,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 129,
+          "instruction": 16,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 136,
+          "instruction": 23,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 175,
+          "instruction": 62,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 242,
+          "instruction": 6,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 249,
+          "instruction": 13,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 320,
+          "instruction": 84,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 387,
+          "instruction": 6,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 394,
+          "instruction": 13,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 435,
+          "instruction": 54,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 502,
+          "instruction": 6,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 509,
+          "instruction": 13,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 550,
+          "instruction": 54,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 617,
+          "instruction": 6,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 624,
+          "instruction": 13,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 665,
+          "instruction": 54,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 732,
+          "instruction": 6,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 739,
+          "instruction": 13,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 780,
+          "instruction": 54,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 847,
+          "instruction": 6,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 895,
+          "instruction": 54,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 962,
+          "instruction": 6,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1040,
+          "instruction": 84,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1107,
+          "instruction": 6,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1114,
+          "instruction": 13,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1155,
+          "instruction": 54,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1222,
+          "instruction": 6,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1229,
+          "instruction": 13,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1270,
+          "instruction": 54,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1337,
+          "instruction": 6,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1344,
+          "instruction": 13,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1385,
+          "instruction": 54,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1452,
+          "instruction": 6,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1459,
+          "instruction": 13,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1500,
+          "instruction": 54,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1567,
+          "instruction": 6,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1574,
+          "instruction": 13,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1615,
+          "instruction": 54,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1692,
+          "instruction": 16,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1699,
+          "instruction": 23,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1770,
+          "instruction": 94,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1837,
+          "instruction": 6,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1844,
+          "instruction": 13,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1885,
+          "instruction": 54,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1952,
+          "instruction": 6,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1959,
+          "instruction": 13,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2000,
+          "instruction": 54,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2067,
+          "instruction": 6,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2074,
+          "instruction": 13,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2115,
+          "instruction": 54,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2182,
+          "instruction": 6,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2189,
+          "instruction": 13,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2230,
+          "instruction": 54,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2297,
+          "instruction": 6,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2304,
+          "instruction": 13,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2345,
+          "instruction": 54,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2412,
+          "instruction": 6,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2419,
+          "instruction": 13,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2489,
+          "instruction": 83,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2556,
+          "instruction": 6,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2563,
+          "instruction": 13,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2604,
+          "instruction": 54,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2671,
+          "instruction": 6,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2678,
+          "instruction": 13,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2719,
+          "instruction": 54,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2786,
+          "instruction": 6,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2793,
+          "instruction": 13,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2834,
+          "instruction": 54,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2901,
+          "instruction": 6,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2908,
+          "instruction": 13,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2958,
+          "instruction": 63,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3025,
+          "instruction": 6,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3032,
+          "instruction": 13,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3073,
+          "instruction": 54,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3140,
+          "instruction": 6,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3147,
+          "instruction": 13,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3188,
+          "instruction": 54,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3255,
+          "instruction": 6,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3262,
+          "instruction": 13,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3303,
+          "instruction": 54,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3370,
+          "instruction": 6,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3377,
+          "instruction": 13,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3427,
+          "instruction": 63,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3494,
+          "instruction": 6,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3501,
+          "instruction": 13,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3542,
+          "instruction": 54,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3609,
+          "instruction": 6,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3616,
+          "instruction": 13,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3657,
+          "instruction": 54,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3724,
+          "instruction": 6,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3731,
+          "instruction": 13,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3772,
+          "instruction": 54,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3839,
+          "instruction": 6,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3846,
+          "instruction": 13,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3896,
+          "instruction": 63,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3963,
+          "instruction": 6,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3970,
+          "instruction": 13,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4011,
+          "instruction": 54,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4078,
+          "instruction": 6,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4085,
+          "instruction": 13,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4126,
+          "instruction": 54,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4193,
+          "instruction": 6,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4200,
+          "instruction": 13,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4241,
+          "instruction": 54,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4308,
+          "instruction": 6,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4315,
+          "instruction": 13,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4365,
+          "instruction": 63,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4432,
+          "instruction": 6,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4439,
+          "instruction": 13,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4480,
+          "instruction": 54,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4547,
+          "instruction": 6,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4554,
+          "instruction": 13,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4595,
+          "instruction": 54,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4662,
+          "instruction": 6,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4669,
+          "instruction": 13,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4710,
+          "instruction": 54,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4775,
+          "instruction": 4,
+          "layer": "head",
+          "values": 1024
+        }
+      ],
+      "rank": 2,
+      "response_peak_bits": 65536,
+      "static_issue_cycles": 549760,
+      "static_issue_ns": "458133.3333333333333333333333",
+      "useful_peak_bits": 32768
+    },
+    {
+      "bound_cycles": 508800,
+      "commands": 491,
+      "continuous_serial_emit_required_values_per_fast_cycle": "768",
+      "generated_cycles": 40960,
+      "one_port_min_issue_cycles_for_peak": 1024,
+      "operand_descriptors": 729,
+      "peak_same_bank_values": 1024,
+      "peak_witnesses": [
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 6,
+          "instruction": 6,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 13,
+          "instruction": 13,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 52,
+          "instruction": 52,
+          "layer": 0,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 129,
+          "instruction": 16,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 136,
+          "instruction": 23,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 175,
+          "instruction": 62,
+          "layer": 1,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 242,
+          "instruction": 6,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 249,
+          "instruction": 13,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 320,
+          "instruction": 84,
+          "layer": 2,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 387,
+          "instruction": 6,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 394,
+          "instruction": 13,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 435,
+          "instruction": 54,
+          "layer": 3,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 502,
+          "instruction": 6,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 509,
+          "instruction": 13,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 550,
+          "instruction": 54,
+          "layer": 4,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 617,
+          "instruction": 6,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 624,
+          "instruction": 13,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 665,
+          "instruction": 54,
+          "layer": 5,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 732,
+          "instruction": 6,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 739,
+          "instruction": 13,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 780,
+          "instruction": 54,
+          "layer": 6,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 847,
+          "instruction": 6,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 895,
+          "instruction": 54,
+          "layer": 7,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 962,
+          "instruction": 6,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1040,
+          "instruction": 84,
+          "layer": 8,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1107,
+          "instruction": 6,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1114,
+          "instruction": 13,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1155,
+          "instruction": 54,
+          "layer": 9,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1222,
+          "instruction": 6,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1229,
+          "instruction": 13,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1270,
+          "instruction": 54,
+          "layer": 10,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1337,
+          "instruction": 6,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1344,
+          "instruction": 13,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1385,
+          "instruction": 54,
+          "layer": 11,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1452,
+          "instruction": 6,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1459,
+          "instruction": 13,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1500,
+          "instruction": 54,
+          "layer": 12,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1567,
+          "instruction": 6,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1574,
+          "instruction": 13,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1615,
+          "instruction": 54,
+          "layer": 13,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1692,
+          "instruction": 16,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1699,
+          "instruction": 23,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1770,
+          "instruction": 94,
+          "layer": 14,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1837,
+          "instruction": 6,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1844,
+          "instruction": 13,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1885,
+          "instruction": 54,
+          "layer": 15,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 1952,
+          "instruction": 6,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 1959,
+          "instruction": 13,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2000,
+          "instruction": 54,
+          "layer": 16,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2067,
+          "instruction": 6,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2074,
+          "instruction": 13,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2115,
+          "instruction": 54,
+          "layer": 17,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2182,
+          "instruction": 6,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2189,
+          "instruction": 13,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2230,
+          "instruction": 54,
+          "layer": 18,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2297,
+          "instruction": 6,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2304,
+          "instruction": 13,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2345,
+          "instruction": 54,
+          "layer": 19,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2412,
+          "instruction": 6,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2419,
+          "instruction": 13,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2489,
+          "instruction": 83,
+          "layer": 20,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2556,
+          "instruction": 6,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2563,
+          "instruction": 13,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2604,
+          "instruction": 54,
+          "layer": 21,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2671,
+          "instruction": 6,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2678,
+          "instruction": 13,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2719,
+          "instruction": 54,
+          "layer": 22,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2786,
+          "instruction": 6,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2793,
+          "instruction": 13,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2834,
+          "instruction": 54,
+          "layer": 23,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2901,
+          "instruction": 6,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 2908,
+          "instruction": 13,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 2958,
+          "instruction": 63,
+          "layer": 24,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3025,
+          "instruction": 6,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3032,
+          "instruction": 13,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3073,
+          "instruction": 54,
+          "layer": 25,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3140,
+          "instruction": 6,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3147,
+          "instruction": 13,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3188,
+          "instruction": 54,
+          "layer": 26,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3255,
+          "instruction": 6,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3262,
+          "instruction": 13,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3303,
+          "instruction": 54,
+          "layer": 27,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3370,
+          "instruction": 6,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3377,
+          "instruction": 13,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3427,
+          "instruction": 63,
+          "layer": 28,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3494,
+          "instruction": 6,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3501,
+          "instruction": 13,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3542,
+          "instruction": 54,
+          "layer": 29,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3609,
+          "instruction": 6,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3616,
+          "instruction": 13,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3657,
+          "instruction": 54,
+          "layer": 30,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3724,
+          "instruction": 6,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3731,
+          "instruction": 13,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3772,
+          "instruction": 54,
+          "layer": 31,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3839,
+          "instruction": 6,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3846,
+          "instruction": 13,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3896,
+          "instruction": 63,
+          "layer": 32,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 3963,
+          "instruction": 6,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 3970,
+          "instruction": 13,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4011,
+          "instruction": 54,
+          "layer": 33,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4078,
+          "instruction": 6,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4085,
+          "instruction": 13,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4126,
+          "instruction": 54,
+          "layer": 34,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4193,
+          "instruction": 6,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4200,
+          "instruction": 13,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4241,
+          "instruction": 54,
+          "layer": 35,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4308,
+          "instruction": 6,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4315,
+          "instruction": 13,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4365,
+          "instruction": 63,
+          "layer": 36,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4432,
+          "instruction": 6,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4439,
+          "instruction": 13,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4480,
+          "instruction": 54,
+          "layer": 37,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4547,
+          "instruction": 6,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4554,
+          "instruction": 13,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4595,
+          "instruction": 54,
+          "layer": 38,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4662,
+          "instruction": 6,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 81920,
+          "containers": 342,
+          "global_instruction": 4669,
+          "instruction": 13,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4710,
+          "instruction": 54,
+          "layer": 39,
+          "values": 1024
+        },
+        {
+          "bank_values": 1024,
+          "command_buffer_bits": 327680,
+          "containers": 342,
+          "global_instruction": 4775,
+          "instruction": 4,
+          "layer": "head",
+          "values": 1024
+        }
+      ],
+      "rank": 3,
+      "response_peak_bits": 65536,
+      "static_issue_cycles": 549760,
+      "static_issue_ns": "458133.3333333333333333333333",
+      "useful_peak_bits": 32768
+    }
+  ],
+  "schema": "opentallas.w16.dsrom-phase-demand-review.v1",
+  "source_pins": {
+    "CROM": {
+      "commit": "dd3f544507100d957052192330f7eb6b6214e4bf",
+      "path": "results/uarch/w11_crom_home_service_preflight_20261001/contract.json",
+      "sha256": "fe3fb2a8199b6ebf1340c62fa88e1d22e8f55fa12bbb6e3f427fb924ade5646c"
+    },
+    "Engram": {
+      "commit": "195fcdac57d10e9047863bf43dcacb247341d1e5",
+      "path": "results/quality/w16_engram_home_service_demand_20261001/demand.json",
+      "sha256": "f2709a51618de7cc9c9c919177c15f17c9a9ebb2a18b7b952b50a1f7f3c82ac8"
+    },
+    "OR": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "results/quality/w10_q_mask_basis_audit_20261001/audit.json",
+      "sha256": "5a89b441ce2145d86e6a15762465cbd4abc0130fc1969dd792ecb8b066ea995b"
+    },
+    "demand": {
+      "commit": "f4bce8fa0a5162964262dd28c476aed549587dd0",
+      "path": "results/uarch/w11_crom_demand_20261001/demand_v2.json.gz",
+      "sha256": "bb597c07e000b2e58f16b949f2c4515ec49cfaa943c70c20133e0361366ec62d"
+    },
+    "demand_tool": {
+      "commit": "7ed62357d77b534dbd8a177e84321f91f105b45b",
+      "path": "tools/w11_dsrom_crom_demand.py",
+      "sha256": "0981e356fa03e03860ae06248abccd9a518962cc6f90f558c3f90acfb0e37e51"
+    },
+    "geometry": {
+      "commit": "e61a5a1ee89497562fdf5aa9e82b85d346cd2b57",
+      "path": "results/quality/w16_w17_geometry_search_20261001/search.json",
+      "sha256": "d3031257bf3e8c479e2b54e880e080e374c9866c976432aa65445de55c69fe20"
+    },
+    "phase": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/phases.json",
+      "sha256": "da6aa5674f5eb4506347ff5e33944d352df3a0be5ea20ec1a120e2dfe6371117"
+    },
+    "phase_tool": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "tools/w10_q_phase_reservations.py",
+      "sha256": "c67a3d0fe196ea6cf690da730b92a6e3aab1d170edc7262dcdbafce986450e28"
+    },
+    "power": {
+      "commit": "e79394b1ccc8b1c17862b8719471b4f2f0b81ee9",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    },
+    "power_tool": {
+      "commit": "e79394b1ccc8b1c17862b8719471b4f2f0b81ee9",
+      "path": "tools/w10_q_power_envelope.py",
+      "sha256": "7bfbfdafb57f3afe203e75e30a673ebe1da844e7059aa344ebe3835d3eeb6dac"
+    },
+    "summary": {
+      "commit": "f4bce8fa0a5162964262dd28c476aed549587dd0",
+      "path": "results/uarch/w11_crom_demand_20261001/summary.json",
+      "sha256": "698ac95c523b9f89a53ad03039e7e2261e09172e8cce6b51198486264072f495"
+    },
+    "whole": {
+      "commit": "9345c1fc048b2e19255e5c27b2bfde6f64360f29",
+      "path": "results/quality/w16_w17_whole_dsrom_candidate_20261001/candidate.json",
+      "sha256": "20949a45fe65d2fd95ba0791ac249cc633cf006c42d70053b7d8512f9ba875b1"
+    }
+  },
+  "verdict": "BLOCKED_FULL_COST_CALENDAR_AND_COEFFICIENT_SERVICE",
+  "verified_dependencies": {
+    "OR:results/quality/w10_q_mask_basis_audit_20261001/reproduce.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "results/quality/w10_q_mask_basis_audit_20261001/reproduce.py",
+      "sha256": "8b28d18061ab66f9051d6fd3624ecf0a69a0b9a13e7d5a5af9a26785b2aa949c"
+    },
+    "OR:results/uarch/w10_q_elaboration_inventory_r1/construction.json": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "OR:results/uarch/w10_q_elaboration_inventory_r1/inventory.json": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/inventory.json",
+      "sha256": "06bada78345cfaa8aa283ccf956f1e9fe490c7538eef49aa2758f9ea9c2ad255"
+    },
+    "OR:tests/test_w10_q_nand_basis_audit.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "tests/test_w10_q_nand_basis_audit.py",
+      "sha256": "e7df621cbca5893350f900fe54505ce633a2c49d3426f742d0522e398dd795fd"
+    },
+    "OR:tests/test_w17_geometry_mask_domain.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "tests/test_w17_geometry_mask_domain.py",
+      "sha256": "509c0d139383b667f5a4f2de8cafcbc9c60da64c4ec4aacb366d3798eebad86a"
+    },
+    "OR:tools/uarch_model.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "tools/uarch_model.py",
+      "sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+    },
+    "OR:tools/w10_q_constructive_area_bound.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "tools/w10_q_constructive_area_bound.py",
+      "sha256": "3ca30a894172a506ae0e62a905b3c248dc81e38a3e99080cc259fab93cf0895f"
+    },
+    "OR:tools/w17_conservative_geometry_search.py": {
+      "commit": "3f9b596c58528ef2338fe49fc5b6f7e1c00da1fd",
+      "path": "tools/w17_conservative_geometry_search.py",
+      "sha256": "ba50d47cbc3bc586e71925c3356d03678cc3d830278ed312b88593a721653b03"
+    },
+    "bf_cells": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/BF_raw_cell_counts.json",
+      "sha256": "25df0ba280abd453ca674ee790c1f235014bcc94e984b70c16ce364273240df4"
+    },
+    "bf_data": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/BF_data.json",
+      "sha256": "097dfa903fed852d8744dec4a2ecd3b4caa53c305f12a23df5773f6d30aa9edb"
+    },
+    "bf_hist": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_clock_tree_site_budget_r1/mapped_clock_endpoints.json",
+      "sha256": "9591e42681e7b943069c0478cf66a48670460149665e57d4bfe7e1158c1cc692"
+    },
+    "clock": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/clock.json",
+      "sha256": "19291d798b14a4f920e6da2d8c310727b5afb6b19efc36df3f850b3a84728b1f"
+    },
+    "construction": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_elaboration_inventory_r1/construction.json",
+      "sha256": "bdb28e8586fe774c5240a04da95527540a07073b36d5852889fdca90251c6faa"
+    },
+    "demand_program": {
+      "commit": "4080bb5fdc1493dd9c58de15d0c947e64a3ea597",
+      "path": "results/rtl/w17_connected_token_preparation_20261001/full40_crom_bound_templates_v2.json",
+      "sha256": "ebe79d6480b4ac737be97da4296d9f4807ad319964966143c0975c74d0761463"
+    },
+    "geometry": {
+      "commit": "e61a5a1ee89497562fdf5aa9e82b85d346cd2b57",
+      "path": "results/quality/w16_w17_geometry_search_20261001/search.json",
+      "sha256": "d3031257bf3e8c479e2b54e880e080e374c9866c976432aa65445de55c69fe20"
+    },
+    "hub": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/hub_model_inputs.json",
+      "sha256": "871479728c153bb5e8e72ad684af41fcff22427d780fbf32ee89b7ff4d8fc272"
+    },
+    "leakages": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/leakage_palette.json",
+      "sha256": "77c69070a7b74c69b059f690c1eb5e8c36e6bb76d0cc8a4d739f09e505b7860e"
+    },
+    "netloads": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "results/uarch/w10_q_existing_icg_r1/netloads.json",
+      "sha256": "a0db13a7b898d049a4677a89725be71c3b723fb23b0fda684f790c61d1aab335"
+    },
+    "phase_power_tool_binding": {
+      "commit": "fea811df454fcc7aaa1609a42c3ee4eb58c9672a",
+      "path": "tools/w10_q_power_envelope.py",
+      "sha256": "7bfbfdafb57f3afe203e75e30a673ebe1da844e7059aa344ebe3835d3eeb6dac"
+    },
+    "power": {
+      "commit": "e79394b1ccc8b1c17862b8719471b4f2f0b81ee9",
+      "path": "results/uarch/w10_q_power_envelope_r1/power.json",
+      "sha256": "75d15a6c456b846a9a2e454383a46e91eeece71f8e537921b91e820d43a36105"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_vec.sv": {
+      "commit": "4080bb5fdc1493dd9c58de15d0c947e64a3ea597",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",
+      "sha256": "45a2a49923cf78981f6c57ec6917f24d6305c2708c175c6160ed951756693c13"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv": {
+      "commit": "4080bb5fdc1493dd9c58de15d0c947e64a3ea597",
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_vec_lane.sv",
+      "sha256": "c20e8a11e2c939b80945cc7d4e2058a696c51275314b2ccfdb92f125be7e2c72"
+    }
+  },
+  "whole_feasible_schedule": false
+}

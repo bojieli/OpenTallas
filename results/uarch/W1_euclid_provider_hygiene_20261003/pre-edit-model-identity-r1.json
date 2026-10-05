@@ -1,0 +1,34 @@
+{
+  "clock_constraints_changed": false,
+  "default_off_contract": "all ready/valid/data/status outputs zero including32-bit commit_r; no false commit acceptance",
+  "delta": {
+    "FF_clock_reset_loads": 0,
+    "boundary_bits_per_cycle": 0,
+    "compute_MACs_per_cycle": 0,
+    "enabled_area_um2": 0,
+    "floorplan_slot": 0,
+    "memory_bytes_per_cycle": 0,
+    "ports": 0,
+    "replicas": 0,
+    "routing_tracks": 0,
+    "single_user_latency_cycles": 0,
+    "single_user_latency_s": 0
+  },
+  "edit": "only default-off assign commit_ready=0 -> assign commit_r=0; same module ports and enabled generate branch byte-identical",
+  "no_new_hardware_admission": true,
+  "original_files_modified": false,
+  "original_provider_sha256": "a8516d20e5912c7da1208f457e916a7f00c4ead42a2a38e5736ae5526e279c77",
+  "physical_or_composed_calendar_adoption": false,
+  "schema": "W1_PRE_EDIT_IDENTITY_MODEL_R1",
+  "status": "SIZED_HYGIENE_ONLY_NO_NEW_ENGINE",
+  "unchanged_enabled_inventory": {
+    "PCs": 32,
+    "global_physical_tags": 4096,
+    "owner_context_entries_per_PC": 128,
+    "request_entries_per_PC": 64,
+    "return_entries_per_PC": 32,
+    "write_residence_slots": 4
+  },
+  "unified_model_path": "tools/uarch_model.py",
+  "unified_model_sha256": "2da5b6d90adfbeb58ca9355db636835205bf6953328a247bf709c6ab93260c45"
+}

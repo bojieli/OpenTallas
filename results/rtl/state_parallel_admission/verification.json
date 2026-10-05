@@ -1,0 +1,58 @@
+{
+  "status": "functional_pass_physical_pending",
+  "scope": "Parallel one-hot descriptor payload lookup and non-saturating-only capacity sum; same request and apply latency. Unique used descriptor identity invariant is tested.",
+  "previous_source": "results/rtl/state_parallel_admission/before.sv",
+  "changes": [
+    "Read matched cursor/capacity/policy/open directly from slot match mask; encoded slot remains for writes.",
+    "Capacity bound uses unstaged zero or request span; saturating clamp remains on staged payload only."
+  ],
+  "evidence": {
+    "multislot_cycle_equivalence": {
+      "slots": [
+        3,
+        16
+      ],
+      "cycles_per_simulator": 10800,
+      "simulators": [
+        "Icarus",
+        "Verilator 5.050"
+      ],
+      "checks": [
+        "all public outputs",
+        "slot fields and ownership",
+        "valid pending payloads",
+        "unique allocated descriptor identities"
+      ]
+    },
+    "cursor_tests": {
+      "cases_per_simulator": 255,
+      "cancellation_positions": 34,
+      "simulators": [
+        "Icarus",
+        "Verilator 5.050"
+      ]
+    },
+    "full_control_campaign": "results/rtl/abi3_state_parallel_admission_campaign.json",
+    "full_control_campaign_sha256": "f77175126de11b222a6df9d4f7496f804d0931764fa668f03a3e3de87f716047",
+    "full_control_checks_per_simulator": [
+      4555,
+      4555
+    ]
+  },
+  "timing_basis": {
+    "stage": "historical sequential-modulo global route; intermediate, not final signoff",
+    "setup_slack_ns": -0.8873,
+    "startpoint": "slot_descriptor[14][19]",
+    "endpoint": "count_commits[27]",
+    "report": "results/rtl/state_parallel_admission/sequential_global_route.rpt",
+    "note": "Predates payload-capture change; lookup and admission arithmetic remain present in the immediate before snapshot. No final improvement claimed."
+  },
+  "sources": {
+    "rtl/abi3/ot_a3_state_controller.sv": "a51c4b0d26c453763eacaeffefadf5ac0ccb9ace146beae5b9409b9cc64f8f4e",
+    "rtl/abi3/ot_a3_pkg.sv": "431190fedf2b3089184c15122a6bc2e0c85353dd18d9f10047ae54e83ff5e263",
+    "tests/test_state_parallel_admission.py": "7a65eebf9004022f13a1d0636300d64977ef4bd029ce96a1ff236138979f4c42",
+    "tests/test_state_cursor_modulo.py": "0471d8bcf75a6ba3d1e4ca1f57fbd90aa6dc6ab8f20d8b4ae9e90eee527c362e",
+    "results/rtl/state_parallel_admission/before.sv": "f60c152c5bdcae2c2db7e5fc1bc9317ed8bad1cdba4c0780afeb90b6d688ba6b"
+  },
+  "physical": "running: results/physical_abi3/asap7/state_controller/pnr_parallel_admission_cts12_1ns.json"
+}

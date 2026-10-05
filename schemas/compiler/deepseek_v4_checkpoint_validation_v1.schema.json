@@ -1,0 +1,53 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_checkpoint_validation_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "config_sha256": {
+      "const": "6c8f3d2d3b48707541b88f32f22ef3f0f8a6b57d8523281e2b8d3cdb0ae9a023"
+    },
+    "index_sha256": {
+      "const": "98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "payload_bytes": {
+      "const": 166878536440
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_checkpoint_validation.v1"
+    },
+    "status": {
+      "const": "pass"
+    },
+    "tensor_count": {
+      "const": 72317
+    },
+    "tensor_structure_sha256": {
+      "const": "18285fe60ca3655be488bbabb88b59489b8ee03cff7fc4f4729424051ca83e0e"
+    }
+  },
+  "required": [
+    "checkpoint_lock_id",
+    "config_sha256",
+    "index_sha256",
+    "model_id",
+    "payload_bytes",
+    "schema",
+    "status",
+    "tensor_count",
+    "tensor_structure_sha256"
+  ],
+  "title": "OpenTallas DeepSeek V4 Flash checkpoint validation v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

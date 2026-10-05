@@ -1,0 +1,13 @@
+--- 4e38326d6f361bc85e660f48c59c355e2bb95274:rtl/v41rom/ot_v41_rom_elem_w10.sv
++++ rtl/v41rom/ot_v41_rom_elem_w10_rowfix_prepare.sv
+@@ -70,0 +71 @@
++    parameter integer FIX_SECOND_ROW_INDEX = 0, // mandatory row decoder repair, opt-in preparation
+@@ -224,0 +226,6 @@
++            if (FIX_SECOND_ROW_INDEX != 0) begin
++                // Address 2*NSEG+1+s must select NSEG+s, including s=NSEG-1.
++                // Preserve the full address until subtraction; reject non-contract writes.
++                if (NB > 1 && {27'd0, cfg_a_e} <= 3 * NSEG)
++                    s_row[{27'd0, cfg_a_e} - (NSEG + 1)] <= cfg_d_e[15:0];
++            end else begin
+@@ -225,0 +233 @@
++            end

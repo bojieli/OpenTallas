@@ -1,0 +1,25 @@
+{
+  "schema": "H3_PORTABLE_PRODUCER_PINS_V1",
+  "files": {
+    "join.json": {
+      "path": "results/uarch/qwen_native_workspace_provider_r20_20261002/output/join.json",
+      "commit": "33b741b4e",
+      "sha256": "ee7ba8f1d817271fac12164781c5359be41c8a39a5d5febca131237a22070488"
+    },
+    "temporary_provider_homes.json.gz": {
+      "path": "results/uarch/qwen_native_workspace_provider_r20_20261002/output/temporary_provider_homes.json.gz",
+      "commit": "33b741b4e",
+      "sha256": "b83c6bd2c6c45877d9be744b2cac43269960ce1a740aa2df91a76a9ba5bd172c"
+    },
+    "verification_and_handoff.json": {
+      "path": "results/uarch/qwen_native_workspace_provider_r20_20261002/verification_and_handoff.json",
+      "commit": "33b741b4e",
+      "sha256": "02b03ca87edddc8074e12128ab9bf0bf8a9cadc32b7553e24c3df6ad427c5a5c"
+    },
+    "provider.py.source": {
+      "path": "tools/qwen_native_workspace_provider_r20.py",
+      "commit": "33b741b4e",
+      "sha256": "b0839cdd81897f8e051b3b4f951ab9615486f264a0cb98185d9d4579ad89d90e"
+    }
+  }
+}

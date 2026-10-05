@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.physical.v41x_me_mp1_rl5_local_preflight.v1",
+  "status": "timing_fail_at_global_place",
+  "claim_scope": "Eight analytical SRAM macro, MP1 RL5 activation store local cut only; not cluster, die, or routed timing.",
+  "target_period_ns": 0.92,
+  "view": "ASAP7 TT RVT academic predictive",
+  "openroad_version": "26Q3-1510-g6cb3f2b704",
+  "pin_placement": {
+    "io_pins": 2297,
+    "available_slots": 20772,
+    "passed": true
+  },
+  "global_place": {
+    "setup_wns_ns": -0.676671,
+    "hold_wns_ns": 0.0439926,
+    "fmax_hz": 626303000.0,
+    "total_cell_area_um2": 33504.5,
+    "sram_macro_area_um2": 31132.6,
+    "stdcell_area_um2": 2371.9
+  },
+  "worst_setup_path": "u_store.pre_e_r[11] to u_store.u_store.g_pos[0].g_c[0].u_mem/wd_in[81], 1307 ps arrival before macro setup; global pre_e control through wide write-data selection",
+  "source_sha256": {
+    "rtl/test/ot_hdc_v41x_me_xbank_macro_inreg_readreg_mp1.sv": "033f4da9c5729baf321ce89a3b685e7f4c4cc4ec2a8bbe3676efa3523f35c53c",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_inreg_readreg.sv": "57960fe347b301a60428b8c5c6e913ca060f9d420170b8e9da1bb5acba206178",
+    "rtl/hdc/v41x/ot_hdc_v41x_me_xbank_macro_readreg.sv": "090d8a48762c7a78221f3136f725bdff673c4db74f41e382f94b1fe819a5008b",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+  },
+  "flow_files_sha256": {
+    "config.mk": "8fdd3de60151887437ab1582f5614991162fddf2c6d240e46a38b6af353837c5",
+    "constraint.sdc": "6fc0dd65b7b577c1beffd041fb8d26d0ea1ba2a51f144bfc05a6e4ce6fafc9a6",
+    "global_place_metrics": "aa473a9e9d67996209e5383b5935767e663bae7fde47ab2ae6d95ce469c8e301",
+    "global_place_report": "bfc522c7fdf4bceda71626157ffd29e62dea0f777ae1bff8059b2d2d5aafaa3d"
+  },
+  "route_completed": false
+}

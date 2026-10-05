@@ -1,0 +1,56 @@
+
+16. Printing statistics.
+
+=== ot_a3_attention_softmax_block ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    94550        - wires
+    94550        - wire bits
+     4539        - public wires
+     4539        - public wire bits
+     4302        - ports
+     4302        - port bits
+    92396 1.23E+04 cells
+     5391  471.605   AND2x2_ASAP7_75t_R
+     2210  193.331   AND3x1_ASAP7_75t_R
+     1043  106.449   AND4x1_ASAP7_75t_R
+      284   33.126   AND5x1_ASAP7_75t_R
+       25    5.832   AO211x2_ASAP7_75t_R
+     9697  848.294   AO21x1_ASAP7_75t_R
+      268   39.074   AO221x1_ASAP7_75t_R
+      393   68.759   AO222x2_ASAP7_75t_R
+      309   40.547   AO22x1_ASAP7_75t_R
+       30    6.998   AO31x2_ASAP7_75t_R
+     1070  124.805   AO32x1_ASAP7_75t_R
+       64    9.331   AO33x2_ASAP7_75t_R
+      217   37.966   AOI211x1_ASAP7_75t_R
+     1880  219.283   AOI21x1_ASAP7_75t_R
+        9    1.837   AOI221x1_ASAP7_75t_R
+      190   27.702   AOI22x1_ASAP7_75t_R
+     8907 3.38E+03   DFFASRHQNx1_ASAP7_75t_R
+     8224  359.718   INVx1_ASAP7_75t_R
+     2917  382.769   MAJx2_ASAP7_75t_R
+     5020   439.15   NAND2x1_ASAP7_75t_R
+       92   14.755   NAND3x1_ASAP7_75t_R
+     5836  510.533   NOR2x1_ASAP7_75t_R
+     1004  161.022   NOR3x1_ASAP7_75t_R
+     1431  166.912   OA211x2_ASAP7_75t_R
+     3625  369.967   OA21x2_ASAP7_75t_R
+      893  156.239   OA222x2_ASAP7_75t_R
+      404   58.903   OA22x2_ASAP7_75t_R
+       60   13.122   OA31x2_ASAP7_75t_R
+       21    3.062   OA33x2_ASAP7_75t_R
+     4329  504.935   OAI21x1_ASAP7_75t_R
+     3337  486.535   OAI22x1_ASAP7_75t_R
+     5372  469.943   OR2x2_ASAP7_75t_R
+     2436  213.101   OR3x1_ASAP7_75t_R
+     1391  141.965   OR4x1_ASAP7_75t_R
+      454   52.955   OR5x1_ASAP7_75t_R
+     9128 1.46E+03   XNOR2x2_ASAP7_75t_R
+     4435  711.285   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_a3_attention_softmax_block': 12292.223040
+     of which used for sequential elements: 3376.465560 (27.47%)
+

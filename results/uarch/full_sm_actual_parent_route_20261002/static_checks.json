@@ -1,0 +1,147 @@
+{
+  "full_SM_build_GO": false,
+  "generator_sha256": "59998db915807745a29ca9a10ec1e36f0e66af0bbfdcc781509c252f5c01aaf9",
+  "models": {
+    "DS": {
+      "FF_count": 77192,
+      "FF_driver_frontier_count": 29174,
+      "OBS_layers_by_master": {
+        "ot_gpu_bd_col": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "RVTN",
+          "RVTP"
+        ],
+        "ot_gpu_tc16": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "RVTN",
+          "RVTP"
+        ],
+        "ot_sram_1r1w_1024x256_m2_r2c2": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ],
+        "ot_sram_1r1w_128x256_m1_r2c2": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ]
+      },
+      "ODB_sha256": "5014f27a0ba5f3aaa15e3e4393f958320426e742ea7267a801226f5d5931a47d",
+      "all_input_driver_frontiers_bound": true,
+      "cell_capacity_um2": 244401.42716999806,
+      "centralized_layout_FAIL_preserved": true,
+      "checks_pass": true,
+      "declared_primary_input_bits": 3264,
+      "full_OBS_halo_PDN_via_track_accounting_checked": true,
+      "geometry_export_sha256": "62502d2dddc54f1e76d7c107338f0b965be07033ef2c474757d47fd94dc4af90",
+      "grid_sha256": "ea321506ed39369ed31d1e754f43e26d80fd7b1da2eacc0a149bf557639ab018",
+      "macro_count": 168,
+      "macro_signal_pin_count": 140002,
+      "macro_signal_unique_source_nets": 60874,
+      "mapped_source_sha256": "5ee11c7c6f05cc60df11dc0bd6a7243a53ea7a467ac1f0544f22d54224162246",
+      "missing_driver_ids": [],
+      "placement_blockages_count": 0,
+      "priced_parent_cell_um2": 64329.24906000001,
+      "routing_obstructions_count": 0,
+      "sampled_cut_screen_is_not_global_routability": true,
+      "sampled_macro_only_cut_count": 152,
+      "sampled_macro_only_multiplane_cut_failures": [],
+      "standalone_column_qualification_transferred": false,
+      "tie_source_proof": [
+        {
+          "instance": "_486936_",
+          "macro_pin_loads": 26624,
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "net": "_222073_",
+          "physical_fanout_remains_charged": true
+        },
+        {
+          "instance": "_486937_",
+          "macro_pin_loads": 7844,
+          "master": "TIELOx1_ASAP7_75t_R",
+          "net": "_222074_",
+          "physical_fanout_remains_charged": true
+        }
+      ]
+    },
+    "Qwen": {
+      "FF_count": 185341,
+      "FF_driver_frontier_count": 35672,
+      "OBS_layers_by_master": {
+        "ot_gpu_tc_col": [
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "M5",
+          "M6",
+          "RVTN",
+          "RVTP"
+        ],
+        "ot_sram_1r1w_1024x256_m2_r2c2": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ],
+        "ot_sram_1r1w_256x256_m2_r2c2": [
+          "M1",
+          "M2",
+          "M3",
+          "M4"
+        ]
+      },
+      "ODB_sha256": "c7496226650db2bf27cd31fac5f4ad6010a84e52bdf6b2b092503f6414605b21",
+      "all_input_driver_frontiers_bound": true,
+      "cell_capacity_um2": 531296.2278899971,
+      "centralized_layout_FAIL_preserved": true,
+      "checks_pass": true,
+      "declared_primary_input_bits": 3224,
+      "full_OBS_halo_PDN_via_track_accounting_checked": true,
+      "geometry_export_sha256": "5b90bb6f412083287a0c0324e0463c570a4929f02c39505fa51f5e5dbf13d914",
+      "grid_sha256": "3f63b51d32cf6cf8e5849f9611fec556ef1494f64c55b98d78d606da188f147a",
+      "macro_count": 85,
+      "macro_signal_pin_count": 87332,
+      "macro_signal_unique_source_nets": 46321,
+      "mapped_source_sha256": "d1a1edb0496beed84a3bc98c1d5a507fb2e321de66b1e719e7f07b398b59dd5c",
+      "missing_driver_ids": [],
+      "placement_blockages_count": 0,
+      "priced_parent_cell_um2": 168261.91884,
+      "routing_obstructions_count": 0,
+      "sampled_cut_screen_is_not_global_routability": true,
+      "sampled_macro_only_cut_count": 92,
+      "sampled_macro_only_multiplane_cut_failures": [],
+      "standalone_column_qualification_transferred": false,
+      "tie_source_proof": [
+        {
+          "instance": "_1513989_",
+          "macro_pin_loads": 5120,
+          "master": "TIEHIx1_ASAP7_75t_R",
+          "net": "_0799798_",
+          "physical_fanout_remains_charged": true
+        },
+        {
+          "instance": "_1513990_",
+          "macro_pin_loads": 794,
+          "master": "TIELOx1_ASAP7_75t_R",
+          "net": "_0799799_",
+          "physical_fanout_remains_charged": true
+        }
+      ]
+    }
+  },
+  "schema": "opentallas.fullSM.native-parent-static-intake.v1"
+}

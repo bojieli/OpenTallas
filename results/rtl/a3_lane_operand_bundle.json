@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.lane_operand_bundle.v1",
+  "status": "pass",
+  "simulator": "Verilator 5.050",
+  "scope": "Quick lane corpora with 1-8-cycle variable-latency behavioral bundle service. Not SRAM/cluster integration or throughput/physical closure. Upstream must flush on clear/reset. One outstanding fetch is a correctness baseline, not final prefetch architecture.",
+  "sources": {
+    "rtl/abi3/ot_a3_lane_pipelined.sv": "cade2927fa311a76e3c19d5f22a0434e3b2e259c030bc707ce72bfd7a17b6466",
+    "rtl/abi3/ot_a3_operand_bundle_bridge.sv": "cc29c6eddd930caa58158b8454458a1d43ebdb2b99c39dc6f50e9560f613850c",
+    "rtl/abi3/ot_a3_lane_pkg.sv": "9ea3fdb6e2d348ff3fd6ed71a3f9ef93b391982c404c7c432ae882f699145b71",
+    "rtl/abi3/ot_a3_mac_lane.sv": "d664af4b8a79fd5ad932d2c6854bcfa96436305418007c703a0f72e6a740f989",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+    "tools/check_lane_operand_bundle.py": "b19ea8e76ba3066b298c9ad3ba8e5ac798b4fd0c7e9a4cee39696b5b7bc4f2d8",
+    "rtl/test/a3_lane_pipelined_top.sv": "f5fb43467583f1e9d47ac0e38bd35ef5a40d00a2ce30454e6deca7fd020c1f09",
+    "rtl/test/tb_a3_lane_pipelined.sv": "9a952882f62f36d9df670f6616ecb3022df9b3ab6d2e69d0252e3a59779db056"
+  },
+  "runs": [
+    {
+      "suite": "groups",
+      "marker": "PASS: ABI3 pipelined lane cases=42 lane_ops=18102 products=50604 outputs=423 faults=12 reference_cases=0 reference_outputs=0 identity=0 adder_stages=3",
+      "checks": 1302,
+      "bundles": "BUNDLES requests=18129 responses=18129 issues=18120",
+      "artifacts": {
+        "build/runtime_lane_bundle/simulation.log": "ee18588b5534fb0ecbee215877004ad9c3c0351547429b8734b8991571bbd3ab",
+        "build/runtime_lane_bundle/top.sv": "68bfb73d7a8ef541665889d68125243e0c412f359d5aeb66cbabd94c53cf373b",
+        "build/runtime_lane_bundle/manifest.json": "a614b5dd5882f8d404847e0be530a34a7bcb9c983bb10ba1b15a484a5037c33a"
+      }
+    },
+    {
+      "suite": "d1",
+      "marker": "PASS: ABI3 pipelined lane cases=57 lane_ops=83431 products=83431 outputs=9365 faults=14 reference_cases=55 reference_outputs=9304 identity=9302 adder_stages=3",
+      "checks": 56992,
+      "bundles": "BUNDLES requests=83470 responses=83470 issues=83457",
+      "artifacts": {
+        "build/runtime_lane_bundle_d1/simulation.log": "5f3e08e36fbf94ce7ef44d52d450091d900868ba34df8a6e26bcce4943ef77c9",
+        "build/runtime_lane_bundle_d1/top.sv": "68bfb73d7a8ef541665889d68125243e0c412f359d5aeb66cbabd94c53cf373b",
+        "build/runtime_lane_bundle_d1/manifest.json": "4c2abb3e633da3d194b6dfff34fb7faaa456b168f0ab4bc8ff03ec9435e83931"
+      }
+    }
+  ]
+}

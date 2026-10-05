@@ -1,0 +1,37 @@
+{
+  "protected_base": "rtl/test/v41_runtime/w17_future_validated_fastpp_die_rt.cpp",
+  "protected_base_sha256": "194b6cf5550445dfc8cd389bfc888636c32fa182ca6d791bdf24064464484aca",
+  "source_original": "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_original_sha256": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04",
+  "copy": "rtl/test/v41_runtime/w17_connected_observation_die_rt.cpp",
+  "copy_sha256": "68df9c35fc67da916e40646d2743817ae3f16435caceadc7a4a9aa9c6895667b",
+  "exact_inverse_to_protected_future_driver": true,
+  "changes": [
+    {
+      "before": "#include \"Vdie0.h\"",
+      "after": "#if !defined(W17_FULLTOKEN_OBSERVATION_OPT_IN) || W17_FULLTOKEN_OBSERVATION_OPT_IN != 1\n#error \"Connected observation copy requires new reviewed build plan; no live binding\"\n#endif\n#if !defined(W17_FUTURE_BIND_DBG_FS)\n#error \"Source-pinned real sticky fault port binding required\"\n#endif\n#include \"../../../tools/runtime/w17_connected_observation_capture.hpp\"\n#include \"Vdie0.h\""
+    },
+    {
+      "before": "    virtual void eval() = 0;",
+      "after": "    virtual void eval() = 0;\n    virtual void observation_edge(uint64_t host_cycle) = 0;"
+    },
+    {
+      "before": "        d->clk = 0; d->rst_n = 0; d->eval();",
+      "after": "        d->sim_obs_epoch = 1; // fresh process reset era; no cross-reset fence claim\n        d->clk = 0; d->rst_n = 0; d->eval();"
+    },
+    {
+      "before": "    void eval() override { d->eval(); }",
+      "after": "    void eval() override { d->eval(); }\n    void observation_edge(uint64_t host_cycle) override {\n        if(d->sim_obs_valid) w17_capture::trace->edge(unsigned(id),host_cycle,d->sim_obs_packet,\n            bool(d->done),uint32_t(d->fault),uint32_t(d->dbg_fs),uint64_t(d->dbg_state));\n    }"
+    },
+    {
+      "before": "    RtPool pool(threads);",
+      "after": "    if(wrong) throw std::invalid_argument(\"wrong-edge is not connected qualification\");\n#ifdef V41_L20\n    w17_capture::trace.reset(new w17_capture::Trace(true));\n#else\n    w17_capture::trace.reset(new w17_capture::Trace(false));\n#endif\n    RtPool pool(threads);"
+    },
+    {
+      "before": "            for (auto& d : dies) { d->field_propagate(); d->att_propagate(); }\n        } else {",
+      "after": "            // Joined rising-edge tasks complete. Drain registered pre-edge packet once,\n            // before propagation/settling; post-edge debug fault/DONE are separate metadata.\n            for (auto& d : dies) d->observation_edge(uint64_t(cyc));\n            for (auto& d : dies) { d->field_propagate(); d->att_propagate(); }\n        } else {"
+    }
+  ],
+  "phase": "registered pre-edge packet drained exactly once after all rising tasks join, before propagation; post-edge DONE/fault remain separate metadata"
+}

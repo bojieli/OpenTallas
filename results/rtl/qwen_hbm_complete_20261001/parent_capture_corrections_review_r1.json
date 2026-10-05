@@ -1,0 +1,46 @@
+{
+  "schema": "parent.qwen-capture-corrections-review.v1",
+  "commits": [
+    "a8cd8e94c",
+    "762428850"
+  ],
+  "parent_intake_commits": [
+    "fdb51b245",
+    "cecafec65"
+  ],
+  "positive_tests": "677 passed in 0.58s",
+  "retained_callback_failure_reproductions": {
+    "exact_source_hashes": 2,
+    "exact_embedded_script_hashes": 2,
+    "stdout_stderr_returncodes_equal": true
+  },
+  "negative_control": "8 failed, 669 deselected against retained a8cd capture source",
+  "scope": "Software supplied-event validation and lock ownership only; no actual payload/provider/lease/drain/service/RTL qualification.",
+  "hardware_admission": false,
+  "token_cycles": null,
+  "new_hardware_jobs": 0,
+  "combined_original_and_validated_tests": "681 passed in 0.44s",
+  "validated_candidate_source_pins": {
+    "tools/qwen_hbm_complete_controller_capture_validated.py": {
+      "commit": "d3c905a81",
+      "sha256": "cf967403334e2e3f61c4ff5c90c3138448cc0364057ed2b32e9f6699088c6626"
+    },
+    "tests/test_qwen_hbm_complete_controller_capture_validated.py": {
+      "commit": "d3c905a81",
+      "sha256": "43348f54a4d25ed82e77f5a67c1b3d1327c7a5063c56809368244a1571b345ad"
+    }
+  },
+  "pinned_originals_restored": {
+    "tools/qwen_hbm_complete_controller_capture.py": {
+      "source": "7474c2f6c",
+      "sha256": "ecdc8a5bd4e25a400c9a6d7fa295b0c44f81b13c7108edd5a5c70218fab1e023",
+      "byte_identical": true
+    },
+    "tests/test_qwen_hbm_complete_controller_capture.py": {
+      "source": "7474c2f6c",
+      "sha256": "bbf01bc2023c544ca539b524d6b8db06e0718a59111e97e52614ae9550fc7eea",
+      "byte_identical": true
+    }
+  },
+  "selection": "Separate validated module imported explicitly; original default remains unchanged. No actual hardware or provider adoption."
+}

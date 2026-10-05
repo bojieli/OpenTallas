@@ -1,0 +1,597 @@
+{
+ "schema": "opentallas.legacy-serial-model-targets.v1",
+ "what": "The per-target headline numbers of the roofline studies as committed at ae4d748716e7 (ae4d7487), the last commit whose serial latency was the flat per-layer floor (latency.*: ~250 ns a layer) plus two all-reduces per layer. Frozen here because the regenerated artifacts replace them; tools/decode_critical_path.py applies the same selection (tools/decode_targets.py) to the regenerated tree for the after column.",
+ "source_commit": "ae4d748716e7fdb0dfcf51bd2b494b02eb412857",
+ "targets": {
+  "qwen3_8b": {
+   "study": "n5_vs_b200",
+   "model": "Qwen3-8B",
+   "recommended": {
+    "design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x5-romfill",
+    "per_user_b1": 16619.488944765362,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 16619.488944765362,
+    "tensor_group_b1": 5,
+    "tensor_group_b64": 5,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "Qwen3-8B/ROM-N5-native-SRAMKV-array-hw-tensor-x4-perstream-romfill",
+    "per_user": 42248.26105937436,
+    "aggregate": 42248.26105937436,
+    "tensor_group": 4,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "Qwen3-8B/ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill",
+    "per_user": 9372.962323616859,
+    "aggregate": 796701.797507433,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "Qwen3-8B/b200_sxm-x58-nvl72-tensor",
+    "per_user": 4443.65414135601,
+    "aggregate": 4443.65414135601,
+    "tensor_group": 58,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "Qwen3-8B/b200_sxm-x347-nvl72-hybrid",
+    "per_user": 3460.344740744314,
+    "aggregate": 221462.0634076361,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "deepseek_v4_flash": {
+   "study": "n5_vs_b200",
+   "model": "DeepSeek-V4-Flash-0731",
+   "recommended": {
+    "design": "DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-tensor-x35",
+    "per_user_b1": 15623.084324565736,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 15623.084324565736,
+    "tensor_group_b1": 35,
+    "tensor_group_b64": 35,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "DSV4-Flash/ROM-N5-native-SRAMKV-array-hw-hybrid-x59",
+    "per_user": 18118.916945727367,
+    "aggregate": 18118.916945727367,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "DSV4-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill",
+    "per_user": 13829.369076137571,
+    "aggregate": 1175496.3714716935,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "DSV4-Flash/b200_sxm-x58-nvl72-tensor",
+    "per_user": 3971.529496583769,
+    "aggregate": 3971.529496583769,
+    "tensor_group": 58,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "DSV4-Flash/b200_sxm-x347-nvl72-hybrid",
+    "per_user": 2652.9664958069557,
+    "aggregate": 169789.85573164516,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "deepseek_v4_pro": {
+   "study": "n5_vs_b200",
+   "model": "DeepSeek-V4-Pro-0813",
+   "recommended": {
+    "design": "DSV4-Pro/ROM-N5-native-SRAMKV-array-hw-tensor-x166-romfill",
+    "per_user_b1": 4787.0256615799435,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 4787.0256615799435,
+    "tensor_group_b1": 166,
+    "tensor_group_b64": 166,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "DSV4-Pro/ROM-N5-native-SRAMKV-array-hw-tensor-x91-perstream-romfill",
+    "per_user": 6111.087039380714,
+    "aggregate": 6111.087039380714,
+    "tensor_group": 91,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "DSV4-Pro/ROM-N5-native-HBMKV-array-hw-hybrid-x399",
+    "per_user": 4226.3401178776685,
+    "aggregate": 422634.0117877668,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "DSV4-Pro/b200_sxm-x71-nvl72-tensor",
+    "per_user": 2455.9761459633132,
+    "aggregate": 2455.9761459633132,
+    "tensor_group": 71,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "DSV4-Pro/b200_sxm-x1358-nvl72-hybrid",
+    "per_user": 1820.284376431732,
+    "aggregate": 116498.20009163085,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "deepseek_v41_flash": {
+   "study": "candidates/deepseek-v41-flash/n5_vs_b200",
+   "model": "DeepSeek-V4.1-Flash",
+   "recommended": {
+    "design": "DeepSeek-V4.1-Flash/ROM-N5-native-SRAMKV-array-hw-tensor-x88",
+    "per_user_b1": 10171.146695451149,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 10171.146695451149,
+    "tensor_group_b1": 88,
+    "tensor_group_b64": 88,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188",
+    "per_user": 15555.913964549894,
+    "aggregate": 731127.956333845,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x227",
+    "per_user": 13436.032295561547,
+    "aggregate": 859906.066915939,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "DeepSeek-V4.1-Flash/b200_sxm-x67-nvl72-tensor",
+    "per_user": 4256.957711731245,
+    "aggregate": 4256.957711731245,
+    "tensor_group": 67,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "DeepSeek-V4.1-Flash/b200_sxm-x347-nvl72-hybrid",
+    "per_user": 2543.9565162373788,
+    "aggregate": 162813.21703919224,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "kimi_k3": {
+   "study": "candidates/kimi-k3/n5_vs_b200",
+   "model": "Kimi-K3",
+   "recommended": {
+    "design": "Kimi-K3/ROM-N5-native-SRAMKV-array-hw-tensor-x297",
+    "per_user_b1": 2459.4262759570847,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 2459.4262759570847,
+    "tensor_group_b1": 297,
+    "tensor_group_b64": 297,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "Kimi-K3/ROM-N5-native-SRAMKV-array-hw-tensor-x132-perstream-romfill",
+    "per_user": 3579.8326952500847,
+    "aggregate": 3579.8326952500847,
+    "tensor_group": 132,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "Kimi-K3/ROM-N5-native-HBMKV-wafer-hybrid-x16",
+    "per_user": 1237.365801146512,
+    "aggregate": 79191.41127337677,
+    "tensor_group": 57,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "Kimi-K3/b200_sxm-x72-nvl72-tensor",
+    "per_user": 1274.9038283880664,
+    "aggregate": 1274.9038283880664,
+    "tensor_group": 72,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "Kimi-K3/b200_sxm-x462-nvl72-hybrid",
+    "per_user": 697.2957590133213,
+    "aggregate": 44626.928576852566,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "mimo_v26_pro": {
+   "study": "candidates/mimo-v26-pro/n5_vs_b200",
+   "model": "MiMo-V2.6-Pro",
+   "recommended": {
+    "design": "MiMo-V2.6-Pro/ROM-N5-native-SRAMKV-array-hw-tensor-x107",
+    "per_user_b1": 4830.424997895681,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 4830.424997895681,
+    "tensor_group_b1": 107,
+    "tensor_group_b64": 107,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "MiMo-V2.6-Pro/ROM-N5-native-SRAMKV-array-hw-tensor-x59-perstream-romfill",
+    "per_user": 6778.816574793203,
+    "aggregate": 6778.816574793203,
+    "tensor_group": 59,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "MiMo-V2.6-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x49",
+    "per_user": 1479.9151203858898,
+    "aggregate": 94714.56770469695,
+    "tensor_group": 57,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "MiMo-V2.6-Pro/b200_sxm-x67-nvl72-tensor",
+    "per_user": 2119.822430995177,
+    "aggregate": 2119.822430995177,
+    "tensor_group": 67,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "MiMo-V2.6-Pro/b200_sxm-x1416-nvl72-hybrid",
+    "per_user": 1581.817364332146,
+    "aggregate": 101236.31131725735,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  },
+  "mimo_v26_flash": {
+   "study": "candidates/mimo-v26-flash/n5_vs_b200",
+   "model": "MiMo-V2.6-Flash",
+   "recommended": {
+    "design": "MiMo-V2.6-Flash/ROM-N5-native-SRAMKV-array-hw-tensor-x36",
+    "per_user_b1": 12303.862395008227,
+    "per_user_b64": null,
+    "aggregate_b64": null,
+    "aggregate_max": 12303.862395008227,
+    "tensor_group_b1": 36,
+    "tensor_group_b64": 36,
+    "pipeline_stages_b1": 1,
+    "collective_algorithms_b1": null,
+    "collectives_per_layer_b1": null
+   },
+   "fastest_rom_b1": {
+    "design": "MiMo-V2.6-Flash/ROM-N5-native-SRAMKV-array-hw-tensor-x36-perstream-romfill",
+    "per_user": 13761.82271981794,
+    "aggregate": 13761.82271981794,
+    "tensor_group": 36,
+    "parallelism": "tensor",
+    "collective_algorithms": null
+   },
+   "fastest_rom_b64": {
+    "design": "MiMo-V2.6-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x340-romfill",
+    "per_user": 2587.7158412197737,
+    "aggregate": 219955.84650368078,
+    "tensor_group": 4,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b1": {
+    "design": "MiMo-V2.6-Flash/b200_sxm-x144-nvl72-hybrid",
+    "per_user": 3532.277402848731,
+    "aggregate": 7064.554805697462,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   },
+   "fastest_gpu_b64": {
+    "design": "MiMo-V2.6-Flash/b200_sxm-x636-nvl72-hybrid",
+    "per_user": 2248.0853494172043,
+    "aggregate": 143877.46236270107,
+    "tensor_group": 72,
+    "parallelism": "hybrid",
+    "collective_algorithms": null
+   }
+  }
+ },
+ "named_designs": {
+  "deepseek_v41_array_x188": {
+   "study": "candidates/deepseek-v41-flash/n5_vs_b200",
+   "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188",
+   "per_user_b1": 15555.913964549894,
+   "per_user_b64": 12208.39019826817,
+   "aggregate_b64": 781336.9726891628,
+   "aggregate_max": 960930.0588582181,
+   "tensor_group_b1": 4,
+   "tensor_group_b64": 4,
+   "pipeline_stages_b1": 40,
+   "collective_algorithms_b1": null,
+   "collectives_per_layer_b1": null,
+   "budget": {
+    "area_split_per_device": {
+     "allocated_mm2": 815.0,
+     "compute_mm2": 328.9152095425532,
+     "fractions": {
+      "compute": 0.40357694422399165,
+      "hbm_phy": 0.06134969325153374,
+      "interconnect": 0.08,
+      "overhead": 0.1,
+      "rom": 0.3550733625244746,
+      "slack": 0.0,
+      "sram": 0.0
+     },
+     "hbm_phy_mm2": 50.0,
+     "interconnect_mm2": 65.2,
+     "overhead_mm2": 81.5,
+     "policy": "balanced: ROM sized to the stored weights, SRAM sized to the resident KV, graded fixed fractions for overhead and interconnect, compute takes the rest",
+     "reasons": [],
+     "rom_mm2": 289.3847904574468,
+     "slack_mm2": 0.0,
+     "sram_mm2": 0.0,
+     "total_mm2": 815.0
+    },
+    "compute_ops_s": {
+     "bf16": 4.204253142332979e+16,
+     "fp32": 2627658213958112.0,
+     "fp4": 1.6817012569331917e+17,
+     "fp8": 8.408506284665958e+16,
+     "w4a8": 1.1891423627074e+17
+    },
+    "cooling_limit_w": 76610.0,
+    "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188",
+    "emulated_formats": {},
+    "execution_format": "fp8",
+    "family": "rom",
+    "hbm_generation": "hbm3e",
+    "hbm_stacks": 5,
+    "kv_capacity_bytes": 19035000000000.0,
+    "kv_read_bytes_s": 846000000000000.0,
+    "kv_store": "hbm",
+    "model": "DeepSeek-V4.1-Flash",
+    "name": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-array-hw-hybrid-x188",
+    "native_formats": [
+     "bf16",
+     "fp32",
+     "fp4",
+     "fp8",
+     "w4a8"
+    ],
+    "node": "N5",
+    "provenance": "7763e5723b2b7779",
+    "published_reference": "",
+    "reasons": [],
+    "representation": "native",
+    "rom_bank_pooling": "striped",
+    "shared_memory_path": false,
+    "silicon_area_mm2_per_device": 815.0,
+    "silicon_area_mm2_total": 153220.0,
+    "sizing_rule": "smallest device count within 2% of the best per-user latency at batch 1, bounded at 4x the minimum feasible count. SRAM-KV designs are sized at batch 1 because SRAM is silicon area; HBM-KV designs are provisioned for batch 4096 for both KV capacity and enough KV bandwidth to keep KV off the critical path ahead of the ROM sweep, capped by the die-edge beachfront a shipping GPU achieves",
+    "spare_area_policy": "sram",
+    "static_power": {
+     "clock_frequency_hz": 1000000000.0,
+     "clock_w": 9092.986391216502,
+     "detail": {
+      "clock_w_per_device": 48.366948889449475,
+      "clock_w_per_mm2_of_array": 0.012750000000000001,
+      "clock_w_per_mm2_of_logic": 0.085,
+      "devices": 188.0,
+      "hbm_stacks_per_device": 5.0,
+      "leakage_w_per_device": 33.47579066861809,
+      "logic_mm2_per_device": 525.6152095425532,
+      "memory_interface_w_per_device": 14.0,
+      "rom_array_mm2_per_device": 289.3847904574468,
+      "rule": "static = max(leakage + clock + memory-interface idle, clocked-idle floor). The floor is a measured whole-device reading and the enumeration is a bottom-up estimate OF THE SAME PHYSICS, so they are combined with max and never added",
+      "sram_array_mm2_per_device": 0.0,
+      "static_w_per_mm2_of_logic": 0.14500000000000002,
+      "static_w_per_mm2_of_rom_array": 0.019450000000000002,
+      "static_w_per_mm2_of_sram_array": 0.017750000000000002,
+      "total_w_per_mm2": 0.11759845344548166,
+      "unallocated_mm2_per_device_charged_nothing": 0.0
+     },
+     "enumerated_w": 18018.4350369167,
+     "floor_binds": false,
+     "floor_w": 9400.0,
+     "leakage_w": 6293.4486457002,
+     "memory_interface_w": 2632.0,
+     "total_w": 18018.4350369167
+    },
+    "static_power_w": 18018.4350369167,
+    "stored_bits_per_parameter": 7.395449608695652,
+    "topology": {
+     "device_count": 188,
+     "inner_link": "rom_package_ucie",
+     "intra_domain_size": 4,
+     "intra_link": "rom_package_ucie",
+     "kind": "array",
+     "link": "rom_board_serdes",
+     "moe_fanout": 0,
+     "on_wafer_regions": 1,
+     "parallelism": "hybrid",
+     "pipeline_stages": 47,
+     "tensor_group": 4,
+     "tensor_group_size": 4
+    },
+    "weight_amortization": "batched",
+    "weight_capacity_bytes": 510286023000.0,
+    "weight_read_bytes_s": 1.4805752693489996e+16,
+    "weight_store": "rom"
+   }
+  },
+  "deepseek_v41_wafer_x12": {
+   "study": "candidates/deepseek-v41-flash/n5_vs_b200",
+   "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12",
+   "per_user_b1": 5652.612578270944,
+   "per_user_b64": 5157.877282536965,
+   "aggregate_b64": 330104.14608236577,
+   "aggregate_max": 4954942.548559812,
+   "tensor_group_b1": 57,
+   "tensor_group_b64": 57,
+   "pipeline_stages_b1": 12,
+   "collective_algorithms_b1": null,
+   "collectives_per_layer_b1": null,
+   "budget": {
+    "area_split_per_device": {
+     "allocated_mm2": 46225.0,
+     "compute_mm2": 32940.8049495,
+     "fractions": {
+      "compute": 0.7126188198918334,
+      "hbm_phy": 0.009302325581395349,
+      "interconnect": 0.08,
+      "overhead": 0.1,
+      "rom": 0.09807885452677122,
+      "slack": 0.0,
+      "sram": 0.0
+     },
+     "hbm_phy_mm2": 430.0,
+     "interconnect_mm2": 3698.0,
+     "overhead_mm2": 4622.5,
+     "policy": "balanced: ROM sized to the stored weights, SRAM sized to the resident KV, graded fixed fractions for overhead and interconnect, compute takes the rest",
+     "reasons": [],
+     "rom_mm2": 4533.6950504999995,
+     "slack_mm2": 0.0,
+     "sram_mm2": 0.0,
+     "total_mm2": 46225.0
+    },
+    "compute_ops_s": {
+     "bf16": 2.687586836751458e+17,
+     "fp32": 1.6797417729696612e+16,
+     "fp4": 1.0750347347005832e+18,
+     "fp8": 5.375173673502916e+17,
+     "w4a8": 7.601643509178633e+17
+    },
+    "cooling_limit_w": 277350.0,
+    "design": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12",
+    "emulated_formats": {},
+    "execution_format": "fp8",
+    "family": "rom",
+    "hbm_generation": "hbm3e",
+    "hbm_stacks": 43,
+    "kv_capacity_bytes": 10449000000000.0,
+    "kv_read_bytes_s": 464400000000000.0,
+    "kv_store": "hbm",
+    "model": "DeepSeek-V4.1-Flash",
+    "name": "DeepSeek-V4.1-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12",
+    "native_formats": [
+     "bf16",
+     "fp32",
+     "fp4",
+     "fp8",
+     "w4a8"
+    ],
+    "node": "N5",
+    "provenance": "da54cf40cddc9de7",
+    "published_reference": "",
+    "reasons": [],
+    "representation": "native",
+    "rom_bank_pooling": "striped",
+    "shared_memory_path": false,
+    "silicon_area_mm2_per_device": 46225.0,
+    "silicon_area_mm2_total": 554700.0,
+    "sizing_rule": "area-ladder point: this device count is not the sizing sweep's choice, it is emitted so the iso-area curve is sampled at the same silicon areas on both sides",
+    "spare_area_policy": "sram",
+    "static_power": {
+     "clock_frequency_hz": 1000000000.0,
+     "clock_w": 43218.786391216505,
+     "detail": {
+      "clock_w_per_device": 3601.5655326013753,
+      "clock_w_per_mm2_of_array": 0.012750000000000001,
+      "clock_w_per_mm2_of_logic": 0.085,
+      "devices": 12.0,
+      "hbm_stacks_per_device": 43.0,
+      "leakage_w_per_device": 2531.85405380835,
+      "logic_mm2_per_device": 41691.3049495,
+      "memory_interface_w_per_device": 120.39999999999999,
+      "rom_array_mm2_per_device": 4533.6950504999995,
+      "rule": "static = max(leakage + clock + memory-interface idle, clocked-idle floor). The floor is a measured whole-device reading and the enumeration is a bottom-up estimate OF THE SAME PHYSICS, so they are combined with max and never added",
+      "sram_array_mm2_per_device": 0.0,
+      "static_w_per_mm2_of_logic": 0.14500000000000002,
+      "static_w_per_mm2_of_rom_array": 0.019450000000000002,
+      "static_w_per_mm2_of_sram_array": 0.017750000000000002,
+      "total_w_per_mm2": 0.13529085097695456,
+      "unallocated_mm2_per_device_charged_nothing": 0.0
+     },
+     "enumerated_w": 75045.8350369167,
+     "floor_binds": false,
+     "floor_w": 600.0,
+     "leakage_w": 30382.248645700198,
+     "memory_interface_w": 1444.8,
+     "total_w": 75045.8350369167
+    },
+    "static_power_w": 75045.8350369167,
+    "stored_bits_per_parameter": 7.395449608695652,
+    "topology": {
+     "device_count": 12,
+     "inner_link": "on_wafer_n5",
+     "intra_domain_size": 57,
+     "intra_link": "on_wafer_n5",
+     "kind": "wafer",
+     "link": "rom_wafer_serdes",
+     "moe_fanout": 0,
+     "on_wafer_regions": 681,
+     "parallelism": "hybrid",
+     "pipeline_stages": 12,
+     "tensor_group": 57,
+     "tensor_group_size": 57
+    },
+    "weight_amortization": "batched",
+    "weight_capacity_bytes": 510286023000.0,
+    "weight_read_bytes_s": 1.4805752693489996e+16,
+    "weight_store": "rom"
+   }
+  }
+ },
+ "hc1_llama31_8b": {
+  "per_user_b1": 24675.184682548883,
+  "published": 16960.0,
+  "ratio_to_published": 1.4549047572257596
+ },
+ "qwen3_8b_single_reticle": {
+  "per_user_b1": 24222.347394485583
+ }
+}

@@ -1,0 +1,118 @@
+{
+ "schema": "opentallas.v41.w18_clock_balance.v1",
+ "orfs_dir": "/home/ubuntu/w18work/karb22/pregionh/orfs",
+ "cts_args": "-sink_clustering_enable -repair_clock_nets -macro_clustering_size 1 -macro_clustering_max_diameter 20",
+ "tolerance_ps": 100.0,
+ "corners": {
+  "ss": {
+   "parent_registers": 7573,
+   "parent_arrival_ps": {
+    "min": 560.8,
+    "median": 584.8,
+    "max": 604.2
+   },
+   "macros": [
+    {
+     "pin": "g_s[0].g_h.u_s/clk",
+     "arrival_ps": 452.2,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 232.7,
+      "min_clock_tree_path": 210.4
+     },
+     "internal_sink_ps": 684.9,
+     "skew_vs_parent_median_ps": 100.1
+    },
+    {
+     "pin": "g_s[1].g_h.u_s/clk",
+     "arrival_ps": 358.0,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 232.7,
+      "min_clock_tree_path": 210.4
+     },
+     "internal_sink_ps": 590.7,
+     "skew_vs_parent_median_ps": 5.9
+    },
+    {
+     "pin": "g_s[2].g_h.u_s/clk",
+     "arrival_ps": 356.5,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 232.7,
+      "min_clock_tree_path": 210.4
+     },
+     "internal_sink_ps": 589.2,
+     "skew_vs_parent_median_ps": 4.4
+    },
+    {
+     "pin": "g_s[3].g_h.u_s/clk",
+     "arrival_ps": 388.0,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 232.7,
+      "min_clock_tree_path": 210.4
+     },
+     "internal_sink_ps": 620.7,
+     "skew_vs_parent_median_ps": 35.9
+    }
+   ],
+   "worst_macro_skew_ps": 100.1,
+   "balanced": false
+  },
+  "ff": {
+   "parent_registers": 7573,
+   "parent_arrival_ps": {
+    "min": 338.0,
+    "median": 357.7,
+    "max": 377.6
+   },
+   "macros": [
+    {
+     "pin": "g_s[0].g_h.u_s/clk",
+     "arrival_ps": 320.7,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 137.3,
+      "min_clock_tree_path": 120.0
+     },
+     "internal_sink_ps": 458.0,
+     "skew_vs_parent_median_ps": 100.3
+    },
+    {
+     "pin": "g_s[1].g_h.u_s/clk",
+     "arrival_ps": 228.0,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 137.3,
+      "min_clock_tree_path": 120.0
+     },
+     "internal_sink_ps": 365.3,
+     "skew_vs_parent_median_ps": 7.6
+    },
+    {
+     "pin": "g_s[2].g_h.u_s/clk",
+     "arrival_ps": 227.7,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 137.3,
+      "min_clock_tree_path": 120.0
+     },
+     "internal_sink_ps": 365.0,
+     "skew_vs_parent_median_ps": 7.3
+    },
+    {
+     "pin": "g_s[3].g_h.u_s/clk",
+     "arrival_ps": 257.7,
+     "etm_insertion_ps": {
+      "max_clock_tree_path": 137.3,
+      "min_clock_tree_path": 120.0
+     },
+     "internal_sink_ps": 395.0,
+     "skew_vs_parent_median_ps": 37.3
+    }
+   ],
+   "worst_macro_skew_ps": 100.3,
+   "balanced": false
+  }
+ },
+ "macro_views": {
+  "ot_chip_v41x_karb_pslice": {
+   "lef_sha256": "10b27a90ac619f852f322057a1a120b0282e46cd38c97e6f37389bdde359aacf"
+  }
+ },
+ "tool_sha256": "4e36e46a2e52ecf1e9b7684df7a76bcbd3f80c8977c571cd6033906f41f86e4b"
+}

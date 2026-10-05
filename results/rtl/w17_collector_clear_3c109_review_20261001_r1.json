@@ -1,0 +1,20 @@
+{
+  "owner_commit": "3c109848ccb97a11d1caf48cf23be9c99f20c3e7",
+  "gate_tool_sha256": "99f3ae734c95f0204f78b7f10f20c9e9e356e6b53a288b4e14c45bc08950a930",
+  "companion_sha256": "178194b789c82b7731383447539097492c43c67646d927e3bc9a6c2893499cf6",
+  "owner_7_cases_independently_replayed": true,
+  "source_pin_count": 7,
+  "local_priority_verdict": "PASS_LOCAL_CONTROL",
+  "delayed_old_response_verdict": "FAIL_DELAYED_OLD_RESPONSE_NOT_BLOCKED",
+  "delayed_case": {
+    "bench_path": "results/rtl/w17_collector_clear_delayed_old_20261001_r1.sv",
+    "bench_sha256": "0b5d18d28b3b67ca86702c7da98ccc6e1e594d89c21762b8e30ea41328d91221",
+    "compile_returncode": 0,
+    "run_returncode": 1,
+    "log": "DELAYED_OBSERVATION fault=0 code=0 count=1 present16=1 remote_stats=1\nFATAL: /tmp/claude-1000/wt/w17-persistent-runtime-r1/results/rtl/w17_collector_clear_delayed_old_20261001_r1.sv:19: delayed old response mutated new collector state\n       Time: 2120000 Scope: tb\n",
+    "compile_log": "/tmp/w17-independent-clear-_dt_1_20/s0.sv:261: warning: Port 10 (w_rows) of ot_chip_v41x_ckv_stream_merge expects 16896 bits, got 1.\n/tmp/w17-independent-clear-_dt_1_20/s0.sv:261:        : Padding 16895 high bits of the port.\n"
+  },
+  "scope": "Localclear+sameedge pass; delayed oldpeer arrives onecycleafternewsel usingactualexternal RX ports. No forces, RTLchanges, epoch tags or fulltoken claims.",
+  "hardware_admission": false,
+  "adopt": false
+}

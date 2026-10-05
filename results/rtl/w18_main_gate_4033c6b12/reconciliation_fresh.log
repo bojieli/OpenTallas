@@ -1,0 +1,10 @@
+exhaustive KARB_HASH n=131072 got=131072 pipe_got=131072 bad=0 multi=0 ingress_stalls=0
+PASS
+small_control KARB_HASH n=128 got=128 pipe_got=128 bad=0 multi=0 ingress_stalls=0
+PASS
+wrong_tag KARB_HASH n=128 got=128 pipe_got=128 bad=128 multi=0 ingress_stalls=0
+FAIL
+duplicate KARB_HASH n=128 got=128 pipe_got=128 bad=128 multi=0 ingress_stalls=0
+FAIL
+missing_pc0 KARB_HASH n=128 got=128 pipe_got=124 bad=4 multi=0 ingress_stalls=0
+FAIL

@@ -1,0 +1,69 @@
+{
+  "historical_models_overwritten": false,
+  "records": {
+    "TP96": {
+      "model_record_refs": {
+        "full_PC_collective_component.json.gz": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/tp96_literal_collective_join_r1/final/full_PC_collective_component.json.gz",
+          "sha256": "1108a9183fabe403c80e19658ba40908b733199135c290d3d4127d7eecf50536"
+        },
+        "summary.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/tp96_literal_collective_join_r1/final/summary.json",
+          "sha256": "e9aad91f62956a9a42e83a811b558e3f250b3e338b830d6c665df83a33fcc6c2"
+        }
+      },
+      "successor_manifest": "TP96_portable_manifest.json"
+    },
+    "provider_V1": {
+      "model_record_refs": {
+        "Kepler_state_home_join.json.gz": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/Kepler_state_home_join.json.gz",
+          "sha256": "b1cc7ae1f052d7754b043de9ca2053a52e5f4e413bd612e737d402e8ae0ced23"
+        },
+        "MTP_source_contract_audit.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/MTP_source_contract_audit.json",
+          "sha256": "1cc24d118fa487398552d7bcc2e8fe9df85837f13d8d06a3a3d84d212adf15ad"
+        },
+        "V1_native_component_successor.json.gz": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/V1_native_component_successor.json.gz",
+          "sha256": "c4407012d640966413431c48e9c8d6eac86a583ec32d157a6999ea562107f10c"
+        },
+        "V1_physical_capacity_join.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/V1_physical_capacity_join.json",
+          "sha256": "ad355bc51b06694f399cc53b7a40adc2753a77e98288b13ef653c07487b0e5dd"
+        },
+        "parent_receipt_join.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/parent_receipt_join.json",
+          "sha256": "037844313d84652eec91928f7e181effc7e7a21b5e56675663ddaf797d407014"
+        },
+        "summary.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/provider_v1_mtp_join_r4/final_physical/summary.json",
+          "sha256": "ce06333dbba0b4a1b3daa9ae5ab6ec062dcd7d41fcb8ff8a9e2a016dcfe25259"
+        }
+      },
+      "successor_manifest": "provider_V1_portable_manifest.json"
+    },
+    "r33": {
+      "model_record_refs": {
+        "all_PC_native_component_successor.json.gz": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/all_PC_native_component_successor.json.gz",
+          "sha256": "a81785c3557c42da8f198baeb0a986ddc5669a9bd2a037e86129aabf7706840b"
+        },
+        "initial_LOAD_boundary_reservations.json.gz": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/initial_LOAD_boundary_reservations.json.gz",
+          "sha256": "e4e04bf6a9d7d19e06b7c5a93cfa6e42e91485a5358b93b1f45483dca12ed401"
+        },
+        "once_reprice_receipt.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/once_reprice_receipt.json",
+          "sha256": "835d77172c8120aee14fc04090569d4dc21c514c0725eaca1db0f9a1abed9c15"
+        },
+        "summary.json": {
+          "canonical_record_path": "results/uarch/h3_complete_native_calendar_20261002/ds_r33_once_reprice_r1/model/summary.json",
+          "sha256": "970c4b68a88c879ae780d3c842c9225109fdc19b8323ce83ce7050a097e4a279"
+        }
+      },
+      "successor_manifest": "r33_portable_manifest.json"
+    }
+  },
+  "schema": "H4_PORTABLE_UNCHANGED_MODEL_REFERENCE_V1"
+}

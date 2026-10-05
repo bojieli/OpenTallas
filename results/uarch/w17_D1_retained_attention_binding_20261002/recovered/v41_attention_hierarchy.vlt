@@ -1,0 +1,7 @@
+`verilator_config
+// Simulation compilation boundaries only. No RTL arithmetic/scheduling edits.
+hier_block -module "ot_hdc_v41x_attn_tile"
+hier_block -module "ot_hdc_v41x_attn_merge"
+hier_block -module "ot_hdc_fmul"
+hier_block -module "ot_hdc_qadd"
+hier_block -module "ot_hdc_v41x_attn_staging"

@@ -1,0 +1,56 @@
+{
+ "claim_boundary": "real ASAP7 channel strip: fixed register stations, repair_design + GRT + repair_timing, STA on global-route parasitics, ideal regional clock; no detailed route, no neighbouring-cluster M8/M9 capacity",
+ "die_um": [
+  3904.0,
+  136.08
+ ],
+ "errors": [],
+ "flop": "DFFHQNx2_ASAP7_75t_R",
+ "git_commit": "903021f692cdb805721fd68594c43aece1701ef7",
+ "groups": [
+  {
+   "chains": 500,
+   "failing_segments": 0,
+   "segments": 2000,
+   "spacing_mm": 0.9,
+   "stations": 4,
+   "worst_hold_slack_ps": 404.8797,
+   "worst_setup_slack_ps": 150.07457
+  },
+  {
+   "chains": 500,
+   "failing_segments": 10,
+   "segments": 1500,
+   "spacing_mm": 1.118,
+   "stations": 3,
+   "worst_hold_slack_ps": 529.081665,
+   "worst_setup_slack_ps": -27.194136
+  },
+  {
+   "chains": 500,
+   "failing_segments": 280,
+   "segments": 1500,
+   "spacing_mm": 1.26,
+   "stations": 3,
+   "worst_hold_slack_ps": 547.955505,
+   "worst_setup_slack_ps": -121.87912
+  }
+ ],
+ "grt_overflow": 0,
+ "grt_usage_pct": 30.06,
+ "layer_adjustment": 0.25,
+ "length_mm": 3.9,
+ "peak_rss_mb": 11265,
+ "period_ps": 920.0,
+ "placement_rc_layer": "M5",
+ "repair_buffers_inserted": [
+  45084
+ ],
+ "schema": "opentallas.v41.die_corridor.v1",
+ "signal_layers": "M4-M9",
+ "status": "routed_timed_grt_parasitics",
+ "tool_sha256": "1a7a46e745079daef84f72ddcb990b2bc6ce9245e3d5b41158c583fb5411dc4e",
+ "uncertainty_ps": 60.0,
+ "width_um": 136.0,
+ "wires": 1500
+}

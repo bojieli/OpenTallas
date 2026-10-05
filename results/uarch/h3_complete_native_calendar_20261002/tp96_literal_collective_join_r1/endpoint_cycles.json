@@ -1,0 +1,20 @@
+{
+  "basis": {
+    "admit_visible_ACK_reverse": "explicit provisional service reservations; provider implementation/calibration UNKNOWN",
+    "consumer_record": "explicit conservative one literal64B record per endpoint service cycle",
+    "gather_word_route": "ceil(observed normal expert8235/5)=1647; sampled normal aggregate, NOT proven per-word or stalled bound",
+    "reduce_word_route": "ceil(retained preflight463462/512)=906; positive provisional route envelope"
+  },
+  "clock_domain": "separate endpoint service cycles, no native software tick conversion",
+  "cycles": {
+    "admit": 2,
+    "consumer_record": 1,
+    "gather_word_route": 1647,
+    "reduce_word_route": 906,
+    "reverse": 2,
+    "visible_ACK": 2
+  },
+  "hardware_admitted": false,
+  "schema": "H4_EXPLICIT_PROVISIONAL_TP96_WORD_CYCLES_V1",
+  "worst_case_bound_proven": false
+}

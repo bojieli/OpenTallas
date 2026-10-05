@@ -1,0 +1,63 @@
+{
+  "actual_DUT_trace_available": false,
+  "adoption": false,
+  "consumer_model_revision": "1c8df3b0f34a8726ec139e4177c0d6e7d98db5d8",
+  "export": {
+    "artifact_files": 38,
+    "bundle_bytes": 1723050,
+    "command": "python3 tools/w19_qwen_hbm_consumer_adapter.py export --enable --bundle /tmp/w19-qwen-consumer-adapter-20261001",
+    "explicit_process_RC": 0,
+    "manifest_sha256": "e2d0d23c80bd158c97790df6b2aa1793a0f07f96f3ac57d03c02a76fb3125b4d",
+    "mapping_entries": 6144,
+    "tool_completion_chunk": "27eb53"
+  },
+  "full_token": false,
+  "full_token_cycles": null,
+  "missing_explicit_child_RC_cases": 61,
+  "negative_probe": {
+    "failures": [
+      {
+        "explicit_process_RC": 1,
+        "fault": "bitflip",
+        "receipt": "results/rtl/w19_qwen_hbm_consumer_adapter/bitflip_failure.json",
+        "sha256": "77959c239330054395847fd3740d8b892ed59782f6729352f3757188bb34a6ef"
+      },
+      {
+        "explicit_process_RC": 1,
+        "fault": "drop",
+        "receipt": "results/rtl/w19_qwen_hbm_consumer_adapter/drop_failure.json",
+        "sha256": "6768aa6f4047ae792cb6de7a7dbce1c2053506044a8dd9290814a143064ac2a2"
+      },
+      {
+        "explicit_process_RC": 1,
+        "fault": "duplicate",
+        "receipt": "results/rtl/w19_qwen_hbm_consumer_adapter/duplicate_failure.json",
+        "sha256": "c6e2cdb5e6901ff310a1f2aee55bbc171d879ea2b0c307bb707234e824001aa6"
+      },
+      {
+        "explicit_process_RC": 1,
+        "fault": "stale-die",
+        "receipt": "results/rtl/w19_qwen_hbm_consumer_adapter/stale-die_failure.json",
+        "sha256": "5186459a15fe19b167ed0070a2531f30d30228a21659424d09b8871511c64a6f"
+      }
+    ],
+    "purpose": "Single oracle word tests checker rejection ONLY; no numerical DUT substitute or passing RTL trace",
+    "synthetic": true
+  },
+  "next_owner_gate": "Feed actual GPU producer/L2 read acceptance into raw_qkv boundary, then realRTL rstd/QK chunk8norm/RoPE/BF16Q/FP8KV. Emit accepted outputs with cycle/identity/fault into exact checker; attach explicit childRC, DUTsource/binary/trace pins and sharedHBMcommit/readback. No expectedintermediate feed and no host epilogue.",
+  "preflight_sha256": "cfeb2290c008dfef8b78b769b9733b8915d868ac7e09fabf33d33089e0156249",
+  "remaining_token_exit": "PhysicalNC16 all32SM/die, shared36clientHBM/L2/NoC/barrier and3:4CDC, numerical vector/KV/attention/SFU/residual andgoldenorderedTP O/down, all36layers/head full151936vocabulary and18bitargmax to reference50994; connected cycles backtomodel, measuredgain>=1%, contextualSS/FF60/25ps andhubrouting beforeadoption.",
+  "schema": "opentallas.w19-qwen-consumer-adapter-validation.v1",
+  "shared_service_pass": false,
+  "source_commit": "bda0148b8f61fde80960dde8a3d7548fae0cb52a",
+  "source_sha256": "c2f14afc718899378e534460952f69d23b0771a0ba5faa1ad70ccd359a3d748f",
+  "status": "adapter_tests_and_export_pass",
+  "strict_explicit_child_RC": false,
+  "test": {
+    "cases": 13,
+    "command": "python3 -m pytest -q tests/test_w19_qwen_hbm_consumer_adapter.py",
+    "explicit_process_RC": 0,
+    "tool_completion_chunk": "a1133e"
+  },
+  "vector_KV_RTL_pass": false
+}

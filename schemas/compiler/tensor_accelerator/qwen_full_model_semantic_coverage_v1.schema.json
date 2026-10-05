@@ -1,0 +1,154 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_semantic_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {"$ref": "#/$defs/sha256"},
+        "command_abi": {
+          "additionalProperties": false,
+          "properties": {
+            "major": {"const": 2},
+            "minor": {"const": 5}
+          },
+          "required": ["major", "minor"],
+          "type": "object"
+        },
+        "external_hbm_at_130nm_boundary": {"const": true},
+        "max_resources_per_transaction": {"const": 64}
+      },
+      "required": ["capability_id", "command_abi", "external_hbm_at_130nm_boundary", "max_resources_per_transaction"],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "complete_graph_operation_coverage": {"const": true},
+        "complete_graph_state_contract_coverage": {"const": true},
+        "complete_neutral_kernel_lowering": {"const": true},
+        "full_model_execution": {"const": false},
+        "physical_plan": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": ["complete_graph_operation_coverage", "complete_graph_state_contract_coverage", "complete_neutral_kernel_lowering", "full_model_execution", "physical_plan", "timing_or_performance"],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "kernel_count": {"const": 617},
+    "model_id": {"const": "qwen3-8b"},
+    "numeric_profile": {"const": "qwen3_bf16_gqa_target_v1"},
+    "operation_count": {"const": 617},
+    "operation_ids_sha256": {"$ref": "#/$defs/sha256"},
+    "operator_families": {
+      "items": {"$ref": "#/$defs/operator_family"},
+      "maxItems": 10,
+      "minItems": 10,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "qualification_evidence": {
+      "items": {"$ref": "#/$defs/qualification"},
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_semantic_coverage.v1"},
+    "state_coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "commit_effect_count": {"const": 36},
+        "prepare_effect_count": {"const": 36},
+        "read_committed_effect_count": {"const": 36},
+        "read_prepared_effect_count": {"const": 36},
+        "resource_count": {"const": 36},
+        "resource_ids_sha256": {"$ref": "#/$defs/sha256"},
+        "terminal_commit_operation_id": {"const": "state.commit"}
+      },
+      "required": ["commit_effect_count", "prepare_effect_count", "read_committed_effect_count", "read_prepared_effect_count", "resource_count", "resource_ids_sha256", "terminal_commit_operation_id"],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "tensor_coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_count": {"const": 652},
+        "checkpoint_bound_weight_count": {"const": 399},
+        "input_count": {"const": 1},
+        "output_count": {"const": 1},
+        "tensor_count": {"const": 1053},
+        "weight_count": {"const": 399}
+      },
+      "required": ["activation_count", "checkpoint_bound_weight_count", "input_count", "output_count", "tensor_count", "weight_count"],
+      "type": "object"
+    },
+    "unknown_operation_count": {"const": 0},
+    "unknown_operations": {
+      "items": false,
+      "maxItems": 0,
+      "type": "array"
+    }
+  },
+  "required": ["capability", "checkpoint_lock_id", "claim_boundary", "graph_id", "kernel_count", "model_id", "numeric_profile", "operation_count", "operation_ids_sha256", "operator_families", "qualification_evidence", "report_id", "schema", "state_coverage", "status", "tensor_coverage", "unknown_operation_count", "unknown_operations"],
+  "title": "OpenTallas Qwen3-8B complete semantic coverage v1",
+  "type": "object",
+  "$defs": {
+    "contract": {
+      "enum": [
+        "bf16_add_rne_v1",
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "bf16_byte_preserving_state_v1",
+        "bf16_payload_lookup_v1",
+        "exact_index_select_v1",
+        "qwen3_gqa_fp32_softmax_bf16_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1",
+        "qwen3_silu_mul_bf16_v1"
+      ]
+    },
+    "operator_family": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": ["ADD", "ATTENTION", "EMBEDDING_LOOKUP", "KV_PREPARE", "LAST_TOKEN_SELECT", "MATMUL", "RMS_NORM", "ROPE", "SILU_MUL", "STATE_COMMIT"]
+        },
+        "numeric_contract": {"$ref": "#/$defs/contract"},
+        "operation_count": {"minimum": 1, "type": "integer"},
+        "qualification_report_ids": {
+          "items": {"$ref": "#/$defs/sha256"},
+          "maxItems": 3,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "status": {"const": "covered"}
+      },
+      "required": ["kind", "numeric_contract", "operation_count", "qualification_report_ids", "status"],
+      "type": "object"
+    },
+    "qualification": {
+      "additionalProperties": false,
+      "properties": {
+        "covered_numeric_contracts": {
+          "items": {"$ref": "#/$defs/contract"},
+          "maxItems": 5,
+          "minItems": 2,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "role": {"enum": ["attention", "final_output", "layer", "qkv"]},
+        "schema": {"minLength": 1, "type": "string"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["covered_numeric_contracts", "payload_sha256", "report_id", "role", "schema", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

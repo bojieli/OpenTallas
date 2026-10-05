@@ -1,0 +1,17 @@
+{
+  "status": "PASS_PARENT_COLD_SOURCE_REQUEST_ONLY_REPLAY",
+  "source_commits": [
+    "19a4a932e9b54fbac4d098d24660f1dffc25d143",
+    "4ebac8163c88de0aa2a88f8f6e16681e6d37c965"
+  ],
+  "tests": 16,
+  "archive_files_verified": 21,
+  "numerical_rank_X_exact": 4,
+  "cumulative_cycles": 4676,
+  "L0_body_cycles": 4669,
+  "strict_return_gate": "FAIL_CORRUPTED_CONCURRENT_FPRINTF_RECORDS_PRESERVED",
+  "source_request_gate": "PASS_LIMITED_SOURCE_REQUEST_ONLY",
+  "physical_service_ownership_ACK_release": "UNKNOWN_NOT_QUALIFIED",
+  "physical_adoption": false,
+  "replay_receipt_sha256": "9dd6dac2242ab6c02bb0ab1efeeff7cef1e49be9e24e3b3b214ef91bf9343384"
+}

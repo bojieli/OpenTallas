@@ -1,0 +1,19 @@
+{
+  "actual_HDL_equivalence": false,
+  "actual_source_accepted_timing": false,
+  "artifact_pins_verified": 12,
+  "focused_tests_passed": 12,
+  "full_geometry_cases": 37,
+  "mutant_differences": {
+    "early_done": "FENCE_DIFF",
+    "reverse_tie": "SELECTION_DIFF",
+    "threshold_off_by_one": "SELECTION_DIFF"
+  },
+  "ninecall_increment_cycles": 3312,
+  "physical_admission": false,
+  "schema": "opentallas.parent.ds-fullselector-source-proof-review.v1",
+  "scope": "Independent IEEE ranking versus source-modeled radix/balanced filter and formed-write/drain event algebra; normalized proof indices do not establish hardware cycles",
+  "service_extra_cycles": 142,
+  "station_mapping_gap": "476180 new HB2xp67 cells excluded from automatic mapping by pinned ASAP7 policy; explicit source-bound allowed realization or retained mapping required",
+  "transport_extra_cycles": 226
+}

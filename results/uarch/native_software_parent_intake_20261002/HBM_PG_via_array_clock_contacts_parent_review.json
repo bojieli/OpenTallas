@@ -1,0 +1,39 @@
+{
+  "SS_FF_qualified": false,
+  "actual_DRC_or_IR_EM_qualified": false,
+  "artifact_entries_verified": 26,
+  "cold_model_byteidentical": true,
+  "focused_tests_PASS": 9,
+  "hardware_admitted": false,
+  "installed_PDN": false,
+  "model_sha256": "c95fb3661dfe2b9e812b92edb0be9cd90afd4d692e439615441b29b94e05df89",
+  "models": {
+    "DeepSeek": {
+      "macro_contacts": 4416,
+      "maximum_passive_last_leg_with_escape_um": 206.00081761006913,
+      "optin_M8_spacing_all_cut_capacity_fits": true,
+      "optin_M8_spacing_max_tracks_lost_per_cut": 417
+    },
+    "Qwen": {
+      "macro_contacts": 4160,
+      "maximum_passive_last_leg_with_escape_um": 206.0008176100746,
+      "optin_M8_spacing_all_cut_capacity_fits": true,
+      "optin_M8_spacing_max_tracks_lost_per_cut": 353
+    }
+  },
+  "owner_commit": "b705ebf00",
+  "remaining": [
+    "implement exact selected PG array constraints; unconstrained PDN auto arrays are not admitted",
+    "bind widened2.088um top-ring footprint to actual complete parent core boundary",
+    "clock branch and source slew enforcement; balanced source clock/FF hold",
+    "actual matrix/L2 owner connection and cache reservation exclusion",
+    "finite production-port contender/ACK/consumer/reverse bounds and whole-program composition"
+  ],
+  "ring_footprint_um": 2.088,
+  "ring_growth_um": 0.404,
+  "schema": "parent-HBM-PG-array-clock-contact-review-v1",
+  "selected_M8_spacing_um": 0.5,
+  "source_array_and_distributed_cut_screen": true,
+  "source_entries_verified": 2,
+  "source_geometry_pass": false
+}

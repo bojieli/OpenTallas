@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.w19.hc-nonlinear.intake-failure.v1",
+  "time": "2026-10-01T12:09:30.547004+00:00",
+  "source_commit": "8363a0e74",
+  "exit_code": 1,
+  "error": "KeyError: 'hc_mult'",
+  "reason": "release config has nested text_config; initial parser assumed flat",
+  "numerical_fixtures_executed": 0,
+  "GPU_campaign_launched": false,
+  "status": "INTAKE_ERROR_NOT_NUMERICAL_VERDICT",
+  "preservation": "run1 retained unchanged; corrected source uses distinct run2"
+}

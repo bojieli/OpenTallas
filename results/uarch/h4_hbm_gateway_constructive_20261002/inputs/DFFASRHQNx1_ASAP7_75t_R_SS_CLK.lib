@@ -1,0 +1,304 @@
+    pin (CLK) {
+      driver_waveform_fall : "PreDriver20.5:fall";
+      driver_waveform_rise : "PreDriver20.5:rise";
+      clock : true;
+      direction : input;
+      input_signal_level : VDD;
+      related_ground_pin : VSS;
+      related_power_pin : VDD;
+      max_transition : 320;
+      capacitance : 0.433982;
+      rise_capacitance : 0.433982;
+      rise_capacitance_range (0.303959, 0.433982);
+      fall_capacitance : 0.433396;
+      fall_capacitance_range (0.301568, 0.433396);
+      input_voltage : default_VDD_VSS_input;
+      timing () {
+        related_pin : "CLK";
+        sdf_cond : "adacond7";
+        timing_type : min_pulse_width;
+        when : "(D * RESETN * SETN)";
+        rise_constraint (mpw_constraint_template_7x7) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "60.3056, 60.3056, 60.3056, 62.9425, 80.5664, 161.133, 321.045" \
+          );
+        }
+        fall_constraint (mpw_constraint_template_7x7) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "42.9535, 42.9535, 42.9535, 50.354, 80.5664, 161.133, 321.045" \
+          );
+        }
+      }
+      timing () {
+        related_pin : "CLK";
+        sdf_cond : "adacond8";
+        timing_type : min_pulse_width;
+        when : "(!D * RESETN * SETN)";
+        rise_constraint (mpw_constraint_template_7x7) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "47.8935, 47.8935, 50.354, 50.354, 80.5664, 161.133, 321.045" \
+          );
+        }
+        fall_constraint (mpw_constraint_template_7x7) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "46.8442, 44.4245, 46.6537, 50.354, 80.5664, 161.133, 321.045" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * RESETN * SETN * QN)";
+        related_pg_pin : VDD;
+        rise_power (scalar) {
+          values ( \
+            "0" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.435285, 0.433354, 0.430365, 0.42672, 0.427264, 0.436249, 0.463945" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * RESETN * SETN * QN)";
+        related_pg_pin : VSS;
+        rise_power (scalar) {
+          values ( \
+            "0" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.351319, 0.34903, 0.346232, 0.342413, 0.343082, 0.351769, 0.378997" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * RESETN * !QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.210168, 0.208752, 0.206616, 0.203381, 0.2035, 0.209902, 0.231115" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.28949, 0.287665, 0.284739, 0.281752, 0.282431, 0.290435, 0.313329" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * RESETN * !QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.282624, 0.280937, 0.278994, 0.275721, 0.27566, 0.282204, 0.303356" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.218669, 0.216693, 0.213955, 0.21066, 0.211423, 0.219266, 0.24199" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * !RESETN * SETN * QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.36561, 0.364605, 0.362072, 0.358906, 0.358577, 0.365606, 0.390537" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.421149, 0.419357, 0.416285, 0.412574, 0.413313, 0.422593, 0.450354" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * !RESETN * SETN * QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.455009, 0.453873, 0.451143, 0.448131, 0.447785, 0.454803, 0.47986" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.334217, 0.332113, 0.329392, 0.325457, 0.326158, 0.335443, 0.362918" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * !RESETN * !SETN * !QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.266658, 0.265058, 0.262991, 0.258934, 0.259167, 0.266552, 0.29119" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.334336, 0.332574, 0.329541, 0.326106, 0.327272, 0.336967, 0.364526" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(D * !RESETN * !SETN * !QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.325653, 0.324185, 0.322254, 0.318436, 0.318269, 0.325889, 0.350695" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.277086, 0.275318, 0.272391, 0.268929, 0.270052, 0.279722, 0.307191" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * SETN * QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.208632, 0.206969, 0.204689, 0.201508, 0.201603, 0.207897, 0.229286" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.298063, 0.296168, 0.293627, 0.290562, 0.291106, 0.298612, 0.321319" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * SETN * QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.280658, 0.279145, 0.276853, 0.273761, 0.27366, 0.280131, 0.301743" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.225944, 0.224068, 0.221651, 0.218533, 0.219076, 0.226532, 0.249107" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * RESETN * SETN * !QN)";
+        related_pg_pin : VDD;
+        rise_power (scalar) {
+          values ( \
+            "0" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.507575, 0.505714, 0.502612, 0.499844, 0.50039, 0.50803, 0.530179" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * RESETN * SETN * !QN)";
+        related_pg_pin : VSS;
+        rise_power (scalar) {
+          values ( \
+            "0" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.431478, 0.429018, 0.426655, 0.423608, 0.424357, 0.432008, 0.454319" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * RESETN * !SETN * !QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.305741, 0.304186, 0.301507, 0.29801, 0.297093, 0.302801, 0.323196" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.386409, 0.384528, 0.381542, 0.379109, 0.381219, 0.391164, 0.416421" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * RESETN * !SETN * !QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.396143, 0.394549, 0.391833, 0.388438, 0.387483, 0.393066, 0.413326" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.296772, 0.294611, 0.292112, 0.289544, 0.291764, 0.301759, 0.327368" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * !RESETN * !SETN * !QN)";
+        related_pg_pin : VDD;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.212268, 0.210696, 0.208206, 0.204905, 0.205105, 0.211382, 0.233222" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.296527, 0.294675, 0.29197, 0.289029, 0.289529, 0.297034, 0.319615" \
+          );
+        }
+      }
+      internal_power () {
+        when : "(!D * !RESETN * !SETN * !QN)";
+        related_pg_pin : VSS;
+        rise_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.288632, 0.287466, 0.284814, 0.281566, 0.281651, 0.287907, 0.30993" \
+          );
+        }
+        fall_power (passive_power_template_7x1) {
+          index_1 ("5, 10, 20, 40, 80, 160, 320");
+          values ( \
+            "0.219905, 0.21828, 0.215744, 0.212443, 0.213101, 0.220593, 0.243164" \
+          );
+        }
+      }
+    }

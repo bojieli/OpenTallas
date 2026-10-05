@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.w10.frontend.qualification.terminal.v1",
+  "observed_at": "2026-10-01T08:29:33.490593+00:00",
+  "verdict": "REJECT_PHYSICAL_ADOPTION",
+  "physical_status": "ERROR_FLW_0024_PLACEMENT_DENSITY_EXCEEDS_1",
+  "source_commit": "465a1e205d6f5de00a0e353edcf8190466e9b273",
+  "source_clean": true,
+  "terminal_record": "results/physical_abi3/asap7/chip/v41_w10_elem/ss_route_failures/frontpar_r1.json",
+  "terminal_record_sha256": "e585f5b184a2de03241b66faf31dbd0497efb314878510004793cb984601f6c5",
+  "completed": "synthesis and floorplan only",
+  "pending_signoff": "SS setup and FF hold not reached; no routed layer qualification or measured timing/rate gain",
+  "default_off": true,
+  "retry_or_tuning": false,
+  "live_original_jobs": [
+    2897072,
+    2711389
+  ],
+  "previous_pending_handoff": "results/uarch/w10_frontend_handoff.json",
+  "rule": "failed lever rejected, no constraints relaxation or geometry/candidate retry",
+  "artifacts_sha256": {
+    "config.mk": "4dc3f7233468837b52bc5319bd78a85c060622f1be3a42c6a43949957b35e0e4",
+    "constraint.sdc": "99f5c2f37ee453a54e6003b88d91b881696c110281caa9d3db379d98f491cc1f",
+    "3_1_place_gp_skip_io.log": "f721a05e03b9d7d05e6d50951a965222bee262b6ee705a1701bb207b02394e69",
+    "io_constraints.tcl": "cbb453780127c41fd981ff7e0bf458247450b05a2b2e42de447e1cf223e84f0d",
+    "2_1_floorplan.json": "89d59bda3e2bd30c7b04e74c2a1d3fde684154dfcbc63a401dcdfbdb19231c6e"
+  }
+}

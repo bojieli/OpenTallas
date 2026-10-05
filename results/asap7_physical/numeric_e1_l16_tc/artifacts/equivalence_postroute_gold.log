@@ -1,0 +1,556 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/work/equivalence_postroute_gold.ys' --
+
+1. Executing Verilog-2005 frontend: /src/rtl/ot_numeric_dot.sv
+Parsing SystemVerilog input from `/src/rtl/ot_numeric_dot.sv' to AST representation.
+Generating RTLIL representation for module `\ot_numeric_dot'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \NUM_EXPERTS = 1
+Parameter \LANES = 16
+Parameter \ACT_W = 8
+Parameter \WEIGHT_W = 4
+Parameter \ACC_W = 32
+Parameter \REPORT_SATURATION_RISK = 1
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_numeric_dot'.
+Parameter \NUM_EXPERTS = 1
+Parameter \LANES = 16
+Parameter \ACT_W = 8
+Parameter \WEIGHT_W = 4
+Parameter \ACC_W = 32
+Parameter \REPORT_SATURATION_RISK = 1
+Generating RTLIL representation for module `$paramod$1468c6a1b219a0e13ce5d6f1297126efd6645872\ot_numeric_dot'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+Removing unused module `$paramod$1468c6a1b219a0e13ce5d6f1297126efd6645872\ot_numeric_dot'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 18 switch rules as full_case in process $proc$/src/rtl/ot_numeric_dot.sv:42$521 in module ot_numeric_dot.
+Marked 2 switch rules as full_case in process $proc$/src/rtl/ot_numeric_dot.sv:72$556 in module ot_numeric_dot.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 4 redundant assignments.
+Promoted 10 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~19 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+     1/20: $2\sat_comb[0:0]
+     2/20: $2\result_comb[31:0]
+     3/20: $1\sat_comb[0:0]
+     4/20: $1\result_comb[31:0]
+     5/20: $16\sum_comb[31:0]
+     6/20: $15\sum_comb[31:0]
+     7/20: $14\sum_comb[31:0]
+     8/20: $13\sum_comb[31:0]
+     9/20: $12\sum_comb[31:0]
+    10/20: $11\sum_comb[31:0]
+    11/20: $10\sum_comb[31:0]
+    12/20: $9\sum_comb[31:0]
+    13/20: $8\sum_comb[31:0]
+    14/20: $7\sum_comb[31:0]
+    15/20: $6\sum_comb[31:0]
+    16/20: $5\sum_comb[31:0]
+    17/20: $4\sum_comb[31:0]
+    18/20: $3\sum_comb[31:0]
+    19/20: $2\sum_comb[31:0]
+    20/20: $1\sum_comb[31:0]
+Creating decoders for process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+     1/4: $0\status[3:0]
+     2/4: $0\result[31:0]
+     3/4: $0\out_poison[0:0]
+     4/4: $0\out_valid[0:0]
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_numeric_dot.\a' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\e' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\l' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\sum_comb' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\w' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\product' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\max_acc' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\min_acc' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\sat_comb' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+No latch inferred for signal `\ot_numeric_dot.\result_comb' from process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_numeric_dot.\out_valid' using process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+  created $adff cell `$procdff$635' with positive edge clock and positive level reset.
+Creating register for signal `\ot_numeric_dot.\out_poison' using process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+  created $adff cell `$procdff$640' with positive edge clock and positive level reset.
+Creating register for signal `\ot_numeric_dot.\result' using process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+  created $adff cell `$procdff$645' with positive edge clock and positive level reset.
+Creating register for signal `\ot_numeric_dot.\status' using process `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+  created $adff cell `$procdff$650' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 18 empty switches in `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+Removing empty process `ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:42$521'.
+Found and cleaned up 1 empty switch in `\ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+Removing empty process `ot_numeric_dot.$proc$/src/rtl/ot_numeric_dot.sv:72$556'.
+Cleaned up 19 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+<suppressed ~8 debug messages>
+
+5. Executing MEMORY pass.
+
+5.1. Executing OPT_MEM pass (optimize memories).
+Performed a total of 0 transformations.
+
+5.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+Performed a total of 0 transformations.
+
+5.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+
+5.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+
+5.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+
+5.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+Removed 5 unused cells and 71 unused wires.
+<suppressed ~6 debug messages>
+
+5.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+
+5.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+Performed a total of 0 transformations.
+
+5.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+
+5.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+5.11. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6. Executing FLATTEN pass (flatten design).
+
+7. Executing ASYNC2SYNC pass.
+Replacing ot_numeric_dot.$procdff$635 ($adff): ARST=\rst_n, D=\in_valid, Q=\out_valid
+Replacing ot_numeric_dot.$procdff$645 ($adff): ARST=\rst_n, D=$0\result[31:0], Q=\result
+Replacing ot_numeric_dot.$procdff$650 ($adff): ARST=\rst_n, D=$0\status[3:0], Q=\status
+Replacing ot_numeric_dot.$procdff$640 ($adff): ARST=\rst_n, D=\in_poison, Q=\out_poison
+
+8. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+9. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+10. Executing TECHMAP pass (map to technology primitives).
+
+10.1. Executing Verilog-2005 frontend: /work/ff_to_nextstate.v
+Parsing Verilog input from `/work/ff_to_nextstate.v' to AST representation.
+Generating RTLIL representation for module `$dff'.
+Generating RTLIL representation for module `$_DFF_P_'.
+Generating RTLIL representation for module `$_DFF_N_'.
+Successfully finished Verilog frontend.
+
+10.2. Continuing TECHMAP pass.
+Using template $paramod$2c2abb5481009543a53234b1db6074526286df3e$dff for cells of type $dff.
+Using template $paramod$923dc6eba0f1d99e876930b467781b891a51c19e$dff for cells of type $dff.
+Using template $paramod$eb73da9fda5e92ddeddcf4207929431baa66a5ba$dff for cells of type $dff.
+No more expansions possible.
+<suppressed ~48 debug messages>
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+<suppressed ~1 debug messages>
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 67 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+11.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 2/2 on $mux $auto$ff.cc:614:unmap_srst$659.
+    dead port 2/2 on $mux $auto$ff.cc:614:unmap_srst$661.
+    dead port 2/2 on $mux $auto$ff.cc:614:unmap_srst$663.
+    dead port 2/2 on $mux $auto$ff.cc:614:unmap_srst$665.
+    dead port 1/2 on $mux $procmux$569.
+    dead port 1/2 on $mux $procmux$563.
+Removed 6 multiplexer ports.
+<suppressed ~53 debug messages>
+
+11.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+11.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 61 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+11.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+Removed 0 unused cells and 23 unused wires.
+<suppressed ~2 debug messages>
+
+11.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+11.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+11.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~47 debug messages>
+
+11.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+11.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 60 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+11.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+
+11.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+11.16. Finished fast OPT passes. (There is nothing left to do.)
+
+12. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+
+13. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module ot_numeric_dot.
+Found and expected 0 SCCs.
+
+14. Executing TECHMAP pass (map to technology primitives).
+
+14.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+14.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $mux.
+Running "alumacc" on wrapper $extern:wrap:$mul:Y_WIDTH=12:B_WIDTH=4:A_WIDTH=8:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$mul:Y_WIDTH=12:B_WIDTH=4:A_WIDTH=8:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$mul:Y_WIDTH=12:B_WIDTH=4:A_WIDTH=8:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$add:Y_WIDTH=32:B_WIDTH=32:A_WIDTH=32:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$add:Y_WIDTH=32:B_WIDTH=32:A_WIDTH=32:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$add:Y_WIDTH=32:B_WIDTH=32:A_WIDTH=32:B_SIGNED=0:A_SIGNED=0:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$gt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$gt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$gt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Running "alumacc" on wrapper $extern:wrap:$lt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using template $extern:wrap:$lt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47 for cells of type $extern:wrap:$lt:Y_WIDTH=1:B_WIDTH=32:A_WIDTH=32:B_SIGNED=1:A_SIGNED=1:394426c56d1a028ba8fdd5469b163e04011def47.
+Using extmapper simplemap for cells of type $xor.
+Using template $paramod$2653f68ddb8eab7b1907b4a20767b72a824a7a36\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $reduce_and.
+Using extmapper simplemap for cells of type $or.
+Using template $paramod$fbc7873bff55778c0b3173955b7e4bce1d9d6834\_90_alu for cells of type $alu.
+Using extmapper maccmap for cells of type $macc_v2.
+  add \activations [127:120] * \weights [63:60] (8x4 bits, signed)
+  add \activations [119:112] * \weights [59:56] (8x4 bits, signed)
+  add \activations [111:104] * \weights [55:52] (8x4 bits, signed)
+  add \activations [103:96] * \weights [51:48] (8x4 bits, signed)
+  add \activations [95:88] * \weights [47:44] (8x4 bits, signed)
+  add \activations [87:80] * \weights [43:40] (8x4 bits, signed)
+  add \activations [79:72] * \weights [39:36] (8x4 bits, signed)
+  add \activations [71:64] * \weights [35:32] (8x4 bits, signed)
+  add \activations [63:56] * \weights [31:28] (8x4 bits, signed)
+  add \activations [55:48] * \weights [27:24] (8x4 bits, signed)
+  add \activations [47:40] * \weights [23:20] (8x4 bits, signed)
+  add \activations [39:32] * \weights [19:16] (8x4 bits, signed)
+  add \activations [31:24] * \weights [15:12] (8x4 bits, signed)
+  add \activations [23:16] * \weights [11:8] (8x4 bits, signed)
+  add \activations [15:8] * \weights [7:4] (8x4 bits, signed)
+  add \activations [7:0] * \weights [3:0] (8x4 bits, signed)
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000001100 for cells of type $fa.
+Using template $paramod$ee3d784672cdb1cb32d9a801a3af776716f16b74\_90_alu for cells of type $alu.
+Using extmapper simplemap for cells of type $and.
+Using extmapper simplemap for cells of type $pos.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000001100 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~4485 debug messages>
+
+15. Executing OPT pass (performing simple optimizations).
+
+15.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+<suppressed ~4793 debug messages>
+
+15.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 8845 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8348 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8284 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8230 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8183 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8161 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8157 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8156 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 8155 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+<suppressed ~2070 debug messages>
+Removed a total of 690 cells.
+
+15.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+15.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+15.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 8155 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+15.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+Removed 887 unused cells and 2496 unused wires.
+<suppressed ~888 debug messages>
+
+15.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+<suppressed ~3 debug messages>
+
+15.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+15.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+15.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 7265 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Computing hashes of 7257 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+<suppressed ~24 debug messages>
+Removed a total of 8 cells.
+
+15.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+Removed 0 unused cells and 11 unused wires.
+<suppressed ~1 debug messages>
+
+15.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+15.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+15.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_numeric_dot..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+15.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_numeric_dot.
+Performed a total of 0 changes.
+
+15.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_numeric_dot'.
+Computing hashes of 7257 cells of `\ot_numeric_dot'.
+Finding duplicate cells in `\ot_numeric_dot'.
+Removed a total of 0 cells.
+
+15.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+15.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_numeric_dot..
+
+15.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_numeric_dot.
+
+15.23. Finished fast OPT passes. (There is nothing left to do.)
+
+16. Executing ABC pass (technology mapping using ABC).
+
+16.1. Extracting gate netlist of module `\ot_numeric_dot' to `<abc-temp-dir>/input.blif'..
+
+16.1.1. Executed ABC.
+Extracted 7257 gates and 7455 wires to a netlist network with 196 inputs and 36 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+16.1.2. Re-integrating ABC results.
+ABC RESULTS:               AND cells:     5345
+ABC RESULTS:               NOT cells:     5171
+ABC RESULTS:              ZERO cells:        1
+ABC RESULTS:        internal signals:     7223
+ABC RESULTS:           input signals:      196
+ABC RESULTS:          output signals:       36
+Removing temp directory.
+Removing global temp directory.
+Removed 0 unused cells and 2498 unused wires.
+
+17. Executing AIGMAP pass (map logic to AIG).
+Module ot_numeric_dot: replaced 0 cells with 0 new cells, skipped 10516 cells.
+  not replaced 2 cell types:
+    5345 $_AND_
+    5171 $_NOT_
+
+18. Executing CHECK pass (checking for obvious problems).
+Checking module ot_numeric_dot...
+Found and reported 0 problems.
+
+19. Executing SCC pass (detecting logic loops).
+Found 0 SCCs in module ot_numeric_dot.
+Found and expected 0 SCCs.
+
+20. Executing HIERARCHY pass (managing design hierarchy).
+
+20.1. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+
+20.2. Analyzing design hierarchy..
+Top module:  \ot_numeric_dot
+Removed 0 unused modules.
+
+21. Executing AIGER backend.
+Warning: Treating undriven bit ot_numeric_dot.\activations [120] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [121] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [122] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [123] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [124] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [125] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [126] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [127] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [63] like $anyseq.
+Warning: Treating a total of 12 undriven bits in ot_numeric_dot like $anyseq.
+
+22. Executing AIGER backend.
+Warning: Treating undriven bit ot_numeric_dot.\activations [120] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [121] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [122] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [123] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [124] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [125] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [126] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\activations [127] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [60] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [61] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [62] like $anyseq.
+Warning: Treating undriven bit ot_numeric_dot.\weights [63] like $anyseq.
+Warning: Treating a total of 12 undriven bits in ot_numeric_dot like $anyseq.
+
+Warnings: 13 unique messages, 26 total
+End of script. Logfile hash: cde35b37e3, time: 1.18s, user: 0.62s, system: 0.06s, MEM: 57.09 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 52% 1x abc (0 sec), 12% 12x opt_expr (0 sec), ...

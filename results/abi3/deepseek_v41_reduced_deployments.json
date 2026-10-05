@@ -1,0 +1,60 @@
+{
+  "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
+  "hbm_single_chip": {
+    "capability_digest": "2f41529361302f00ff44960595bdd577d4b5e6246fe158c3868093004b774ce7",
+    "checker_findings": 0,
+    "checker_ok": true,
+    "deployment_digest": "663db5450cd6a56236bff4c7fba4041297ebcbc3761a046d65f478729557c3d7",
+    "graph_id": "91ebb520a22c861c381ada7fbbdbc542b6ca81a709d6b46794d1a43658da720a",
+    "neutrality_errors": 0,
+    "note": "26 findings at first lowering, then 0. The five causes were all general: a scratch sized at one query row instead of the query block; a token-block round-up applied to a context-resolved leading axis, in the plan and in the emitter both; a cache_row spelling the HBM checker compared raw while the ROM checker already resolved it through CACHE_ROW_ALIASES; and a pooled state member map that recorded the LAST window of a repeated resource where the layer term walks from the first. None of them is model-specific and both shipped plan digests are unchanged.",
+    "numeric_contract_substitutions": 12,
+    "plan_id": "2f14d7b22782dc2fc0e8267ca83ee39a7b2110b5c1e2879f7f00e378caec1d9d",
+    "profile": "single-chip-comparator",
+    "status": "admitted",
+    "verifier_findings": 0,
+    "warnings": 3
+  },
+  "model_id": "deepseek-v4.1-flash-reduced-v1",
+  "rom_array_64": {
+    "reason": "region 'rom.r0.p059.s1' has 12 members per slot, which do not divide into 64 owners. The reduction scales n_routed_experts by the width factor, 192/16 = 12. This is a property of the reduced vehicle, not of the array backend -- the released 192 divides 64 three ways -- and it is a reduction-rule choice: an expert count is an ownership unit as well as a size, so a vehicle intended for an N-owner array has to keep it divisible by N, which at 64 owners means a width factor of at most 3 rather than 16.",
+    "status": "refused"
+  },
+  "rom_wafer": {
+    "capability_digest": "cfca88d4ce9f57135623d09cfd91aa15c39a55cb8d8a2090cf08ce884da9a861",
+    "deployment_sha256": "0be3671fcce6d9f3824c1e38f426ad22d6d9447b2ce765ed906b61786c2339fc",
+    "descriptor_count": 9708,
+    "descriptors_by_type": {
+      "COMMUNICATION": 49,
+      "COUNTER_CLASS": 9,
+      "ENTRYPOINT_TABLE": 1,
+      "EVENT_WAIT_SET": 1172,
+      "GENERATION_POLICY": 1,
+      "LOOP_CONTROL": 1347,
+      "MEMORY_OBJECT": 1492,
+      "NUMERIC": 73,
+      "OPERATOR": 1417,
+      "PREDICATE": 5,
+      "SCHEDULE": 95,
+      "STATE": 3,
+      "TENSOR_VIEW": 4043,
+      "TOPOLOGY": 1
+    },
+    "deterministic": true,
+    "instruction_count": 4337,
+    "loop_count": 1347,
+    "mutable_state_bytes": 56666306,
+    "plan_id": "eea08d2764dfa2e3abaed3f7d8a33652dc267dde352cdafe367bd6793287d9a1",
+    "product": "deepseek-v4.1-flash-rom",
+    "region_count": 821,
+    "rom_generated_bytes": 41968252,
+    "rom_payload_bytes": 25727664,
+    "status": "admitted",
+    "target_id": "deepseek-v4.1-flash-rom-wafer-2",
+    "verifier_admitted": true,
+    "verifier_checks_passed": 63,
+    "verifier_checks_total": 63
+  },
+  "schema": "opentallas.deepseek_v41_reduced_deployments.v1",
+  "what_this_is": "The first admitted deployments of any DeepSeek-V4.1-Flash graph, on two of the three stores. The vehicle is the reduced fixture (dim 160, vocab 4,040, 40 layers, window 128, 12 routed experts), so these are shape-reduced deployments of the full operator set at shipped arithmetic, not shipped dimensions. Neither is a token: a token additionally needs the RTL issue bridge to admit the operations the graph names, which is measured in deepseek_v41_reduced_rtl_token_gap.json."
+}

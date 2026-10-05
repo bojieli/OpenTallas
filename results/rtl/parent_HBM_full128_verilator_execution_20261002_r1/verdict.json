@@ -1,0 +1,152 @@
+{
+  "GO_commit": "0fc076647ed85b0334f7fceee4ce89ed6fb8f232",
+  "GO_sha256": "b5a4d45ad7159ede878807fe569e3c65615859d2892bdd0f228869ea34c8a00b",
+  "actual_binary_sha256": "e15efc3b9ff0be70e74450891e176caeb65a6d8ac9e309aea7ba8aceeb3e1852",
+  "admission": {
+    "affinity": [
+      28,
+      29
+    ],
+    "cgroup": "/user.slice/user-1000.slice/user@1000.service/app.slice/hbm-full128-verilator-parent-20261002-r1.service",
+    "memory_max": "8589934592",
+    "memory_swap_max": "0",
+    "systemd": {
+      "LimitFSIZE": "1073741824",
+      "OOMPolicy": "stop",
+      "RuntimeMaxUSec": "17min"
+    }
+  },
+  "arithmetic_exact_PASS": true,
+  "build_GO": false,
+  "logs_sha256": {
+    "actual_sim.log": "c1033d386839370e77b9136496867d3e4c46b46c23f1071ed0b11f49958bf383",
+    "cxx_build.log": "6986ddeaefda77b1b3c3d42f628acc2c6c9ddb4393375c5ce4243b147c12bed3",
+    "storage_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "storage_sim.log": "d2f6afa565c892e2588c43cdab50ca2152920e64a18210ae4d950923b0088015",
+    "verilate.log": "822aac6b9d10c6bf273a6ac7c502225868bd4d8aa5c21aa09e8f2c923da8085d"
+  },
+  "output_bytes": 878464348,
+  "phases": [
+    {
+      "argv": [
+        "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+        "--cc",
+        "--exe",
+        "--main",
+        "--timing",
+        "--top-module",
+        "tb_full_service_exact",
+        "--prefix",
+        "Vtb_full_service_exact",
+        "--Mdir",
+        "/tmp/full-sm-rf-verilator-parent-20261002-r1/obj",
+        "--compiler",
+        "gcc",
+        "--threads",
+        "1",
+        "-O0",
+        "-Wno-fatal",
+        "--output-split",
+        "20000",
+        "--output-split-cfuncs",
+        "2000",
+        "-CFLAGS",
+        "-O0",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_full_sm_service.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_rf_service.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_scratch_service.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_fadd.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/hdc/ot_hdc_fastfp.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/hdc/ot_hdc_prefix.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/test/full_sm_service/sram_models.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/test/full_sm_service/tb_full_service_exact.sv"
+      ],
+      "exit_code": 0,
+      "name": "verilate",
+      "termination_reason": null,
+      "wall_limit_s": 300,
+      "wall_s": 39.08894773898646
+    },
+    {
+      "argv": [
+        "/usr/bin/make",
+        "-C",
+        "/tmp/full-sm-rf-verilator-parent-20261002-r1/obj",
+        "-f",
+        "Vtb_full_service_exact.mk",
+        "-j2",
+        "CXX=/usr/bin/g++",
+        "LINK=/usr/bin/g++",
+        "OPT_FAST=-O0",
+        "OPT_SLOW=-O0",
+        "OPT_GLOBAL=-O0"
+      ],
+      "exit_code": 0,
+      "name": "cxx_build",
+      "termination_reason": null,
+      "wall_limit_s": 480,
+      "wall_s": 255.81478495290503
+    },
+    {
+      "argv": [
+        "/tmp/full-sm-rf-verilator-parent-20261002-r1/obj/Vtb_full_service_exact"
+      ],
+      "exit_code": 0,
+      "name": "actual_sim",
+      "termination_reason": null,
+      "wall_limit_s": 60,
+      "wall_s": 1.0336767160333693
+    },
+    {
+      "argv": [
+        "/usr/bin/iverilog",
+        "-g2012",
+        "-s",
+        "tb_storage",
+        "-o",
+        "/tmp/full-sm-rf-verilator-parent-20261002-r1/storage.vvp",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_rf_service.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/gpu/ot_gpu_scratch_service.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/test/full_sm_service/sram_models.sv",
+        "/home/ubuntu/OpenTallas-hbm-rf-service/rtl/test/full_sm_service/tb_storage.sv"
+      ],
+      "exit_code": 0,
+      "name": "storage_compile",
+      "termination_reason": null,
+      "wall_limit_s": 30,
+      "wall_s": 1.0331275039352477
+    },
+    {
+      "argv": [
+        "/usr/bin/vvp",
+        "/tmp/full-sm-rf-verilator-parent-20261002-r1/storage.vvp"
+      ],
+      "exit_code": 0,
+      "name": "storage_sim",
+      "termination_reason": null,
+      "wall_limit_s": 30,
+      "wall_s": 2.067103572189808
+    }
+  ],
+  "physical_adoption": false,
+  "proposal_sha256": "2612a484661bec171e90907c3c1ab21e61d60019aa19e4c3c1c8f7987153ee79",
+  "schema": "opentallas.full-sm-service.verilator-run.v1",
+  "source_commit": "b764cc45e57a632a8ea32284dad8ca30ebf8091a",
+  "source_sha256": {
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/gpu/ot_gpu_full_sm_service.sv": "39c9810b547917212f67777099772b30e62ef8865617352e27b5781da23c6896",
+    "rtl/gpu/ot_gpu_rf_service.sv": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0",
+    "rtl/gpu/ot_gpu_scratch_service.sv": "ddc4e77f1805afaaaedbe09415681f8eb92ed1118dbbb8ae756e06cf41a4fa02",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/test/full_sm_service/sram_models.sv": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+    "rtl/test/full_sm_service/tb_full_service_exact.sv": "2e871bfe29ac28b79aaf6c781d71f5c26bf6ec5c2bf6fb9446a4d29ea642e3c6",
+    "rtl/test/full_sm_service/tb_storage.sv": "38a17b671df8971ec53bac4267b25db046988ac691d7538699816b0cabd58c74"
+  },
+  "verdict": "PASS_DIRECTED_FULL128_AND_STORAGE_ONLY",
+  "wall_s": 299.1745402812958
+}

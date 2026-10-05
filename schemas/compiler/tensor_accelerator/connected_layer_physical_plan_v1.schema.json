@@ -1,0 +1,411 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/connected_layer_physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "expected_counters": {"$ref": "connected_layer_expectations_v1.schema.json#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {"$ref": "#/$defs/image"},
+        "projections": {
+          "items": {"$ref": "#/$defs/projection"},
+          "maxItems": 7,
+          "minItems": 7,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "regions": {
+          "items": {"$ref": "#/$defs/hbm_region"},
+          "maxItems": 10,
+          "minItems": 10,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["image", "projections", "regions"],
+      "type": "object"
+    },
+    "numeric_contracts": {
+      "const": [
+        "bf16_add_rne_v1",
+        "bf16_payload_lookup_v1",
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "bf16_byte_preserving_state_v1",
+        "qwen3_gqa_fp32_softmax_bf16_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1",
+        "qwen3_silu_mul_bf16_v1"
+      ]
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "problem": {"$ref": "#/$defs/problem"},
+    "program": {"$ref": "#/$defs/program"},
+    "qualification_bundle_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.connected_layer_physical_plan.v1"},
+    "source_operation_ids": {"$ref": "connected_layer_request_v1.schema.json#/$defs/source_operations"},
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "addressing": {"const": "bank_base_plus_byte_offset"},
+        "regions": {
+          "items": {"$ref": "#/$defs/sram_region"},
+          "maxItems": 26,
+          "minItems": 26,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["addressing", "regions"],
+      "type": "object"
+    }
+  },
+  "required": [
+    "capability_id",
+    "expected_counters",
+    "graph_id",
+    "hbm",
+    "numeric_contracts",
+    "physical_plan_id",
+    "problem",
+    "program",
+    "qualification_bundle_id",
+    "schema",
+    "source_operation_ids",
+    "sram"
+  ],
+  "title": "Connected Qwen layer HBM/SRAM physical plan v1",
+  "type": "object",
+  "$defs": {
+    "checkpoint_row_source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "checkpoint_row"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "row": {"minimum": 0, "type": "integer"},
+        "tensor_name": {"minLength": 1, "type": "string"},
+        "tensor_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["kind", "payload_sha256", "row", "tensor_name", "tensor_payload_sha256"],
+      "type": "object"
+    },
+    "checkpoint_tensor_source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "checkpoint_tensor"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        },
+        "tensor_name": {"minLength": 1, "type": "string"}
+      },
+      "required": ["kind", "payload_sha256", "shape", "tensor_name"],
+      "type": "object"
+    },
+    "derived_source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "derived_constant"},
+        "numeric_contract": {"const": "qwen3_rope_fp32_bf16_v1"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "positions": {"const": 8000}
+      },
+      "required": ["kind", "numeric_contract", "payload_sha256", "positions"],
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "properties": {
+        "base_address": {"minimum": 0, "type": "integer"},
+        "path": {"const": "memory/hbm_connected_layer.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["base_address", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "metadata_source": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+            "kind": {"const": "runtime_initial_state_metadata"},
+            "resource_id": {"const": "kv.layer.0"}
+          },
+          "required": ["fixture_id", "kind", "resource_id"],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+            "kind": {"const": "runtime_transaction_descriptor"},
+            "transaction_id": {"maximum": 18446744073709551615, "minimum": 1, "type": "integer"}
+          },
+          "required": ["fixture_id", "kind", "transaction_id"],
+          "type": "object"
+        }
+      ]
+    },
+    "ordinary_hbm_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "id": {
+          "enum": [
+            "embedding_rows",
+            "input_norm_weight",
+            "k_norm_weight",
+            "post_attention_norm_weight",
+            "q_norm_weight",
+            "rope_coefficient_table",
+            "state_metadata",
+            "transaction_descriptor"
+          ]
+        },
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {
+          "oneOf": [
+            {"$ref": "#/$defs/checkpoint_row_source"},
+            {"$ref": "#/$defs/checkpoint_tensor_source"},
+            {"$ref": "#/$defs/derived_source"},
+            {"$ref": "#/$defs/metadata_source"}
+          ]
+        }
+      },
+      "required": ["address", "id", "offset_bytes", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    },
+    "hbm_region": {
+      "oneOf": [
+        {"$ref": "#/$defs/ordinary_hbm_region"},
+        {"$ref": "#/$defs/state_hbm_region"}
+      ]
+    },
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "base_generation": {"minimum": 0, "type": "integer"},
+        "coefficient_row_bytes": {"const": 512},
+        "committed_length": {"minimum": 0, "type": "integer"},
+        "context_capacity": {"const": 8000},
+        "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+        "head_dim": {"const": 128},
+        "hidden_width": {"const": 4096},
+        "intermediate_width": {"const": 12288},
+        "key_value_heads": {"const": 8},
+        "prepared_length": {"const": 1},
+        "projections": {
+          "items": {"$ref": "#/$defs/projection_problem"},
+          "maxItems": 7,
+          "minItems": 7,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "qualified_state_resources": {"const": 1},
+        "query_heads": {"const": 32},
+        "resident_embedding_base_token": {"minimum": 0, "type": "integer"},
+        "resident_embedding_rows": {"const": 1},
+        "rope_positions": {"const": 8000},
+        "rows": {"const": 1},
+        "source_atomic_state_count": {"const": 36},
+        "transaction_id": {"maximum": 18446744073709551615, "minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "base_generation",
+        "coefficient_row_bytes",
+        "committed_length",
+        "context_capacity",
+        "fixture_id",
+        "head_dim",
+        "hidden_width",
+        "intermediate_width",
+        "key_value_heads",
+        "prepared_length",
+        "projections",
+        "qualified_state_resources",
+        "query_heads",
+        "resident_embedding_base_token",
+        "resident_embedding_rows",
+        "rope_positions",
+        "rows",
+        "source_atomic_state_count",
+        "transaction_id"
+      ],
+      "type": "object"
+    },
+    "program": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {"const": 23570},
+        "path": {"const": "program/commands.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 32, "type": "integer"}
+      },
+      "required": ["command_count", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "projection": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {"enum": ["attention_output", "down", "gate", "k", "q", "up", "v"]},
+        "input_region": {"enum": ["attention", "attention_norm", "gated_mlp", "mlp_norm"]},
+        "kernel_index": {"enum": [2, 3, 4, 10, 13, 14, 16]},
+        "output_region": {"enum": ["attention_projected", "down", "gate", "k_raw", "q_raw", "up", "v"]},
+        "source": {"$ref": "#/$defs/projection_source"},
+        "tiles": {
+          "items": {"$ref": "#/$defs/tile"},
+          "maxItems": 3072,
+          "minItems": 256,
+          "type": "array"
+        }
+      },
+      "required": ["id", "input_region", "kernel_index", "output_region", "source", "tiles"],
+      "type": "object"
+    },
+    "projection_problem": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {"enum": ["attention_output", "down", "gate", "k", "q", "up", "v"]},
+        "input_region": {"enum": ["attention", "attention_norm", "gated_mlp", "mlp_norm"]},
+        "k": {"enum": [4096, 12288]},
+        "k_tile": {"const": 256},
+        "k_tiles": {"enum": [16, 48]},
+        "kernel_index": {"enum": [2, 3, 4, 10, 13, 14, 16]},
+        "n": {"enum": [1024, 4096, 12288]},
+        "n_tile": {"const": 64},
+        "n_tiles": {"enum": [16, 64, 192]},
+        "output_region": {"enum": ["attention_projected", "down", "gate", "k_raw", "q_raw", "up", "v"]},
+        "source_role": {
+          "enum": [
+            "attention_output_weight",
+            "down_projection_weight",
+            "gate_projection_weight",
+            "k_projection_weight",
+            "q_projection_weight",
+            "up_projection_weight",
+            "v_projection_weight"
+          ]
+        },
+        "tile_count": {"enum": [256, 1024, 3072]}
+      },
+      "required": ["id", "input_region", "k", "k_tile", "k_tiles", "kernel_index", "n", "n_tile", "n_tiles", "output_region", "source_role", "tile_count"],
+      "type": "object"
+    },
+    "projection_source": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "checkpoint_tensor"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "tensor_name": {"minLength": 1, "type": "string"}
+      },
+      "required": ["kind", "payload_sha256", "shape", "tensor_name"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "sram_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "allocated_bytes": {"minimum": 1, "type": "integer"},
+        "bank": {"maximum": 15, "minimum": 0, "type": "integer"},
+        "dtype": {"enum": ["bf16", "fp32", "u32"]},
+        "id": {
+          "enum": [
+            "accumulator_tile",
+            "attention",
+            "attention_norm",
+            "attention_projected",
+            "down",
+            "gate",
+            "gated_mlp",
+            "hidden_0",
+            "hidden_1",
+            "input_norm_weight",
+            "k_norm",
+            "k_norm_weight",
+            "k_raw",
+            "k_rotary",
+            "mlp_norm",
+            "post_attention",
+            "post_attention_norm_weight",
+            "q_norm",
+            "q_norm_weight",
+            "q_raw",
+            "q_rotary",
+            "rope_coefficients",
+            "runtime_ids",
+            "up",
+            "v",
+            "weight_tile"
+          ]
+        },
+        "logical_bytes": {"minimum": 1, "type": "integer"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": ["address", "allocated_bytes", "bank", "dtype", "id", "logical_bytes", "offset_bytes", "shape"],
+      "type": "object"
+    },
+    "state_hbm_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "allocated_bytes": {"const": 16384000},
+        "id": {"enum": ["key_state", "value_state"]},
+        "initialized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "initialized_size_bytes": {"const": 6144},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "source": {
+          "additionalProperties": false,
+          "properties": {
+            "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+            "kind": {"const": "qualified_runtime_initial_state"},
+            "qkv_execution_report_id": {"$ref": "#/$defs/sha256"},
+            "transform": {"minLength": 1, "type": "string"}
+          },
+          "required": ["fixture_id", "kind", "qkv_execution_report_id", "transform"],
+          "type": "object"
+        }
+      },
+      "required": ["address", "allocated_bytes", "id", "initialized_payload_sha256", "initialized_size_bytes", "offset_bytes", "payload_sha256", "source"],
+      "type": "object"
+    },
+    "tile": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "k_count": {"const": 256},
+        "k_start": {"minimum": 0, "type": "integer"},
+        "n_count": {"const": 64},
+        "n_start": {"minimum": 0, "type": "integer"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"const": 32768},
+        "tile_index": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["address", "k_count", "k_start", "n_count", "n_start", "offset_bytes", "payload_sha256", "size_bytes", "tile_index"],
+      "type": "object"
+    }
+  }
+}

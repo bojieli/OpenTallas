@@ -1,0 +1,41 @@
+{
+  "FIFO_count": 2,
+  "FIFO_entries_each": 2,
+  "bound_kind": "SOURCE_CONTROL_NOT_MEASURED_CONTEXT",
+  "bridge_width_bits": 471,
+  "finite_capacity_requires_admission_credit": true,
+  "forward_path": [
+    "source_to_FAST_FIFO2",
+    "FAST_held_route38",
+    "FAST_to_destination_FIFO2"
+  ],
+  "hardware_cycles_or_ns": null,
+  "hardware_qualified": false,
+  "in_flight_storage_bits": 2355,
+  "outer_provider_ACK_reverse_bound": null,
+  "phase_alignment": null,
+  "reset_online_rendezvous_bound": null,
+  "reverse_credit": "each FIFO read pointer returns through two write-domain synchronizer stages; no release before synchronized pointer",
+  "route_counterexample": {
+    "identity_unchanged": true,
+    "maximum_sink_wait": null,
+    "reachable_state": {
+      "left": 0,
+      "live": true
+    },
+    "repeated_edges": 100,
+    "sink_ready": false
+  },
+  "route_hold_fast_edges": 38,
+  "route_packet_registers": 1,
+  "schema": "H4_H1_ACTUAL_CDC_OBLIGATIONS_V1",
+  "source_H1_C0_V1_bridge_instantiation_mapping": null,
+  "source_destination_clock_periods": null,
+  "source_pins": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_clock_bridge.sv": "49fd1936ff2a62d59855823bf66dc1ce41f51f62c01111f621e1241d2c5d6e47",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_fifo2.sv": "a424d37ec80d6c3cc326bf067b26849bcb43ef9f620a90f8d34a900fe6933903",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_route.sv": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c"
+  },
+  "status": "FAIL_FULL_PRODUCTION_FINITE_CDC_ADMISSION",
+  "synchronizer_stages_each_direction": 2
+}

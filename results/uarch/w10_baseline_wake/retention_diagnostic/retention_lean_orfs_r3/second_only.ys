@@ -1,0 +1,24 @@
+read_verilog -sv /work/retention_lean_orfs_r3/wake.sv
+hierarchy -top wake_diag
+proc
+write_json /work/retention_lean_orfs_r3/second_only_proc.json
+
+synth -top wake_diag -run coarse:coarse
+write_json /work/retention_lean_orfs_r3/second_only_coarse.json
+opt -fast -full
+memory_map
+opt -full
+techmap
+write_json /work/retention_lean_orfs_r3/second_only_techmap.json
+# W10 modeled wake cells: select drivers from eight named wires, not $procdff names.
+select -assert-count 8 w:g_wake.g_leaf*.wake
+select -set ot_wake_techmap w:g_wake.g_leaf*.wake %ci t:$_DFF_* %i
+select -assert-count 8 @ot_wake_techmap
+setattr -set keep 1 @ot_wake_techmap
+select -clear
+opt -fast
+dfflibmap -liberty /work/asap7_seq_ss.lib
+opt -fast
+abc
+opt -fast
+write_json /work/retention_lean_orfs_r3/second_only_mapped.json

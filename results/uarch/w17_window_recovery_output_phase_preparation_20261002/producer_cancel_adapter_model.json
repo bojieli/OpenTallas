@@ -1,0 +1,181 @@
+{
+  "schema": "opentallas.selected_producer.cancel_adapter.v1",
+  "status": "MODEL_ONLY_UNIMPLEMENTED_NO_GO_NO_RTL",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "producer_path": "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv",
+  "producer_sha256": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1",
+  "gap_commit": "9d42d5da8a4f5cf36d4e04668c6894eb9d9f37b4",
+  "gap_sha256": "c5cc0a5b373054d7615df946a38df25a448be3e63be597e96403a6aa111020a9",
+  "WIN_STACK": 2,
+  "finite_contract": {
+    "QE_operations": 1,
+    "outputs_per_QE": 16,
+    "WINDOW_accepted_blocks_at_once": 1,
+    "accepted_write_intents_per_block": 2,
+    "fault_edge": "freeze new cap/issue/blk/descriptor admissions; already accepted transfer remains owned",
+    "fixed_QE_suffix": "sink/drop every already-issued output without backpressure, preserve fault; wait source-bound QE idle after last output",
+    "local_cancel": "new explicit producer metadata clear-to-EMPTY only after suffix closure; not rst_n and no payload zeroing",
+    "write_drain": "retain accepted block WC then WS even after fault; never cancel downstream accepted intent",
+    "restart": "producer cancel_ack + QE suffix idle + WINDOW empty + selected mux/KARB/backend ownership zero + certified delivery and visibility fences + valid provenance",
+    "closed_identity_assumption": "One closed QE operation; observation generation is not on wire. Real QE has no per-output generation; restart only after complete old suffix. Hostile same-wire output cannot be detected without provider identity."
+  },
+  "source_bound_timing": {
+    "accept": 300,
+    "read_samples": [
+      302,
+      303,
+      304,
+      305,
+      306,
+      307,
+      308,
+      309,
+      310,
+      311,
+      312,
+      313,
+      314,
+      315,
+      316,
+      317
+    ],
+    "capture_samples": [
+      317,
+      318,
+      319,
+      320,
+      321,
+      322,
+      323,
+      324,
+      325,
+      326,
+      327,
+      328,
+      329,
+      330,
+      331,
+      332
+    ],
+    "idle_sample": 335,
+    "max_total_inflight_or_pending_capture_blocks": 16,
+    "no_actual_cancel_semantics": true
+  },
+  "candidate_interface": {
+    "inputs": [
+      "freeze",
+      "cancel_request",
+      "QE_suffix_closed",
+      "selected_owner_quiescent",
+      "certified_fence"
+    ],
+    "outputs": [
+      "local_cancel_ack",
+      "producer_frozen"
+    ],
+    "replicas": 1,
+    "additional_control_bits_estimate": 19,
+    "bits_detail": "5 suffix count +5 delivered count +5 discarded count +2 state +freeze1 +cancel_ack1; diagnostics may remain model-only",
+    "healthy_added_stages": 0,
+    "healthy_guard_cycles": 0,
+    "area_dff_estimate_um2": 5.540400000000001,
+    "route_control_bits_proxy": 7,
+    "payload_bits_added": 0,
+    "clock_reset": "actual producer clk/rst_n streaming domain; new local cancel must not reset mux/backend or another owner",
+    "latency": "<=16 remaining capture outputs + source QE idle tail + local cancel acknowledgement; accepted WR/read/fence latency requires bounded external service fairness, no numerical PHY drain bound assigned",
+    "slot_and_enable_gate_area": "UNPRICED; model count only, no floorplan/SSFF/adoption"
+  },
+  "boundary_witnesses": [
+    {
+      "fault_after_captures": 0,
+      "fixed_QE_suffix_discarded": 16,
+      "resident_cancelled": 0
+    },
+    {
+      "fault_after_captures": 1,
+      "fixed_QE_suffix_discarded": 15,
+      "resident_cancelled": 1
+    },
+    {
+      "fault_after_captures": 2,
+      "fixed_QE_suffix_discarded": 14,
+      "resident_cancelled": 2
+    },
+    {
+      "fault_after_captures": 3,
+      "fixed_QE_suffix_discarded": 13,
+      "resident_cancelled": 3
+    },
+    {
+      "fault_after_captures": 4,
+      "fixed_QE_suffix_discarded": 12,
+      "resident_cancelled": 4
+    },
+    {
+      "fault_after_captures": 5,
+      "fixed_QE_suffix_discarded": 11,
+      "resident_cancelled": 5
+    },
+    {
+      "fault_after_captures": 6,
+      "fixed_QE_suffix_discarded": 10,
+      "resident_cancelled": 6
+    },
+    {
+      "fault_after_captures": 7,
+      "fixed_QE_suffix_discarded": 9,
+      "resident_cancelled": 7
+    },
+    {
+      "fault_after_captures": 8,
+      "fixed_QE_suffix_discarded": 8,
+      "resident_cancelled": 8
+    },
+    {
+      "fault_after_captures": 9,
+      "fixed_QE_suffix_discarded": 7,
+      "resident_cancelled": 9
+    },
+    {
+      "fault_after_captures": 10,
+      "fixed_QE_suffix_discarded": 6,
+      "resident_cancelled": 10
+    },
+    {
+      "fault_after_captures": 11,
+      "fixed_QE_suffix_discarded": 5,
+      "resident_cancelled": 11
+    },
+    {
+      "fault_after_captures": 12,
+      "fixed_QE_suffix_discarded": 4,
+      "resident_cancelled": 12
+    },
+    {
+      "fault_after_captures": 13,
+      "fixed_QE_suffix_discarded": 3,
+      "resident_cancelled": 13
+    },
+    {
+      "fault_after_captures": 14,
+      "fixed_QE_suffix_discarded": 2,
+      "resident_cancelled": 14
+    },
+    {
+      "fault_after_captures": 15,
+      "fixed_QE_suffix_discarded": 1,
+      "resident_cancelled": 15
+    },
+    {
+      "fault_after_captures": 16,
+      "fixed_QE_suffix_discarded": 0,
+      "resident_cancelled": 16
+    }
+  ],
+  "remaining_gaps": [
+    "Actual producer cancel/freeze ports and QE suffix adapter absent.",
+    "Bounded external delivery/visibility fence provider absent; projected idx deadline not PHY.",
+    "Asynchronous/global reset during ownership forbidden; no reset erases accepted downstream intents.",
+    "Payload and arithmetic unchanged; no new provider or hardware implementation."
+  ]
+}

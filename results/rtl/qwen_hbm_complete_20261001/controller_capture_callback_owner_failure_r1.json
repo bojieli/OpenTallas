@@ -1,0 +1,39 @@
+{
+  "actual_provider_credit": false,
+  "hardware_build_ready": false,
+  "reproduction": "Check out source_pins commit; write each embedded source verbatim to a temporary file and run its recorded command from the checkout. Returncode 0 confirms the asserted failure behavior, not a passing controller.",
+  "schema": "Qwen_controller_capture_callback_owner_failure_r1",
+  "scope": "Software candidate supplied-event controls only, not hardware qualification. Valid typed ledger transactions reproduced against a8cd before correction.",
+  "source_pins": {
+    "tools/qwen_hbm_complete_common36.py": {
+      "commit": "a8cd8e94caacc3e2bc778b1c184b821e083d5f52",
+      "sha256": "1e34e1b56ea08cd953aa2bf935e880494951c0679c015aa6d43a1aa9dffbe62e"
+    },
+    "tools/qwen_hbm_complete_controller_capture.py": {
+      "commit": "a8cd8e94caacc3e2bc778b1c184b821e083d5f52",
+      "sha256": "80f0edaa3cb574b4790feb50f444b88c3758b1619860bfcbf6e7c05d2c169d18"
+    }
+  },
+  "verdict": "FAIL",
+  "whole_program_admission": false,
+  "witnesses": [
+    {
+      "command": "PYTHONPATH=\"$PWD/tools\" PYTHONDONTWRITEBYTECODE=1 python /tmp/qwen-callback-audit-0zuK1n/repro_owner_release.py",
+      "path": "/tmp/qwen-callback-audit-0zuK1n/repro_owner_release.py",
+      "returncode": 0,
+      "sha256": "7c826ea230c20761bb875806e4ed59eb9a52bce2fcb1e461e1c6fccbdd56618a",
+      "source": "from qwen_hbm_complete_controller_capture import Capture, FAST, SLOW, pc_of\nfrom math import ceil\nc = Capture()\na = dict(die=0, stack=0, PC=pc_of(0), sector=0, tag=0,\n         producer_epoch=1, transport_epoch=7, instruction=10, position=0)\nb = dict(a, tag=1, instruction=11)\nassert all(type(v) is int for v in a.values())\nassert all(type(v) is int for v in b.values())\nassert c.column(a, 0, 0xffffffff, 'supplied-eligibility', 1000000)\nc.backing_visible(a, 9*FAST)\nt = c.edge(9*FAST + 10000)\nassert c.capture(a, t)\nr = (ceil((t+FAST)/SLOW)+3)*SLOW\nc.ACK_consumer_retire(a, r)\n# Old owner still occupies its slot until reverse credit; new RMW is accepted.\nc.lock_partial(b, 1)\nc.read_import_retired(b, r)\naddress = c.address(b)\nassert c.locks[address]['identity'] == c.identity(b)\nassert c.locks[address]['merged'] is None\nprint('before:', {'A_state': c.pending[c.identity(a)]['state'],\n                  'B_lock': c.locks[address], 'quiescent': c.quiescent()})\nc.reverse_credit(a, c.edge(r)+3*FAST)\nprint('after:', {'pending': c.pending, 'locks': c.locks,\n                 'ACK': c.ACK, 'quiescent': c.quiescent()})\nassert address not in c.locks and c.quiescent()\ntry:\n    c.merge_result(b, ('XOR', 'AND', 'XOR'), r, r+27*SLOW)\nexcept KeyError as e:\n    print('B valid merge loses its owner:', repr(e))\nelse:\n    raise AssertionError('expected lost lock')\nd = dict(a, tag=2, instruction=12)\nassert c.column(d, c.edge(r)+5*FAST, 0xffffffff, 'supplied-eligibility', 1000000)\nprint('third owner fullwrite accepted while B RMW unfinished:', c.pending[c.identity(d)])\n",
+      "stderr": "",
+      "stdout": "before: {'A_state': 'RETIRED', 'B_lock': {'identity': (0, 0, 11, 0, 1, 0, 0, 1, 7), 'mask': 1, 'read_retired': Fraction(200000, 9), 'merged': None}, 'quiescent': False}\nafter: {'pending': {}, 'locks': {}, 'ACK': {(0, 0): []}, 'quiescent': True}\nB valid merge loses its owner: KeyError((0, 0, 0))\nthird owner fullwrite accepted while B RMW unfinished: {'q': {'die': 0, 'stack': 0, 'PC': 0, 'sector': 0, 'tag': 2, 'producer_epoch': 1, 'transport_epoch': 7, 'instruction': 12, 'position': 0}, 'channel': (0, 0, 0), 'address': (0, 0, 0), 'column': Fraction(80000, 3), 'visible_due': Fraction(102500, 3), 'state': 'COLUMN', 'visible': None, 'retired': None}\n"
+    },
+    {
+      "command": "PYTHONPATH=\"$PWD/tools\" PYTHONDONTWRITEBYTECODE=1 python /tmp/qwen-callback-audit-0zuK1n/repro_spent_identity.py",
+      "path": "/tmp/qwen-callback-audit-0zuK1n/repro_spent_identity.py",
+      "returncode": 0,
+      "sha256": "15f8dfc23bb1fbe3c1cf84670eae834389b9f9623133793c35af4a4d614af4e2",
+      "source": "from qwen_hbm_complete_controller_capture import Capture, FAST, SLOW, pc_of\nfrom math import ceil\nc = Capture()\nq = dict(die=0, stack=0, PC=pc_of(0), sector=0, tag=0,\n         producer_epoch=1, transport_epoch=7, instruction=10, position=0)\nc.lock_partial(q, 1)\nc.read_import_retired(q, 0)\nc.merge_result(q, ('XOR', 'AND', 'XOR'), 0, 27*SLOW)\nt = c.edge(27*SLOW+FAST)\nassert c.column(q, t, 1, 'supplied-eligibility', 1000000)\nv = c.edge(t+7274)\nc.backing_visible(q, v)\ncaptured = c.edge(v+10000)\nassert c.capture(q, captured)\nr = (ceil((captured+FAST)/SLOW)+3)*SLOW\nc.ACK_consumer_retire(q, r)\ncredit = c.edge(r)+3*FAST\nc.reverse_credit(q, credit)\nassert c.quiescent()\n# The same complete identity can reacquire a lock, despite being permanently seen.\nc.lock_partial(q, 1)\nc.read_import_retired(q, 0)  # Replay the already-consumed callback.\nc.merge_result(q, ('XOR', 'AND', 'XOR'), 0, 27*SLOW)\ntry:\n    c.column(q, credit+2*FAST, 1, 'supplied-eligibility', 1000000)\nexcept ValueError as e:\n    assert str(e) == 'duplicate identity'\n    print('reused identity column rejected:', str(e))\nelse:\n    raise AssertionError('expected duplicate rejection')\nprint('state:', {'locks': c.locks, 'pending': c.pending,\n                 'seen': c.identity(q) in c.seen, 'quiescent': c.quiescent()})\nassert c.locks and not c.pending and not c.quiescent()\n",
+      "stderr": "",
+      "stdout": "reused identity column rejected: duplicate identity\nstate: {'locks': {(0, 0, 0): {'identity': (0, 0, 10, 0, 1, 0, 0, 0, 7), 'mask': 1, 'read_retired': Fraction(0, 1), 'merged': Fraction(30000, 1)}}, 'pending': {}, 'seen': True, 'quiescent': False}\n"
+    }
+  ]
+}

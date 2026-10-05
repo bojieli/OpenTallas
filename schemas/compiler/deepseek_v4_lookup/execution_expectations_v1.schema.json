@@ -1,0 +1,100 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/execution_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "counter_coefficients_per_token": {
+      "additionalProperties": false,
+      "properties": {
+        "bf16_codes_copied": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_activation_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_activation_bytes_written": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_input_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "logical_rom_bytes_read": {
+          "$ref": "#/$defs/nonnegative"
+        },
+        "rom_lookup_rows": {
+          "$ref": "#/$defs/nonnegative"
+        }
+      },
+      "required": [
+        "bf16_codes_copied",
+        "logical_activation_bytes_read",
+        "logical_activation_bytes_written",
+        "logical_input_bytes_read",
+        "logical_rom_bytes_read",
+        "rom_lookup_rows"
+      ],
+      "type": "object"
+    },
+    "fixed_counters": {
+      "additionalProperties": false,
+      "properties": {
+        "completion_events": {
+          "const": 1
+        },
+        "micro_ops_executed": {
+          "const": 4
+        },
+        "semantic_operations_executed": {
+          "const": 3
+        }
+      },
+      "required": [
+        "completion_events",
+        "micro_ops_executed",
+        "semantic_operations_executed"
+      ],
+      "type": "object"
+    },
+    "hardware_accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "cycles": {
+          "type": "null"
+        },
+        "hbm_transactions": {
+          "type": "null"
+        },
+        "stalls": {
+          "type": "null"
+        },
+        "status": {
+          "const": "not modeled by the functional lookup slice"
+        }
+      },
+      "required": [
+        "cycles",
+        "hbm_transactions",
+        "stalls",
+        "status"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_expectations.v1"
+    }
+  },
+  "required": [
+    "counter_coefficients_per_token",
+    "fixed_counters",
+    "hardware_accounting",
+    "schema"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "nonnegative": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "schema": "H3_PORTABLE_PRODUCER_PINS_V1",
+  "files": {
+    "Qwen_tiled.json.gz": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz",
+      "sha256": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc"
+    },
+    "bounded_manifest.json": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/manifest.json",
+      "sha256": "146b938fb8950a0ce3aff45a493136f467691a1bed7f17e44a63c3364154ed10"
+    },
+    "bounded.py.source": {
+      "commit": "41eef76fa",
+      "path": "tools/h3_qwen_complete_native.py",
+      "sha256": "39510ee998e14e536772b61baa8b2188e7b0dde2063f484db5133238c1157324"
+    },
+    "interface_handoff.json": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/interface_handoff.json",
+      "sha256": "9fb5a09328982e3d04e3b62946431eae32f676a8479c49a59bfae89739d332b6"
+    },
+    "producer_tests.log": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/tests_final.txt",
+      "sha256": "5952b218382e51f578768c0a348723d5418c12143cc6d5f49d527f1d1b978a79"
+    },
+    "producer_execution.json": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/execution_result.json",
+      "sha256": "24c2bf3c7d2d76ea9d4fb388ad82ca0b967957e899d115e3142b88d26b3e2026"
+    },
+    "provider.py.source": {
+      "commit": "42f0a41",
+      "path": "tools/hbm_provider_microvm_r21.py",
+      "sha256": "3c4de52c72793911428133536da3eced170c63088fccf7ac02b56657e9f277c2"
+    },
+    "provider_scope.json": {
+      "commit": "42f0a41",
+      "path": "results/uarch/hbm_provider_microvm_r21_20261002/scope_and_interfaces.json",
+      "sha256": "001fc060a55724c6366a41b5a915d2a737a89c5ef503fa02e07e9a8ffa562bfc"
+    },
+    "sources/results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Peirce_native_76d564c9a.py.source": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Peirce_native_76d564c9a.py.source",
+      "sha256": "f69471b8b4df22b8634d0636361370f92e8b13399a9f395b3e842be66a854daf"
+    },
+    "sources/results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz": {
+      "commit": "41eef76fa",
+      "path": "results/uarch/h3_versioned_lowering_20261002/Qwen.json.gz",
+      "sha256": "97539f0ec3337bd0ea810528dd40bc1c8894098a46b03a77facc0bcb5b33d33a"
+    },
+    "sources/tests/test_h3_qwen_complete_native.py": {
+      "commit": "41eef76fa",
+      "path": "tests/test_h3_qwen_complete_native.py",
+      "sha256": "1a7d996aabae6728fe854a59c99b442185554e2ed69ed0efc4a82af87e2e7c35"
+    },
+    "sources/tools/h3_distributed_norm_endpoint.py": {
+      "commit": "41eef76fa",
+      "path": "tools/h3_distributed_norm_endpoint.py",
+      "sha256": "2112a5d7b5a4879e193151a8e42b47e5487391049eb5345243e739b26cf3d1be"
+    },
+    "sources/tools/h3_versioned_lowering.py": {
+      "commit": "41eef76fa",
+      "path": "tools/h3_versioned_lowering.py",
+      "sha256": "900dec4186274cbe3e41cf2eea4abfa76d7d58182d96c3e6b55ea04409e58e91"
+    },
+    "sources/tools/qwen_hbm_complete_program.py": {
+      "commit": "41eef76fa",
+      "path": "tools/qwen_hbm_complete_program.py",
+      "sha256": "4ecc9eadc4de9e3a65cb66e3977cd2db6eb514a4459117c15aad61ec7e4014e1"
+    },
+    "restoring_scalar.py.source": {
+      "commit": "e03c40e40",
+      "path": "tools/h3_exact_scalar_contract.py",
+      "sha256": "d96ac1b3d02b68ad62532f1f8c0eab63b9a64c4b43cc0218aab78d68ed38a132"
+    },
+    "sources/compiler/models/qwen3-8b/checkpoint_source.json": {
+      "commit": "41eef76fa",
+      "path": "compiler/models/qwen3-8b/checkpoint_source.json",
+      "sha256": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607"
+    },
+    "sources/compiler/models/qwen3-8b/config.json": {
+      "commit": "41eef76fa",
+      "path": "compiler/models/qwen3-8b/config.json",
+      "sha256": "deaa300e5384a480c2cafd0db33cba0da89db8eeeb8ddc2b584b89bd46d52ffb"
+    },
+    "ds/forward_dispatch_milestone.json.gz": {
+      "commit": "6e3ce3620",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_milestone.json.gz",
+      "sha256": "765edfc5efc8fc0d6f40946451d8beb4a54b3253de9e93ecd7f02bb72874af2f"
+    },
+    "ds/forward_dispatch_model.json.gz": {
+      "commit": "6e3ce3620",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/forward_dispatch_model.json.gz",
+      "sha256": "180636f5f3522978309261d2f5e0b339e4fbde0ecb4959413b26143570a3698e"
+    },
+    "ds/handoff.json": {
+      "commit": "6e3ce3620",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/handoff.json",
+      "sha256": "bf4cb315eca573f9100d862f572c6a478b6db295d62f38fb6efc413124fe2a10"
+    },
+    "ds/files_sha256.json": {
+      "commit": "6e3ce3620",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/files_sha256.json",
+      "sha256": "30e8e6fc62fe0a4ac2e17bd9230c6bac5556b098c344dbeffa0a6c8e64ff5c44"
+    },
+    "ds/full_forward_milestone_tests.log": {
+      "commit": "6e3ce3620",
+      "path": "results/uarch/h3_deepseek_bounded_tiles_20261002/full_forward_milestone_tests.log",
+      "sha256": "3f384efc38ce43974978e9aced983f1fdf98684d494c5d09e5a1df12f4658741"
+    },
+    "ds/h3_deepseek_bounded_compile.py.source": {
+      "commit": "6e3ce3620",
+      "path": "tools/h3_deepseek_bounded_compile.py",
+      "sha256": "eb8e5af9242576770819cb9dd6fa26deea627fc1a3eade33506cf98c4b05cc33"
+    },
+    "ds/h3_deepseek_streaming_linear.py.source": {
+      "commit": "6e3ce3620",
+      "path": "tools/h3_deepseek_streaming_linear.py",
+      "sha256": "e938187d1701bffe8ace7c565fe8fc6567eed476f85ddd16e174de63a62e7bc9"
+    },
+    "ds/h3_deepseek_staged_native.py.source": {
+      "commit": "6e3ce3620",
+      "path": "tools/h3_deepseek_staged_native.py",
+      "sha256": "13b34676646f9686150572ab314a3146d038883317ad76ffb0201269035f976f"
+    },
+    "ds/h3_deepseek_bounded_tiles.py.source": {
+      "commit": "6e3ce3620",
+      "path": "tools/h3_deepseek_bounded_tiles.py",
+      "sha256": "1528e177d21783827f5b970112853038540207b487654a10d9af46d1d020d1de"
+    },
+    "ds/h3_native_microop_adapter.py.source": {
+      "commit": "6e3ce3620",
+      "path": "tools/h3_native_microop_adapter.py",
+      "sha256": "cf3e7c0b6390f1586bc8f92cb0f6af8f04a48402299afbf80acf53b493a60e1a"
+    },
+    "bounded_entrypoint.py.source": {
+      "commit": "44e58b4aa",
+      "path": "tools/h3_qwen_bounded_native.py",
+      "sha256": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b"
+    },
+    "baseline.py.source": {
+      "commit": "44e58b4aa",
+      "path": "tools/h3_qwen_complete_native.py",
+      "sha256": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76"
+    },
+    "bounded_r2_manifest.json": {
+      "commit": "44e58b4aa",
+      "path": "results/uarch/h3_qwen_complete_native_20261002/bounded_r2/manifest.json",
+      "sha256": "4de5951136bb2c4b796d486b2264929f7e64e5fe14fd03256b22cb34ab5a448b"
+    }
+  },
+  "separate_entrypoint_producer_commit": "44e58b4aa"
+}

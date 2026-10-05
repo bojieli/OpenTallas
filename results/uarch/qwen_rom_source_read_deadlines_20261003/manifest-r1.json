@@ -1,0 +1,23 @@
+{
+  "focused_tests": 44,
+  "pins": {
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/dispatch-tests.log": "f30d010c0822f8e179b3a8911294020a5abd4b3751001cab66864ada6397acb2",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/mock-bench.cpp.gz": "5cd8875889b656e2aeb0ce43a3e77315c7ea82d2a4853bbf9ca16f2aa4cddf94",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/mock-formatting-r1.json": "5d2d1ca168a70693df2cf240c78244bc77bf742ed5b90e55d232d9cd16786d21",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/observer-tests-final.log": "23a5d52abab995f949a860af0decb07e795c5470b166d506333fa1163d93adeb",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/observer-tests.log": "6f38e073cd77b83d177816540b19edb872c1ee37fd518b84df06a9396dd6c5de",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/preparation.json.gz": "acb9fd2a936fd179599e10886798e56ef82331a702426fddcc10304461c7350a",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/program-tests.log": "b0e340eb06d83e4d5d2133b14948f77d655d6fdcb199127f1d9e2537410d9a06",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/qwen_rom_observer.hpp.gz": "c8aadf4e093272cb74c1f18f1ce11ca36b227bac64426b1664e1f2c3c9d25a8c",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/qwen_rom_rt_observed.cpp.gz": "019c5c7c3376be086e230e931f0770662efa15a3062bc49dc67f1318b1a556a5",
+    "results/uarch/qwen_rom_source_read_deadlines_20261003/read-observer-plan-r1.json": "935dc5278903c899843193e99b21bc4567d48084f5b5d2a85f1affc40bb77f62",
+    "rtl/test/qwen_rom_runtime/observer/qwen_rom_observer.hpp": "6c37db03c5fb524bd86a3b63621cdef2dc63e37bd626b6a5ea715d6b42245fcd",
+    "tests/test_qwen_rom_source_observer.py": "b83ebafad7575226ce91c72c938b245f6e8edd75c328fc9d9f7040bc75daff36",
+    "tools/qwen_rom_observer_microbench.py": "48e3200c78f92ac95cdb9c47d4d41458dfb9a6606066c3a0931d5736564c24e9",
+    "tools/qwen_rom_source_observer_prepare.py": "c36c4931e41b64e477c70218d66e3f6ba68a4283345aba76d44d17a24389a42d",
+    "tools/qwen_rom_source_observer_replay.py": "1a780efdb19e3c9db9569d9dbf69a92686469bfba3ce7478ec6c44d92fc66ea0",
+    "tools/qwen_rom_source_observer_verify.py": "7e8054463fcc400f5ffce596f4b33aafa4277ad4bcdd2faabf14caceba127653",
+    "tools/qwen_rom_source_release_export.py": "c94b4ab9b6899c70e25d95db2ca33ea1d20953a13420dd020ef9fc57f52c42f7"
+  },
+  "scope": "defaultoff actual host-port read observer readiness; fixture tests only; no actual journal or runtime admission"
+}

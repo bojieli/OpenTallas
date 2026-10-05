@@ -1,0 +1,16 @@
+{
+  "schema": "w15b_sram_independent_validation_v1",
+  "verdict": "PASS",
+  "source_commit": "f449a0d9ac9a4b6f227bab636cd8d6156fbd8f0d",
+  "checks": [
+    "all record/source commit pins",
+    "binary manifest/gen/record pins",
+    "80 raw log hashes",
+    "48 op rows and exact write counts per run",
+    "28 deterministic timing and VM digests",
+    "zero late faults",
+    "current golden byte-identical fixtures"
+  ],
+  "physical_signoff": "NOT CLAIMED; existing SS/FF physical gates remain pending",
+  "historical_draft": "Preserved unchanged in /tmp/claude-1000/wt/w15/results/rtl/w15_collectives.json"
+}

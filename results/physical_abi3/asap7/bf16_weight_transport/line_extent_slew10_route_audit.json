@@ -1,0 +1,48 @@
+{
+  "scope": "Transport with final-line flags and 10 percent slew margin; sources predate compact-pass transport change",
+  "source_bindings": [
+    {
+      "recorded": "rtl/abi3/ot_a3_weight_layout_cursor.sv",
+      "verified": "results/physical_abi3/asap7/bf16_weight_transport/compact_fetch/ot_a3_weight_layout_cursor.sv",
+      "sha256": "4bb34f7f0f23f250cf2e5a3785f8da047c9ddb08516a02002877eb1f13bb84e0"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "verified": "rtl/abi3/ot_a3_bf16_weight_gather.sv",
+      "sha256": "70119b4ec736f120f6c3ca6d9f6a4c489568c962809c8093191876a0f45052a8"
+    },
+    {
+      "recorded": "rtl/abi3/ot_a3_bf16_weight_transport.sv",
+      "verified": "results/physical_abi3/asap7/bf16_weight_transport/compact_fetch/ot_a3_bf16_weight_transport.sv",
+      "sha256": "e4222efddee8f71f5a2ab0fe1d52f7e6df18dd0af5cab9837884bdfa8367d7e0"
+    }
+  ],
+  "retained_artifacts_verified": 7,
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.0361992,
+        "max_cap_violations": 0.0,
+        "max_fanout_violations": 0.0,
+        "max_slew_violations": 0.0,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 0.0169131,
+        "signal_integrity_clean": true,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "area_um2": 6141.48
+}

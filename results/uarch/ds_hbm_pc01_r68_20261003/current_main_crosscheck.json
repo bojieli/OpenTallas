@@ -1,0 +1,40 @@
+{
+  "actual_runtime_changed": false,
+  "changed_common": [],
+  "common_exact": 2375,
+  "comparison_main": "7b4509c23a8a67891f250bef78d7459e6050883c",
+  "complete_inventory_scope": "prepared frozen tree, not a claim that future main adds no unrelated helpers",
+  "historical_helpers_added_by_successor": [
+    "tools/ds_hbm_atomic_checkpoint_r66.py",
+    "tools/ds_hbm_checkpoint_phase_ram_r61.py",
+    "tools/ds_hbm_fullscope_enrollment_r60.py",
+    "tools/ds_hbm_held_resume_r61.py",
+    "tools/ds_hbm_remote_relaunch_plan_r66.py",
+    "tools/ds_pc01_checkpoint_fastpath_review.py"
+  ],
+  "new_source_dependencies": [
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/results/uarch/ds_hbm_connected_source_r37_20261002/inputs/h4_c0_ds_source_views.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/results/uarch/ds_hbm_source_prefix_r39_20261002/inputs/h4_c0_ds_native_execution.py.source",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_atomic_checkpoint_r66.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_checkpoint_storage_r55.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_checkpointed_prefix_r63.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_dual_resources_r56.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_prefix_observed_outputs_r42.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_source_prefix_r45.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_storage_home_binding_r41.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_hbm_unconsumed_retirement_r45.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/ds_producer_checkpoint_resume_v3.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/h3_complete_native_calendar_successor_r1.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/h3_ds_checkpoint_provider_r30.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/inputs/sources/tools/h3_ds_source_prefix_provider_r39.py",
+    "results/uarch/ds_pc01_checkpoint_fastpath_review_20261003/model.json",
+    "tools/ds_hbm_atomic_checkpoint_r67.py",
+    "tools/ds_hbm_pc01_child_r68.py",
+    "tools/ds_hbm_pc01_controller_r68.py",
+    "tools/ds_hbm_pc01_price_r68.py",
+    "tools/ds_hbm_per_pc_r67.py",
+    "tools/ds_hbm_remote_controller_r67.py",
+    "tools/ds_hbm_remote_price_r67.py"
+  ],
+  "prepared_base": "054c8ecb014ae36dfb29dc375c996cc6cf243e6e"
+}

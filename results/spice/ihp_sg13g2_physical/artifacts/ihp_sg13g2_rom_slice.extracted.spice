@@ -1,0 +1,15 @@
+* NGSPICE file created from ihp_sg13g2_rom_slice.ext - technology: ihp-sg13g2
+
+.subckt ihp_sg13g2_rom_slice VGND VPWR WL_PRESENT EN_PRESENT PRE_PRESENT Q_PRESENT
++ WL_ABSENT EN_ABSENT PRE_ABSENT Q_ABSENT
+X0 VGND EN_ABSENT NROW_ABSENT/S VGND sg13_lv_nmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X1 VPWR PRE_ABSENT BL_ABSENT VPWR sg13_lv_pmos ad=0.34p pd=2.68u as=0.34p ps=2.68u w=1u l=0.13u
+X2 VPWR BL_PRESENT Q_PRESENT VPWR sg13_lv_pmos ad=9.24322p pd=77.045u as=0.77302p ps=7.205u w=1u l=0.13u
+X3 VPWR PRE_PRESENT BL_PRESENT VPWR sg13_lv_pmos ad=0 pd=0 as=1.20022p ps=12.905u w=1u l=0.13u
+X4 NROW_PRESENT/S WL_PRESENT BL_PRESENT VGND sg13_lv_nmos ad=1.22242p pd=10.465u as=0 ps=0 w=1u l=0.13u
+X5 VPWR BL_ABSENT Q_ABSENT VPWR sg13_lv_pmos ad=0 pd=0 as=0.77302p ps=7.205u w=1u l=0.13u
+X6 VGND BL_PRESENT Q_PRESENT VGND sg13_lv_nmos ad=9.72802p pd=81.085u as=0 ps=0 w=1u l=0.13u
+X7 VGND BL_ABSENT Q_ABSENT VGND sg13_lv_nmos ad=0 pd=0 as=0 ps=0 w=1u l=0.13u
+X8 VGND EN_PRESENT NROW_PRESENT/S VGND sg13_lv_nmos ad=0 pd=0 as=0 ps=0 w=1u l=0.13u
+X9 NROW_ABSENT/S WL_ABSENT ROM_DRAIN_ABSENT VGND sg13_lv_nmos ad=1.22242p pd=10.465u as=0.37962p ps=3.545u w=1u l=0.13u
+.ends

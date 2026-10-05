@@ -1,0 +1,55 @@
+{
+  "callback_schema_scope": "Model input only, no RTL or measured hardware provider. Parent-owned epoch proof stays independent.",
+  "finite_resources": {
+    "ACK_capture_per_die": 4,
+    "RMW_locks_per_die": 4,
+    "forward_CDC_depth_per_die": 4,
+    "mappings_per_die": 4,
+    "reverse_CDC_depth_per_die": 4
+  },
+  "identity_fields": [
+    "instruction",
+    "position",
+    "die",
+    "stack",
+    "client",
+    "fullAW34sector",
+    "tag",
+    "producer_epoch_at_acceptance",
+    "transport_epoch",
+    "beat"
+  ],
+  "producer_domains": {
+    "controller": "Source model1000ps",
+    "hub_FAST": "2500/3ps",
+    "serial": "10000/9ps"
+  },
+  "publication_expression": "max(all272 exact-address sector reversecredit events); KVread starts after that publication and actual lease acquisition.",
+  "schema": "Mandatory_finite_consumer_phase_inputs_r7",
+  "source_requirements": [
+    "Common36.ACK_store: landing accept, scoreboard-visible and actual sector DUT-retire timestamps.",
+    "Common36.consumer_result_retire: all delivered beats, result-visible timestamp, actual DUT-retire timestamp.",
+    "Common36.credit_return: exact held identity after reverseCDC crossing.",
+    "Retained stage adapter: all272 sector completions, mandatory KV_READ acquisition, SCORES/PV result visibility and retirement, lease release before writer context release."
+  ],
+  "status": "ABSENT_IN_ACTUAL_r5_JOURNALS_NO_TIMER_SUBSTITUTE",
+  "timing_fields": [
+    "read_RF_import_visible_ps",
+    "RMW_merge_done_ps",
+    "read_consumer_result_visible_ps",
+    "read_consumer_DUT_retire_ps",
+    "WR_backing_visible_ps",
+    "ACK_capture_ps",
+    "forward_CDC_accept_ps",
+    "scoreboard_store_visible_ps",
+    "WR_consumer_result_visible_ps",
+    "WR_consumer_DUT_retire_ps",
+    "reversecredit_ps",
+    "KV_READ_lease_acquire_ps",
+    "SCORES_result_visible_ps",
+    "SCORES_DUT_retire_ps",
+    "PV_result_visible_ps",
+    "PV_DUT_retire_ps",
+    "lease_release_ps"
+  ]
+}

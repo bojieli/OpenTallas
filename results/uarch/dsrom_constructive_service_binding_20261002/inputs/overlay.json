@@ -1,0 +1,966 @@
+{
+  "DBU_per_um": 1000,
+  "capacity_and_latency_requirements": [
+    "Whole model weights and aggregate compute conserved across added dies",
+    "Largest unpartitionable operator and golden ownership granularity bind minimum partition count",
+    "MACs per die decrease; MACs/byte unchanged",
+    "Stage hops priced separately from TP/collective changes and mandatory finite index/return corrections"
+  ],
+  "common_candidate": "Pending actual source-owned inventory/ownership join; former58/276 screen fails corrected service debit",
+  "corridors": [
+    {
+      "candidate_anchor_band_um": [
+        1000.0,
+        21819.04,
+        10974.880000000001,
+        23650.72
+      ],
+      "margin_tracks": 72,
+      "name": "index_HBM_all128responses",
+      "per_layer": [
+        {
+          "layer": "M2",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 47488,
+          "unique_phased_positions": 47488
+        },
+        {
+          "layer": "M4",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 38160,
+          "unique_phased_positions": 38160
+        }
+      ],
+      "required_parallel_tracks": 42752,
+      "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+      "signal_tracks_after50pct_PG_clock_via_reserve": 42824
+    },
+    {
+      "candidate_anchor_band_um": [
+        1000.0,
+        23650.719999999998,
+        10974.880000000001,
+        25147.6
+      ],
+      "margin_tracks": 46,
+      "name": "index_quarter_join_to_batch",
+      "per_layer": [
+        {
+          "layer": "M2",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 38808,
+          "unique_phased_positions": 38808
+        },
+        {
+          "layer": "M4",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 31185,
+          "unique_phased_positions": 31185
+        }
+      ],
+      "required_parallel_tracks": 34950,
+      "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+      "signal_tracks_after50pct_PG_clock_via_reserve": 34996
+    },
+    {
+      "candidate_anchor_band_um": [
+        1000.0,
+        25147.6,
+        10974.880000000001,
+        25875.519999999997
+      ],
+      "margin_tracks": 52,
+      "name": "mergedKV_to_stage",
+      "per_layer": [
+        {
+          "layer": "M2",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 18872,
+          "unique_phased_positions": 18872
+        },
+        {
+          "layer": "M4",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 15165,
+          "unique_phased_positions": 15165
+        }
+      ],
+      "required_parallel_tracks": 16966,
+      "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+      "signal_tracks_after50pct_PG_clock_via_reserve": 17018
+    },
+    {
+      "candidate_anchor_band_um": [
+        1000.0,
+        25875.519999999997,
+        10974.880000000001,
+        25886.319999999996
+      ],
+      "margin_tracks": 49,
+      "name": "directproducer_registered_boundary",
+      "per_layer": [
+        {
+          "layer": "M2",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 280,
+          "unique_phased_positions": 280
+        },
+        {
+          "layer": "M4",
+          "translated_OBS_and_4p32um_halo_blocked": 0,
+          "unblocked": 225,
+          "unique_phased_positions": 225
+        }
+      ],
+      "required_parallel_tracks": 203,
+      "scope": "Candidate phased-grid extension. Via/PDN/clock detailed shapes and pin escape still require actual service placement; not a global route proof.",
+      "signal_tracks_after50pct_PG_clock_via_reserve": 252
+    },
+    {
+      "candidate_anchor_band_um": [
+        1000.0,
+        16205.56,
+        3125.44,
+        17100.088
+      ],
+      "macro_OBS_intersections": 0,
+      "margin_tracks": 4,
+      "name": "collector_combined",
+      "required_parallel_tracks": 20909,
+      "signal_tracks_after50pct_PG_clock_via_reserve": 20913
+    }
+  ],
+  "die_DBU": [
+    33000000,
+    26000000
+  ],
+  "fixed_depth": 4096,
+  "gate": {
+    "WAKE_RNE_source_matched_hard_abstract": "MISSING",
+    "actual_Nash_inventory_and_ownership": "JOIN_REQUIRED",
+    "full_die_fit": false,
+    "hard_field_slot_abstract": "MISSING",
+    "physical_admission": false
+  },
+  "historical_recipient_label_in_source_model": "Archimedes01a0f9c6 retained as prior handoff provenance; current routing above",
+  "independent_SVG": false,
+  "independent_sweep": false,
+  "macros_per_slot": 2,
+  "model_sha256": "06bd52db3edefe90463593ee03d39fd0c962341c61b7853d86c9d030c58014a2",
+  "planned_collector_macros": [
+    {
+      "candidate_anchor_body_um": [
+        1004.32,
+        16004.32,
+        1177.12,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice0",
+      "local_body_um": [
+        4.32,
+        4.32,
+        177.12,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1185.76,
+        16004.32,
+        1358.56,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice1",
+      "local_body_um": [
+        185.76,
+        4.32,
+        358.56,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1367.2,
+        16004.32,
+        1540.0,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice2",
+      "local_body_um": [
+        367.2,
+        4.32,
+        540.0,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1548.6399999999999,
+        16004.32,
+        1721.44,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice3",
+      "local_body_um": [
+        548.64,
+        4.32,
+        721.44,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1730.08,
+        16004.32,
+        1902.88,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice4",
+      "local_body_um": [
+        730.08,
+        4.32,
+        902.8800000000001,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1911.52,
+        16004.32,
+        2084.32,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice5",
+      "local_body_um": [
+        911.5200000000001,
+        4.32,
+        1084.3200000000002,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2092.96,
+        16004.32,
+        2265.7599999999998,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice6",
+      "local_body_um": [
+        1092.9599999999998,
+        4.32,
+        1265.7599999999998,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2274.3999999999996,
+        16004.32,
+        2447.2,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice7",
+      "local_body_um": [
+        1274.3999999999999,
+        4.32,
+        1447.1999999999998,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2455.84,
+        16004.32,
+        2628.64,
+        16045.36
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank0.slice8",
+      "local_body_um": [
+        1455.84,
+        4.32,
+        1628.6399999999999,
+        45.36
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1004.32,
+        16054.0,
+        1177.12,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice0",
+      "local_body_um": [
+        4.32,
+        54.0,
+        177.12,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1185.76,
+        16054.0,
+        1358.56,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice1",
+      "local_body_um": [
+        185.76,
+        54.0,
+        358.56,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1367.2,
+        16054.0,
+        1540.0,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice2",
+      "local_body_um": [
+        367.2,
+        54.0,
+        540.0,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1548.6399999999999,
+        16054.0,
+        1721.44,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice3",
+      "local_body_um": [
+        548.64,
+        54.0,
+        721.44,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1730.08,
+        16054.0,
+        1902.88,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice4",
+      "local_body_um": [
+        730.08,
+        54.0,
+        902.8800000000001,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1911.52,
+        16054.0,
+        2084.32,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice5",
+      "local_body_um": [
+        911.5200000000001,
+        54.0,
+        1084.3200000000002,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2092.96,
+        16054.0,
+        2265.7599999999998,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice6",
+      "local_body_um": [
+        1092.9599999999998,
+        54.0,
+        1265.7599999999998,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2274.3999999999996,
+        16054.0,
+        2447.2,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice7",
+      "local_body_um": [
+        1274.3999999999999,
+        54.0,
+        1447.1999999999998,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2455.84,
+        16054.0,
+        2628.64,
+        16095.04
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank1.slice8",
+      "local_body_um": [
+        1455.84,
+        54.0,
+        1628.6399999999999,
+        95.03999999999999
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1004.32,
+        16103.68,
+        1177.12,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice0",
+      "local_body_um": [
+        4.32,
+        103.68,
+        177.12,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1185.76,
+        16103.68,
+        1358.56,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice1",
+      "local_body_um": [
+        185.76,
+        103.68,
+        358.56,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1367.2,
+        16103.68,
+        1540.0,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice2",
+      "local_body_um": [
+        367.2,
+        103.68,
+        540.0,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1548.6399999999999,
+        16103.68,
+        1721.44,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice3",
+      "local_body_um": [
+        548.64,
+        103.68,
+        721.44,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1730.08,
+        16103.68,
+        1902.88,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice4",
+      "local_body_um": [
+        730.08,
+        103.68,
+        902.8800000000001,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1911.52,
+        16103.68,
+        2084.32,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice5",
+      "local_body_um": [
+        911.5200000000001,
+        103.68,
+        1084.3200000000002,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2092.96,
+        16103.68,
+        2265.7599999999998,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice6",
+      "local_body_um": [
+        1092.9599999999998,
+        103.68,
+        1265.7599999999998,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2274.3999999999996,
+        16103.68,
+        2447.2,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice7",
+      "local_body_um": [
+        1274.3999999999999,
+        103.68,
+        1447.1999999999998,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2455.84,
+        16103.68,
+        2628.64,
+        16144.72
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank2.slice8",
+      "local_body_um": [
+        1455.84,
+        103.68,
+        1628.6399999999999,
+        144.72
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1004.32,
+        16153.36,
+        1177.12,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice0",
+      "local_body_um": [
+        4.32,
+        153.35999999999999,
+        177.12,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1185.76,
+        16153.36,
+        1358.56,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice1",
+      "local_body_um": [
+        185.76,
+        153.35999999999999,
+        358.56,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1367.2,
+        16153.36,
+        1540.0,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice2",
+      "local_body_um": [
+        367.2,
+        153.35999999999999,
+        540.0,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1548.6399999999999,
+        16153.36,
+        1721.44,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice3",
+      "local_body_um": [
+        548.64,
+        153.35999999999999,
+        721.44,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1730.08,
+        16153.36,
+        1902.88,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice4",
+      "local_body_um": [
+        730.08,
+        153.35999999999999,
+        902.8800000000001,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        1911.52,
+        16153.36,
+        2084.32,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice5",
+      "local_body_um": [
+        911.5200000000001,
+        153.35999999999999,
+        1084.3200000000002,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2092.96,
+        16153.36,
+        2265.7599999999998,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice6",
+      "local_body_um": [
+        1092.9599999999998,
+        153.35999999999999,
+        1265.7599999999998,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2274.3999999999996,
+        16153.36,
+        2447.2,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice7",
+      "local_body_um": [
+        1274.3999999999999,
+        153.35999999999999,
+        1447.1999999999998,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    },
+    {
+      "candidate_anchor_body_um": [
+        2455.84,
+        16153.36,
+        2628.64,
+        16194.4
+      ],
+      "implementation_status": "Banked candidate ONLY; real retained collector source uses FF storage. No actual banked hierarchy falsely claimed.",
+      "instance": "candidate_collector.bank3.slice8",
+      "local_body_um": [
+        1455.84,
+        153.35999999999999,
+        1628.6399999999999,
+        194.39999999999998
+      ],
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "orientation": "R0"
+    }
+  ],
+  "rectangles": [
+    {
+      "area_mm2": 2.3381710387199997,
+      "bbox_DBU": [
+        1000000,
+        16000000,
+        3125440,
+        17100088
+      ],
+      "name": "BANKED_COLLECTOR_MACROS_AND_CLEAR20909TRACK_BAND",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 7.483249152000001,
+      "bbox_DBU": [
+        1000000,
+        17100088,
+        3125440,
+        20620888
+      ],
+      "name": "ACTUAL_POOLED_INDEXER_AND4RING_READERS",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 0.3075936768,
+      "bbox_DBU": [
+        1000000,
+        20620888,
+        3125440,
+        20765608
+      ],
+      "name": "X_SEL_TOPK_STORE",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 0.08263710720000002,
+      "bbox_DBU": [
+        1000000,
+        20765608,
+        3125440,
+        20804488
+      ],
+      "name": "PROSPECTIVE_COMMON_CONTROLLER_CUT",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 45.6762053376,
+      "bbox_DBU": [
+        3125440,
+        16000000,
+        10974880,
+        21819040
+      ],
+      "name": "ATTENTION64TILES_STATIONARY_STAGE_PVMERGE_WINDOW_RAW_QE_SERVICE",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 18.270788198400005,
+      "bbox_DBU": [
+        1000000,
+        21819040,
+        10974880,
+        23650720
+      ],
+      "name": "index_HBM_all128responses_CLEAR_ROUTE_BAND",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 14.931198374400003,
+      "bbox_DBU": [
+        1000000,
+        23650720,
+        10974880,
+        25147600
+      ],
+      "name": "index_quarter_join_to_batch_CLEAR_ROUTE_BAND",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 7.260914649600001,
+      "bbox_DBU": [
+        1000000,
+        25147600,
+        10974880,
+        25875520
+      ],
+      "name": "mergedKV_to_stage_CLEAR_ROUTE_BAND",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 0.10772870400000001,
+      "bbox_DBU": [
+        1000000,
+        25875520,
+        10974880,
+        25886320
+      ],
+      "name": "directproducer_registered_boundary_CLEAR_ROUTE_BAND",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 1.389602304,
+      "bbox_DBU": [
+        10974880,
+        16000000,
+        11605600,
+        18203200
+      ],
+      "name": "HUB_COLLECTIVE",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 0.892342656,
+      "bbox_DBU": [
+        10974880,
+        18203200,
+        11605600,
+        19618000
+      ],
+      "name": "HUB_VM",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 1.3882399488000001,
+      "bbox_DBU": [
+        10974880,
+        19618000,
+        11605600,
+        21819040
+      ],
+      "name": "HUB_GATHER",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 12.80542597632,
+      "bbox_DBU": [
+        11605600,
+        16000000,
+        13806208,
+        21819040
+      ],
+      "name": "HUB_SU_VECTOR",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    },
+    {
+      "area_mm2": 18.3132171648,
+      "bbox_DBU": [
+        13806208,
+        16000000,
+        16953328,
+        21819040
+      ],
+      "name": "HUB_HC",
+      "status": "Explicit priced rectangle; only collector SRAM body has retained macro abstract. Logic rectangles are source-state/arithmetic construction reservations, not hard tiles."
+    }
+  ],
+  "roles": {
+    "field_inventory": "Nash",
+    "service_inventory_ports_routes_clockPG": "controller-gap owner",
+    "shared_SVG_implementation": "Keplerfde",
+    "shared_placement_environment": "Archimedes9568",
+    "whole_token_latency": "Maxwell"
+  },
+  "schema": "opentallas.DSROM.shared4096.numeric-service-overlay.v1",
+  "source_ports_reference": "model.json:source_actual_port_inventory",
+  "source_qualification": "Grid/OBS static screen only. Logic rectangles remain source-counted reservation proxies. No new elaboration or physical closure. Native DS bridge state/area absent; no Qwen ownership transfer."
+}

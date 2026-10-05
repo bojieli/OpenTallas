@@ -1,0 +1,101 @@
+{
+  "block": "ot_gpu_tc_col",
+  "clock_period_ps": 833.0,
+  "closed_signoff": false,
+  "corners": {
+    "FF": {
+      "hold_buffer_um2": 1737.9,
+      "hold_buffers": 23839,
+      "hold_tns_ps": -0.91,
+      "hold_wns_ps": -0.91,
+      "macros_at_tt": [],
+      "rc": 0,
+      "setup_tns_ps": 0.0,
+      "setup_wns_ps": 186.11,
+      "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ff.lib"
+    },
+    "SS": {
+      "hold_buffer_um2": 1737.9,
+      "hold_buffers": 23839,
+      "hold_tns_ps": 0.0,
+      "hold_wns_ps": 70.36,
+      "macros_at_tt": [],
+      "rc": 0,
+      "setup_tns_ps": -38377.03,
+      "setup_wns_ps": -102.66,
+      "timing_model": "results/physical_abi3/asap7/chip/abstracts/ot_gpu_tc_col/ot_gpu_tc_col_ss.lib"
+    }
+  },
+  "git": {
+    "commit": "000ba0898f5120a66d5905ccff333ebbbe28394d",
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "note": "macros_at_tt lists hard macros timed with their TT model (no corner model yet): their paths are not valid sign-off; the ss_fmax includes the 60 ps uncertainty",
+  "policy": "setup at SS with 60 ps uncertainty, hold at FF with 25 ps (AGENTS.md sign-off corners)",
+  "schema": "opentallas-chip-block-corners-v1",
+  "sources": [
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+    },
+    {
+      "path": "rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_fadd.sv",
+      "sha256": "ba36ce3f0a3605c1ea5cad6aabf5fef09220637cdaef9a8a5f1bf3ff1b33f504"
+    },
+    {
+      "path": "rtl/v41rom/ot_v41_bmul2.sv",
+      "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_fadd.sv",
+      "sha256": "aba6e544799fac9c2d1a8ffe6287c0da6f212b59e1667f3d7b52fbd6043893e6"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tree.sv",
+      "sha256": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db"
+    },
+    {
+      "path": "rtl/gpu/ot_gpu_tc_col.sv",
+      "sha256": "7366fcff171403a70a3088851386be437c1b8a346dd001fb102d14eaaefee940"
+    }
+  ],
+  "ss_fmax_hz": 1068764295.0,
+  "work_dir": "/home/ubuntu/w13work/tc_col_13"
+}

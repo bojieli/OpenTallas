@@ -1,0 +1,5 @@
+{
+  "status": "FAIL_PRODUCER_SOURCE_CLOSURE",
+  "reason": "Live producer edited source while its compile_all() was active. Package self-source pin did not match captured producer source. Native scheduling stopped before publishing complete verdict.",
+  "successor": "native_r2 consumes compilation from immutable result-directory source snapshot with ROOT relocation only."
+}

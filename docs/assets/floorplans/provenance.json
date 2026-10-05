@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.atlas-floorplan-illustrations.v1",
+  "qualification": "illustrations only; captions define evidence scope",
+  "sources": {
+    "results/floorplan/qwen_o4/floorplan.json": "363739dda99e4f41baca028cfd57fcccee04d3b6027b7a1b4d49942cd43253ca",
+    "results/physical_abi3/asap7/chip/v41_w18/die_floorplan_ch8.64.json": "a81dcc667cdfeb2f4046e4a78690801abaefd8cacdd04e0d3499ef14bf379c64",
+    "tools/hbm_gpu_floorplan.py": "2b7241963971fd9fc8991ffd9a0cf89aee11525ad4747cb49efad001bc531205",
+    "tools/qwen_o4_floorplan.py": "2fa9633b32441d3e8a7a2154d6badce118522b2dff2105319df73849dfa95bb5"
+  },
+  "renderer_sha256": "6914e744ae56af50c9262ec3b9ac561dffbb37d2066742357afc42df6c2b0120",
+  "plates": {
+    "qwen-rom": "c116d52b9f74ec21373fd1ae234984ac3b8b3d3824cd2a8cee9c3b1845c75bc1",
+    "deepseek-rom": "ed43dea85712ec49ff8b68706874c716db0b70fcbcacfea0f9d53d0a5a01d9b8",
+    "qwen-hbm": "2b3b9ea66a185d21fe582ef1d9c8544a957eda69616f1c99455c0a608da0f717",
+    "deepseek-hbm": "8e31169e63700897fc2849ff459021a14f8af9b8c3a09916bd6fd9a852e546c7"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "PID": 2548073,
+  "host": "ubuntu",
+  "cwd": "/tmp/kepler-ds-r50-current-main-20261002",
+  "SHA": "6f8ea7ec4ef66045fbf8c6a4e00604ce8d23f415",
+  "argv": [
+    "/home/ubuntu/bin/python",
+    "tools/ds_hbm_dual_constructor_r56.py",
+    "--plan",
+    "results/uarch/ds_hbm_dual_resources_r56_20261003/preflight_plan.json",
+    "--out",
+    "/tmp/kepler-ds-r56-dual-constructor-preflight-20261003",
+    "--preflight-only"
+  ],
+  "python_version": "3.10.12 (main, Aug 31 2026, 10:18:17) [GCC 11.4.0]",
+  "started_ns": 1790989149156856866,
+  "disk_available": 806361690112,
+  "disk_required": 525569405088,
+  "RAM_available": 143403999232,
+  "RAM_required": 119463128716,
+  "numerical_GO": false,
+  "OS_caps_added": false,
+  "output": "/tmp/kepler-ds-r56-dual-constructor-preflight-20261003",
+  "log": "/tmp/kepler-ds-r56-dual-constructor-preflight-20261003.log"
+}

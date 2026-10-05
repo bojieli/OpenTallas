@@ -1,0 +1,27 @@
+{
+  "status": "pass",
+  "w19_pytest": 30,
+  "w17_runtime_checker": 9,
+  "w17_build_admission": 8,
+  "loader_rtl_replays": 4,
+  "retained_gate": "60-case compact proof reused, 54-case padded proof not rerun",
+  "source_pins": {
+    "loader": "aea92e9f9",
+    "companion_audit": "4c7f32e41",
+    "w17": "a7ee63c37"
+  },
+  "logs": {
+    "results/rtl/w19_loader_audit_checks_20261001/w17_runtime.log": "8745f37467950cbb1a3fb073f6582fab8c5096f1e1d52f6d75a8d5a299aaaef2",
+    "results/rtl/w19_loader_audit_checks_20261001/w17_build_admission.log": "84103bf7e62ae284175484b919fc349159a9b3bbd736deca3046febf399ea961",
+    "results/rtl/w19_loader_audit_checks_20261001/empty_patch_failure.log": "821a4497a46b0212e4ca45912d48a8d98a8a72efb955bab21229bb7104511b0a",
+    "results/rtl/w19_loader_audit_checks_20261001/w17_main_runtime.log": "67399932f69608f1617905853fe9b1c23716f0b63cc66c194e5f9d676944e486",
+    "results/rtl/w19_loader_audit_checks_20261001/w19_pytest.log": "a2a3c4b68aa70416fb312e4aaae8e14c352c367fc692b27c4622eb9644d825cf",
+    "results/rtl/w19_loader_audit_checks_20261001/w17_main_build_admission.log": "2aa7c28b8066fa158e2f8d7adcbc63ecf05aedd25b6f807adb877c6ee7381fc1"
+  },
+  "scope": "Functional loader boundary and source composition only; no new engine/router RTL or physical/timing adoption",
+  "main_regressions": {
+    "source_commit": "24910c5ba679439a16d7be78029fa48fe979e934",
+    "runtime": 9,
+    "build_admission": 8
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "argv": [
+    "./obj_bfcolumn/Vtb_bfcolumn"
+  ],
+  "case": "bfcolumn",
+  "elapsed_seconds": 0.3420385019853711,
+  "explicit_DIFF": false,
+  "failure_kinds": [
+    "NUMERICAL_VALUE"
+  ],
+  "log": "positive_bfcolumn_simulate.log",
+  "log_sha256": "e852fb432709a09272082a898085681207416df7b3f4091c51585815b4d99583",
+  "metrics": {
+    "cgroup.procs": "2841463",
+    "cpu.max": null,
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "memory.max": "4294967296",
+    "memory.peak": "2491949056",
+    "memory.swap.max": "0"
+  },
+  "numerical_completion": {
+    "events": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ]
+    ],
+    "expected_counters": [
+      [
+        1,
+        456,
+        912,
+        448
+      ]
+    ],
+    "expected_events": [
+      [
+        1,
+        1,
+        8,
+        1,
+        16,
+        32
+      ],
+      [
+        2,
+        1,
+        8,
+        1,
+        32,
+        64
+      ],
+      [
+        3,
+        1,
+        8,
+        1,
+        48,
+        96
+      ],
+      [
+        4,
+        1,
+        8,
+        1,
+        56,
+        112
+      ],
+      [
+        5,
+        6,
+        8,
+        1,
+        152,
+        304
+      ],
+      [
+        6,
+        6,
+        4,
+        1,
+        200,
+        400
+      ],
+      [
+        7,
+        6,
+        4,
+        1,
+        248,
+        496
+      ],
+      [
+        8,
+        6,
+        4,
+        1,
+        296,
+        592
+      ],
+      [
+        9,
+        6,
+        4,
+        2,
+        344,
+        688
+      ],
+      [
+        10,
+        6,
+        4,
+        2,
+        392,
+        784
+      ],
+      [
+        11,
+        6,
+        4,
+        2,
+        440,
+        880
+      ],
+      [
+        3,
+        1,
+        8,
+        1,
+        456,
+        912
+      ]
+    ],
+    "pass_counters": [],
+    "valid": false
+  },
+  "pass_marker": null,
+  "phase": "simulate",
+  "remaining_seconds_at_start": 59.06179601792246,
+  "returncode": 1,
+  "variant": "positive"
+}

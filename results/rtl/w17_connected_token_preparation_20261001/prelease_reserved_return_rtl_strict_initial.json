@@ -1,0 +1,21 @@
+{
+  "verdict": "FAIL_UNCHANGED_RESERVED_RETURN_RTL",
+  "source_pins": {
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream_ring.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "829a1e1566c781466b20dc7c939026234ddbb30351a59601ce32e0c61f6a3ea3"
+    },
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_kstream.sv": {
+      "commit": "d2c28c279c4b8df731f9c4937e790831529a954b",
+      "sha256": "0d33d2ad3136583b05f221eea414776358e401e55d5a5e70e4f0728f1a29c6c3"
+    }
+  },
+  "bench_sha256": "e3504cb3b5ab8ada0f57309c915ebd6eea1842d06f3e227b3b2b77d0bdcea6d8",
+  "logs": {
+    "compile": "",
+    "run": "DEBUG cyc=1 nb=000000000000 nbt=xx rv=00000000 rr=xxxxxxxx\nDEBUG cyc=2 nb=000000000000 nbt=xx rv=00000000 rr=xxxxxxxx\nDEBUG cyc=3 nb=000000000000 nbt=xx rv=00000000 rr=xxxxxxxx\nDEBUG cyc=4 nb=xxxxxxxxxxxx nbt=xx rv=00000000 rr=xxxxxxxx\nDEBUG cyc=5 nb=xxxxxxxxxxxx nbt=xx rv=00000000 rr=xxxxxxxx\nDEBUG cyc=6 nb=xxxxxxxxxxxx nbt=00 rv=00000000 rr=ffffffff\nDEBUG cyc=7 nb=xxxxxxxxxxxx nbt=00 rv=00000000 rr=ffffffff\nDEBUG cyc=8 nb=xxxxxxxxxxxx nbt=00 rv=00000000 rr=ffffffff\nDEBUG cyc=9 nb=xxxxxxxxxxxx nbt=02 rv=00000003 rr=ffffffff\nDEBUG cyc=10 nb=xxxxxxxxxxxx nbt=20 rv=ffffffff rr=ffffffff\nDEBUG cyc=11 nb=xxxxxxxxxxxx nbt=20 rv=ffffffff rr=ffffffff\nDEBUG cyc=12 nb=xxxxxxxxxxxx nbt=20 rv=ffffffff rr=ffffffff\nDEBUG cyc=13 nb=xxxxxxxxxxxx nbt=20 rv=ffffffff rr=ffffffff\nDEBUG cyc=14 nb=xxxxxxxxxxxx nbt=02 rv=00000003 rr=ffffffff\nFATAL: /home/ubuntu/w17-prelease-rtl-shi3hiso/tb.sv:36: bad drain requested=136 recv=136 beats=x out=0 ov=1\n       Time: 3000000000000000 Scope: tb\n"
+  },
+  "scope": "NPC32/WB32/GA24 ring posted136 synthetic sectors accepted with o_ready0; no DRAMtime/exactarithmetic/newhardware/fulltoken/physical qualification",
+  "source_unchanged": true,
+  "adopt": false
+}

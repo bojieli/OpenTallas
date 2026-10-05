@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/tmp/DS-recovery-negative-successor-execution-20261002-r1/VM_frozen_store_drop/obj/Vtb",
+    "+CUT=PREFIX",
+    "+PREFIX=0"
+  ],
+  "returncode": 1,
+  "log_sha256": "f062b1e480cba27a2b358d7bc38ac93ec13c1fd8aa9259cd29431a29ae4ff475",
+  "memory_events_before": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  },
+  "memory_events_after": {
+    "low": 0,
+    "high": 0,
+    "max": 0,
+    "oom": 0,
+    "oom_kill": 0,
+    "oom_group_kill": 0
+  }
+}

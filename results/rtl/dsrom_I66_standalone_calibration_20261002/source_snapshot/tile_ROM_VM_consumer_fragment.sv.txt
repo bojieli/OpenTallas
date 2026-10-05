@@ -1,0 +1,5 @@
+        if (X_ROM != 0) begin
+            if (rom_xre) for (q = 0; q < 64; q = q + 1) rom_xq[32*q +: 32] <= vm[rom_xaddr[VM_AW-1:0] + VM_AW'(q)];
+            if (rom_vre) rom_vq <= vm[rom_vaddr[VM_AW-1:0]];
+            for (q = 0; q < ROM_R; q = q + 1) if (rom_we[q]) vm[rom_waddr[q*AW +: VM_AW]] <= rom_wdata[32*q +: 32];
+        end

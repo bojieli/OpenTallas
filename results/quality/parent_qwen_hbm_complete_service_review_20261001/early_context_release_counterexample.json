@@ -1,0 +1,13 @@
+{
+  "owner_source_commits": [
+    "ee77828b3",
+    "53111e8db"
+  ],
+  "supplied_callback_cases_passed": 9,
+  "counterexample": "All272 sectors complete and publish; no leaseyet; release_writer_context accepted; subsequentrequired encoded KV_READ acquire fails.",
+  "subsequent_read_error": "reader landing after writer context reuse/release",
+  "scope": "Callback validator model, suppliedsyntheticcallbacks only. Not actual controller/dut failure.",
+  "required_correction": "Either defercontext release until mandatorySCORES/PV retired or allowpublishedgeneration lease frompersistdirectory afterwritercontext reuse. Must preservepricedfinitecounts/sourceprogram.",
+  "actual_provider_qualified": false,
+  "hardware_admission": false
+}

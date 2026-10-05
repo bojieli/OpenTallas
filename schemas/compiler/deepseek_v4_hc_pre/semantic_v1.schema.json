@@ -1,0 +1,148 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/semantic_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "architectural_outputs": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "$ref": "#/$defs/branch" },
+        "comb": { "$ref": "#/$defs/comb" },
+        "post": { "$ref": "#/$defs/post" },
+        "residual": { "$ref": "#/$defs/residual" }
+      },
+      "required": ["branch", "comb", "post", "residual"],
+      "type": "object"
+    },
+    "claim_boundary": {
+      "const": "Complete learned-parameter and numeric-contract package for one layer-0 attention HC_PRE site; contains no activation, result, or execution evidence."
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_profile_id": { "const": "opentallas.deepseek_v4_hc_pre_numeric.v1" },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "base_resource": { "const": "layers.0.hc_attn_base" },
+        "input": { "const": "x_bf16[batch,sequence,4,4096]" },
+        "kind": { "const": "HC_PRE" },
+        "projection_resource": { "const": "layers.0.hc_attn_fn" },
+        "scale_resource": { "const": "layers.0.hc_attn_scale" }
+      },
+      "required": ["base_resource", "input", "kind", "projection_resource", "scale_resource"],
+      "type": "object"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_semantic.v1" },
+    "site": { "$ref": "#/$defs/site" },
+    "source": { "$ref": "#/$defs/source" }
+  },
+  "required": [
+    "architectural_outputs",
+    "claim_boundary",
+    "model_id",
+    "numeric_profile_id",
+    "operation",
+    "schema",
+    "site",
+    "source"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE semantic contract v1",
+  "type": "object",
+  "$defs": {
+    "branch": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "BF16" },
+        "shape": { "const": "[batch,sequence,4096]" }
+      },
+      "required": ["dtype", "shape"],
+      "type": "object"
+    },
+    "comb": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "F32" },
+        "shape": { "const": "[batch,sequence,4,4]" }
+      },
+      "required": ["dtype", "shape"],
+      "type": "object"
+    },
+    "post": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "F32" },
+        "shape": { "const": "[batch,sequence,4]" }
+      },
+      "required": ["dtype", "shape"],
+      "type": "object"
+    },
+    "residual": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": { "const": "BF16" },
+        "shape": { "const": "[batch,sequence,4,4096]" }
+      },
+      "required": ["dtype", "shape"],
+      "type": "object"
+    },
+    "sha256": { "pattern": "^[0-9a-f]{64}$", "type": "string" },
+    "site": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "const": "attention" },
+        "layer": { "const": 0 },
+        "scope": { "const": "main" }
+      },
+      "required": ["branch", "layer", "scope"],
+      "type": "object"
+    },
+    "source": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "evidence_scope": { "const": "official_checkpoint" }
+            },
+            "required": ["evidence_scope"]
+          },
+          "then": {
+            "properties": {
+              "application_status": { "const": "partial_official_transform_application_not_release_evidence" },
+              "repository": { "const": "deepseek-ai/DeepSeek-V4-Flash-0731" },
+              "revision": { "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062" }
+            }
+          },
+          "else": {
+            "properties": {
+              "application_status": { "const": "development_fixture_application_not_release_evidence" }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "application_id": { "$ref": "#/$defs/sha256" },
+        "application_status": {
+          "enum": [
+            "development_fixture_application_not_release_evidence",
+            "partial_official_transform_application_not_release_evidence"
+          ]
+        },
+        "checkpoint_lock_id": { "$ref": "#/$defs/sha256" },
+        "evidence_scope": { "enum": ["development_fixture", "official_checkpoint"] },
+        "repository": { "minLength": 1, "type": "string" },
+        "revision": { "pattern": "^[0-9a-f]{40}$", "type": "string" },
+        "verification_id": { "$ref": "#/$defs/sha256" }
+      },
+      "required": [
+        "application_id",
+        "application_status",
+        "checkpoint_lock_id",
+        "evidence_scope",
+        "repository",
+        "revision",
+        "verification_id"
+      ],
+      "type": "object"
+    }
+  }
+}

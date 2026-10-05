@@ -1,0 +1,29 @@
+{
+  "verdict": "PASS_EXACT_PREPHYSICAL",
+  "adopted": false,
+  "rows": 240,
+  "cases": 13,
+  "completion_cycle_delta": 0,
+  "full_case_records_identical": true,
+  "unchanged_baseline_source_pins": true,
+  "full_shape": {
+    "N": 4,
+    "NB": 2,
+    "MTP": 6,
+    "FAST": 1,
+    "PP": 1,
+    "FRONT_PAR": 0,
+    "LAT": 8
+  },
+  "pending": [
+    "actual full-goal floorplan and synthesis leaf-clone check",
+    "SS/FF contextual timing, clean route and real abstract",
+    "clock power, hub layers, die root/region and actual IR"
+  ],
+  "input_sha256": {
+    "model": "22ec42a393a34fb639d9ea8766b1da3b5682dfca761405ce5d0fb2c29c72be58",
+    "control": "ec428796c12fc684971f80bfa20b99530b428ce46013de643cffa7890079b5de",
+    "baseline": "870a4565a96b77c972c5a09f540d467990cef4a7a90243427062f4cf0b3b4512",
+    "candidate": "b29ad7dce69b99426078c5d817fceb2c0b017d043883dd18e5cfa63d03f753b8"
+  }
+}

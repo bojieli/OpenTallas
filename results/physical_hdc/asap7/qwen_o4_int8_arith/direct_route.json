@@ -1,0 +1,65 @@
+{
+  "block": "ot_hdc_qwen_int8_arith",
+  "corner": "ASAP7 RVT TT, 0.7 V, 0 C, local platform LEF/Liberty",
+  "direct_route": {
+    "core_area_um": [
+      5,
+      5,
+      65,
+      65
+    ],
+    "detailed_route_drc": 0,
+    "die_area_um": [
+      0,
+      0,
+      70,
+      70
+    ],
+    "engineering_acceptance": "NOT_MET",
+    "extracted_spef": true,
+    "max_capacitance_violating_pins": 0,
+    "max_fanout_violating_pins": 5,
+    "max_slew_violating_pins": 310,
+    "propagated_clock_setup_wns_ns": -0.29776,
+    "propagated_clock_worst_hold_slack_ns": -0.06276,
+    "route_peak_memory_mb": 815.21,
+    "tool": "/usr/bin/openroad v2.0-17598-ga008522d8"
+  },
+  "limitations": [
+    "Direct diagnostic lacks ORFS timing and hold/slew repair, PDN, antenna, post-route equivalence and signoff checks.",
+    "The source mapped constants one_ and zero_ were converted from POWER/GROUND to ordinary SIGNAL nets solely to let the direct detailed router process the mapped netlist; this is not tie-cell or PDN implementation.",
+    "No macro model or full O4 tile/die is routed."
+  ],
+  "local_synthesis_sta": {
+    "cell_area_um2": 436.892,
+    "cells": 3222,
+    "fmax_mhz": 900.1,
+    "sequential_area_um2": 147.929,
+    "setup_wns_ns": -0.19099
+  },
+  "remote_orfs_command": "OT_PHYSICAL_STAGES=pnr bash tools/run_hdc_qwen_int8_arith_physical.sh --force --keep-workdir /disk/qwen_o4_int8_arith_orfs",
+  "resources": {
+    "default_orfs_timeout_seconds": 21600,
+    "observed_direct_route_peak_memory_mb": 815.21,
+    "suggested_remote_memory_cap_gb": 8
+  },
+  "schema": "qwen-o4-int8-arith-direct-route-diagnostic-v1",
+  "scope": "8-bit weight code decode/product and post-accumulation row scale multiplier only; no ROM/SRAM, matvec controller, TP2, UCIe, or full core",
+  "source_commit": "8458580674f8f75094024685585312820c1b4b34",
+  "source_hashes_sha256": {
+    "results/physical_hdc/asap7/qwen_o4_int8_arith/artifacts/detailed_route.log.gz": "26c389537fd024ece3f8e21a2cc0437048151ddf846c6e09e0b60b9240880df0",
+    "results/physical_hdc/asap7/qwen_o4_int8_arith/artifacts/extracted_sta.log.gz": "112350d03afefa066d3d7cdc631c9d163612f9c81ca9a468f1c9a5a94ea67391",
+    "results/physical_hdc/asap7/qwen_o4_int8_arith/artifacts/final_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/physical_hdc/asap7/qwen_o4_int8_arith/artifacts/placement_cts_grt.log.gz": "32f442ee0ed43157ba225141b57882a6c7c45e5b344c29c57224c660db9b1423",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_qwen_int8_arith.sv": "49cb8cc53efb3f7bfbee3d14e44ccc8d0910367e6f786d589254aee4d1a9c46d",
+    "tools/qwen_o4_int8_arith_droute.tcl": "4811f608ba0f253207d59005ced8ea71e501429d1c911fffe3bcd975c42f01d2",
+    "tools/qwen_o4_int8_arith_extracted_sta.tcl": "e8599370084b847558957654832855551ebff820c68d45513e3a5089a2c0133d",
+    "tools/qwen_o4_int8_arith_openroad.tcl": "3869072053aad9501c4e3e56fc10ed24a5c85631ec5909bb0a090a0720676345",
+    "tools/run_abi3_physical.py": "937999677650feeb6c0084d71afd8b341aa7d0a5a701525b9e9852b572e3ea84",
+    "tools/run_hdc_qwen_int8_arith_physical.sh": "fcda3444cf5f71988d4f74f06f7b2ca07e65eac9216fe7555a3546f6524441b1"
+  },
+  "target_clock_period_ns": 0.92
+}

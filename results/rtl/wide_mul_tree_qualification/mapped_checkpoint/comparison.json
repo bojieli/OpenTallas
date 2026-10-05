@@ -1,0 +1,26 @@
+{
+  "scope": "Current matched ORFS synthesis checkpoints from live routes. These are mapped areas before clock-tree and physical repair, not routed timing or area verdicts.",
+  "records": [
+    {
+      "configuration": "chain_current",
+      "mapped_cell_area_um2": 1583.30052,
+      "report": "results/rtl/wide_mul_tree_qualification/mapped_checkpoint/chain_current_stat.txt",
+      "sha256": "0624645a38dbe82a677f9f334442a6c129688e92cebf9c42ec3d6f166729e3ed"
+    },
+    {
+      "configuration": "tree_current",
+      "mapped_cell_area_um2": 1595.11032,
+      "report": "results/rtl/wide_mul_tree_qualification/mapped_checkpoint/tree_current_stat.txt",
+      "sha256": "6d60ce88f3953a66ca97c167143228e541264f797b0de06d5e2c9c05fa0f2018"
+    },
+    {
+      "configuration": "tree_step32",
+      "mapped_cell_area_um2": 2654.68266,
+      "report": "results/rtl/wide_mul_tree_qualification/mapped_checkpoint/tree_step32_stat.txt",
+      "sha256": "4c0d26498dd3e4df6326242e6befd587f6a0567c96f5e704bcdf9062fb1213f8"
+    }
+  ],
+  "tree16_area_change_percent": 0.7458975634012877,
+  "tree32_area_change_percent": 67.66764277952741,
+  "decision": "Tree32 reduces containing softmax cycles but increases standalone mapped multiplier area significantly. Await extracted timing; evaluate complete-engine area per useful throughput before selecting width."
+}

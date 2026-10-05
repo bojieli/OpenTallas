@@ -1,0 +1,50 @@
+{
+  "status": "EXACT_INPUT_ENROLLMENT_AND_RETAINED_SOURCE_LINEAGE_VERIFIED",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "launch_manifest": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/launch.json",
+  "launch_manifest_sha256": "f741a93a13aacad45efd7d18fea86f7891de9c35ee44d6854dafd3bee3eceecc",
+  "source145_verified_against_git_and_retained_source": true,
+  "archive_count": 13,
+  "archive_bytes": 500032878,
+  "header_count": 137,
+  "header_bytes": 159333258,
+  "compile_sources": 4,
+  "all_input_files_stable_during_hash": true,
+  "archive_header_manifests": "archives.json / headers.json / compile_sources.json",
+  "retained_build_logs": [
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die0.log",
+      "sha256": "55a1292fb84210072d1f26431c894793fc8d95ef91d73f693af94abd8683020b",
+      "bytes": 818691,
+      "exit_status_0": true
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die1.log",
+      "sha256": "322487cb3453668abc0921dcf52fb241a59a714a1ea730c97568f430767f5d87",
+      "bytes": 818691,
+      "exit_status_0": true
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die2.log",
+      "sha256": "886944bf1d30559f165a8f9f1b6f100e3d4fb346f5d7e80be7e16e81d8548f73",
+      "bytes": 818690,
+      "exit_status_0": true
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/build_die3.log",
+      "sha256": "239896ca4434c66daf2201f257dfaa9129299576c17a78e7f78774a12bb479df",
+      "bytes": 818691,
+      "exit_status_0": true
+    },
+    {
+      "path": "/home/ubuntu/w17-current-L0-fastpp-20261001-r4/build/link.log",
+      "sha256": "5847274dea7fb28c92e706bb5f454ab7fe2a89c9707bdedbae120bf6945acb60",
+      "bytes": 3490,
+      "exit_status_0": true
+    }
+  ],
+  "limitation": "No historical build-time archive/header content manifest was located. Current SHA256 enrollment plus unchanged145sources and retained successful build/link logs establish exact reuse inputs and build lineage; no independent archive rebuild or new runtime equivalence claim.",
+  "payload_images_or_checkpoint_contents_read": false,
+  "original_archives_headers_modified": false,
+  "compiler_or_runtime_launched": false
+}

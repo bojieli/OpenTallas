@@ -1,0 +1,52 @@
+{
+  "Dewey": {
+    "RF_bytes_per_SM": 524288,
+    "RF_ports": "2R1W",
+    "beat_bytes": 64,
+    "contract": "inputs/Dewey_C0_interface.json",
+    "credit_until": "mirrored_visible_ACK",
+    "measured_provider_service": false,
+    "shared_bytes": 65536,
+    "source_command_join_missing": true
+  },
+  "GO": {
+    "existing_numerical_jobs_unchanged": true,
+    "full_token_admitted": false,
+    "host_inventory_and_journal_size_before_any_full_run": true,
+    "no_arbitrary_build_caps": true,
+    "reason": "missing actual input payloads and concrete branch semantics; H3 software token can proceed independently of physical measurements once bound"
+  },
+  "ROM_ECC_scope": "no mandatory weight/configuration ROM ECC; mutable state/SRAM/HBM/link protections retained",
+  "Sagan": {
+    "actual_parent_refill_writeback_ACK_reverse": "UNKNOWN per pinned dynamic_leaf_checkpoint",
+    "contract": "inputs/Sagan_shared_bridge_contract.json",
+    "parent_fullshape_run": false,
+    "workspace32MiB_is_not_shared64KiB": true
+  },
+  "auxiliary_request_count": 671,
+  "changed_arithmetic_operators": 0,
+  "families": 30,
+  "full_native_PCs": 2213,
+  "implemented": [
+    "source-declared F32 zero initial partial destination with exact output version and full extent; no generic zero fallback",
+    "released BF16 checkpoint row payload with exact rank row and shape; no inferred cast/slice of FP8 wo_a",
+    "inherited r30 finite fragments, immutable reads, sector causality, lease and reverse journal"
+  ],
+  "initial_context_required_path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930",
+  "live_owned_remote_jobs": [],
+  "missing_initial_window_versions": 40,
+  "new_PVE2_PVE3_jobs": 0,
+  "original_native_sha256": "c7ae6baf3f57d3b8d23b3532dad9d1fa921ac86736b5e8b5a229f644a1994313",
+  "physical_qualified": false,
+  "remaining_provider_branches": [
+    "retained history/window inputs and subsequent auxiliary consumer views",
+    "source auxiliary coefficient/descriptor/CROM/Engram/scale payload bindings",
+    "accepted expert route descriptor -> checkpoint tensor",
+    "FP8 wo_a decoded/BF16 source conversion and head-local K512 ownership",
+    "source versioned reshape/subview and non-row collective adapters",
+    "compound code/scale publication where requested"
+  ],
+  "source_initial_context_directory_available": false,
+  "status": "R31_CONCRETE_DATA_BINDINGS_PASS_FULL_TOKEN_GO_BLOCKED",
+  "zero_reference_count": 3840
+}

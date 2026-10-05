@@ -1,0 +1,84 @@
+{
+  "admission": false,
+  "capacity": {
+    "banks_per_rank": 45,
+    "container_bits": 274,
+    "logical_address_bits": 20,
+    "logical_capacity_words": 552960,
+    "logical_words_per_container": 3,
+    "padding_bits": 82,
+    "required_words": 549760,
+    "rows_per_bank": 4096,
+    "spare_words": 3200
+  },
+  "checkpoint_payload_reads": 0,
+  "correction": "Previous30c76272f leakage parser matched default_cell_leakage_power; actual cell value52805.1442nW. Prior record retained in git; this correction is authoritative.",
+  "gain_credit": 0,
+  "jobs_launched": 0,
+  "operand_gate": {
+    "L14_product_retained_sources_known": true,
+    "L1_product_source_bound": false,
+    "actual_checkpoint_operands_per_rank": 729,
+    "actual_producer_changed": false,
+    "full_program_relocation_owner": "Godel",
+    "generated_Engram_operands_per_rank": 2
+  },
+  "owner_candidate_pin": "64c6bffe0",
+  "ports": {
+    "address": "container=logical//3; lane=logical%3; bank=container//4096; row=container%4096",
+    "arbitration": "instruction-order exclusive read lease held until consumer acceptance; stall cannot overwrite held response",
+    "logical_response_bits": 64,
+    "macro_read_bits": 274,
+    "physical_macro_clock_enable": null,
+    "scalar_logical_words_per_fast_cycle": 1,
+    "unrelated_read_parallelism": false
+  },
+  "registered_select_structure": {
+    "FF_cell_area_um2": null,
+    "area_note": "macro area excludes capture/select/tag/lease/arbitration/clock/CDC cells",
+    "bank_select_mux2_bits": 12056,
+    "bank_tree_levels": 6,
+    "conservative_capture_FF_bits_per_rank": 12330,
+    "lane_select_mux2_bits": 128,
+    "lane_tree_levels": 2,
+    "mux_cell_area_um2": null,
+    "power_clock_gating_and_activity": null,
+    "wire_fanout_route_cost": null
+  },
+  "schema": "opentallas.w11.crom-packed-home-service-preflight.v1",
+  "source_macro_cost": {
+    "SS_leakage_W_per_bank": 5.2805144200000004e-05,
+    "SS_leakage_W_per_rank": 0.002376231489,
+    "area_um2_per_bank": 7881.3648,
+    "macro_area_mm2_per_rank": 0.354661416,
+    "scope": "compiler-generated predictive macro Liberty/LEF; not current contextual silicon/route measurement"
+  },
+  "source_pins": {
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef": {
+      "commit": "64c6bffe0",
+      "sha256": "99d748ee4cd4eada18c2931f9b472e369759a7fa1fbd865f08b62f559f7cf1bf"
+    },
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib": {
+      "commit": "64c6bffe0",
+      "sha256": "a50b73315c92406401d1540e223070671a3a8c45edd0e87e8d0d96bf50b8bd15"
+    },
+    "results/uarch/v41_rom_depth_study.json": {
+      "commit": "64c6bffe0",
+      "sha256": "2486182dfd3bfd8f37db72ee59c254222d2586292efdead2697bd71ccf095c5b"
+    }
+  },
+  "timing_preflight": {
+    "FF_hold_verdict": null,
+    "SS_macro_clk_to_q_ps": 744.0,
+    "SS_min_period_ps": 711.9,
+    "candidate_streaming_cycles": "at least1macro-to-register +1registered bank/lane select; more if select fails target",
+    "capture_setup_ps": 25,
+    "contextual_SS_verdict": null,
+    "direct_capture_residual_ps": 4.0,
+    "mandatory_capture_before_bank_lane_mux": true,
+    "measured_capture_select_cycles": null,
+    "serial_domain_CDC_cycles": null,
+    "setup_uncertainty_ps": 60,
+    "streaming_period_ps": 833
+  }
+}

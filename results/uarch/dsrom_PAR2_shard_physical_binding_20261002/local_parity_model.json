@@ -1,0 +1,449 @@
+{
+  "applicability": {
+    "DeepSeek_HBM": "No ROM parity novelty or cost transfer.",
+    "DeepSeek_ROM": "Same PAR2 candidate analytical preparation only.",
+    "Qwen_HBM": "No ROM parity novelty or cost transfer.",
+    "Qwen_ROM": "No transfer; different source inventory."
+  },
+  "area": {
+    "against_clearance_priced_screen_remaining_mm2": 121.55310800447424,
+    "against_original163_screen_remaining_mm2": 153.6477671411142,
+    "control_gate_bit_equivalents": 6862336,
+    "fit_certified": false,
+    "full_added_debit_mm2": 9.469334937600001,
+    "logic_allowance_mm2": 5.38501032576,
+    "logic_is_explicit_conservative_construction_allowance_not_synthesis": true,
+    "logic_rectangle_rounding_mm2": 0.03226967424000016,
+    "no_residual418_or47_credit": true,
+    "retained_FF50_mm2_per_bit": 7.5816e-07,
+    "screen_with_variant_mm2": 736.4468919955258,
+    "state_bits": 240400
+  },
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "conservation": {
+    "full_all58_replica": true,
+    "leaves": 412,
+    "no_NP_depth_stage_or_reduction_change": true,
+    "no_adjacent_q_BF_compute_added": true,
+    "original_shard0_storage_retained": true,
+    "replica_gross_bits": 462389248,
+    "replica_useful_capacity_bits": 432013312,
+    "source_allocated_parity_bits_by_stage": {
+      "0": 330301440,
+      "1": 322273280,
+      "10": 326860800,
+      "11": 331448320,
+      "12": 332595200,
+      "13": 330301440,
+      "14": 330301440,
+      "15": 328007680,
+      "16": 334888960,
+      "17": 330301440,
+      "18": 318832640,
+      "19": 337182720,
+      "2": 326860800,
+      "20": 332595200,
+      "21": 330301440,
+      "22": 330301440,
+      "23": 328007680,
+      "24": 334888960,
+      "25": 330301440,
+      "26": 328007680,
+      "27": 328007680,
+      "28": 334888960,
+      "29": 330301440,
+      "3": 340623360,
+      "30": 330301440,
+      "31": 325713920,
+      "32": 332595200,
+      "33": 330301440,
+      "34": 330301440,
+      "35": 328007680,
+      "36": 334888960,
+      "37": 328007680,
+      "38": 330301440,
+      "39": 328007680,
+      "4": 330301440,
+      "40": 334888960,
+      "41": 330301440,
+      "42": 328007680,
+      "43": 328007680,
+      "44": 334888960,
+      "45": 330301440,
+      "46": 330301440,
+      "47": 325713920,
+      "48": 332595200,
+      "49": 330301440,
+      "5": 330301440,
+      "50": 330301440,
+      "51": 328007680,
+      "52": 334888960,
+      "53": 105512960,
+      "54": 0,
+      "55": 0,
+      "56": 0,
+      "57": 0,
+      "6": 330301440,
+      "7": 331448320,
+      "8": 332595200,
+      "9": 330301440
+    },
+    "total_added_leaves_all58_TP4_shard1": 95584
+  },
+  "decision": "RAW_REPLICA_CAPACITY_AND_AREA_ALLOWANCE_PASS_SAME_PACKING_FINITE_CONFLICT_SCREEN_FAILS_ONE_CYCLE_ASSUMPTION",
+  "finite_service": {
+    "acceptance_rule": "One batch of at most128 pair requests; freeze accepted identities; no next batch until all ECC terminal+ordered consumer ACK retire. Round robin one unique row perleaf perround; broadcast only matching row identities.",
+    "actual_epoch_fault_drain_required": true,
+    "actual_simultaneous_engine_issue_proven": false,
+    "additional_latency": "Macro SS cq743.963ps plus capture/setup/wire, sidecar SECDED, gather, weight ECC terminal and visible ACK. No cycles assigned until decoder/capture timing binds; 128 read rounds is a service bound conditional on stallable source, not total latency.",
+    "all_source_records": 46509,
+    "coalesce_only_identical_leaf_row": true,
+    "conflict_free_one_cycle_service": false,
+    "first_address_batch_witness": {
+      "distinct_rows": 64,
+      "leaf_chunk_parity": [
+        0,
+        0
+      ],
+      "requests_pair_linearbit": [
+        [
+          2061,
+          204800
+        ],
+        [
+          2092,
+          207360
+        ],
+        [
+          2122,
+          209920
+        ],
+        [
+          2154,
+          212480
+        ],
+        [
+          2188,
+          215040
+        ],
+        [
+          2218,
+          217600
+        ],
+        [
+          2250,
+          220160
+        ],
+        [
+          2284,
+          222720
+        ],
+        [
+          2314,
+          225280
+        ],
+        [
+          2346,
+          227840
+        ],
+        [
+          2380,
+          230400
+        ],
+        [
+          2409,
+          232960
+        ],
+        [
+          2442,
+          235520
+        ],
+        [
+          2476,
+          238080
+        ],
+        [
+          2505,
+          240640
+        ],
+        [
+          2538,
+          243200
+        ],
+        [
+          2572,
+          245760
+        ],
+        [
+          2601,
+          248320
+        ],
+        [
+          2637,
+          250880
+        ],
+        [
+          2668,
+          253440
+        ],
+        [
+          2697,
+          256000
+        ],
+        [
+          2733,
+          258560
+        ],
+        [
+          2764,
+          261120
+        ],
+        [
+          2793,
+          263680
+        ],
+        [
+          2829,
+          266240
+        ],
+        [
+          2860,
+          268800
+        ],
+        [
+          2889,
+          271360
+        ],
+        [
+          2925,
+          273920
+        ],
+        [
+          2956,
+          276480
+        ],
+        [
+          2986,
+          279040
+        ],
+        [
+          3020,
+          281600
+        ],
+        [
+          3050,
+          284160
+        ],
+        [
+          3082,
+          286720
+        ],
+        [
+          3116,
+          289280
+        ],
+        [
+          3146,
+          291840
+        ],
+        [
+          3178,
+          294400
+        ],
+        [
+          3212,
+          296960
+        ],
+        [
+          3242,
+          299520
+        ],
+        [
+          3274,
+          302080
+        ],
+        [
+          3308,
+          304640
+        ],
+        [
+          3338,
+          307200
+        ],
+        [
+          3370,
+          309760
+        ],
+        [
+          3404,
+          312320
+        ],
+        [
+          3433,
+          314880
+        ],
+        [
+          3466,
+          317440
+        ],
+        [
+          3500,
+          320000
+        ],
+        [
+          3529,
+          322560
+        ],
+        [
+          3562,
+          325120
+        ],
+        [
+          3596,
+          327680
+        ],
+        [
+          3625,
+          330240
+        ],
+        [
+          3661,
+          332800
+        ],
+        [
+          3692,
+          335360
+        ],
+        [
+          3721,
+          337920
+        ],
+        [
+          3757,
+          340480
+        ],
+        [
+          3788,
+          343040
+        ],
+        [
+          3817,
+          345600
+        ],
+        [
+          3853,
+          348160
+        ],
+        [
+          3884,
+          350720
+        ],
+        [
+          3913,
+          353280
+        ],
+        [
+          3949,
+          355840
+        ],
+        [
+          3980,
+          358400
+        ],
+        [
+          4010,
+          360960
+        ],
+        [
+          4044,
+          363520
+        ],
+        [
+          4074,
+          366080
+        ]
+      ],
+      "schedule_scope": "Adversarial address-service witness; simultaneous actual engine issue not established.",
+      "source_record": {
+        "active_pairs": 64,
+        "eligible_leaf_distinct_pair_upper": 64,
+        "first_address_batch_distinct_row_peak": 64,
+        "ordinal": 10,
+        "phase": 10,
+        "segment": 0,
+        "stage": 0
+      }
+    },
+    "macro_capture_seats": 412,
+    "maximum_eligible_pair_requests_per_single_leaf": 128,
+    "one_port_per_leaf": true,
+    "per_batch_conditional_issue_II_cycles": 128,
+    "per_batch_read_round_upper": 128,
+    "per_user_token_delta_not_yet_admitted": true,
+    "remote_2048bit_cycle_dependency_removed_only_after_local_ECC_terminal": true,
+    "request_seats": 128,
+    "source_FP4_matrices": 46080,
+    "source_metadata_only": true,
+    "source_unbackpressured_engine_cannot_use_this_contract_without_owned_accept_ready_adapter": true,
+    "witness_single_leaf_read_rounds": 64,
+    "witness_unique_reads": 64
+  },
+  "generator_sha256": "8df4833a278890ef35fe8f0a24a8685effbbecab34e131e06e2c9b4673ae4d06",
+  "geometry": {
+    "actual_parent_PG_via_clock_exclusions_bound": false,
+    "halo_grid_mm2": 4.0520549376,
+    "last_y_DBU": 8776080,
+    "layout_artifact": "local_parity_placement.json.gz",
+    "logic_rectangle_DBU": [
+      0,
+      8611920,
+      33000000,
+      8776080
+    ],
+    "parent_service_band_unchanged": true,
+    "parity_OBS_artifact": "local_parity_OBS.json.gz",
+    "pin_shapes": 185812,
+    "pin_templates": "macro_templates.json",
+    "raw_bodies_halos_logic_disjoint_from_parent_macros": true,
+    "raw_body_mm2": 3.2471222976
+  },
+  "minimum_next_source_repair": [
+    "Owner exporter must produce real paired codeword+sidecar addresses and opt-in accept-ready/arithmetic ECC terminal fence; current ports absent.",
+    "Preserve exact parity values while binding128 seats,412 captures and source-owned SECDED decoders; bound capture/decode/visible latency and consumer deadlines.",
+    "Place named gather/decoder/controller instances within explicit allowance; bind pin escape/PG/vias/CTS and incidence routing before G0."
+  ],
+  "new_engine_RTL_compile_PR_jobs": 0,
+  "parent_model_sha256": "1f7cb420e693e1d058913d6162a788e2def420cd1fc7f417e93604acc5ce8e88",
+  "physical_GO": false,
+  "ports": {
+    "address_formula": "ecc_bit_base + sum(previous_run.n*words*16) + (a-start)*16 + mb*8",
+    "address_translation": "divmod(linear_bit,256); divmod(word,16384) -> sidecar pair; divmod(localword,8192) -> mb; pp=a%2,row=a//2; keep global owner/phase/word/reset generation.",
+    "aligned_16bit_gather_has_no_256bit_word_straddle": true,
+    "each_leaf": {
+      "addr_in": 12,
+      "ce_in": 1,
+      "clk": 1,
+      "rd_out": 274,
+      "read_ports": 1
+    },
+    "independent_leaf_commands_bits_per_cycle": 5356,
+    "peak_local_raw_macro_return_bits_per_cycle": 112888,
+    "raw_word_SECDED_payload256_check10": true,
+    "useful_parity_delivery_bits_per_active_pair": 16,
+    "weight_code_scale_payload272_check10": "2inline+8sidecar each codeword; two codewords per pair. Must terminal before arithmetic.",
+    "worst_pair_consumers": 128,
+    "worst_useful_delivery_bits_per_cycle": 2048
+  },
+  "routing": {
+    "command_address_fanout": "412 distinct12bit addresses+CE; raw read112888bits/cycle is distributed, not a single freebus.",
+    "gather": "16bits*128 terminal lanes; source incidence map required for physical cut loads; retain allcodeword identities.",
+    "local_raw_shoreline_pin_OBS_translated": true,
+    "macro_CLK_added_cap_fF": 3577.70912,
+    "no_collector_track_debit_transfer": true,
+    "pin_escape_PG_via_and_decoder_routes_not_qualified": true
+  },
+  "schema": "opentallas.dsrom.PAR2.local-raw-parity.v1",
+  "source_capacity_calendar_commit": "1679182779f2b5fd748f7152dc930cc45a0b5c07",
+  "source_receipt_sha256": "7322f7fa15245991d3ffe6965ba9a23ef41cc361fe2d02e5f31c51f50329afcf",
+  "variant": "LOCAL_RAW_PARITY_SHARD1_SAME_PACKING"
+}

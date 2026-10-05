@@ -1,0 +1,144 @@
+{
+  "scope": "READ_ONLY_SOURCE_QUALIFIED_L0_WINDOW_SERVICE_EXPECTATION_NOT_RUNTIME_PROGRESS",
+  "recorded_utc": "2026-10-01T21:18:44.821276+00:00",
+  "source_commit": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_clean": true,
+  "source_sha256": {
+    "rtl/test/v41_runtime/w17_current_fastpp_die_rt.cpp": "8d1b7a553adc8882d4dd7c5f1c8bff53c34754eb5859be1804a436324a1cea04",
+    "rtl/test/v41_runtime/ot_v41_rt_die.sv": "43803b86e4bbdf5cbd68fb682a19611156d8595b7c9c71afd83f0898e9bf8d65",
+    "rtl/chip/ckvsel/ot_chip_v41x_die.sv": "06765ad88a0339b9df4fa9129d3b4f4d008ec4f9a12290ece59455df3cb12663",
+    "rtl/chip/ot_chip_v41x_hbm3e_phy.sv": "23d3470ccf31c747d18787d7b619b17bbe04c24754e89fe6f87d260dd59ed05b",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "92dc584e3caa00f2a66750d8092b4ae6c8fa9741dc645935d02705f4273a1543",
+    "rtl/chip/ot_chip_v41x_hbm_karb.sv": "a15e75ba2d0617b3d4b799ddcb61df59a63ae641c0414f2c9d83ffa68e1d9b1d",
+    "rtl/chip/ot_chip_v41x_kv_rope_reqmux.sv": "2c1ff0a202a2f26c8bc7d46d498839e40a31ee1d1cfbd52d5c1869b8c523f94c",
+    "rtl/chip/ot_chip_v41x_kv_reqmux.sv": "eef51eba3f64cc95b479fe6acc21f1b901296f6e980b27957af94492db8bc66c",
+    "rtl/chip/ot_chip_v41x_window_attn_source.sv": "56853b1e5831c51492985eb22623100d116d21e462a290a331267a3335e4e1fd",
+    "rtl/chip/ot_chip_v41x_window_refill_schedule.sv": "742beee407f3501b8506a1181f6879d2b477afced06c8a5cd9ab301a90fdbb62",
+    "rtl/chip/ot_chip_v41x_window_kv_prefetch.sv": "5a0cf8fb49fd259a7ad48df1e8b8f0e48abf69b28116802a46438a4322a71062",
+    "rtl/chip/ot_chip_v41x_attn_desc_lifecycle.sv": "f783dae4fedb878a7771dd37ab596552671d72b731024dbffd7c26c9e88b153d",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l0/ot_hdc_core_v41x.sv": "72469d77560b88734183b5a780bd420ff2a5c15272ec6d237a2293294a98beb3",
+    "rtl/hdc/v41x/ot_hdc_v41x_window_kv_blocks.sv": "819c5ed07652dceb9de23bdd9c0485416026c6d46bceef06ce2fbbfa3269d7d1"
+  },
+  "binary_sha256": "dbd8546a7860d36dbfa446e240ba5be2ed5b5daf6b3db4d5a90c020e4d42f6c8",
+  "pid": 1968071,
+  "progress_tail": [
+    "CYC 18800 wall 6802.0 s pc 24 24 24 24",
+    "CYC 19000 wall 6863.6 s pc 24 24 24 24",
+    "CYC 19200 wall 6924.2 s pc 24 24 24 24",
+    "CYC 19400 wall 6988.4 s pc 24 24 24 24",
+    "CYC 19600 wall 7051.6 s pc 24 24 24 24"
+  ],
+  "fixture": {
+    "rows": 128,
+    "sector_reads": 2176,
+    "sector_bytes": 32,
+    "region": [
+      262144,
+      264320
+    ],
+    "row_of_all_addresses": 8,
+    "pseudo_channels": 32,
+    "requests_per_channel": 68,
+    "unique_pc_bank_pairs": 128,
+    "WINDOW_REFILL_CREDITS": 1,
+    "WINDOW_RETAIN_L0": 0,
+    "WINDOW_STREAM_II1": 0,
+    "KARB_LOCAL": 0
+  },
+  "actual_backend": {
+    "provider": "hbm3e_phy.u_k RTL timed idx_hbm, MEM_MODE0; no C++ response injector",
+    "CLK_PS": 1000,
+    "clock_binding_note": "hbm3e_phy forwards CLK_PS only to W model, NOT to u_k; idx_hbm default1000 applies",
+    "QD": 64,
+    "RQD": 32,
+    "REFPB": 3,
+    "banks_per_pc": 32,
+    "refresh_period_per_pc_event_ps": 121875,
+    "RFCPB_PS": 200000,
+    "REQ_PS": 10000,
+    "CL_PS": 12500,
+    "BURST_PS": 1024,
+    "RSP_PS": 10000,
+    "RCDRD_PS": 19375,
+    "RP_PS": 16250,
+    "read_return_deadline": "h_tcol +23524ps; registered next-cycle offer, popped on rsp_v&&rsp_rdy",
+    "queue_admission": "req_rdy=(q_free>=req_len); one-credit WINDOW issues next sector only after prior response, so own traffic cannot fill64/32queues",
+    "scheduler": "FR-FCFS/MAXSKIP16 exists but absent other traffic q_n<=1 and no bypass; refpb3 processes due refreshes lazily at each request, MRU/least-queued bank choice"
+  },
+  "transport": {
+    "requests": "window -> priority window/CKV mux -> alternating KV/RoPE mux -> per-PC round-robin K/index arbiter -> HBM queue",
+    "responses": "tag-owner demux; lowest-PC K return chosen; WINDOW s_rdy=all1, independent of ME attention issue",
+    "competitors": "L0 CKV c_v tied0; RoPE preload completes before controlled PC advance; absence of pending index/RoPE traffic is a replay condition, not measured queue sample",
+    "no_circular_prefetch_issue_dependency": "schedule WAIT consumes pf_ok derived from completed stage_valid/user/tag in IDLE; stage_v=issue_v&&!staged_sent does NOT require stream_go. Descriptor moves STAGE->READY, then core ME issue permits stream_go/merge_start. issue_ready requires stream_go only after stage_v has already unlocked descriptor."
+  },
+  "conditional_expectation": {
+    "scalar_tool": "tools/w17_L0_window_service_expectation.py",
+    "tool_sha256": "00960b3f28c7e2a168f4251ecfc8d10d68da397152d6a54574c63c7889d6ef35",
+    "result_sha256": "e375cd6ccc78d739f12f358176f57abc8a453554efcda9e728b61f12959b10fe",
+    "elapsed_min": 123964,
+    "elapsed_max": 125727,
+    "end_cycle_min": 136671,
+    "end_cycle_max": 138146,
+    "conditions": [
+      "empty request and response queues at start",
+      "no concurrent RoPE/index/CKV requester",
+      "cold initially closed bank state; refresh deadlines reset-origin",
+      "functional pinned ready/valid transport",
+      "no source faults"
+    ],
+    "limits": "Previous write/RoPE bank state is not reconstructed; these starts form sensitivity examples, not a proof of actual start or deadline.",
+    "verdict": "Sensitivity replay, not formal cycle equivalence, actual request observation, or guaranteed live deadline",
+    "bound_scope": "Min/max over listed deterministic cold-state scenarios ONLY; not an exhaustive start/bank-state bound or measured live counter proof."
+  },
+  "watchdog_risk": {
+    "live_pc_watchdog": 100000,
+    "all_cases_exceed_watchdog": true,
+    "meaning": "A terminal PC24 watchdog can precede healthy cold-refill completion; do not classify that terminal as proved deadlock without causal state/producer evidence. No watchdog or runtime changed.",
+    "initialization": "After priming, 64 ticks and token start, lastpc initialized ~0 and last_move=cyc. First loop sample updates last_move; every subsequent change by ANY rank resets it.",
+    "trigger": "cyc-last_move > WD; WD=RT_WATCHDOG=100000; triggers on the100001st cycle since latest ANY-rank PC change, not row/sector progress.",
+    "last_move_observation": "CYC12200 allPC22; CYC12400 allPC24. If unchanged thereafter, last_move is in[12201,12400], so trigger in[112202,112401]. Precise intra-checkpoint transition is not exported.",
+    "terminal_classification": "Prints WATCHDOG with core state/idles/waited/CDMA words, breaks loop, dumps all4 VM arrays, prints TIMEOUT, returns1 if any rank notDONE. Does NOT set a DUT fault bit or prove circular wait; timeout must remain failed/incomplete, not exact/PASS.",
+    "live_environment": {
+      "RT_WATCHDOG": "100000",
+      "RT_SKIP": "0"
+    }
+  },
+  "tests": {
+    "scalar_cases": 26,
+    "assertions": [
+      "2176reads/case",
+      "elapsed>=2176*34",
+      "all selected start/edge cases exceed100000"
+    ],
+    "rtl_gate": "NOT_RUN; no builds allowed or needed for this read-only audit"
+  },
+  "next_action": "Preserve sole run. Independently replay scalar source transcription and use existing terminal diagnostic if watchdog fires; no live attach/change/watchers. A future owner-approved successor must bind service-sized watchdog and source-qualified counters without transferring old exactness.",
+  "launch_source_recheck": {
+    "count": 145,
+    "mismatches": [],
+    "launch_sha256": "f741a93a13aacad45efd7d18fea86f7891de9c35ee44d6854dafd3bee3eceecc"
+  },
+  "actual_admission_dependency_audit": {
+    "result": "No circular dependency found in inspected PC24 source path; actual state/progress unobserved, not a deadlock-free RTL proof.",
+    "edges": [
+      "PC21 matching producer/drain can issue via win_su_match&&win_issue_ready, win_admit exception; unrelated operations require win_idle.",
+      "Core u_blocks drains16blocks; EMPTY reached on final blk_v&&blk_ready. Source blk_ready=!schedule_busy&&prefetch_stateIDLE; before descriptor starts source schedule is idle.",
+      "Core PC24 S_DEC waits win_idle. Descriptor kvd_v emitted only for S_DEC attention decode while win_idle; no source prefetch is announced until packed core row handoff drained.",
+      "Accepted descriptor starts schedule without waiting for core me_go or SU idle; prefetch_ready may wait remaining final block writes, but writer grant/wr_done has no me_go dependency.",
+      "WINDOW one-credit FR issues m_v unconditionally while address legal; FR_DONE awaits routed response. req_rdy derives queue room, rsp_rdy for WINDOW constant1, not kv_ok or stream_go.",
+      "Final sector response sets stage_valid/tag/user and IDLE; pf_ok then permits schedule WAIT->SEND or ISSUE.",
+      "staged_v=issue_v&&!staged_sent is independent of stream_go and merge_start_ready; raises descriptor STAGE->READY and kv_ok.",
+      "Core waits SU idle,unit_ready,kv_ok and !kvd_v,win_idle. Once true me_go emitted then S_GO advances PC25; stream_go/merge starts only afterward. This ordering breaks kv_ok/attention-issue circularity."
+    ],
+    "other_blockers": "Fault, invalid row/user/tag/address, unserved transport response, unexpected competing queues, SU nonretirement or engine notready remain possible; PC-only samples cannot distinguish them."
+  },
+  "instrumentation_gap": {
+    "periodic": "PC only; no actual m_v/m_rdy/rsp_v/rsp_rdy count, rows_refilled, sectors_read, prefetch_state, desc_state, kv_ok or win_idle snapshot.",
+    "terminal": "dbg_state carries core st/d_unit/idles/coll_busy/waited/CDMA status; dbg_words is CDMA, not WINDOW reads. This can localize admission vs SU but cannot prove actual2176request progress.",
+    "no_live_change": true,
+    "no_attach": true,
+    "no_new_watcher": true,
+    "no_build": true,
+    "rtl_pins_unchanged": true
+  }
+}

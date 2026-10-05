@@ -1,0 +1,30 @@
+{
+  "actual_error_count": 20,
+  "causal_service_bound": "BOUND_MISSING",
+  "compiler_invocations": 0,
+  "engine_sources_changed": false,
+  "failed_source_commit": "99e8f0df14453c64262e5cb165517289ce0140a6",
+  "forced_ready": false,
+  "fresh_GO_required": true,
+  "log_original_path": "/tmp/w17-D1-current-core-parent-frontend-20261002-r1/frontend.log",
+  "log_sha256": "ce094f9000b9dd6ea0b1eb56d167f7fa230e6bb801dc6b519453d9d6b6e48469",
+  "old_fixture_changed": false,
+  "original_PC24_cause": "UNOBSERVED",
+  "parent_reported_duration_seconds": 1,
+  "parent_reported_exit": 1,
+  "runtime_invocations": 0,
+  "scope_correction": {
+    "w_addr": "dut.g_packed_kv.w_addr",
+    "w_rdy": "dut.g_packed_kv.w_rdy",
+    "w_s_beat": "dut.g_packed_kv.w_s_beat",
+    "w_s_tag": "dut.g_packed_kv.w_s_tag",
+    "w_srdy": "dut.g_packed_kv.w_srdy",
+    "w_sv": "dut.g_packed_kv.w_sv",
+    "w_tag": "dut.g_packed_kv.w_tag",
+    "w_v": "dut.g_packed_kv.w_v",
+    "w_wdone": "dut.g_packed_kv.w_wdone",
+    "w_we": "dut.g_packed_kv.w_we"
+  },
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "status": "ADDITIVE_SCOPE_CORRECTION_SOURCE_ONLY_NO_RETRY"
+}

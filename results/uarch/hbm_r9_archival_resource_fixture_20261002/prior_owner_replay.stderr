@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-hbm-r6-archive/tools/hbm_r9_archival_validation.py", line 77, in <module>
+    print(json.dumps(validate_archive(),indent=2,sort_keys=True))
+  File "/home/ubuntu/OpenTallas-hbm-r6-archive/tools/hbm_r9_archival_validation.py", line 65, in validate_archive
+    raise ValueError('unchanged real-root controls failed: '+test.stderr)
+ValueError: unchanged real-root controls failed: ......E...
+======================================================================
+ERROR: test_mocked_cold_build_lifecycle (__main__.QwenCalibration)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/ubuntu/OpenTallas-hbm-qwen-r9/tools/test_hbm_qwen_frontend_r9.py", line 61, in test_mocked_cold_build_lifecycle
+    R.execute(proposal,gp,'GO',out);self.assertEqual(calls.call_count,2)
+  File "/home/ubuntu/OpenTallas-hbm-qwen-r9/tools/run_hbm_qwen_frontend_r9.py", line 186, in execute
+    if receipt['verdict'] not in ('PASS_DIRECTED_NATIVE_DS_CONNECTED_ONLY','PASS_NATIVE_QWEN_BUILD_ONLY'):raise RuntimeError(receipt.get('failure','incomplete'))
+RuntimeError: insufficient fresh host memory headroom
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.462s
+
+FAILED (errors=1)
+

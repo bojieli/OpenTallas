@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_q_proj_vectors_v1.schema.json",
+  "title": "Complete Qwen q_proj RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "blocks",
+    "build_id",
+    "claim_boundary",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "commands",
+    "composition",
+    "expected_accumulator_tiles",
+    "expected_final_accumulator_codes",
+    "expected_output_codes",
+    "first_block_vector_set_id",
+    "graph_id",
+    "hbm_shard",
+    "input_codes",
+    "kernel_ir_id",
+    "numeric_contract",
+    "physical_plan_id",
+    "rmsnorm_source_vector_id",
+    "schema",
+    "source_execution",
+    "tiles",
+    "vector_set_id"
+  ],
+  "properties": {
+    "blocks": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "build_id": {"const": "3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f"},
+    "claim_boundary": {
+      "const": {
+        "architectural_simulator_output_correlated": true,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_layer_execution": false,
+        "complete_q_projection_graph_operation": true,
+        "graph_valid_qwen_command_slice": true,
+        "independent_reference_all_operations_exact": true,
+        "preloaded_attention_norm_row": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "raw_weight_payload_retained": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command_program_sha256": {"const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"},
+    "command_vector_set_id": {"const": "420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2"},
+    "commands": {
+      "type": "array",
+      "minItems": 2048,
+      "maxItems": 2048,
+      "items": {"$ref": "#/$defs/command"}
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_address",
+        "accumulator_payload_sha256",
+        "all_accumulator_tiles_sha256",
+        "auxiliary_address",
+        "auxiliary_payload_sha256",
+        "auxiliary_saturation_count",
+        "auxiliary_write_count",
+        "dma_destination_address",
+        "graph_command_count",
+        "graph_command_end",
+        "graph_command_start",
+        "graph_operation_id",
+        "input_address",
+        "input_element_count",
+        "input_payload_sha256",
+        "k_tile_count_per_output_block",
+        "matmul_add_count",
+        "matmul_multiply_count",
+        "output_block_count",
+        "output_element_count",
+        "parent_deployed_weight_payload_sha256",
+        "parent_source_weight_payload_sha256",
+        "submitted_command_count",
+        "weight_address",
+        "weight_element_count",
+        "weight_payload_sha256",
+        "weight_tile_count"
+      ],
+      "properties": {
+        "accumulator_address": {"const": 5242880},
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "all_accumulator_tiles_sha256": {"$ref": "#/$defs/sha256"},
+        "auxiliary_address": {"const": 6291456},
+        "auxiliary_payload_sha256": {"const": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"},
+        "auxiliary_saturation_count": {"type": "integer", "minimum": 0, "maximum": 4096},
+        "auxiliary_write_count": {"const": 4096},
+        "dma_destination_address": {"const": 4194304},
+        "graph_command_count": {"const": 2048},
+        "graph_command_end": {"const": 2050},
+        "graph_command_start": {"const": 3},
+        "graph_operation_id": {"const": "node.0002"},
+        "input_address": {"const": 3145728},
+        "input_element_count": {"const": 4096},
+        "input_payload_sha256": {"const": "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"},
+        "k_tile_count_per_output_block": {"const": 16},
+        "matmul_add_count": {"const": 16777216},
+        "matmul_multiply_count": {"const": 16777216},
+        "output_block_count": {"const": 64},
+        "output_element_count": {"const": 4096},
+        "parent_deployed_weight_payload_sha256": {"const": "27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b"},
+        "parent_source_weight_payload_sha256": {"const": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"},
+        "submitted_command_count": {"const": 2048},
+        "weight_address": {"const": 4194304},
+        "weight_element_count": {"const": 16777216},
+        "weight_payload_sha256": {"const": "27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b"},
+        "weight_tile_count": {"const": 1024}
+      }
+    },
+    "expected_accumulator_tiles": {
+      "type": "array",
+      "minItems": 1024,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/accumulator_codes"}
+    },
+    "expected_final_accumulator_codes": {"$ref": "#/$defs/final_accumulator_codes"},
+    "expected_output_codes": {"$ref": "#/$defs/output_codes"},
+    "first_block_vector_set_id": {"const": "4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129"},
+    "graph_id": {"const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"},
+    "hbm_shard": {
+      "const": {
+        "logical_base_address": 1073741824,
+        "path": "memory/hbm/hbm.00001.656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37.bin",
+        "sha256": "656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37",
+        "size_bytes": 1073741824,
+        "slice_offset_bytes": 170950656,
+        "slice_size_bytes": 33554432
+      }
+    },
+    "input_codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
+    "kernel_ir_id": {"const": "270b7609f2ea101593b3870a498bda3320336c94b27862dca7f991352727e050"},
+    "numeric_contract": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+    "physical_plan_id": {"const": "ba1d95462450d2cd059e6b55271c73ea90895515c9a4129bba1b51df265109c3"},
+    "rmsnorm_source_vector_id": {"const": "ce2a725cc574f334273dbfdc93e6fab7fc4da48df8d2d4087f22307635212d81"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_rtl_q_proj_vectors.v1"},
+    "source_execution": {
+      "const": {
+        "execution_report_id": "77b849e49608cacf9522eb16fad289385523c39618425e1e1c5f30126e504746",
+        "execution_report_sha256": "4ddc5212edb5942f2b0d43a630da30fc7912309029cd917ce692bb6e663299f0",
+        "independent_reference_id": "9033bc2ca0d078ff1bf85a624c952f207d2d8042eb0a1bc8bd1830d9b28007fb",
+        "independent_reference_sha256": "5ed2ab5c12998e63627ffcda33a631b98ea48d811da1d23c6e7035ce375cad80",
+        "node_0002_output_sha256": "b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff"
+      }
+    },
+    "tiles": {
+      "type": "array",
+      "minItems": 1024,
+      "maxItems": 1024,
+      "items": {"$ref": "#/$defs/tile"}
+    },
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "accumulator_codes": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "final_accumulator_codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "output_codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["auxiliary", "destination", "engine", "flags", "index", "kernel_index", "opcode", "size0", "size1", "size2", "size3", "source0", "source1"],
+      "properties": {
+        "auxiliary": {"type": "integer", "minimum": 0},
+        "destination": {"type": "integer", "minimum": 0},
+        "engine": {"enum": [1, 2]},
+        "flags": {"enum": [0, 1, 2]},
+        "index": {"type": "integer", "minimum": 3, "maximum": 2050},
+        "kernel_index": {"const": 2},
+        "opcode": {"enum": [1, 16]},
+        "size0": {"type": "integer", "minimum": 1},
+        "size1": {"type": "integer", "minimum": 0},
+        "size2": {"type": "integer", "minimum": 0},
+        "size3": {"const": 0},
+        "source0": {"type": "integer", "minimum": 0},
+        "source1": {"type": "integer", "minimum": 0}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["abi_major", "abi_minor", "expected_error", "expected_fields", "expected_index", "last", "name", "record_hex"],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {"$ref": "#/$defs/fields"},
+        "expected_index": {"type": "integer", "minimum": 3, "maximum": 2050},
+        "last": {"type": "boolean"},
+        "name": {"type": "string", "pattern": "^(dma|matmul)_q_proj_n(0[0-9]|[1-5][0-9]|6[0-3])_k(0[0-9]|1[0-5])$"},
+        "record_hex": {"type": "string", "pattern": "^[0-9a-f]{128}$"}
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accumulator_payload_sha256", "auxiliary_address", "command_end", "command_start", "output_block_index", "output_payload_sha256", "output_saturation_count", "tile_evidence_start", "weight_payload_sha256"],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "auxiliary_address": {"type": "integer", "minimum": 6291456, "maximum": 6299520},
+        "command_end": {"type": "integer", "minimum": 34, "maximum": 2050},
+        "command_start": {"type": "integer", "minimum": 3, "maximum": 2019},
+        "output_block_index": {"type": "integer", "minimum": 0, "maximum": 63},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "output_saturation_count": {"type": "integer", "minimum": 0, "maximum": 64},
+        "tile_evidence_start": {"type": "integer", "minimum": 0, "maximum": 1008},
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "tile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accumulator_payload_sha256", "dma_command_index", "dma_source_address", "flags", "input_address", "k_tile_index", "matmul_command_index", "output_block_index", "weight_payload_sha256"],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "dma_command_index": {"type": "integer", "minimum": 3, "maximum": 2049},
+        "dma_source_address": {"type": "integer", "minimum": 1244692480, "maximum": 1278214144},
+        "flags": {"enum": [0, 1, 2]},
+        "input_address": {"type": "integer", "minimum": 3145728, "maximum": 3153408},
+        "k_tile_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "matmul_command_index": {"type": "integer", "minimum": 4, "maximum": 2050},
+        "output_block_index": {"type": "integer", "minimum": 0, "maximum": 63},
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

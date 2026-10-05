@@ -1,0 +1,73 @@
+{
+  "status": "PASS_INDEPENDENT_REMAINING_THREE_NEGATIVE_CONTROLS",
+  "actual_worker_verdict": "PASS_ACCEPTANCE_EDGE_REMAINING_CONTROL_ONLY",
+  "GO_commit": "fef50c307a3367e7883985b4a0c9969391daafab",
+  "source_frozen_commit": "d9329a9fff3240df6fef37fd5e3f548f08bcc9d1",
+  "source_pin": "4e38326d6f361bc85e660f48c59c355e2bb95274",
+  "source_count": 166,
+  "phase_summary": [
+    {
+      "run": "remaining",
+      "phase": "PC_advance",
+      "cases": 1,
+      "closure_sha256": "9fe464197ec3fb5b752fb958f4deb06fd64f6fa16966e5da91b9f5b0384cc345",
+      "binary_receipt": {
+        "sha256": "9c023a1c3a6cf6db2fe8bccc47c280d97c362d9462f33a0b63a67f7a1e431f4d",
+        "bytes": 105489464
+      },
+      "runtime_seconds": 0.9231408671475947,
+      "expected_marker": "fault edge advanced PC"
+    },
+    {
+      "run": "remaining",
+      "phase": "VM_frozen_store_drop",
+      "cases": 1,
+      "closure_sha256": "8108b467483cafc6e6814b84ee2e68974546a3be88238bfe68fadfad7c36d12b",
+      "binary_receipt": {
+        "sha256": "a48f77046cbb6634a841f0de5a950b0965b56c7b9330b31601a163717e2362d0",
+        "bytes": 105489464
+      },
+      "runtime_seconds": 2.813777906820178,
+      "expected_marker": "actual accepted VM stores missing"
+    },
+    {
+      "run": "remaining",
+      "phase": "scalar_suppression",
+      "cases": 1,
+      "closure_sha256": "196c43e7145277685faf0d4b714ae6074620cb3e0726dee4b17d0e1d734a5801",
+      "binary_receipt": {
+        "sha256": "e731866eb4ec06a9cda20d2f0e021fca1323287328c412f5188da51dd2aca8b6",
+        "bytes": 105489464
+      },
+      "runtime_seconds": 4.330842251889408,
+      "expected_marker": "accepted scalar suppression lost"
+    }
+  ],
+  "compile_seconds": 1468.8777719964273,
+  "runtime_seconds": 8.06776102585718,
+  "sampled_memory_peak_bytes": 7460950016,
+  "terminal": {
+    "returncode": 0,
+    "terminal": "MainPID=0\nResult=success\nExecMainStatus=0\nCPUUsageNSec=[not set]\nActiveState=inactive\n",
+    "worker_record_exists": true,
+    "outside_worker_cgroup": true
+  },
+  "first_dependency_all_hashes_verified": true,
+  "offline_replay": "python strict_replay.py --archive archive",
+  "self_contained": "canonical_sources, actual runners/dependencies, all models/expectations/plans, committed GO contents, raw terminal/cap/resource/compile/runtime logs, every phase closure, first qualified edge dependency and historical23 evidence. Replay reads only this artifact.",
+  "relocated_replay_PASS": true,
+  "materialized_archive_content_bytes": 55755725,
+  "archive_manifest_sha256": "f43b56fde857dbac8f3640e21896089a0d514dd9cc06b3c40a5e7edd2a2e8d63",
+  "actual_binary_reexecution": false,
+  "generated_binary_scope": "Pre-reclamation hash and generated-inventory provenance only. No deleted binary rehash or RTL rerun.",
+  "mixed_bench_scope": {
+    "baseline23": "Historical original bench PASS",
+    "first_plus_remaining4": "Acceptance-edge bench negative controls PASS",
+    "newbench_healthy23": "NOT_RUN",
+    "full27_newbench_qualification": false
+  },
+  "prior_failures": "Original baseline campaign first-mutant predicate failure remains unchanged, with its raw root failure/progress records archived. No retry or expectation weakening.",
+  "physical_provider": false,
+  "fulltoken": false,
+  "adoption": false
+}

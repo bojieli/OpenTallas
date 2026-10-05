@@ -1,0 +1,187 @@
+{
+  "CPU_sharing": true,
+  "FSIZE": "unlimited",
+  "Nice": 10,
+  "RLIMIT_AS": "unlimited",
+  "actual_RTL": false,
+  "actual_capacity": {
+    "disk_available_bytes": 37159075840,
+    "mem_available_bytes": 213699235840
+  },
+  "admission_record_path": "results/rtl/qwen_trained_byte_conversion_PVE1_20261002_r1/GO.json",
+  "admitted": true,
+  "aggregate_output_bytes": 10737418240,
+  "authorization": "User explicitly authorized pinned VM checkpoint conversion after destination lock hashes and fresh lease/headroom; full native execution excluded",
+  "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "checkpoint_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218",
+  "cpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "destination_hash_inventory": [
+    {
+      "bytes": 728,
+      "matches": true,
+      "path": "config.json",
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"
+    },
+    {
+      "bytes": 3996250744,
+      "matches": true,
+      "path": "model-00001-of-00005.safetensors",
+      "sha256": "31d6a825ae35f11fb85b195b4c42c146c051e446433125a215336abdf95cbf5f"
+    },
+    {
+      "bytes": 3993160032,
+      "matches": true,
+      "path": "model-00002-of-00005.safetensors",
+      "sha256": "5991236cea6fe21f3d43cab0f0e84448734fbbe0789816202989f2ddc9d18282"
+    },
+    {
+      "bytes": 3959604768,
+      "matches": true,
+      "path": "model-00003-of-00005.safetensors",
+      "sha256": "c5185c4794be2d8a9784d5753c9922db38df478ce11f9ed0b415b7304d896836"
+    },
+    {
+      "bytes": 3187841392,
+      "matches": true,
+      "path": "model-00004-of-00005.safetensors",
+      "sha256": "b5ee7de71fbf17db3d5704e0c8f2bc7d005ca9e1d7ca2aeb19827b0cfcaa917a"
+    },
+    {
+      "bytes": 1244659840,
+      "matches": true,
+      "path": "model-00005-of-00005.safetensors",
+      "sha256": "20c2d6366ab85c90786ccdd829cd2b9e7d30ef3b2ebbb998280e7e4014b542ff"
+    },
+    {
+      "bytes": 32878,
+      "matches": true,
+      "path": "model.safetensors.index.json",
+      "sha256": "f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc"
+    }
+  ],
+  "disk_headroom_bytes": 25769803776,
+  "expected_image_bytes": 9428966912,
+  "expected_source_bytes": 16381550382,
+  "fleet_lease": {
+    "CPU_sharing": true,
+    "Nice": 10,
+    "admission": "Parent-directed CPU sharing; exact memory/disk reservations remain enforced",
+    "capacity_basis": "PVE1 fresh199GiB available; existing finite row-stream source model, retain80GiB fleet-capacity reservation, no smaller guessed process cap. This is fleet capacity protection, not an estimated workload peak.",
+    "held_lock_files": [
+      "/tmp/claude-1000/agd_slots/ot-pve1.9",
+      "/tmp/claude-1000/agd_slots/ot-pve1.10",
+      "/tmp/claude-1000/agd_slots/ot-pve1.11",
+      "/tmp/claude-1000/agd_slots/ot-pve1.12",
+      "/tmp/claude-1000/agd_slots/ot-pve1.13",
+      "/tmp/claude-1000/agd_slots/ot-pve1.14",
+      "/tmp/claude-1000/agd_slots/ot-pve1.15",
+      "/tmp/claude-1000/agd_slots/ot-pve1.16",
+      "/tmp/claude-1000/agd_slots/ot-pve1.17",
+      "/tmp/claude-1000/agd_slots/ot-pve1.18",
+      "/tmp/claude-1000/agd_slots/ot-pve1.wt.a7108d83add5",
+      "/tmp/claude-1000/queue/fleet-admission-guard-20261002/thread-leases/ot-pve1.840795"
+    ],
+    "host": "ot-pve1",
+    "lease_keeper_pid": 840795,
+    "memory_reservation_GiB": 80,
+    "no_AS_cap": true,
+    "no_FSIZE_cap": true,
+    "no_wall_cap": true,
+    "source_commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+    "source_model": "18ff7ccc5",
+    "threads": 8
+  },
+  "fresh_host_headroom_bytes": 111669149696,
+  "full_native_execution_admitted": false,
+  "memory_bytes": 85899345920,
+  "oracle_callbacks": 0,
+  "schema": "opentallas.Qwen.trained-native.admission.v1",
+  "shared_CPU_admission": {
+    "CPU_model": {
+      "Nice": 10,
+      "configured_peak_ratio": 1.2857142857142858,
+      "conservative_guard_doublecount_workers": 64,
+      "conversion_workers": 8,
+      "exclusive_CPUs": false,
+      "observed_load": 6.55615234375,
+      "performance_credit": false,
+      "physical_CPUs": 28,
+      "protected_configured_workers": 28,
+      "wall_deadline": null
+    },
+    "authorized_peak_thread_exception_only": true,
+    "existing_leases": [
+      {
+        "kind": "legacy",
+        "known": true,
+        "pid": 2491424,
+        "start_ticks": 310210959,
+        "threads": 28
+      }
+    ],
+    "lease": {
+      "CPU_sharing": true,
+      "authorization": "Parent explicitly directs sole PVE1 conversion after disclosed protected28worker W11 demand; memory/disk remain capacity-priced; no global guard modification.",
+      "cwd": "/home/ubuntu/OpenTallas-qwen-trained-conversion-r2",
+      "host": "ot-pve1",
+      "pid": 840795,
+      "slot_gib": 80,
+      "source_head": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+      "threads": 8,
+      "time": 1790946081.066463
+    },
+    "observed": {
+      "compute_threads": 28,
+      "cpus": 28,
+      "free_gib": 199.02804565429688,
+      "load": 6.55615234375,
+      "observed_at": 1790946080.986494,
+      "total_gib": 235.94449615478516
+    },
+    "pricing": {
+      "admit": false,
+      "aggregate_peak_ram_gib": 144,
+      "conservative_aggregate_threads": 64,
+      "effective_ram_budget_gib": 208,
+      "live_free_after_peak_gib": 55.028045654296875,
+      "observed_compute_threads": 28,
+      "reasons": [
+        "AGGREGATE_THREADS"
+      ],
+      "request_threads": 8,
+      "reserved_headroom_gib": 24,
+      "reserved_threads": 28,
+      "slot_request_gib": 80,
+      "thread_cap": 28
+    }
+  },
+  "source_commit": "44e58b4aaab28a3539d6d312ac80a8f8442c52dd",
+  "source_sha256": {
+    "/home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r1/launcher.py": "7cc012f0a8345e39555d60e9cc81b3939df1049521faf8a23dd4e3e0225bfe47",
+    "/home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r1/lease_recipe.py": "16d2de14214f027f626fae16a1f74a8f6f6a2b56cc7cc4d11dc4c3b6f71f8760",
+    "compiler/models/qwen3-8b/checkpoint_source.json": "5cd6273118054c4a9140682bcd7a32488d8697db26bedf5d7ece8de99e141607",
+    "results/uarch/h3_qwen_complete_native_20261002/tiled_r1/Qwen_tiled.json.gz": "ff789c0c464b6a13b96f197a10004bd79c0b478f9932404c1bfe25e30dd3aabc",
+    "tests/test_qwen_trained_byte_provider.py": "b6b5662d541fecf3461dc402a53d5e63796c68bea926121efd32e3dab9b01689",
+    "tools/h3_qwen_bounded_native.py": "282e57ab97f2dcdd0205b6f4e11ec189b669e3cc48548fab5f6d3c373d63c32b",
+    "tools/h3_qwen_complete_native.py": "9a231227d3d605cd34aec0629300bf24ff561b14d0b65364a696f9c5be4a6c76",
+    "tools/model_qwen_trained_byte_provider.py": "20be672eb77db7b37e877411a2db63a376cde01c0d4c500d41d333ccc0c76038",
+    "tools/prepare_qwen_trained_native.py": "9de0153315e6ffe4914218f390febd9444df4b5063846f2d5afcf9001f0ff60c",
+    "tools/qwen3_deployment_quality.py": "2f7e08bbb926f1900f58438c1fc850a7c035bb1cf99f32b8f839acb0f080a715",
+    "tools/qwen_hbm_complete_executor.py": "ff3f14b7d37aa3e690a3771c4deff905b673fd178646a8693c83531846215203",
+    "tools/qwen_hbm_complete_reference.py": "1e2875a0c3a616deeae3b8c679087bd01eaa95e628508586fb63e9fef0b05ab8",
+    "tools/qwen_trained_byte_provider.py": "48c3453cfd84edaeb9a609fb9915834ac475ffe25023609fe9b754f28e7849ff",
+    "tools/qwen_trained_native_run.py": "807f2bfb643e313872ec0431d999a74f6a70755e502d7b9562daf3ed40a84711"
+  },
+  "unit": "hbm-qwen-trained-byte-conversion-pve1-20261002-r1.service",
+  "wall_limit_s": null,
+  "worker_threads": 8
+}

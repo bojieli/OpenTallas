@@ -1,0 +1,92 @@
+{
+  "Qwen": {
+    "ECC_debit_in_own_loaded_control_model": 0,
+    "ROM_ECC_requirement_removed": true,
+    "SSFF_failure_still_requires_bank_control_reset_arrival_repair": true,
+    "loaded_control_failure_preserved": "f28f30496d5489a76b90c3bc45fc479e4fcc5881",
+    "own_control_area_credit": 0,
+    "sameedge_capture_observable_arithmetic_unchanged": true
+  },
+  "area": {
+    "existing_checkers_additional_cell_mm2_not_in_old_screen_not_subtracted_twice": 0.05513502816,
+    "main_and_raw_fullcorrector_floors_removed_once_in_named_terms": true,
+    "new_conservative_per_shard_screen_mm2": 727.1611257120057,
+    "no_measured_geometry_fit_claim": true,
+    "old_ECC_local_screen_mm2": 732.9650770579258,
+    "removed_unique_ECC_terms_mm2": {
+      "ECC_gather_only": 0.15992930304,
+      "address_bank_arbitration": 4.1981442048,
+      "main_pair_SECDED272_check10": 0.5279219712,
+      "raw_parity_capture_identity_state": 0.11869752959999999,
+      "sidecar_leaf_SECDED256_check10": 0.7996465152
+    },
+    "removed_unique_ECC_total_mm2": 5.80433952384,
+    "retained_common_main_terms_mm2": {
+      "conservative_carrier_padding_512FF_not_payload_change": 0.00038817792,
+      "main_data_selection_proxy": 0.052792197119999995,
+      "main_request_identity_capture_state": 0.0635641344,
+      "old_area_rounding_policy": 0.06682414463999997
+    },
+    "reticle_area_mm2": 858,
+    "reticle_mm": [
+      26,
+      33
+    ],
+    "unallocated_margin_before_real_unpriced_terms_mm2": 130.83887428799426,
+    "underlying_field_cfg_return_fixed_service_routes_clockPG_residual_retained_mm2": 726.9775570579258
+  },
+  "authoritative_record": "results/uarch/dsrom_ROM_noECC_candidate_20261002/model-r2.json",
+  "candidate": "DS4096-TP4-S58-PAR2-NP2048",
+  "conditional_credits": {
+    "ECC_old_reuse_interval": 8,
+    "actual_source_perbank_lease_release_must_determine_capacity": true,
+    "conditional_extra_FF50_proxy_mm2": 0.09971320319999999,
+    "conditional_extra_slots": 192,
+    "conditional_extra_state_bits": 131520,
+    "conditional_peak_if_old_perread_lease_ACK_protocol_retained": 320,
+    "consecutive_edges": 16,
+    "extra_slots_not_selected_or_added_to_screen": true,
+    "feed_is_actual_fullphase_accept_trace": false,
+    "noECC_conditional_reuse_interval": 5,
+    "not_authorized_to_remove_ACK_or_invent_ready_stalls": true,
+    "pairs_per_edge": 64,
+    "unchanged_128_lease_capacity": 128
+  },
+  "coordination": {
+    "Archimedes": "same NP2048 geometry; remove ECC-only cones/router/roles, retain charged padding macro/OBS/halo and common main capture/control; source clock/macro CLKQ/setup/hold/corridors still mandatory.",
+    "Nash": "same owner/phase/address map; omit ROM ECC addresses/dependencies only. Retain payload/scale/cfg/HE/CROM and original ordering; bind accepted maincapture/delivery/ownerACK, not offered phases.",
+    "parent": "compose noECC cfg/input/root/normalmain dependency edges and actual accepted ownership; SRAM/HBM/link protection unchanged."
+  },
+  "no_new_jobs": true,
+  "no_physical_admission": true,
+  "normal_dependency": "MainCE n -> actual PP1 capture postNBA n+2 -> original sample preedge n+3; no ECC terminal/checker/sidecar path. ACK remains actual matching ownership fence.",
+  "not_removed": [
+    "SRAM",
+    "HBM",
+    "links",
+    "payload/scale/arithmetic",
+    "identity/generation",
+    "capture",
+    "ownerACK",
+    "macroOBS/halo",
+    "return capacity",
+    "fixed service/routes/clockPG/residual"
+  ],
+  "old_ECC_FAIL_records_preserved": true,
+  "original_source_unchanged": true,
+  "physical_mode": "same compiled NP2048, field/config macros and halos; ECC storage roles idle/padding; no repack/body credit",
+  "required_before_RTL": [
+    "Nash exact noECC same-phase acceptedcapture/consumer/ACK contract and finite slots",
+    "Archimedes actual main capture/control/CTS/hold/endpoints and disjoint slot fit",
+    "parent cfg/input/root payload delivery and sameprogram criticalpath join"
+  ],
+  "tests": {
+    "byte_replay": true,
+    "command": "python3 -m unittest discover -s tests -p test_dsrom_ROM_noECC_candidate.py -v",
+    "count": 12,
+    "source_origin_checks": 7,
+    "verdict": "PASS"
+  },
+  "user_authorized_ROM_only_noECC": true,
+  "width": "Source cap0/cap1 each274, pair548; arithmetic payloadpair544. No282-bit physicalmacro. +512FFreserve repairs old544bit request buffer proxy to548."
+}

@@ -1,0 +1,468 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_physical_campaign_v1.schema.json",
+  "title": "Qwen public-IHP RTL physical feasibility campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifacts",
+    "campaign_id",
+    "claim_boundary",
+    "constraints",
+    "design",
+    "evidence_sha256",
+    "excluded_metrics",
+    "flow",
+    "metrics",
+    "open_gates",
+    "qualification",
+    "schema",
+    "source_sha256",
+    "status",
+    "structural_integrity",
+    "toolchain"
+  ],
+  "properties": {
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "final_def",
+        "final_gds",
+        "final_odb",
+        "final_sdc",
+        "final_spef",
+        "final_verilog",
+        "mapped_verilog"
+      ],
+      "properties": {
+        "final_def": {"$ref": "#/$defs/artifact"},
+        "final_gds": {"$ref": "#/$defs/artifact"},
+        "final_odb": {"$ref": "#/$defs/artifact"},
+        "final_sdc": {"$ref": "#/$defs/artifact"},
+        "final_spef": {"$ref": "#/$defs/artifact"},
+        "final_verilog": {"$ref": "#/$defs/artifact"},
+        "mapped_verilog": {"$ref": "#/$defs/artifact"}
+      }
+    },
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "const": {
+        "activity_derived_power": false,
+        "complete_layer_execution": false,
+        "formal_equivalence": false,
+        "foundry_drc": false,
+        "gds_generated": true,
+        "independent_lvs": false,
+        "open_pdk_rtl_to_gds_feasibility": true,
+        "package_reliability_yield_or_silicon": false,
+        "qualified_sram_macro": false,
+        "ta_phy_7_closed": false,
+        "ta_rtl_6_closed": false
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_setup_diagnostics",
+        "clock_names",
+        "core_clock_period_ns",
+        "core_clock_uncertainty_ns",
+        "hold_repair_margin_ns",
+        "input_delay_ns",
+        "max_routing_layer",
+        "output_delay_ns",
+        "serialized_input_delay_bits",
+        "serialized_output_delay_bits",
+        "unconstrained_endpoints"
+      ],
+      "properties": {
+        "check_setup_diagnostics": {"const": []},
+        "clock_names": {"const": ["core_clock", "io_clock"]},
+        "core_clock_period_ns": {"const": 20.0},
+        "core_clock_uncertainty_ns": {"const": 0.2},
+        "hold_repair_margin_ns": {"const": 0.1},
+        "input_delay_ns": {"const": 1.0},
+        "max_routing_layer": {"const": "Metal5"},
+        "output_delay_ns": {"const": 1.0},
+        "serialized_input_delay_bits": {"const": 598},
+        "serialized_output_delay_bits": {"const": 319},
+        "unconstrained_endpoints": {"const": 0}
+      }
+    },
+    "design": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "design_nickname",
+        "die_height_um",
+        "die_width_um",
+        "macro_count",
+        "top"
+      ],
+      "properties": {
+        "design_nickname": {"const": "opentallas_qwen_add_sram"},
+        "die_height_um": {"exclusiveMinimum": 0, "type": "number"},
+        "die_width_um": {"exclusiveMinimum": 0, "type": "number"},
+        "macro_count": {"const": 0},
+        "top": {"const": "ot_ta_add_bf16_sram_engine"}
+      }
+    },
+    "evidence_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detailed_route_drc",
+        "finish_metrics",
+        "finish_report",
+        "klayout_merge_log",
+        "route_log",
+        "synthesis_check",
+        "synthesis_statistics"
+      ],
+      "properties": {
+        "detailed_route_drc": {"$ref": "#/$defs/sha256"},
+        "finish_metrics": {"$ref": "#/$defs/sha256"},
+        "finish_report": {"$ref": "#/$defs/sha256"},
+        "klayout_merge_log": {"$ref": "#/$defs/sha256"},
+        "route_log": {"$ref": "#/$defs/sha256"},
+        "synthesis_check": {"$ref": "#/$defs/sha256"},
+        "synthesis_statistics": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "excluded_metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["duplicate_orfs_metric_keys", "power_ir_thermal_reason"],
+      "properties": {
+        "duplicate_orfs_metric_keys": {
+          "const": {
+            "finish__design__instance__area": 2,
+            "finish__design__instance__count": 2,
+            "finish__power__internal__total": 3,
+            "finish__power__leakage__total": 3,
+            "finish__power__switching__total": 3,
+            "finish__power__total": 3
+          }
+        },
+        "power_ir_thermal_reason": {"minLength": 1, "type": "string"}
+      }
+    },
+    "flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "corners",
+        "floorplan_core_utilization_percent",
+        "maximum_routing_layer",
+        "platform",
+        "target_clock_period_ns",
+        "variant"
+      ],
+      "properties": {
+        "corners": {"const": ["slow", "typ", "fast"]},
+        "floorplan_core_utilization_percent": {"const": 25.0},
+        "maximum_routing_layer": {"const": "Metal5"},
+        "platform": {"const": "ihp-sg13g2"},
+        "target_clock_period_ns": {"const": 20.0},
+        "variant": {"pattern": "^[a-z0-9][a-z0-9._-]{0,63}$", "type": "string"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["postroute", "routing", "synthesis", "timing"],
+      "properties": {
+        "postroute": {"$ref": "#/$defs/postroute"},
+        "routing": {"$ref": "#/$defs/routing"},
+        "synthesis": {"$ref": "#/$defs/synthesis"},
+        "timing": {"$ref": "#/$defs/timing"}
+      }
+    },
+    "open_gates": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/open_gate"}
+    },
+    "qualification": {
+      "const": {
+        "detailed_route_internal_drc": "pass",
+        "extracted_setup_hold": "pass",
+        "klayout_stream_merge": "pass",
+        "open_pdk_rtl_to_gds_feasibility": "pass",
+        "post_synthesis_structural_integrity": "pass",
+        "timing_constraint_coverage": "pass"
+      }
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_physical_campaign.v1"
+    },
+    "source_sha256": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 9
+    },
+    "status": {"const": "pass"},
+    "structural_integrity": {"$ref": "#/$defs/structural_integrity"},
+    "toolchain": {"$ref": "#/$defs/toolchain"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "size_bytes"],
+      "properties": {
+        "path": {"pattern": "^orfs/(results|reports|logs)/", "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      }
+    },
+    "postroute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "core_area_um2",
+        "die_area_um2",
+        "io_count",
+        "net_count",
+        "standard_cell_area_um2",
+        "standard_cell_count",
+        "standard_cell_utilization"
+      ],
+      "properties": {
+        "core_area_um2": {"exclusiveMinimum": 0, "type": "number"},
+        "die_area_um2": {"exclusiveMinimum": 0, "type": "number"},
+        "io_count": {"minimum": 1, "type": "integer"},
+        "net_count": {"minimum": 1, "type": "integer"},
+        "standard_cell_area_um2": {"exclusiveMinimum": 0, "type": "number"},
+        "standard_cell_count": {"minimum": 1, "type": "integer"},
+        "standard_cell_utilization": {
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1,
+          "type": "number"
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "antenna_net_violations",
+        "antenna_pin_violations",
+        "detailed_route_internal_violations",
+        "final_vias",
+        "final_wire_length_um",
+        "klayout_lef_cells_matched",
+        "klayout_orphan_cells"
+      ],
+      "properties": {
+        "antenna_net_violations": {"const": 0},
+        "antenna_pin_violations": {"const": 0},
+        "detailed_route_internal_violations": {"const": 0},
+        "final_vias": {"minimum": 1, "type": "integer"},
+        "final_wire_length_um": {"minimum": 1, "type": "integer"},
+        "klayout_lef_cells_matched": {"const": true},
+        "klayout_orphan_cells": {"const": 0}
+      }
+    },
+    "synthesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["area_um2", "cell_count", "problems", "sequential_area_um2"],
+      "properties": {
+        "area_um2": {"exclusiveMinimum": 0, "type": "number"},
+        "cell_count": {"minimum": 1, "type": "integer"},
+        "problems": {"const": 0},
+        "sequential_area_um2": {"exclusiveMinimum": 0, "type": "number"}
+      }
+    },
+    "timing_summary": {
+      "type": "object",
+      "required": [
+        "hold_tns_ns",
+        "hold_violations",
+        "hold_wns_ns",
+        "setup_tns_ns",
+        "setup_violations",
+        "setup_wns_ns"
+      ],
+      "properties": {
+        "hold_tns_ns": {"minimum": 0, "type": "number"},
+        "hold_violations": {"const": 0},
+        "hold_wns_ns": {"minimum": 0, "type": "number"},
+        "setup_tns_ns": {"minimum": 0, "type": "number"},
+        "setup_violations": {"const": 0},
+        "setup_wns_ns": {"minimum": 0, "type": "number"}
+      }
+    },
+    "corner_timing": {
+      "allOf": [
+        {"$ref": "#/$defs/timing_summary"},
+        {
+          "type": "object",
+          "properties": {"log_sha256": {"$ref": "#/$defs/sha256"}},
+          "required": ["log_sha256"]
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "timing_audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate_hold_wns_ns",
+        "aggregate_setup_wns_ns",
+        "check_setup_diagnostics",
+        "constraint_log_sha256",
+        "hold_violations",
+        "per_corner",
+        "setup_violations",
+        "status",
+        "unconstrained_endpoints"
+      ],
+      "properties": {
+        "aggregate_hold_wns_ns": {"minimum": 0, "type": "number"},
+        "aggregate_setup_wns_ns": {"minimum": 0, "type": "number"},
+        "check_setup_diagnostics": {"const": []},
+        "constraint_log_sha256": {"$ref": "#/$defs/sha256"},
+        "hold_violations": {"const": 0},
+        "per_corner": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fast", "slow", "typ"],
+          "properties": {
+            "fast": {"$ref": "#/$defs/corner_timing"},
+            "slow": {"$ref": "#/$defs/corner_timing"},
+            "typ": {"$ref": "#/$defs/corner_timing"}
+          }
+        },
+        "setup_violations": {"const": 0},
+        "status": {"const": "pass"},
+        "unconstrained_endpoints": {"const": 0}
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["aggregate_extracted", "independent_audit"],
+      "properties": {
+        "aggregate_extracted": {
+          "allOf": [
+            {"$ref": "#/$defs/timing_summary"},
+            {
+              "type": "object",
+              "properties": {
+                "core_clock_fmax_hz": {"exclusiveMinimum": 0, "type": "number"}
+              },
+              "required": ["core_clock_fmax_hz"]
+            }
+          ],
+          "unevaluatedProperties": false
+        },
+        "independent_audit": {"$ref": "#/$defs/timing_audit"}
+      }
+    },
+    "open_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate", "reason", "status"],
+      "properties": {
+        "gate": {
+          "enum": [
+            "activity_power_ir_thermal_performance_per_watt",
+            "formal_equivalence",
+            "foundry_drc_lvs",
+            "sram_macro_package_reliability_yield_silicon"
+          ]
+        },
+        "reason": {"minLength": 1, "type": "string"},
+        "status": {"const": "not_run"}
+      }
+    },
+    "structural_integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "formal_equivalence",
+        "interface_bit_count",
+        "interface_port_count",
+        "interfaces_match",
+        "mapped_cell_count",
+        "mapped_json_sha256",
+        "mapped_latch_count",
+        "mapped_process_count",
+        "method",
+        "source_cell_count_after_proc_flatten",
+        "source_json_sha256",
+        "source_latch_count",
+        "source_process_count",
+        "status",
+        "tool_log_sha256"
+      ],
+      "properties": {
+        "formal_equivalence": {"const": false},
+        "interface_bit_count": {"const": 918},
+        "interface_port_count": {"const": 27},
+        "interfaces_match": {"const": true},
+        "mapped_cell_count": {"minimum": 1, "type": "integer"},
+        "mapped_json_sha256": {"$ref": "#/$defs/sha256"},
+        "mapped_latch_count": {"const": 0},
+        "mapped_process_count": {"const": 0},
+        "method": {"const": "independent_yosys_source_and_mapped_structural_check"},
+        "source_cell_count_after_proc_flatten": {"minimum": 1, "type": "integer"},
+        "source_json_sha256": {"$ref": "#/$defs/sha256"},
+        "source_latch_count": {"const": 0},
+        "source_process_count": {"const": 0},
+        "status": {"const": "pass"},
+        "tool_log_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "tool_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["executable", "sha256", "version"],
+      "properties": {
+        "executable": {"pattern": "^/", "type": "string"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "version": {"minLength": 1, "type": "string"}
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "container_image_id",
+        "container_reference",
+        "platform_collateral_sha256",
+        "status",
+        "tools"
+      ],
+      "properties": {
+        "container_image_id": {"pattern": "^sha256:[0-9a-f]{64}$", "type": "string"},
+        "container_reference": {
+          "pattern": "^[^@]+@sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "platform_collateral_sha256": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/sha256"},
+          "minProperties": 19
+        },
+        "status": {"const": "pass"},
+        "tools": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["klayout", "openroad", "yosys"],
+          "properties": {
+            "klayout": {"$ref": "#/$defs/tool_identity"},
+            "openroad": {"$ref": "#/$defs/tool_identity"},
+            "yosys": {"$ref": "#/$defs/tool_identity"}
+          }
+        }
+      }
+    }
+  }
+}

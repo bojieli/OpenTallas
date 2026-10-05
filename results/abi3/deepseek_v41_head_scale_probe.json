@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.result.v41_head_scale_probe.v1",
+ "oracle": {
+  "final_norm.all": {
+   "size": 163840,
+   "min": -2.03125,
+   "max": 1.71875
+  },
+  "final_norm.last": {
+   "size": 5120,
+   "min": -0.921875,
+   "max": 1.1484375,
+   "rms": 0.22681590649938807,
+   "argmax": 529
+  },
+  "head.all": {
+   "size": 129280,
+   "min": -17.81656837463379,
+   "max": 27.19188690185547
+  },
+  "head.last": {
+   "size": 129280,
+   "min": -17.81656837463379,
+   "max": 27.19188690185547,
+   "rms": 4.155365926132972,
+   "argmax": 13806
+  }
+ },
+ "device_from_committed_head_trace": {
+  "final_norm.all": {
+   "size": 163840,
+   "min": -2.047,
+   "max": 1.758
+  },
+  "vocabulary_head.select": {
+   "size": 5120,
+   "min": -0.7656,
+   "max": 1.422
+  },
+  "vocabulary_head.project": {
+   "size": 129280,
+   "min": -13.48,
+   "max": 17.0,
+   "argmax": 305
+  }
+ }
+}

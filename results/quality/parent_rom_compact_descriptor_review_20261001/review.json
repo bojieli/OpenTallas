@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.parent.rom-compact-descriptor-review.v1",
+  "candidate_commit": "59d0630e62502eca15ef1151085aaf63c92c8e4e",
+  "cli_byte_identity": true,
+  "artifact_sha256": "a994f26b73e906a7b65ae37460ed11657f02c200fd3d8dd6965b83d2b7fabc19",
+  "source_pin_objects_verified": [
+    "candidate",
+    "parent_width_review",
+    "scalar_replay",
+    "pair",
+    "spine",
+    "images",
+    "clock",
+    "rootstop",
+    "sizing_coefficients"
+  ],
+  "independent_owner_key_count": 15360,
+  "independent_q_config_affine_register_mux_screen_mm2": "17.9871561456",
+  "partial_cfg_plus_stream_cycles_per_expert": 323,
+  "verdict": "PASS_PRICING_AND_PIN_REPLAY_ONLY",
+  "scope": "Analytical proposed register/mux/address-generation screen, not existing hardware or measured implementation; field capacity still conditional.",
+  "tests_passed": 3,
+  "unbound": [
+    "actual template words and base patch exactness",
+    "owner hub assignment",
+    "actual hardware ports and CDC",
+    "whole stage latency including lookup/wake/returns",
+    "dense/HC placement",
+    "full slot/channel fit",
+    "context SS/FF",
+    "connected token"
+  ],
+  "engine_RTL_build_ready": false,
+  "physical_admission": false,
+  "adopt": false
+}

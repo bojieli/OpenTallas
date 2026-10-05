@@ -1,0 +1,1029 @@
+{
+  "artifacts": {
+    "1_2_yosys.raw.v": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/1_2_yosys.raw.v",
+      "sha256": "598df32ecf73fa1a1545a04e7385c2e040d75db3f4dc95bf61cebada78061aa0",
+      "size_bytes": 1180137
+    },
+    "1_2_yosys.v": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/1_2_yosys.v",
+      "sha256": "c14388031d9751552871338e81d8ca3493ab02aece407afa925037b5830cc1b2",
+      "size_bytes": 1180123
+    },
+    "5_route_drc.rpt": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/5_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "6_final.def": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.def",
+      "sha256": "cb5a490d38d90e67d91e87025d709ab47503d784e841f0133a1a75014cac80b9",
+      "size_bytes": 5167682
+    },
+    "6_final.gds": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.gds",
+      "sha256": "cab92b9aa2f2334abee102475f3f9818f07756b28a1d22e1588345b052769f18",
+      "size_bytes": 6029496
+    },
+    "6_final.odb": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.odb",
+      "sha256": "ea10f0893d7fcc2f9ea986d9802f42f2b8a790400050967f8526153936a4c207",
+      "size_bytes": 10891003
+    },
+    "6_final.sdc": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.sdc",
+      "sha256": "00c6c8d89d4cc35e1c22024399133871ebcc88a18ad3df1e1afb075e64f50e0b",
+      "size_bytes": 25122
+    },
+    "6_final.spef": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.spef",
+      "sha256": "a82979f4ddd5d42ac592f3554c01d5424e2c4212f952b1554fefe0de2b2937e3",
+      "size_bytes": 4824117
+    },
+    "6_final.v": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_final.v",
+      "sha256": "e7f3517903844ae322b925111b741fe42131f0bdeb29c849fbae0997192351ff",
+      "size_bytes": 602573
+    },
+    "6_finish.rpt": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/6_finish.rpt",
+      "sha256": "9fd92644247ae20c1b9464045d40f0f30ddc5b5e5d730a804fcbd12af3a06ce8",
+      "size_bytes": 63200
+    },
+    "config.mk": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/config.mk",
+      "sha256": "3ec2411c81bba88d196ae00be94dde59e1a8d8423bceb90afd73c655e8b04cb6",
+      "size_bytes": 767
+    },
+    "constraint.sdc": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/constraint.sdc",
+      "sha256": "5a84e462ca6ea9a866f714f271e78d02b3de526a72ef4267e25161b05246261c",
+      "size_bytes": 379
+    },
+    "equivalence_mapped_abc_cec.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_abc_cec.log",
+      "sha256": "3c56c62a17bf116124c4a91ecb57de9af0165979acb374344f6cabb784024a1b",
+      "size_bytes": 146
+    },
+    "equivalence_mapped_gate.aag": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gate.aag",
+      "sha256": "f03ad4f27644a98d5219d3b1e545027c5058608e8410650347a09df9da5545a0",
+      "size_bytes": 105998
+    },
+    "equivalence_mapped_gate.aig": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gate.aig",
+      "sha256": "03f32d3678934deb65148e0d848e2611322a8bb02f58f085a40430f8f0cd4090",
+      "size_bytes": 21426
+    },
+    "equivalence_mapped_gate.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gate.log",
+      "sha256": "d92690e23fdd5f096d2490701605baa12a6c83d86adc0144fda75757a1b0ec81",
+      "size_bytes": 76532
+    },
+    "equivalence_mapped_gate.ys": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gate.ys",
+      "sha256": "0f2759cac5da974afc85f3e0355a91ea067a3ce581ff66343b0fb31c5990d504",
+      "size_bytes": 1605
+    },
+    "equivalence_mapped_gate_state.json": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gate_state.json",
+      "sha256": "3027590377b0cc2bc7bc1ab38b14d3e0ca53b1f578ceb28a6e2863697abbe436",
+      "size_bytes": 1489
+    },
+    "equivalence_mapped_gold.aag": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gold.aag",
+      "sha256": "fe633345d1e564a16771114934221da18f41c113f3e374287c85d22250fcb4da",
+      "size_bytes": 84373
+    },
+    "equivalence_mapped_gold.aig": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gold.aig",
+      "sha256": "32706bd30cdf26e1f3959ee0b78aa60cdc339020a5d67799cb18fc41b3354720",
+      "size_bytes": 17971
+    },
+    "equivalence_mapped_gold.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gold.log",
+      "sha256": "2fb68e71d0b4618c18ada48902b6854ad5fbefdd1f82d3000bc98cb299e42551",
+      "size_bytes": 26571
+    },
+    "equivalence_mapped_gold.ys": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gold.ys",
+      "sha256": "cd4bd7d593ca5bdddcae738ea4e2416761b5bab680c9f66a3cfd2e33ce5a0608",
+      "size_bytes": 961
+    },
+    "equivalence_mapped_gold_state.json": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_mapped_gold_state.json",
+      "sha256": "2a3110a67296c8fe3d4577a2658f37955b2e3b9030f3088eed6ba46eaf41a8f6",
+      "size_bytes": 1583
+    },
+    "equivalence_postroute_abc_cec.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_abc_cec.log",
+      "sha256": "81ef773bd5c258bd286aed46e339d61014f8b88440a09306c98edcdcf2c2d8e8",
+      "size_bytes": 152
+    },
+    "equivalence_postroute_gate.aag": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gate.aag",
+      "sha256": "694c2c2cdea1e3acecdfe6467fb7c169533885fc0ddf67e4dbc3936cfc8071cb",
+      "size_bytes": 106629
+    },
+    "equivalence_postroute_gate.aig": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gate.aig",
+      "sha256": "6774dd8bfbb781ba5944928363170283ebef62cc12edb2055fbf640d2c04ffc8",
+      "size_bytes": 21428
+    },
+    "equivalence_postroute_gate.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gate.log",
+      "sha256": "8984458f12f3b04072880f0a7c095028d4620f974d3e267a84a7b285f96b62bf",
+      "size_bytes": 78649
+    },
+    "equivalence_postroute_gate.ys": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gate.ys",
+      "sha256": "b51efa104a1c86d857a21a010a4de01e8b6c46eccade7faf7818ecf9b7c0bc14",
+      "size_bytes": 1612
+    },
+    "equivalence_postroute_gate_state.json": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gate_state.json",
+      "sha256": "d0e11362356f9d9f03c1297f18b5792bbd3a931b8aa6a110b8dec783c17c0ded",
+      "size_bytes": 1489
+    },
+    "equivalence_postroute_gold.aag": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gold.aag",
+      "sha256": "fe633345d1e564a16771114934221da18f41c113f3e374287c85d22250fcb4da",
+      "size_bytes": 84373
+    },
+    "equivalence_postroute_gold.aig": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gold.aig",
+      "sha256": "32706bd30cdf26e1f3959ee0b78aa60cdc339020a5d67799cb18fc41b3354720",
+      "size_bytes": 17971
+    },
+    "equivalence_postroute_gold.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gold.log",
+      "sha256": "95885fd995eea3962db97580c962f5ac52027052e1617b14506721227828bcb1",
+      "size_bytes": 26574
+    },
+    "equivalence_postroute_gold.ys": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gold.ys",
+      "sha256": "f93148b0bd74b7bdc8a88db89215602d628da28d49623656da9168afb84dfdc7",
+      "size_bytes": 970
+    },
+    "equivalence_postroute_gold_state.json": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/equivalence_postroute_gold_state.json",
+      "sha256": "2a3110a67296c8fe3d4577a2658f37955b2e3b9030f3088eed6ba46eaf41a8f6",
+      "size_bytes": 1583
+    },
+    "ff_to_nextstate.v": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/ff_to_nextstate.v",
+      "sha256": "65e05bf548c56bbf1a528e7ec892f98529789a3c9f918082ba462393f771c912",
+      "size_bytes": 354
+    },
+    "metadata.json": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/metadata.json",
+      "sha256": "f4dd9bf6fc4cc8644c6b2a65ae125db4e205f4407e785c1fd8a665213f72fc4b",
+      "size_bytes": 23644
+    },
+    "openroad_flow.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/openroad_flow.log",
+      "sha256": "52626985f8d50ef26f64232dc4a722f210d0c2a65fc90808e47658f724a26030",
+      "size_bytes": 102694
+    },
+    "openroad_synthesis.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/openroad_synthesis.log",
+      "sha256": "f098c292635a04d03ee65cde0f40696688766964e3feb06cca1c20c351b47dd5",
+      "size_bytes": 17506
+    },
+    "unconstrained_check.log": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "unconstrained_check.tcl": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/unconstrained_check.tcl",
+      "sha256": "7c67f723525cae06ec46fb636c4f1d33c0c40636108b31e7f298211d87ea66a3",
+      "size_bytes": 839
+    },
+    "unconstrained_endpoints.rpt": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  },
+  "campaign_id": "opentallas-asap7-predictive-physical-v1",
+  "canonical": true,
+  "canonical_disposition": "clean source baseline",
+  "case": {
+    "async_reset_ports": [
+      "rst_n"
+    ],
+    "clock_period_ns": 4.25,
+    "clock_port": "clk",
+    "core_utilization_percent": 35,
+    "corner": "TC",
+    "description": "One-expert, 16-lane signed integer-DV dot product; control and physical-scaling representative, not an FP8/MXFP4 implementation.",
+    "equivalence_method": "feedforward_output_register_next_state_cec",
+    "name": "numeric_e1_l16_tc",
+    "parameters": {
+      "ACC_W": 32,
+      "ACT_W": 8,
+      "LANES": 16,
+      "NUM_EXPERTS": 1,
+      "REPORT_SATURATION_RISK": 1,
+      "WEIGHT_W": 4
+    },
+    "place_density": 0.6,
+    "primary_vt": "RVT",
+    "sources": {
+      "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c"
+    },
+    "temperature_c": 0,
+    "top": "ot_numeric_dot",
+    "voltage_v": 0.7
+  },
+  "claim_boundary": [
+    "ASAP7 is a predictive research PDK and is not tied to a foundry.",
+    "The three cases contain no ROM or SRAM macro; bundled ASAP7 FakeRAM collateral is forbidden and unused.",
+    "The numeric cases implement signed integer DV only, not OpenTallas target MXFP4 x FP8, FP8 x FP8, BF16, or FP32 arithmetic.",
+    "Passing results constrain public digital-cell and routed-wire plausibility only; they do not validate target ROM density, energy, sense margin, power delivery, package, HBM, yield, or manufacturability.",
+    "The reported TC model is the ASAP7 library's nominal model condition and has no calibrated error bar against TSMC N7 or N4."
+  ],
+  "generated_at": "2026-08-28T11:04:23+00:00",
+  "git": {
+    "dirty_paths": [],
+    "head": "bc8089f1678f5795d37fdb24af015aa05bb00fca",
+    "selected_sources": [
+      "rtl/ot_numeric_dot.sv"
+    ],
+    "selected_sources_match_index": true,
+    "worktree_clean": true
+  },
+  "lock": {
+    "path": "configs/pdk/asap7_physical_lock.json",
+    "sha256": "941ea32ac5773993adcfa908e963c89a738d46ab12cace68e9c11d9e12a00143",
+    "size_bytes": 8332
+  },
+  "mapped_equivalence": {
+    "aiger_interface": {
+      "generated_order_identical": true,
+      "input_names": [
+        "activations[0]",
+        "activations[100]",
+        "activations[101]",
+        "activations[102]",
+        "activations[103]",
+        "activations[104]",
+        "activations[105]",
+        "activations[106]",
+        "activations[107]",
+        "activations[108]",
+        "activations[109]",
+        "activations[10]",
+        "activations[110]",
+        "activations[111]",
+        "activations[112]",
+        "activations[113]",
+        "activations[114]",
+        "activations[115]",
+        "activations[116]",
+        "activations[117]",
+        "activations[118]",
+        "activations[119]",
+        "activations[11]",
+        "activations[120]",
+        "activations[121]",
+        "activations[122]",
+        "activations[123]",
+        "activations[124]",
+        "activations[125]",
+        "activations[126]",
+        "activations[127]",
+        "activations[12]",
+        "activations[13]",
+        "activations[14]",
+        "activations[15]",
+        "activations[16]",
+        "activations[17]",
+        "activations[18]",
+        "activations[19]",
+        "activations[1]",
+        "activations[20]",
+        "activations[21]",
+        "activations[22]",
+        "activations[23]",
+        "activations[24]",
+        "activations[25]",
+        "activations[26]",
+        "activations[27]",
+        "activations[28]",
+        "activations[29]",
+        "activations[2]",
+        "activations[30]",
+        "activations[31]",
+        "activations[32]",
+        "activations[33]",
+        "activations[34]",
+        "activations[35]",
+        "activations[36]",
+        "activations[37]",
+        "activations[38]",
+        "activations[39]",
+        "activations[3]",
+        "activations[40]",
+        "activations[41]",
+        "activations[42]",
+        "activations[43]",
+        "activations[44]",
+        "activations[45]",
+        "activations[46]",
+        "activations[47]",
+        "activations[48]",
+        "activations[49]",
+        "activations[4]",
+        "activations[50]",
+        "activations[51]",
+        "activations[52]",
+        "activations[53]",
+        "activations[54]",
+        "activations[55]",
+        "activations[56]",
+        "activations[57]",
+        "activations[58]",
+        "activations[59]",
+        "activations[5]",
+        "activations[60]",
+        "activations[61]",
+        "activations[62]",
+        "activations[63]",
+        "activations[64]",
+        "activations[65]",
+        "activations[66]",
+        "activations[67]",
+        "activations[68]",
+        "activations[69]",
+        "activations[6]",
+        "activations[70]",
+        "activations[71]",
+        "activations[72]",
+        "activations[73]",
+        "activations[74]",
+        "activations[75]",
+        "activations[76]",
+        "activations[77]",
+        "activations[78]",
+        "activations[79]",
+        "activations[7]",
+        "activations[80]",
+        "activations[81]",
+        "activations[82]",
+        "activations[83]",
+        "activations[84]",
+        "activations[85]",
+        "activations[86]",
+        "activations[87]",
+        "activations[88]",
+        "activations[89]",
+        "activations[8]",
+        "activations[90]",
+        "activations[91]",
+        "activations[92]",
+        "activations[93]",
+        "activations[94]",
+        "activations[95]",
+        "activations[96]",
+        "activations[97]",
+        "activations[98]",
+        "activations[99]",
+        "activations[9]",
+        "clk",
+        "expert_enable",
+        "in_poison",
+        "in_valid",
+        "rst_n",
+        "weights[0]",
+        "weights[10]",
+        "weights[11]",
+        "weights[12]",
+        "weights[13]",
+        "weights[14]",
+        "weights[15]",
+        "weights[16]",
+        "weights[17]",
+        "weights[18]",
+        "weights[19]",
+        "weights[1]",
+        "weights[20]",
+        "weights[21]",
+        "weights[22]",
+        "weights[23]",
+        "weights[24]",
+        "weights[25]",
+        "weights[26]",
+        "weights[27]",
+        "weights[28]",
+        "weights[29]",
+        "weights[2]",
+        "weights[30]",
+        "weights[31]",
+        "weights[32]",
+        "weights[33]",
+        "weights[34]",
+        "weights[35]",
+        "weights[36]",
+        "weights[37]",
+        "weights[38]",
+        "weights[39]",
+        "weights[3]",
+        "weights[40]",
+        "weights[41]",
+        "weights[42]",
+        "weights[43]",
+        "weights[44]",
+        "weights[45]",
+        "weights[46]",
+        "weights[47]",
+        "weights[48]",
+        "weights[49]",
+        "weights[4]",
+        "weights[50]",
+        "weights[51]",
+        "weights[52]",
+        "weights[53]",
+        "weights[54]",
+        "weights[55]",
+        "weights[56]",
+        "weights[57]",
+        "weights[58]",
+        "weights[59]",
+        "weights[5]",
+        "weights[60]",
+        "weights[61]",
+        "weights[62]",
+        "weights[63]",
+        "weights[6]",
+        "weights[7]",
+        "weights[8]",
+        "weights[9]"
+      ],
+      "inputs": 197,
+      "latches": 0,
+      "matching": "ABC CEC by unique AIGER symbol name; canonical order shown",
+      "output_names": [
+        "out_poison",
+        "out_valid",
+        "result[0]",
+        "result[10]",
+        "result[11]",
+        "result[12]",
+        "result[13]",
+        "result[14]",
+        "result[15]",
+        "result[16]",
+        "result[17]",
+        "result[18]",
+        "result[19]",
+        "result[1]",
+        "result[20]",
+        "result[21]",
+        "result[22]",
+        "result[23]",
+        "result[24]",
+        "result[25]",
+        "result[26]",
+        "result[27]",
+        "result[28]",
+        "result[29]",
+        "result[2]",
+        "result[30]",
+        "result[31]",
+        "result[3]",
+        "result[4]",
+        "result[5]",
+        "result[6]",
+        "result[7]",
+        "result[8]",
+        "result[9]",
+        "status[0]",
+        "status[1]",
+        "status[2]",
+        "status[3]"
+      ],
+      "outputs": 38
+    },
+    "artifacts": {
+      "equivalence_mapped_abc_cec.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_abc_cec.log",
+        "sha256": "3c56c62a17bf116124c4a91ecb57de9af0165979acb374344f6cabb784024a1b",
+        "size_bytes": 146
+      },
+      "equivalence_mapped_gate.aag": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gate.aag",
+        "sha256": "f03ad4f27644a98d5219d3b1e545027c5058608e8410650347a09df9da5545a0",
+        "size_bytes": 105998
+      },
+      "equivalence_mapped_gate.aig": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gate.aig",
+        "sha256": "03f32d3678934deb65148e0d848e2611322a8bb02f58f085a40430f8f0cd4090",
+        "size_bytes": 21426
+      },
+      "equivalence_mapped_gate.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gate.log",
+        "sha256": "d92690e23fdd5f096d2490701605baa12a6c83d86adc0144fda75757a1b0ec81",
+        "size_bytes": 76532
+      },
+      "equivalence_mapped_gate.ys": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gate.ys",
+        "sha256": "0f2759cac5da974afc85f3e0355a91ea067a3ce581ff66343b0fb31c5990d504",
+        "size_bytes": 1605
+      },
+      "equivalence_mapped_gate_state.json": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gate_state.json",
+        "sha256": "3027590377b0cc2bc7bc1ab38b14d3e0ca53b1f578ceb28a6e2863697abbe436",
+        "size_bytes": 1489
+      },
+      "equivalence_mapped_gold.aag": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gold.aag",
+        "sha256": "fe633345d1e564a16771114934221da18f41c113f3e374287c85d22250fcb4da",
+        "size_bytes": 84373
+      },
+      "equivalence_mapped_gold.aig": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gold.aig",
+        "sha256": "32706bd30cdf26e1f3959ee0b78aa60cdc339020a5d67799cb18fc41b3354720",
+        "size_bytes": 17971
+      },
+      "equivalence_mapped_gold.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gold.log",
+        "sha256": "2fb68e71d0b4618c18ada48902b6854ad5fbefdd1f82d3000bc98cb299e42551",
+        "size_bytes": 26571
+      },
+      "equivalence_mapped_gold.ys": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gold.ys",
+        "sha256": "cd4bd7d593ca5bdddcae738ea4e2416761b5bab680c9f66a3cfd2e33ce5a0608",
+        "size_bytes": 961
+      },
+      "equivalence_mapped_gold_state.json": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_mapped_gold_state.json",
+        "sha256": "2a3110a67296c8fe3d4577a2658f37955b2e3b9030f3088eed6ba46eaf41a8f6",
+        "size_bytes": 1583
+      },
+      "ff_to_nextstate.v": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/ff_to_nextstate.v",
+        "sha256": "65e05bf548c56bbf1a528e7ec892f98529789a3c9f918082ba462393f771c912",
+        "size_bytes": 354
+      }
+    },
+    "method": "Full sequential equivalence for a one-state-layer, feed-forward output-register design via audited combinational next-state ABC CEC",
+    "proof_preconditions": {
+      "aiger_latches": 0,
+      "gate_state_bits": 36,
+      "gold_state_bits": 38,
+      "mapped_constant_state_elimination_allowed": true,
+      "rtl_state_bits_equal_architectural_output_bits": true,
+      "state_feedback_after_ff_collapse_scc_count": 0
+    },
+    "proven_points": 38,
+    "status": "pass",
+    "unproven_points": 0
+  },
+  "memory_placeholder_audit": {
+    "files_scanned": [
+      "rtl/ot_numeric_dot.sv",
+      "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/1_2_yosys.v",
+      "build/asap7_physical/numeric_e1_l16_tc/results/asap7/opentallas_numeric_e1_l16_tc/base/6_final.v",
+      "build/asap7_physical/numeric_e1_l16_tc/config.mk"
+    ],
+    "forbidden_patterns": [
+      "fakeram",
+      "fake_ram",
+      "sram",
+      "openram"
+    ],
+    "matches": [],
+    "status": "pass"
+  },
+  "metrics": {
+    "antenna_violating_nets": 0.0,
+    "antenna_violating_pins": 0.0,
+    "clock_count": 1.0,
+    "clock_period_ns": 4.25,
+    "core_area_um2": 1644.62,
+    "die_area_um2": 1996.3,
+    "drc_errors": 0.0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_hz": 243123000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0.0,
+    "hold_wns_ns": 0.805138,
+    "raw_timing_ps": {
+      "hold_tns_ns": 0.0,
+      "hold_wns_ns": 805.138,
+      "setup_tns_ns": 0.0,
+      "setup_wns_ns": 136.856
+    },
+    "sdc_clock_period_ps": 4250.0,
+    "setup_tns_ns": 0.0,
+    "setup_violations": 0.0,
+    "setup_wns_ns": 0.136856,
+    "standard_cell_area_um2": 632.335,
+    "utilization_fraction": 0.384486,
+    "vias": 42366.0,
+    "wirelength_um": 10832.0
+  },
+  "netlist_normalization": {
+    "raw_mapped_netlist": {
+      "path": "results/asap7_physical/numeric_e1_l16_tc/artifacts/1_2_yosys.raw.v",
+      "sha256": "598df32ecf73fa1a1545a04e7385c2e040d75db3f4dc95bf61cebada78061aa0",
+      "size_bytes": 1180137
+    },
+    "reason": "The embedded OpenSTA reader rejects signed top declarations after bit-level mapping; mandatory mapped and final sequential equivalence gate this syntax-only normalization.",
+    "signed_declaration_tokens_removed": 2
+  },
+  "postroute_equivalence": {
+    "aiger_interface": {
+      "generated_order_identical": false,
+      "input_names": [
+        "activations[0]",
+        "activations[100]",
+        "activations[101]",
+        "activations[102]",
+        "activations[103]",
+        "activations[104]",
+        "activations[105]",
+        "activations[106]",
+        "activations[107]",
+        "activations[108]",
+        "activations[109]",
+        "activations[10]",
+        "activations[110]",
+        "activations[111]",
+        "activations[112]",
+        "activations[113]",
+        "activations[114]",
+        "activations[115]",
+        "activations[116]",
+        "activations[117]",
+        "activations[118]",
+        "activations[119]",
+        "activations[11]",
+        "activations[120]",
+        "activations[121]",
+        "activations[122]",
+        "activations[123]",
+        "activations[124]",
+        "activations[125]",
+        "activations[126]",
+        "activations[127]",
+        "activations[12]",
+        "activations[13]",
+        "activations[14]",
+        "activations[15]",
+        "activations[16]",
+        "activations[17]",
+        "activations[18]",
+        "activations[19]",
+        "activations[1]",
+        "activations[20]",
+        "activations[21]",
+        "activations[22]",
+        "activations[23]",
+        "activations[24]",
+        "activations[25]",
+        "activations[26]",
+        "activations[27]",
+        "activations[28]",
+        "activations[29]",
+        "activations[2]",
+        "activations[30]",
+        "activations[31]",
+        "activations[32]",
+        "activations[33]",
+        "activations[34]",
+        "activations[35]",
+        "activations[36]",
+        "activations[37]",
+        "activations[38]",
+        "activations[39]",
+        "activations[3]",
+        "activations[40]",
+        "activations[41]",
+        "activations[42]",
+        "activations[43]",
+        "activations[44]",
+        "activations[45]",
+        "activations[46]",
+        "activations[47]",
+        "activations[48]",
+        "activations[49]",
+        "activations[4]",
+        "activations[50]",
+        "activations[51]",
+        "activations[52]",
+        "activations[53]",
+        "activations[54]",
+        "activations[55]",
+        "activations[56]",
+        "activations[57]",
+        "activations[58]",
+        "activations[59]",
+        "activations[5]",
+        "activations[60]",
+        "activations[61]",
+        "activations[62]",
+        "activations[63]",
+        "activations[64]",
+        "activations[65]",
+        "activations[66]",
+        "activations[67]",
+        "activations[68]",
+        "activations[69]",
+        "activations[6]",
+        "activations[70]",
+        "activations[71]",
+        "activations[72]",
+        "activations[73]",
+        "activations[74]",
+        "activations[75]",
+        "activations[76]",
+        "activations[77]",
+        "activations[78]",
+        "activations[79]",
+        "activations[7]",
+        "activations[80]",
+        "activations[81]",
+        "activations[82]",
+        "activations[83]",
+        "activations[84]",
+        "activations[85]",
+        "activations[86]",
+        "activations[87]",
+        "activations[88]",
+        "activations[89]",
+        "activations[8]",
+        "activations[90]",
+        "activations[91]",
+        "activations[92]",
+        "activations[93]",
+        "activations[94]",
+        "activations[95]",
+        "activations[96]",
+        "activations[97]",
+        "activations[98]",
+        "activations[99]",
+        "activations[9]",
+        "clk",
+        "expert_enable",
+        "in_poison",
+        "in_valid",
+        "rst_n",
+        "weights[0]",
+        "weights[10]",
+        "weights[11]",
+        "weights[12]",
+        "weights[13]",
+        "weights[14]",
+        "weights[15]",
+        "weights[16]",
+        "weights[17]",
+        "weights[18]",
+        "weights[19]",
+        "weights[1]",
+        "weights[20]",
+        "weights[21]",
+        "weights[22]",
+        "weights[23]",
+        "weights[24]",
+        "weights[25]",
+        "weights[26]",
+        "weights[27]",
+        "weights[28]",
+        "weights[29]",
+        "weights[2]",
+        "weights[30]",
+        "weights[31]",
+        "weights[32]",
+        "weights[33]",
+        "weights[34]",
+        "weights[35]",
+        "weights[36]",
+        "weights[37]",
+        "weights[38]",
+        "weights[39]",
+        "weights[3]",
+        "weights[40]",
+        "weights[41]",
+        "weights[42]",
+        "weights[43]",
+        "weights[44]",
+        "weights[45]",
+        "weights[46]",
+        "weights[47]",
+        "weights[48]",
+        "weights[49]",
+        "weights[4]",
+        "weights[50]",
+        "weights[51]",
+        "weights[52]",
+        "weights[53]",
+        "weights[54]",
+        "weights[55]",
+        "weights[56]",
+        "weights[57]",
+        "weights[58]",
+        "weights[59]",
+        "weights[5]",
+        "weights[60]",
+        "weights[61]",
+        "weights[62]",
+        "weights[63]",
+        "weights[6]",
+        "weights[7]",
+        "weights[8]",
+        "weights[9]"
+      ],
+      "inputs": 197,
+      "latches": 0,
+      "matching": "ABC CEC by unique AIGER symbol name; canonical order shown",
+      "output_names": [
+        "out_poison",
+        "out_valid",
+        "result[0]",
+        "result[10]",
+        "result[11]",
+        "result[12]",
+        "result[13]",
+        "result[14]",
+        "result[15]",
+        "result[16]",
+        "result[17]",
+        "result[18]",
+        "result[19]",
+        "result[1]",
+        "result[20]",
+        "result[21]",
+        "result[22]",
+        "result[23]",
+        "result[24]",
+        "result[25]",
+        "result[26]",
+        "result[27]",
+        "result[28]",
+        "result[29]",
+        "result[2]",
+        "result[30]",
+        "result[31]",
+        "result[3]",
+        "result[4]",
+        "result[5]",
+        "result[6]",
+        "result[7]",
+        "result[8]",
+        "result[9]",
+        "status[0]",
+        "status[1]",
+        "status[2]",
+        "status[3]"
+      ],
+      "outputs": 38
+    },
+    "artifacts": {
+      "equivalence_postroute_abc_cec.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_abc_cec.log",
+        "sha256": "81ef773bd5c258bd286aed46e339d61014f8b88440a09306c98edcdcf2c2d8e8",
+        "size_bytes": 152
+      },
+      "equivalence_postroute_gate.aag": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gate.aag",
+        "sha256": "694c2c2cdea1e3acecdfe6467fb7c169533885fc0ddf67e4dbc3936cfc8071cb",
+        "size_bytes": 106629
+      },
+      "equivalence_postroute_gate.aig": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gate.aig",
+        "sha256": "6774dd8bfbb781ba5944928363170283ebef62cc12edb2055fbf640d2c04ffc8",
+        "size_bytes": 21428
+      },
+      "equivalence_postroute_gate.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gate.log",
+        "sha256": "8984458f12f3b04072880f0a7c095028d4620f974d3e267a84a7b285f96b62bf",
+        "size_bytes": 78649
+      },
+      "equivalence_postroute_gate.ys": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gate.ys",
+        "sha256": "b51efa104a1c86d857a21a010a4de01e8b6c46eccade7faf7818ecf9b7c0bc14",
+        "size_bytes": 1612
+      },
+      "equivalence_postroute_gate_state.json": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gate_state.json",
+        "sha256": "d0e11362356f9d9f03c1297f18b5792bbd3a931b8aa6a110b8dec783c17c0ded",
+        "size_bytes": 1489
+      },
+      "equivalence_postroute_gold.aag": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gold.aag",
+        "sha256": "fe633345d1e564a16771114934221da18f41c113f3e374287c85d22250fcb4da",
+        "size_bytes": 84373
+      },
+      "equivalence_postroute_gold.aig": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gold.aig",
+        "sha256": "32706bd30cdf26e1f3959ee0b78aa60cdc339020a5d67799cb18fc41b3354720",
+        "size_bytes": 17971
+      },
+      "equivalence_postroute_gold.log": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gold.log",
+        "sha256": "95885fd995eea3962db97580c962f5ac52027052e1617b14506721227828bcb1",
+        "size_bytes": 26574
+      },
+      "equivalence_postroute_gold.ys": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gold.ys",
+        "sha256": "f93148b0bd74b7bdc8a88db89215602d628da28d49623656da9168afb84dfdc7",
+        "size_bytes": 970
+      },
+      "equivalence_postroute_gold_state.json": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/equivalence_postroute_gold_state.json",
+        "sha256": "2a3110a67296c8fe3d4577a2658f37955b2e3b9030f3088eed6ba46eaf41a8f6",
+        "size_bytes": 1583
+      },
+      "ff_to_nextstate.v": {
+        "path": "build/asap7_physical/numeric_e1_l16_tc/ff_to_nextstate.v",
+        "sha256": "65e05bf548c56bbf1a528e7ec892f98529789a3c9f918082ba462393f771c912",
+        "size_bytes": 354
+      }
+    },
+    "method": "Full sequential equivalence for a one-state-layer, feed-forward output-register design via audited combinational next-state ABC CEC",
+    "proof_preconditions": {
+      "aiger_latches": 0,
+      "gate_state_bits": 36,
+      "gold_state_bits": 38,
+      "mapped_constant_state_elimination_allowed": true,
+      "rtl_state_bits_equal_architectural_output_bits": true,
+      "state_feedback_after_ff_collapse_scc_count": 0
+    },
+    "proven_points": 38,
+    "status": "pass",
+    "unproven_points": 0
+  },
+  "runner": {
+    "path": "tools/run_asap7_physical.py",
+    "sha256": "807358613f8721e2656530ad43720da164f33999ae2471d65d3ab855edb91e99",
+    "size_bytes": 80213
+  },
+  "schema_version": 1,
+  "source_inventory": [
+    {
+      "path": "rtl/ot_numeric_dot.sv",
+      "sha256": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+      "size_bytes": 3914
+    }
+  ],
+  "status": "pass",
+  "toolchain": {
+    "abc_version": "UC Berkeley, ABC 1.01 (compiled 0 0)",
+    "container_image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+    "container_reference": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "openroad_version": "26Q3-1510-g6cb3f2b704",
+    "status": "pass",
+    "verified_sha256": {
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/KLayout/asap7.lyt": "c0d9587a636ca54246cdbdbded3919a7e49efcf50904700335432017a6d8fba2",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/README.md": "2d4ccc26693e0109bc7038f6765c3c3b4363ad52904ad31c712bde7a7eb3212c",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/config.mk": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/drc/asap7.lydrc": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+      "/OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules": "32a117e5e866d3de1406e8f18d65b6f1857781f156638941a4769e25ef5252cc",
+      "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+      "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92",
+      "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc": "aab92e379150754859c4e25041b010f75b7cced1bc61806f217f81632e44aece"
+    },
+    "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
+  },
+  "unconstrained_endpoint_audit": {
+    "acceptance_max": 0,
+    "artifact": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_endpoints.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    "log": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_check.log",
+      "sha256": "00ec88923e4c24a2a6149bf9f6b571bbfd7a181cfa1c95d2c771c1388b762098",
+      "size_bytes": 266
+    },
+    "script": {
+      "path": "build/asap7_physical/numeric_e1_l16_tc/unconstrained_check.tcl",
+      "sha256": "7c67f723525cae06ec46fb636c4f1d33c0c40636108b31e7f298211d87ea66a3",
+      "size_bytes": 839
+    },
+    "status": "pass",
+    "unconstrained_endpoint_report_lines": 0
+  }
+}

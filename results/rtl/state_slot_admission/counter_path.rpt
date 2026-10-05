@@ -1,0 +1,98 @@
+OpenSTA 3.1.0 be771a0116 Copyright (c) 2026, Parallax Software, Inc.
+License GPLv3: GNU GPL version 3 <http://gnu.org/licenses/gpl.html>
+
+This is free software, and you are free to change and redistribute it
+under certain conditions; type `show_copying' for details. 
+This program comes with ABSOLUTELY NO WARRANTY; for details type `show_warranty'.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13178, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13211, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13244, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13277, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13310, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13343, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 13376, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14772, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14805, timing group from output port.
+Warning 1212: /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib line 14838, timing group from output port.
+COUNTER_PINS _51409_/D _51410_/D _51411_/D _51412_/D _51413_/D _51414_/D _51415_/D _51416_/D _51417_/D _51418_/D _51419_/D _51420_/D _51421_/D _51422_/D _51423_/D _51424_/D _51425_/D _51426_/D _51427_/D _51428_/D _51429_/D _51430_/D _51431_/D _51432_/D _51433_/D _51434_/D _51435_/D _51436_/D _51437_/D _51438_/D _51439_/D _51440_/D
+Startpoint: op_rows_bound (input port clocked by core_clk)
+Endpoint: _51440_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+    Delay      Time   Description
+-------------------------------------------------------------
+   0.0000    0.0000   clock core_clk (rise edge)
+   0.0000    0.0000   clock network delay (ideal)
+ 200.0000  200.0000 ^ input external delay
+   0.0000  200.0000 ^ op_rows_bound (in)
+  80.4268  280.4268 v _32508_/Y (NAND2x1_ASAP7_75t_R)
+  63.3477  343.7746 v _34862_/Y (OR3x1_ASAP7_75t_R)
+  35.2656  379.0402 v _34864_/Y (MAJx2_ASAP7_75t_R)
+  30.8931  409.9333 v _34866_/Y (MAJx2_ASAP7_75t_R)
+  31.1038  441.0371 v _34867_/Y (MAJx2_ASAP7_75t_R)
+  31.2312  472.2683 v _34869_/Y (MAJx2_ASAP7_75t_R)
+  31.2465  503.5148 v _34871_/Y (MAJx2_ASAP7_75t_R)
+  33.2761  536.7909 v _34873_/Y (OA211x2_ASAP7_75t_R)
+  39.8461  576.6370 v _34875_/Y (OA33x2_ASAP7_75t_R)
+  33.4862  610.1232 v _34877_/Y (MAJx2_ASAP7_75t_R)
+  30.7657  640.8889 v _34878_/Y (MAJx2_ASAP7_75t_R)
+  30.7640  671.6529 v _34879_/Y (MAJx2_ASAP7_75t_R)
+  30.7620  702.4149 v _34880_/Y (MAJx2_ASAP7_75t_R)
+  31.4341  733.8491 v _34881_/Y (MAJx2_ASAP7_75t_R)
+  33.3992  767.2483 v _34883_/Y (OA211x2_ASAP7_75t_R)
+  39.8468  807.0951 v _34885_/Y (OA33x2_ASAP7_75t_R)
+  33.4862  840.5813 v _34887_/Y (MAJx2_ASAP7_75t_R)
+  30.7607  871.3419 v _34888_/Y (MAJx2_ASAP7_75t_R)
+  30.7607  902.1026 v _34889_/Y (MAJx2_ASAP7_75t_R)
+  30.7619  932.8646 v _34890_/Y (MAJx2_ASAP7_75t_R)
+  31.1204  963.9850 v _34891_/Y (MAJx2_ASAP7_75t_R)
+  34.5894  998.5745 v _34893_/Y (OA211x2_ASAP7_75t_R)
+  27.8604 1026.4348 v _34895_/Y (OA31x2_ASAP7_75t_R)
+  33.0822 1059.5171 v _34896_/Y (MAJx2_ASAP7_75t_R)
+  33.9206 1093.4376 v _34899_/Y (OA211x2_ASAP7_75t_R)
+  39.8468 1133.2844 v _34901_/Y (OA33x2_ASAP7_75t_R)
+  33.4861 1166.7706 v _34902_/Y (MAJx2_ASAP7_75t_R)
+  31.4443 1198.2148 v _34903_/Y (MAJx2_ASAP7_75t_R)
+  28.5705 1226.7854 v _34908_/Y (XNOR2x2_ASAP7_75t_R)
+  22.2397 1249.0250 v _34909_/Y (OR2x2_ASAP7_75t_R)
+  19.9889 1269.0139 v _35030_/Y (AO21x1_ASAP7_75t_R)
+  26.5425 1295.5564 v _35259_/Y (AO221x1_ASAP7_75t_R)
+  43.1489 1338.7053 v _36202_/Y (OR5x1_ASAP7_75t_R)
+  58.4675 1397.1729 v _36238_/Y (OR5x1_ASAP7_75t_R)
+  60.9071 1458.0798 v _36242_/Y (OR5x1_ASAP7_75t_R)
+  40.9454 1499.0253 v _36244_/Y (OR3x1_ASAP7_75t_R)
+  31.3795 1530.4047 v _36245_/Y (OR2x2_ASAP7_75t_R)
+  15.1468 1545.5515 ^ _36246_/Y (NOR2x1_ASAP7_75t_R)
+  34.1449 1579.6964 ^ _36248_/Y (AND3x1_ASAP7_75t_R)
+  30.1166 1609.8130 ^ _36249_/Y (AND2x2_ASAP7_75t_R)
+  13.5553 1623.3682 v _36250_/Y (NAND2x1_ASAP7_75t_R)
+  39.4035 1662.7717 v _36252_/Y (OR3x1_ASAP7_75t_R)
+  40.4072 1703.1790 v _36254_/Y (OR3x1_ASAP7_75t_R)
+  30.2631 1733.4420 v _36255_/Y (OR2x2_ASAP7_75t_R)
+  38.2796 1771.7217 v _36257_/Y (OR3x1_ASAP7_75t_R)
+  40.4334 1812.1552 v _36259_/Y (OR3x1_ASAP7_75t_R)
+  40.4320 1852.5870 v _36261_/Y (OR3x1_ASAP7_75t_R)
+  40.4320 1893.0190 v _36263_/Y (OR3x1_ASAP7_75t_R)
+  40.4319 1933.4509 v _36265_/Y (OR3x1_ASAP7_75t_R)
+  40.4319 1973.8828 v _36267_/Y (OR3x1_ASAP7_75t_R)
+  38.1513 2012.0341 v _36269_/Y (OR3x1_ASAP7_75t_R)
+  27.5300 2039.5641 v _36270_/Y (OR2x2_ASAP7_75t_R)
+  28.0707 2067.6348 ^ _47750_/Y (XNOR2x2_ASAP7_75t_R)
+  18.6293 2086.2642 ^ _47751_/Y (AND2x2_ASAP7_75t_R)
+   0.0000 2086.2642 ^ _51440_/D (DFFASRHQNx1_ASAP7_75t_R)
+          2086.2642   data arrival time
+
+1000.0000 1000.0000   clock core_clk (rise edge)
+   0.0000 1000.0000   clock network delay (ideal)
+   0.0000 1000.0000   clock reconvergence pessimism
+          1000.0000 ^ _51440_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -26.9201  973.0798   library setup time
+           973.0798   data required time
+-------------------------------------------------------------
+           973.0798   data required time
+          -2086.2642   data arrival time
+-------------------------------------------------------------
+          -1113.1842   slack (VIOLATED)
+
+

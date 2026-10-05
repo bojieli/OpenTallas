@@ -1,0 +1,43 @@
+{
+  "implementation": "07b1516d8",
+  "gate_successor": "f6d618d72",
+  "required_gate": "nonvacuous TP2/TP4 all accepted returns and output-control match; must PASS before route",
+  "top": "ot_qwen_coll_ctx_rnext",
+  "real_native_submodules": [
+    "ot_qwen_tp_seq_w12_rnext",
+    "ot_rom_oneshot_die_f12",
+    "ot_hdc_fp32_add_lat LAT7"
+  ],
+  "surrogate_receivers": false,
+  "all_IO_timed": true,
+  "variants": [
+    {
+      "name": "qcc-rnext-u25-r1",
+      "utilization_pct": 25,
+      "host": "ot-epyc1tb"
+    },
+    {
+      "name": "qcc-rnext-u30-r1",
+      "utilization_pct": 30,
+      "host": "ot-epyc2"
+    },
+    {
+      "name": "qcc-rnext-u35-r1",
+      "utilization_pct": 35,
+      "host": "ot-epyc1tb"
+    }
+  ],
+  "clock_ps": 833,
+  "SS_uncertainty_ps": 60,
+  "FF_uncertainty_ps": 25,
+  "worker_threads": 16,
+  "peak_GiB_admission_per_route": 32,
+  "capacity_source": "prior same fullTP2 native ctx retained synthesis/route; added516-bit return cut priced beforeRTL",
+  "timeout": null,
+  "per_process_AS_cap": null,
+  "file_cap": null,
+  "runtime_RAM_cap": null,
+  "fixed_fulltoken_rate": null,
+  "adoption": false,
+  "core_boundary_dependency": "Beauvoir b50 core source handed off but native ME/SU receiver clock/loadedsink context still needed; no exposed IO rescue"
+}

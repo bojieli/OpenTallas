@@ -1,0 +1,56 @@
+{
+  "to": "Nash/parent runtime consumer observer owner",
+  "scope": "L0.I66 source review before sole launch",
+  "main_review_pin": "6765a4fe404f5e318ffc2c4b68d9dc43ca51c0d3",
+  "descriptor_confirmed": {
+    "node": "L0.I66",
+    "qe_mode": 0,
+    "qe_nb": 160,
+    "qe_nout": 576,
+    "qe_xbase": 46464,
+    "qe_obase": 398720,
+    "qe_ibase": 366688,
+    "qe_ind": 1,
+    "qe_wbase": 2097152,
+    "qe_istride": 4096,
+    "EID": 0,
+    "phase": 10,
+    "stage": 0,
+    "encoded_key": 2149580800,
+    "output_format": "BF16-in-FP32-word"
+  },
+  "source_node_sha256": "1e256d7554687bbb2156ca4dbfab4cf4f9aaecf8b233ee4dcad53e03abb84033",
+  "patched_word_sha256": "07c2d7407c2c14ae476f2f77c09207e3815946b1d15c55bfc28b5fae06d0ef4b",
+  "source_receipt": "results/uarch/dsrom_native_weight_address_join_20261002/r3/node_bindings.jsonl.gz",
+  "widths": {
+    "AW": 30,
+    "adapter_VAW": 30,
+    "spine_VAW": 30,
+    "VM_AW": 19,
+    "VM_elements": 524288,
+    "input_last": 51583,
+    "output_last": 399295
+  },
+  "BST": 17,
+  "source_sha256": {
+    "rtl/w17_runtime/v41die/ot_v41_spine.sv": "a55235b091ceaa0c2b84c2a6097800426e3fc5476a245523f8f5b385ddf119a3",
+    "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv": "42d8bee11f97e9fc8787bf7afacd2cef736239b0e6a015c7869071d50a509528",
+    "rtl/w17_runtime/hdc/v41x/ckvsel/ot_hdc_core_v41x.sv": "8f0f96712ad05393379dcbb3312c7616993697b7e2a5cc37aceb9556d106bde6",
+    "rtl/v41die/ot_v41_rom_adapt.sv": "b6f61eef3f3aeab8995dee0f537616849cae27d9ac3dca39a9b794dfcec8a90f"
+  },
+  "must_not_substitute_generic_spine": "rtl/v41die/ot_v41_spine.sv has rows_left unguarded lateNBA override/no reset; selected rtl/w17_runtime/v41die/ot_v41_spine.sv has correct reset243 guarded249/250",
+  "native_tile_VM_snippet": "rtl/w17_runtime/chip/ot_chip_v41x_tile.sv:554-556; onecycle registered64FP32 activation/readEID,128writer ports, mask ONLY at memoryindex",
+  "observer_contract": [
+    "native q_go accepted with ready, registered VM EID read before keyCAM; no direct phase injection",
+    "accepted cfg words before field GO; BST17 full controls and data, no oldBST2 deadline reuse",
+    "real root row/pos/e/fp32/BF16 -> actual registered writer; validate source-format BF16-in32, not arbitrary FP32 raw equality",
+    "record actual VM postNBA contents at398720..399295 after acceptedwrites",
+    "known nonzero computed coefficients/input; initialize dest distinctsentinel before op to avoid vacuity; no host writes during phase",
+    "writer/root/tree/pair/loader/stream debt empty, rows_left0 and postwrite fence before drain; no newACK/pool"
+  ],
+  "existing_validator_notice": "140c97711 validator hardcodes old32768 zero-fixture frame; do not feed newjournal without source-bound address/format normalization or dedicated successor. Oldpreparation unchanged history.",
+  "wrapper_review_status": "announced observer paths not yet visible at read time; no actual implementation/test/run approval inferred",
+  "no_duplicate_launch": true,
+  "no_D1_changes": true,
+  "no_physical_PAR2_hardprovider_fulltoken_claim": true
+}

@@ -1,0 +1,304 @@
+{
+  "layers": 40,
+  "experts_per_layer": 384,
+  "matrices_per_expert": [
+    "w1",
+    "w3",
+    "w2"
+  ],
+  "weight_count": 46080,
+  "scale_count": 46080,
+  "tensor_count": 92160,
+  "missing_keys": [],
+  "extra_routed_expert_keys": [],
+  "unique_keys": true,
+  "scale_pairing_bijective": true,
+  "per_layer": [
+    {
+      "layer": 0,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 1,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 2,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 3,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 4,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 5,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 6,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 7,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 8,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 9,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 10,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 11,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 12,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 13,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 14,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 15,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 16,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 17,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 18,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 19,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 20,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 21,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 22,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 23,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 24,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 25,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 26,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 27,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 28,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 29,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 30,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 31,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 32,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 33,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 34,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 35,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 36,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 37,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 38,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    },
+    {
+      "layer": 39,
+      "experts": 384,
+      "weight_count": 1152,
+      "scale_count": 1152
+    }
+  ],
+  "weight_stored_bytes_from_offsets": 271790899200,
+  "scale_stored_bytes_from_offsets": 16986931200,
+  "observed_stored_signatures": [
+    {
+      "matrix": "w1",
+      "weight_stored_dtype": "I8",
+      "weight_stored_shape": [
+        2304,
+        2560
+      ],
+      "scale_stored_dtype": "F8_E8M0",
+      "scale_stored_shape": [
+        2304,
+        160
+      ],
+      "pair_count": 15360
+    },
+    {
+      "matrix": "w2",
+      "weight_stored_dtype": "I8",
+      "weight_stored_shape": [
+        5120,
+        1152
+      ],
+      "scale_stored_dtype": "F8_E8M0",
+      "scale_stored_shape": [
+        5120,
+        72
+      ],
+      "pair_count": 15360
+    },
+    {
+      "matrix": "w3",
+      "weight_stored_dtype": "I8",
+      "weight_stored_shape": [
+        2304,
+        2560
+      ],
+      "scale_stored_dtype": "F8_E8M0",
+      "scale_stored_shape": [
+        2304,
+        160
+      ],
+      "pair_count": 15360
+    }
+  ]
+}

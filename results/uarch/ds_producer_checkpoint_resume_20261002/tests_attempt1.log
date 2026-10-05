@@ -1,0 +1,541 @@
+F....FFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+____ test_actual_provider_native_operators_continuous_vs_restored_byteexact ____
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_actual_provider_native_op0')
+
+    def test_actual_provider_native_operators_continuous_vs_restored_byteexact(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path)
+
+tests/test_ds_producer_checkpoint_resume.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78efdbbf2b90>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+__________ test_pending_reverse_partial_append_and_retired_gap_refuse __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_pending_reverse_partial_a0')
+
+    def test_pending_reverse_partial_append_and_retired_gap_refuse(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path);p.rf[0].queue.append('accepted')
+
+tests/test_ds_producer_checkpoint_resume.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78efdb5e3190>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+__ test_tampered_checkpoint_refuses_before_constructor_mutation[payload.bin] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_tampered_checkpoint_refus0')
+file = 'payload.bin'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78ef8b84c340>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+___ test_tampered_checkpoint_refuses_before_constructor_mutation[state.json] ___
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_tampered_checkpoint_refus1')
+file = 'state.json'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78efdbbdfa30>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+_ test_tampered_checkpoint_refuses_before_constructor_mutation[actual_observations.json] _
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_tampered_checkpoint_refus2')
+file = 'actual_observations.json'
+
+    @pytest.mark.parametrize('file',['payload.bin','state.json','actual_observations.json'])
+    def test_tampered_checkpoint_refuses_before_constructor_mutation(tmp_path,file):
+>       p,e,w,c,d,r=captured(tmp_path);f=d/file;raw=f.read_bytes();f.write_bytes(bytes([raw[0]^1])+raw[1:])
+
+tests/test_ds_producer_checkpoint_resume.py:87: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78ef8b84c640>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+__________ test_stale_generation_source_and_partial_checkpoint_refuse __________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_stale_generation_source_a0')
+
+    def test_stale_generation_source_and_partial_checkpoint_refuse(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path);p2,e2,w2=constructor(tmp_path,'cold')
+
+tests/test_ds_producer_checkpoint_resume.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78efdbbdfeb0>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+_____________ test_resume_loop_defaultoff_and_no_expected_stimulus _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6970/test_resume_loop_defaultoff_an0')
+
+    def test_resume_loop_defaultoff_and_no_expected_stimulus(tmp_path):
+>       p,e,w,c,d,r=captured(tmp_path)
+
+tests/test_ds_producer_checkpoint_resume.py:101: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_ds_producer_checkpoint_resume.py:48: in captured
+    p,e,w=constructor(tmp_path,'first');e.execute_operation(e.native['instructions'][0]);w.seen.add((0,'v0',0,1,'data'))
+tests/test_ds_producer_checkpoint_resume.py:27: in execute_operation
+    self.provider.publish({'PC':pc,'rank':0,'generation':1,'version':'v'+str(pc),'home_indices':[pc]}, {'data':data},{'result':'out'})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <h3_ds_checkpoint_provider_r30.Provider object at 0x78efde3b8340>
+identity = {'PC': 0, 'generation': 1, 'home_indices': [0], 'rank': 0, ...}
+fields = {'data': array([ 1.25,  2.25,  3.25,  4.25,  5.25,  6.25,  7.25,  8.25,  9.25,
+       10.25, 11.25, 12.25, 13.25, 14.2....25, 20.25, 21.25, 22.25, 23.25, 24.25, 25.25, 26.25, 27.25,
+       28.25, 29.25, 30.25, 31.25, 32.25], dtype=float32)}
+source_store_view = {'result': 'out'}
+
+    def publish(self,identity,fields,source_store_view):
+        # Source home/version metadata validated by driver and repeated here.
+        rank=identity['rank'];version=identity['version'];gen=identity['generation']
+        if gen!=self.generation:raise ValueError('publication generation')
+        if identity['home_indices'] and self.homes[identity['home_indices'][0]]['home']['class']=='HBM_NATIVE_STATE':return self.publish_state(identity,fields,source_store_view)
+        for i in identity['home_indices']:
+            h=self.homes[i]
+            if h['version']!=version or rank not in h['rank_group'] or h['home']['class']!='RF':raise ValueError('source native home')
+        if not identity['home_indices']:raise ValueError('persistent output needs concrete physical home directory')
+        if set(fields)!={'data'}:raise NotImplementedError('compound persistent/code/scale field homes required')
+        if self._leased(version):raise ValueError('write over leased version')
+        proposed={(self.homes[i]['SM'],slot) for i in identity['home_indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+        for (live_version,live_rank),loc in self.locations.items():
+            if live_rank!=rank or live_version==version or loc.get('kind')=='state_fragment':continue
+            occupied={(self.homes[i]['SM'],slot) for i in loc['indices'] for slot in range(self.homes[i]['home']['slot_first'],self.homes[i]['home']['slot_first']+self.homes[i]['home']['vectors'])}
+            if proposed&occupied:raise ValueError('physical RF home aliases retained version')
+        data=fields['data'];words=np.ascontiguousarray(data).view(np.uint32).reshape(-1)
+        if rank not in self.rf:self.rf[rank]=BoundSectorProvider({('DeepSeek',rank):[dict(base=0,bytes=RF_BYTES)]},journal_budget=self.journal_budget,allocation_identity={'address_class':'RF','rank':rank})
+        p=self.rf[rank];s=Storage(p,'DeepSeek',rank,0,RF_BYTES);s.pc=identity['PC'];s.epoch=gen
+        begin=len(p.events);covered=set()
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words))
+            block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256
+            chosen=idx[block%32==sm]
+            if len(chosen)!=h['word_count'] or len(chosen)>h['home']['vectors']*128:raise ValueError('native home word capacity')
+            if covered.intersection(chosen.tolist()):raise ValueError('duplicate native source word home')
+            covered.update(chosen.tolist())
+            payload=words[chosen]
+            for copy in range(2):
+                base=(sm*2+copy)*RF_SM+h['home']['slot_first']*512
+                t=Tensor('DeepSeek',rank,base,(len(payload),),'U32')
+                for k in range(0,len(payload),128):s.write(t,k,payload[k:k+128])
+        if covered!=set(range(len(words))):raise ValueError('unscattered native source words')
+        # Exact data reconstructed by addressed reads from copy0, not a cached
+        # whole-source arithmetic result shortcut.
+        restored=np.empty_like(words)
+        for i in identity['home_indices']:
+            h=self.homes[i];sm=h['SM'];idx=np.arange(len(words));block=(idx%5120)//256 if h['partition']=='HC_plane_dimension' else idx//256;chosen=idx[block%32==sm]
+            base=sm*2*RF_SM+h['home']['slot_first']*512;t=Tensor('DeepSeek',rank,base,(len(chosen),),'U32')
+            for k in range(0,len(chosen),128):restored[chosen[k:k+128]]=s.read(t,np.arange(k,min(k+128,len(chosen))))
+        if not np.array_equal(restored,words):raise ValueError('native addressed publication readback')
+        restored=restored.view(data.dtype).reshape(data.shape);restored.flags.writeable=False;self.published[version,rank]=restored
+        self.locations[version,rank]=dict(indices=identity['home_indices'],shape=data.shape,dtype=data.dtype,pc=identity['PC'])
+        source=p.events[begin:];last_write=max(k for k,e in enumerate(source) if e['event']=='software_backing_visible')
+        terminal=list(islice(((k,e) for k,e in enumerate(source) if k>=last_write and e['event'] in ['software_backing_visible','consumer_accept','validated_reverse_grant']),3))
+        if [e['event'] for _,e in terminal]!=['software_backing_visible','consumer_accept','validated_reverse_grant']:raise ValueError('actual source write completion sequence')
+        events=[]
+        for k,e in terminal:
+            events.append(dict(event='software_backing_visible' if e['event']=='software_backing_visible' else e['event'],identity=identity,sequence=self.seq+k+1,source_fragment_identity=e['identity'],source_tag=e['tag'],source_tag_generation=e['generation'],source_tick=e['tick']))
+>       self.seq+=len(source);self.trace.extend(events)
+E       TypeError: object of type 'Slice' has no len()
+
+tools/h3_ds_checkpoint_provider_r30.py:273: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_actual_provider_native_operators_continuous_vs_restored_byteexact
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_pending_reverse_partial_append_and_retired_gap_refuse
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[payload.bin]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[state.json]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_tampered_checkpoint_refuses_before_constructor_mutation[actual_observations.json]
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_stale_generation_source_and_partial_checkpoint_refuse
+FAILED tests/test_ds_producer_checkpoint_resume.py::test_resume_loop_defaultoff_and_no_expected_stimulus

@@ -1,0 +1,38 @@
+{
+  "API": "ds_hbm_continuation_scope_r51.transition(old_manifest,new_manifest,old_identity,new_identity,boundary_pc,storage_projection,source_review)",
+  "actual_state_restored": false,
+  "adopted_into_restore": false,
+  "blockers": [
+    "parent-reviewed new calendar pin and unchanged executor AST before successor adapter",
+    "Peirce explicit shared-state serialization/restoration (current helper rejects nonempty PC10 shared objects)",
+    "source-sized prelaunch checkpoint metadata/payload projection and fresh aggregate disk admission",
+    "actual provider/witness/engine constructor preflight against exact source and compact installer",
+    "source-reviewed execution admission; no numerical launch now"
+  ],
+  "candidate_complete_journal_bytes": 819950818992,
+  "constructor_preflight_launched": false,
+  "fresh_available_disk_bytes": 883801288704,
+  "fresh_headroom_before_checkpoint_bytes": 63850469712,
+  "hardware_qualified": false,
+  "numerical_launch_performed": false,
+  "pending_calendar_successor": true,
+  "permitted_policy_fields": [
+    "prefix_stop",
+    "journal_root",
+    "journal_capacity_bytes"
+  ],
+  "reviewed_candidate_dependency": "1907a4ede",
+  "schema": "DS_HBM_CONTINUATION_SOURCE_REVIEW_R51",
+  "source_base": "7a26263e35e74cfdf5383fc99ed56741ec6555b8",
+  "source_sha256": {
+    "tests/test_ds_hbm_continuation_scope_r51.py": "0bcb208ab346b72902eddca58372f1bb8b8295f22c25c67656b5111ea533f49f",
+    "tools/ds_hbm_continuation_scope_r51.py": "36103eee4dc404a48524a5474d0b7de53cc61cc1af2f87d3d70aa42e6e545dad",
+    "tools/ds_hbm_current_calendar_adapter_r50.py": "839765749577fabbed3ffeca27ba996d6f3727f9efacc3b2b725d1709e991e1a",
+    "tools/ds_producer_checkpoint_resume.py": "712c45c1267302e4e408fe41a9300474d00810482217e6e4713925b2768c694e",
+    "tools/h3_complete_native_calendar.py": "c0370e63dba0eadcc06c5522c28a956ddebfd10af9b8765a61fe0e4fe025b817"
+  },
+  "status": "READY_TRANSITION_CONTRACT_FOR_PEIRCE_REVIEW_NOT_RUNTIME_ADMISSION",
+  "strict_identity": "all other manifest fields and all other Peirce identity fields unchanged",
+  "test_command": "python -m pytest -q tests/test_ds_hbm_continuation_scope_r51.py",
+  "tests_passed": 14
+}

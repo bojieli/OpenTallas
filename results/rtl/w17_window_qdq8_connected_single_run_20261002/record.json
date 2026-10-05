@@ -1,0 +1,879 @@
+{
+  "mode": "CONNECTED_SINGLE_SERVICE",
+  "results": [
+    {
+      "case": "retain0",
+      "compile": {
+        "status": 0,
+        "command": [
+          "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator",
+          "--binary",
+          "--timing",
+          "--build",
+          "-j",
+          "2",
+          "-Wno-fatal",
+          "-Wno-WIDTH",
+          "-Wno-PINMISSING",
+          "--top-module",
+          "tb",
+          "-GRETAIN=0",
+          "-I/tmp/window-qdq8-connected-prepared-20261002-r2",
+          "-I/tmp/window-qdq8-connected-prepared-20261002-r2/sources",
+          "--Mdir",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/obj_retain0",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_attn_row_merge.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_attn_source.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_kv_prefetch.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_refill_schedule.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_row_codec.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_stage4.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_stream.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_retention.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_kv_reqmux.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_kv_rope_reqmux.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_hbm_karb.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_v41x_idx_hbm.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_v41x_window_kv_blocks.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_window_block_guard.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_chip_v41x_attn_desc_lifecycle.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_v41_qe.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_actquant.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_fp4qdq.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_blockdot.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_chunk8_stack.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_delay.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_fpu.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_hdc_fp32_mul_pipe.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/ot_fp32_add_rne_pipe.sv",
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/sources/tb.sv"
+        ],
+        "cwd": "/home/ubuntu/w17-window-epoch-candidate",
+        "timeout_seconds": 150.0,
+        "wall_seconds": 31.051113803870976,
+        "log_sha256": "3978cc159b894463f951dcdd5ad44bc42ca6ac28aef6246b481941d28f03a158"
+      },
+      "binary": {
+        "path": "/tmp/window-qdq8-connected-prepared-20261002-r2/obj_retain0/Vtb",
+        "sha256": "133ae9083db683cc986df2063182794554339d3f566f1a197dba4f0369e2c8da",
+        "bytes": 1966408
+      },
+      "runtime": {
+        "status": 1,
+        "command": [
+          "/tmp/window-qdq8-connected-prepared-20261002-r2/obj_retain0/Vtb"
+        ],
+        "cwd": "/tmp/window-qdq8-connected-prepared-20261002-r2",
+        "timeout_seconds": 5,
+        "wall_seconds": 0.015578405000269413,
+        "log_sha256": "4b095d73abaab2b4c02b795c7ed1b8c8e52163b0c315501e28e3d14bb1c83228"
+      },
+      "comparison": {
+        "checks": {
+          "block": {
+            "actual_count": 0,
+            "predicted_count": 16,
+            "exact": false
+          },
+          "descriptor": {
+            "actual_count": 0,
+            "predicted_count": 6,
+            "exact": false
+          },
+          "write_ack": {
+            "actual_count": 0,
+            "predicted_count": 32,
+            "exact": false
+          },
+          "logical_publish": {
+            "actual_count": 0,
+            "predicted_count": 1,
+            "exact": false
+          },
+          "request": {
+            "actual_count": 0,
+            "predicted_count": 13088,
+            "exact": false
+          },
+          "reply": {
+            "actual_count": 0,
+            "predicted_count": 13056,
+            "exact": false
+          },
+          "column": {
+            "actual_count": 0,
+            "predicted_count": 13088,
+            "exact": false
+          },
+          "lifecycle_done": {
+            "actual_count": 0,
+            "predicted_count": 6,
+            "exact": false
+          },
+          "stage": {
+            "actual": [],
+            "predicted": [
+              [
+                21361,
+                0,
+                1,
+                20454
+              ],
+              [
+                41749,
+                1,
+                2,
+                20255
+              ],
+              [
+                61648,
+                2,
+                3,
+                19766
+              ],
+              [
+                81576,
+                3,
+                4,
+                19795
+              ],
+              [
+                101509,
+                4,
+                5,
+                19800
+              ],
+              [
+                121844,
+                5,
+                6,
+                20202
+              ]
+            ],
+            "exact": false
+          },
+          "per_PC": {
+            "exact": false,
+            "actual_count": 0
+          },
+          "terminal": {
+            "actual": null,
+            "predicted": [
+              0,
+              32,
+              32,
+              13056,
+              13056,
+              192,
+              256
+            ],
+            "exact": false
+          },
+          "actual_QE_capture": {
+            "exact": false,
+            "actual_count": 0,
+            "expected_count": 16
+          },
+          "natural_wrap": {
+            "exact": false,
+            "actual": [],
+            "expected": [
+              [
+                81574,
+                512
+              ]
+            ]
+          }
+        },
+        "mismatches": [
+          {
+            "kind": "block",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                336,
+                0
+              ],
+              [
+                381,
+                1
+              ],
+              [
+                416,
+                2
+              ]
+            ]
+          },
+          {
+            "kind": "descriptor",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                906,
+                0,
+                1,
+                0,
+                128
+              ],
+              [
+                21493,
+                1,
+                2,
+                0,
+                128
+              ],
+              [
+                41881,
+                2,
+                3,
+                0,
+                128
+              ]
+            ]
+          },
+          {
+            "kind": "write_ack",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                358,
+                1
+              ],
+              [
+                380,
+                2
+              ],
+              [
+                403,
+                3
+              ]
+            ]
+          },
+          {
+            "kind": "logical_publish",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                905
+              ]
+            ]
+          },
+          {
+            "kind": "request",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                337,
+                11,
+                264303,
+                65536,
+                1,
+                4294967295
+              ],
+              [
+                359,
+                15,
+                264319,
+                65552,
+                1,
+                1
+              ],
+              [
+                382,
+                12,
+                264304,
+                65537,
+                1,
+                4294967295
+              ]
+            ]
+          },
+          {
+            "kind": "reply",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                961,
+                0,
+                262144,
+                65568,
+                0
+              ],
+              [
+                964,
+                0,
+                262145,
+                65569,
+                0
+              ],
+              [
+                965,
+                1,
+                262148,
+                65572,
+                0
+              ]
+            ]
+          },
+          {
+            "kind": "column",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                357,
+                11,
+                356375,
+                264303,
+                65536,
+                1
+              ],
+              [
+                379,
+                15,
+                378375,
+                264319,
+                65552,
+                1
+              ],
+              [
+                402,
+                12,
+                401375,
+                264304,
+                65537,
+                1
+              ]
+            ]
+          },
+          {
+            "kind": "lifecycle_done",
+            "first_index": 0,
+            "actual": [],
+            "predicted": [
+              [
+                21492,
+                0,
+                1
+              ],
+              [
+                41880,
+                1,
+                2
+              ],
+              [
+                61779,
+                2,
+                3
+              ]
+            ]
+          },
+          {
+            "kind": "stage",
+            "actual": [],
+            "predicted": [
+              [
+                21361,
+                0,
+                1,
+                20454
+              ],
+              [
+                41749,
+                1,
+                2,
+                20255
+              ],
+              [
+                61648,
+                2,
+                3,
+                19766
+              ],
+              [
+                81576,
+                3,
+                4,
+                19795
+              ],
+              [
+                101509,
+                4,
+                5,
+                19800
+              ],
+              [
+                121844,
+                5,
+                6,
+                20202
+              ]
+            ]
+          },
+          {
+            "kind": "per_PC",
+            "actual": [],
+            "predicted": [
+              [
+                0,
+                408,
+                0,
+                992,
+                128,
+                0,
+                0
+              ],
+              [
+                1,
+                408,
+                0,
+                992,
+                128,
+                0,
+                0
+              ],
+              [
+                2,
+                408,
+                0,
+                992,
+                128,
+                0,
+                0
+              ],
+              [
+                3,
+                408,
+                0,
+                994,
+                129,
+                0,
+                0
+              ],
+              [
+                4,
+                408,
+                0,
+                993,
+                129,
+                0,
+                0
+              ],
+              [
+                5,
+                408,
+                0,
+                994,
+                129,
+                0,
+                0
+              ],
+              [
+                6,
+                408,
+                0,
+                994,
+                130,
+                0,
+                0
+              ],
+              [
+                7,
+                408,
+                0,
+                996,
+                130,
+                0,
+                0
+              ],
+              [
+                8,
+                408,
+                0,
+                996,
+                129,
+                0,
+                0
+              ],
+              [
+                9,
+                408,
+                0,
+                997,
+                128,
+                0,
+                0
+              ],
+              [
+                10,
+                408,
+                0,
+                997,
+                128,
+                0,
+                0
+              ],
+              [
+                11,
+                408,
+                1,
+                998,
+                129,
+                0,
+                0
+              ],
+              [
+                12,
+                408,
+                4,
+                998,
+                131,
+                0,
+                0
+              ],
+              [
+                13,
+                408,
+                4,
+                998,
+                131,
+                0,
+                0
+              ],
+              [
+                14,
+                408,
+                4,
+                998,
+                131,
+                0,
+                0
+              ],
+              [
+                15,
+                408,
+                19,
+                998,
+                131,
+                0,
+                0
+              ],
+              [
+                16,
+                408,
+                0,
+                988,
+                124,
+                0,
+                0
+              ],
+              [
+                17,
+                408,
+                0,
+                988,
+                125,
+                0,
+                0
+              ],
+              [
+                18,
+                408,
+                0,
+                989,
+                124,
+                0,
+                0
+              ],
+              [
+                19,
+                408,
+                0,
+                989,
+                125,
+                0,
+                0
+              ],
+              [
+                20,
+                408,
+                0,
+                989,
+                125,
+                0,
+                0
+              ],
+              [
+                21,
+                408,
+                0,
+                989,
+                125,
+                0,
+                0
+              ],
+              [
+                22,
+                408,
+                0,
+                990,
+                125,
+                0,
+                0
+              ],
+              [
+                23,
+                408,
+                0,
+                990,
+                124,
+                0,
+                0
+              ],
+              [
+                24,
+                408,
+                0,
+                990,
+                125,
+                0,
+                0
+              ],
+              [
+                25,
+                408,
+                0,
+                990,
+                125,
+                0,
+                0
+              ],
+              [
+                26,
+                408,
+                0,
+                990,
+                124,
+                0,
+                0
+              ],
+              [
+                27,
+                408,
+                0,
+                990,
+                125,
+                0,
+                0
+              ],
+              [
+                28,
+                408,
+                0,
+                991,
+                125,
+                0,
+                0
+              ],
+              [
+                29,
+                408,
+                0,
+                991,
+                125,
+                0,
+                0
+              ],
+              [
+                30,
+                408,
+                0,
+                991,
+                125,
+                0,
+                0
+              ],
+              [
+                31,
+                408,
+                0,
+                991,
+                124,
+                0,
+                0
+              ]
+            ]
+          },
+          {
+            "kind": "terminal",
+            "actual": null,
+            "predicted": [
+              0,
+              32,
+              32,
+              13056,
+              13056,
+              192,
+              256
+            ]
+          },
+          {
+            "kind": "actual_QE_capture",
+            "actual": [],
+            "expected": [
+              [
+                317,
+                0,
+                55232,
+                57044625241811648050835346398516363059591781825259543921461680331754012016896,
+                127
+              ],
+              [
+                318,
+                1,
+                55264,
+                57099612293992358866676809335637523064852985402536425929507378632983259979807,
+                127
+              ],
+              [
+                319,
+                2,
+                55296,
+                57154599346173069682518272272758683070114188979813307937553076934212507942718,
+                127
+              ],
+              [
+                320,
+                3,
+                55328,
+                57209586398353780498359735209879843075375392557090189945598775235441755905629,
+                127
+              ],
+              [
+                321,
+                4,
+                55360,
+                57266347226411288437292858241746846951774054314279229437774979933484850511228,
+                127
+              ],
+              [
+                322,
+                5,
+                55392,
+                57321334278591999253134321178868006957035257891556111445820678234714098539932,
+                127
+              ],
+              [
+                323,
+                6,
+                55424,
+                57376321330772710068975784115989166962296461468832993453866376535943346502843,
+                127
+              ],
+              [
+                324,
+                7,
+                55456,
+                57431308382953420884817247053110326967557665046109875461912074837172594465754,
+                127
+              ],
+              [
+                325,
+                8,
+                55488,
+                56991418921491564935038844183963579646531320577619965113170529909261568047865,
+                127
+              ],
+              [
+                326,
+                9,
+                55520,
+                57206038887251971419229074207151936380460173624396753087301540526356888092672,
+                127
+              ],
+              [
+                327,
+                10,
+                55552,
+                0,
+                105
+              ],
+              [
+                328,
+                11,
+                55584,
+                57896928055670665928733867960092856710703453994410772906766553944782138277888,
+                105
+              ],
+              [
+                329,
+                12,
+                55616,
+                54034527578886930164263452995903399803032028942774485037174821721497014827000,
+                119
+              ],
+              [
+                330,
+                13,
+                55648,
+                10442211630720833063624964522055930817185520854855848940544150558196385617816,
+                105
+              ],
+              [
+                331,
+                14,
+                55680,
+                54034527578886930164263452995903399803032028942774485037174821721497014827000,
+                203
+              ],
+              [
+                332,
+                15,
+                55712,
+                56760828057507938933123031867003876398661757189039492176204698043094671392125,
+                105
+              ]
+            ]
+          },
+          {
+            "kind": "natural_wrap",
+            "actual": [],
+            "expected": [
+              [
+                81574,
+                512
+              ]
+            ]
+          }
+        ],
+        "verdict": "FAIL_PRESERVED_NO_FIT"
+      }
+    }
+  ],
+  "GO_commit": "41a5a84ce12379f5758b10608926e233a4934d4a",
+  "plan_sha256": "22388c4c9f01f334ef959a50d1077865a1f62e3ae335bb63905960e42e21aee1",
+  "runner_sha256": "6849f7f69ccdd7385314b4c08fa4ba961abdff827d69c3824a2074c9588c1665",
+  "source_head": "9d42d5da8a4f5cf36d4e04668c6894eb9d9f37b4",
+  "budget": {
+    "whole_service_seconds": 180,
+    "compile_total_seconds": 150,
+    "compile_count": 2,
+    "case_seconds": 5,
+    "cases": 2,
+    "total_case_seconds": 10,
+    "supervision_reserve_seconds": 20
+  },
+  "compile_seconds_used": 31.051113803870976,
+  "verdict": "FAIL_PRESERVED_NO_FALLBACK_NO_RETRY",
+  "error_type": "RuntimeError",
+  "error": "Runtime/model mismatch: stop, no retry/fit",
+  "aggregate_memory_peak_bytes": 1159483392,
+  "memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+  "worker_wall_seconds": 31.4947626888752
+}

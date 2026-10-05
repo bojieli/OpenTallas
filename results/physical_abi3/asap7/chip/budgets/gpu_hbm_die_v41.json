@@ -1,0 +1,258 @@
+{
+ "name": "gpu_hbm_die_v41",
+ "arch": "hbm_gpu_v41",
+ "period_ps": 833.0,
+ "uncertainty_ps": 60.0,
+ "method": "W13: the SM's die-level ports (NoC, x broadcast, barrier) at 300 ps internal each; outputs 450 ps (clock-to-out incl. insertion), inputs 300 ps; 1.2 GHz (0.833 ns) at SS per AGENTS.md e7479589",
+ "blocks": {
+  "ot_gpu_sm_v": {
+   "instance": "sm*",
+   "ports": {
+    "start": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "op_rows": {
+     "direction": "input",
+     "width": 13,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "op_c": {
+     "direction": "input",
+     "width": 16,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "op_g": {
+     "direction": "input",
+     "width": 8,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "op_gs": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "op_fmt": {
+     "direction": "input",
+     "width": 2,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "d_valid": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "d_base": {
+     "direction": "input",
+     "width": 32,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "d_lines": {
+     "direction": "input",
+     "width": 24,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "req_ready": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "rsp_v": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "rsp_tag": {
+     "direction": "input",
+     "width": 10,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "rsp_data": {
+     "direction": "input",
+     "width": 1088,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "xw_en": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "xw_addr": {
+     "direction": "input",
+     "width": 7,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "xw_data": {
+     "direction": "input",
+     "width": 2048,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "release_in": {
+     "direction": "input",
+     "width": 1,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    },
+    "busy": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "d_ready": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "req_v": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "req_addr": {
+     "direction": "output",
+     "width": 32,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "req_tag": {
+     "direction": "output",
+     "width": 10,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "rv": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "rrow": {
+     "direction": "output",
+     "width": 12,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "rdata": {
+     "direction": "output",
+     "width": 256,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "fault": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "arrive": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "released": {
+     "direction": "output",
+     "width": 1,
+     "internal_budget_ps": 450.0,
+     "external_ps": 323.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary; outputs leave a flop: 450 ps covers the macro clock insertion, the receiving flop sits at the macro edge"
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1,
+     "status": "static",
+     "internal_budget_ps": null,
+     "external_ps": null
+    },
+    "xw_grp": {
+     "direction": "input",
+     "width": 7,
+     "internal_budget_ps": 300.0,
+     "external_ps": 473.0,
+     "status": "fits",
+     "note": "W13 die budget: the SM registers its NoC, x-store and barrier boundary"
+    }
+   }
+  }
+ },
+ "memories": {},
+ "violations": [],
+ "wire_model": null,
+ "tile_io_fraction": null,
+ "tile_netlist": null
+}

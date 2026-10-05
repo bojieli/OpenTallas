@@ -1,0 +1,110 @@
+{
+  "verdict": "PASS_FULLMAP_STRUCTURE_PHYSICAL_ADMISSION_HOLD",
+  "adopted": false,
+  "physical_admission": false,
+  "source_commit": "b046de7f0278bae6a28f2bd346303bbc25cc4bac",
+  "synthesis_companion_commit": "424c00210",
+  "strict_guard_commit": "6e7ed6728",
+  "structure": {
+    "verdict": "PASS_STRUCTURE_ONLY",
+    "macros": [
+      "\\g_mac[0].g_pp.u_rom0",
+      "\\g_mac[0].g_pp.u_rom1",
+      "\\g_mac[1].g_pp.u_rom0",
+      "\\g_mac[1].g_pp.u_rom1"
+    ],
+    "icg_count": 8,
+    "distinct_wake_flops": [
+      "\\g_wake.g_leaf[0].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[1].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[2].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[3].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[4].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[5].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[6].wake$_DFF_PN1_",
+      "\\g_wake.g_leaf[7].wake$_DFF_PN1_"
+    ],
+    "flop_count": 91733,
+    "wake_control_pins": {
+      "CLK": "clk",
+      "D": "_000046_",
+      "RESETN": "_383944_",
+      "SETN": "rst_n"
+    },
+    "mapped_netlist_sha256": "d6b8f7848db0fdfb1f1142deaa298154c4a6366447ee5d1906df8055ed4ba2ea"
+  },
+  "flop_delta_vs_failed_map": 7,
+  "full_mapped_netlist": "/home/ubuntu/w10-w18-recovery/baseline_wake/fullmap_r2/1_2_yosys.v",
+  "area": {
+    "measured_synthesis_stdcell_um2": 62705.9,
+    "measured_synthesis_macro_um2": 31525.5,
+    "core_um2": 138042.31680000003,
+    "requested_placement_density": 0.5,
+    "macro_excluded_density_lower_bound": 0.5886948360251786,
+    "area_needed_at_requested_density_before_escape_um2": 156937.3,
+    "area_deficit_before_escape_um2": 18894.98319999996,
+    "escape_reservation_um2": 6957.34272,
+    "area_needed_with_exclusive_escape_reservation_um2": 163894.64271999997,
+    "area_deficit_with_escape_um2": 25852.325919999945,
+    "verdict": "FAIL_SIMPLE_50PCT_AREA_RESERVATION_TEST_NOT_A_ROUTED_FIT_VERDICT",
+    "scope": "conservative uniform standard-cell density and exclusive escape reservation; actual local packing, halo/PG/clock/hold and site legality unproved; no density relaxation or outline adoption"
+  },
+  "exactness": {
+    "verdict": "PASS_EXACT_PREPHYSICAL",
+    "adopted": false,
+    "rows": 240,
+    "cases": 13,
+    "completion_cycle_delta": 0,
+    "full_case_records_identical": true,
+    "unchanged_baseline_source_pins": true,
+    "full_shape": {
+      "N": 4,
+      "NB": 2,
+      "MTP": 6,
+      "FAST": 1,
+      "PP": 1,
+      "FRONT_PAR": 0,
+      "LAT": 8
+    },
+    "pending": [
+      "actual full-goal floorplan and synthesis leaf-clone check",
+      "SS/FF contextual timing, clean route and real abstract",
+      "clock power, hub layers, die root/region and actual IR"
+    ],
+    "input_sha256": {
+      "model": "22ec42a393a34fb639d9ea8766b1da3b5682dfca761405ce5d0fb2c29c72be58",
+      "control": "ec428796c12fc684971f80bfa20b99530b428ce46013de643cffa7890079b5de",
+      "baseline": "870a4565a96b77c972c5a09f540d467990cef4a7a90243427062f4cf0b3b4512",
+      "candidate": "b29ad7dce69b99426078c5d817fceb2c0b017d043883dd18e5cfa63d03f753b8"
+    }
+  },
+  "pin_access_review": {
+    "commit": "c3a265f43",
+    "verdict": "NECESSARY_CONSTRAINTS_PROVED_FULL_ACCESS_PENDING",
+    "actual_all_pin_escape": false,
+    "local_contiguity": false
+  },
+  "pending": [
+    "parent/root actual all-pin escape, orientation/track phase/site legality and local reserved capacity",
+    "model-price fullgoal actual-density/area discrepancy before any floorplan or outline change",
+    "matched neighbor clocks and I/O contracts; W18 macro-output FF and recovery/removal scope",
+    "contextual SS setup/FF hold, real final abstracts, actual-element clock power and die IR"
+  ],
+  "jobs": {
+    "fullmap_terminal": true,
+    "lease_released": true,
+    "new_floorplan": false,
+    "cts": false,
+    "route": false
+  },
+  "evidence": {
+    "run.log.txt": "e3d1f4258bc6f0be62a7df789142e9514ad0cfea7f9a4b1093991f0431ab0eb0",
+    "companion.tcl": "1e52773a57cc1d3e6e6321b323da10316c64bede8836097f0d4961bb50d6d538",
+    "lease_terminal.json": "af9a3aa0be610f5e9c04ca6e10cb55c4913bd52c235aa49414cc6a604700dc7c",
+    "strict_structure.json": "014ab430b67b6c1542f48d493893e01b6c47276dbcec73d8ad1c01df158b690b",
+    "mapped_wake_macro_cone.v": "f1ad277cef8e45238f60c61d6a9c2ee471743cbaba0f31d72a3658f8974bba7f",
+    "terminal.json": "9f0d994c52a94cbbe3dd3feedac71626c14be1c64f7134ef0813a3aca0099a6b",
+    "1_synth.json": "9c533c30b0b4d8d84c252ca90ab694b967d030557e19b8787b9056ebc272a616",
+    "exact_source_revalidation.json": "f40b02a8d8d28217ae619e99f8c88ce09ea49af4c673884f8687384e7d818048"
+  }
+}
