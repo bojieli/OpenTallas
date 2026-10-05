@@ -59,8 +59,7 @@ foreach spec $lc_specs {
   # OpenDB EXCLUSIVE is the DEF FENCE region type.
   $region setRegionType EXCLUSIVE
   odb::dbBox_create $region [expr {round($x0*$lc_dbu)}] [expr {round($y0*$lc_dbu)}] [expr {round($x1*$lc_dbu)}] [expr {round($y1*$lc_dbu)}]
-  set group [odb::dbGroup_create $lc_block "loader_crc_$name"]
-  $group setRegion $region
+  set group [odb::dbGroup_create $region "loader_crc_$name"]
   foreach inst [dict get $lc_registers $name] {$group addInst $inst}
   set exclusive 0; set shared 0
   dict for {cell inst} [dict get $lc_cones $name] {
