@@ -105,6 +105,21 @@ def request_addresses(desc):
             yield desc['b_base'] + t * desc['b_items'] + i
 
 
+def tag16_mapping(desc):
+    """Finite W2 mapping contract; no claim for unequal-G or mixed-format pairs."""
+    a, b = [Op(**o) for o in desc['segments']]
+    if not (a.rows == b.rows == 2 and a.groups == b.groups == 2
+            and a.fmt == b.fmt == 'fp4' and a.c == b.c == 8):
+        raise ValueError('TAGW16 mapper supports actual W2 pairs only')
+    return dict(rows_a=2, rows_total=4, groups=2, c=8,
+                xb_a=a.xb, xb_b=b.xb, delta_x=(b.xb-a.xb)%128,
+                op_a=a.identity, op_b=b.identity,
+                virtual_rows=[dict(key=i, operation=a.identity if i<2 else b.identity,
+                                   local_row=i if i<2 else i-2) for i in range(4)],
+                tag_bits=16, reducer_keys=[0,1,2,3],
+                completion_rows=4, format='fp4', source_arithmetic_changed=False)
+
+
 def compile_run(ops, enabled=False):
     """Default-off compiler. Conservative pairs; no speculative shift packing."""
     for op in ops:
