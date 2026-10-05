@@ -154,9 +154,13 @@ set_false_path -from [get_ports por_n]
                                   for p in src.rglob('*') if p.is_file() and '.git' not in p.parts},
                     abc_repeated=False, rtl_changes=False)
     (work / 'route_manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
+    make = 'make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 '
+    result = f'/work/results/asap7/{a.nickname}/base/'
     cmd = ['docker', 'run', '--rm', '-v', f'{src}:/src:ro', '-v', f'{work}:/work',
            '-w', '/OpenROAD-flow-scripts/flow', a.image, 'bash', '-lc',
-           'source /OpenROAD-flow-scripts/env.sh; make -j16 DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish']
+           'source /OpenROAD-flow-scripts/env.sh; ' +
+           make + '-j1 ' + result + '1_2_yosys.v && ' +
+           make + '-j1 ' + result + '2_1_floorplan.odb && ' + make + '-j16 finish']
     with (work / 'route.log').open('w') as log:
         result = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT)
     (work / 'route.exit').write_text(str(result.returncode) + '\n')
