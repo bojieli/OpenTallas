@@ -57,7 +57,7 @@ SRC += ["rtl/dsrom_sys/reindex_parent/"+name for name in (
     "ot_dsrom_reindex_gather.sv", "ot_dsrom_reindex_gather_parent.sv",
     "ot_dsrom_reindex_kgctl_parent.sv", "ot_dsrom_reindex_kgdata_parent.sv",
     "ot_dsrom_reindex_list_macro.sv", "ot_dsrom_reindex_request_cut.sv")]
-SRC += ["rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv"]
+SRC += ["rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_drain_queue.sv", "rtl/dsrom_sys/reindex_parent/ot_dsrom_reindex_parent_control.sv"]
 SRC += ["physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
 
