@@ -20,6 +20,8 @@ def main():
                         help='required native host library, e.g. crypto for pinned target-entry SHA256')
     parser.add_argument('--linked-source', action='store_true',
                         help='link selected source factory/prefix/embedding directly; select caller "-"')
+    parser.add_argument('--static-native-cut',type=Path,
+                        help='opt-in completed static native cut selection.json; selects actual cut/TU/flags together')
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--cxx', default='g++')
     parser.add_argument('--host-source', type=Path,
@@ -36,7 +38,6 @@ def main():
     for path in required:
         if not path.is_file():
             parser.error(f'completed native input missing: {path}')
-    args.output.mkdir(parents=True, exist_ok=False)
     includes = [support, args.pq, args.pb, args.verilator_include,
                 args.verilator_include / 'vltstd', args.rom_client_dir,
                 *args.include_dir]
@@ -46,16 +47,23 @@ def main():
                     support / 's81_minimum_source_factory.cpp',
                     support / 's81_minimum_prefix.cpp',
                     support / 's81_minimum_embedding.cpp']
+    flags=[]
+    archives=list(args.model_archive)
+    if args.static_native_cut:
+        from dsrom_s81_static_native_cut import enroll
+        sources,selected_includes,archives,flags=enroll(args.static_native_cut,sources,includes,archives)
+        includes=selected_includes
+    args.output.mkdir(parents=True, exist_ok=False)
     models = []
-    if args.model_archive:
-        models = ['-Wl,--whole-archive', *map(str, args.model_archive),
+    if archives:
+        models = ['-Wl,--whole-archive', *map(str, archives),
                   '-Wl,--no-whole-archive']
     obj = args.output / 's81_minimum_element.o'
     commands = [
-        [args.cxx, '-std=c++17', '-O2', '-pthread',
+        [args.cxx, '-std=c++17', '-O2', '-pthread', *flags,
          *[f'-I{p}' for p in includes], '-c',
          str(host_source), '-o', str(obj)],
-        [args.cxx, '-std=c++17', '-O2', '-pthread', '-rdynamic', str(obj),
+        [args.cxx, '-std=c++17', '-O2', '-pthread', *flags, '-rdynamic', str(obj),
          *[f'-I{p}' for p in includes], *map(str, sources),
          str(args.pq / 'libVpq.a'), str(args.pb / 'libVpb.a'),
          *models,

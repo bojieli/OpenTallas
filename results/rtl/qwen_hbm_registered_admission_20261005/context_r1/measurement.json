@@ -1,0 +1,23 @@
+{
+  "scope": "FULL_CUT_CONTROL_CONTEXT_NOT_ARITHMETIC_OR_TOKEN",
+  "source_commit": "92d84cda9",
+  "tp2": {
+    "advances": 7650,
+    "commands": 16,
+    "baseline_cycles": 8055,
+    "candidate_cycles": 23342,
+    "delta": 15287
+  },
+  "tp4": {
+    "advances": 7650,
+    "commands": 16,
+    "baseline_cycles": 8055,
+    "candidate_cycles": 23342,
+    "delta": 15287
+  },
+  "status": "PASS",
+  "clock_adoption": false,
+  "comparison": "Every accepted engine edge: command/state/read/all aligned ME and maxima address/mask/data/strobes; terminal argmax/fault/retirement. Unchanged physical context actors, not actual arithmetic leaves.",
+  "source_runtime": "16 literal ME commands plus END; initial arrival stall400 clocks; positive finite source fixture",
+  "retained_token_census_scope": "Prior HA8 source4a38/gate87e6 differs from actual f4 f940/gate4923; gross sensitivity ONLY, not source-identical current-token cost"
+}

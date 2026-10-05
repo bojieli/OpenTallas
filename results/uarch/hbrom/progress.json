@@ -4,15 +4,15 @@
   "base_revision": "55ba24fdc32cda16de602f5ec5d758d176e96d1a",
   "default_off": true,
   "requirements": {
-    "analytical_model": "implemented; source-correct native sweep and new transport/floorplan integration in progress",
+    "analytical_model": "implemented with source-pinned G0 TP4/TP8 feasible compositions; default-off latency refinements in progress",
     "whole_model_storage_and_mapping": "checkpoint inventory and whole-row executable allocator implemented; codec tests pass",
-    "cluster_die_and_network_selection": "pending_model",
-    "RTL_implementation": "pending_model",
+    "cluster_die_and_network_selection": "G0 prototype:128 ROM pairs/tile,4 NC1 tiles/cluster,26 clusters/die,TP4,190 logic dies,1303.348063us; rejected for architectural adoption, priced calibration vehicle",
+    "RTL_implementation": "ROM feed and connected full-shape tile bench in progress; protected SRAM successor in progress",
     "full_shape_exact_component_validation": "pending_RTL",
-    "synthesis": "pending_RTL",
+    "synthesis": "EPYC2 pinned ac1af6715 full-shape NC1 baseline synthesis live; not a protected cluster or physical signoff",
     "contextual_SS_FF_physical": "pending_synthesis",
     "model_calibration": "pending_measurements",
-    "merge_and_push": "input evidence7f4648052 merged to main and pushed via integration936de848c"
+    "merge_and_push": "through83d781e27 integrated/pushed via a08adc6b4; G0 baseline record pending next commit"
   },
   "scope_notes": [
     "No full-system simulation unless owner asks; minimal full-shape components compose token schedule.",
@@ -21,9 +21,14 @@
     "ROM no ECC; mutable protection retained."
   ],
   "next_actions": [
-    "Finish geometry/transport-specific candidate selection",
-    "Calibrate full-shape reused NC1 tile through remote synthesis",
-    "Implement selected ROM payload adapter and connected exact bench",
-    "Contextual physical flow and model calibration"
+    "Measure pinned NC1 baseline area and intrinsic timing",
+    "Validate real ROM feed with full selected tile rows across23 actual-checkpoint operations",
+    "Reprice selected-KV forwarding, expert operand residency/dispatch, and source-role HBM placement",
+    "Contextual component physical implementation and calibration after model selection"
+  ],
+  "current_findings": [
+    "Compute sharing reduces matrix hardware replication but adds ROM selection and operand communication.",
+    "Old candidate sweeps explicitly invalidated by ownership, service-area, or expert-tail accounting corrections.",
+    "Current full colocated service role reservation209.533mm2; geometry must reserve hub and four PHYs separately."
   ]
 }
