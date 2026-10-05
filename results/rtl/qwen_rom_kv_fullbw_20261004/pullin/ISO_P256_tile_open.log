@@ -1,4 +1,0 @@
-STATS ISO_P256_tile_open hbm_act=512 rd=4352 wr=136 refpb=2384 violations=0 max_landing=8 rsp_tile_stall=944 fill_sectors=4352 wr_sectors=136 wr_lat_max=29
-PASS ISO_P256_tile_open "P":256,"fill_cycles":121,"fill_sectors":4352,"sectors_per_cycle":35.97,"tb_s_at_1p2ghz":1.381,"kv_ok_after_start":452,"su_drain_wait":387,"violations":0 : slices and token HBM codes exact
-KV_SERVICE4_STANDALONE PASS
-{"cases":[{"name":"ISO_P256_tile_open","pass":true,"P":256,"fill_cycles":121,"fill_sectors":4352,"sectors_per_cycle":35.97,"tb_s_at_1p2ghz":1.381,"kv_ok_after_start":452,"su_drain_wait":387,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}

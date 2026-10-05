@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/tools/dsrom_native_weight_address_join.py", line 205, in <module>
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);generate(p.parse_args().out)
-  File "/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/tools/dsrom_native_weight_address_join.py", line 166, in generate
-    b=join.binding(n['id']);bindings.append(b);census[b['classification']]+=1
-  File "/home/ubuntu/w17-dsrom-fixed4096-owner-compiler/tools/dsrom_native_weight_address_join.py", line 69, in binding
-    slot=f['qe_ibase']-self.slots[L]
-KeyError: 0
