@@ -9992,6 +9992,8 @@ def hbm_r5a_protected_pipeline_model():
     extra_ns=clk_ns*(1+3+3)+hclk_ns*2
     r2_path=ROOT / "results/rtl/hbm_accel_r5a_p2_20261005/r2_EXACT/latency_price.json"
     r2=json.loads(r2_path.read_text()) if r2_path.exists() else None
+    r3_path=ROOT / 'results/rtl/hbm_accel_r5a_p2_20261005/r3_CAPTURE_EXACT/exact.json'
+    r3=json.loads(r3_path.read_text()) if r3_path.exists() else None
     return dict(item=6,status='PREBUILD_DEFAULT_OFF',enabled_default=False,
         evidence=dict(path=str(measured.relative_to(ROOT)),sha256=hashlib.sha256(measured.read_bytes()).hexdigest()),
         shape=dict(NPC=pcs,NSM=sms,banks=banks,depth=depth,landing_credit=32,
@@ -10036,7 +10038,12 @@ def hbm_r5a_protected_pipeline_model():
             bounds_analytical_until_changed_source_bench=True,
             prior_increment_estimate_is_not_verified_upper_bound=True,
             measured_previous_revision=r2,
-            measured_current_capture_revision=False),
+            measured_current_capture_revision=r3 is not None,
+            measured_current_capture_minimum=None if r3 is None else dict(
+                source_commit=r3['source_commit'],record=str(r3_path.relative_to(ROOT)),
+                exact=r3['exact'],protection_pass=r3['protection_pass'],
+                first_access_ns=r3['measured_first_access_worst_ns'],
+                performance=r3['performance'],full88_replayed=False)),
         targets={m:dict(applicable=m in ('qwen_hbm','v41_hbm'),
             token_added_ns_per_fetch=extra_ns if m.endswith('_hbm') else 0)
             for m in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
