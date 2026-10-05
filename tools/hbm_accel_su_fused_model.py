@@ -75,5 +75,45 @@ def model():
         unknowns_are_ESTIMATE=True)
 
 
+def command_bridge_model():
+    """Price the missing scalar producer/held command, before adding hardware.
+
+    Existing VM has four N1024 read planes. The proposal reserves one plane's
+    first 20 word lanes for config, and reuses it after capture. No extra port
+    or payload CDC is assumed; actual parent arbiter is not yet identified.
+    """
+    records=[]
+    for kind, words in (("hc_norm",4),("q_norm",0),("kv_norm",0),
+                       ("swiglu",1),("hc_post",20)):
+        held_bits=32+5*24+words*32+3*32+3+16+16+8
+        records.append(dict(kind=kind,producer_VM_words=words,
+            producer_VM_bytes=words*4,producer_read_bits_per_edge=words*32,
+            producer_max_read_planes=1 if words else 0,new_memory_ports=0,
+            read_request_edges=1 if words else 0,read_response_capture_edges=1 if words else 0,
+            command_handoff_edges_ESTIMATE=1,
+            added_edges_after_operand_availability_ESTIMATE=(2 if words else 0)+1,
+            descriptor_and_scalar_hold_FF_bits_ESTIMATE=held_bits,
+            descriptor_DFF_area_floor_um2_ESTIMATE=held_bits*.2916,
+            arbiter_clients=2,read_address_mux_bits=4*1024*24,
+            read_source_mux_bits=4*1024*2,read_enable_mux_bits=4*1024,
+            write_address_mux_bits=1024*24,write_data_mux_bits=1024*32,
+            write_enable_mux_bits=1024,read_return_demux_bits=4*1024*32,
+            read_mux_area_um2=None,write_mux_area_um2=None,
+            command_ready_fanout_cost_um2=None,clock_tree_cost_um2=None,
+            boundary_min_payload_tracks=words*32,corridor_capacity=None,
+            parent_slot_fit=None,wire_CDC_credit_refresh_exposure_measured_us=None,
+            full_program_composed_delta_us=None,replicas=1,added_MACs_per_cycle=0,
+            input_availability='actual source producer completes before command read; upstream not hidden',
+            lease='exclusive VM ownership held until actual writes and producer/read debt drain',
+            numerical_contract='raw VM bits; no scalar arithmetic/reassociation',
+            physical_qualified=False,adopted=False))
+    return dict(schema='opentallas.hbm-su-command-bridge.price.v1',default_enabled=False,
+        actual_parent_issuer_arbiter_source=None,
+        existing_execution_hook='dshbm_baseline_measure.cmd_su_run -> rtl_hdc_v41x_vec_campaign.run_program',
+        existing_hook_scope='whole-program native bench plus CPU reference; not hardware issuer',
+        concrete_blocker='shared VM issuer/arbiter lease transfer between VEC and fused path not identified',
+        no_new_hardware_written=True,rows=records,estimates_not_results=True)
+
+
 if __name__ == "__main__":
     print(json.dumps(model(), indent=2))

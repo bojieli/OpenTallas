@@ -347,5 +347,13 @@
     "empty": "Zero placeholder with NPROG=0.",
     "schedule": "run_program calls schedule/oracle; not used. Saved wait fields alone do not prove a safe newly composed schedule.",
     "issuer": "Scalar producer, go/ready/credit and shared VM arbiter remain separate Nash/Einstein integration dependency."
+  },
+  "consumer_manifest_join": {
+    "path": "results/rtl/hbm_su_fused_20261005/native_abi/native_contract.json",
+    "source_main_commit": "d9d6af263",
+    "ordered_fields_match": true,
+    "program_word_bits": 690,
+    "binary_sha256_match": true,
+    "scope": "No caller edits; Einstein owns program runner."
   }
 }
