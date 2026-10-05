@@ -37,10 +37,12 @@ module ot_dsrom_su_norm #(
     parameter integer HC = 1,           // 1: four-copy hc_pre mix in front; 0: plain input
     parameter integer RD = 0,           // RoPE tail length (0: none; the tail lies in the last vector)
     parameter integer QUANT = 1,        // FP8 act-quant of the output (N a multiple of 32)
+    parameter integer RXS = 0,          // 1: one more register stage on the RoPE operands (cycles for margin)
     parameter integer RW = 9,           // result wire stages (lane tree -> scalar tail)
     parameter integer BW = 9,           // broadcast wire stages (scalar tail -> lanes)
     parameter integer LM = 5,
-    parameter integer LA = 4
+    parameter integer LA = 4            // 5: every add is the input-cut l5x adder (routed margin when fed from
+                                        //    another unit's register; +1 cycle per add on the chain)
 ) (
     input  wire                     clk,
     input  wire                     rst_n,
@@ -78,7 +80,7 @@ module ot_dsrom_su_norm #(
     localparam integer DR  = 1 + 3 * (3 * LM + LA);         // ot_hdc_v41x_rsqrt DEPTH
     localparam integer KS  = 1;
     localparam integer LB  = D - (NV - 1) * N;            // length of the last vector
-    localparam integer LAV = LA + 1;                      // vector-level adds: the operand-multiplexer adder (l5x)
+    localparam integer LAV = (LA >= 5) ? LA : LA + 1;     // vector-level adds: the operand-multiplexer adder (l5x)
     function automatic integer tz(input integer x);
         integer t;
         begin
@@ -161,19 +163,11 @@ module ot_dsrom_su_norm #(
             wire [31:0] xl;
             wire [9:0] f;
             if (HC) begin : g_mix
-                wire [31:0] m0, m1, m2, m3, m2d, m3d, a1, a2, a3;
-                ot_hdc_qmul_lat #(LM) u_m0 (clk, rst_n, in_v, in_x[(0 * N + l) * 32 +: 32], pre[0 +: 32], m0, f[0]);
-                ot_hdc_qmul_lat #(LM) u_m1 (clk, rst_n, in_v, in_x[(1 * N + l) * 32 +: 32], pre[32 +: 32], m1, f[1]);
-                ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, in_v, in_x[(2 * N + l) * 32 +: 32], pre[64 +: 32], m2, f[2]);
-                ot_hdc_qmul_lat #(LM) u_m3 (clk, rst_n, in_v, in_x[(3 * N + l) * 32 +: 32], pre[96 +: 32], m3, f[3]);
-                ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_a1 (clk, rst_n, vm[LM], m0, m1, a1, f[4]);
-                ot_hdc_delay #(.W(32), .D(LA)) u_d2 (.clk(clk), .rst_n(rst_n), .d(m2), .q(m2d));
-                ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_a2 (clk, rst_n, vm[LM + LA], a1, m2d, a2, f[5]);
-                ot_hdc_delay #(.W(32), .D(2 * LA)) u_d3 (.clk(clk), .rst_n(rst_n), .d(m3), .q(m3d));
-                ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LA)) u_a3 (clk, rst_n, vm[LM + 2 * LA], a2, m3d, a3, f[6]);
-                reg [31:0] xr;
-                always @(posedge clk) xr <= bf16(a3);
-                assign xl = xr;
+                ot_dsrom_su_norm_mix #(.LM(LM), .LA(LA)) u_mix (.clk(clk), .rst_n(rst_n), .v(in_v),
+                    .h0(in_x[(0 * N + l) * 32 +: 32]), .h1(in_x[(1 * N + l) * 32 +: 32]),
+                    .h2(in_x[(2 * N + l) * 32 +: 32]), .h3(in_x[(3 * N + l) * 32 +: 32]), .pre(pre), .x(xl),
+                    .fault(f[0]));
+                assign f[6:1] = 6'd0;
             end else begin : g_plain
                 assign xl = in_x[l * 32 +: 32];
                 assign f[6:0] = 7'd0;
@@ -329,8 +323,8 @@ module ot_dsrom_su_norm #(
     // other vectors (and lanes) pass with the same delay.  Routed timing: the rotation reads its operands from its own
     // (kept) copy of the scale output register, uses the operand-cut multiplier (LAT 6) and adder (l5x, LAT 5), and
     // selects rotated / passed BEFORE the output register, so ro leaves a register.
-    localparam integer LMR = LM + 1, LAR = LA + 1;
-    localparam integer DRO = LMR + LAR + 1;
+    localparam integer LMR = LM + 1, LAR = (LA >= 5) ? LA : LA + 1;
+    localparam integer DRO = RXS + LMR + LAR + 1;
     wire [DRO:0] vr;
     ot_hdc_vline #(.D(DRO)) u_vr (.clk(clk), .rst_n(rst_n), .v(y_v), .vd(vr));
     wire [7:0] ro_i, ro_im;
@@ -345,13 +339,15 @@ module ot_dsrom_su_norm #(
                     localparam integer KK = (l - (LB - RD)) / 2;
                     localparam integer ODD = (l - (LB - RD)) % 2;
                     wire [31:0] cc = cos_t[KK * 32 +: 32], sn = sin_t[KK * 32 +: 32];
-                    wire [31:0] mine = ybr[l * 32 +: 32];
-                    wire [31:0] pair = ybr[(ODD ? l - 1 : l + 1) * 32 +: 32];
+                    wire [31:0] mine, pair;
+                    ot_hdc_delay #(.W(64), .D(RXS)) u_rx (.clk(clk), .rst_n(rst_n),
+                                                         .d({ybr[l * 32 +: 32], ybr[(ODD ? l - 1 : l + 1) * 32 +: 32]}),
+                                                         .q({mine, pair}));
                     wire [31:0] pp, qq, rs, dl;
                     wire f0, f1, f2;
-                    ot_hdc_qmul_lat #(LMR) u_p (clk, rst_n, y_v, mine, cc, pp, f0);                             // a*c | b*c
-                    ot_hdc_qmul_lat #(LMR) u_q (clk, rst_n, y_v, pair, ODD ? sn : {~sn[31], sn[30:0]}, qq, f1); // -(b*s) | a*s
-                    ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LAR)) u_a (clk, rst_n, vr[LMR], pp, qq, rs, f2);
+                    ot_hdc_qmul_lat #(LMR) u_p (clk, rst_n, vr[RXS], mine, cc, pp, f0);                             // a*c | b*c
+                    ot_hdc_qmul_lat #(LMR) u_q (clk, rst_n, vr[RXS], pair, ODD ? sn : {~sn[31], sn[30:0]}, qq, f1); // -(b*s) | a*s
+                    ot_hdc_qadd_lat #(.KEEP(KS), .LAT(LAR)) u_a (clk, rst_n, vr[RXS + LMR], pp, qq, rs, f2);
                     ot_hdc_delay #(.W(32), .D(DRO - 1)) u_d (.clk(clk), .rst_n(rst_n), .d(yb[l * 32 +: 32]), .q(dl));
                     reg [31:0] o;
                     always @(posedge clk) o <= last_rm ? bf16(rs) : dl;
@@ -404,4 +400,40 @@ module ot_dsrom_su_norm #(
         else if (go) flt <= 1'b0;
         else if ((|lf) || (|cf) || (|tf_any) || (|nf) || f_div || f_eps || f_rsq || (|rf) || (|qf)) flt <= 1'b1;
     assign fault = flt;
+endmodule
+
+
+// One lane of the hc_pre mix: x = bf16(((h0*p0 + h1*p1) + h2*p2) + h3*p3), the golden's seqsum order; depth
+// LM + 3 LA + 1.  Its own module so it is also a routable minimum component.
+module ot_dsrom_su_norm_mix #(
+    parameter integer LM = 5,
+    parameter integer LA = 4
+) (
+    input  wire         clk,
+    input  wire         rst_n,
+    input  wire         v,
+    input  wire [31:0]  h0, h1, h2, h3,
+    input  wire [127:0] pre,
+    output wire [31:0]  x,
+    output wire         fault
+);
+    localparam integer DM = LM + 3 * LA + 1;
+    wire [DM:0] vm;
+    ot_hdc_vline #(.D(DM)) u_vm (.clk(clk), .rst_n(rst_n), .v(v), .vd(vm));
+    wire [31:0] m0, m1, m2, m3, m2d, m3d, a1, a2, a3;
+    wire [6:0] f;
+    ot_hdc_qmul_lat #(LM) u_m0 (clk, rst_n, v, h0, pre[0 +: 32], m0, f[0]);
+    ot_hdc_qmul_lat #(LM) u_m1 (clk, rst_n, v, h1, pre[32 +: 32], m1, f[1]);
+    ot_hdc_qmul_lat #(LM) u_m2 (clk, rst_n, v, h2, pre[64 +: 32], m2, f[2]);
+    ot_hdc_qmul_lat #(LM) u_m3 (clk, rst_n, v, h3, pre[96 +: 32], m3, f[3]);
+    ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a1 (clk, rst_n, vm[LM], m0, m1, a1, f[4]);
+    ot_hdc_delay #(.W(32), .D(LA)) u_d2 (.clk(clk), .rst_n(rst_n), .d(m2), .q(m2d));
+    ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a2 (clk, rst_n, vm[LM + LA], a1, m2d, a2, f[5]);
+    ot_hdc_delay #(.W(32), .D(2 * LA)) u_d3 (.clk(clk), .rst_n(rst_n), .d(m3), .q(m3d));
+    ot_hdc_qadd_lat #(.KEEP(1), .LAT(LA)) u_a3 (clk, rst_n, vm[LM + 2 * LA], a2, m3d, a3, f[6]);
+    reg [31:0] xr;
+    wire [32:0] rs = {1'b0, a3} + 33'h7FFF + {32'd0, a3[16]};    // RNE to BF16 (tools/hdc_golden.to_bf16)
+    always @(posedge clk) xr <= {rs[31:16], 16'd0};
+    assign x = xr;
+    assign fault = |f;
 endmodule

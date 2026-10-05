@@ -208,9 +208,13 @@ SUN = re.compile(r"SUN go=(-?\d+) y_last=(-?\d+) r=(-?\d+) ro_last=(-?\d+) q_las
                  r"checked_y=(\d+) checked_r=(\d+) checked_q=(\d+) fault=(\d+)")
 
 
-def build(out: Path, variant, fp, n):
+def build(out: Path, variant, fp, n, rxs=0, la=4):
     p = dict(VARIANTS[variant], N=n or VARIANTS[variant]["N"])
-    tag = f"{variant}_{fp}_N{p['N']}"
+    if rxs:
+        p["RXS"] = rxs
+    if la != 4:
+        p["LA"] = la
+    tag = f"{variant}_{fp}_N{p['N']}" + (f"_rxs{rxs}" if rxs else "") + (f"_la{la}" if la != 4 else "")
     obj = out / f"build_{tag}"
     exe = obj / "Vtb_dsrom_su_norm"
     if not exe.exists():
@@ -228,7 +232,7 @@ def build(out: Path, variant, fp, n):
 
 def cmd_run(a):
     out = Path(a.out)
-    exe, p, tag = build(out, a.variant, a.fp, a.n)
+    exe, p, tag = build(out, a.variant, a.fp, a.n, a.rxs, a.la)
     cases = [c for c in json.loads((out / "cases.json").read_text())["cases"] if c["kind"] == a.variant]
     rows = []
     for c in cases:
@@ -270,22 +274,23 @@ def vector_levels(nv, la=4):
     return int(level[0])
 
 
-def floor_terms(v):
+def floor_terms(v, la=4, rxs=0):
     """The fused chain's floor in 1.2 GHz cycles: the golden op DAG's longest path on dedicated f12 units at the
     variant's lane count (the stream and vector-level terms are the width trade), plus the wire charged once and the
     vector-memory read (accept) cycle."""
     p = VARIANTS[v]
-    LM, LA = 5, 4
+    LM, LA = 5, la
+    LAV = LA if LA >= 5 else LA + 1
     nv = -(-p["D"] // p["N"])
     lt = (p["N"] // 8).bit_length() - 1
     t = dict(vm_read=1, hub_in=HUB_IN)
     if p["HC"]:
         t["mix_4mul_3add_rnd"] = LM + 3 * LA + 1
     t.update(square=LM, chunk_chain_7add=7 * LA, tree_in_vector=lt * LA,
-             stream_and_vector_levels=vector_levels(nv, LA + 1), result_wire=RW, divide_by_D_divc=9, add_eps=LA,
+             stream_and_vector_levels=vector_levels(nv, LAV), result_wire=RW, divide_by_D_divc=9, add_eps=LA,
              rsqrt=1 + 3 * (3 * LM + LA), broadcast_wire=BW, scale_stream=nv - 1, scale_mul_mul_rnd=2 * LM + 1)
     if p["RD"]:
-        t["rope_mul6_add5_rnd"] = (LM + 1) + (LA + 1) + 1
+        t["rope_mul6_add5_rnd"] = rxs + (LM + 1) + LAV + 1
     if p["QUANT"]:
         t["actquant_aq12"] = 18
     t["hub_out"] = HUB_OUT
@@ -307,6 +312,8 @@ def cmd_record(a):
     runs = {}
     for f in sorted(out.glob("run_*.json")):
         r = json.loads(f.read_text())
+        if r["params"].get("LA", 4) != a.la:
+            continue
         runs[f"{r['variant']}_{r['fp']}_N{r['params']['N']}"] = r
     meas = {}
     for v, p in VARIANTS.items():
@@ -317,7 +324,7 @@ def cmd_record(a):
         cyc = {k: sorted({r[k] for r in full["rows"]}) for k in ("y_last", "q_last", "ro_last", "r")}
         assert all(len(x) == 1 for x in cyc.values()), (v, cyc)   # fixed pipeline: data-independent latency
         c = {k: x[0] for k, x in cyc.items()}
-        ft = floor_terms(v)
+        ft = floor_terms(v, a.la)
         meas[v] = dict(params=full["params"], exact=ok, cases_full_shape=len(full["rows"]), golden_cases=len(gold),
                        golden_layers=sorted({r["layer"] for r in gold}), cases_rtl_N64=len(rtl["rows"]),
                        checked_elements_full=sum(r["checked_y"] for r in full["rows"]),
@@ -327,7 +334,7 @@ def cmd_record(a):
                        floor_cycles=sum(ft.values()), floor_terms=ft,
                        residual_over_floor=c["q_last"] - sum(ft.values()) if p["QUANT"] else None)
     res = dict(schema="opentallas.dsrom-recovery.su-norm.measure.v1", generated_utc=now(),
-               clock_hz=FAST, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
+               clock_hz=FAST, add_latency=a.la, wire=dict(HUB_IN=HUB_IN, HUB_OUT=HUB_OUT, RW=RW, BW=BW,
                                         basis="hub traverse once a chain: 22 / 15 slow stages x 748/504 um reach; "
                                               "RW / BW: the reducer's 6 slow cross-lane result stages x 1.5, each way"),
                variants=meas, runs={k: dict(status=r["status"], params=r["params"], fp=r["fp"], rows=len(r["rows"]),
@@ -407,6 +414,7 @@ def cmd_lever(a):
     su_norm/route/ (corner_sta_<unit>.json, routed) and su_norm/screen/ (screen_<unit>.json, pre-layout)."""
     base = ROOT / "results/rtl/dsrom_recovery_20261004"
     m = json.loads((base / "su_norm/measure.json").read_text())
+    assert m.get("add_latency") == 5, "lever uses the LA5 (input-cut adder) measurement"
     V = m["variants"]
     us = lambda c: round(c / FAST * 1e6, 5)                                             # noqa: E731
     src = ("ot_dsrom_su_norm {v} (N {N}, D {D}): {what} {c} cycles at 1.2 GHz from the vector-memory read to the last "
@@ -479,6 +487,8 @@ def main():
     ap.add_argument("--variant", choices=tuple(VARIANTS))
     ap.add_argument("--fp", choices=("dpi", "rtl"), default="dpi")
     ap.add_argument("--n", type=int, default=None)
+    ap.add_argument("--rxs", type=int, default=0, help="run: RoPE extra register stage (RTL RXS)")
+    ap.add_argument("--la", type=int, default=4, help="run: add latency of the unit (RTL LA: 4 = f12_l4, 5 = l5x)")
     ap.add_argument("--top", default="ot_dsrom_su_norm")
     ap.add_argument("--sources", default=None, help="screen: comma list (default: the unit's sources)")
     ap.add_argument("--param", action="append")
