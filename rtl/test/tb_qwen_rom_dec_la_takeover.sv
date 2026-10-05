@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb #(parameter VPOS=1, POSITION=8187);
+module tb #(parameter VPOS=1, POSITION=8187, BOUNDED=0);
 reg clk=0; always #5 clk=~clk;
 reg rst_n=0,start=0;
 reg [17:0] token=3,pos=POSITION;
@@ -36,7 +36,7 @@ wire idle=cycle%11!=0;
 wire [15:0] progress=cycle%32;
 `include "ot_hdc_isa.svh"
 decode_component #(.DEC_LA(0),.VPOS(VPOS)) a(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.me_progress(progress),.su_progress(progress),.su_rows(progress),.am_idx(am_idx),.am_val(am_val),.am_any(am_any),.next_token(next0),.next_val(val0),.cycles(cycles0),.prog_q(q0),.prog_re(re0),.prog_addr(addr0),.done(done0),.decoded(dec0),.accepted(accept0),.invalid_at_load(bad0));
-decode_component #(.DEC_LA(1),.VPOS(VPOS)) b(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.me_progress(progress),.su_progress(progress),.su_rows(progress),.am_idx(am_idx),.am_val(am_val),.am_any(am_any),.next_token(next1),.next_val(val1),.cycles(cycles1),.prog_q(q1),.prog_re(re1),.prog_addr(addr1),.done(done1),.decoded(dec1),.accepted(accept1),.invalid_at_load(bad1));
+decode_component #(.DEC_LA(1),.VPOS(VPOS),.DEC_LA_BOUND(BOUNDED)) b(.clk(clk),.rst_n(rst_n),.start(start),.token(token),.pos(pos),.me_ready(ready),.me_idle(idle),.su_ready(ready),.su_idle(idle),.me_progress(progress),.su_progress(progress),.su_rows(progress),.am_idx(am_idx),.am_val(am_val),.am_any(am_any),.next_token(next1),.next_val(val1),.cycles(cycles1),.prog_q(q1),.prog_re(re1),.prog_addr(addr1),.done(done1),.decoded(dec1),.accepted(accept1),.invalid_at_load(bad1));
 always @(posedge clk) begin
  cycle<=cycle+1;
  if(re0) q0<=mem[addr0%65];
