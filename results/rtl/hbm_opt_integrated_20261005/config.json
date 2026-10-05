@@ -44,8 +44,34 @@
         "Euclid owns production XMAP forwarding from Pauli leaf; s1_xa<=xa absolute once",
         "Existing stress sequence nonzero-ring-base and wrap case required"
       ],
-      "binding": null,
-      "missing": "Production cursor-fold and selected combined bench source/fixture binding pending."
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "55350c5919b2cc14620e7cc3b252a3841ed839a91d572c35ae55e5737ade2ed5"
+        },
+        "parameters": {
+          "ENABLE": 1,
+          "PQ_ENABLE": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/summary.json",
+            "sha256": "d322bfb3e71ef5e8555b6a4a96be1596caf7982c359f246528cfbb6eeb3de48b",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_XMAP_8_POSITIVES_EXPECTED_NEGATIVE",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Cached DS minimum SM component sequences; 1ns simulation only. Not full token or loaded SS/FF clock admission.",
+        "reuse_executable": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/work/build_xmap1/Vtb_hbm_accel_sm_pq_xmap_seq",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
     },
     "format_masked_activation": {
       "owner": "Pauli",
@@ -62,13 +88,38 @@
         "P6 FP4/FP8/BF16 beats 8/4/3; P1 FP4 groups [0,4]",
         "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
       ],
-      "binding": null,
-      "missing": "Standalone Pauli leaf positively available at owner source path; Euclid production XMAP forwarding and combined exact executable binding remain pending.",
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb",
+          "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "c88ee4f14b0464ab32eab8a5de9e8919aa25081a49d9ce7638f9ca4ca2197a54"
+        },
+        "parameters": {
+          "XMAP": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/summary.json",
+            "sha256": "d322bfb3e71ef5e8555b6a4a96be1596caf7982c359f246528cfbb6eeb3de48b",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_XMAP_8_POSITIVES_EXPECTED_NEGATIVE",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Cached DS minimum SM component sequences; 1ns simulation only. Not full token or loaded SS/FF clock admission.",
+        "reuse_executable": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/work/build_xmap1/Vtb_hbm_accel_sm_pq_xmap_seq",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound.",
       "eligible_workloads": [
         "ds_1m"
       ],
       "target_eligibility": {
-        "ds_1m": "Production SM multi-format activation fragment; joint XMAP gate pending.",
+        "ds_1m": "Actual production PQ/XMAP joint gate PASS: four P1/four P6 retained sequences and expected negative.",
         "qwen_8k": {
           "enabled": false,
           "verdict": "INAPPLICABLE_TO_SELECTED_ME_SPINE",
@@ -81,14 +132,18 @@
     "partial_wave_packing": {
       "owner": "Erdos",
       "default_enabled": false,
-      "source_paths": [],
+      "source_paths": [
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv"
+      ],
       "hooks": [
         "PQ dependency",
         "PAIR requests",
         "op parity and distinct reducer identity"
       ],
       "binding": null,
-      "missing": "Optional: >=1% measured incremental gain over PQ; source/ABI not landed."
+      "missing": "Actual Erdos module source ready; Euclid atomic PACK_W2 production hook and Erdos paired-SM exact gate pending. Optional remains OFF until incremental measured gain is priced."
     },
     "expert_workgroup": {
       "owner": "Hubble",
