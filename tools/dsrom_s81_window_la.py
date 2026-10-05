@@ -59,6 +59,7 @@ NEW_RTL = ["rtl/dsrom_sys/s81_window_la/ot_dsrom_hbm_wmux.sv",
            "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_la_stage.sv",
            "rtl/dsrom_sys/s81_window_la/ot_dsrom_window_attn_source_la.sv"]
 BENCH = "rtl/test/dsrom_sys/s81_window_la/tb_dsrom_s81_window_la.sv"
+TRACE_MODEL = "rtl/test/ot_hdc_v41x_idx_hbm_trace.sv"   # the controller + JESD238 checker (DRAMCHK builds)
 SOURCES = ["rtl/chip/ot_dsrom_window_stream_la.sv",
            "rtl/chip/window_owner_safe/ot_chip_v41x_window_attn_source_owner_safe.sv",
            "rtl/chip/window_owner_safe/ot_chip_v41x_window_kv_prefetch_owner_safe.sv",
@@ -139,6 +140,10 @@ def cmd_vectors(a):
             f.write(f"@{W_BASE:x}\n")
             for s in range(W_BASE, W_BASE + 128 * PITCH):
                 f.write(f"{0 if (s - W_BASE) // PITCH == own else sectors[s]:064x}\n")
+        with open(out / f"L{L}.cold.wmem", "w") as f:  # OWN_WRITE = 0 (cold-row reference): every row in the image
+            f.write(f"@{W_BASE:x}\n")
+            for s in range(W_BASE, W_BASE + 128 * PITCH):
+                f.write(f"{sectors[s]:064x}\n")
         with open(out / f"L{L}.rows", "w") as f:
             for slot in range(128):
                 f.write(f"{stage[slot]:01056x}\n")
@@ -168,15 +173,35 @@ CONFIGS = {
     "la_bg": dict(LA=1, BG=1),                                   # stress: scan pressure during the load too
     "la_kg_p1": dict(LA=1, KG=1, KG_FIRST=1, PL="p1"), "la_kg_p2": dict(LA=1, KG=1, KG_FIRST=1, PL="p2"),
     "la_kgcon_p2": dict(LA=1, KG=1, PL="p2"),                    # stress: gather concurrent with the load
+    "la_pi16": dict(LA=1, PULLIN=16), "la_pi16lru": dict(LA=1, PULLIN=16, PULLIN_LRU=1),
+    "la_pi8lru": dict(LA=1, PULLIN=8, PULLIN_LRU=1),
+    "la_pb16": dict(LA=1, PULLIN=16, PULLIN_BATCH=16), "la_pb8": dict(LA=1, PULLIN=8, PULLIN_BATCH=8),
+    "la_pb32": dict(LA=1, PULLIN=32, PULLIN_BATCH=32),
+    "diag_legacy": dict(LA=1, REF_LEGACY=1),                     # diagnostic: pre-fix REFpb placement, never a result
+    "la_pi16_iw16": dict(LA=1, PULLIN=16, LA_IW=16),
+    "la_pc": dict(LA=1, LA_ISSUE_PC=1), "la_pc_pi16": dict(LA=1, LA_ISSUE_PC=1, PULLIN=16),
+    "cold_la": dict(LA=1, OWN_WRITE=0), "cold_la_pc_pi16": dict(LA=1, LA_ISSUE_PC=1, PULLIN=16, OWN_WRITE=0),
+    "cold_la_pi16": dict(LA=1, PULLIN=16, OWN_WRITE=0),
+    "cold_la_pc_pb16": dict(LA=1, LA_ISSUE_PC=1, PULLIN=16, PULLIN_BATCH=16, OWN_WRITE=0),
+    "cold_la_pc_pb32": dict(LA=1, LA_ISSUE_PC=1, PULLIN=32, PULLIN_BATCH=32, OWN_WRITE=0),
+    "la_pc_pb16": dict(LA=1, LA_ISSUE_PC=1, PULLIN=16, PULLIN_BATCH=16),
+    "la_pc_pb32": dict(LA=1, LA_ISSUE_PC=1, PULLIN=32, PULLIN_BATCH=32),
+    "diag_noref": dict(LA=1, REFI_PS=1000000000000),                # diagnostic floor, never a result
 }
-PLAN = {0: ["asbuilt_c8", "asbuilt_c1", "la"], 20: ["asbuilt_c8_scan", "la_scan", "la_bg", "la"],
-        24: ["la_kg_p1", "la_kg_p2", "la_kgcon_p2", "la"]}
-# job start phases: LA cases sample one refresh interval (tREFI 3.9 us = 4,682 cycles) uniformly, 64 points
+# The adopted S81 window configuration (claude/dsrom-s81-window-bind-20261004): the bound full-bandwidth load with
+# per-pseudo-channel issue (LA_ISSUE_PC) and the stack controller's batched idle REFpb pull-in (PULLIN 16, BATCH 16).
+FINAL = dict(LA=1, LA_ISSUE_PC=1, PULLIN=16, PULLIN_BATCH=16)
+CONFIGS.update({
+    "lf": dict(FINAL), "lf_scan": dict(FINAL, BG=1, BG_STOP=1), "lf_bg": dict(FINAL, BG=1),
+    "lf_kg_p1": dict(FINAL, KG=1, KG_FIRST=1, PL="p1"), "lf_kg_p2": dict(FINAL, KG=1, KG_FIRST=1, PL="p2"),
+    "lf_kgcon_p2": dict(FINAL, KG=1, PL="p2"), "lf_cold": dict(FINAL, OWN_WRITE=0), "la_cold": dict(LA=1, OWN_WRITE=0),
+})
+PLAN = {0: ["asbuilt_c8", "asbuilt_c1", "lf", "lf_cold", "la_cold"], 20: ["asbuilt_c8_scan", "lf_scan", "lf_bg"],
+        24: ["lf_kg_p1", "lf_kg_p2", "lf_kgcon_p2", "lf"]}
+# job start phases: window cases sample one refresh interval (tREFI 3.9 us = 4,682 cycles) uniformly, 64 points
 PHASES = {"asbuilt_c1": [3000, 5077], "asbuilt_c8": [3000, 5077, 7154, 9231], "asbuilt_c8_scan": [3000, 5077],
-          "la": [3000 + 73 * i for i in range(64)], "la_scan": [3000 + 73 * i for i in range(64)],
-          "la_bg": [3000 + 73 * i for i in range(64)],
-          "la_kg_p1": [3000 + 585 * i for i in range(8)], "la_kg_p2": [3000 + 585 * i for i in range(8)],
-          "la_kgcon_p2": [3000 + 585 * i for i in range(8)]}
+          **{c: [3000 + 585 * i for i in range(8)] for c in ("lf_kg_p1", "lf_kg_p2", "lf_kgcon_p2")},
+          "la": [3000 + 73 * i for i in range(64)]}
 CPP = """#include "Vtb_dsrom_s81_window_la.h"
 #include "verilated.h"
 static double t = 0.0; double sc_time_stamp() { return t; }
@@ -192,6 +217,9 @@ WS = re.compile(r"WSTREAM cycles=(\d+) ns=([\d.]+) rows=(\d+) beats=(\d+)")
 KS = re.compile(r"KGSTACK s=(\d+) blocks=(\d+) sectors=(\d+) hbm_beats=(\d+) keys=(\d+) first=(-?\d+) last=(-?\d+)")
 KL = re.compile(r"KGATHER last=(-?\d+) bad=(\d+) first_cycle_rel_window_start=(-?\d+)")
 WW = re.compile(r"WWRITE cycles=(-?\d+) ns=(-?[\d.]+) blocks=16 sectors_written=(\d+)")
+DC = re.compile(r"DRAMCHK s=(\d+) pre=(\d+) ref=(\d+) act=(\d+) rd=(\d+) wr=(\d+) viol=(\d+) rrefd=(\d+) "
+                r"ref_round_bad=(\d+) ref_gap_max_ps=(\d+)")
+WD = re.compile(r"WDIAG rsp_stall_pc_cycles=(\d+) req_notrdy_pc_cycles=(\d+) issue_idle_cycles=(\d+)")
 VD = re.compile(r"VERDICT (\w+) bad=(\d+) kg_bad=(\d+) rows=(\d+) fault=(\d+)")
 
 
@@ -199,10 +227,12 @@ def build(cfg: str, obj: Path, verilator: str):
     c = dict(CONFIGS[cfg])
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "main.cpp").write_text(CPP)
-    params = dict(CREDITS=8, BG=0, KG=0, KG_FIRST=0, BG_STOP=0, CLK_PS=CLK_PS, **PLACEMENTS[c.pop("PL", "p1")])
+    params = dict(CREDITS=8, BG=0, KG=0, KG_FIRST=0, BG_STOP=0, PULLIN=0, CLK_PS=CLK_PS, **PLACEMENTS[c.pop("PL", "p1")])
+    chk = c.pop("DRAMCHK", 1)
     params.update(c)
     cmd = [verilator, "--cc", "--exe", "--build", "-j", "8", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNOPTFLAT",
            "--top-module", "tb_dsrom_s81_window_la", *[f"-G{k}={v}" for k, v in params.items()],
+           *(["+define+DRAMCHK", str(ROOT / TRACE_MODEL)] if chk else []),
            "--Mdir", str(obj), str(obj / "main.cpp"), *[str(ROOT / s) for s in SOURCES]]
     r = subprocess.run(cmd, capture_output=True, text=True, cwd=ROOT)
     if r.returncode:
@@ -212,7 +242,8 @@ def build(cfg: str, obj: Path, verilator: str):
 
 def run_one(binary: Path, vec: Path, L: int, cfg: str, t0: int):
     kg = CONFIGS[cfg].get("KG", 0)
-    args = [str(binary), f"+WMEM={vec}/L{L}.wmem", f"+ROWS={vec}/L{L}.rows", f"+t0={t0}"]
+    cold = CONFIGS[cfg].get("OWN_WRITE", 1) == 0
+    args = [str(binary), f"+WMEM={vec}/L{L}{'.cold' if cold else ''}.wmem", f"+ROWS={vec}/L{L}.rows", f"+t0={t0}"]
     if kg:
         args.append(f"+PFX={vec}/cand_r1")                 # rank 1: the worst rank of the re-index record
     t = time.time()
@@ -235,8 +266,21 @@ def run_one(binary: Path, vec: Path, L: int, cfg: str, t0: int):
         m = KL.search(out)
         if m:
             row.update(kg_last_cycles=int(m.group(1)), kg_bad=int(m.group(2)), kg_start_rel_window=int(m.group(3)))
+    ck = [list(map(int, m.groups())) for m in DC.finditer(out)]
+    if ck:
+        row["dram_check"] = dict(stacks=len(ck), violations=sum(c[6] for c in ck), trrefd=sum(c[7] for c in ck),
+                                 ref_round_bad=sum(c[8] for c in ck), refpb=sum(c[2] for c in ck),
+                                 ref_gap_max_ns=max(c[9] for c in ck) / 1000)
+    m = WD.search(out)
+    if m:
+        row.update(rsp_stall_pc_cycles=int(m.group(1)), req_notrdy_pc_cycles=int(m.group(2)),
+                   issue_idle_cycles=int(m.group(3)))
+    if row.get("first_rsp_cycles") is not None and row.get("last_rsp_cycles", 0) > row["first_rsp_cycles"]:
+        row["sustained_frac"] = round(2176 / ((row["last_rsp_cycles"] - row["first_rsp_cycles"]) * 32 * CLK_PS / 1024), 4)
     m = VD.search(out)
     row["verdict"] = m.group(1) if m else "NONE"
+    if row.get("dram_check", {}).get("violations", 0) or (ck and len(ck) != 4):
+        row["verdict"] = "FAIL_DRAM"
     if row["verdict"] != "PASS":
         row["log_tail"] = (out + r.stderr)[-2500:]
     return row
@@ -245,12 +289,13 @@ def run_one(binary: Path, vec: Path, L: int, cfg: str, t0: int):
 def cmd_run(a):
     out = a.out.resolve()
     vec = a.vectors.resolve()
-    cfgs = sorted({c for L in PLAN for c in PLAN[L]})
+    plan = {int(k): v for k, v in json.loads(a.plan).items()} if a.plan else PLAN
+    cfgs = sorted({c for L in plan for c in plan[L]})
     if a.only:
         cfgs = [c for c in cfgs if c in a.only.split(",")]
     with cf.ThreadPoolExecutor(min(len(cfgs), a.jobs)) as ex:
         bins = dict(zip(cfgs, ex.map(lambda c: build(c, out / f"obj_{c}", a.verilator), cfgs)))
-    tasks = [(L, c, t0) for L in PLAN for c in PLAN[L] if c in bins for t0 in PHASES[c]]
+    tasks = [(L, c, t0) for L in plan for c in plan[L] if c in bins for t0 in PHASES.get(c, PHASES["la"])]
     with cf.ThreadPoolExecutor(a.jobs) as ex:
         rows = list(ex.map(lambda x: run_one(bins[x[1]], vec, *x), tasks))
     for r in rows:
@@ -275,7 +320,8 @@ def _one(text, old, new):
     return text.replace(old, new, 1)
 
 
-DIE_PARAMS = """    parameter integer WINDOW_STREAM_LA = 0, // opt-in (claude/dsrom-s81-window-bind-20261004): the WINDOW refill
+DIE_PARAMS = """    parameter integer WINDOW_LA_ISSUE_PC = 1, // with WINDOW_STREAM_LA: per-pseudo-channel issue (the adopted, timing-closed)
+    parameter integer WINDOW_STREAM_LA = 0, // opt-in (claude/dsrom-s81-window-bind-20261004): the WINDOW refill
                                             // reads the job's ring at full stack bandwidth (ot_dsrom_window_attn_source_la)
     parameter integer IDX_KGATHER_PORT = 0, // opt-in: per-stack wide read client 1 for ot_hdc_v41x_idx_kgather
                                             // (the re-index candidate read); exposed as kgw_* die ports
@@ -308,7 +354,7 @@ def install_die(text: str) -> str:
              KGW_PORTS + "    input  wire              clk,\n    input  wire              rst_n,")
     # the window source -> the successor (same parameters and ports, plus the wide port)
     t = _one(t, "        ot_chip_v41x_window_attn_source_owner_safe #(.REFILL_OWNER_SAFE(WINDOW_REFILL_OWNER_SAFE),",
-             "        ot_dsrom_window_attn_source_la #(.STREAM_LA(WINDOW_STREAM_LA != 0), "
+             "        ot_dsrom_window_attn_source_la #(.STREAM_LA(WINDOW_STREAM_LA != 0), .LA_ISSUE_PC(WINDOW_LA_ISSUE_PC), "
              ".REFILL_OWNER_SAFE(WINDOW_REFILL_OWNER_SAFE),")
     t = _one(t, "            .s_beat(w_s_beat), .s_data(w_s_data));\n        assign win_fault = win_service_fault;",
              "            .s_beat(w_s_beat), .s_data(w_s_data),\n"
@@ -551,6 +597,14 @@ def cmd_record(a):
             e["TBps_mean_time"] = round(69632 / (load["mean"] * CLK_PS * 1e-12) / 1e12, 4)
             e["fraction_of_stack_peak_mean_time"] = round(e["TBps_mean_time"] / peak, 4)
             e["TBps_best"] = round(69632 / (load["min"] * CLK_PS * 1e-12) / 1e12, 4)
+        su = [r["sustained_frac"] for r in ok if "sustained_frac" in r]
+        if su:
+            e["sustained_after_first_access"] = dict(median=round(statistics.median(su), 4), mean=round(statistics.mean(su), 4),
+                                                     min=round(min(su), 4))
+        dc = [r["dram_check"] for r in rs if "dram_check" in r]
+        if dc:
+            e["dram_check"] = dict(cases=len(dc), violations=sum(d["violations"] for d in dc),
+                                   refpb=sum(d["refpb"] for d in dc), ref_gap_max_ns=max(d["ref_gap_max_ns"] for d in dc))
         if any("kg_last_cycles" in r for r in ok):
             kl = [r["kg_last_cycles"] for r in ok]
             e["kgather_cycles"] = _stats(kl)
@@ -559,15 +613,15 @@ def cmd_record(a):
     S = lambda k, f="mean", what="load_cycles": summary[k][what][f]
     terms = {
         "la": {
-            "window_only": dict(own_row_write_cycles=S("L0.la", what="write_cycles"),
-                                window_cycles=S("L0.la", what="stream_cycles"), source="L0.la: start -> rows delivered"),
-            "scan": dict(own_row_write_cycles=S("L20.la_scan", what="write_cycles"),
-                         window_cycles=S("L20.la_scan"), source="L20.la_scan: write under scan, load after it"),
-            "reindex": dict(own_row_write_cycles=max(S("L24.la_kg_p1", what="write_cycles"), S("L24.la_kg_p2", what="write_cycles")),
-                            window_cycles=max(S("L24.la_kg_p1"), S("L24.la_kg_p2")),
-                            source="L24.la_kg_p1/p2 (worse): write with the gather, load after it"),
-            "reuse": dict(own_row_write_cycles=S("L24.la", what="write_cycles"), window_cycles=S("L24.la"),
-                          source="L24.la: no concurrent index traffic"),
+            "window_only": dict(own_row_write_cycles=S("L0.lf", what="write_cycles"),
+                                window_cycles=S("L0.lf", what="stream_cycles"), source="L0.lf: start -> rows delivered"),
+            "scan": dict(own_row_write_cycles=S("L20.lf_scan", what="write_cycles"),
+                         window_cycles=S("L20.lf_scan"), source="L20.lf_scan: write under scan, load after it"),
+            "reindex": dict(own_row_write_cycles=max(S("L24.lf_kg_p1", what="write_cycles"), S("L24.lf_kg_p2", what="write_cycles")),
+                            window_cycles=max(S("L24.lf_kg_p1"), S("L24.lf_kg_p2")),
+                            source="L24.lf_kg_p1/p2 (worse): write with the gather, load after it"),
+            "reuse": dict(own_row_write_cycles=S("L24.lf", what="write_cycles"), window_cycles=S("L24.lf"),
+                          source="L24.lf: no concurrent index traffic"),
         },
         "asbuilt_c8": {
             "window_only": dict(own_row_write_cycles=S("L0.asbuilt_c8", what="write_cycles"),
@@ -579,7 +633,7 @@ def cmd_record(a):
             "reuse": dict(own_row_write_cycles=S("L0.asbuilt_c8", what="write_cycles"),
                           window_cycles=S("L0.asbuilt_c8"), source="L0.asbuilt_c8"),
         }}
-    kg = [r for k in ("la_kg_p1", "la_kg_p2") for r in by[(24, k)] if r["verdict"] == "PASS"]
+    kg = [r for k in ("lf_kg_p1", "lf_kg_p2") for r in by[(24, k)] if r["verdict"] == "PASS"]
     worst = max(kg, key=lambda r: r["kg_last_cycles"])
     sec = sum(17 * s["blocks"] for s in worst["kg_stacks"])
     secs = worst["kg_last_cycles"] * CLK_PS * 1e-12
@@ -608,6 +662,39 @@ def cmd_record(a):
     print(rec["status"], json.dumps({k: (v["load_cycles"] or {}).get("mean") for k, v in summary.items()}))
 
 
+def cmd_inputs(a):
+    """Composition inputs under the corrected REFpb controller (results/rtl/hbm_refpb_fix_20261004): the 1M reader
+    runs with their fixed-model cycles (dsrom_reader.json variants.fixed) and the adopted gather's fixed-model worst
+    rank (dsrom_idxkey_gather_after.json asbuilt_worst_rank, 737 cycles), in the formats tools/dsrom_1m_measure.py
+    compose reads.  Derived, never re-simulated here."""
+    fix = ROOT / "results/rtl/hbm_refpb_fix_20261004"
+    reader = json.loads((ROOT / "results/rtl/dsrom_1m_measured_20261004/reader.json").read_text())
+    fixed = json.loads((fix / "dsrom_reader.json").read_text())["variants"]["fixed"]
+    for r in reader["runs"]:
+        f = fixed.get(r["name"])
+        if f is None:
+            continue
+        clk = r["parameters"]["CLK_PS"]
+        r.update(cycles=f["cycles"], sectors=f["sectors"], refpb_fix_before_cycles=f["before_cycles"],
+                 refpb_fix_dram_violations=f["dram_check"]["violations"])
+        r["bytes"] = r["sectors"] * 32
+        r["seconds"] = r["cycles"] * clk * 1e-12
+        r["achieved_TBps"] = r["bytes"] / r["seconds"] / 1e12
+        r["fraction_of_peak"] = r["achieved_TBps"] / r["peak_TBps"]
+    reader["derived_from"] = ["results/rtl/dsrom_1m_measured_20261004/reader.json",
+                              "results/rtl/hbm_refpb_fix_20261004/dsrom_reader.json (variants.fixed)"]
+    gather = json.loads((ROOT / "results/rtl/dsrom_reindex_candidates_20261004/gather.json").read_text())
+    w = json.loads((fix / "dsrom_idxkey_gather_after.json").read_text())["asbuilt_worst_rank"]
+    gather["worst_rank"] = dict(gather["worst_rank"], name=w["name"] + "_refpb_fixed", cycles=w["cycles"],
+                                achieved_TBps=w["achieved_TBps"], fraction_of_peak=w["fraction_of_peak"])
+    gather["derived_from"] = ["results/rtl/dsrom_reindex_candidates_20261004/gather.json",
+                              "results/rtl/hbm_refpb_fix_20261004/dsrom_idxkey_gather_after.json (asbuilt_worst_rank)"]
+    REC.mkdir(parents=True, exist_ok=True)
+    (REC / "reader_refpb_fixed.json").write_text(json.dumps(reader, indent=1) + "\n")
+    (REC / "gather_refpb_fixed.json").write_text(json.dumps(gather, indent=1) + "\n")
+    print("inputs written", gather["worst_rank"]["cycles"])
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -619,6 +706,7 @@ def main():
     r.add_argument("--vectors", type=Path, required=True)
     r.add_argument("--jobs", type=int, default=16)
     r.add_argument("--only", default="")
+    r.add_argument("--plan", default="", help='JSON {layer: [config, ...]} instead of PLAN (diagnostics)')
     r.add_argument("--verilator", default="verilator")
     e = sub.add_parser("emit")
     e.add_argument("--out", type=Path, required=True)
@@ -634,8 +722,10 @@ def main():
     c.add_argument("--bind", default="")
     c.add_argument("--screen", default="")
     c.add_argument("--out", default=str(REC / "window_load.json"))
+    sub.add_parser("inputs")
     a = ap.parse_args()
-    dict(vectors=cmd_vectors, run=cmd_run, emit=cmd_emit, **{"native-emit": cmd_native_emit}, bind=cmd_bind, record=cmd_record)[a.cmd](a)
+    dict(inputs=cmd_inputs, vectors=cmd_vectors, run=cmd_run, emit=cmd_emit, **{"native-emit": cmd_native_emit},
+         bind=cmd_bind, record=cmd_record)[a.cmd](a)
 
 
 if __name__ == "__main__":
