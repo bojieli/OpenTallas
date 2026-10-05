@@ -9262,3 +9262,185 @@ def hbm_existing_attention_allocation_model():
                 physical_slot_allocated=True,contextual_tile_PNR_admitted=False,
                 remaining_admission='Actual macro pin escape, fanout netlist, loaded parent clocks and min input delays required; no leaf input-hold qualification.',
                 adopted=False,gain_claim=None)
+
+
+def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None):
+    """One CP component successor, priced before RTL; no clock/rate credit."""
+    import hashlib
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    prior = 'results/rtl/hbm_su_cp_release_20261005/registered_boundary/routed_r1/u25/physical.json'
+    record = json.loads((root / prior).read_text())
+    metrics = record['place_and_route']['metrics']
+    # 192 XORs,48 NOR4,12 NAND4,3 NOR4; seven final output gates,
+    # one independent acceptance gate and64 NAND2-equivalent control allowance.
+    xor_nand2 = 192 * 4
+    tree_nand2 = (48 + 12 + 3) * 4
+    final_nand2 = 8 * 6
+    control_nand2 = 64
+    allowance = (xor_nand2 + tree_nand2 + final_nand2 + control_nand2) * .08748
+    result = dict(schema='hbm.cp.balanced-veto.pre-rtl.v1', default_off=True,
+        reference='best serial REGISTERED_BOUNDARY, grouped71533 rejected',
+        prior_physical_sha256=hashlib.sha256((root/prior).read_bytes()).hexdigest(),
+        replicas=1, capacity_transactions=1, MACs_per_cycle=0,
+        additional_memory_ports=0,additional_memory_bytes_per_cycle=0,
+        owner_PC_padding_bits=192,local_owner_compare_input_bits=384,
+        xor_gates=192,nor4_match_leaves=48,nand4_middle=12,nor4_equal64_roots=3,
+        final_output_and4=5,qualified_fault_quiet_outputs=2,
+        independent_release_acceptance_and4=1,control_nand2_allowance=64,
+        tree_compare_levels=4,max_equal64_branch_loads=8,
+        additional_FF_bits=0,baseline_mapped_FF_cells=metrics['sequential_cell_count'],
+        protected_state='original W6 header,18 phase rails,14 status rails,sticky qualification retained',
+        external_boundary_delta_bits_per_cycle=0,additional_external_tracks=0,
+        internal_owner_compare_tracks_lower_bound=384,
+        local_branch_fanout=8,external_channel_capacity=None,
+        baseline_routed_body_um2=metrics['standard_cell_area_um2'],
+        conservative_logic_allowance_um2=allowance,removal_credit_um2=0,
+        body_ceiling_um2=metrics['standard_cell_area_um2']+allowance,
+        existing_component_core_um2=metrics['core_area_um2'],
+        body_fits_existing_core_capacity=None,
+        full_parent_slot_fit=None,area_proxy_basis='NAND2=.08748um2; allowance counts complete replacement logic without subtraction, not mapped proof',
+        prelease_edges=5,grant_edges=1,rearm_edges=1,added_serial_edges=0,
+        release_acceptance='same live192-bit owner,all existing error/status/completion/grant predicates and actual release_r; no output-qualified signal fed through priority next-state chain',
+        phase_implementation='parallel one-hot equations, same original accepted release transition and fault priority',
+        measured_successor_edges=None,composed_latency_delta_ns_at_target=0,
+        target_period_ps=833.333,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+        context_route='same original full ports,IO20/u25/density.5; only after exact8713 and fresh Kant admission',
+        measured_gain=None,clock_qualified=False,adopted=False,
+        adoption='exact changed gate and SS/FF context required; timing-failed successor rejected without tuning')
+
+    # Additional parent association rails, not owner/header mirror credit.
+    join_body = 2*.2916 + 2*.2 + 8*.08748 + 2*.10206
+    result['parent_association_join'] = dict(default_enabled=False,
+        added_source_FF_bits=2,protection='Complementary association rails; mismatch quarantines admission',
+        logic_NAND2_allowance=8,buffer_allowance=2,
+        additional_body_allowance_um2=join_body,
+        additional_placement_at50pct_um2=join_body/.5,
+        combined_body_ceiling_um2=result['body_ceiling_um2']+join_body,
+        combined_placement_at50pct_um2=(result['body_ceiling_um2']+join_body)/.5,
+        added_grant_to_executor_start_edges=1,added_latency_ns_at_target=1/1.2,
+        source_basis='Registered CP owned follows raw grant by one edge; no extra join pipeline stage',
+        new_request_gate='Current complete qualified owned, requester valid and ready gated together',
+        held_response_gate='Held shared grant association, never current live identity',
+        retirement='Actual raw grant removal clears association and permits executor FINISHED cleanup',
+        extra_memory_ports=0,extra_external_ports=0,mirror_copy_credit=0,
+        measured=False,parent_physical_qualified=False)
+
+    # CP boundary bookkeeping only. W2 publication/provider/calendar belongs
+    # to its owner; its completion supplies exec_done here and is not repriced.
+    source = 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv'
+    decoder = 'rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv'
+    bench = 'rtl/test/hbm_accel/control_loop_20261005/tb_su_cp_grouped_owner.sv'
+    inputs = dict(clk=1,por_n=1,launch_v=2,launch_pc=32,cp_job=32,
+        cp_gen=4,launch_token=17,launch_pos=20,lease_granted=1,
+        release_r=1,exec_done=1,exec_fault=1,retired_original_ops=4,shared_fault=1)
+    outputs = dict(native_launch=2,lease_v=1,release_v=1,owned=1,
+        pending=1,quiet=1,selected=1,done=1,fault=1,selected_pc=32,
+        held_job=32,held_gen=4,held_token=17,held_pos=20)
+    cp_state = dict(header_W6=216,phase_dual_rails=18,owner_match=5,
+        shape=1,qualification_fault_dual_rails=2,status_dual_rails=14,
+        ecc_fault=1,checked_valid=1,decoder_start=1)
+    decoder_state = dict(state=2,held_code=216,held_syndrome=21,
+        held_overall=3,corrected_header=192,bad=1)
+    assert sum(inputs.values()) == 118 and sum(outputs.values()) == 115
+    assert sum(cp_state.values()) == 259 and sum(decoder_state.values()) == 435
+    result.update(schema='hbm.cp.balanced-veto.component-composition.v2',
+        source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest()
+            for p in (source,decoder,bench)},
+        ports=dict(input_bits=inputs,output_bits=outputs,
+            total_input_bits=118,total_output_bits=115,
+            sampled_input_bits_excluding_clock_reset=116,
+            boundary_signal_tracks_lower_bound=231,
+            memory_ports={},memory_bytes_per_cycle=0,
+            physical_pin_bits_including_clock_reset=233,
+            internal_decoder_boundary=dict(code_bits=216,data_bits=192,
+                request_handshake_bits=2,response_handshake_bits=2,bad_bits=1),
+            clock_domains=1,CDC_added=0,
+            rate_basis='Signal width per target edge; handshake/backpressure controls accepted rate, not all bits are transfers every edge'),
+        protection=dict(header='Three72-bit W6 SECDED mutable-control words; correction retained',
+            correction_calendar='E1 syndrome/parity capture; E2 corrected192-bit header; validation before E5 lease offer',
+            dispatch_before_checked_valid=False,
+            same_edge_owner_veto_bits=192,
+            same_edge_veto='Live job/gen/token/position/PC and all padding compared at every positive handshake and independent actual release acceptance; registered owner_match is never sole authority',
+            mirror_copy_credit_bits=0,
+            mirror_basis='No credit for a held mirror or independent copy; mapped aliasing/pruning must be established by synthesis',
+            error_debt_CPL_and_reset_contract='Original fault, actual grant/release/cleanup debt and cold/warm CPL coordination retained'),
+        parent_clock=dict(target_period_ns=1/1.2,
+            component_characterization_period_ns=.833333,
+            actual_parent_clock_net=None,actual_parent_clock_period_ns=None,
+            parent_clock_domain_and_phase=None,parent_insertion_and_boundary_delays=None,
+            clock_context_qualified=False,
+            required_owner_input='Selected HBM parent CP clock net/period/domain/phase, boundary IO loads/delays and insertion relationship to shared grant/executor/reset/CPL; target is not proof of parent wiring'),
+        state_inventory=dict(CP_source_bits=cp_state,decoder_source_bits=decoder_state,
+            total_source_state_bits_before_constant_pruning=694,
+            source_count_basis='Selected registered/balanced branches; legacy constant72-bit control and blocking capture temporary are excluded. Padding/constant pruning means this is not mapped FF count.',
+            additional_FF_bits=0,transactions=1,queue_depth=0),
+        replication=dict(component_instances=1,parent_instances_per_die=None,
+            new_replica_mux_bits=0,new_replica_demux_bits=0,
+            new_replica_fanout=0,local_equal64_loads=8,
+            parent_launch_and_reset_fanout=None),
+        intensity=dict(MACs_per_cycle=0,memory_bytes_per_cycle=0,
+            arithmetic_intensity_MACs_per_memory_byte=None,
+            communication='Control/owner-only component; no arithmetic or added memory service'),
+        floorplan=dict(component_reference_core_um2=metrics['core_area_um2'],
+            planning_density=.5,
+            required_placement_area_um2=(metrics['standard_cell_area_um2']+allowance)/.5,
+            basis='Positive full replacement logic allowance plus prior routed body; geometric area estimate excludes CTS/PG and route overhead.',
+            allocated_parent_slot=None,parent_slot_fit=None,
+            channel_tracks_required_lower_bound=231,allocated_channel_capacity=None,
+            channel_layer_pitch_and_length=None,channel_fit=None,
+            new_memory_macros=0,existing_W6_mutable_state_protection_retained=True),
+        latency_calendar=dict(
+            launch_capture='E0; launch accepted, complete header retained',
+            prelease_edges=5,grant_accept_edges=1,
+            qualified_exec_done_to_release_offer_edges=1,
+            release_offer_to_actual_accept_edges=1,
+            actual_grant_and_exec_done_clear_to_CP_done_edges=1,
+            CP_done_to_quiet_edges=2,
+            minimum_launch_to_done_local_edges=9,
+            minimum_launch_to_quiet_local_edges=11,
+            minimum_launch_to_done_local_ns_at_target=9/1.2,
+            minimum_launch_to_quiet_local_ns_at_target=11/1.2,
+            basis='Existing exact bench E1-E5, granted(), good_case() and warm rearm assertions; conditional immediate acceptance/cleanup, excluding external work and stalls.',
+            measured_extra_status_rearm_edges=1,
+            completion_input='Actual executor exec_done with four retired original operations and shared grant; W2 publication is an upstream term owned by Jason, never counted here.',
+            external_wait_terms=['shared lease grant refusal','executor work until qualified exec_done',
+                'shared release_r refusal','actual lease_granted/exec_done cleanup',
+                'actual CPL and cold/warm reset coordination outside this bind'],
+            fault_or_refusal_latency_bound=None,
+            local_transaction_expression='launch_to_done = (9 + grant_wait + executor_work_wait + release_wait + cleanup_wait) * target_period; quiet adds2 edges',
+            parent_token_expression='Sum scheduled CP intervals on the token critical path; count executor/provider/W2 intervals once at their owning term; overlap must come from actual parent calendar',
+            parent_scheduled_transactions_per_token=None,
+            parent_overlap_calendar=None,composed_token_latency_ns=None,
+            added_local_latency_edges=0,added_local_latency_ns_at_target=0),
+        model_prerequisites=dict(physical_build_admitted=False,
+            parent_composition_qualified=False,
+            required_owner_input=[
+                'Parent actual CP clock net/period/domain/phase and boundary delays/loading/insertion relative to executor/grant/reset/CPL',
+                'Parent selected-program CP transaction count and critical-path/overlap calendar per target model/context, including grant/release/cleanup and CPL/reset readiness',
+                'Claude selected HBM parent CP instance count, allocated slot dimensions/usable area and routing/CTS/PG reservation',
+                'Claude actual CP channel layer/pitch/length and available tracks, plus launch/reset fanout and boundary loading'],
+            unknown_policy='Fail closed: standalone u25 IO20 recipe is a characterization context, not a parent slot/channel/calendar reservation; no new route until these prerequisites are supplied'))
+
+    if measurement is not None:
+        measured = json.loads((root / measurement).read_text())
+        if measured['verdict'] != 'PASS_EXACT_ONLY' or measured['checks'] != 8713:
+            raise ValueError('CP successor requires its single full mechanism gate')
+        result['measured_successor_edges'] = {k: measured[k] for k in
+            ('prelease_edges','grant_edges','rearm_edges','added_edges')}
+        result['measurement_sha256'] = hashlib.sha256((root/measurement).read_bytes()).hexdigest()
+        result['composed_latency_delta_ns_at_target'] = measured['added_edges'] * .833333
+        result['clock_qualified'] = False
+    if parent_measurement is not None:
+        parent_record=json.loads((root/parent_measurement).read_text())
+        if parent_record['verdict']!='PASS_CONNECTED_PROTOCOL_ONLY' or parent_record['foreign_cases']!=15:
+            raise ValueError('CP parent join requires its actual connected protocol gate')
+        join=result['parent_association_join']
+        join['measured']=True
+        join['measurement_sha256']=hashlib.sha256((root/parent_measurement).read_bytes()).hexdigest()
+        join['measured_checks']=parent_record['checks']
+        join['added_grant_to_executor_start_edges']=parent_record['added_executor_start_edges']
+        join['added_latency_ns_at_target']=parent_record['added_executor_start_edges']/1.2
+        join['source_sha256']=parent_record['source_sha256']
+    return result
