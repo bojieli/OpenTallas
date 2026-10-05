@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """Bounded standard-library attribution of existing records; no model/build execution."""
-import gzip, hashlib, json, re, subprocess
+import gzip, hashlib, json, re, subprocess, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 OUT = Path(__file__).resolve().parent
 PINS = {}
+SOURCE = sys.argv[1] if len(sys.argv) > 1 else '80d0e333ed01512d1bcc15fc0da5c1ebfcd92432'
 def raw(p):
-    b = subprocess.check_output(['git', '-c', 'gc.auto=0', 'show', 'HEAD:' + p], cwd=ROOT)
+    b = subprocess.check_output(['git', '-c', 'gc.auto=0', 'show', SOURCE + ':' + p], cwd=ROOT)
     PINS[p] = hashlib.sha256(b).hexdigest()
     return b
 def read(p):
     return json.loads(raw(p))
-rev = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+rev = subprocess.check_output(['git', 'rev-parse', SOURCE], cwd=ROOT, text=True).strip()
 r = read('results/rtl/dsrom_recovery_20261004/composition.json')
 h = read('results/rtl/dshbm_1m_allmeasured_20261004/composition.json')
 f = read('results/rtl/dsrom_1m_allmeasured_20261004/field.json')
