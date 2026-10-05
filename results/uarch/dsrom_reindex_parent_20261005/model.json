@@ -149,10 +149,12 @@
     "request_FIFO_entries_per_PC": 1,
     "drain_reserved_entries": 4,
     "half_die_copy_stages": 1,
+    "half_copy_bits_per_lane": 270,
+    "half_copy_lanes": 4,
     "dispatch_inflight_pairs": 3,
     "decoded_FIFO_entries": 16,
     "counter_FF_removed": 6656,
-    "response_FF_removed": 1280,
+    "response_FF_removed": 1024,
     "redundant_write_enable_FF_removed": 256,
     "added_FF": {
       "request_FIFO": 2145,
@@ -160,9 +162,9 @@
       "decoded_FIFO": 2032,
       "list_capture": 1912,
       "pending_and_metadata_checks": 384,
-      "local_half_copies": 512
+      "local_half_copies": 1080
     },
-    "net_FF_delta": -695,
+    "net_FF_delta": 129,
     "protection": "SRAM SECDED; counter check bits; pending/metadata checks; full tag/beat identity; finite occupancy and reservation checks, no invented clears or credits"
   },
   "latency": {
@@ -183,7 +185,7 @@
   "area": {
     "control_cell_cap_um2": 37452.2,
     "retained_KC8_cells_um2": 37615.4,
-    "estimated_FF_delta_um2": -263.4606,
+    "estimated_FF_delta_um2": 48.90132,
     "unmeasured_mapping_logic_CTS_delta_um2": null,
     "control_cap_unchanged": true,
     "list_macro_reservation_um2": 82730.4192,
