@@ -1,0 +1,31 @@
+{
+  "verdict": "PASS_BANK_COMPONENT_ONLY",
+  "observed_utc": "2026-10-05T21:38:37.328538+00:00",
+  "source_sha256": {
+    "tools/uarch_model.py": "30277e6ed7863b4af25bfc223afa29bce826e5a6722517a08f51034b8f7ccc04",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "eb97f06009f4cdfed18ed3cce43bb1720b4cd0c3e597c0bb563902e06ca0dd50",
+    "rtl/test/dsrom_wavefront/tb_wfc_decoded_read.sv": "5f4ef1734cd27b57178b5c30072322b68c313f4000430633d9fd5d165dae1061",
+    "tools/dsrom_wfc_decoded_read_exact.sh": "17e54d92a7c8f7a3165da8c194cecda975ba5f70b87827f2faee66ff919968cb"
+  },
+  "cases": [
+    1,
+    27,
+    32
+  ],
+  "exact_cycles": 24576,
+  "checks": [
+    "all user addresses and ring slots",
+    "read-before-write",
+    "invalid user zero",
+    "simultaneous record/ring updates",
+    "warm reset of eligibility",
+    "unchanged priority encoders"
+  ],
+  "added_pipeline_edges": 0,
+  "default_enabled": false,
+  "MAXU866_exact": "PENDING_REMOTE_ADMISSION",
+  "stage_exact": "PENDING_REMOTE_ADMISSION",
+  "physical_context_qualified": false,
+  "SS60FF25": "UNKNOWN",
+  "actual_parent_completion_binding": null
+}
