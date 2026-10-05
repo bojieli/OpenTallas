@@ -1,0 +1,35 @@
+{
+  "fragment_count": 46671,
+  "moved": 22765,
+  "capacity": {
+    "service_die_mm2": 553.3722862734398,
+    "field_die_mm2": 841.6801043190399,
+    "strict_return_nodes": 5090,
+    "strict_return_mm2": 33.989104319039996,
+    "all_fixed_debit_retained_mm2": 465.477,
+    "nine_provider_complete_frame_cfg_reserve_mm2": 1.7244479447999999,
+    "reticle_mm2": 858,
+    "two_percent_budget_mm2": 840.84,
+    "service_margin_before_overlays_mm2": 287.4677137265602,
+    "field_deficit_at_two_percent_before_overlays_mm2": 0.8401043190398241,
+    "field_fits_858_before_overlays": true,
+    "two_percent_pass": false,
+    "placed_slot_fit": false,
+    "no_overlays_discarded": "PG/clock/PHY/DFT included inherited fixed charge; changed pin/route/codec/control overlay union still unmeasured"
+  },
+  "transport": {
+    "conditional_clock_GHz": 1.2,
+    "link_payload_bytes_per_edge": 64,
+    "baseline_hop_cycles": 909,
+    "prior_serial_packet_ns": 7798911.666666613,
+    "split_serial_packet_ns": 8954141.666666629,
+    "delta_ns": 1155230.0000000158,
+    "L20_split_packet_ns": 191050.0,
+    "L19_split_packet_ns": 227073.33333333326,
+    "no_free_overlap_or_input_reuse": true,
+    "selected_expert_scope": "worst legal alternative per source slot, never all384",
+    "full_token_delta_ns": null,
+    "MTP_iteration_delta_ns": null,
+    "physical_link_qualified": false
+  }
+}

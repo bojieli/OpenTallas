@@ -64,7 +64,7 @@ def _isa_bits():
 
 def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False,
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
-             bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0):
+             bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
@@ -151,6 +151,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['b3r8_bw_align'] = bw_align
     m['b3r2']['b3r9_east_mirror'] = east_mirror
     m['b3r2']['b3r10_bw_edge'] = bw_edge
+    if slab_obs_top != 7 or m6_strip:
+        _slab_entry(v, slab_obs_top, m6_strip)
+    m['b3r2']['b3r15_slab_obs_top'] = slab_obs_top
+    m['b3r2']['b3r15_m6_strip_um'] = m6_strip
     if io_faces:
         _io_faces(v)
     m['b3r2']['b3r11_io_faces'] = io_faces
@@ -835,6 +839,85 @@ def _tree_cols(v, ncols):
     v.masters, v.pin_rects = masters, pin_rects
 
 
+def _slab_entry(v, obs_top=7, strip=0.0):
+    """b3r15: a second horizontal entry layer into the band port/scale slabs (qfd_port_tiles_*); b3r12/b3r13 i50
+    finals put every over-capacity M8 window in the gcell column at the W slab face because OBS M1-M7 left M8 the
+    only entry layer.
+    Option A (obs_top=5): the slab is implemented with M1-M5 only (proved on a port-group P&R), so M6/M7 are free
+        over the whole slab; the block-word pins stay M8 area pins.
+    Option B (strip > 0): a `strip` um wide channel inside the array-facing slab face keeps OBS M1-M5 only (the
+        slab logic under it routes M1-M5); the block-word pins move to M6 inside that channel, 3 M6 tracks apart."""
+    base_masters, base_rects, base_lef = v.masters, v.pin_rects, v.lef_text
+
+    def masters(model, k=1, port_bits=None):
+        out = base_masters(model, k, port_bits)
+        for name, b in out.items():
+            if not name.startswith('qfd_port_tiles'):
+                continue
+            b.obs_top = obs_top
+            if strip:
+                # the column decides the array-facing face (an edge-entry slab's bw pins sit across its width)
+                xv = model['geo']['x_vch']
+                west = next(it.x < xv for it in model['insts'] if it.master == name)
+                b.m6_strip = (0.0, strip) if west else (b.w - strip, b.w)
+                # edge-entry words (b3r10) share one y at the slab edge: stack them into the slab, 100 um apart
+                yy = {}
+                for p_, spec in b.ports.items():
+                    if p_.startswith('bw') and spec[0] == 'area':
+                        yy.setdefault(round(spec[3], 1), []).append(p_)
+                b.m6_y = {}
+                for y0, ps in yy.items():
+                    if len(ps) == 1:
+                        b.m6_y[ps[0]] = y0
+                        continue
+                    up = y0 < b.h / 2
+                    for q, p_ in enumerate(sorted(ps, key=lambda z: int(z[2:]))):
+                        d = 60.0 + 100.0 * q
+                        b.m6_y[p_] = (y0 - 70.0 + d) if up else (y0 + 70.0 - d)
+        return out
+
+    def pin_rects(mst, k, wmap):
+        rects = base_rects(mst, k, wmap)
+        sx = getattr(mst, 'm6_strip', None)
+        if not sx:
+            return rects
+        off, p = F.TRK['M6']
+        step = p * k * 3
+        hw = 0.016 * k
+        out = []
+        for nm, layer, r in rects:
+            port = nm.split('[')[0]
+            spec = mst.ports.get(port)
+            if not (port.startswith('bw') and spec and spec[0] == 'area'):
+                out.append((nm, layer, r))
+                continue
+            n = wmap.get(port, spec[1])
+            i = int(nm.split('[')[1].rstrip(']'))
+            yc = getattr(mst, 'm6_y', {}).get(port, spec[3])
+            y = off * k + round((yc - n * step / 2 - off * k) / (p * k)) * p * k + i * step
+            x0 = sx[0] + 0.25 * (sx[1] - sx[0])
+            out.append((nm, 'M6', (x0, y - hw, x0 + 0.4 * k, y + hw)))
+        return out
+
+    def lef_text(mst, k, wmap):
+        txt, n = base_lef(mst, k, wmap)
+        sx = getattr(mst, 'm6_strip', None)
+        if not sx:
+            return txt, n
+        head, tail = txt.split('  OBS\n', 1)
+        L = ['  OBS']
+        for i in range(1, mst.obs_top + 1):
+            if i >= 6:
+                for a, c in ((0.0, sx[0]), (sx[1], mst.w)):
+                    if c - a > 1e-6:
+                        L += [f'    LAYER M{i} ;', f'      RECT {a:.3f} 0 {c:.3f} {mst.h:.3f} ;']
+            else:
+                L += [f'    LAYER M{i} ;', f'      RECT 0 0 {mst.w:.3f} {mst.h:.3f} ;']
+        L += ['  END', f'END {mst.name}', '']
+        return head + '\n'.join(L), n
+    v.masters, v.pin_rects, v.lef_text = masters, pin_rects, lef_text
+
+
 # ------------------------------------------------------------------------------------------------ clock regions
 def clock_regions(v, m):
     """Decision C regions: 4 x 4-tile blocks (with their corridors), spine bands, strip thirds, IO blocks."""
@@ -979,6 +1062,56 @@ def latency_tws(stages):
                 unified_model_sha256=hashlib.sha256((ROOT / 'tools/uarch_model.py').read_bytes()).hexdigest(),
                 instruction_for_model_owner='set QWEN_WIRE_W12["tws"] = floorplan_stages (me_lat_extra follows) and '
                                             're-run the Qwen ROM headline; bound until a routed path STA confirms the pitch')
+
+
+def wire_bound_8k(v, m, comp='results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json',
+                  ar_job='results/rtl/qwen_dspark_system_20261004/ctx8k/k_AR0.json'):
+    """The measured 8K token / DSpark step (REAL_MEM RTL, which already carries the RTL wire stages bd/nws/tws/ord of
+    its build) with the die floorplan's measured wire-stage bounds added: worst block word (tws) minus the RTL's tws
+    on every ME op, the hub<->stack link delta (2 traversals a layer pass), and the F2 two-beat +1 a ME op.  ME ops a
+    layer pass and a head come from the unified model's +1 probe (217 = 36 x 6 + 1)."""
+    C = json.loads((ROOT / comp).read_text())
+    rtl = json.loads((ROOT / ar_job).read_text())['wire_stages']
+    bw = bword_stages(v, m)
+    ls = v.link_stages(m)
+    f2 = latency()
+    ops_tok = f2['me_ops_on_token_path']
+    if (ops_tok - 1) % 36:
+        raise SystemExit(f'ME ops a token {ops_tok} is not 36 x n + 1')
+    ops_layer, ops_head = (ops_tok - 1) // 36, 1
+    d_tws = bw['max'] - rtl['tws']
+    d_link = ls['delta_stages_at_430']
+    per_layer = ops_layer * (d_tws + 1) + 2 * d_link
+    per_head = ops_head * (d_tws + 1)
+    cc = C['components_cycles']
+    clk = C['clock_hz']
+    # AR token: 36 layer passes + 1 head; DSpark step: verify 2 x 36 layer passes + 2 heads, drafter layer passes
+    # (drafter_layers_rtl / one drafter layer) + S draft heads, commit (no ME op)
+    nd = round(C['composed']['draft_terms']['drafter_layers_rtl'] / cc['drafter_layer_D0_S3'])
+    s_heads = 3
+    ar0 = C['composed']['ar_token_cycles']
+    st0 = C['composed']['step_cycles']
+    ar_pen = 36 * per_layer + per_head
+    st_pen = 2 * 36 * per_layer + 2 * per_head + nd * per_layer + s_heads * per_head
+    ar1, st1 = ar0 + ar_pen, st0 + st_pen
+    tau = C['tau']
+    return dict(schema='opentallas.qwen-rom-wire-bound-8k.v1', source=dict(composition=comp, ar_job=ar_job),
+                rtl_wire_stages=rtl, floorplan_block_word_stages=bw, hub_stack=dict(
+                    rtl_r2_entry_stages=ls['r2_model_total_stages'], floorplan_stages=ls['r2_model_total_stages'] + d_link,
+                    delta=d_link, traversals_per_layer_pass=2),
+                me_ops=dict(per_layer_pass=ops_layer, per_head=ops_head, per_ar_token=ops_tok),
+                deltas=dict(tws_per_me_op=d_tws, two_beat_per_me_op=1, link_per_traversal=d_link,
+                            per_layer_pass=per_layer, per_head=per_head),
+                ar=dict(measured_cycles=ar0, penalty_cycles=ar_pen, bound_cycles=ar1,
+                        measured_tok_s=round(clk / ar0, 1), bound_tok_s=round(clk / ar1, 1),
+                        delta_pct=round(100 * (ar0 / ar1 - 1), 3)),
+                dspark=dict(measured_step_cycles=st0, drafter_layer_passes=nd, draft_heads=s_heads,
+                            penalty_cycles=st_pen, bound_step_cycles=st1, tau=tau,
+                            measured_tok_s=round(tau * clk / st0, 1), bound_tok_s=round(tau * clk / st1, 1),
+                            delta_pct=round(100 * (st0 / st1 - 1), 3)),
+                status='bound: floorplan stage counts at the 430.56 um corridor-gate pitch (no routed-path STA); the '
+                       'hub<->stack delta assumes the REAL_MEM measurement carries the r2 46-stage link; F2 bound '
+                       'is 0 once the column-FIFO prefetch is measured')
 
 
 def write_def_regions(v, m, path):
@@ -1129,7 +1262,42 @@ def write_pdn_r4(v, m, path, bump_um):
     return dict(core_pitch_um=cp, grids=len(meta), meta=meta)
 
 
-def case_pdn(v, m, work, bump_um):
+def write_pdn_r5(v, m, path, bump_um):
+    """r5 = r4 stripes/connects with unambiguous grid ownership.  pdngen `-instances` is a Tcl regexp over every
+    instance name (pdn::get_insts), so r4's bare names claimed several instances each (sp_port_tiles_0 matched
+    sp_port_tiles_0_f1, s_1_1 matched s_1_10; >1000 PDN-0182 on b3r2b).  r5 anchors every name (^name$) and puts all
+    instances whose stripe offset to the die lattice is equal into one grid (pdngen builds one instance grid per
+    matched instance, offsets stay instance-relative), so ~3,200 grids become a few dozen and no instance is matched
+    by two grids."""
+    r4 = write_pdn_r4(v, m, path, bump_um)
+    cp = r4['core_pitch_um']
+    head = Path(path).read_text().split('\n')[:9]
+    head[0] = '# r5 full-die PDN: r4 grids, anchored instance patterns, one macro grid per stripe phase'
+    byname = {it.name: it for it in m['insts']}
+    groups = {}
+    for e in r4['meta']:
+        it = byname[e['instance']]
+        if not re.fullmatch(r'[A-Za-z0-9_]+', it.name):
+            raise ValueError(f'instance name needs escaping: {it.name}')
+        key = ('M5', round((-it.x) % cp, 3)) if e['layer'] == 'M5' else ('M8', round((-it.y) % cp, 3))
+        groups.setdefault(key, []).append(it.name)
+    L = list(head)
+    for j, ((layer, off), names) in enumerate(sorted(groups.items())):
+        g = f'pg_{layer.lower()}_{j}'
+        pats = ' '.join(f'^{n}$' for n in sorted(names))
+        L.append(f'define_pdn_grid -macro -instances {{{pats}}} -voltage_domains CORE -name {g} -starts_with GROUND '
+                 '-grid_over_boundary')
+        if layer == 'M5':
+            L += [f'add_pdn_stripe -grid {g} -layer M5 -width .504 -pitch {cp:.3f} -offset {off:.3f}',
+                  f'add_pdn_connect -grid {g} -layers {{M4 M5}}', f'add_pdn_connect -grid {g} -layers {{M5 M8}}']
+        else:
+            L += [f'add_pdn_stripe -grid {g} -layer M8 -width .48 -pitch {cp:.3f} -offset {off:.3f}',
+                  f'add_pdn_connect -grid {g} -layers {{M7 M8}}', f'add_pdn_connect -grid {g} -layers {{M8 M9}}']
+    Path(path).write_text('\n'.join(L) + '\n')
+    return dict(core_pitch_um=cp, grids=len(groups), instances=len(r4['meta']), meta=r4['meta'])
+
+
+def case_pdn(v, m, work, bump_um, rev='r4'):
     """Real-technology die (legality, track assert, pin access) with power abstracts (VDD/VSS M7 + M8 rails on every
     element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the connected r4 full-die pdn.tcl (write_pdn_r4);
     run_pdn.tcl runs pdngen + check_power_grid."""
@@ -1137,12 +1305,20 @@ def case_pdn(v, m, work, bump_um):
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)
     parts = []
-    for name, mst in M.items():
-        text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
-        parts.append(text)
+    # r5: the power abstracts take the selected module's pin geometry (tree-column / edge-entry pin_rects live on v,
+    # PG.powered_lef reads F, which raised on the b3r7+ 6-field pin specs); r4 keeps its F geometry byte-identical
+    pg_f = PG.F
+    if rev == 'r5':
+        PG.F = v
+    try:
+        for name, mst in M.items():
+            text, _ = PG.powered_lef(mst, 1, {q: pw.get((name, q), 0) for q in mst.order})
+            parts.append(text)
+    finally:
+        PG.F = pg_f
     (work / 'elements.lef').write_text('VERSION 5.8 ;\nBUSBITCHARS "[]" ;\nDIVIDERCHAR "/" ;\n' + '\n'.join(parts) +
                                        'END LIBRARY\n')
-    meta = write_pdn_r4(v, m, work / 'pdn.tcl', bump_um)['meta']
+    meta = (write_pdn_r5 if rev == 'r5' else write_pdn_r4)(v, m, work / 'pdn.tcl', bump_um)['meta']
     (work / 'run_pdn.tcl').write_text("""# full-die PDN with macro grids on the placed floorplan
 proc mem {tag} { set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {VmRSS:\\s+(\\d+)} $s -> r; puts "OTMEM $tag [expr {$r/1024}] MB [clock seconds]" }
@@ -1159,6 +1335,7 @@ mem check
 write_db /work/floorplan_pdn.odb
 """)
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
+               **({'pdn_rev': rev} if rev != 'r4' else {}),
                execution_order=['run.tcl', 'run_pdn.tcl'])
     (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
     return man
@@ -1166,7 +1343,7 @@ write_db /work/floorplan_pdn.odb
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary'])
+    ap.add_argument('mode', choices=['plan', 'grt', 'real', 'pdn', 'ir', 'latency', 'summary', 'wire8k'])
     ap.add_argument('--window', default='tile_field')
     ap.add_argument('--vdd-pitch', type=float, default=63.64,
                     help='per-net bump pitch: 63.64 = 45 um array, every core bump power (the IR PASS cases ir_*_align_b45)')
@@ -1188,7 +1365,13 @@ def main(argv=None):
     ap.add_argument('--bw-x', type=float, default=20.0, help='b3r13: block-word pin column distance from the slab face (um)')
     ap.add_argument('--edge-gap', type=float, default=0.0, help='b3r14: routing gap (um) between each tile array and '
                     'its facing spine slab column; the die grows by two gaps')
+    ap.add_argument('--slab-obs-top', type=int, default=7, help='b3r15 option A: band port/scale slab OBS top layer '
+                    '(5 = slab routed M1-M5, M6/M7 free over it)')
+    ap.add_argument('--m6-strip', type=float, default=0.0, help='b3r15 option B: width (um) of an OBS-M1-M5 entry '
+                    'channel inside the array-facing slab face; block-word pins on M6 in it')
     ap.add_argument('--east-mirror', action='store_true', help='b3r9: east-array block trees mirrored (root spine-side)')
+    ap.add_argument('--pdn-rev', default='r4', choices=['r4', 'r5'], help='pdn mode: r5 = anchored, phase-grouped '
+                    'macro grids (no PDN-0182 grid-ownership conflicts)')
     ap.add_argument('--work', type=Path)
     ap.add_argument('--out', type=Path)
     ap.add_argument('--k', type=int, default=16)
@@ -1205,7 +1388,13 @@ def main(argv=None):
                     b3r6=a.b3r6, tree_cols=a.tree_cols,
                     bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
                     io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
-                    edge_gap=a.edge_gap)
+                    edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip)
+    if a.mode == 'wire8k':
+        rec = wire_bound_8k(v, m)
+        if a.out:
+            a.out.write_text(json.dumps(rec, indent=1) + '\n')
+        print(json.dumps(dict(ar=rec['ar'], dspark=rec['dspark'], deltas=rec['deltas']), indent=1))
+        return 0
     if a.mode == 'plan':
         out = a.out
         out.mkdir(parents=True, exist_ok=True)
@@ -1232,7 +1421,7 @@ def main(argv=None):
         (work / 'manifest.json').write_text(json.dumps(man, indent=1) + '\n')
         print(json.dumps({k: man[k] for k in ('window', 'power_w', 'bump_sites')}))
     elif a.mode == 'pdn':
-        print(json.dumps(case_pdn(v, m, work, a.vdd_pitch)))
+        print(json.dumps(case_pdn(v, m, work, a.vdd_pitch, a.pdn_rev)))
     else:
         man = v.case_real(m, work)
         print(json.dumps(man))

@@ -2223,10 +2223,19 @@ def apply_scan_insertion(mapped: Path, case: Path, block: dict[str, Any], view_n
     pre = case / "1_2_yosys.prescan.v"
     shutil.copy2(mapped, pre)
     module = dft_netlist.read_module(mapped, block["top"])
-    text, report = scan_insert.insert_scan(
-        module, cells, chains=dft["chains"], max_length=dft["max_length"],
-        clock_mixing=dft["clock_mixing"], tech=view_name,
-    )
+    if dft.get("bound_macros"):
+        # default-off successor path: X-bounded hard macros + ICG test enable (tools/dft/macro_bound.py)
+        from dft import macro_bound  # noqa: PLC0415
+        bb_ports = {name: macro_bound.read_bb_ports(Path(path)) for name, path in dft["bound_macros"].items()}
+        text, report = macro_bound.insert_scan_bounded(
+            module, cells, bb_ports, chains=dft["chains"], max_length=dft["max_length"],
+            clock_mixing=dft["clock_mixing"], tech=view_name,
+        )
+    else:
+        text, report = scan_insert.insert_scan(
+            module, cells, chains=dft["chains"], max_length=dft["max_length"],
+            clock_mixing=dft["clock_mixing"], tech=view_name,
+        )
     mapped.write_text(text, encoding="utf-8")
     shutil.copy2(mapped, case / "1_2_yosys.scan.v")
     report["prescan_netlist_sha256"] = sha256_file(pre)
@@ -3173,6 +3182,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--scan-clock-mixing", default=None, choices=["no_mix", "mix"],
                         help="no_mix (default): one clock domain per chain; mix: chains "
                              "cross domains through lock-up latches")
+    parser.add_argument("--dft-bound-macros", action="store_true",
+                        help="with --dft scan: treat every --macro-view macro as an X-bounded black box "
+                             "(outputs AND !test_mode) and open ICGs in test mode (SE = test_mode); "
+                             "tools/dft/macro_bound.py.  Default off: the plain inserter, as every earlier record")
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
@@ -3475,6 +3488,17 @@ def main(argv: list[str] | None = None) -> int:
     if dft and "pnr" not in stages:
         print("--dft scan is applied to the ORFS netlist; it requires stage pnr", file=sys.stderr)
         return 2
+    if getattr(args, "dft_bound_macros", False):
+        if not dft or not args.macro_view:
+            print("--dft-bound-macros needs --dft scan and at least one --macro-view", file=sys.stderr)
+            return 2
+        dft["bound_macros"] = {}
+        for spec in args.macro_view:
+            name, _, mdir = spec.partition("=")
+            bb = Path(mdir) / f"{name}_bb.v"
+            if not bb.is_absolute():
+                bb = (Path.cwd() / bb).resolve()
+            dft["bound_macros"][name] = str(bb)
     if dft and args.view not in DFT_SUPPORTED_VIEWS:
         print(f"--dft scan supports views {sorted(DFT_SUPPORTED_VIEWS)}", file=sys.stderr)
         return 2

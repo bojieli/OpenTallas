@@ -21,6 +21,14 @@
 // packed WINDOW KV load (rtl/chip/ot_dsrom_window_stream_la.sv); binding on claude/dsrom-s81-window-bind-20261004
 `define DSROM_BL_WINDOW_STREAM     1
 `define DSROM_BL_WINDOW_STREAM_IW  8
+// per-user cross-stage staged state under WAVE: position slots >= WIN (DS-ROM correctness 2026-10-04,
+// results/rtl/dsrom_correctness_20261004).  SIDE (multicast) staging: ot_rom_pkg_ctrl_wf_ps SIDE_PSL (slot = position
+// mod 2^SIDE_PSL, per-(user, slot) counts, core_side_off added by the memory wrapper to staging reads); SIDE_PSH = log2
+// of the stage's whole SIDE staging span (words), so 2^(SIDE_PSL + SIDE_PSH) <= 2^SIDE_USH.  Hop-relayed state
+// (tools/hdc_program_v41_array.py `relay`, the S81 controller's mode) is per position by construction: no flag.
+`define DSROM_BL_SIDE_PSL          3
+// ROM element second-macro row decode (entry 2NSEG+1+s -> s_row[NSEG+s]): fixed in place in ot_v41_rom_elem_w10 and
+// every copy (no flag; every image with an 8-segment pair must be rebuilt from the fixed source)
 // S81 die configuration: one die per rank, 12 head dies (results/rtl/dsrom_s81_fulldie_20261004)
 `define DSROM_BL_HEAD_DIES         12
 `endif
