@@ -1,24 +1,30 @@
 {
   "adopted": false,
   "area": {
+    "CTS_IO_cell_area_budget_um2": 435.69414,
     "FF_proxy_um2": 0.2916,
     "actual_owner_context": "results/rtl/hbm_die_takeover_20261005/selected_parent_context.json#W2/channels/clock",
-    "actual_parent_slot_bbox_um": null,
+    "actual_parent_slot_bbox_um": [
+      11112.336,
+      9802.08,
+      11371.536,
+      10061.28
+    ],
+    "actual_slot_outline_um2": 67184.64,
     "binding_owner": "Turing 01a10dba-5786-7d01-b636-797f591b5657 (existing dieplan takeover; Claude limit confirmed)",
     "codec_basis": "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json#SRAM_protection_candidate.pair_cell_body_um2",
     "exclusions": "loaded CTS/PG, hold repair, actual long channels and physically distinct protection implementation",
     "historical_component_core_is_not_parent_slot": true,
     "historical_component_core_um2": 14867.4,
+    "hold_repair_cell_area_budget_um2": 1234.5442450000003,
     "includes": "all planned protected FF, fully spatial codec allowance, select/held tuple mux,7load buffer tree,5pct placement margin",
     "inspected_existing_sources": [
       "tools/hbm_accel_sm_v_floorplan.py",
       "results/floorplan/hbm_gpu/v41_hbm_die.json"
     ],
     "missing_physical_keys": [
-      "W2 parent_instance/replica mapping",
-      "W2 parent_slot_bbox_um",
-      "W2 clk_sm clock/uncertainty constraint binding",
-      "W2 boundary corridor layers/pitch/usable tracks and competing allocations"
+      "actual propagated clk_sm insertion/skew and extracted boundary loads",
+      "gateway transport stages: 2 each direction, budget4 roundtrip edges; installation unbound"
     ],
     "mux2_bit_proxy_um2": 0.2,
     "owner_existing_floorplan_source_sha256": "1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df",
@@ -27,10 +33,12 @@
       "/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json"
     ],
     "parent_instance_path": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink",
-    "parent_owner_measured_missing": true,
+    "parent_owner_measured_missing": false,
     "planned_50pct_placement_um2": 51850.85829000001,
     "planned_cell_body_um2": 24690.884900000005,
-    "slot_fit": null
+    "residual_cell_capacity_um2": 7231.1967149999955,
+    "slot_fit": true,
+    "slot_fit_scope": "analytical body plus CTS/IO/hold budgets in actual finite reservation; no mapped/routed claim"
   },
   "compute": {
     "MACs_per_cycle": 0,
@@ -39,12 +47,17 @@
     "incoming_FP32_words": 32
   },
   "connected_parent_integration": {
+    "CP_association_added_admission_edges": 1,
+    "CP_association_cost_owner": "CP function; never repriced inside W2 publication",
     "CP_writer": "Harvey; ot_ds_hbm_cmdproc20 and ot_hbm_integrated_su_cp_bind remain unchanged",
+    "actual_composed_clock_and_latency_qualified": false,
     "actual_parent_basis": "72e15410b (published parent join main2eb337dc8)",
     "actual_parent_diff_scope": "only W2 default-off parameter and u_w2_sink binding; all CP/association hooks unchanged",
     "added_sink_state_bits": 0,
     "bench": "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv",
     "bench_scope": "one selected pair with retained GU/SwiGLU inputs, live native W2/sector/provider/shared owner and actual CP reset hook; no SU/gather/formatter or full-die reset claim",
+    "companion_CP_callable": "hbm_cp_balanced_veto_model restored verbatim from2eb337dc8; owner Harvey",
+    "composition_condition": "Actual parent must bind clk_sm and scheduled CP/SU/W2 overlap calendar; native-only W2 bench does not exercise SU association",
     "connected_gate_passed": false,
     "default": 0,
     "finite_ingress_seats": 4,
@@ -65,6 +78,258 @@
   },
   "default_enabled": false,
   "engine_RTL_admitted": true,
+  "finite_child_owner_contract": {
+    "W2": {
+      "CTS_IO_cell_area_budget_um2": 435.69414,
+      "CTS_buffers_budget": 1843,
+      "IO_buffers_budget": 2426,
+      "MACs_per_cycle": 0,
+      "added_boundary_register_cycles": 0,
+      "added_memory_ports": 0,
+      "buffer_budget_is_analytical": true,
+      "cell_body_budget_um2": 24690.884900000005,
+      "core_bbox_um": [
+        11112.336,
+        9802.08,
+        11371.536,
+        10061.28
+      ],
+      "core_relative_um": [
+        250.56,
+        43.2,
+        509.76,
+        302.4
+      ],
+      "external_signal_bits": 1213,
+      "gross_bbox_um": [
+        11095.056,
+        9784.8,
+        11388.816,
+        10078.56
+      ],
+      "gross_relative_um": [
+        233.28,
+        25.92,
+        527.04,
+        319.68
+      ],
+      "hold_repair_cell_area_budget_um2": 1234.5442450000003,
+      "internal_fanout_budget": 7,
+      "logical_instance": "g_on.g_die[d].u_w2_sink",
+      "macro_abstract_installed": false,
+      "measured_fanout": null,
+      "measured_receiver_load_fF": null,
+      "optimisation_default_off": true,
+      "physical_reservation": "hb_cmdproc/w2",
+      "placement_utilisation_ceiling": 0.5,
+      "replicas_per_DS_die": 1,
+      "residual_cell_capacity_um2": 7231.1967149999955,
+      "state_bits_preoptimization": 5616,
+      "usable_outline_um2": 67184.64
+    },
+    "actual_loaded_clock_qualified": false,
+    "allocation_checks": {
+      "channels_fit": true,
+      "claims_disjoint": true,
+      "containment": true,
+      "retained_original_area": true
+    },
+    "boundary_transport": {
+      "RTL_stage_installation": "caller owner must insert/price transport cuts before clock qualification; reservation alone installs no FF",
+      "extra_roundtrip_cycles_per_transaction_budget": 4,
+      "measured_wire_delay_ps": null,
+      "parent_port_binding": "provider arbitration/response queue, result ingress, shared-owner lease and CP callbacks terminate at gateway; no extra memory port",
+      "roundtrip_target_ns": 3.3333333333333335,
+      "routed_envelope_um": 600,
+      "source_receiver_gateway_bbox_um": [
+        10879.056,
+        10104.48,
+        11388.816,
+        10277.28
+      ],
+      "stage_quantum_um": 430.56,
+      "wire_stage_budget_each_direction": 2
+    },
+    "canonical_path": "results/rtl/hbm_child_contract_20261005/child_reservations.json",
+    "canonical_sha256": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f",
+    "channels": [
+      {
+        "available_signal_tracks": 1218,
+        "bbox_um": [
+          10879.056,
+          9802.08,
+          11112.336,
+          9888.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 614,
+        "exclusive_reservation": true,
+        "group": "provider",
+        "layer": "M6",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "req_v",
+          "req_r",
+          "req",
+          "rsp_v",
+          "rsp_r",
+          "rsp"
+        ],
+        "raw_tracks": 1350,
+        "relative_bbox_um": [
+          17.28,
+          43.2,
+          250.56,
+          129.6
+        ],
+        "residual_tracks": 604,
+        "via_escape_tracks_reserved": 68
+      },
+      {
+        "available_signal_tracks": 1219,
+        "bbox_um": [
+          11112.336,
+          10061.28,
+          11198.736,
+          10104.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 302,
+        "exclusive_reservation": true,
+        "group": "result",
+        "layer": "M7",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "result_v",
+          "result_op",
+          "result_row",
+          "result_data",
+          "native_done"
+        ],
+        "raw_tracks": 1351,
+        "relative_bbox_um": [
+          250.56,
+          302.4,
+          336.96,
+          345.6
+        ],
+        "residual_tracks": 917,
+        "via_escape_tracks_reserved": 68
+      },
+      {
+        "available_signal_tracks": 1219,
+        "bbox_um": [
+          11198.736,
+          10061.28,
+          11285.136,
+          10104.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 297,
+        "exclusive_reservation": true,
+        "group": "metadata",
+        "layer": "M7",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "owned",
+          "installed",
+          "reserve_v",
+          "reserve_r",
+          "pair_op",
+          "rows_a",
+          "rows_b",
+          "op_a",
+          "op_b",
+          "base_a",
+          "limit_a",
+          "base_b",
+          "limit_b",
+          "provider_tag",
+          "frame",
+          "source_permit",
+          "retained",
+          "done",
+          "quiet",
+          "fault",
+          "retire_v",
+          "retire_r"
+        ],
+        "raw_tracks": 1351,
+        "relative_bbox_um": [
+          336.96,
+          302.4,
+          423.36,
+          345.6
+        ],
+        "residual_tracks": 922,
+        "via_escape_tracks_reserved": 68
+      }
+    ],
+    "clock": {
+      "IO_false_paths_allowed": false,
+      "actual_propagated_insertion_ps": null,
+      "actual_skew_ps": null,
+      "added_CDCs": 0,
+      "added_register_stages": 0,
+      "capacitance_basis": "32um M6 segment plus seven SS DFF D pins; budget, not measured actual load",
+      "domain": "streaming",
+      "hold_uncertainty_ps": 25,
+      "input_delay_max_ps": 166.66666666666669,
+      "input_delay_min_ps": 0,
+      "insertion_budget_ps": 100,
+      "local_skew_budget_ps": 10,
+      "max_segment_um": 32,
+      "output_capacitance_budget_fF": 9.673192,
+      "output_delay_max_ps": 166.66666666666669,
+      "output_delay_min_ps": 0,
+      "parent_port": "clk_sm",
+      "period_ps": 833.3333333333334,
+      "root_reset": "rst_sm_n",
+      "setup_uncertainty_ps": 60,
+      "skew_budget_must_be_verified": true,
+      "source_phase_ps": 0,
+      "warm_reset": "cp_reset_n",
+      "warm_reset_must_not_clear_accepted_debt": true
+    },
+    "current_sink_changed_admission_gate_only": true,
+    "latency": {
+      "CP_added_local_cycles": 1,
+      "CP_added_target_ns": 0.8333333333333334,
+      "W2_fourrow_target_delta_ns": 28.333333333333336,
+      "W2_measured_fourrow_added_edges": 34,
+      "W2_whole_token_publication_count": null,
+      "note": "Component calendar projection at target clock; no whole-token multiplicity claim",
+      "whole_token_added_latency_ns": null
+    },
+    "owner": "Turing",
+    "parent": {
+      "bbox_um": [
+        10861.776,
+        9758.88,
+        12676.152,
+        11162.856
+      ],
+      "clock_port": "clk_sm",
+      "external_parent_trunks": "M8/M9 over service block; no released PG or trunk credit",
+      "instance": "hb_cmdproc",
+      "lower_metal": "M6 horizontal/M7 vertical local exclusive reservation",
+      "original_claim_preserved": true,
+      "source_snapshot": "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv"
+    },
+    "slot_and_ports_and_state_budget_unchanged": true,
+    "source_bound_sink_sha256": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
+    "source_commit": "d7f4a688e"
+  },
+  "finite_child_reservation_bound": true,
   "gate": {
     "assertions": "accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high",
     "existing_fourrow_inputs_unchanged": true,
@@ -82,7 +347,7 @@
       "payload_CE_with_accepted_debt",
       "selected_checked_payload_CE_with_accepted_debt"
     ],
-    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json",
+    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r4_PASS/result.json",
     "warm_hook_in_component": false
   },
   "measured_connected_component": {
@@ -209,17 +474,18 @@
   },
   "measured_successor_component": {
     "FP32_words": 32,
+    "added_state_for_admission_fence_bits": 0,
     "artifact_sha256": {
-      "CORRUPT_SHARED_OWNER.log": "f8b5bc800de787f20bc71bbf82e19b0f82b1fc49a33919e5b2570aabfbc47f1f",
-      "CORRUPT_SINK_CONTROL.log": "4ff55c57d6dfa12b9509082af86c8c4463b58fac548f5e1c6ec770a24abf3b92",
-      "compile.log": "b569393346c501c38e572b5d43fcb04dbc009b18bd2a99b6dccef26567ca6d4f",
-      "corrupt.log": "d5d829fd37e1d2708f0952ce2f175465d4764fcb375941efe4900bf4bcbe1dcd",
-      "normal.log": "be3df73111c2b2f7ddf81ce6f8fe0d865947e8ff7bbaac8969f552f53ec23c95",
-      "payload_ce.log": "c32026c49affd594e3e377a242a4c712ea92f71feff80320eadf5a983b7e8463",
+      "CORRUPT_SHARED_OWNER.log": "90aab2250c4dac4fa85bed03798c5382086e97c8b35b6463d50043e1f7db92fe",
+      "CORRUPT_SINK_CONTROL.log": "4ff37aeb647335c546767ef4d92213155316c1deaa960781d68a721f13d8f409",
+      "compile.log": "e5ddb69c8a419d2ac20c38526dc0865710697d9f2a1b2a0f358f1fccf5731299",
+      "corrupt.log": "8a5c4b99414ae3ec1469fc86add70ca1ebb5e3681cab1e8cfac96f4968437821",
+      "normal.log": "c8172f5d962f3161cfcd3ded33e5122eb38f750b78eac0a7d8713e18fdf43dea",
+      "payload_ce.log": "ee96b42cf7ede3fff4f5f3221ba46da83f6348015c77c428a49b5e3c2b433a3d",
       "run.log": "d7dcd516ff6f0557701cc35f5721f63e57c73621e0324d1e192d62393d8a8081",
       "runtime.rc": "a74a29182314b9eabe3b8f7f215e6c2f5379960d8818ba38ccfc189a7f4fc79d",
-      "selected_payload_ce.log": "a62832e384b85cfe89a0ac022a6dc88c3ae2eeae60e1ae133e65da7955b86900",
-      "source.json": "b4a6d85f0a32d80740e357de0d2746c3f1a064ab2f6325074ac9245480019e12",
+      "selected_payload_ce.log": "7da391d21f7c5465913d63af75673a6d001c71e973f327f1bbc5c3be536a7b3a",
+      "source.json": "2778eaa882b926c0b6dc5bf8bce900e4b178f52a36c9f02a52da97b17104efe9",
       "toolchain.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
     },
     "authority_negative_observation_edges": 12,
@@ -238,6 +504,7 @@
       "CORRUPT_SINK_CONTROL",
       "CORRUPT_SHARED_OWNER"
     ],
+    "new_native_admission_fence": "only protected CAPTURE with no pending row; retained no-ready callbacks checked against actual owner/free reserved seat",
     "parent_condition": "real CP reset/quarantine must keep root POR high and preserve sink, borrower and CDC accepted debt until matched consumption",
     "parent_warm_reset_tested": false,
     "payload_CE": {
@@ -273,13 +540,15 @@
       "service_overlaps_existing_provider_wait": true
     },
     "shared_releases": 1,
-    "source_commit": "26718de65058e2c94b807e6fd00ebd1f00100080",
+    "source_commit": "1b5066754df6db8b28465bfa26addced11e3eb8f",
+    "source_pin_includes_uncommitted_integration_patch": true,
     "verdict": "PASS_COMPONENT_EXACT",
     "whole_token": false,
     "writes": 4
   },
   "model_bounded": true,
   "parent_binding_complete": false,
+  "parent_binding_remaining": "actual propagated clock/receiver loads and required gateway transport installation; current connected gate",
   "parent_boundary_requirements": {
     "boundary_inputs_bits": {
       "base_a": 32,
@@ -408,7 +677,9 @@
     "completion": "all source cuts valid + matching protected identity + four matched write ACKs + four full payload readbacks + positive verified/completion fences; shared matched release then CP callback/CPL",
     "exact_gate_passed": true,
     "exact_gate_scope": "minimum four-row component with real CP/shared owner/finite RAM; enclosing warm reset and physical closure untested",
+    "extra_GO_or_owner_ledger": false,
     "implementation_present": true,
+    "new_native_admission": "protected CAPTURE with no pending row; does not revoke accepted returns or reserved no-ready callbacks",
     "no_ROM_waiver_for_mutable_state": true,
     "no_parity_waiver": true,
     "normal_path": "select unchanged code+identity; capture syndrome/overall; reject DUE; capture checked original code+identity with positive completion (no correction mux or re-encode of payload)",
@@ -434,10 +705,134 @@
     "whole_token_missing_key": "selected caller schedule: accepted W2 reservations per die/token, with frame/op/rows and release ordering"
   },
   "routing": {
-    "actual_parent_channel_capacity_tracks": null,
+    "actual_boundary_signal_demand_tracks": 1213,
+    "actual_parent_channel_capacity_tracks": 3656,
     "buffer_tree_load_assumption": 7,
-    "channel_fit": null,
+    "channel_fit": true,
+    "channel_fit_scope": "analytical exclusive finite child allocation; no routed capacity claim",
     "estimated_buffer_count": 803,
+    "finite_reserved_channels": [
+      {
+        "available_signal_tracks": 1218,
+        "bbox_um": [
+          10879.056,
+          9802.08,
+          11112.336,
+          9888.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 614,
+        "exclusive_reservation": true,
+        "group": "provider",
+        "layer": "M6",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "req_v",
+          "req_r",
+          "req",
+          "rsp_v",
+          "rsp_r",
+          "rsp"
+        ],
+        "raw_tracks": 1350,
+        "relative_bbox_um": [
+          17.28,
+          43.2,
+          250.56,
+          129.6
+        ],
+        "residual_tracks": 604,
+        "via_escape_tracks_reserved": 68
+      },
+      {
+        "available_signal_tracks": 1219,
+        "bbox_um": [
+          11112.336,
+          10061.28,
+          11198.736,
+          10104.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 302,
+        "exclusive_reservation": true,
+        "group": "result",
+        "layer": "M7",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "result_v",
+          "result_op",
+          "result_row",
+          "result_data",
+          "native_done"
+        ],
+        "raw_tracks": 1351,
+        "relative_bbox_um": [
+          250.56,
+          302.4,
+          336.96,
+          345.6
+        ],
+        "residual_tracks": 917,
+        "via_escape_tracks_reserved": 68
+      },
+      {
+        "available_signal_tracks": 1219,
+        "bbox_um": [
+          11198.736,
+          10061.28,
+          11285.136,
+          10104.48
+        ],
+        "child": "W2",
+        "clock_other_tracks_reserved": 64,
+        "competing_local_signal_tracks": 0,
+        "demand_tracks": 297,
+        "exclusive_reservation": true,
+        "group": "metadata",
+        "layer": "M7",
+        "offset_um": 0.016,
+        "pitch_um": 0.064,
+        "ports": [
+          "owned",
+          "installed",
+          "reserve_v",
+          "reserve_r",
+          "pair_op",
+          "rows_a",
+          "rows_b",
+          "op_a",
+          "op_b",
+          "base_a",
+          "limit_a",
+          "base_b",
+          "limit_b",
+          "provider_tag",
+          "frame",
+          "source_permit",
+          "retained",
+          "done",
+          "quiet",
+          "fault",
+          "retire_v",
+          "retire_r"
+        ],
+        "raw_tracks": 1351,
+        "relative_bbox_um": [
+          336.96,
+          302.4,
+          423.36,
+          345.6
+        ],
+        "residual_tracks": 922,
+        "via_escape_tracks_reserved": 68
+      }
+    ],
     "identity_code_bits": 216,
     "logical_slot_select_fanout": 288,
     "mapped_fanout": null,
@@ -455,7 +850,7 @@
     "immutable_caller": "f835c8641",
     "released_selected_schedule": "a86d3cfd3"
   },
-  "source_permission": "Owner explicitly authorizes bounded component pipeline/gate while actual parent slot remains unbound; no physical fit or route admission",
+  "source_permission": "Finite d7f4a688e child slot/channel/budget-clock contract bound; functional integration continues, actual loaded clock and transport installation not qualified",
   "source_sha256": {
     "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
     "results/physical/hbm_w2_sink_registered_terminal_20261005/r1/endpoint_groups.json": "3ab6043317f55791134fda188d64515611084309fb1c52edaa966485b043c0c8",
@@ -467,14 +862,15 @@
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/private_alloc.svh": "0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/seq.hex": "1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json": "b3833a7548aec7bd6e4c3f558bd44e81be6055f595f480ae415acebf0958568e",
-    "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json": "427a083cf3eeb04f5f06f21d101d730dcc468bb4c7af9e98e36546ace3e5124d",
-    "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/source.json": "b4a6d85f0a32d80740e357de0d2746c3f1a064ab2f6325074ac9245480019e12",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r4_PASS/result.json": "a1386077d7450cb6ffb96b69d9ab565ab672f7ea52c455d981f0139ecae006ab",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r4_PASS/source.json": "2778eaa882b926c0b6dc5bf8bce900e4b178f52a36c9f02a52da97b17104efe9",
     "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
+    "results/uarch/hbm_w2_publication_20261005/inputs/finite_child_d7f4a688e.json": "a48317a9e25bd5daccee99f87414d595c7b3373f0778cfc3d2f1377aef56b20b",
     "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e",
     "results/uarch/hbm_w2_publication_20261005/inputs/original_f835_sink.sv": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",
     "results/uarch/hbm_w2_publication_20261005/inputs/released_connected_gate.sv": "1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e",
     "results/uarch/hbm_w2_publication_20261005/inputs/released_connected_runtime.py": "b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f",
-    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "bfc1a96fa98639b4a27563afdbdf21ebfa0b3d71e0c9c75ef0ffbe387d32bc18",
     "tools/hbm_accel_sm_v_floorplan.py": "1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df"
   },
   "storage": {
@@ -516,6 +912,33 @@
     "CE_selected_payload_bound_scope": "at most4 transient CE stripes in each of4rows, serial correction; excludes control/identity faults and repeated injection",
     "FF_hold_uncertainty_ps": 25,
     "SS_setup_uncertainty_ps": 60,
+    "actual_loaded_parent_clock_qualified": false,
+    "actual_parent_clock_contract": {
+      "IO_false_paths_allowed": false,
+      "actual_propagated_insertion_ps": null,
+      "actual_skew_ps": null,
+      "added_CDCs": 0,
+      "added_register_stages": 0,
+      "capacitance_basis": "32um M6 segment plus seven SS DFF D pins; budget, not measured actual load",
+      "domain": "streaming",
+      "hold_uncertainty_ps": 25,
+      "input_delay_max_ps": 166.66666666666669,
+      "input_delay_min_ps": 0,
+      "insertion_budget_ps": 100,
+      "local_skew_budget_ps": 10,
+      "max_segment_um": 32,
+      "output_capacitance_budget_fF": 9.673192,
+      "output_delay_max_ps": 166.66666666666669,
+      "output_delay_min_ps": 0,
+      "parent_port": "clk_sm",
+      "period_ps": 833.3333333333334,
+      "root_reset": "rst_sm_n",
+      "setup_uncertainty_ps": 60,
+      "skew_budget_must_be_verified": true,
+      "source_phase_ps": 0,
+      "warm_reset": "cp_reset_n",
+      "warm_reset_must_not_clear_accepted_debt": true
+    },
     "headline_rate_credit": false,
     "inherited_same_fourrow_gate_release_edges": {
       "measured_delta": 19,
@@ -529,8 +952,10 @@
     "old_FF_hold_slack_ps": 15.645707,
     "old_REGISTERED_SUBBLOCKS_verdict": "REJECT_SS_SETUP",
     "old_SS_slack_ps": -733.090149,
-    "parent_clock_constraint_source": null,
+    "parent_clock_constraint_source": "results/rtl/hbm_child_contract_20261005/w2_parent_clk_sm.sdc (d7f4a688e; budget, not propagated STA)",
     "parent_sink_clock_port": "clk_sm (immutable_parent.sv u_w2_sink .clk)",
+    "parent_transport_budget_for_8_provider_transactions_edges": 32,
+    "parent_transport_budget_roundtrip_edges": 4,
     "planned_added_local_edges_by_cut": {
       "final_completion_fence": 1,
       "metadata_check": 0,
@@ -546,6 +971,7 @@
     "release_181_plus_planned_edges_is_not_a_measurement": true,
     "target_clock_ps": 833.333,
     "total_fault_stall_bound": null,
+    "transport_budget_not_installed_or_measured": true,
     "whole_token_added_latency_ns": null
   }
 }
