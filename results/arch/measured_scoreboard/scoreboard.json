@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "d309ce914",
+ "generated_from_commit": "eb5b887d5",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -5070,7 +5070,7 @@
    "value": 474.808,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_step_us": {
    "target": "hbm_ds",
@@ -5085,7 +5085,7 @@
    "value": 1050.638,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_tok_s": {
    "target": "hbm_ds",
@@ -5100,7 +5100,7 @@
    "value": 3958.5,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_tok_s_tau_published": {
    "target": "hbm_ds",
@@ -5115,7 +5115,7 @@
    "value": 3700.5,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_corrected_ar_us": {
    "target": "hbm_ds",
@@ -5130,7 +5130,7 @@
    "value": 566.864,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_corrected_mtp_step_us": {
    "target": "hbm_ds",
@@ -5145,7 +5145,7 @@
    "value": 1104.861,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_gate_ar_us_today": {
    "target": "hbm_ds",
@@ -5160,7 +5160,7 @@
    "value": 596.027,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.matched_gate_mtp_step_us_today": {
    "target": "hbm_ds",
@@ -5174,7 +5174,7 @@
    "value": 1289.398,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_qwen.ar_tok_s_p8191_tp2": {
    "target": "hbm_qwen",
@@ -5382,7 +5382,7 @@
    "value": 28.296272636999998,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.finite_q_response_wait_us": {
    "target": "hbm_ds",
@@ -5397,7 +5397,7 @@
    "value": 27.572522058,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
   },
   "hbm_ds.finite_q_requests": {
    "target": "hbm_ds",
@@ -5412,7 +5412,67 @@
    "value": 640,
    "resolved": true,
    "blob": "16231f36029af5149e0c90857dd1db631619e837",
-   "last_commit": "3210e9ce7 2026-10-05"
+   "last_commit": "aeb1381af 2026-10-05"
+  },
+  "hbm_ds.joint_pq_xmap_ar_increment_us": {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_ar_increment_us",
+   "label": "Joint PQ+XMAP incremental AR group projection beyond measured PQ",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.AR.incremental_vs_measured_PQ_us",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF.",
+   "value": 1.493,
+   "resolved": true,
+   "blob": "9374370192b89638c8e5b138dde1cd3b58a86cd3",
+   "last_commit": null
+  },
+  "hbm_ds.joint_pq_xmap_p1_l20_cycles": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p1_l20_cycles",
+   "label": "Joint PQ+XMAP P1 L20 component cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.ar_l20.result.total_cycles",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate.",
+   "value": 4048,
+   "resolved": true,
+   "blob": "055fcbac46e85e17e6b12244d924d55ef11cf2ca",
+   "last_commit": "95eae97d3 2026-10-05"
+  },
+  "hbm_ds.joint_pq_xmap_mtp_increment_us": {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_mtp_increment_us",
+   "label": "Joint PQ+XMAP incremental MTP group projection beyond measured PQ",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.MTP.incremental_vs_measured_PQ_us",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF.",
+   "value": 26.933,
+   "resolved": true,
+   "blob": "9374370192b89638c8e5b138dde1cd3b58a86cd3",
+   "last_commit": null
+  },
+  "hbm_ds.joint_pq_xmap_p6_l20_cycles": {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p6_l20_cycles",
+   "label": "Joint PQ+XMAP P6 L20 component cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.p6_l20.result.total_cycles",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate.",
+   "value": 5400,
+   "resolved": true,
+   "blob": "055fcbac46e85e17e6b12244d924d55ef11cf2ca",
+   "last_commit": "95eae97d3 2026-10-05"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",

@@ -234,10 +234,67 @@ def load_recs(d, suffix):
     return out
 
 
+def joint_records(terminal_path, layouts_path, production_dir):
+    """Join actual PQ+XMAP timings to unchanged retained sequence descriptors.
+
+    No numeric inputs are regenerated. Layout source hashes must match all four
+    retained fixture files; the changed packed activation image is intentional.
+    """
+    import copy
+    terminal = json.loads(terminal_path.read_text())
+    layouts = json.loads(layouts_path.read_text())
+    retained_path = production_dir / 'retained_artifacts.json'
+    retained = json.loads(retained_path.read_text())
+    fixtures = {Path(f['dir']).name: {Path(p['path']).name: p['sha256']
+                for p in f['files']} for f in retained['fixtures']}
+    assert terminal['status'] == 'pass' and terminal['source_stable']
+    assert terminal['one_compiled_executable'] and not terminal['generated_numeric_inputs']
+    assert not terminal['full_token_measured'] and not terminal['SS_FF_admitted']
+    records, cases = {}, {}
+    for case, entry in terminal['results'].items():
+        r = entry['result']
+        assert entry['exit'] == 0 and r['returncode'] == 0
+        if case == 'stress_negative_fp4':
+            assert not r['exact'] and r['accepted'] and r['negative']
+            continue
+        assert r['exact'] and r['beat_counts_exact'] and not r['negative']
+        assert not r['mismatching_rows'] and not r['unexpected_rows']
+        p6 = case.startswith('p6_')
+        fixture = case + '_haz1_g0'
+        layout = layouts[f'a{6 if p6 else 1}/{fixture}/layout.json']
+        assert all(layout['source_sha256'][name] == fixtures[fixture][name]
+                   for name in ('seq.hex', 'lines.hex', 'x.hex', 'out.txt'))
+        base = json.loads((production_dir/'pq'/f'{case}_f{6 if p6 else 1}.json').read_text())
+        assert len(base['ops']) == len(r['ops']) == len(layout['ops'])
+        joint_sources = {p.split('/source/')[-1]: h for p, h in r['source_sha256'].items()}
+        # XMAP changes the parent/leaf and bench, but not arithmetic or PQ issue.
+        shared = {p: h for p, h in base['source_sha256'].items()
+                  if p in joint_sources and not p.endswith('/ot_hbm_accel_sm_pq.sv')}
+        assert shared and all(joint_sources[p] == h for p, h in shared.items())
+        adapted = copy.deepcopy(base)
+        for b, j, l, dst in zip(base['ops'], r['ops'], layout['ops'], adapted['ops']):
+            assert b['op'] == j['op'] == l['op'] and b['fmt'] == j['fmt'] == l['fmt']
+            assert b['x_addresses'] == j['addresses'] == l['addresses']
+            assert j['complete'] == j['timing']['results'] == b['rows']
+            assert j['fault'] == j['timing']['fault'] == 0 and j['beats_exact']
+            assert j['timing']['lines'] == b['lines'] and j['consumed'] == b['rtl']['consumed']
+            dst['rtl'] = j['timing']
+        adapted['total_cycles'] = r['total_cycles']
+        records[case] = adapted
+        cases[case] = dict(PQ_cycles=base['total_cycles'], joint_cycles=r['total_cycles'],
+                           fewer_cycles=base['total_cycles']-r['total_cycles'],
+                           ops=len(r['ops']), fixture_sha256=layout['source_sha256'])
+    assert len(cases) == 8
+    return records, dict(cases=cases, negative_expected_failure=True,
+                        inputs={rel(p): sha(p) for p in (terminal_path, layouts_path, retained_path)})
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--rec", type=Path, default=REC)
     ap.add_argument("--out", type=Path, default=REC / "composition.json")
+    ap.add_argument('--joint-record', type=Path)
+    ap.add_argument('--joint-layouts', type=Path)
     a = ap.parse_args()
     S = setup()
     ar0, mm0, rows1, rows6 = gate_rows(S)
@@ -262,6 +319,58 @@ def main():
                          serial_protocol_check=serial_check(rows6, dict(l20=r6s.get("l20_6"), wg=r6s.get("wg_6")))
                          if r6s.get("l20_6") else None)
     out["item1_pipelined_issue"] = i1
+    if a.joint_record:
+        assert a.joint_layouts
+        joint, scope = joint_records(a.joint_record, a.joint_layouts, a.rec)
+        projection = {}
+        for name, rows, keys, P, old in (
+            ('AR', rows1, ('ar_l20', 'wg'), 1, ar0),
+            ('MTP', rows6, ('p6_l20', 'p6_wg'), 6, mm0['step_us'])):
+            saved, groups = item1(S, rows, dict(l20=joint[keys[0]], wg=joint[keys[1]]), P)
+            projection[name] = dict(total_replacement_saved_us=saved,
+                incremental_vs_measured_PQ_us=round(saved-i1[name]['saved_us'], 3),
+                remaining_target_clock_us=round(old-saved, 3), groups=groups)
+        out['joint_PQ_XMAP'] = dict(**scope, target_clock_projection=projection,
+            accounting='REPLACE the same PQ groups once; do not add standalone item3 estimates or separate issue/layout savings',
+            measured_scope='eight minimum-component P1/P6 sequences, not a full-token execution',
+            bench_clock_ns=1, projection_clock_hz=F_SM,
+            class_proxy='historical ATTN3 representative prefix retained; all-layer group substitution is modeled coverage',
+            SS_FF_admitted=False, adopted=False, full_token_gain_measured=False,
+            qualified_headline_rate=None, Qwen_provider_bound=False, Qwen_opt3_enabled=False)
+    # Production records may be composed without rerunning the numeric gates.
+    # Keep their benchmark clock and measured scope separate from this target
+    # clock program projection and the independent, unmeasured layout forecast.
+    production_result = a.rec / 'result.json'
+    if production_result.exists():
+        r = json.loads(production_result.read_text())
+        join_path = a.rec / 'DS1M_sequence_source_join.json'
+        join = json.loads(join_path.read_text())
+        assert sha(A.BASE/'program.json') == join['source_program_sha256']
+        assert len(r['table']) == 12
+        assert all(t['status'] == 'pass' and t['mismatching_ops'] == 0 for t in r['table'])
+        assert r['negative']['mismatching_ops'] == 13
+        out['production_measurement_scope'] = dict(
+            result=rel(production_result), result_sha256=sha(production_result),
+            source_join=rel(join_path), source_join_sha256=sha(join_path),
+            authoritative_program=rel(A.BASE/'program.json'),
+            authoritative_program_sha256=sha(A.BASE/'program.json'),
+            numerical_gate=r['numerical_gate'], negative_gate=r['negative_gate'],
+            source_commit=r['source_commit'], positive_sequences=12,
+            negative_mismatching_ops=13, bench_clock_ns=r['bench_clock_ns'],
+            projection_clock_hz=F_SM,
+            original_supervisor_exit=r['supervisor_exit'],
+            original_supervisor_error_class=r['supervisor_error_class'],
+            hydration_failure_log=rel(a.rec/'compose.log'),
+            hydration_failure_log_sha256=sha(a.rec/'compose.log'),
+            hydration='tracked original program metadata restored with source-join SHA; no simulation or input regeneration',
+            interpretation='measured production component cycles, substituted into the same source-program target-clock model; not integrated full-token measurements',
+            dependency_coverage='L20 group/source join and retained class sequences; historical ATTN3 representative-prefix substitution retained explicitly',
+            new_layout_or_wave_measurements_included=False,
+            actual_combined_config_measured=False, SS60_FF25_qualified=False,
+            candidate_adopted=False, qualified_headline_rate=None,
+            Qwen_provider_bound=False, Qwen_opt3_enabled=False,
+            Qwen_DS_layout_savings_transfer=False,
+            provider_risks='native/fused VM service unresolved; finite-Q actual cost stays separate, not replaced by a wide-port assumption')
     # (3) activation delivery
     i3 = {}
     for mode in ("masked", "masked_static", "wide4096", "masked_wide4096", "masked_static_wide4096"):
@@ -270,6 +379,8 @@ def main():
         i3[mode] = dict(AR_us=ar, AR_saved_us=round(ar0 - ar, 3), MTP_step_us=mm["step_us"],
                         MTP_saved_us=round(mm0["step_us"] - mm["step_us"], 3), MTP_tok_s=mm["mtp_tok_s"], loads=tab)
     out["item3_activation_delivery"] = i3
+    if production_result.exists():
+        out['item3_interpretation'] = 'unchanged analytical beat-law sensitivity ONLY; no actual layout-ON measurement or cross-target credit'
     out["inputs"] = {rel(p): sha(p) for p in sorted(pqd.glob("*.json"))} if pqd.exists() else {}
     out["tool_sha256"] = {rel(Path(__file__)): sha(Path(__file__))}
     a.out.parent.mkdir(parents=True, exist_ok=True)

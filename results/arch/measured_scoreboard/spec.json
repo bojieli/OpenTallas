@@ -4038,6 +4038,50 @@
    "unit": "requests",
    "status": "measured",
    "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_ar_increment_us",
+   "label": "Joint PQ+XMAP incremental AR group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.AR.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p1_l20_cycles",
+   "label": "Joint PQ+XMAP P1 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.ar_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_mtp_increment_us",
+   "label": "Joint PQ+XMAP incremental MTP group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.MTP.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p6_l20_cycles",
+   "label": "Joint PQ+XMAP P6 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.p6_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
   }
  ],
  "derived": [
