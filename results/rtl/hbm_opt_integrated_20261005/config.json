@@ -40,7 +40,9 @@
         "op_xb",
         "producing-column G1 selection",
         "disjoint x ring and dependent-op drain",
-        "ENABLE=1/PQ_ENABLE=1; both default 0"
+        "ENABLE=1/PQ_ENABLE=1; both default 0",
+        "Euclid owns production XMAP forwarding from Pauli leaf; s1_xa<=xa absolute once",
+        "Existing stress sequence nonzero-ring-base and wrap case required"
       ],
       "binding": null,
       "missing": "Production cursor-fold and selected combined bench source/fixture binding pending."
@@ -49,15 +51,18 @@
       "owner": "Pauli",
       "default_enabled": false,
       "source_paths": [
-        "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv",
         "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
       ],
       "hooks": [
-        "XMAP default 0",
-        "FP4/FP8/BF16 P6 beats 8/4/3"
+        "Pauli-owned exported leaf: actual separate source path/module pending owner publication",
+        "Euclid production top forwards XMAP; default 0, explicit candidate 1",
+        "tools/hbm_accel_activation_layout.py::pack_fragment(original,fmt,active,nc=8)",
+        "tools/hbm_accel_activation_layout.py::beat_groups(fmt,active,nc=8)",
+        "P6 FP4/FP8/BF16 beats 8/4/3; P1 FP4 groups [0,4]",
+        "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
       ],
       "binding": null,
-      "missing": "Measure ON TOP of selected production PQ using the same cached operands/results; separate effects are not additive."
+      "missing": "Parent selects Euclid sole production SMtop/issuer, Pauli leaf/packer only. Actual exported leaf and production XMAP forwarding pending; no duplicate legacy issuer join."
     },
     "partial_wave_packing": {
       "owner": "Erdos",
@@ -236,13 +241,21 @@
     }
   },
   "host_policy": {
-    "new_heavy_host": "ot-epyc1tb",
-    "job_root": "/srv/opentallas/jobs-overflow",
-    "admit": "/srv/opentallas-scratch/admit.sh",
     "make_jobs": 16,
     "NUM_CORES": 16,
     "TMPDIR": "<unique job directory>/tmp",
-    "arbitrary_timeout": null
+    "arbitrary_timeout": null,
+    "new_heavy_hosts": {
+      "ot-epyc1tb": {
+        "job_root": "/srv/opentallas/jobs-overflow",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      },
+      "ot-epyc2": {
+        "job_root": "/srv/opentallas-scratch2/jobs",
+        "admit": "/srv/opentallas-scratch/admit.sh"
+      }
+    },
+    "selection": "Kepler/Rawls refresh both CPU busy/load, available RAM and selected NVMe disk immediately before the one ready launch; balanced selection, no memory-only dispatch."
   },
   "clock_policy": {
     "SS_setup_uncertainty_ps": 60,

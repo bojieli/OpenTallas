@@ -148,11 +148,12 @@ def save(path, record):
 
 def run(config, root, profile, out, workload_names=None):
     policy = config['host_policy']
-    if socket.gethostname() != policy['new_heavy_host']:
-        raise ValueError('Runtime is remote EPYC1 only; local plan is lightweight')
+    host = policy['new_heavy_hosts'].get(socket.gethostname())
+    if host is None:
+        raise ValueError('Runtime is remote EPYC1/2 only; local plan is lightweight')
     out = out.resolve()
-    if not out.is_relative_to(Path(policy['job_root'])):
-        raise ValueError('Use unique EPYC1 jobs-overflow NVMe output')
+    if not out.is_relative_to(Path(host['job_root'])):
+        raise ValueError('Use the selected host\'s unique NVMe job output')
     plan = prepare(config, root, profile)
     if profile == 'default_off' or not plan['first_two_exact']:
         raise ValueError('Combined candidate requires the first two exact levers')
@@ -175,7 +176,7 @@ def run(config, root, profile, out, workload_names=None):
         folder.mkdir()
         # Substitution is only for the unique result directory; no shell expansion.
         argv = [arg.replace('{out}', str(folder)) for arg in binding['argv']]
-        command = [policy['admit'], str(binding['admit_gib']), '--', *argv]
+        command = [host['admit'], str(binding['admit_gib']), '--', *argv]
         save(folder / 'command.json', command)
         with (folder / 'runtime.log').open('x') as log:
             process = subprocess.Popen(command, cwd=binding['cwd'], env=env,

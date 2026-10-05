@@ -2,7 +2,7 @@
   "schema": "opentallas.hbm-opt-integrated-blocklist.v1",
   "consumer": "Claude HBM die floorplan owner",
   "floorplan_namespace": "results/rtl/hbm_accel_die_floorplan_20261005/",
-  "profile": "candidate_on",
+  "profile": "candidate_on (parent-selected production join)",
   "installed_or_clock_admitted": false,
   "blocks": [
     {
@@ -28,7 +28,6 @@
       "lever": "format_masked_activation",
       "owner": "Pauli",
       "source_paths": [
-        "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv",
         "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv"
       ],
       "default_enabled": false,
@@ -38,7 +37,7 @@
         "physical binding absent"
       ],
       "implementation_holds": [
-        "Measure ON TOP of selected production PQ using the same cached operands/results; separate effects are not additive."
+        "Parent selects Euclid sole production SMtop/issuer, Pauli leaf/packer only. Actual exported leaf and production XMAP forwarding pending; no duplicate legacy issuer join."
       ],
       "source_replacements": {},
       "slot_macro_channel_binding": null
@@ -184,5 +183,6 @@
     "global_context": 1048576,
     "production_VM_CDC_protected_SRAM_and_final_ordered_gather_qualified": false
   },
-  "area_accounting": "Source inventories only; no new area totals, no zero-cost missing wires/provider/storage. Consume primary model/physical records; unknown installed slots remain null."
+  "area_accounting": "Source inventories only; no new area totals, no zero-cost missing wires/provider/storage. Consume primary model/physical records; unknown installed slots remain null.",
+  "production_join_selection": "results/rtl/hbm_opt_integrated_20261005/production_join_selection.json"
 }
