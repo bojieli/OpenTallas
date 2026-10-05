@@ -158,11 +158,7 @@ module ot_qwen_s4_protected_ring #(
         wire [P-1:0] arrived_bin=arrived[0+:P];
         wire release_here_ok=(cr1==~ci1);
         wire [P-1:0] release_here=gray_to_bin(cr1);
-        // Keep the subtraction in the pointer's modulo ring. Comparing an
-        // un-sized expression to DEPTH widens it and falsely overflows when
-        // arrived_bin wraps below the still-outstanding release pointer.
-        wire [P-1:0] arrival_occupancy=arrived_bin-release_here;
-        wire arrival_overflow=valid[WIRE_STAGES]&&release_here_ok&&(arrival_occupancy>=DEPTH);
+        wire arrival_overflow=valid[WIRE_STAGES]&&release_here_ok&&((arrived_bin-release_here)>=DEPTH);
         wire arrival_fault=arrived_bad||arrived[2*P]||poison[WIRE_STAGES]||arrival_overflow;
         wire arrival_take=valid[WIRE_STAGES]&&!arrival_fault;
         wire [P-1:0] arrived_next=arrived_bin+P'(arrival_take);

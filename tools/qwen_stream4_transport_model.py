@@ -67,15 +67,22 @@ def transport(allocation, interface, root=ROOT):
     # Conservative local legs retain full sealed records per PC in both
     # directions. Do not omit the PC->stack gather or stack->PC delivery.
     local_ff=2*local_spans*per_node_ff
-    extra_endpoint_ff=4*2*(5+6+8+8+3+3+1+1)+128*2*(5+1)
+    global_receiver_and_credit_source_FF=8*(8*8+6)
+    # Reuse each already charged PC ring's encoder and decoder as the local
+    # wire endpoints. WIRE_STAGES moves sealed code between those cuts; it
+    # does not introduce another 256 full encoder/decoder pipelines.
+    # ACK remains its own 72-bit sealed ring, not a dropped sideband pulse.
+    local_ack_control_ff=4+2*(2*7+2)
+    local_ack_ff=local_spans*(72+local_ack_control_ff)
+    local_receiver_and_credit_source_FF=128*((8*7+6)+(8*5+6)+(8*7+6))
+    extra_endpoint_ff=4*2*(5+6+8+8+3+3+1+1)+128*2*(5+1)+global_receiver_and_credit_source_FF+local_receiver_and_credit_source_FF
     # Exact gates still determine realized mux/decode area. Count raw muxes
     # and PC demux/semantic/owner compares positively before source.
     mux=4*504*31*3+4*32*296*3
-    checks=3*((trunk_ff+local_ff-504*2*(trunk_spans+local_spans))//2+extra_endpoint_ff//2)
-    buffers=math.ceil((trunk_ff+local_ff+extra_endpoint_ff)/7)
-    pipeline_cell=((trunk_ff+local_ff+extra_endpoint_ff)*.2916+(mux+checks)*.08748+buffers*.10206)/1e6
-    # Separate endpoint seals/checkers for the conservative local legs.
-    local_codec_cell=128*2*7*pair/1e6
+    checks=3*((trunk_ff+local_ff-504*2*(trunk_spans+local_spans)+local_spans*local_ack_control_ff)//2+extra_endpoint_ff//2)
+    buffers=math.ceil((trunk_ff+local_ff+local_ack_ff+extra_endpoint_ff)/7)
+    pipeline_cell=((trunk_ff+local_ff+local_ack_ff+extra_endpoint_ff)*.2916+(mux+checks)*.08748+buffers*.10206)/1e6
+    local_codec_cell=0
     functional_core=ingress['core_mm2_all']+forward['core_mm2_all']+reverse['core_mm2_all']+(pipeline_cell+local_codec_cell)/util
     # Explicit capacity reserve, not a borrowed closure verdict: ten percent
     # extra cell/floorplan area for buffers and actual clock trees, plus the
@@ -89,7 +96,7 @@ def transport(allocation, interface, root=ROOT):
     # retirement pointer, not merely a straight-line geometric wire count.
     longest_credit_rtt=2*(max_local+max_trunk)+1+2+4+2+2
     return dict(schema='opentallas.qwen.stream4.selected-transport.prebuild.v1',
-        selected='four independent sealed 504-bit full-record stack links with protected finite credit pools',
+        selected='four independent sealed 504-bit full-record stack links with protected finite credit pools; existing PC ring codecs reused on local legs',
         default_OFF=True,implemented=False,NEAR_HBM=0,DSpark=False,ROM_ECC=False,
         baseline_plan=allocation['baseline_plan'],actual_service_NWR=64,actual_top_WBW=4,
         source_grants='one rotating PC grant per stack; at most four total; held one-edge grant reserves a queue slot even across warm admission pause',
@@ -111,8 +118,20 @@ def transport(allocation, interface, root=ROOT):
         trunk_legs=legs,local_legs=local,
         coded_data_FF_per_pipeline_node=504,checked_control_FF_per_pipeline_node=control_ff,
         trunk_pipeline_FF=trunk_ff,local_pipeline_FF=local_ff,extra_endpoint_DMR_FF=extra_endpoint_ff,
+        global_receiver_and_credit_source_FF=global_receiver_and_credit_source_FF,
+        local_receiver_and_credit_source_FF=local_receiver_and_credit_source_FF,
+        local_ACK_pipeline_FF=local_ack_ff,
+        local_codec_reuse=dict(source='ot_qwen_s4_protected_pc u_l/u_w/u_a with LOCAL_WIRE_SPANS',
+            already_charged_in='mutable_interface rings landing/write/write_done encoder+decoder DMR cuts and codec pairs',
+            extra_local_encoder_decoder_FF=0,extra_local_codec_pairs=0,
+            actual_source_placement_required=True,
+            implemented_default_OFF=True,
+            ACK_ready='explicit backpressure at u_a output; retirement on actual mux acceptance',
+            local_write_no_stall_credit_bound_CLK_edges=2*max_local+11,
+            local_write_depth=16,local_write_stalls_priced=True,
+            local_write_peak_records_per_PC_CLK_edge=min(1,16/(2*max_local+11))),
         endpoint_mux_demux_NAND2=mux,extra_checker_NAND2=checks,extra_fanout8_buffers=buffers,
-        local_codec_pairs=128*2*7,codec_pair_cell_um2=pair,
+        local_codec_pairs=0,codec_pair_cell_um2=pair,
         pipeline_cell_mm2=pipeline_cell,local_codec_cell_mm2=local_codec_cell,
         utilization=util,functional_transport_core_mm2= functional_core,
         clock_and_buffer_reserve_core_mm2=clock_buffer_reserve,
@@ -138,10 +157,10 @@ def transport(allocation, interface, root=ROOT):
             minimum_fill_CLK_edges_at_four_return_records=32768,
             minimum_fill_ps_at_four_return_records=32768*833.333,
             historical_changed_source_fill_edges=1466,
-            actual_released_layers=36,actual_posted_MLP_window_CLK_edges=3000,
-            minimum_late_prefetch_exposure_CLK_edges=32768-3000,
-            repeated_36_layer_late_prefetch_lower_bound_ps=36*(32768-3000)*833.333,
-            token_composition='first exposed fill >=32768 edges plus visibility; later fills >=max(0,32768-actual measured independent MLP window) each; add ordered write/ACK fences and unchanged head/core path once',
+            actual_released_layers=36,component_chain_MLP_window_CLK_edges=3000,
+            component_chain_minimum_late_prefetch_exposure_CLK_edges=32768-3000,
+            full_token_issue_timestamps_known=False,
+            token_composition='first exposed fill >=32768 edges plus visibility; later fills >=max(0,32768-actual measured independent MLP window) each; add ordered write/ACK fences and unchanged head/core path once; component MLP3000 is not the actual36-layer calendar',
             price='return bandwidth and PC grant stalls are real; compose into each exposed fill and write visibility fence, retain posted prefetch overlap only when measured',
             whole_token_measured=False,rate_credit=False,adopted=False),
         warm_reset='closes fresh grants; every issued grant, frame, pointer, decoder and backend owner drains or stays held; POR alone erases',
@@ -152,4 +171,6 @@ def transport(allocation, interface, root=ROOT):
         source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in [
             allocation['baseline_plan'],'tools/qwen_rom_fulldie.py',
             'rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv','rtl/hdc/kv/ot_qwen_s4_protected_ring.sv',
+            'rtl/hdc/kv/ot_qwen_s4_protected_pc.sv','rtl/hdc/kv/ot_qwen_s4_interface_context.sv',
+            'rtl/hdc/kv/ot_qwen_s4_packet_link.sv',
             'rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv']})
