@@ -523,7 +523,10 @@ module ot_dsrom_reindex_kgctl_parent #(
         // responses clear pending bits; the dispatch write (one-hot slots, slot copies) then sets them
         for (p2 = 0; p2 < NPC; p2 = p2 + 1)
             for (e2 = 0; e2 < WB; e2 = e2 + 1)
-                if (rr_oh[p2][e2]) begin
+                if (rr_oh[p2][e2] && !rr_bad[e2/SG][p2] && adm[e2] &&
+                    (rr_kind[e2/SG][p2] ? pend_s[e2][p2] :
+                     (pend_c[e2][p2] && !(^cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)]) &&
+                      rr_beat[e2/SG][p2*2+:2] == cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][1:0]))) begin
                     if (rr_kind[e2/SG][p2]) pend_s[e2][p2] <= 1'b0;
                     else if (cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][1:0] == 2'd3) pend_c[e2][p2] <= 1'b0;
                 end

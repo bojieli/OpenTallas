@@ -9,6 +9,7 @@ module ot_dsrom_reindex_kgdata_parent #(
     input  wire                 clk,
     input  wire                 rst_n,
     input wire reserve,
+    output wire fault,
     input  wire [NPC-1:0]       rsp_v,
     input  wire [NPC*TAGW-1:0]  rsp_tag,
     input  wire [NPC*BEATW-1:0] rsp_beat,
@@ -50,6 +51,7 @@ module ot_dsrom_reindex_kgdata_parent #(
     wire pop=o_valid&&o_ready;
     wire [3:0] next_reserved={1'b0,reserved}+(reserve?4'd1:4'd0)-(pop?4'd1:4'd0);
     reg reservation_fault;
+    assign fault=reservation_fault;
     assign dr_ready=ready_q&&state_ok&&!reservation_fault;
     always @(posedge clk)begin
         if(!rst_n)begin reserved<=0;reserved_n<=3'b111;ready_q<=1;reservation_fault<=0;end

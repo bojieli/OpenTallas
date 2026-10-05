@@ -47,7 +47,7 @@ module ot_dsrom_reindex_gather_parent #(
 
     initial if(NPC!=32||WB!=128||AW!=28||HW!=20||TAGW!=16||LENW!=4||BEATW!=4||DW!=256||LBW!=14||LMW!=11||LSW!=3||DF!=8)
         $fatal(1,"source-faithful parent geometry required");
-    wire cbusy,cfault,mfault,drain_ready,drain_accept;
+    wire cbusy,cfault,mfault,dfault,drain_ready,drain_accept;
     wire [1:0] dr_v;
     wire [6:0] dr_slot;wire [13:0] dr_j;wire [9:0] dr_fc,dr_f0;wire [27:0] dr_blk;
     wire [NPC-1:0] c_req_v,c_req_rdy,qfault;
@@ -55,7 +55,7 @@ module ot_dsrom_reindex_gather_parent #(
     wire command_valid,command_ready,command_in_ready,command_fault;
     wire [47:0] command;
     reg bad_command;
-    wire live_fault=mfault||command_fault||bad_command||(|qfault);
+    wire live_fault=dfault||mfault||command_fault||bad_command||(|qfault);
     wire all_fault=live_fault||cfault;
     wire d_valid;wire [15:0] d_kv;wire [16*544-1:0] d_key;wire [27:0] d_blk;
     assign busy=cbusy||d_valid||command_valid||(|req_v)||all_fault;
@@ -106,7 +106,7 @@ module ot_dsrom_reindex_gather_parent #(
         assign {req_addr[p*AW+:AW],req_len[p*LENW+:LENW],req_tag[p*TAGW+:TAGW]}=data;
     end endgenerate
     ot_dsrom_reindex_kgdata_parent u_d(
-        .clk(clk),.rst_n(rst_n),.reserve(drain_accept),.rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_beat(rsp_beat),.rsp_data(rsp_data),
+        .clk(clk),.rst_n(rst_n),.reserve(drain_accept),.fault(dfault),.rsp_v(rsp_v),.rsp_tag(rsp_tag),.rsp_beat(rsp_beat),.rsp_data(rsp_data),
         .dr_v(dr_v),.dr_slot(dr_slot),.dr_j(dr_j),.dr_fc(dr_fc),.dr_f0(dr_f0),.dr_blk(dr_blk),.dr_ready(drain_ready),
         .o_valid(d_valid),.o_ready(o_ready&&!all_fault),.o_kv(d_kv),.o_key(d_key),.o_blk(d_blk));
     integer ck;reg [4:0] nko;reg [5:0] nbt;
