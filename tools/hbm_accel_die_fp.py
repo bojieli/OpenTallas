@@ -362,6 +362,9 @@ def build(variant=None):
     variant.update(W=W, H=H)
     m = dict(geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, scan=scan, links=links, host=host_mac,
              notes=notes, variant=variant, stn_faces={})
+    if variant.get('r5a_sidebands'):
+        from hbm_r5a_parent_allocation import allocate
+        allocate(m)
     m['buses'], m['paths'] = buses(m)
     if variant.get('child_contract'):
         from hbm_die_child_contract import allocations
@@ -397,6 +400,8 @@ def _router(m, B, P):
     n_wp = [0]
     pf = m['variant'].get('port_fix')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
+
+    blocked += [tuple(r) for r in m.get('reserved_regions', [])]
 
     def free(x, y, w, h):
         if x < EDGE or y < EDGE or x + w > g['W'] - EDGE or y + h > g['H'] - EDGE:
