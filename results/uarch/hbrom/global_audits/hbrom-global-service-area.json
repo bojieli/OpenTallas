@@ -1,0 +1,656 @@
+{
+  "schema": "opentallas.hbrom.global_service_area.v1",
+  "architecture_only": true,
+  "qualified": false,
+  "source_pins": {
+    "tools/hbrom_service_area.py": "28ba2c8cd355108440c571e2c6d06f15f7b3cd30e1d6f275b929f821e63366d3",
+    "tools/uarch_model.py": "8152aff4d4ac0e86f58c7ba7e3c6a833bd57e0eaedaaf13fed79294911d2e830",
+    "tools/w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+    "tools/w19_hbm_token_compose.py": "532e750860030c2142cc514da714582083a70519f28dff0fc49cdd7d46ca936a",
+    "results/rtl/w19_hbm_tp96_program_oreduce.json": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "results/uarch/hbm_gpu.json": "80afd828f1eb6898b808fbe9471f8500a25e147f527e94832dfa557acdca0731",
+    "results/uarch/v41_dedicated_units.json": "d149afcdad874d0876bf3e4397e42c33be32a737201c5587d6940553dc4f8d69"
+  },
+  "global_roles": {
+    "head_ranks": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63
+    ],
+    "nonhead_ranks": [
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+    ],
+    "index_scan_ranks": "all96; keys owned by (row//8)%96",
+    "SU_HC_router_service": "all96; reused across40layers",
+    "matrix_engines": "16or32 perrank; not included in service area"
+  },
+  "roles": {
+    "head_rank": {
+      "rank_count": 64,
+      "total_retained_width_allowance_mm2": 250.5576002612187,
+      "components": [
+        {
+          "name": "link_endpoints_and_router",
+          "replicas": 1,
+          "unit_reservation_mm2": 8,
+          "area_mm2": 8,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "two link endpoints, arbitration, credit queues; excludes external PHY silicon",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "control_identity_protection",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "scheduler, descriptors, tags, address bounds, protected mutable ownership",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "CDC_and_link_protection",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "ratio FIFOs, link check/retry storage; no ROM ECC",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SU_VM",
+          "replicas": 1,
+          "unit_reservation_mm2": 38.601,
+          "area_mm2": 38.601,
+          "basis": "VMC_BLOCK physical reservation",
+          "includes": "1024/256 lanes, 1536 SRAM macros, VM network",
+          "evidence": "inherited_floorplan_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "attention_compute",
+          "replicas": 1,
+          "unit_reservation_mm2": 33.380892672,
+          "area_mm2": 33.380892672,
+          "basis": "primitive MAC cells / 0.50 placement utilization",
+          "includes": "64 H16 TD32 tiles; excludes all attention SRAM and load flops",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_scorer",
+          "replicas": 16,
+          "unit_reservation_mm2": 2.709744,
+          "area_mm2": 43.355904,
+          "basis": "NK4 primitive cells / 0.50 placement utilization",
+          "includes": "exact FP4 products and per-key head sums; excludes reader and selectors",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HBM_PHY",
+          "replicas": 4,
+          "unit_reservation_mm2": 10.0052200512,
+          "area_mm2": 40.0208802048,
+          "basis": "ot_hbm3e_phy_v41x_aw30 actual LEF SIZE",
+          "includes": "four stack PHYs only; HBM DRAM silicon counted separately",
+          "evidence": "macro_abstract",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HBM_controllers_readers_collectors",
+          "replicas": 4,
+          "unit_reservation_mm2": 1.5,
+          "area_mm2": 6.0,
+          "basis": "explicit unmeasured physical allowance per stack",
+          "includes": "128 total PC readers, sector response assembly, arbitration, protection",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HE_projection",
+          "replicas": 5120,
+          "unit_reservation_mm2": 0.002337582,
+          "area_mm2": 11.96841984,
+          "basis": "FP32 add+mul cells / 0.50 utilization",
+          "includes": "FP32 MAC lanes only",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HE_tree_operand_delivery",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "chunk8 accumulators, tree, independent side-branch operand supply",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "Sinkhorn",
+          "replicas": 1,
+          "unit_reservation_mm2": 0.0661828,
+          "area_mm2": 0.0661828,
+          "basis": "historical cell area / 0.50 utilization",
+          "includes": "4x4 20-iteration unit; frequency remains historical151.9MHz pending qualification",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "quantizers",
+          "replicas": 32,
+          "unit_reservation_mm2": 0.05,
+          "area_mm2": 1.6,
+          "basis": "explicit unmeasured per32-element quantizer physical allowance",
+          "includes": "FP8/FP4 scale/max/round logic; no fast32-instance service until validated",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_select_and_merge",
+          "replicas": 64,
+          "unit_reservation_mm2": 0.0706848,
+          "area_mm2": 4.5238272,
+          "basis": "K512 unit cells / 0.50 utilization; one per key lane",
+          "includes": "local selector units; merge storage/controller additional",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "selector_merge_and_router_select",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "global-index exact top512 merge, candidate membership, router top6/order6",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "attention_packed_staging",
+          "replicas": 68,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.48224218750000003,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "557056 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "attention_stationary_PWORDS2",
+          "replicas": 32,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.22693750000000001,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "262144 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "attention_scores_probability_PV",
+          "replicas": 12,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.0851015625,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "94208 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "persistent_windows",
+          "replicas": 330,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 2.34029296875,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "2703360 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_candidate_keys",
+          "replicas": 136,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.9644843750000001,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "1114112 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "selector_lists_and_membership",
+          "replicas": 48,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.34040625,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "393216 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SRAM_protection_parity",
+          "replicas": 1,
+          "unit_reservation_mm2": 1.91655810546875,
+          "area_mm2": 1.91655810546875,
+          "basis": "72/64 SECDED check-bit capacity allowance",
+          "includes": "SUVM and dedicated SRAM parity capacity; codec not included",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SRAM_protection_codecs",
+          "replicas": 1,
+          "unit_reservation_mm2": 4,
+          "area_mm2": 4,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "parallel ECC encode/decode/fault gating; all active service ports",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "attention_load_registers",
+          "replicas": 1,
+          "unit_reservation_mm2": 0.0382205952,
+          "area_mm2": 0.0382205952,
+          "basis": "DFF cell area /0.50 utilization",
+          "includes": "PWORDS2 tile load registers",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "service_global_routing_clock",
+          "replicas": 1,
+          "unit_reservation_mm2": 12,
+          "area_mm2": 12,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "hub inter-unit channels, registers, clock gates/CTS; local placement already included",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "global_L2",
+          "area_mm2": 4.13,
+          "basis": "historical HBM four2MiB slices; separate from SUVM; alias removal requires schedule"
+        },
+        {
+          "name": "L2_parity_capacity",
+          "area_mm2": 0.51625,
+          "basis": "72/64 protection capacity proxy; codec unknown"
+        },
+        {
+          "name": "TU_SerDes_UCIe_PHY",
+          "area_mm2": 28,
+          "basis": "18mm2 SerDes+10mm2 UCIe historical perrank reservation; TU physical scope not closed"
+        }
+      ],
+      "head_specialized_compute_only_sensitivity_mm2": 219.2630133812187,
+      "specialization_note": "H1 attention ideal lane-area/16 only; unchanged supporting SRAM/ports reservation; no timing credit or physical qualification"
+    },
+    "nonhead_rank": {
+      "rank_count": 32,
+      "total_retained_width_allowance_mm2": 216.34420574401875,
+      "components": [
+        {
+          "name": "link_endpoints_and_router",
+          "replicas": 1,
+          "unit_reservation_mm2": 8,
+          "area_mm2": 8,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "two link endpoints, arbitration, credit queues; excludes external PHY silicon",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "control_identity_protection",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "scheduler, descriptors, tags, address bounds, protected mutable ownership",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "CDC_and_link_protection",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "ratio FIFOs, link check/retry storage; no ROM ECC",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SU_VM",
+          "replicas": 1,
+          "unit_reservation_mm2": 38.601,
+          "area_mm2": 38.601,
+          "basis": "VMC_BLOCK physical reservation",
+          "includes": "1024/256 lanes, 1536 SRAM macros, VM network",
+          "evidence": "inherited_floorplan_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_scorer",
+          "replicas": 16,
+          "unit_reservation_mm2": 2.709744,
+          "area_mm2": 43.355904,
+          "basis": "NK4 primitive cells / 0.50 placement utilization",
+          "includes": "exact FP4 products and per-key head sums; excludes reader and selectors",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HBM_PHY",
+          "replicas": 4,
+          "unit_reservation_mm2": 10.0052200512,
+          "area_mm2": 40.0208802048,
+          "basis": "ot_hbm3e_phy_v41x_aw30 actual LEF SIZE",
+          "includes": "four stack PHYs only; HBM DRAM silicon counted separately",
+          "evidence": "macro_abstract",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HBM_controllers_readers_collectors",
+          "replicas": 4,
+          "unit_reservation_mm2": 1.5,
+          "area_mm2": 6.0,
+          "basis": "explicit unmeasured physical allowance per stack",
+          "includes": "128 total PC readers, sector response assembly, arbitration, protection",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HE_projection",
+          "replicas": 5120,
+          "unit_reservation_mm2": 0.002337582,
+          "area_mm2": 11.96841984,
+          "basis": "FP32 add+mul cells / 0.50 utilization",
+          "includes": "FP32 MAC lanes only",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "HE_tree_operand_delivery",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "chunk8 accumulators, tree, independent side-branch operand supply",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "Sinkhorn",
+          "replicas": 1,
+          "unit_reservation_mm2": 0.0661828,
+          "area_mm2": 0.0661828,
+          "basis": "historical cell area / 0.50 utilization",
+          "includes": "4x4 20-iteration unit; frequency remains historical151.9MHz pending qualification",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "quantizers",
+          "replicas": 32,
+          "unit_reservation_mm2": 0.05,
+          "area_mm2": 1.6,
+          "basis": "explicit unmeasured per32-element quantizer physical allowance",
+          "includes": "FP8/FP4 scale/max/round logic; no fast32-instance service until validated",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_select_and_merge",
+          "replicas": 64,
+          "unit_reservation_mm2": 0.0706848,
+          "area_mm2": 4.5238272,
+          "basis": "K512 unit cells / 0.50 utilization; one per key lane",
+          "includes": "local selector units; merge storage/controller additional",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "selector_merge_and_router_select",
+          "replicas": 1,
+          "unit_reservation_mm2": 2,
+          "area_mm2": 2,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "global-index exact top512 merge, candidate membership, router top6/order6",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "persistent_windows",
+          "replicas": 330,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 2.34029296875,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "2703360 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "index_candidate_keys",
+          "replicas": 136,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.9644843750000001,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "1114112 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "selector_lists_and_membership",
+          "replicas": 48,
+          "unit_reservation_mm2": 0.0070917968750000004,
+          "area_mm2": 0.34040625,
+          "basis": "whole256x256 SRAM macros at inherited density",
+          "includes": "393216 useful bytes before SECDED; packed staging retains selected rows",
+          "evidence": "analytic_macro_reservation",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SRAM_protection_parity",
+          "replicas": 1,
+          "unit_reservation_mm2": 1.91655810546875,
+          "area_mm2": 1.91655810546875,
+          "basis": "72/64 SECDED check-bit capacity allowance",
+          "includes": "SUVM and dedicated SRAM parity capacity; codec not included",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "SRAM_protection_codecs",
+          "replicas": 1,
+          "unit_reservation_mm2": 4,
+          "area_mm2": 4,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "parallel ECC encode/decode/fault gating; all active service ports",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "service_global_routing_clock",
+          "replicas": 1,
+          "unit_reservation_mm2": 12,
+          "area_mm2": 12,
+          "basis": "explicit unmeasured physical allowance",
+          "includes": "hub inter-unit channels, registers, clock gates/CTS; local placement already included",
+          "evidence": "analytical_allowance",
+          "measured_for_hbrom": false
+        },
+        {
+          "name": "global_L2",
+          "area_mm2": 4.13,
+          "basis": "historical HBM four2MiB slices; separate from SUVM; alias removal requires schedule"
+        },
+        {
+          "name": "L2_parity_capacity",
+          "area_mm2": 0.51625,
+          "basis": "72/64 protection capacity proxy; codec unknown"
+        },
+        {
+          "name": "TU_SerDes_UCIe_PHY",
+          "area_mm2": 28,
+          "basis": "18mm2 SerDes+10mm2 UCIe historical perrank reservation; TU physical scope not closed"
+        }
+      ],
+      "head_specialized_compute_only_sensitivity_mm2": 216.34420574401875,
+      "specialization_note": "H1 attention ideal lane-area/16 only; unchanged supporting SRAM/ports reservation; no timing credit or physical qualification"
+    }
+  },
+  "mutable_state": {
+    "unique_kv_source_rows": {
+      "2": 524288,
+      "8": 524288,
+      "14": 524288,
+      "20": 1048576
+    },
+    "unique_ckv_and_index_bytes": 933232640,
+    "row_bytes": {
+      "ckv": 288,
+      "index": 68,
+      "window": 528
+    },
+    "max_rank_ckv_index_bytes": 9725920,
+    "min_rank_ckv_index_bytes": 9714528,
+    "replicated_window_bytes_per_rank": 2703360,
+    "max_rank_payload_bytes": 12429280,
+    "window_policy": "all40 windows retained perrank; no layer-stage allocation or free persistent-window timing credit",
+    "selected_rows_buffer_bytes_per_head_rank": 147456,
+    "source_selected_sets": 4,
+    "selected_set_lifetime_note": "Reuse acrosslayers needs source-version ownership and up to4 sets if simultaneouslyretained; ledger staging not yet proved sufficient"
+  },
+  "hbm": {
+    "retained_stacks_per_rank": 4,
+    "retained_stack_count": 384,
+    "stack_capacity_B": 24000000000,
+    "total_capacity_B": 9216000000000,
+    "dram_core_dies_assumption": 8,
+    "base_dies_per_stack": 1,
+    "total_DRAM_and_base_dies": 3456,
+    "phy_area_included_per_rank": 40.0208802048,
+    "bandwidth_per_rank_assumed_Bps": 3600000000000.0,
+    "stack_reduction_status": "capacity permits fewer stacks but bandwidth/readers/latency/floorplan require explicit repricing; noautomatic8SM/stack coupling forROMfedmatrix"
+  },
+  "legacy_hbm_reservation": {
+    "dedicated_units_footprint_mm2": 112.7,
+    "dedicated_units_mm2": {
+      "indexer": 20.57,
+      "attention": 16.69,
+      "su": 4.183,
+      "sfu": 8.819,
+      "hc_fp32_lanes": 5.984,
+      "sinkhorn_select_engram": 0.103
+    },
+    "L2_mm2": 4.13,
+    "note": "112.7mm2 historical sum is not complete SRAM/protected service inventory; do not substitute for physicalcomplete area"
+  },
+  "qualification_blockers": [
+    "Service allowances are not guaranteed bounds: controllers and SRAM codecs remain unmeasured",
+    "Existing attention timing uses16head price ononehead/rank; scaling area without newshape gate is speculative",
+    "Index64keys/cycle inventory must be matched to corrected HBMindexschedule; legacyNODE_NS slope implies different width",
+    "HE5120 retained from HBMarea ledger; offpath completion and service ports need fullDAG",
+    "SUVM andL2 retained separately conservatively; potential overlap cannot be credited without alias/port proof",
+    "Persistentwindow SRAMreservation and HBMcapacity accounting describe alternatives; do not charge HBMtraffic removal automatically",
+    "TU28mm2 PHY reservation source is historical; physicalpackageendpoint geometry remains unqualified",
+    "Collective digital buffers/protection may exceed generic8mm2 endpoint allowance",
+    "AuxiliaryEngram/sourcearchive service and dies external; matrix RF/SRAM/ROM omitted deliberately",
+    "16vs32engines does nothalve SU/index/attention or persistent40layerstates"
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "verdict": "PASS",
+  "scope": "One existing 164-case seed, XREG1 default/candidate numerical checker and identical latency",
+  "rows": {
+    "0": {
+      "n_fail": 0,
+      "n_cases": 164,
+      "done": [
+        0,
+        0,
+        200,
+        7607
+      ],
+      "latency_sm": [
+        [
+          31,
+          32
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          31,
+          32
+        ],
+        [
+          27,
+          27
+        ]
+      ]
+    },
+    "1": {
+      "n_fail": 0,
+      "n_cases": 164,
+      "done": [
+        0,
+        0,
+        200,
+        7607
+      ],
+      "latency_sm": [
+        [
+          31,
+          32
+        ],
+        [
+          27,
+          27
+        ],
+        [
+          31,
+          32
+        ],
+        [
+          27,
+          27
+        ]
+      ]
+    }
+  },
+  "sources": {
+    "rtl/gpu_sys/ot_gpu_coll_endpoint.sv": "adf09a0bbf30c47f0c514c5476d39173bb3478414ae43a93195c012658d3a36b",
+    "rtl/gpu_sys/ot_gpu_coll_fabric.sv": "4755fb6105464f97dbddd51d80c1f5d84a43cea7a5d408b4862f0999ebd44608",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/link/ot_link_nvls_switch.sv": "a623c4a413714d718d0f21011f103d14ef33d1d18fb050389e4397d56a3d8c42",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo_oh.sv": "0a712c15de567a1ab15c42f673c2ec304d2c06bde2292005bdaa5540d474eb5f",
+    "rtl/gpu_sys/ot_gpu_coll_mux_f12.sv": "5658eaa9163de06f1b9c1047169954a95de65599d984f7f61fc6ad9b0f5af417",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_f12.sv": "34cd78eefe99771774026ac1a70ef9e9c6d143a55faf50fd5d9dbc2da6499840",
+    "rtl/gpu_sys/ot_gpu_coll_endpoint_f12_txmask.sv": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+    "rtl/test/gpu_sys/tb_gpu_coll.sv": "759fda2314331901cffe1f3f1d1796f46dc570202cb26e5fb76eabf65a5026ec",
+    "tools/gpu_sys/run_coll.py": "a69d24ca4d252061338d01c62b80f26b7a25c00f5f6aa785720fe9dff5f0eaac",
+    "results/rtl/hbm_accel_fmax_inventory_20261004/noc/coll/run_coll_txmask.py": "5f6d32e8aebd838b8e6a389a2631024c5081df9708006fd9192544599ccc64aa",
+    "tools/uarch_model.py": "c079b74f75ee4aa83c8369302608916dbd60528bba7acf73bf428c7f26d40e27"
+  }
+}
