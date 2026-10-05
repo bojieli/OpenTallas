@@ -1,0 +1,80 @@
+{
+  "verdict": "PASS_SELECTED_SIMT_BF16_RETIREMENT_COMPONENT",
+  "source_commit": "8bb377015",
+  "exporter_rtl_original_pin": "b06fa0324",
+  "enabled_rows": 9216,
+  "experts": [
+    41,
+    65
+  ],
+  "matrices": [
+    "w1",
+    "w3"
+  ],
+  "spans": 768,
+  "acknowledged_store_sectors": 1536,
+  "held_cycles": 6891,
+  "default_off_export_rows": 0,
+  "scope": "Retained actual cold native GU FP32 inputs -> real selected-SIMT LDG/CVTBF16/held retirement/acknowledged STG; no live TC producer, no SwiGLU/W2 or token PASS.",
+  "full_released_image_enrollment": "Franklin caller required; current reduced loader image is not this enrollment",
+  "arithmetic": "unchanged rtl/gpu_sys/ot_gpu_simt_lane.sv::f_bf16; expected comparator only",
+  "rejection_checks": [
+    "wrong literal bound source",
+    "missing conversion at EXIT",
+    "changed owner frame",
+    "mismatched launch identity"
+  ],
+  "first_failure": "r1 terminal sampled in same delta as sm_done before continuous gu_join_terminal settled; only bench changed in r2; original FAIL retained",
+  "interface": {
+    "module": "ot_hbm_accel_simt_sm",
+    "parameter": "GU_JOIN=0",
+    "clock": "clk, rst_n",
+    "width_lanes": 128,
+    "descriptor": "one literal PC/source + expert/matrix/global contiguous row span per real launch",
+    "payload": "gu_join_bf16[NL*16-1:0], real alu_wy high16 per lane",
+    "valid_accept": "gu_join_v && gu_join_accept at rising edge; payload/identity held, issue blocked and pend retained until accepted",
+    "frame": "73 bits {position20,token17,generation4,job32}; full frame retained, low16 launch fields checked; existing owner_valid/frame lifetime reused",
+    "fence": "gu_join_terminal coincides with successful sm_done after export acceptance and original LSU/ALU/TC/bulk drain",
+    "example": {
+      "expert": 41,
+      "matrix": "w1/G",
+      "sm": 0,
+      "die": 0,
+      "row_base": 0,
+      "count": 12,
+      "conversion_pc": 3,
+      "source_register": 1,
+      "downstream_op": 0
+    },
+    "example2": {
+      "expert": 65,
+      "matrix": "w3/U",
+      "sm": 6,
+      "die": 0,
+      "row_base": 0,
+      "count": 12,
+      "conversion_pc": 3,
+      "source_register": 1,
+      "downstream_op": 1
+    }
+  },
+  "model": {
+    "metadata_register_bits": 184,
+    "added_payload_bits": 0,
+    "minimum_extra_blocking_cycles_per_span": 1,
+    "full_calendar_priced": false
+  },
+  "physical_admitted": false,
+  "adopted": false,
+  "SS60_FF25_closed": false,
+  "evidence_sha256": {
+    "run_1.log": "20fc473dc7ea9d96544c6f868d4d5bb0824bd86f5322c684d2766296c0635f40",
+    "run_0.log": "49f9c366cd70221b61db63fbe549c85d2cf635e8181edebdd19cec75db0c4534",
+    "build_1.log": "2d5eb77cfd01ce40679487fb3823d8da0284c7f68dc8e7d723ed3ef0a79bf2e5",
+    "build_0.log": "2d5eb77cfd01ce40679487fb3823d8da0284c7f68dc8e7d723ed3ef0a79bf2e5",
+    "source_pins.json": "bafcc44d7d229e57bb7059a3e8e13343a17ef7cd40dc42c4915a7c78d557f653",
+    "input_source.json": "5c3f3ca1d7ce04b13ff516824e5e60a8a22a0678fc07c9757eaa486bb85b002e",
+    "admission.json": "f8a5d9de56a537e9d7424c820fb74809b249ebb2dd72d50cfb21e27f3696091b",
+    "exit.json": "b9a9f2b527e57115b6394e4f7ca2815f12b8b015ef9d11a3cb26ab186741d5e4"
+  }
+}

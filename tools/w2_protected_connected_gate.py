@@ -26,6 +26,19 @@ def sha(p):
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
+def retain_identical_generated_timestamps(object_dir, generated_dir):
+    # Verilator can rewrite identical common headers. Their timestamp alone
+    # must not invalidate the already compiled numerical hierarchy. Changed
+    # headers retain their new timestamp and rebuild every dependent object.
+    retained = []
+    for target in generated_dir.iterdir():
+        original = object_dir / target.name
+        if target.suffix in ('.cpp', '.h') and original.is_file() and sha(target) == sha(original):
+            shutil.copystat(original, target)
+            retained.append(target.name)
+    return retained
+
+
 def run(donor, job, overlay, reuse_objects=None):
     object_dir = reuse_objects if reuse_objects is not None else donor / 'build/obj'
     pins = json.loads((donor / 'build/source_pin.json').read_text())
@@ -64,6 +77,11 @@ def run(donor, job, overlay, reuse_objects=None):
     command[command.index('--Mdir') + 1] = str(job / 'obj')
     command[1:1] = ['-GPROTECTED_TRANSACTION_PIPELINE=1', '-GLOCAL_CP_RESET_ENABLE=1']
     command.append(str(job / 'src' / replacements[2]))
+    # Generate first, retain identical dependencies, then let make compile
+    # only changed units. --binary would build before this reuse check.
+    command[command.index('--binary'):command.index('--binary') + 1] = ['--cc', '--main', '--exe']
+    build = ['make', '-C', str(job / 'obj'), '-f',
+             'Vtb_hbm_integrated_gu_w2_hubble.mk', '-j4']
     all_sources = list(dict.fromkeys(list(pins) + replacements))
     receipt = dict(source_commit=(overlay / 'source.commit').read_text().strip(),
                    donor=str(donor), reused_objects=str(object_dir), load=loads, available_kb=available_kb,
@@ -73,8 +91,14 @@ def run(donor, job, overlay, reuse_objects=None):
                    selected_run_mode=1, physical_admission=False)
     (job / 'source_pin.json').write_text(json.dumps(receipt, indent=2) + '\n')
     (job / 'command.json').write_text(json.dumps(command, indent=2) + '\n')
+    (job / 'build_command.json').write_text(json.dumps(build, indent=2) + '\n')
     with (job / 'compile.log').open('w') as log:
         rc = subprocess.run(command, cwd=job, stdout=log, stderr=subprocess.STDOUT).returncode
+        record_exit(job, 'frontend', rc)
+        if not rc:
+            retained = retain_identical_generated_timestamps(object_dir, job / 'obj')
+            (job / 'retained_generated.json').write_text(json.dumps(retained, indent=2) + '\n')
+            rc = subprocess.run(build, cwd=job, stdout=log, stderr=subprocess.STDOUT).returncode
     record_exit(job, 'compile', rc)
     if rc:
         raise SystemExit(1)

@@ -1,0 +1,96 @@
+{
+  "schema": "opentallas.w2.connected-warm-terminal.v1",
+  "verdict": "PASS",
+  "source_commit": "6bbbeb371660f82d394919ee66b8aa77d89398ab",
+  "source_pin": "source_pin.json",
+  "compile_returncode": 0,
+  "runtime_returncode": 0,
+  "runtime_signal": null,
+  "rows": [
+    {
+      "cycle": 11170,
+      "op": 0,
+      "row": 0,
+      "data": "000000000000000000000000000000000000000000000000000000003dd91184"
+    },
+    {
+      "cycle": 11556,
+      "op": 0,
+      "row": 1,
+      "data": "000000000000000000000000000000000000000000000000000000003caccd6c"
+    },
+    {
+      "cycle": 12366,
+      "op": 1,
+      "row": 0,
+      "data": "000000000000000000000000000000000000000000000000000000003d9c2d26"
+    },
+    {
+      "cycle": 12760,
+      "op": 1,
+      "row": 1,
+      "data": "00000000000000000000000000000000000000000000000000000000bbd91c50"
+    }
+  ],
+  "counts": {
+    "rows": 4,
+    "sectors": 212,
+    "native_requests": 64,
+    "native_returns": 64,
+    "writes": 4,
+    "readbacks": 4,
+    "releases": 1,
+    "finish_cycle": 12865
+  },
+  "readback_cycles": [
+    11465,
+    12196,
+    12665,
+    12840
+  ],
+  "release_cycle": 12845,
+  "original_release_cycle": 12828,
+  "added_observed_release_edges": 17,
+  "original_finish_cycle": 12845,
+  "added_fixture_finish_edges": 20,
+  "finish_delta_includes_warm_ack_and_reopen": true,
+  "warm_request": {
+    "cycle": 11398,
+    "accepted": 199,
+    "consumed": 198,
+    "retained": 1
+  },
+  "warm_ack": {
+    "cycle": 12864,
+    "accepted": 220,
+    "consumed": 220,
+    "releases": 1
+  },
+  "warm_checks": {
+    "root_POR_held": true,
+    "accepted_debt_preserved": true,
+    "held_CPL_preserved": true,
+    "held_CPL_samples": 12,
+    "matched_release": true
+  },
+  "gold_inputs_unchanged": true,
+  "donor_changed_sources": [
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv",
+    "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv"
+  ],
+  "scope": "Retained GU/SwiGLU inputs; live selected native W2/installed NS2/finite provider/shared owner/END-CPL/local CP reset. Excludes SU association, gather, formatter, full token and new extracted CDC/context top.",
+  "fixture_clock_ps": 1000,
+  "physical_admission": false,
+  "objects_preserved": "ot-epyc2:/srv/opentallas-scratch2/jobs/w2-protected-parent-warm-r2/obj",
+  "sha256": {
+    "command.json": "2c510b1ec7009b3385facbddce5c04f32c88b15546fad22e2b71861cf9e07726",
+    "compile.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "compile.log": "9dc982f89d4a39afdb6ee4861c358f62368067b5cf5403340e1eea1ca4b46c93",
+    "compile_terminal.json": "c37cb712bf33ba0b1a8761b5e8515864b19b55b7d77e082d61389cf8bc66ee7c",
+    "runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "runtime.log": "3360ef49ef2d3c6418b992c9f01d5d6a108d3760f63c6cfa9fcbbea7e78140a5",
+    "runtime_command.json": "9077f5d38b88a33ad05e99d6bb3ab84368a6e8cec8d1b220b45dfec65322d6fc",
+    "runtime_terminal.json": "c37cb712bf33ba0b1a8761b5e8515864b19b55b7d77e082d61389cf8bc66ee7c",
+    "source_pin.json": "617945713d7ab3b46b6c1076f453d8b636d22847c0a7e80b9c54135963cba7b2"
+  }
+}

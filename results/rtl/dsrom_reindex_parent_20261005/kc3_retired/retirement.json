@@ -1,0 +1,19 @@
+{
+  "status": "RETIRED_DEPENDENCIES_RELEASED",
+  "source": "c09f9e91b",
+  "preserve_ref": "refs/preserve/dsrom-reindex-kc3-source-20261005",
+  "purpose": "Legacy KC3 child physical cohort; original Oct4 driver terminal and no current source/record/recipe consumer found; new source-owned production parent supersedes that child purpose.",
+  "original_driver_failure_retained": true,
+  "stop": "TERM to exact Yosys via its original container after host TERM lacked permission",
+  "original_pids": [
+    3957831,
+    3957830,
+    3949639,
+    3949718
+  ],
+  "original_container": "8440cdd050361684a791070fcdcb2707a2fa442ed5da69c06033daa930158a7e",
+  "verified_at": "2026-10-05T22:45:58.139463+00:00",
+  "verification": "EPYC1 ps of all four original PIDs empty; docker ps original container filter empty",
+  "source_or_scratch_deleted": false,
+  "qualification_credit": false
+}

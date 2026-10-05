@@ -1,0 +1,18 @@
+{
+  "source_commit": "2a51dec7fb0694690d759bb995ff605193414384",
+  "measured_gather_cycles": 739,
+  "previous_KC8_cycles": 738,
+  "added_cycles": 1,
+  "reindex_layers_per_token": 4,
+  "streaming_clock_ps": 833.333,
+  "composed_fixed_delta_us": 0.003333332,
+  "per_token_delta_basis": "Measured worst real gather rank vs retained KC8 child, all other composed terms unchanged; this is component timing, not nativeS81 qualification",
+  "fullshape_exact": true,
+  "output_backpressure_exact": true,
+  "macro_binding": "16 aligned ot_sram_1r1w_512x128_m4_r2c2 perstack; all8list exact/SECDED component PASS",
+  "parent_SSFF": false,
+  "fixed_control_slot_fit": false,
+  "adopted": false,
+  "default_enabled": false,
+  "physical": "same fullshape source queued after real CPU headroom stopped postguard before any PNR; SS60/FF25 and833.333 unchanged"
+}

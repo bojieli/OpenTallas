@@ -1,0 +1,90 @@
+{
+  "status": "FULL_SHAPE_EXACT_PASS_PHYSICAL_PENDING",
+  "cases": 344,
+  "bad_cases": 0,
+  "dram_violations": 0,
+  "configurations": {
+    "lf": {
+      "cases": 128,
+      "load_mean_cycles": 185.703125,
+      "load_max_cycles": 396,
+      "load_mean_ns": 154.7125,
+      "sustained_median": 0.774,
+      "sustained_mean": 0.7371234375
+    },
+    "lf_bg": {
+      "cases": 64,
+      "load_mean_cycles": 311.640625,
+      "load_max_cycles": 648,
+      "load_mean_ns": 259.5921875,
+      "sustained_median": 0.5846,
+      "sustained_mean": 0.5030765625
+    },
+    "lf_cold": {
+      "cases": 64,
+      "load_mean_cycles": 182.328125,
+      "load_max_cycles": 377,
+      "load_mean_ns": 151.9,
+      "sustained_median": 0.9834,
+      "sustained_mean": 0.938865625
+    },
+    "lf_kg_p1": {
+      "cases": 8,
+      "load_mean_cycles": 213.375,
+      "load_max_cycles": 356,
+      "load_mean_ns": 177.725,
+      "sustained_median": 0.6582,
+      "sustained_mean": 0.6019125
+    },
+    "lf_kg_p2": {
+      "cases": 8,
+      "load_mean_cycles": 208.25,
+      "load_max_cycles": 297,
+      "load_mean_ns": 173.4625,
+      "sustained_median": 0.6381,
+      "sustained_mean": 0.596575
+    },
+    "lf_kgcon_p2": {
+      "cases": 8,
+      "load_mean_cycles": 172,
+      "load_max_cycles": 172,
+      "load_mean_ns": 143.3,
+      "sustained_median": 0.774,
+      "sustained_mean": 0.774
+    },
+    "lf_scan": {
+      "cases": 64,
+      "load_mean_cycles": 288.671875,
+      "load_max_cycles": 486,
+      "load_mean_ns": 240.453125,
+      "sustained_median": 0.48355,
+      "sustained_mean": 0.434040625
+    }
+  },
+  "mandatory_closure_latency_priced": true,
+  "adoption": false,
+  "parent_clock_load_slot_qualified": false,
+  "physical_job": {
+    "host": "ot-epyc2",
+    "root": "/srv/opentallas-scratch2/jobs/mencius-window-pnr-r1",
+    "source_pin": "81ce7328c",
+    "driver": 1009763,
+    "yosys": 1009986,
+    "state": "RUNNING_NO_TERMINAL",
+    "period_ps": 833.3333333333334,
+    "setup_ps": 60,
+    "hold_ps": 25,
+    "IO_waiver": false
+  },
+  "writer_debt": "writer_debt_r1/record.json: PASS 5 negative cases, 16 exact blocks/32 actual write acknowledgements",
+  "legacy_handoff_performance_gate": {
+    "max_load_mean_ns": 140,
+    "own_load_mean_ns": 154.7125,
+    "cold_load_mean_ns": 151.9,
+    "load_mean_pass": false,
+    "cold_sustained_median_min": 0.9,
+    "cold_sustained_median": 0.9834,
+    "cold_sustained_median_pass": true,
+    "disposition": "extra cycles priced for mandatory clock closure; no performance gate relaxation or adoption credit"
+  }
+}

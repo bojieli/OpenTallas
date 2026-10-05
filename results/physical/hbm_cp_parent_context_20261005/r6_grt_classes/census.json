@@ -1,0 +1,48 @@
+{
+  "scope": "Read-only retainedGRT all-endpoint census; actual route still active",
+  "worst_slack_ps": -336.86908,
+  "true_FF_negative_endpoints": 130,
+  "output_negative_bits": 12,
+  "true_FF_families": 9,
+  "output_families": 11,
+  "reset_negative_endpoints": 0,
+  "separate_input_data_failures": [
+    {
+      "launch": "cp_job[18]",
+      "endpoint": "frame_lo[71]/D",
+      "slack_ps": -1.29,
+      "mechanism": "SECDED overall parity encoder"
+    }
+  ],
+  "parasitics": "Retained5_1grtODB global-route segments; estimate_parasitics -global_routing. read_guides warning says guides cannot estimate parasitics; originalWNS/r2r/count reproduced exactly from retainedODB.",
+  "fresh_pre": {
+    "load": 98.12060546875,
+    "idle_cores": 75.89505106048703,
+    "required_cores": 1
+  },
+  "fresh_post": {
+    "load": 98.12060546875,
+    "idle_cores": 75.80113278791693,
+    "required_cores": 1
+  },
+  "admission": "unchanged admit.sh 8; read-only OpenROAD threads1",
+  "source_phase_ps": 0,
+  "setup_ps": 60,
+  "hold_ps": 25,
+  "all_true_FF_basis": "all_registers -data_pins; actual FFfamilies named in reports; comb literalD not inferred",
+  "source_RTL_edited": false,
+  "route_restarted": false,
+  "adopted": false,
+  "model_preparation": "onefour-cone draft; unifiedmodel registration required before successor RTL/build; model-alone not adoption",
+  "artifacts": {
+    "drc_iteration5_classes.json": "04130b0232362a6dc2ef5a17383a95d2101d37d901db8e7a373a89d560316765",
+    "grt_census.log": "55b4c955e73bcf47718c1741449dad894e6251b7d5bddcfb498893e9320b2a4b",
+    "grt_i2r.log": "ef552a1c3aac6548988aff1d1b02fa994fecfca801f6ef20194581d7c356c19e",
+    "grt_census.tcl": "3c4db9b54654f863d79efabbf9df5b87f26d3a884552f716a5d57e7fddf78c99",
+    "grt_i2r.tcl": "3e403bd2a06897f186d53d9729ffce7c60d6846f9ad67169f5921283e9936f3b",
+    "5_global_route.rpt": "2f6186717040ecb1d3a6c155e7e7ef1248839ec1a60e2937f1250f37a4e9bb6a",
+    "controlcut_model_draft.json": "b38951dccbeeb9e2ee757f64dc1af7ab87af67f8a0f0939f4198efe810425d0d",
+    "classes.json": "ff0e5a05901df1988e19abdc7dc50744064e0ad184c144f1ac3a0439fb67e447",
+    "route_drc_iteration5.rpt": "f104ae6405f987ab1a435a055fbb578bdd961fb028e13c2ae92af5ba231ef908"
+  }
+}

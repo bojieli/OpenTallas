@@ -2,18 +2,20 @@
 // ---------------------------------------------------------------------------
 // ot_dsrom_window_stage_pipeline: the packed WINDOW staging buffer of ot_dsrom_window_attn_source_la
 // (claude/dsrom-s81-window-bind-20261004).  Successor of ot_chip_v41x_window_stage4 for the wide load:
-// the same four-bank row organisation (absolute row 4q + b in bank b, slot q mod 32) and the same two-cycle,
-// one-four-row-request-a-cycle read path into the attention row merge; but filled by up to NPC sectors a cycle
+// the same four-bank row organisation (absolute row 4q + b in bank b, slot q mod 32) and a pipelined,
+// one-four-row-request-a-cycle read path into the attention row merge; filled by up to NPC sectors a cycle
 // (one response port per HBM pseudo-channel) instead of one.
 //
 // Landing.  Each bank is split into 17 sector columns (16 code sectors of 256 b, the scale sector's low
 // 128 b), every column a 32-entry single-write-port array: 68 columns, each written at most once a cycle.
 // A response beat (granule tag t, beat j -> window sector s = 4 t + j, slot = s / 17, column = s mod 17)
-// is first registered in a one-entry per-pseudo-channel buffer together with its decoded slot / column.
-// From the buffers, the lowest pseudo-channel targeting a column writes it; a beat that loses holds its
-// buffer and back-pressures its pseudo-channel (in_rdy = buffer free or draining).  The accepted beats are
+// passes through five elastic per-pseudo-channel decode registers. From the final registers, the lowest
+// pseudo-channel targeting a column wins; a losing beat holds and back-pressures its pipeline. Column
+// payload and row enables are registered before the actual FF write. The accepted beats are
 // also forwarded (acc_*) to ot_dsrom_window_stream_la, whose issue / completion accounting therefore sees
-// exactly the beats that landed.  Every decision reads registers (the buffers), not the HBM response wires.
+// exactly the beats that landed. Acceptance coincides with the actual payload write, preserving original
+// tags and beat numbers. Read capture uses four eight-entry groups and a final registered group mux,
+// adding one edge to the original two-edge four-row response protocol.
 // A sector landed twice in one job, or a beat outside the 2,176-sector window, is a fault.
 //
 // Job.  `job_v` (one cycle, while not busy) opens a job: rows [first, first + count) of user `user`,

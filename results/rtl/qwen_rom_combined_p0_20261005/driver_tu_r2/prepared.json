@@ -1,0 +1,60 @@
+{
+  "status": "PREPARED_ACTUAL_DRIVER_TU_ONLY",
+  "history": {
+    "path": "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1/history/L0_die0.bin",
+    "sha256": "190fcd6d3cd94bba849b4082990090cbedba5ddd9a756f82624d225f5c721876"
+  },
+  "token_fixture": {
+    "path": "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/run/L0_die0_kvP.hex",
+    "sha256": "e6751ad771fc6c10016ce1b8c53c1b904478e55182f84df84722d0c65fc45379",
+    "scope": "actual released-checkpoint token K/V, linked protocol operands only"
+  },
+  "original_runtime_command_sha256": "035d9861c11631917ef22f80b815bdf0e6f9ac3b8c6829fcc1db60137f3fd1f4",
+  "existing_model": {
+    "objects": "/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj",
+    "archive_sha256": "9613f1267160a768a02d3bd0e547f4af0c1fe522240e7d6f4b92c07f74aabb4c",
+    "header_sha256": "b4351bbcee0701dd48d079633ce9355e17e5d67bebfff72e987ac3a6328a4aec",
+    "seam_exports": {
+      "warm_rst_n": false,
+      "hold_rows": false,
+      "bad_ack_tag": false,
+      "join_debt": false
+    }
+  },
+  "actual_runtime_root": "/usr/share/verilator",
+  "actual_model_make_sha256": "d2c01ecb3f954d4870862ec69e5619fdca777b5c340d504d1485b78f972b7fc2",
+  "new_frontend_launched": false,
+  "force_internal_state": false,
+  "producer32case_replay": false,
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-O2",
+    "-pthread",
+    "-DP0_REUSE_HEADER=1",
+    "-I/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj",
+    "-I/usr/share/verilator/include",
+    "-I/usr/share/verilator/include/vltstd",
+    "-I/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-8be0610f5/src/tools/qwen_rom_combined_p0_20261005",
+    "-c",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-8be0610f5/src/tools/qwen_rom_combined_p0_20261005/linked_driver.cpp",
+    "-o",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-8be0610f5/driver-tu-r2/driver.o"
+  ],
+  "link": [
+    "g++",
+    "-pthread",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-8be0610f5/driver-tu-r2/driver.o",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/Vtb_qwen_rt_kv_stream4__ALL.a",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/verilated.o",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/verilated_threads.o",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-stream4-protected-bbcb3d019/build/obj/verilated_dpi.o",
+    "-o",
+    "/srv/opentallas-scratch2/jobs/codex-qwen-p0-linked-8be0610f5/driver-tu-r2/linked_driver_tu_probe"
+  ],
+  "source_sha256": "977acd8d5e1d55eeeafb887a36b80b6e0d585156678db25ed0ff8b53c6cc0c3c",
+  "required_runtime_ABI": "actual public warm admission + held row valid/pop + consumer ACK tag seam; old constant warm pin is not equivalent",
+  "runtime_ready": false,
+  "full_token": false,
+  "linked_case": "one released L0/rank0 P8191 actual consumer+protected simulation provider: real command/GO, held rows, 136 ACKs, warm admission, final actual debt0; negative tag preserves accepted debt"
+}

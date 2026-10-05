@@ -1,0 +1,10 @@
+KGHBM s=0 rd=2312 act=1826 hit=486 conf=987 ref=499 bp=317 lat_sum_ps=333339041 lat_max_ps=332424 pc_rd_min=54 pc_rd_max=106
+KGHBM s=1 rd=1870 act=1573 hit=297 conf=686 ref=489 bp=121 lat_sum_ps=259581379 lat_max_ps=334779 pc_rd_min=41 pc_rd_max=76
+KGHBM s=2 rd=2176 act=1678 hit=498 conf=758 ref=493 bp=108 lat_sum_ps=303421833 lat_max_ps=413138 pc_rd_min=41 pc_rd_max=86
+KGHBM s=3 rd=1887 act=1538 hit=349 conf=701 ref=482 bp=110 lat_sum_ps=247608038 lat_max_ps=366389 pc_rd_min=27 pc_rd_max=80
+KGSTACK s=0 blocks=136 sectors=2312 first=102 last=539
+KGSTACK s=1 blocks=110 sectors=1870 first=114 last=493
+KGSTACK s=2 blocks=128 sectors=2176 first=101 last=623
+KGSTACK s=3 blocks=111 sectors=1887 first=114 last=558
+KGATHER_PASS blocks=136,110,128,111 sectors=8245 last=623 clk_ps=833 wb=128
+- /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_gather_parent.sv:178: Verilog $finish
