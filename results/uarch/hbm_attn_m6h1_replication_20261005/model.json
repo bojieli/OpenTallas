@@ -38,8 +38,17 @@
     "leaf_core_area_um2": 84448.9,
     "leaf_cell_area_um2": 28000.2,
     "tile_core_area_lower_bound_mm2": 1.3511824,
+    "measured_macro_size_um": [
+      294.782,
+      294.782
+    ],
+    "halo_um": [
+      5,
+      5
+    ],
+    "tile_macro_halo_area_lower_bound_mm2": 1.4862730803839996,
     "tile_cell_area_mm2": 0.4480032,
-    "required_over_slot_lower_bound": 2.7023648,
+    "required_over_slot_lower_bound": 2.9725461607679993,
     "engine_core_area_lower_bound_mm2": 86.4756736,
     "existing_engine_slot_mm2": 32.0,
     "halo_and_wiring_area_mm2": null,
@@ -55,12 +64,13 @@
     "hold_uncertainty_ps": 25
   },
   "contextual_pnr_admitted": false,
-  "blocker": "Measured core-area lower bound exceeds existing composed tile slot",
+  "blocker": "Measured macro and existing halo exceed composed tile slot",
   "adopted": false,
   "gain_claim": null,
   "source_sha256": {
     "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/physical.json": "da88d59d668fb46a5c2475306d8576cc7e91fd522ec02c49f09d4d757c1fa4a9",
     "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/corner_sta.json": "159516ce38f6d402d87fd9ebbb9ba6e4fed89a375e1351affed550776924a896",
-    "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/die_inventory.py": "1ca96bbd8f9d26947ebcd650761a50c731b33ea31db849639078340735f6397f"
+    "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/die_inventory.py": "1ca96bbd8f9d26947ebcd650761a50c731b33ea31db849639078340735f6397f",
+    "physical/hbm_fmax_attn/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1.lef": "523f1f7474de4592374b730837aca26e61c4e6f67ddb43f0685ec5de218e3bfb"
   }
 }
