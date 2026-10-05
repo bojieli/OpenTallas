@@ -1,0 +1,89 @@
+{
+  "top": "ot_qwen_rom_rt_die_w12_stream4_tagged_ar",
+  "source_root": "/srv/opentallas/repos/laplace-qwen-plainar-stream4-1d44fd09d",
+  "measured": "/srv/opentallas-scratch/claude/fullbw-hbm/build_rt4",
+  "native": "/srv/opentallas/repos/laplace-qwen-tagged-accept1-a60af57e4",
+  "parameters": {
+    "die": [
+      "-GG=6144",
+      "-GNW=18",
+      "-GSNW=18",
+      "-GQWEN_FULLSHAPE=1",
+      "-GME_IDLE_GATE=1",
+      "-GD=4",
+      "-GSW=64",
+      "-GLV=7",
+      "-GSCALE_LOCAL=0",
+      "-GMEM_EXTRA=1",
+      "-GSMIN=7",
+      "-GSMAX=11",
+      "-GTCUT=7",
+      "-GBD=41",
+      "-GXVM=1",
+      "-GNWS=5",
+      "-GTWS=38",
+      "-GORD=7",
+      "-GREAL_MEM=1",
+      "-GENABLE_AR256=1",
+      "-GNSTK=4",
+      "-GSCALE_BANKS=13",
+      "-GCROM_WORDS=1048576",
+      "-GHBM_LAYERS=36",
+      "-GEMBED_ROM=1",
+      "-GFILL_LAT=8",
+      "-GNRD=256",
+      "-GLKA=512",
+      "-GWBW=4",
+      "-GHBM_PHASE=0",
+      "-GHBM_PULLIN=16",
+      "-GBASELINE_AR=1"
+    ],
+    "coll": [
+      "-GN=4",
+      "-GLANES=16",
+      "-GTAGW=32",
+      "-GDEPTH=256",
+      "-GLAT=339",
+      "-GBPC_NUM=3600"
+    ],
+    "tile": [
+      "-GGT=6144",
+      "-GNW=18",
+      "-GSMIN=7",
+      "-GCODE_BANKS=5",
+      "-GMEM_EXTRA=1",
+      "-GKV_VB=131072",
+      "-GKV_NH=2"
+    ]
+  },
+  "source_sha256": {
+    "/srv/opentallas/repos/laplace-qwen-plainar-stream4-1d44fd09d/rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+    "/srv/opentallas/repos/laplace-qwen-plainar-stream4-1d44fd09d/tools/runtime/qwen_baseline_ar_stream4/qwen_rom_rt_w12_stream4_fulltoken.cpp": "6aa610d098bbae2d122dc9a979f3f25c70c508976760a490535237804790f102",
+    "/srv/opentallas/repos/laplace-qwen-tagged-accept1-a60af57e4/rtl/hdc/kv/ot_qwen_hbm_stream4_tagged.sv": "f97ab5593d26b2861a5816774e50194b82ff7d4a4d1bdf528a187a9a321ad64e",
+    "/srv/opentallas/repos/laplace-qwen-tagged-accept1-a60af57e4/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "2dcbec64d86ae8a3288a1cf150080c31a70ca423b5f2f8f73138ca51663c0883",
+    "/srv/opentallas/repos/laplace-qwen-tagged-accept1-a60af57e4/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
+    "/srv/opentallas-scratch/claude/fullbw-hbm/build_rt4/die/Vdie__hierMkArgs.f": "7653bca416e405f4761fa556cc13bb27c4c933f772b28a51297c6a3b7b12b655",
+    "/srv/opentallas-scratch/claude/fullbw-hbm/build_rt4/build_params.json": "56fff7b146342c8e06924ad76f4944d7bb174c37c1fa344e6ea9ed591cc5a2c2",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_fmul/ot_hdc_fmul.sv": "645b54e5744cc14cd5fce70a19570ae8fe208f25d39ca770df446709766193df",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_fmul/libot_hdc_fmul.a": "9b38f4588b783b1e38d6cdb62d36f1e8718715f1402981aebb5b16e90ed4d9fa",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_qadd/ot_hdc_qadd.sv": "320fee9916fbffe14dd0115b8de7be96f620183efb9fda68bed73e1f1805c446",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_qadd/libot_hdc_qadd.a": "6c703354d9406f5a32a189c237e9a75fd8346f105ae80ad1e28be04627eb999e",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_vstream_lane_a/ot_hdc_vstream_lane_a.sv": "08476301b92fa7c3dd65ef57c6f9d75f74d451802b0747e6b11309cc1c257fa6",
+    "/srv/opentallas-scratch/jobs/laplace-qwen-plainar-stream4-P8191-r1/die/Vot_hdc_vstream_lane_a/libot_hdc_vstream_lane_a.a": "85455fa33f43a2569b9356edd2643d1c16d46554b2c435716f3857f1ebad8df5"
+  },
+  "workload": {
+    "position": 8191,
+    "token": 24,
+    "layers": 36,
+    "head": true,
+    "near_attention": false,
+    "dspark": false,
+    "accept": false
+  },
+  "reused_leaves": [
+    "Vot_hdc_fmul",
+    "Vot_hdc_qadd",
+    "Vot_hdc_vstream_lane_a"
+  ],
+  "scope": "Unmeasured full36 plain-AR native STREAM4 successor"
+}
