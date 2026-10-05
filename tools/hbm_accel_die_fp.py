@@ -1608,6 +1608,7 @@ def q_tile():
 def build_qwen(variant=None):
     variant = dict(variant or {}, die='qwen')
     T = q_tile()
+    T['tree_pin_pitch'] = int(variant.get('tree_pitch', 4))   # q2: 4 (q1 at 2: the M8 area-pin columns congested)
     th = T['h']
     spw = up(variant.get('spine_w', 2000.16), GX)
     spc = up(variant.get('spine_ch', 172.8), GX)
@@ -1727,25 +1728,60 @@ def build_qwen(variant=None):
         return it
     core_h = up(QBLOCKS['core'][0] * 1e6 / bw, GY)
     core = blk('sp_core', 'qhd_core', QBLOCKS['core'][0], dn(geo['mid'] - core_h / 2, GY))
-    lower = [('sp_scale0', 'scale', 0), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1), ('sp_scale1', 'scale', 1)]
-    upper = [('sp_scale2', 'scale', 2), ('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale3', 'scale', 3),
-             ('sp_loader', 'loader', None)]
+    # q2: the port slices pack against the core (q1 GRT: 65 % of the i5 overflow was the 6,144-bit port -> core words
+    #     climbing over the slabs between them); the scale slabs and the loader spread over the rest of the column
+    packed = variant.get('port_core', 1)
+    if packed:
+        lower = [('sp_scale0', 'scale', 0), ('sp_scale1', 'scale', 1), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1)]
+        upper = [('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale2', 'scale', 2), ('sp_scale3', 'scale', 3),
+                 ('sp_loader', 'loader', None)]
+    else:
+        lower = [('sp_scale0', 'scale', 0), ('sp_port0', 'port', 0), ('sp_port1', 'port', 1), ('sp_scale1', 'scale', 1)]
+        upper = [('sp_scale2', 'scale', 2), ('sp_port2', 'port', 2), ('sp_port3', 'port', 3), ('sp_scale3', 'scale', 3),
+                 ('sp_loader', 'loader', None)]
     if hb_mm2 > 0:
         upper.append(('sp_host_b', 'host_b', None))
 
     def mm(kind_):
         return dict(scale=QBLOCKS['scale'][0] / 4, port=QBLOCKS['port'][0] / 4, loader=QBLOCKS['loader'][0],
                     host_b=hb_mm2)[kind_]
-    for seq, a, b in ((lower, y_lo, core.y - Q_GAP), (upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
+    PG_ = 2 * Q_GAP                                   # port slice <-> core / port spacing when packed
+    for lo_side, seq, a, b in ((True, lower, y_lo, core.y - Q_GAP), (False, upper, core.y + core.h + SHAVE + Q_GAP, y_hi)):
         hs_ = [up(mm(k_) * 1e6 / bw, GY) for _, k_, _ in seq]
-        gap = (b - a - sum(hs_)) / (len(seq) + 1)
-        assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a, b, sum(hs_))
-        y = a + gap
-        for (name, k_, _), h_ in zip(seq, hs_):
+        ys_ = {}
+        if packed:
+            ports = [i for i, (_, k_, _) in enumerate(seq) if k_ == 'port']
+            rest = [i for i in range(len(seq)) if i not in ports]
+            if lo_side:          # ports top-down from the core, the rest spread below
+                y = core.y - PG_
+                for i in reversed(ports):
+                    y = dn(y - hs_[i], GY)
+                    ys_[i] = y
+                    y -= PG_
+                b2, a2 = y, a
+            else:
+                y = core.y + core.h + SHAVE + PG_
+                for i in ports:
+                    ys_[i] = up(y, GY)
+                    y = ys_[i] + hs_[i] + PG_
+                a2, b2 = y, b
+            gap = (b2 - a2 - sum(hs_[i] for i in rest)) / (len(rest) + 1)
+            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap)
+            y = a2 + gap
+            for i in rest:
+                ys_[i] = up(y, GY)
+                y += hs_[i] + gap
+        else:
+            gap = (b - a - sum(hs_)) / (len(seq) + 1)
+            assert gap >= Q_GAP - 1e-6, ('spine does not pack', gap, a, b, sum(hs_))
+            y = a + gap
+            for i in range(len(seq)):
+                ys_[i] = up(y, GY)
+                y += hs_[i] + gap
+        for i, (name, k_, _) in enumerate(seq):
             master = f'qhd_{name[3:]}'
-            blk(name, master, mm(k_), up(y, GY), kind='host_slab' if k_ == 'host_b' else 'spine',
+            blk(name, master, mm(k_), ys_[i], kind='host_slab' if k_ == 'host_b' else 'spine',
                 dom='link' if k_ == 'host_b' else 'stream_1p2')
-            y += h_ + gap
     notes.append(f'spine blocks {bw:.1f} um wide in a {spw:.1f} um column ({spc:.1f} um channels); host slab '
                  f'{ha_mm2:.3f} mm2 in the N band + {hb_mm2:.3f} mm2 at the spine N end')
     m = dict(die='qwen', geo=geo, insts=insts, regions=regions, groups=groups, hub=hub, tiles=tiles, heads=heads,
@@ -1779,7 +1815,7 @@ def _q_tile_pins(mst, T):
     for p_, f_ in (('fs', 'S'), ('fn', 'N')):
         mst.face(p_, Q_FILL_BITS, f_, 'M5', T['body_w'] / 2, 2)
     for i, p_ in enumerate(('t_out', 'n_a', 'n_b', 'n_y')):
-        mst.area(p_, Q_TREE_BITS, 40.0 + 60.0 * i, T['macro_band_h'] + T['logic_h'] / 2, 2)
+        mst.area(p_, Q_TREE_BITS, 40.0 + 60.0 * i, T['macro_band_h'] + T['logic_h'] / 2, T['tree_pin_pitch'])
 
 
 def _q_head_pins(mst):
