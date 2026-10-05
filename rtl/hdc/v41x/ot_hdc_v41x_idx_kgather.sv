@@ -45,8 +45,11 @@
 //   89 ps on broadcast fan-out across its ~40k flops; the control now (a) loads the dispatch write stage
 //   into 8 kept copies (each feeding 16 slots or 4 channels' request FIFOs), (b) writes slots through a
 //   one-hot slot register, (c) registers each response's slot one-hot, (d) reads the drain's metadata
-//   AND-OR through a one-hot head, and (e) forms completion in two registered levels (8-channel partials,
-//   then their AND with adm delayed alongside: one more cycle from last beat to completion, never early).
+//   AND-OR through a one-hot head (16-slot partials registered with the drain decision, OR'd in the
+//   second stage), (e) forms completion in two registered levels (8-channel partials, then their AND
+//   with adm delayed alongside: one more cycle from last beat to completion, never early), (f) adds the
+//   ring head to the list word in the stage after the SRAM register, and (g) counts request-FIFO room
+//   without the cycle's pop (conservative; keeps req_rdy out of the 64-FIFO room AND).
 // DATA (ot_hdc_v41x_idx_kgdata): per pseudo-channel bank WB x 4 code beats + WB scale
 // sectors (behavioural here; one 1W1R SRAM bank per channel on silicon, the
 // kstream_range ROB plus a WB x 256 b scale bank); the drain gathers each key's
@@ -136,7 +139,7 @@ module ot_hdc_v41x_idx_kgctl #(
     reg            e3_v;   reg [QW-1:0] e3_seq; reg [1:0] e3_m;
     reg            e4_v;   reg [QW-1:0] e4_seq; reg [1:0] e4_m;
     reg            e5_v;   reg [QW-1:0] e5_seq; reg [1:0] e5_m;
-    reg [LBW+6:0]  e1_lk [0:1];             // local key / 8
+    reg [LBW+6:0]  lk    [0:1];             // local key / 8 (e2 stage, combinational)
     reg [LBW-1:0]  e1_blk[0:1], e2_blk[0:1], e3_blk[0:1], e4_blk[0:1], e5_blk[0:1];
     reg [LBW+4:0]  e2_m17[0:1];             // 17 x super-block
     reg [6:0]      e2_j [0:1], e3_j [0:1], e4_j [0:1], e5_j [0:1];
@@ -335,12 +338,14 @@ module ot_hdc_v41x_idx_kgctl #(
                             cnt = cnt + 1'b1;
                         end
                     fq_wp[p] <= wp;
+                    // room counts the pushes but not this cycle's pop (conservative: keeps the request
+                    // port's req_rdy out of the 64-FIFO room AND)
+                    rm[p] = (cnt + 4 <= DF);
                     if (p < NPC ? (iss[p % NPC] && !use_s[p % NPC]) : (iss[p % NPC] && use_s[p % NPC])) begin
                         fq_rp[p] <= fq_rp[p] + 1'b1;
                         cnt = cnt - 1'b1;
                     end
                     fq_n[p] <= cnt;
-                    rm[p] = (cnt + 4 <= DF);
                 end
                 room_all <= &rm;
                 // drain stage 1: head and next, in order
@@ -368,6 +373,9 @@ module ot_hdc_v41x_idx_kgctl #(
     reg [6:0]      aj [0:1];
     reg [4:0]      afc [0:1], af0 [0:1];
     reg [LBW-1:0]  ablk [0:1];
+    localparam integer MDW = 7 + 5 + 5 + LBW;
+    reg [MDW-1:0]  mp;
+    reg [MDW-1:0]  dpart [0:2*GS-1];
     always @(posedge clk) begin
         // decode pipe
         c0_seq <= rd_seq;
@@ -375,9 +383,9 @@ module ot_hdc_v41x_idx_kgctl #(
         e1_m <= c0_m; e2_m <= e1_m; e3_m <= e2_m; e4_m <= e3_m; e5_m <= e4_m;
         for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
             e1_blk[l2] <= l2 ? lr_o : lr_e;
-            e1_lk[l2] <= {{LBW{1'b0}}, skip8} + {7'd0, l2 ? lr_o : lr_e};
-            e2_blk[l2] <= e1_blk[l2]; e2_j[l2] <= e1_lk[l2][6:0];
-            e2_m17[l2] <= {e1_lk[l2][LBW+6:7], 4'd0} + {4'd0, e1_lk[l2][LBW+6:7]};
+            lk[l2] = {{LBW{1'b0}}, skip8} + {7'd0, e1_blk[l2]};
+            e2_blk[l2] <= e1_blk[l2]; e2_j[l2] <= lk[l2][6:0];
+            e2_m17[l2] <= {lk[l2][LBW+6:7], 4'd0} + {4'd0, lk[l2][LBW+6:7]};
             e3_blk[l2] <= e2_blk[l2]; e3_j[l2] <= e2_j[l2];
             e3_o0[l2] <= HW'(e2_m17[l2]);
             e3_oc[l2] <= HW'(e2_m17[l2]) + HW'(1) + HW'(e2_j[l2][6:3]);
@@ -455,19 +463,20 @@ module ot_hdc_v41x_idx_kgctl #(
                     req_tag[p2*TAGW +: TAGW] <= TAGW'({1'b0, fq_slot[p2 * DF + fq_rp[p2]]});
                 end
             end
-        // drain stage 2 data: the retired slots' metadata, AND-OR read through the one-hot slot
+        // drain metadata: stage 1 registers per-16-slot partial AND-OR reads of the head and next slot
+        // (both admitted and complete when taken, so their metadata cannot change before stage 2);
+        // stage 2 ORs the GS partials
+        for (g2 = 0; g2 < GS; g2 = g2 + 1)
+            for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
+                mp = 0;
+                for (e2 = g2 * SG; e2 < (g2 + 1) * SG; e2 = e2 + 1)
+                    mp = mp | ({m_j[e2], m_fc[e2], m_f0[e2], m_blk[e2]} & {MDW{hoh[(e2 + WB - l2) % WB]}});
+                dpart[2*g2+l2] <= mp;
+            end
         for (l2 = 0; l2 < 2; l2 = l2 + 1) begin
-            aj[l2] = 0; afc[l2] = 0; af0[l2] = 0; ablk[l2] = 0;
-        end
-        for (e2 = 0; e2 < WB; e2 = e2 + 1) begin
-            aj[0] = aj[0] | (m_j[e2] & {7{dq_oh[e2]}});
-            afc[0] = afc[0] | (m_fc[e2] & {5{dq_oh[e2]}});
-            af0[0] = af0[0] | (m_f0[e2] & {5{dq_oh[e2]}});
-            ablk[0] = ablk[0] | (m_blk[e2] & {LBW{dq_oh[e2]}});
-            aj[1] = aj[1] | (m_j[e2] & {7{dq_oh[(e2 + WB - 1) % WB]}});
-            afc[1] = afc[1] | (m_fc[e2] & {5{dq_oh[(e2 + WB - 1) % WB]}});
-            af0[1] = af0[1] | (m_f0[e2] & {5{dq_oh[(e2 + WB - 1) % WB]}});
-            ablk[1] = ablk[1] | (m_blk[e2] & {LBW{dq_oh[(e2 + WB - 1) % WB]}});
+            mp = 0;
+            for (g2 = 0; g2 < GS; g2 = g2 + 1) mp = mp | dpart[2*g2+l2];
+            {aj[l2], afc[l2], af0[l2], ablk[l2]} = mp;
         end
         if (dq_v) begin
             dr_j <= {aj[1], aj[0]}; dr_fc <= {afc[1], afc[0]}; dr_f0 <= {af0[1], af0[0]};
