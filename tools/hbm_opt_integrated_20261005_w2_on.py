@@ -24,9 +24,10 @@ OWN_FILES = [OWN + n + '.sv' for n in (
 PEER_FILES = ['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv',
               OWN + 'ot_hbm_integrated_w2_sector_adapter.sv',
               'rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv']
-# Exact installed dimensions, one selected die, both real native SM producers.
+# Exact installed dimensions: original two-die/four-SM parent.
+# The collective tag pipeline does not support a one-rank reduction fabric.
 PARAMS = dict(ENABLE=1, COMBINED_ENABLE=1, W2_RESULT_ENABLE=1,
-              W2_SECTOR_ENABLE=1, ND=1, NSM=2, NS=2, NPC=2,
+              W2_SECTOR_ENABLE=1, ND=2, NSM=2, NS=2, NPC=2,
               MEM_WORDS=2097152, VM_AW=21)
 
 def prepare(own, peer, work):
@@ -62,7 +63,7 @@ def prepare(own, peer, work):
         shutil.copyfile(peer / rel, dst)
     (work / 'sources.json').write_text(json.dumps(ordered, indent=2) + '\n')
     shutil.copyfile(Path(__file__), work / 'run.py')
-    print(f'PREPARED enabled parent ND1/NSM2/NS2, {len(ordered)} actual sources; no execution')
+    print(f'PREPARED enabled parent ND2/NSM2/NS2, {len(ordered)} actual sources; no execution')
 
 def run(work, tool):
     sources = json.loads((work / 'sources.json').read_text())
@@ -76,6 +77,11 @@ def run(work, tool):
     (work / 'command.json').write_text(json.dumps(command, indent=2) + '\n')
     with (work / 'elaboration.log').open('w') as log:
         rc = subprocess.run(command, cwd=work, stdout=log, stderr=subprocess.STDOUT).returncode
+    (work / 'frontend.exit').write_text(str(rc) + '\n')
+    # A permissive frontend exit must not qualify an out-of-range hierarchy.
+    if not rc and '%Warning-SELRANGE:' in (work / 'elaboration.log').read_text():
+        print('REJECT_ENABLED_PARENT_OUT_OF_RANGE_SELECTION')
+        rc = 1
     (work / 'elaboration.exit').write_text(str(rc) + '\n')
     if not rc:
         print('PASS_ENABLED_W2_PARENT_ELABORATION_ONLY')
