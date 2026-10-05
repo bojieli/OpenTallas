@@ -1,0 +1,233 @@
+{
+  "scope": "One prepared source cut for actual R6 GRT phase validation -> qualified owned -> accepted association paths; no RTL written/no new route",
+  "status": "PREPARED_PENDING_ROUTED_TERMINAL_AND_PARENT_SOURCE_ASSIGNMENT",
+  "default_off": true,
+  "current_sources": {
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3"
+  },
+  "raw_grt_report_sha256": "2f6186717040ecb1d3a6c155e7e7ef1248839ec1a60e2937f1250f37a4e9bb6a",
+  "evidence": {
+    "output": {
+      "launch": "phase_q[1]",
+      "endpoint": "exec_owned",
+      "slack_ps": -336.87
+    },
+    "true_FF": {
+      "launch": "phase_q[1]",
+      "endpoint": "associated_q",
+      "slack_ps": -103.66
+    },
+    "setup_violations_reported": 142,
+    "all_violator_classes_available": true,
+    "GRT_true_FF_violations": 130,
+    "GRT_output_bits_violations": 12,
+    "GRT_classes": [
+      {
+        "family": "FF:u_su_association.on.associated_n$_DFFE_PN1P_/D",
+        "slack_ps": -71.225418,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_association.on.associated_n$_DFFE_PN1P_",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "FF:u_su_association.on.associated_q$_DFFE_PN0P_/D",
+        "slack_ps": -103.658417,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_association.on.associated_q$_DFFE_PN0P_",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "FF:u_su_cp.on.frame_hi[*]$_DFFE_PN0P_/D",
+        "slack_ps": -39.686478,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.frame_hi[0]$_DFFE_PN0P_",
+        "violating_endpoints": 14
+      },
+      {
+        "family": "FF:u_su_cp.on.frame_lo[*]$_DFFE_PN0P_/D",
+        "slack_ps": -47.354565,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.frame_lo[31]$_DFFE_PN0P_",
+        "violating_endpoints": 72
+      },
+      {
+        "family": "FF:u_su_cp.on.pc_code[*]$_DFFE_PN0P_/D",
+        "slack_ps": -46.00481,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.pc_code[23]$_DFFE_PN0P_",
+        "violating_endpoints": 35
+      },
+      {
+        "family": "FF:u_su_cp.on.phase_n[*]$_DFF_PN1_/D",
+        "slack_ps": -92.991501,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.phase_n[4]$_DFF_PN1_",
+        "violating_endpoints": 2
+      },
+      {
+        "family": "FF:u_su_cp.on.phase_q[*]$_DFF_PN0_/D",
+        "slack_ps": -79.107056,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.phase_q[4]$_DFF_PN0_",
+        "violating_endpoints": 3
+      },
+      {
+        "family": "FF:u_su_cp.on.registered_status.status_n[*]$_DFF_PN1_/D",
+        "slack_ps": -1.925016,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.registered_status.status_n[4]$_DFF_PN1_",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "FF:u_su_cp.on.registered_status.status_q[*]$_DFF_PN0_/D",
+        "slack_ps": -36.40377,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "u_su_cp.on.registered_status.status_q[4]$_DFF_PN0_",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:done",
+        "slack_ps": -267.216705,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "done (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:exec_owned",
+        "slack_ps": -336.86908,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "exec_owned (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:fault",
+        "slack_ps": -218.847168,
+        "launch": "u_su_cp.on.phase_n[4]$_DFF_PN1_",
+        "endpoint": "fault (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:lease_v",
+        "slack_ps": -262.090454,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "lease_v (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:native_launch[*]",
+        "slack_ps": -59.824478,
+        "launch": "launch_pc[1] (input port clocked by core_clk)",
+        "endpoint": "native_launch[1] (output port clocked by core_clk)",
+        "violating_endpoints": 2
+      },
+      {
+        "family": "OUTPUT:new_request_permit",
+        "slack_ps": -331.883759,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "new_request_permit (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:owned",
+        "slack_ps": -325.957581,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "owned (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:pending",
+        "slack_ps": -272.936951,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "pending (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:quiet",
+        "slack_ps": -255.671875,
+        "launch": "u_su_cp.on.registered_header.decoder.data_q[7]$_DFFE_PN0P_",
+        "endpoint": "quiet (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:release_v",
+        "slack_ps": -261.55545,
+        "launch": "u_su_cp.on.phase_q[1]$_DFF_PN0_",
+        "endpoint": "release_v (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      },
+      {
+        "family": "OUTPUT:selected",
+        "slack_ps": -67.094162,
+        "launch": "launch_pc[1] (input port clocked by core_clk)",
+        "endpoint": "selected (output port clocked by core_clk)",
+        "violating_endpoints": 1
+      }
+    ],
+    "I2R": {
+      "launch": "cp_job[18]",
+      "endpoint": "frame_lo[71]/D",
+      "slack_ps": -1.29,
+      "mechanism": "SECDED overall parity encoder XOR/XNOR chain"
+    }
+  },
+  "candidate": "Exact full18-rail legal-nine-word positive control validation plus parallel final owner/error/status-veto reductions; no delayed live-owner or mutable-control authority",
+  "semantics": "Valid iff phase_n is bitwise complement of phase_q and phase_q is exactly one-hot. Nine18-bit legal words cover precisely existing valid control states. Every other word suppresses positive permits on current edge. W6 ECC, status/qualification fault rails, full192 liveowner/padding checks and independent actualrelease acceptance retained.",
+  "MACs_per_cycle": 0,
+  "extra_memory_ports": 0,
+  "extra_memory_bytes_per_cycle": 0,
+  "extra_boundary_bits_per_cycle": 0,
+  "extra_external_tracks": 0,
+  "replica_count": 1,
+  "extra_FF_bits": 0,
+  "extra_cycles": 0,
+  "extra_component_latency_ns": 0,
+  "system_token_count": null,
+  "actual_caller": "One selected Bacon CP launch; Hubble W2 launch separate clocks/calendar, not a token image",
+  "gate_inventory": {
+    "legal_word_AND4_nodes": 63,
+    "OR9_reduction_nodes": 4,
+    "parallel_final_reduction_AND4_allowance": 24,
+    "shared_rail_inversion_allowance": 18,
+    "rail_fanout_buffer_allowance": 18
+  },
+  "fanout": {
+    "raw_phase_rail_per_code_decode_max": 9,
+    "price_no_synthesis_alias_credit": true,
+    "final_owner_compare_branch_fanout_unchanged": 8
+  },
+  "pricing_basis": "Existing unified CP model NAND2 area .08748um2; 6NAND2 per AND4/reduction gate, oneNAND2 per inversion, buffer allowance .2um2 each; conservative proxy, not mapped area or delay",
+  "added_logic_allowance_um2": 52.93872,
+  "removal_credit_um2": 0,
+  "actual_CTS_body_area_um2": 588.53628,
+  "actual_CTS_association_area_um2": 0.71442,
+  "existing_body_fence_um2": 1679.616,
+  "existing_body_planning_utilization": 0.5,
+  "CTS_dummy_buffer_area_already_in_actual_body_um2": 13.88016,
+  "physical_qualification": false,
+  "timing_prediction": null,
+  "contract_change": false,
+  "associated_debt_policy": "Retain already accepted response/drain despite transient live-veto; do not replace current new-admission veto by associated/held identity; exec_owned qualified bypass remains until an independently priced/verified calendar change",
+  "blocked_on": "Current terminal extractedSSFF/DRC/loadedIR; allrawGRTclasses nowrecovered underfresh1thread fit. Source remains untouched/no build. Register bounded unifiedmodel entry before any implementation; Turing actual DRC pin-access geometry needed if terminal retains west M6/V6/M7 failures.",
+  "body_ceiling_with_allowance_um2": 641.475,
+  "body_half_utilization_fit": true,
+  "additional_preparation": {
+    "quiet": "Distribute owner bypass to three exactequal64 roots before parallel final local control/status/error reduction; retain is_idle/!checked_valid bypass semantics. No registered-owner substitution.",
+    "entry": "Balanced match of31 constrained PC bits for exactly {80000004,c0000004}; only bit30 differs in already-authorized entry set. Full live-owner PC still all32bits.",
+    "ECC_capture": "Overall SECDED parity is exact XOR of35 data bits whose non-power-of-two codeword index has even popcount. Balanced reduction for three original capture words (PC18 active terms/frame_lo35/frame_hi6). All72bit encoded words unchanged; correction/UE retained."
+  },
+  "additional_inventory": {
+    "quiet_OR2": 3,
+    "quiet_final_AND4_allowance": 4,
+    "entry_tree_gate_allowance": 11,
+    "entry_inverter_allowance": 2,
+    "overall_parity_XOR2_full64_allowance": 102,
+    "overall_parity_XOR2_actual_variable_inputs": 56,
+    "added_FF": 0,
+    "added_cycles": 0
+  },
+  "additional_logic_allowance_um2": 44.52732,
+  "total_logic_allowance_um2": 97.46604,
+  "total_body_ceiling_um2": 686.00232,
+  "internal_fanout_and_route": "18raw phase rails each <=9 codeword decode loads + existingtransition loads (must measure mapping); phase code9 reductions;31 entry bits one leaf each + original ECC/comparison consumers;3owner equal64 roots finalquiet loads remain1perroot; overallparity data fanout one additionalbalancednetwork, 3captureinstances, maxone parityconsumerperselectedbit. No additional externalchannel bits. Internaltrack fit unqualified until actual modeled local allocation/GRT, no measured claim."
+}

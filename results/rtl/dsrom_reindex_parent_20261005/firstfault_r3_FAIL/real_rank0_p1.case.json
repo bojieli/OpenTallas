@@ -1,0 +1,4 @@
+{
+  "pass_": false,
+  "log": "PARENT_FAULT stack=1 core=1 list=0 command=0 bad_command=0 req=00000000 drain=0 rd_seq=110 list_v=00000 count=110 reserved=0\n[21000] %Fatal: tb_dsrom_reindex_gather_parent.sv:90: Assertion failed in TOP.tb_hdc_v41x_idx_kgather.g_stack[1]: production parent fault\n%Error: /srv/opentallas-scratch2/codex/dsrom-reindex-parent-20261005/debug_src/rtl/dsrom_sys/reindex_parent/tb_dsrom_reindex_gather_parent.sv:90: Verilog $stop\nAborting...\n"
+}

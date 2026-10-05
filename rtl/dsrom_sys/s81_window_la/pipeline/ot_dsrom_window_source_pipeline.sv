@@ -3,21 +3,16 @@
 // ot_dsrom_window_source_pipeline: default-off successor of ot_chip_v41x_window_attn_source_owner_safe
 // (rtl/chip/window_owner_safe/, unchanged) for the S81 layer die (claude/dsrom-s81-window-bind-20261004).
 //
-// STREAM_LA = 0 (default): the original module, instantiated with the same parameters and ports; the wide
-//   port (wl_*) is tied off.  The die is then the as-built die (the wide port's ot_dsrom_hbm_wmux is wires).
-// STREAM_LA = 1: the WINDOW refill no longer fetches one 544-B row per prefetch command through the stack's
-//   single K channel (REFILL_CREDITS sectors in flight, scales after codes: 149,502 / 24,157 cycles for the
-//   128 rows at credits 1 / 8, results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json).  The
-//   job's whole 128-slot ring (user region base + 2,176 u, 17 sectors a slot) is read by the audited
-//   ot_dsrom_window_stream_la (its issue engine, ot_dsrom_window_stream_la_s81) (128-B granules on all 32 pseudo-channels, IW a cycle, the whole window in
-//   flight) through the wide port, landed by ot_dsrom_window_la_stage, and served to the unchanged attention
-//   row merge (ot_chip_v41x_attn_row_merge, or ot_chip_v41x_window_stream with STREAM_II1) through the
-//   stage4 four-row protocol.
-//   Kept from the as-built source, unchanged: the packed-row writer (ot_chip_v41x_window_kv_prefetch_owner_safe
-//   on the K port: block writes and priming; its refill path is idle), the start / staged / stream_go / done
-//   handshake of ot_chip_v41x_window_refill_schedule, the row-tag and user checks (a 128-slot tag mirror of
-//   the writer's prime / block traffic, checked for every job row before the job's rows are published, 4 slots
-//   a cycle), the region bound check, and the fault semantics (sticky, fail-closed).
+// This module is selected only by STREAM_LA && WINDOW_PIPELINE in the default-off
+// source wrapper. The fallback branch below retains the original source interface.
+// The full 128-slot ring is read through the unchanged 32-pseudo-channel stream
+// engine and staged in the actual FF-backed pipeline. Golden packed bytes and the
+// existing attention row merge are unchanged. Job admission is registered before
+// issuing a load. Four row identities are checked per cycle using arithmetic,
+// mirror-read and comparison registers. Publication waits for the stream engine's
+// identity and poison validation tail to drain, including a zero-row job.
+// The K-port writer pipelines prime/block validation and address decode while
+// retaining accepted write debt and checking the live region before each issue.
 //   Not supported with STREAM_LA = 1: RETAIN_L0 (elaboration error).
 //   Contract: the user's ring region must be 32-sector aligned (stream_la faults otherwise), and slots outside
 //   a job (count < 128, only positions < 127) must not hold poison bytes (FP8 code 0x7f/0xff, E8M0 0xff): the
@@ -129,7 +124,7 @@ module ot_dsrom_window_source_pipeline #(
         reg [31:0] load_cyc, load_cyc_q;
         reg staged_sent, done_r, ctl_fault;
         reg [2:0] ctl_code;                       // {region/geometry, tag mirror, merge}
-        // ---- the as-built packed-row writer (K port): block writes and priming only ----
+        // ---- pipelined packed-row writer (K port): block writes and priming only ----
         wire wr_prime_ready, wr_blk_ready, wr_pf_ready, wr_fault;
         wire [4:0] wr_code;
         ot_dsrom_window_writer_pipeline #(.REFILL_OWNER_SAFE(REFILL_OWNER_SAFE), .POS_W(POS_W),

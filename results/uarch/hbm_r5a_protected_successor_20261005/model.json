@@ -39,7 +39,7 @@
     "ingress": "SECDED64 id word plus complemented occupancy/valid",
     "landing": "4 SECDED64 payload words + SECDED64 PC/sector sequence identity, depth32 unchanged",
     "SRAM": "64 raw128 macros +32 parity/tag128 macros; correct single bit, poison double bit before delivery",
-    "mutable": "complement mirrors on FIFO local pointers, dispatch, location, masks and PC refresh state; mismatched synchronised Gray rails conservatively refuse",
+    "mutable": "complement mirrors on FIFO pointers/faults, dispatch, location, masks, PC refresh, macro address/valid/index and syndrome; captured coded packet parity prevents post-syndrome corruption resealing; synchronised Gray rail mismatch conservatively refuses",
     "config": "duplicated local LUT/base with bounds/validity; never waive HBM/link/SRAM protection"
   },
   "cuts": {
@@ -47,9 +47,11 @@
     "descriptor_prefetch": 2,
     "bank_local_decode": 1,
     "bank_reduction": 2,
-    "SRAM_read_then_correct_capture": 2,
+    "SRAM_read_then_correct_capture": 3,
     "per_pc_broadcast_local": true,
     "read_capture": "real corner macro clkQ -> correction registers -> finite skid/consumer",
+    "macro_address_capture": "falling-edge address/data/enable staging; real half-cycle relation to rising macro capture",
+    "output_credit_depth": 8,
     "min_paths": "real capture clocks and loads; repair hold on SRAM address/data/enable and local control, no false IO"
   },
   "replicas_mux_demux_fanout": {
@@ -71,12 +73,12 @@
       "local_lut_and_bases": 66560,
       "mask_mirrors": 16384,
       "bank_selection_cuts": 46080,
-      "read_correction_and_skid": 30720,
+      "read_correction_and_skid": 81920,
       "core_control_mirrors": 32768,
       "ingress_and_outputs": 25856
     },
-    "added_FF_ceiling_bits": 384256,
-    "standard_cell_upper_um2": 477463.0496,
+    "added_FF_ceiling_bits": 435456,
+    "standard_cell_upper_um2": 492392.9696,
     "macro_area_um2": 497052.0,
     "util_ceiling": 0.35,
     "CTS_route_headroom_fraction": 0.15,
@@ -86,32 +88,742 @@
       2000.16
     ],
     "existing_service_estimate_mm2": 1.4,
-    "parent_slot_fit": false,
+    "parent_slot_fit": true,
+    "finite_parent_allocation": "results/uarch/hbm_r5a_finite_parent_20261005/model.json",
     "allocation_owner": "Turing"
   },
   "routing": {
-    "demand_tracks": 21088,
-    "requested_channel_width_um": 600,
+    "demand_tracks": 27488,
+    "requested_channel_width_um": 617.76,
     "layers": 4,
-    "pitch_um": 0.08,
-    "PG_via_reserved_fraction": 0.2256,
-    "clock_tracks": 64,
-    "capacity_tracks": 23168,
+    "native_channel_layers": [
+      {
+        "layer": "M6",
+        "pitch_um": 0.064,
+        "raw_tracks": 9652,
+        "retained_PG_tracks": 0,
+        "via_tracks": 483,
+        "clock_other_tracks": 64,
+        "available_tracks": 9105
+      },
+      {
+        "layer": "M7",
+        "pitch_um": 0.064,
+        "raw_tracks": 9652,
+        "retained_PG_tracks": 0,
+        "via_tracks": 483,
+        "clock_other_tracks": 64,
+        "available_tracks": 9105
+      },
+      {
+        "layer": "M8",
+        "pitch_um": 0.08,
+        "raw_tracks": 7722,
+        "retained_PG_tracks": 2532,
+        "via_tracks": 387,
+        "clock_other_tracks": 64,
+        "available_tracks": 4739
+      },
+      {
+        "layer": "M9",
+        "pitch_um": 0.08,
+        "raw_tracks": 7722,
+        "retained_PG_tracks": 2532,
+        "via_tracks": 387,
+        "clock_other_tracks": 64,
+        "available_tracks": 4739
+      }
+    ],
+    "allocation_tracks_from_committed_parent": true,
+    "capacity_tracks": 27688,
     "local_reservation_fits": true,
-    "actual_parent_residual_tracks": null,
-    "parent_channel_fit": false
+    "actual_parent_residual_tracks": 200,
+    "parent_channel_fit": true,
+    "finite_parent_die_mm2": 737.2803062592001,
+    "parent_clock_load_qualification": false
   },
   "latency": {
-    "added_clk_edges_upper": 6,
+    "added_clk_edges_upper": 7,
     "added_hclk_edges_upper": 2,
-    "first_access_added_ns_upper": 7.048,
+    "first_access_added_ns_upper": 7.881333333333334,
     "DS_routed_fetches": 40,
-    "DS_token_added_us_upper": 0.28192,
+    "DS_token_added_us_upper": 0.31525333333333333,
     "old_measured_gain_us": 13.343,
-    "remaining_gain_us_lower": 13.06108,
+    "remaining_gain_us_lower": 13.027746666666667,
     "golden_sector_sequence_unchanged": true,
     "steady_PC_sectors_per_hclk": 1,
-    "bounds_analytical_until_changed_source_bench": true
+    "bounds_analytical_until_changed_source_bench": true,
+    "prior_increment_estimate_is_not_verified_upper_bound": true,
+    "measured_previous_revision": {
+      "new_source_commit": "bee4a854a6b924ef1f7014daaeb1c4bf6891533e",
+      "old_source_commit": "4aa3ad968043ad249e23dff8882c601f328b7d3d",
+      "real_implementation": "elastic descriptor cut, PC-local decoded row staging, bank-local mux/capture and SRAM correction pipeline",
+      "old_exact": {
+        "verdict": "PASS",
+        "cases": 88,
+        "backpressure_cases": 24,
+        "sectors_checked_per_case": 9408
+      },
+      "new_exact": {
+        "verdict": "PASS",
+        "cases": 88,
+        "backpressure_cases": 24,
+        "sectors_checked_per_case": 9408
+      },
+      "old_worst_ns": 142.415,
+      "new_worst_ns": 150.489,
+      "worst_to_worst_added_ns": 8.074000000000012,
+      "matched_nominal_added_ns": {
+        "min": 7.497,
+        "max": 9.996,
+        "mean": 9.071890625
+      },
+      "first_ACT_added_hclk_edges": [
+        2.0,
+        3.0
+      ],
+      "measured_child_gain_us_vs_central": 13.02,
+      "retained_140ns_gate": "FAIL; 64/64 notice cases over gate; no relaxation",
+      "physical_verdict": "NOT_RUN for changed source; original e11b FAIL retained",
+      "bounds_note": "The initial7clk+2hclk 7.881ns increment underestimated observed phase/dispatch effects; actual measured first access replaces that estimate for R2 only. R3 captured-protection revision not yet measured.",
+      "pairs": [
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8000000,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8061285,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8121546,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8181807,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8242068,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8302329,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8362590,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8423875,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8484136,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8544397,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8604658,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8664919,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8725180,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8785441,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8846726,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8906987,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 8967248,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9027509,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9087770,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9148031,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9209316,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9269577,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9329838,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9390099,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9450360,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9510621,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9570882,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9632167,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9692428,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9752689,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9812950,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9873211,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9933472,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 9993733,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10055018,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10115279,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10175540,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10235801,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10296062,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10356323,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10417608,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10477869,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10538130,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10598391,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10658652,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10718913,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10779174,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10840459,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10900720,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 10960981,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11021242,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11081503,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11141764,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11203049,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11263310,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11323571,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11383832,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11444093,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11504354,
+          "stall_pct": 0,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11564615,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 2.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11625900,
+          "stall_pct": 0,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11686161,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11746422,
+          "stall_pct": 0,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice",
+          "t_route_ps": 11806683,
+          "stall_pct": 0,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 8000000,
+          "stall_pct": 10,
+          "added_first_access_ps": 6664,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 8484136,
+          "stall_pct": 10,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 8967248,
+          "stall_pct": 10,
+          "added_first_access_ps": 5831,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 9450360,
+          "stall_pct": 10,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 9933472,
+          "stall_pct": 10,
+          "added_first_access_ps": 9163,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 10417608,
+          "stall_pct": 10,
+          "added_first_access_ps": 8330,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 10900720,
+          "stall_pct": 10,
+          "added_first_access_ps": 6664,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall10",
+          "t_route_ps": 11383832,
+          "stall_pct": 10,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 8000000,
+          "stall_pct": 40,
+          "added_first_access_ps": 1666,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 8484136,
+          "stall_pct": 40,
+          "added_first_access_ps": 11662,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 8967248,
+          "stall_pct": 40,
+          "added_first_access_ps": 5831,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 9450360,
+          "stall_pct": 40,
+          "added_first_access_ps": 11662,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 9933472,
+          "stall_pct": 40,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 10417608,
+          "stall_pct": 40,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 10900720,
+          "stall_pct": 40,
+          "added_first_access_ps": 13328,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall40",
+          "t_route_ps": 11383832,
+          "stall_pct": 40,
+          "added_first_access_ps": 6664,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 8000000,
+          "stall_pct": 75,
+          "added_first_access_ps": 5831,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 8484136,
+          "stall_pct": 75,
+          "added_first_access_ps": 4998,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 8967248,
+          "stall_pct": 75,
+          "added_first_access_ps": 9996,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 9450360,
+          "stall_pct": 75,
+          "added_first_access_ps": 3332,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 9933472,
+          "stall_pct": 75,
+          "added_first_access_ps": 6664,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 10417608,
+          "stall_pct": 75,
+          "added_first_access_ps": 3332,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 10900720,
+          "stall_pct": 75,
+          "added_first_access_ps": 7497,
+          "added_first_ACT_hclk_edges": 3.0
+        },
+        {
+          "case": "refpb_notice_stall75",
+          "t_route_ps": 11383832,
+          "stall_pct": 75,
+          "added_first_access_ps": 5831,
+          "added_first_ACT_hclk_edges": 3.0
+        }
+      ]
+    },
+    "measured_current_capture_revision": true,
+    "measured_current_capture_minimum": {
+      "source_commit": "cde8433038b0f8bbf7ad894fb5d37c0e343cb463",
+      "record": "results/rtl/hbm_accel_r5a_p2_20261005/r3_CAPTURE_EXACT/exact.json",
+      "exact": {
+        "verdict": "PASS",
+        "cases": 4,
+        "backpressure_cases": 3,
+        "sectors_checked_per_case": 9408
+      },
+      "protection_pass": true,
+      "first_access_ns": 150.423,
+      "performance": {
+        "verdict": "FAIL",
+        "first_access_gate_ns": 140.0,
+        "criterion": "all SMs first-expert w1/w3 access, independent of composed token gain"
+      },
+      "full88_replayed": false
+    }
   },
   "targets": {
     "qwen_rom": {
@@ -124,11 +836,11 @@
     },
     "qwen_hbm": {
       "applicable": true,
-      "token_added_ns_per_fetch": 7.048
+      "token_added_ns_per_fetch": 7.881333333333334
     },
     "v41_hbm": {
       "applicable": true,
-      "token_added_ns_per_fetch": 7.048
+      "token_added_ns_per_fetch": 7.881333333333334
     }
   },
   "clock": {

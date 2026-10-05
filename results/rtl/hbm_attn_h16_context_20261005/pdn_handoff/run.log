@@ -1,0 +1,184 @@
+{"allcorner_spef_evaluator": "/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl", "original_sha256": "8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c", "patched_sha256": "532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d", "helper_sha256": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a"}
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib
+read_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/hbm_fmax_attn_context/macro_placement.tcl
+[INFO MPL-0035] Macro g_g\[0\].u_g placed. Bounding box (5.000um, 5.000um), (299.782um, 299.782um). Orientation R0
+[INFO MPL-0035] Macro g_g\[1\].u_g placed. Bounding box (352.982um, 5.000um), (647.764um, 299.782um). Orientation R0
+[INFO MPL-0035] Macro g_g\[2\].u_g placed. Bounding box (700.964um, 5.000um), (995.746um, 299.782um). Orientation R0
+[INFO MPL-0035] Macro g_g\[3\].u_g placed. Bounding box (1048.946um, 5.000um), (1343.728um, 299.782um). Orientation R0
+[INFO MPL-0035] Macro g_g\[4\].u_g placed. Bounding box (5.000um, 352.982um), (299.782um, 647.764um). Orientation R0
+[INFO MPL-0035] Macro g_g\[5\].u_g placed. Bounding box (352.982um, 352.982um), (647.764um, 647.764um). Orientation R0
+[INFO MPL-0035] Macro g_g\[6\].u_g placed. Bounding box (700.964um, 352.982um), (995.746um, 647.764um). Orientation R0
+[INFO MPL-0035] Macro g_g\[7\].u_g placed. Bounding box (1048.946um, 352.982um), (1343.728um, 647.764um). Orientation R0
+[INFO MPL-0035] Macro g_g\[8\].u_g placed. Bounding box (5.000um, 700.964um), (299.782um, 995.746um). Orientation R0
+[INFO MPL-0035] Macro g_g\[9\].u_g placed. Bounding box (352.982um, 700.964um), (647.764um, 995.746um). Orientation R0
+[INFO MPL-0035] Macro g_g\[10\].u_g placed. Bounding box (700.964um, 700.964um), (995.746um, 995.746um). Orientation R0
+[INFO MPL-0035] Macro g_g\[11\].u_g placed. Bounding box (1048.946um, 700.964um), (1343.728um, 995.746um). Orientation R0
+[INFO MPL-0035] Macro g_g\[12\].u_g placed. Bounding box (5.000um, 1048.946um), (299.782um, 1343.728um). Orientation R0
+[INFO MPL-0035] Macro g_g\[13\].u_g placed. Bounding box (352.982um, 1048.946um), (647.764um, 1343.728um). Orientation R0
+[INFO MPL-0035] Macro g_g\[14\].u_g placed. Bounding box (700.964um, 1048.946um), (995.746um, 1343.728um). Orientation R0
+[INFO MPL-0035] Macro g_g\[15\].u_g placed. Bounding box (1048.946um, 1048.946um), (1343.728um, 1343.728um). Orientation R0
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.06949999978765846, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.009999999776482582
+rtl_macro_placer -max_num_level 2 -halo_width 5 -halo_height 5 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.06949999978765846
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro g_g\[0\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[10\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[11\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[12\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[13\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[14\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[15\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[1\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[2\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[3\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[4\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[5\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[6\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[7\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[8\].u_g.
+[INFO MPL-0062] Found fixed macro g_g\[9\].u_g.
+[INFO MPL-0017] No unfixed macros.
+[INFO MPL-0013] Skipping macro placement.
+[INFO MPL-0500] Runtime: 0.02s
+Design area 1390348 um^2 76% utilization.
+write_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_2_floorplan_macro.odb
+Elapsed time: 0:03.47[h:]min:sec. CPU time: user 3.95 sys 0.36 (123%). Peak memory: 945972KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            3            923 4adb35beefababe19ae4
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib
+read_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO ODB-0303] The initial 4999 rows (124890017 sites) were cut with 16 shapes for a total of 22723 rows (26805401 sites).
+[INFO TAP-0004] Inserted 9998 endcaps.
+[INFO TAP-0005] Inserted 22251 tapcells.
+Design area 1392322 um^2 76% utilization.
+write_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:02.27[h:]min:sec. CPU time: user 2.14 sys 0.13 (99%). Peak memory: 359452KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            2            351 f4d64d0cfffa668b0860
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib
+read_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[0\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[0\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[10\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[10\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[11\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[11\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[12\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[12\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[13\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[13\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[14\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[14\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[15\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[15\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[1\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[1\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[2\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[2\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[3\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[3\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[4\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[4\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[5\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[5\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[6\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[6\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[7\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[7\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[8\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[8\].u_g
+[WARNING PDN-0007] VSS on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[9\].u_g
+[WARNING PDN-0007] VDD on M6 is partially blocked (2.2%) by obstructions on M7 for g_g\[9\].u_g
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[0\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[10\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[11\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[12\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[13\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[14\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[15\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[1\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[2\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[3\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[4\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[5\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[6\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[7\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[8\].u_g
+[INFO PDN-0001] Inserting grid: CORE_macro_grid_1 - g_g\[9\].u_g
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[0\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[10\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[11\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[12\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[13\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[14\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[15\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[1\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[2\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[3\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[4\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[5\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[6\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[7\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[8\].u_g" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "CORE_macro_grid_1 - g_g\[9\].u_g" (Instance) does not contain any shapes or vias.
+[ERROR PDN-0233] Failed to generate full power grid.
+Error: pdn.tcl, 7 PDN-0233
+Elapsed time: 0:24.22[h:]min:sec. CPU time: user 23.65 sys 0.58 (99%). Peak memory: 2113852KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_4_floorplan_pdn.odb] Error 2

@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.dsrom.qx10.native_parent.v1",
+  "source": {
+    "engine": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+    "engine_sha256": "88e58e80d79dece71346b3123174d0ae0188b6590de88938575877b2209fc3b6",
+    "parent_model_sha256": "9c5a8dfe024a637c333150070321db5d511a0ac822b731371ff0c28036bd49f2",
+    "boundary_model_sha256": "555f72b7ac6283635da8b3faaecfba4d05b178cddf2ce2005eb47fbc509548e5",
+    "Z18a_synth_stat_sha256": "c6d94322a8e404e6d36698bacfa892faa36cd5869561798d455de2fc97033b58"
+  },
+  "scope": "one full NB2/PP1 QX10 engine, D3 broadcast, PQ0 descriptor loader, D64 first return and separate root capture",
+  "compute": {
+    "FP8_MACs_per_cycle": 64,
+    "FP4_MACs_per_cycle": 128,
+    "weight_payload_bytes_per_cycle": 64,
+    "FP8_MACs_per_weight_byte": 1,
+    "new_MACs_per_cycle": 0
+  },
+  "memory_bytes_per_cycle": {
+    "weight": 68.5,
+    "configuration": 6
+  },
+  "boundary_bits_per_cycle": {
+    "XS": 549,
+    "configuration": 54,
+    "go": 1,
+    "pair_result": 126,
+    "root_capture": 69
+  },
+  "replicas": {
+    "element": 1,
+    "logical_banks": 2,
+    "real_weight_ROMs": 4,
+    "first_return_node": 1
+  },
+  "mux_demux_fanout": "unchanged QX10 ping-pong capture mux, QZ_NS8/QZ_NE4 copies, class-valid admission and protected return identity",
+  "floorplan": {
+    "slot_um": [
+      1040.256,
+      239.76
+    ],
+    "engine_frame_um": [
+      510.84,
+      151.2
+    ],
+    "engine_bbox_um": [
+      527.256,
+      44.28,
+      1038.096,
+      195.48
+    ],
+    "parent_bbox_um": [
+      2.16,
+      2.16,
+      525.096,
+      237.6
+    ]
+  },
+  "area": {
+    "Z18a_total_um2": 56737.8513,
+    "ROM_um2": 31525.459199999998,
+    "engine_logic_um2": 25212.392100000005,
+    "engine_stdcell_available_um2": 45713.548800000004,
+    "engine_density": 0.6,
+    "parent_conservative_cell_upper_um2": 21413.976,
+    "parent_density": 0.5,
+    "sum_conservative_body_um2": 78151.8273,
+    "analytical_slot_fit": true,
+    "routed_slot_fit": false
+  },
+  "routing": {
+    "local_boundary_tracks": 809,
+    "conservative_channel_height_um": 235.44,
+    "channel_capacity_source": "existing M4/M6 48/64nm track estimates in uarch_model; 50% clock/PG reserve",
+    "estimated_channel_capacity_tracks": 4291,
+    "signal_layers": "M2-M7",
+    "clock_layers": "M7-M8",
+    "actual_routing_fit": false
+  },
+  "clocks": {
+    "period_ps": 833.3333333333334,
+    "SS_uncertainty_ps": 60,
+    "FF_uncertainty_ps": 25,
+    "root": "clk/core_clk",
+    "gated": "u_qx.u_e.g_cg.u_cg.u_icg/GCLK",
+    "XS": "actual selected g_qb.g_bx posedge gclk lines257/260",
+    "reset_launch": "eight g_mac.g_mz copies on core_clk",
+    "macro": {
+      "ss": {
+        "clk_to_q_ps": 743.9627002267231,
+        "macro_setup_ps": 39.800541169166664,
+        "macro_hold_ps": 30.074020584583334,
+        "clock_pin_cap_fF": 8.68376,
+        "four_macro_clock_pin_cap_fF": 34.73504,
+        "uncertainty_ps": 60
+      },
+      "ff": {
+        "clk_to_q_ps": 492.24471244471647,
+        "macro_setup_ps": 24.694771075555558,
+        "macro_hold_ps": 19.67222053777778,
+        "clock_pin_cap_fF": 10.3732,
+        "four_macro_clock_pin_cap_fF": 41.4928,
+        "uncertainty_ps": 25
+      }
+    },
+    "loaded_root_cuts_qualified": false
+  },
+  "latency": {
+    "new_pipeline_cycles": 0,
+    "measured_QX10_vs_QX9_minimum_cycles": 0,
+    "source_BST_edges": 3,
+    "existing_first_return_edges": 6,
+    "existing_field_wire_cycles": 80,
+    "charge_transport_once": true,
+    "whole_node_or_token_reprice": false
+  },
+  "fault": {
+    "no_constant_fault_waiver": true,
+    "engine_frontend": "existing Z18 synthesis frontend",
+    "frontend_loader_source": "physical/dsrom_qx10_parent_context/parent_loader/ot_v41_pair_pq_ld_frontend.sv",
+    "frontend_loader_sha256": "75b916ee433eae2293d1d478909eb513ca89db7cac3c385425c9a54379536ea3",
+    "frontend_loader_origin": "/srv/opentallas-scratch2/codex/fspine-v9-parent-context-20261005/pq0_fault_lowering_r3/fixed.sv",
+    "semantic_and_mapped_producer_gate_required": true
+  },
+  "full_context_build_ready": true,
+  "full_field_build_ready": false,
+  "missing_input_clocks": true,
+  "physical_qualified": false,
+  "existing_terms": {
+    "parent_model": "results/uarch/dsrom_v9_parent_context_20261005/model.json",
+    "boundary_model": "results/uarch/dsrom_v9_field_boundary_20261005/model.json"
+  },
+  "resource": {
+    "host": "EPYC1",
+    "reservation_GiB": 32,
+    "cores": 4,
+    "smoke_cores": 1,
+    "basis": "full existing Z18 element admitted at30GiB plus one parent; no whole field",
+    "actual_fresh_fit_required": true
+  }
+}

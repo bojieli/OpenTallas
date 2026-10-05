@@ -1,0 +1,146 @@
+{
+  "verdict": "REJECT_SS_SETUP",
+  "SS_setup_wns_ps": -3.8967718097025688,
+  "SS_setup_tns_ps": -3.8967718097025688,
+  "FF_hold_wns_ps": 7.011447006582842,
+  "FF_hold_tns_ps": 0,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "engine_source_commit": "0032b735573af2d24416eee1cf5911c0ac99ff5d",
+  "geometry_um": [
+    510.84,
+    151.2
+  ],
+  "violator_class": "bank1 lane P1 shifted-product to P2 shift/CSA",
+  "startpoint": "u_e.g_mac[1].g_l3.u_l0.p1_q[10][11]",
+  "endpoint": "u_e.g_mac[1].g_l3.u_l0.p2_c[97]",
+  "all_reported_classes": [
+    {
+      "report": "cls_FF.all.paths",
+      "worst_ps": 7.0,
+      "negative_reported_paths": 0,
+      "reported_paths": 300
+    },
+    {
+      "report": "cls_FF.async.paths",
+      "worst_ps": 39.7,
+      "negative_reported_paths": 0,
+      "reported_paths": 300
+    },
+    {
+      "report": "cls_FF.icg.paths",
+      "worst_ps": 289.9,
+      "negative_reported_paths": 0,
+      "reported_paths": 1
+    },
+    {
+      "report": "cls_FF.reg.paths",
+      "worst_ps": 7.4,
+      "negative_reported_paths": 0,
+      "reported_paths": 300
+    },
+    {
+      "report": "cls_SS.all.paths",
+      "worst_ps": -3.9,
+      "negative_reported_paths": 1,
+      "reported_paths": 300
+    },
+    {
+      "report": "cls_SS.async.paths",
+      "worst_ps": 188.0,
+      "negative_reported_paths": 0,
+      "reported_paths": 300
+    },
+    {
+      "report": "cls_SS.icg.paths",
+      "worst_ps": 117.6,
+      "negative_reported_paths": 0,
+      "reported_paths": 1
+    },
+    {
+      "report": "cls_SS.reg.paths",
+      "worst_ps": -3.9,
+      "negative_reported_paths": 1,
+      "reported_paths": 300
+    },
+    {
+      "report": "io_FF.in_max.paths",
+      "worst_ps": 104.9,
+      "negative_reported_paths": 0,
+      "reported_paths": 6
+    },
+    {
+      "report": "io_FF.in_min.paths",
+      "worst_ps": 120.1,
+      "negative_reported_paths": 0,
+      "reported_paths": 6
+    },
+    {
+      "report": "io_FF.out_max.paths",
+      "worst_ps": 561.3,
+      "negative_reported_paths": 0,
+      "reported_paths": 3
+    },
+    {
+      "report": "io_FF.out_min.paths",
+      "worst_ps": 7.0,
+      "negative_reported_paths": 0,
+      "reported_paths": 3
+    },
+    {
+      "report": "io_SS.in_max.paths",
+      "worst_ps": 73.1,
+      "negative_reported_paths": 0,
+      "reported_paths": 6
+    },
+    {
+      "report": "io_SS.in_min.paths",
+      "worst_ps": 29.4,
+      "negative_reported_paths": 0,
+      "reported_paths": 6
+    },
+    {
+      "report": "io_SS.out_max.paths",
+      "worst_ps": 218.8,
+      "negative_reported_paths": 0,
+      "reported_paths": 3
+    },
+    {
+      "report": "io_SS.out_min.paths",
+      "worst_ps": 289.4,
+      "negative_reported_paths": 0,
+      "reported_paths": 3
+    }
+  ],
+  "physical_qualified": false,
+  "whole_field_missing_input_clocks": true,
+  "measured_additional_cycles_vs_QX9": 0,
+  "composition_record": "results/rtl/dsrom_qx10_field_min_20261005/minimum_composition.json",
+  "analytical_extra_cycles_not_adopted": true,
+  "DRC_report_bytes": 0,
+  "DRC_report_empty": true,
+  "files": {
+    "io_SS.in_min.paths": "6fa6774988f61386b96527475c0aa5f2dc7325e87a412cbbb88761649b44cfd2",
+    "cls_FF.icg.paths": "e3c84b5e2e759ca3f073348db8b1e4be40b36e9358694e1afbd7aff57ff7b010",
+    "io_FF.out_max.paths": "4103578be4bfdefe3cd83683dd5da7b3e271c4bbaeb0b15cd22e21590fb4aa55",
+    "macro_gate.json": "07ec94b335f7a9b5075850041b4abb9e18ea42f485d9081eace884c411167c17",
+    "io_FF.out_min.paths": "6183c1e32a2dd0a86d0ad73214eea615bb1d4efcdab70e9b022a0dd2cf25a39c",
+    "cls_FF.async.paths": "ec7381cd218068943a8625456735b1721d399af96414ea8386ee83406dcfbc60",
+    "cls_SS.reg.paths": "f7295f2232b9be9eb5d2211e283a538bf814fa92c335aff1a93aa12b0d8a66c3",
+    "cls_FF.reg.paths": "a300b951fc25af9c0a6807f6c916ca918fbfa05813376da9e038855ad303144d",
+    "final_SS.ends": "4c155e513e7eb45414cb1579e14378ee47c37633f4a64b724e61560f298f3e07",
+    "io_SS.out_min.paths": "d4d1afeab29fb9d4670e8362eb9eebd16ec332245e83af28dd8649248315c3be",
+    "receipt.json": "f34530a94223cee1b570745930fe5f93bd2ddd3b5ecaa47fc537fb25bf563cec",
+    "cls_FF.all.paths": "725a863ac94469a5608f6a41dddb1e2c2a40e86fd17b7492a2a1540dcc015f5c",
+    "io_FF.in_max.paths": "11cfb19a35594bef016bb5e200587b66717207bbbc5c7d3a00e8b4a614ee925a",
+    "cls_SS.async.paths": "55bb80b6191c4ef4d17440507b15a34563a4cfb60e94082fcf5eb18a53db15f4",
+    "io_SS.in_max.paths": "9a95319f9b2aaf85ff92a22c26c5666777c8c70dcca49d9003038b37f61f561b",
+    "io_SS.out_max.paths": "c4d007c53dd76b274bba0efcdc61fad799698f68d318804057cf607baef3f241",
+    "cls_SS.icg.paths": "c19978e8e62c75f6beb60fdd0740c3d508c673b888cb03bfee009f576d28c2f5",
+    "cls_SS.all.paths": "f7295f2232b9be9eb5d2211e283a538bf814fa92c335aff1a93aa12b0d8a66c3",
+    "launch.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_FF.ends": "ae34f6619ab4c23ce86c531a65083abfa239a816ae9adf7ea74a2111510565df",
+    "io_FF.in_min.paths": "ac4d2a10ac6f462f5c2d437348833748ce70e384dc3ca907388de8a522c14e80"
+  }
+}

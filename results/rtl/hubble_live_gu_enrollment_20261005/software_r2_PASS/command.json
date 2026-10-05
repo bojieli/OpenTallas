@@ -1,0 +1,14 @@
+[
+  "python3",
+  "/srv/opentallas-scratch2/jobs/franklin-live-gu-enrollment-r2/src/tools/hubble_live_gu_enrollment.py",
+  "--gu",
+  "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r2/inputs/srv/opentallas-scratch/jobs/hubble-expert-workgroup-actual-r2/L20",
+  "--inputs",
+  "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r2/inputs/srv/opentallas/repos/hubble-expert-workgroup-90b8a03e8/results/rtl/dshbm_expert_workgroup_20261005/source_inputs/L20",
+  "--retained",
+  "/srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3/actual/L20/native_swiglu",
+  "--weight-rows",
+  "/srv/opentallas-scratch2/jobs/franklin-live-gu-released-inputs-20261005",
+  "--out",
+  "/srv/opentallas-scratch2/jobs/franklin-live-gu-enrollment-r2/image"
+]

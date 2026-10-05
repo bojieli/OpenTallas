@@ -1,0 +1,11 @@
+{
+  "reused_sha256": {
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base/1_2_yosys.v": "a84466eae806e9ea8cbe25f89b19014afc91737150b70f14ff5d99776c32d6c8",
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base/1_synth.odb": "109954c6d86ad6250953a3fdb7219b9b6fc7a61ef7dfc32bd28c5a0ca84c3687",
+    "results/asap7/opentallas_ot_hdc_v41_fh_macro_ctx_asap7_C10_capture/base/1_synth.sdc": "4286470b79b752489561cc1bf2c09b3860752e54820a8590a1edf2c73a9bc1e8"
+  },
+  "source_run": "/srv/opentallas-scratch/codex/dsrom-fh-capture-20261005/routes/C10c_capture/work/orfs",
+  "terminal_reason": "floorplan init modes conflict; no timing verdict",
+  "change": "same2000x660 geometry, delete conflicting CORE_UTILIZATION mode only",
+  "synth_source": "78cd22c97"
+}

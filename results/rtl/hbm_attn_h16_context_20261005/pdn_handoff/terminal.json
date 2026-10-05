@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.hbm.attention.actual_pdn_handoff.v1",
+  "original_native_failure": "PDN-0233: default macro grid M4/M5 does not meet actual M6 power pins; original failure retained",
+  "selected_source": "physical/hbm_fmax_attn_context/pdn.tcl",
+  "selected_row_halo_um": 5,
+  "M8_power_ground_pairs": 250,
+  "M9_power_ground_pairs": 249,
+  "PG_width_um": 0.474,
+  "PG_pitch_um": 5.4,
+  "PG_fraction": 0.17555555555555555,
+  "existing_reserved_fraction": 0.1756,
+  "generation_pass": true,
+  "timing_qualified": false,
+  "IR_qualified": false,
+  "power_connectivity_qualified": false,
+  "preserved_warnings": [
+    "PDN-0007: actual M6 macro pins partially obstructed by M7 OBS",
+    "PDN-0110: failed M5/M8 vias at clipped boundary stripes"
+  ],
+  "added_RTL_cycles": 0,
+  "leaf_LEF_and_SS_FF_timing_unchanged": true,
+  "continuation": "Reuse completed synthesis, selected fixed placements, 5um tapcell and finite PDN ODB; no RTL/synthesis/placement rebuild."
+}
