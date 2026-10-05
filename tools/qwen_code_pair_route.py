@@ -103,7 +103,12 @@ def main():
     if len({(r['column'], r['bank'], r['coded_bit']) for r in bindings}) != 2880:
         raise RuntimeError('capture bit binding is not one-to-one')
     (work / 'capture_bindings.json').write_text(json.dumps(bindings, indent=2) + '\n')
-    region = ['source /work/slot/local_capture_regions.tcl', 'set members [dict create]']
+    # Pinned OpenDB attaches a group through dbRegion.addGroup. Keep the
+    # supplier's frozen hook as history; adapt only the physical API spelling.
+    hook = (slot / 'local_capture_regions.tcl').read_text()
+    hook = hook.replace('$group setRegion $region', '$region addGroup $group')
+    (work / 'local_capture_regions.tcl').write_text(hook)
+    region = ['source /work/local_capture_regions.tcl', 'set members [dict create]']
     for key, members in sorted(groups.items()):
         region.append('dict set members {' + key + '} {' + ' '.join(members) + '}')
     region += ['ot_code_pair_capture_regions $members']
