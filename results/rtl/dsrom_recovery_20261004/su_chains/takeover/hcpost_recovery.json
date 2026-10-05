@@ -35,7 +35,17 @@
     "routing_fit": null,
     "timing": null,
     "adoption": false,
-    "counts_status": "ESTIMATE sourcecounts, not physicalcost/adoption"
+    "counts_status": "ESTIMATE sourcecounts, not physicalcost/adoption",
+    "selected_physical_verdict": "REJECT_SS",
+    "selected_SS_ps": -52.47,
+    "selected_FF_ps": 5.7,
+    "measured_lane_standard_cell_area_um2": 5435.51,
+    "replicated_lane_area_mm2_ESTIMATE": 5.56596224,
+    "hub_data_and_coefficient_register_bits_ESTIMATE": 2168064,
+    "hub_valid_register_bits_ESTIMATE": 90,
+    "full_unit_area_um2": null,
+    "hub_area_um2": null,
+    "full_unit_routed_corridor": false
   },
   "ng256_latency_cycles": null
 }
