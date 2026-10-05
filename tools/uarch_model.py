@@ -9726,3 +9726,30 @@ def dsrom_window_full_block_pipeline_model():
             parent_phase_insertion_and_terminal_loads_qualified=False),
         gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
             adoption=False))
+
+
+def dsrom_window_pipeline_measured_latency_price(root=None):
+    """Compose the pinned matched WINDOW leaf; physical clock credit stays zero.
+
+    WSTREAM includes the load, so charging load again would be wrong. Fixed
+    pipeline cycles and observed HBM phase/queue effects are kept separate.
+    """
+    import json
+    root = Path(root) if root is not None else Path(__file__).resolve().parents[1]
+    path = root / 'results/rtl/dsrom_window_pipeline_20261005/matched_latency_price.json'
+    leaf = json.loads(path.read_text())
+    rows = leaf['cases']
+    mean = leaf['configurations']['lf']['mean_write_plus_stream_delta_cycles']
+    worst = max(row['write_plus_stream_delta_cycles'] for row in rows)
+    structural = dsrom_window_full_block_pipeline_model()['latency']['added_layer_cycles_upper']
+    return dict(scope='mandatory WINDOW component, matched refresh/scan/gather corpus',
+        measured_cases=len(rows), clock_hz=1.2e9, clock_physically_qualified=False,
+        mean_lf_added_cycles=mean, corpus_worst_added_cycles=worst,
+        structural_added_cycles_upper=structural,
+        phase_queue_exposure_above_structural_upper_cycles=max(0,worst-structural),
+        all_61_layers_mean_lf_charge_us=mean*61/1.2e9*1e6,
+        all_61_layers_corpus_worst_charge_us=worst*61/1.2e9*1e6,
+        basis='conservative serial write plus end of WINDOW stream; load not charged twice; producer/consumer overlap remains in actual parent calendar',
+        measured_leaf=str(path.relative_to(root)),
+        source_priced=True, parent_clock_load_slot_qualified=False,
+        physical_adoption=False, headline_changed=False)
