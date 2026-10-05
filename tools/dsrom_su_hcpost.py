@@ -175,9 +175,58 @@ def cmd_record(a):
     return 0
 
 
+def cmd_lever(a):
+    """levers/su_hcpost.json from the committed full-shape run and the routed lane's corner STA."""
+    rec = ROOT / "results/rtl/dsrom_recovery_20261004/su_hcpost"
+    run = json.loads((rec / "runs" / a.run).read_text())
+    cs = json.loads((rec / "route" / a.corner).read_text())
+    rows = run["rows"]
+    gold = [r for r in rows if r["kind"] == "golden_1m"]
+    cyc = {r["cycles"] for r in rows}
+    assert len(cyc) == 1, cyc
+    cyc = cyc.pop()
+    exact = all(r["pass_"] and r["errors"] == 0 and r["fault"] == 0 for r in rows) and len(gold) == 8
+    us = round(cyc / 1.2e3, 5)
+    ss, ff = cs["setup_ss"]["worst_slack_ps"], cs["hold_ff"]["worst_slack_ps"]
+    src = (f"ot_dsrom_su_hcpost (NG {run['ng']} groups x 4 lanes = 1,024 outputs/cycle, mul_f12 L{run['ml']} / add_f12 "
+           f"L{run['al']}): go -> last of 20 output beats landed {cyc} cycles at 1.2 GHz incl. hub in {run['win']} / out "
+           f"{run['wout']} register stages; bit-exact on the 8 golden 1M hc_post chains (L0/L3/L20/L24 attn+ffn) + "
+           f"{len(rows) - len(gold)} stress cases")
+    old = 0.2899
+    r = dict(schema="opentallas.dsrom-recovery.lever.v1", lever="su_hcpost", verdict=a.verdict, exact=exact,
+             ss_ff=dict(period_ps=833.0, ss_setup_wns_ps=ss, ff_hold_wns_ps=ff, closes=bool(cs["closes_signoff"]),
+                        basis="ROUTED minimum component (one lane, ot_dsrom_su_hcpost_lane): ORFS asap7 at 0.833 ns, "
+                              "tools/w18/corner_sta.py SS setup 60 ps / FF hold 25 ps",
+                        record=f"results/rtl/dsrom_recovery_20261004/su_hcpost/route/{a.corner}",
+                        prelayout_screen="results/rtl/dsrom_recovery_20261004/su_hcpost/screen/ (pessimistic for the "
+                                         "f12 units: standalone add_f12_l5x screens -45.6 ps but routes +13.0)"),
+             nodes={"*.attn.hc_post": dict(us=us, source=src, cls="measured", kind="fused_fast"),
+                    "*.ffn.hc_post": dict(us=us, source=src, cls="measured", kind="fused_fast")},
+             measurement=dict(old=dict(unit="ot_hdc_v41x_vec N1024 wired, 4 dependent ops (0.9 GHz) + CDC",
+                                       us=old, record="results/rtl/dsrom_1m_allmeasured_20261004/su.json"),
+                              new=dict(unit="ot_dsrom_su_hcpost", cycles=cyc, us=us, clock_hz=1.2e9,
+                                       record=f"results/rtl/dsrom_recovery_20261004/su_hcpost/runs/{a.run}"),
+                              floor=dict(cycles=97, us=0.08083, source="anatomy.json floors.hc_post",
+                                         residual=f"{cyc - 97} cycles over the anatomy floor: the operand capture register (1), "
+                                                  f"the closing adder latency (add_f12 L5 instead of L4: +1 on each of "
+                                                  f"the 4 serial adds) and the landing register (1); L4 adders fail "
+                                                  f"the routed lane by -52.5 ps (route/lane_m5a4_FAIL.corner.json)"
+                                         if cyc > 97 else "at floor"),
+                              saving_us_per_layer=round(2 * (old - us), 5)),
+             variants_note=("mul_f12_l6 lanes (m6a4, m6a5) mismatch the golden in this lane (runs/*m6*: FAIL), so the "
+                            "L6 multiplier is not used; m5a4 is exact (99 cycles) but does not close routed; m5a5 is "
+                            "exact and closes"),
+             default="opt-in: applied only in the recovery baseline; the SU lowering of hc_post is unchanged",
+             note=a.note)
+    out = ROOT / "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json"
+    out.write_text(json.dumps(r, indent=1) + "\n")
+    print(json.dumps(dict(cycles=cyc, us=us, exact=exact, ss=ss, ff=ff), indent=1))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=("prep", "run", "record"))
+    ap.add_argument("step", choices=("prep", "run", "record", "lever"))
     ap.add_argument("--out", required=True)
     ap.add_argument("--cases")
     ap.add_argument("--stress", type=int, default=32)
@@ -188,8 +237,12 @@ def main():
     ap.add_argument("--al", type=int, default=4)
     ap.add_argument("--hier", type=int, default=1, help="verilate the lane once (hier_block) and instance it")
     ap.add_argument("--rec")
+    ap.add_argument("--run")
+    ap.add_argument("--corner", default="lane_m6a5.corner.json")
+    ap.add_argument("--verdict", default="ADOPT")
+    ap.add_argument("--note", default="")
     a = ap.parse_args()
-    return dict(prep=cmd_prep, run=cmd_run, record=cmd_record)[a.step](a)
+    return dict(prep=cmd_prep, run=cmd_run, record=cmd_record, lever=cmd_lever)[a.step](a)
 
 
 if __name__ == "__main__":

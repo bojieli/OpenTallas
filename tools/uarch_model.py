@@ -1075,6 +1075,57 @@ def dsrom_reindex_kc7_model():
         admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
 
 
+def dsrom_reindex_kc8_model():
+    """Claude's cycle-identical structural repair, priced before its sole route."""
+    # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
+    # the old room_all flop may disappear, but mapping determines that debit.
+    copies, room = 6 * 128, 8
+    ff = copies + room
+    nand2 = copies * 4 + room * 4 + (8 * 7 + 7) * 2 + 64
+    gross = round(ff * 0.37908 + nand2 * 0.08748, 8)
+    parent, cap = 35166.3, 37452.2
+    return dict(
+        schema="opentallas.dsrom-reindex.kc8-model.v1", selected=False,
+        default_enabled=False, source_commit="0b598c6dbf8136463dc11b65373b5f84039fe4c0",
+        parent="kc7 terminal FAIL; measured same-context cells, not a die net debit",
+        dimensions=dsrom_reindex_kc7_model()["dimensions"],
+        mechanism=["8 registered local AND8 room groups; AND8 dispatch join at same edge",
+                   "3 kept write-enable copies per lane: metadata31/code32/scale32 loads"],
+        compute=dict(new_macs_per_cycle=0, new_rounding_points=0),
+        state=dict(gross_added_ff=ff, kept_copy_ff=copies, grouped_room_ff=room,
+                   gross_added_clock_sinks=ff, removed_room_all_credit=0,
+                   room_reset_set_loads=8, copied_enable_reset="rst_n in synchronous D predicate",
+                   accepted_debt_reset_semantics="unchanged"),
+        timing=dict(new_edges=0, new_cdc=0, per_user_latency_delta_cycles=0,
+                    actual_existing_gate_cases=20, actual_worst_cycles=738,
+                    conditional_833ps_us=0.614754, period_ps=833,
+                    SS_uncertainty_ps=60, FF_uncertainty_ps=25,
+                    ready_external_budget_ps=166.6, original_max_and_min_groups_required=True,
+                    dispatch_added_combinational_AND_inputs=8, SS_FF_closed=False,
+                    slew_margin_percent=20, acceptance_slew_limit_ps=320, hold_margin_ps=8),
+        ports=dsrom_reindex_kc7_model()["ports"],
+        replicas=dict(controls_per_stack=1, stacks_per_rank=4, ranks=4,
+                      kept_enable_copies_per_lane=3, lanes=2, room_groups=8,
+                      FIFOs_per_room_group=8, no_new_memory_ports=True),
+        construction=dict(gross_ff_um2=round(ff*0.37908,8),
+                          decode_D_reset_allowance_nand2=copies*4+room*4+64,
+                          local_AND_and_join_nand2=(8*7+7)*2,
+                          gross_nand2_equivalents=nand2, gross_extra_um2=gross,
+                          footprint_basis="0.37908um2 FF and 0.08748um2 NAND2; footprint only, no TT delay transfer",
+                          conservative_decode_allowance="4 NAND2 per copied bit, no shared-decode or removed-logic credit",
+                          mapped_buffers_clock_tree_and_net_delta_um2=None),
+        slot=dict(core_um2=93630.5, max_cell_fraction=0.40, max_cells_um2=cap,
+                  measured_kc7_cells_um2=parent, construction_total_um2=round(parent+gross,8),
+                  remaining_mapping_CTS_repair_budget_um2=round(cap-parent-gross,8),
+                  fit_verified=False, parent_die_reservation=False),
+        routing=dict(new_internal_copy_Q_nets=copies, new_room_Q_nets=room,
+                     copy_Q_select_loads=[31,32,32], same_D_copy_loads=3,
+                     clock_reset_wire_sites_and_loaded_delay_unknown=True,
+                     additional_tracks=None, available_tracks=None,
+                     acceptance="same fixed core; mapped occupancy within cap and zero DRC/antenna/slew/cap/fanout"),
+        admission="consume completed20case gate; one OPT_KC8=1 route with slew margin20; new failing cone escalates to Claude, no blind rescue")
+
+
 def dsrom_reindex_kc7_parallel_model():
     """Owner-directed named fanout; contexts are measured, never die admission."""
     lib = "SEQ_RVT_TT_nldm_220123.lib footprint only, no TT timing transfer"
@@ -1151,6 +1202,7 @@ DEDICATED = dict(
         reindex_control_closure_successor=dsrom_reindex_kc6_model(),
         reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
+        reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -8287,6 +8339,33 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
 
 
 
+def dsrom_wfc_reset_release_gate_price():
+    """Owner-supplied reset-release qualifiers, not a clock-domain change.
+
+    The existing rst_q register still releases one edge after rst_n. Suppress
+    all link admission/write and core-start terms during that existing edge;
+    no new state or steady-state response edge is added.
+    """
+    signals = ['in_ready', 'rx_hdr', 'rx_res', 'rx_side', 'vm_we',
+               'st_rx', 'st_new', 'st_q', 'st_fb', 'st_wk', 'core_start']
+    nand2, buffers = 2*len(signals), 3*len(signals)
+    gross = nand2*0.08748 + buffers*0.10206
+    return dict(new_FF_bits=0, new_clock_pin_cap_fF_SS=0, new_memory_ports=0,
+                new_memory_bytes_per_cycle=0, MACs_per_cycle=0, replicas=1,
+                reset_qualified_terms=signals, added_pipeline_edges=0,
+                reset_release_edges_after_rst_n=1, steady_state_cycle_delta=0,
+                model_reference_cycle_contract='Existing registered-root +1 reset edge; SOURCE1 serial engine +3.7 cycles/issue historical until remeasured. Golden rounding and reductions unchanged.',
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross, total_cell_growth_budget_um2=2*gross,
+                original_clock_and_reset_register_unchanged=True,
+                full_shape=dict(WIN=6,FLIT=512,NW=21,AW=30,VWA=15,USER_W=10,MAXU=866,KVW=32768),
+                target_period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+                utilizations=[0.40,0.45,0.50], actual_route_fit_unknown=True,
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                prior_r12_source_sha256='26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba',
+                physical_adopted=False)
+
+
 def dsrom_wfc_typed_completion_price(idw=47, paw=14, nw=21):
     """Add one retained terminal kind to the finite END/result join.
 
@@ -9573,3 +9652,14 @@ def hbm_loader_retained_token_host_price(*, mem_words, dies=2, slices=2):
         existing_wire_CDC_credits_refresh='retained model RTL exercised, not zero-cost or physical signoff',
         unknowns='production PCIe tail, full-system physical CDC/slot/SSFF remain unqualified',
         adopted=False,physical_qualified=False,source_changed_datapath=False)
+
+
+def ha2_tu_owner_adapter_model():
+    """Additive runtime owner replacement, selected shared8 TU shape, unadopted."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('ha2_tu_owner_model.py')
+    spec = importlib.util.spec_from_file_location('ha2_tu_owner_model', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()

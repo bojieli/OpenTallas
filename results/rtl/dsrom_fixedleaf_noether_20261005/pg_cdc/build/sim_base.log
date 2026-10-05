@@ -1,0 +1,22 @@
+TOKEN 0 mode=0 go_cycle=3000 dut_ready=1
+ABORT wake request during power-down cycle=9634 state=5
+SHORT gap after token 0: next go at 10098
+TOKEN 1 mode=0 go_cycle=10098 dut_ready=1
+TOKEN 2 mode=1 go_cycle=26098 dut_ready=1
+TOKEN 3 mode=1 go_cycle=42098 dut_ready=1
+TOKEN 4 mode=0 go_cycle=58098 dut_ready=1
+TOKEN 5 mode=1 go_cycle=74098 dut_ready=1
+TOKEN 6 mode=1 go_cycle=90098 dut_ready=1
+ABORT wake request during power-down cycle=91482 state=6
+SHORT gap after token 6: next go at 91946
+TOKEN 7 mode=1 go_cycle=91946 dut_ready=1
+TOKEN 8 mode=0 go_cycle=107946 dut_ready=1
+TOKEN 9 mode=0 go_cycle=123946 dut_ready=1
+ABORT wake request during power-down cycle=130582 state=7
+SHORT gap after token 9: next go at 131046
+TOKEN 10 mode=0 go_cycle=131046 dut_ready=1
+TOKEN 11 mode=1 go_cycle=147046 dut_ready=1
+SPINE stopped_cycles=94956 unpowered_cycles=94929
+WAKE min=271 max=273 cycles (req_on -> ready); restore max=208 cycles; lead=400
+PASS cycles=148942 rows=192 nonzero=82 sleeps=13 wakes=13 restores=325 aborts=3 off_cycles=94929 on_cycles=54013
+/srv/opentallas/repos/noether-fixedleaf-7957cd35b/rtl/test/tb_v41_rom_stage_pg_cdc.sv:239: $finish called at 148946500 (1ps)
