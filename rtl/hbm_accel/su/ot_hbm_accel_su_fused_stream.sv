@@ -7,7 +7,7 @@
 module ot_hbm_accel_su_fused_stream #(
     parameter integer ENABLE = 0, KIND = 0, N = 1024, D = 5120, RD = 0,
     parameter integer BCAST = 7, RET = 8, LM = 6, LA = 5,
-    parameter integer RW = 9, BW = 9
+    parameter integer RW = 9, BW = 9, PUBLISH_QUANT = 1, ROUTED = 1
 )(
     input wire clk, rst_n,
     input wire cmd_valid, input wire [31:0] cmd_id,
@@ -34,7 +34,7 @@ module ot_hbm_accel_su_fused_stream #(
 );
     localparam integer NV = (D+N-1)/N;
     localparam integer NB = KIND==4 ? (4*D+N-1)/N : NV;
-    localparam integer NE = KIND<3 ? NV*(2+(RD!=0)) : NB;
+    localparam integer NE = KIND<3 ? NV*(1+PUBLISH_QUANT+(RD!=0)) : (KIND==3 ? NB*(1+PUBLISH_QUANT) : NB);
     wire fire = cmd_valid && cmd_ready;
     reg start, streaming;
     reg [15:0] loaded, issued, landed;
@@ -92,9 +92,10 @@ module ot_hbm_accel_su_fused_stream #(
         wire yv, qv, rv, rov;
         wire [7:0] yi, qi;
         wire [N*32-1:0] yy, rr;
-        wire [N*8-1:0] qc; wire [(N/32)*10-1:0] qe;
-        wire [N*16-1:0] qy; wire [31:0] scalar;
-        ot_dsrom_su_norm #(.N(N),.D(D),.HC(KIND==0),.RD(RD),.QUANT(1),
+        wire [(PUBLISH_QUANT ? N/32 : 1)*256-1:0] qc;
+        wire [(PUBLISH_QUANT ? N/32 : 1)*10-1:0] qe;
+        wire [(PUBLISH_QUANT ? N/32 : 1)*512-1:0] qy; wire [31:0] scalar;
+        ot_dsrom_su_norm #(.N(N),.D(D),.HC(KIND==0),.RD(RD),.QUANT(PUBLISH_QUANT),
             .RW(RW),.BW(BW),.LM(LM),.LA(LA)) u_engine
             (.clk(clk),.rst_n(rst_n),.go(start),.in_v(iv),
              .in_x(xd[(KIND==0 ? 4 : 1)*N*32-1:0]),.pre(pp),.n_f(nf),.eps(ep),
@@ -114,12 +115,41 @@ module ot_hbm_accel_su_fused_stream #(
             (.clk(clk),.rst_n(rst_n),.v(qv),.d({qi,qc,qe,qy}),.vq(q_valid),.q(qo));
         assign {q_index,q_codes,q_exp,q_bf16}=qo;
     end else if (KIND==3) begin : g_swiglu
-        ot_dsrom_su_swiglu #(.W(N),.NIN(BCAST),.NOUT(RET),.ROUTED(1),.LM(LM),.LA(LA)) u_engine
-            (.clk(clk),.rst_n(rst_n),.v(accepted),.g(operands[0+:N*32]),
-             .u(operands[N*32+:N*32]),.w(operands[2*N*32+:N*32]),.lim(li),
-             .vo(q_valid),.q(q_codes),.e(q_exp),.y(q_bf16),.fault(engine_fault));
-        assign y_valid=0; assign ro_valid=0; assign y_data=0; assign ro_data=0;
-        assign y_index=0; assign q_index=landed[7:0];
+        wire iv; wire [3*N*32-1:0] ix;
+        ot_dsrom_su_hcpost_wire #(.W(3*N*32),.D(BCAST)) u_in
+            (.clk(clk),.rst_n(rst_n),.v(accepted),.d(operands[0+:3*N*32]),.vq(iv),.q(ix));
+        wire [N*32-1:0] a, bf;
+        wire [N-1:0] av, af;
+        genvar l,b;
+        for(l=0;l<N;l=l+1) begin : g_l
+            ot_dsrom_su_swiglu_lane #(.LM(LM),.LA(LA),.ROUTED(ROUTED)) u
+                (.clk(clk),.rst_n(rst_n),.v(iv),.g(ix[l*32+:32]),
+                 .u(ix[N*32+l*32+:32]),.w(ix[2*N*32+l*32+:32]),.lim(li),
+                 .a(a[l*32+:32]),.vo(av[l]),.fault(af[l]));
+            ot_dsrom_su_bf16rnd r (.x(a[l*32+:32]),.y(bf[l*32+:32]));
+        end
+        // Preserve the original VM-visible BF16 before downstream quantisation.
+        ot_dsrom_su_hcpost_wire #(.W(N*32),.D(RET)) u_y
+            (.clk(clk),.rst_n(rst_n),.v(av[0]),.d(bf),.vq(y_valid),.q(y_data));
+        assign y_index=landed[7:0];
+        if(PUBLISH_QUANT) begin : g_quant
+            wire [N/32-1:0] qv,qf;
+            wire [N*8-1:0] qc; wire [(N/32)*10-1:0] qe; wire [N*16-1:0] qy;
+            for(b=0;b<N/32;b=b+1) begin : g_b
+                ot_hdc_actquant u (.clk(clk),.rst_n(rst_n),.v(av[0]),.fp4(1'b0),
+                    .x(bf[1024*b+:1024]),.vo(qv[b]),.q(qc[256*b+:256]),
+                    .e(qe[10*b+:10]),.y(qy[512*b+:512]),.fault(qf[b]));
+            end
+            wire [N*8+(N/32)*10+N*16-1:0] oq;
+            ot_dsrom_su_hcpost_wire #(.W(N*8+(N/32)*10+N*16),.D(RET)) u_q
+                (.clk(clk),.rst_n(rst_n),.v(qv[0]),.d({qc,qe,qy}),.vq(q_valid),.q(oq));
+            assign {q_codes,q_exp,q_bf16}=oq;
+            assign engine_fault=(|af)|(qv[0] && (|qf));
+        end else begin : g_no_quant
+            assign q_valid=0; assign q_codes=0; assign q_exp=0; assign q_bf16=0;
+            assign engine_fault=|af;
+        end
+        assign ro_valid=0; assign ro_data=0; assign q_index=0;
     end else if (KIND==4) begin : g_hc_post
         // ML5/AL4 until the owner's ML6 integration fix is available and qualified.
         ot_dsrom_su_hcpost #(.NG(N/4),.WIN(BCAST),.WOUT(RET),.ML(5),.AL(4)) u_engine
