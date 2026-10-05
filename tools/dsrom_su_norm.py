@@ -346,7 +346,12 @@ def main():
     ap.add_argument("--fp", choices=("dpi", "rtl"), default="dpi")
     ap.add_argument("--n", type=int, default=None)
     ap.add_argument("--record", default=str(ROOT / "results/rtl/dsrom_recovery_20261004/su_norm/measure.json"))
+    ap.add_argument("--hub-in", type=int, default=None, help="hub stages in (default 33: the ROM's 22 slow stages)")
+    ap.add_argument("--hub-out", type=int, default=None, help="hub stages out (default 23: the ROM's 15 slow stages)")
     a = ap.parse_args()
+    global HUB_IN, HUB_OUT
+    HUB_IN = a.hub_in if a.hub_in is not None else HUB_IN
+    HUB_OUT = a.hub_out if a.hub_out is not None else HUB_OUT
     return dict(prep=cmd_prep, run=cmd_run, record=cmd_record)[a.step](a)
 
 
