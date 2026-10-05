@@ -14,8 +14,8 @@
 module ot_su12_lane #(
     parameter integer KIND = 0,
     parameter integer LANE = 37,
-    parameter integer MLAT = 3,         // multiplier latency (W11 serial domain: 5)
-    parameter integer ALAT = 3,         // FP add latency (W11 serial domain: 4)
+    parameter integer MLAT = 6,         // multiplier latency (W11 serial domain: 5)
+    parameter integer ALAT = 6,         // FP add latency (W11 serial domain: 4)
     parameter integer OPR = 1,
     parameter integer DDIV = 21,
     parameter integer SIDEX = 3

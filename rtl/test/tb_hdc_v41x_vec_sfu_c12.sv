@@ -46,11 +46,11 @@ module tb_hdc_v41x_vec_sfu #(parameter integer MLAT = 6, parameter integer ALAT 
     localparam integer DQ_SP = DQ_EXP + 11 * MLAT + 10 * ALAT + 31 + DDIV, DR_SP = 259;
     localparam integer DQ_SQ = 31, DR_SQ = 31;
     // align: the shallower of the pair is delayed to the deeper one
-    `define OT_ALIGN(NM, W, DQ, DR, QIN, RIN, QOUT, ROUT) \
+    `define OT_ALIGN(NM, WD, DQ, DR, QIN, RIN, QOUT, ROUT) \
         generate if ((DQ) <= (DR)) begin : NM``_q \
-            ot_hdc_delay #(.W(W), .D((DR) - (DQ)), .RESET(1)) u (clk, rst_n, QIN, QOUT); assign ROUT = RIN; \
+            ot_hdc_delay #(.W(WD), .D((DR) - (DQ)), .RESET(1)) u (clk, rst_n, QIN, QOUT); assign ROUT = RIN; \
         end else begin : NM``_r \
-            ot_hdc_delay #(.W(W), .D((DQ) - (DR)), .RESET(1)) u (clk, rst_n, RIN, ROUT); assign QOUT = QIN; \
+            ot_hdc_delay #(.W(WD), .D((DQ) - (DR)), .RESET(1)) u (clk, rst_n, RIN, ROUT); assign QOUT = QIN; \
         end endgenerate
     // division
     wire [31:0] dq, dr; wire dvq, dvr, dfq, dfr;
