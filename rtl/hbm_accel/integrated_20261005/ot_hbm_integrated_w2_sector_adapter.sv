@@ -52,6 +52,7 @@ module ot_hbm_integrated_w2_sector_adapter #(parameter integer ENABLE=0)(
   reg valid_map;
   integer length,span,first_sector,expected_local;
   always @* begin
+   expected_local=0;
    length=map_lanes==8?136:17;
    span=integer'(map_compact_offset[4:0])+length;
    first_sector=integer'(map_compact_offset)>>5;

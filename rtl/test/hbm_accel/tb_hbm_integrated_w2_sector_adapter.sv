@@ -164,6 +164,20 @@ module tb_hbm_integrated_w2_sector_adapter;
   @(negedge clk);native_req_v=0;output_installed=1;reserve_v=1;
   tick();if(!sink_retained)$fatal(1,"actual seat reservation missing");
   @(negedge clk);reserve_v=0;
+  if($test$plusargs("CHECK_COMB_DEFAULT"))begin
+   // Actual first released full frame. Every active iteration must derive
+   // the same local line, then count0 must leave a deterministic default.
+   {map_cfg,map_tags,map_byte_addresses,map_native_addr,map_sm,map_compact_offset,map_lanes,map_count}=maps[0];
+   native_req_addr=map_native_addr;
+   for(integer j=0;j<6;j=j+1)map_tags[j*16+:16]=16'(tag_counter+j);
+   #0.01;
+   if(!dut.g_on.valid_map || dut.g_on.expected_local!==((integer'(map_compact_offset)/32+integer'(map_count)-1)/4))
+    $fatal(1,"active source map changed by combinational default");
+   map_count=0;#0.01;
+   if(dut.g_on.expected_local!==0 || dut.g_on.valid_map || native_req_r || adapter_busy || adapter_fault || req_v)
+    $fatal(1,"inactive map default/validation mutation");
+   $display("PASS_COMB_DEFAULT active-source-local-line unchanged; count0 deterministic/rejected; no mutation");
+  end
   for(current_case=0;current_case<ncases;current_case=current_case+1)begin
    @(negedge clk);
    {map_cfg,map_tags,map_byte_addresses,map_native_addr,map_sm,map_compact_offset,map_lanes,map_count}=maps[current_case];
