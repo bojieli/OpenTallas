@@ -9811,7 +9811,6 @@ def dsrom_window_full_block_pipeline_model():
     Storage is explicitly implemented as FF cells and row feedback muxes.  This
     price does not claim an SRAM macro or a source-qualified enclosing die.
     """
-<<<<<<< HEAD
     npc, banks, cols, depth, rowb = 32, 4, 17, 32, 4224
     raw = banks * depth * rowb
     # Five elastic decode stages preserve every beat and its original identity.
@@ -9960,48 +9959,6 @@ def hbm_r5a_protected_pipeline_model():
             FF_hold_uncertainty_ps=25,macro_clkQ_from_own_SS_FF=True),
         gates=dict(fullshape_exact=False,physical_admitted=False,routed_SS_FF=False,
             parent_context=False,adopted=False))
-=======
-    lanes = 8 * 4 * 2
-    inc_groups = sum(25 - (1 << i) for i in range(5))
-    add_groups = sum(13 - (1 << i) for i in range(4))
-    return dict(schema='opentallas.hbm.smh.round_prefix.price.v1',
-        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
-        replicas=lanes, bterm_latency_cycles=11, accumulator_IL=8,
-        added_cycles=0, added_register_bits=0,
-        MACs_per_cycle_delta=0, memory_bytes_per_cycle_delta=0,
-        boundary_bits_per_cycle_delta=0, boundary_track_delta=0,
-        inc24_prefix_AND_nodes=inc_groups,
-        exponent12_prefix_groups_per_adder=add_groups,
-        parallel_exponent_adders_per_lane=2,
-        new_mux_bits_per_lane=12,
-        new_logic_gate_reservation_per_lane=512,
-        tile_bterm_lanes=4, tile_new_logic_gate_reservation=2048,
-        tile_die_um=[319.68, 509.76],
-        area_and_slot_fit='Map reserved gates using actual WC cells; measure mapping delta before route; no area or fit PASS inferred.',
-        latency_composition_delta_us=0, physical_adopted=False,
-        constraints=dict(period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25))
-
-
-def hbm_smh_local_grt_price(boxes):
-    """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
-    area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
-    die_area=319.68*509.76
-    for x1,y1,x2,y2 in boxes:
-        if not (0<=x1<x2<=319.68 and 0<=y1<y2<=509.76):
-            raise ValueError('Repair outside actual tile allocation')
-    return dict(schema='opentallas.hbm.smh.local_grt.price.v1',
-        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
-        added_pipeline_edges=0,added_register_bits=0,added_memory_ports=0,
-        added_boundary_bits_per_cycle=0,added_physical_tracks=0,added_replicas=0,
-        new_logic_area_um2=0,tile_die_um=[319.68,509.76],density=0.55,
-        repair_boxes_um=boxes,repair_area_um2=area,repair_area_fraction=area/die_area,
-        baseline_global_capacity_reservation=0.25,local_capacity_reservation=0.5,
-        layers=['M2','M3','M4','M5','M6'],
-        track_impact='Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.',
-        latency_delta='Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.',
-        composed_AR_us=441.505,composed_MTP_step_us=1002.401,
-        physical_adopted=False,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25)
->>>>>>> 6a703d4f6 (Localize actual SMH GRT failures and price bounded SRAM-edge route reservation)
 
 
 def dsrom_window_pipeline_measured_latency_price(root=None):
@@ -10029,3 +9986,24 @@ def dsrom_window_pipeline_measured_latency_price(root=None):
         measured_leaf=str(path.relative_to(root)),
         source_priced=True, parent_clock_load_slot_qualified=False,
         physical_adoption=False, headline_changed=False)
+
+
+def hbm_smh_local_grt_price(boxes):
+    """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
+    area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
+    die_area=319.68*509.76
+    for x1,y1,x2,y2 in boxes:
+        if not (0<=x1<x2<=319.68 and 0<=y1<y2<=509.76):
+            raise ValueError('Repair outside actual tile allocation')
+    return dict(schema='opentallas.hbm.smh.local_grt.price.v1',
+        basis='results/rtl/hbm_sm_structure_20261005/takeover_r1/composition_r3.json',
+        added_pipeline_edges=0,added_register_bits=0,added_memory_ports=0,
+        added_boundary_bits_per_cycle=0,added_physical_tracks=0,added_replicas=0,
+        new_logic_area_um2=0,tile_die_um=[319.68,509.76],density=0.55,
+        repair_boxes_um=boxes,repair_area_um2=area,repair_area_fraction=area/die_area,
+        baseline_global_capacity_reservation=0.25,local_capacity_reservation=0.5,
+        layers=['M2','M3','M4','M5','M6'],
+        track_impact='Locally withhold capacity from existing allocated tracks; no obstruction or track budget credit.',
+        latency_delta='Zero architectural cycles; actual routed wire/repair buffer delta pending and must be priced.',
+        composed_AR_us=441.505,composed_MTP_step_us=1002.401,
+        physical_adopted=False,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25)
