@@ -30,33 +30,39 @@ module tb_code_read_align;
   endtask
   initial begin
     tick(); @(negedge clk);por_n=1;
-    // Unsupported virtual banks must refuse before any actual leaf acceptance.
-    for(integer b=2;b<8;b=b+1) begin
+    // Uninstalled physical spans are refused by the enclosing mapper, not
+    // inferred from virtual tags here. Out-of-range tags5..7 still refuse.
+    for(integer b=5;b<8;b=b+1) begin
       virtual_bank={3'(b),3'(b)};#1;
-      if(ready!==0 || rsp!==0) $fatal(1,"unsupported virtual bank accepted");
+      if(ready!==0 || rsp!==0) $fatal(1,"out-of-range virtual bank accepted");
     end
-    virtual_bank={3'd1,3'd0};#1;
-    if(ready!==3) $fatal(1,"bound idle columns not ready");
-    rd_fire=3; tick();
-    if(rsp!==0 || ready!==0) $fatal(1,"early response or repeated acceptance");
-    @(negedge clk);rd_fire=0;
-    tick();
-    if(MEM_EXTRA==0 && rsp!==3) $fatal(1,"missing second-edge response");
-    if(MEM_EXTRA==1 && rsp!==0) $fatal(1,"MEM_EXTRA capture bypassed");
-    tick();
-    if(rsp!==3 || rom[0+:256]!==256'h123456789abcdef0 ||
-       rom[(1*5+1)*266+:256]!==256'hfedcba9876543210)
-      $fatal(1,"response data/bank alignment");
-    if(rom[266+:266]!==0 || rom[(1*5)*266+:266]!==0 || rom[256+:10]!==0)
-      $fatal(1,"wrong bank driven");
-    // Changing proposed bank/data while stalled must not relabel held response.
-    @(negedge clk);virtual_bank={3'd0,3'd1};leaf_rd_data='1;
-    tick();tick();
-    if(rsp!==3 || ready!==0 || rom[0+:256]!==256'h123456789abcdef0 || fault)
-      $fatal(1,"held response changed");
-    @(negedge clk);rsp_ready=3;
-    tick();
-    if(rsp!==0 || ready!==3 || fault) $fatal(1,"retirement did not release");
+    for(integer b=0;b<5;b=b+1) begin
+      @(negedge clk);virtual_bank={3'(4-b),3'(b)};rsp_ready=0;#1;
+      if(ready!==3) $fatal(1,"valid virtual tags not ready");
+      rd_fire=3; tick();
+      if(rsp!==0 || ready!==0) $fatal(1,"early response or repeated acceptance");
+      @(negedge clk);rd_fire=0;
+      tick();
+      if(MEM_EXTRA==0 && rsp!==3) $fatal(1,"missing second-edge response");
+      if(MEM_EXTRA==1 && rsp!==0) $fatal(1,"MEM_EXTRA capture bypassed");
+      tick();
+      if(rsp!==3 || rom[b*266+:256]!==256'h123456789abcdef0 ||
+         rom[(5+4-b)*266+:256]!==256'hfedcba9876543210)
+        $fatal(1,"response data/bank alignment");
+      for(integer slot=0;slot<5;slot=slot+1) begin
+        if(slot!=b && rom[slot*266+:266]!==0) $fatal(1,"wrong column0 bank driven");
+        if(slot!=4-b && rom[(5+slot)*266+:266]!==0) $fatal(1,"wrong column1 bank driven");
+      end
+      if(rom[b*266+256+:10]!==0) $fatal(1,"unused upper bits not zero");
+      // Changing proposed tag/data while stalled must not relabel the response.
+      @(negedge clk);virtual_bank={3'd5,3'd5};leaf_rd_data='1;
+      tick();tick();
+      if(rsp!==3 || ready!==0 || rom[b*266+:256]!==256'h123456789abcdef0 || fault)
+        $fatal(1,"held response changed");
+      @(negedge clk);rsp_ready=3;
+      tick();
+      if(rsp!==0 || ready!==0 || fault) $fatal(1,"retirement/invalid next tag");
+    end
     // A real leaf fault never becomes valid zero data or positive readiness.
     @(negedge clk);leaf_fault=1;#1;
     if(rsp!==0 || ready!==0 || !fault) $fatal(1,"fault not refused");
