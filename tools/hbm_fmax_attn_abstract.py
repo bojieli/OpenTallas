@@ -31,9 +31,16 @@ def main():
     ap.add_argument("--name", required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--image", default="openroad/orfs:latest")
+    ap.add_argument("--tmp-dir", type=Path,
+                    help="job-local host scratch to bind at /tmp; sets container TMPDIR=/tmp")
     a = ap.parse_args()
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
+    tmp_args = []
+    if a.tmp_dir is not None:
+        tmp_dir = a.tmp_dir.resolve()
+        tmp_dir.mkdir(parents=True, exist_ok=True)
+        tmp_args = ["-v", f"{tmp_dir}:/tmp", "-e", "TMPDIR=/tmp"]
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = base.relative_to(orfs)
     rec = dict(name=a.name, orfs_dir=str(orfs), corners={})
@@ -53,11 +60,14 @@ write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib
 exit
 """
         (out / f"export_{c}.tcl").write_text(tcl)
-        p = subprocess.run(["docker", "run", "--rm", "-v", f"{orfs}:/in:ro", "-v", f"{out}:/out", a.image,
-                            "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
-                            f"/out/export_{c}.tcl"], capture_output=True, text=True)
+        cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/in:ro", "-v", f"{out}:/out", *tmp_args, a.image,
+               "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad", "-no_init", "-exit",
+               f"/out/export_{c}.tcl"]
+        p = subprocess.run(cmd, capture_output=True, text=True)
         (out / f"export_{c}.log").write_text(p.stdout + p.stderr)
         rec["corners"][c] = dict(returncode=p.returncode, done="OT_EXPORT_DONE" in p.stdout)
+        if tmp_args:
+            rec["corners"][c]["command"] = cmd
     # the element name is the liberty cell; the per-corner library names differ
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     rec["ok"] = all(v["done"] for v in rec["corners"].values()) and len(rec["files"]) == 3
