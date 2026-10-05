@@ -102,6 +102,9 @@
 // and `core_pos` are combinational (the start costs no extra cycle); the
 // memory and link ports are driven from state and the link-side inputs.
 // ---------------------------------------------------------------------------
+`ifndef OT_WFC_CONTROL_PIPE
+`define OT_WFC_CONTROL_PIPE 0
+`endif
 `ifndef OT_WFC_LOCAL_CONTROL
 `define OT_WFC_LOCAL_CONTROL 0
 `endif
@@ -110,6 +113,10 @@
 `endif
 module ot_rom_pkg_ctrl_wfc #(
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
+    parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
+    parameter integer PREFIX_INC = 0, // explicit balanced position carry
+    parameter integer QUEUE_SHIFT = 0, // priced same-edge constant-head TXQ
+    parameter integer CONTROL_PIPE = `OT_WFC_CONTROL_PIPE, // priced completion/start capture, default off
     parameter integer LOCAL_CONTROL = `OT_WFC_LOCAL_CONTROL, // opt-in same-edge control locality
     parameter integer PKG_ID       = 0,
     parameter integer FLIT         = 512,    // bits; one vector-memory word
@@ -256,6 +263,15 @@ module ot_rom_pkg_ctrl_wfc #(
     // (a registered root for the reset tree; every flop below sees release one cycle later)
     (* keep *) reg rst_q;
     always @(posedge clk or negedge rst_n) if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+    wire rx_enable;
+    generate if (HEADER_LOCAL) begin : g_header_local_release
+        reg enable_q;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) enable_q <= 1'b0; else enable_q <= 1'b1;
+        assign rx_enable = enable_q;
+    end else begin : g_header_original_release
+        assign rx_enable = rst_q;
+    end endgenerate
     // A HIDDEN header's position check, pipelined (header at t; hdr_user / hdr_pos hold until the next
     // header, >= t + RXW + 1): t+1 each group latches the user's low bits, t+2 reads its entry
     // (registered), t+3 the group is selected (registered; hdr_pos, hdr_pos + 1 and the group copied),
@@ -265,6 +281,27 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [NW-1:0] upos_hr, hdr_pos1, pos_c;
 
     // -- core -------------------------------------------------------------------------
+    reg start_i;
+    reg [NW-1:0] start_tok_i, start_pos_i;
+    wire launch_wait;
+    generate if (CONTROL_PIPE) begin : g_control_launch
+        reg v;
+        reg [NW-1:0] token_q, pos_q;
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) v <= 1'b0; else v <= start_i;
+        always @(posedge clk) if (start_i) begin
+            token_q <= start_tok_i; pos_q <= start_pos_i;
+        end
+        assign core_start = v;
+        assign core_token = token_q;
+        assign core_pos = pos_q;
+        assign launch_wait = v;
+    end else begin : g_control_launch_original
+        assign core_start = start_i;
+        assign core_token = start_tok_i;
+        assign core_pos = start_pos_i;
+        assign launch_wait = 1'b0;
+    end endgenerate
     reg          running;              // from the start edge until the job is handed to TX
     reg [USER_W-1:0] cur_user;
     assign core_user = cur_user;
@@ -292,17 +329,41 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [NW-1:0]   tx_pos, tx_idx, tx_tok;
     reg [31:0]     tx_val;
     assign out_valid = (txq_n != 0);
-    assign out_data  = txq_d[txq_r];
-    assign out_last  = txq_l[txq_r];
+    assign out_data  = txq_d[QUEUE_SHIFT ? 0 : txq_r];
+    assign out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
     wire tx_pop   = out_valid && out_ready;
     wire tx_space = (txq_n + rd_inflight) < TXQ;
     // the finished job is taken once the previous one's messages are queued
-    wire job_done = running && core_done && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
+    wire completion_qual = running && core_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && (txq_n + 2 <= TXQ);
+    wire job_done;
+    wire [NW-1:0] rep_idx;
+    wire [31:0] rep_val;
+    generate if (CONTROL_PIPE) begin : g_control_completion
+        reg v;
+        reg [NW-1:0] idx_q;
+        reg [31:0] val_q;
+        // Qualification reserves the current running owner. Until consume,
+        // no new core start is possible and no VM overwrite is advertised.
+        // Capture the exact argmax on the qualified edge, not a later sample.
+        always @(posedge clk or negedge rst_q)
+            if (!rst_q) v <= 1'b0;
+            else v <= completion_qual && !v;
+        always @(posedge clk) if (completion_qual && !v) begin
+            idx_q <= rep_idx_raw; val_q <= rep_val_raw;
+        end
+        assign job_done = v;
+        assign rep_idx = idx_q;
+        assign rep_val = val_q;
+    end else begin : g_control_completion_original
+        assign job_done = completion_qual;
+        assign rep_idx = rep_idx_raw;
+        assign rep_val = rep_val_raw;
+    end endgenerate
     // argmax this package reports: its own part's, or the running one if better
     wire [NW-1:0] own_idx = core_next_token + ROW0;
     wire          keep_pa = COMBINE_IN && !better(own_idx, core_next_val, cur_pa_idx, cur_pa_val);
-    wire [NW-1:0] rep_idx = keep_pa ? cur_pa_idx : own_idx;
-    wire [31:0]   rep_val = keep_pa ? cur_pa_val : core_next_val;
+    wire [NW-1:0] rep_idx_raw = keep_pa ? cur_pa_idx : own_idx;
+    wire [31:0]   rep_val_raw = keep_pa ? cur_pa_val : core_next_val;
     // payload words still to be read: [tx_lo, TXB + XWORDS)
     wire           tx_reading = (tx_st == T_DATA) || (job_done && SEND_HIDDEN);
     wire [VWA-1:0] tx_lo = job_done ? TXB : TXB + tx_k;
@@ -322,6 +383,13 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [3:0]    side_cnt [0:MAXU-1];   // SIDE messages received and not yet consumed, per user
     reg [NW-1:0] hdr_pos, hdr_pa_idx, hdr_tok;
     reg [31:0]   hdr_pa_val;
+    wire [NW-1:0] hdr_pos_increment;
+    generate if (PREFIX_INC) begin : g_position_prefix
+        ot_dsrom_wfc_position_inc #(.W(NW)) u_inc(.v(hdr_pos),.inc(hdr_pos_increment));
+    end else begin : g_position_original
+        assign hdr_pos_increment = hdr_pos + 1'b1;
+    end endgenerate
+
     reg          pend;                   // a received job waits for the outbound reads
     // (closed) registered mirrors of the word addresses: rxw = RXB + rx_j, sww = the SIDE staging word,
     // txh = TXB + tx_k, txs = SIDE_TXB + tx_k -- updated with rx_j / tx_k, so no adder before a compare
@@ -370,7 +438,7 @@ module ot_rom_pkg_ctrl_wfc #(
     wire [NW-1:0]     e_tok, e_pos, e_pr_pos, e_tok_p, e_tok_i;
     wire [USER_W-1:0] e_user, e_pr_user, e_tok_u;
     wire [3:0]        e_pr_blk;
-    wire              src_free = !running && !tx_hold_i && !pend && rx_st == R_IDLE;
+    wire              src_free = rx_enable && !running && !tx_hold_i && !pend && rx_st == R_IDLE;
 
     // reduction of the registered RESULT (combinational)
     reg          fb_v, fb_cont;
@@ -424,7 +492,7 @@ module ot_rom_pkg_ctrl_wfc #(
         // accepted flit until this controller can retain it on that edge.
         // Otherwise the sender consumes the header while we are still reset,
         // and the next payload is decoded as a new header.
-        if (!rst_q) begin
+        if (!rx_enable) begin
             in_ready = 1'b0;
         end else if (rx_st == R_IDLE) begin
             if (in_type == MT_HIDDEN) begin
@@ -448,7 +516,7 @@ module ot_rom_pkg_ctrl_wfc #(
         vm_raddr = job_done ? TXB : (tx_st == T_SDATA) ? txs : txh[VWA-1:0];
 
         // core start: at most one source per cycle; the core samples it on this edge
-        st_rx = (rx_last_word_i || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
+        st_rx = ((CONTROL_PIPE ? 1'b0 : rx_last_word_i) || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0;
         if (SOURCE && !running && !tx_hold_i && !pend && rx_st == R_IDLE) begin
             st_new = !WF && nu_ok && next_u < MAXU;
@@ -457,17 +525,17 @@ module ot_rom_pkg_ctrl_wfc #(
             // WAVE: never on a result's reduction cycle (no same-cycle issue/verify race)
             st_wk  = WF && e_go;      // the engine's start (a new user or a known-token position)
         end
-        core_start = st_rx || st_new || st_q || st_fb || st_wk;
-        core_token = FWD_TOKEN ? hdr_tok : {NW{1'b0}}; core_pos = hdr_pos; st_user = hdr_user;
-        if (st_new) begin core_token = nu_tok; core_pos = 0; st_user = next_u; end
-        if (st_q)   begin core_token = jq_t[jq_r]; core_pos = jq_p[jq_r]; st_user = jq_u[jq_r]; end
-        if (st_fb)  begin core_token = fb_tok; core_pos = res_p + 1'b1; st_user = res_u; end
-        if (st_wk)  begin core_token = e_tok; core_pos = e_pos; st_user = e_user; end
+        start_i = st_rx || st_new || st_q || st_fb || st_wk;
+        start_tok_i = FWD_TOKEN ? hdr_tok : {NW{1'b0}}; start_pos_i = hdr_pos; st_user = hdr_user;
+        if (st_new) begin start_tok_i = nu_tok; start_pos_i = 0; st_user = next_u; end
+        if (st_q)   begin start_tok_i = jq_t[jq_r]; start_pos_i = jq_p[jq_r]; st_user = jq_u[jq_r]; end
+        if (st_fb)  begin start_tok_i = fb_tok; start_pos_i = res_p + 1'b1; st_user = res_u; end
+        if (st_wk)  begin start_tok_i = e_tok; start_pos_i = e_pos; st_user = e_user; end
         // the registered reset root releases one cycle after rst_n: take nothing from the link and start
         // nothing until then (the reference releases with rst_n; a flit offered in that cycle must wait)
-        if (!rst_q) begin
+        if (!rx_enable) begin
             in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0; vm_we = 1'b0;
-            st_rx = 1'b0; st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0; core_start = 1'b0;
+            st_rx = 1'b0; st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0; start_i = 1'b0;
         end
     end
 
@@ -515,12 +583,12 @@ module ot_rom_pkg_ctrl_wfc #(
             end
 
             // ---- core start
-            if (core_start) begin
+            if (start_i) begin
                 running <= 1'b1;
-                cur_user <= st_user; cur_pos <= core_pos;
+                cur_user <= st_user; cur_pos <= start_pos_i;
                 cur_pa_idx <= hdr_pa_idx; cur_pa_val <= hdr_pa_val;
                 kv_base <= st_user * KVW;
-                cur_tok <= core_token;
+                cur_tok <= start_tok_i;
             end
             if (st_rx) pend <= 1'b0;
             else if (rx_last_word) pend <= 1'b1;
@@ -563,7 +631,7 @@ module ot_rom_pkg_ctrl_wfc #(
             if (uchk) uchk <= 1'b0;
             uchk2 <= uchk; uchk3 <= uchk2; uchk4 <= uchk3;
             gsel_oh <= {{(UNG-1){1'b0}}, 1'b1} << (hdr_user >> 5);
-            if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos + 1'b1; pos_c <= hdr_pos; gw_oh <= gsel_oh; end
+            if (uchk3) begin upos_hr <= upos_sel; hdr_pos1 <= hdr_pos_increment; pos_c <= hdr_pos; gw_oh <= gsel_oh; end
             if (uchk4 && (pos_c > upos_hr || pos_c + WIN < upos_hr)) proto_fault <= 1'b1;
             res_v <= 1'b0;
             if (rx_res) begin
@@ -599,7 +667,38 @@ module ot_rom_pkg_ctrl_wfc #(
             // Same queue, same priority, same write edge. The opt-in bank
             // mirror removes binary write-address decoding from the late
             // core_done enqueue control. Payload registers remain unreset.
-            if (LOCAL_CONTROL) begin
+            if (QUEUE_SHIFT) begin
+                if (tx_pop) begin
+                    for (qbank = 0; qbank < TXQ-1; qbank = qbank + 1) begin
+                        txq_d[qbank] <= txq_d[qbank+1];
+                        txq_l[qbank] <= txq_l[qbank+1];
+                    end
+                end
+                // Append after the exact simultaneous pop; enqueue priority
+                // and capacity reservation match the original finite TXQ.
+                if (job_done) begin
+                    if (SEND_HIDDEN) begin
+                        txq_d[txq_n-tx_pop] <= header(HID_D, MT_HIDDEN, XLEN, cur_user, cur_pos, rep_idx, rep_val,
+                                      FWD_TOKEN ? cur_tok : {NW{1'b0}}, 16'd0);
+                        txq_l[txq_n-tx_pop] <= 1'b0;
+                    end else begin
+                        txq_d[txq_n-tx_pop] <= header(RES_D, MT_RESULT, 8'd0, cur_user, cur_pos, rep_idx, rep_val,
+                                      {NW{1'b0}}, 16'd0);
+                        txq_l[txq_n-tx_pop] <= 1'b1;
+                    end
+                end else if (q_hdr_r) begin
+                    txq_d[txq_n-tx_pop] <= header(RES_D, MT_RESULT, 8'd0, tx_user, tx_pos, tx_idx, tx_val,
+                                  {NW{1'b0}}, 16'd0);
+                    txq_l[txq_n-tx_pop] <= 1'b1;
+                end else if (q_hdr_s) begin
+                    txq_d[txq_n-tx_pop] <= header(SIDE_D, MT_SIDE, SLEN, tx_user, tx_pos, {NW{1'b0}}, 32'd0,
+                                  {NW{1'b0}}, SIDE_A);
+                    txq_l[txq_n-tx_pop] <= 1'b0;
+                end else if (rd_inflight) begin
+                    txq_d[txq_n-tx_pop] <= vm_rq;
+                    txq_l[txq_n-tx_pop] <= rd_last;
+                end
+            end else if (LOCAL_CONTROL) begin
                 for (qbank = 0; qbank < TXQ; qbank = qbank + 1) begin
                     if (txq_bank[qbank]) begin
                         if (job_done) begin
@@ -1052,4 +1151,25 @@ module ot_rom_pkg_ctrl_wfc_grp #(parameter integer DECODED_READ = 0, parameter i
             if (ef[k]) f_lo <= k;
         end
     end
+endmodule
+
+// Balanced carry tree; no register/latency change, modulo-2^W increment.
+module ot_dsrom_wfc_position_inc #(parameter integer W=21)(
+ input wire [W-1:0] v, output wire [W-1:0] inc);
+ assign inc[0]=~v[0];
+ genvar b,n,l;
+ generate for(b=1;b<W;b=b+1)begin:g_bit
+   localparam integer L=$clog2(b), P=1<<L;
+   wire [P-1:0] tree[0:L];
+   for(n=0;n<P;n=n+1)begin:g_leaf
+     if(n<b)assign tree[0][n]=v[n];
+     else assign tree[0][n]=1'b1;
+   end
+   for(l=1;l<=L;l=l+1)begin:g_level
+     for(n=0;n<(P>>l);n=n+1)begin:g_node
+       assign tree[l][n]=tree[l-1][2*n]&tree[l-1][2*n+1];
+     end
+   end
+   assign inc[b]=v[b]^tree[L][0];
+ end endgenerate
 endmodule

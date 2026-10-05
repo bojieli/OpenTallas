@@ -10726,3 +10726,120 @@ def hbm_simt_gu_coded_retention_model(nl=128, imw=13, nv=256):
             physical_probe_only=True,actual_parent_slot_allocated=False),
         full_calendar_ready=False,parent_context_ready=False,
         period_ps=833,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,adopted=False)
+
+
+def dsrom_wfc_control_pipeline_price(nw=21, maxu=866, user_w=10):
+    """Mandatory repair of actual S0 r1 paths, before candidate RTL.
+
+    Capture the qualified completion and its exact argmax, retaining current
+    owner until consume. Capture the start token/position alongside launch;
+    delay last-write starts through pend. This is only the control portion
+    of a multi-class structural repair, not a ready-to-route variant.
+    """
+    completion_bits = nw + 32 + 1
+    launch_bits = 2*nw + 1
+    ff = completion_bits + launch_bits
+    payload = ff - 2
+    nand2 = payload*4 + 128
+    buffers = ff*3 + 64
+    gross = payload*0.2916 + 2*0.37908 + nand2*0.08748 + buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.control_pipeline_price.v1',
+        mechanism='qualified completion capture plus reserved core launch',
+        MAXU=maxu, NW=nw, USER_W=user_w, MACs_per_cycle=0, replicas=1,
+        added_FF_bits=ff, completion_capture_bits=completion_bits,
+        launch_capture_bits=launch_bits, NAND2_reservation=nand2,
+        buffer_reservation= buffers, gross_cell_area_um2=gross,
+        cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+        new_memory_ports=0, memory_bytes_per_cycle_delta=0,
+        external_boundary_bits_per_cycle_delta=0,
+        internal_capture_bits_per_cycle=ff,
+        routing_track_demand_delta=2*ff+64,
+        existing_track_demand=4972, existing_track_capacity=16041,
+        analytical_tracks_fit=4972+2*ff+64<=16041,
+        baseline_measured_cell_area_um2=23536.2,
+        modeled_local_cell_area_um2=23536.2+2*gross,
+        existing_characterization_core_area_um2=94864,
+        local_characterization_area_fit=(23536.2+2*gross)<=94864*0.4,
+        allocated_parent_slot=None, selected_parent_slot_fit=False,
+        additional_completion_cycles=1,
+        additional_source_launch_cycles=1,
+        additional_received_launch_cycles=2,
+        per_source_job_latency_delta_cycles=2,
+        per_received_job_latency_delta_cycles=3,
+        target_period_ps=833, SS_setup_uncertainty_ps=60,
+        FF_hold_uncertainty_ps=25,
+        per_source_job_latency_delta_ns=2*0.833,
+        per_received_job_latency_delta_ns=3*0.833,
+        token_composition='delta_cycles = 2*N_source_jobs + 3*N_received_jobs on exposed serial controller edges; queue/router/VM successor waits add separately, no free overlap credit',
+        whole_token_exposed_job_counts=None,
+        whole_token_delta_ns=None, exact_gate_passed=False,
+        raw_failure='results/rtl/dsrom_wfc_parent_cut_physical_20261005/s0/terminal.json',
+        input_clock_or_macro_credit=False,
+        pending_structural_classes=['controller/router elastic cut',
+          'router head/allocator and drops carry', 'position increment',
+          'reset-gated header capture', 'external receiver clock/load and VM macro binding',
+          'one real slew violation place28608/A'],
+        P_and_R_ready=False, SS_FF_closed=False,
+        actual_parent_context_qualified=False, adopted=False)
+
+
+def dsrom_wfc_queue_head_price(flit=512, txq=4, np=3, buf=4):
+    """Same-edge finite shift heads remove measured binary-read mux classes.
+
+    Controller TXQ and only the dedicated WFC router projection shift on pop.
+    Original queue capacity, accepted debt, packet allocation and credits stay
+    unchanged; every shift is charged, no ideal free transport or FF removal.
+    """
+    controller_bits=(flit+1)*(txq-1)
+    router_bits=(flit+1+np)*np*(buf-1)
+    shift_bits=controller_bits+router_bits
+    nand2=shift_bits*4
+    buffers=shift_bits+128
+    gross=nand2*0.08748+buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.queue_head_price.v1',
+      MACs_per_cycle=0, replicas=1, flit_bits=flit,
+      controller_queue_flits=txq, router_ports=np, router_queue_flits=buf,
+      added_FF_bits=0, retained_payload_FF_bits=(flit+1)*txq+(flit+1+np)*np*buf,
+      internal_shift_bits_per_edge=shift_bits,
+      internal_shift_bytes_per_edge=shift_bits/8,
+      shifted_memory_ports=0, external_bytes_per_cycle_delta=0,
+      external_boundary_bits_per_edge_delta=0,
+      new_pipeline_edges=0, single_user_latency_delta_cycles=0,
+      NAND2_reservation=nand2, buffer_reservation=buffers,
+      cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+      routing_track_demand_delta=shift_bits,
+      existing_track_capacity=16041, existing_track_demand=4972,
+      combined_control_pipeline_tracks=258,
+      combined_tracks_fit=4972+258+shift_bits<=16041,
+      baseline_measured_area_um2=23536.2,
+      combined_local_area_budget_um2=23536.2+218.2626+2*gross,
+      characterization_core_area_um2=94864,
+      combined_local_area_fit=23536.2+218.2626+2*gross<=94864*0.4,
+      selected_parent_slot_fit=False, measured_routed_fit=False,
+      mechanism='constant head slot; shift accepted entries on pop, simultaneous append indexes exact post-pop count; routing metadata remains sampled at input acceptance',
+      P_and_R_ready=False, SS_FF_closed=False, adopted=False)
+
+
+def dsrom_wfc_header_cut_price(nw=21):
+    """Explicit parallel position carry and separately registered RX enable.
+
+    Price every padded reduction gate. The RX enable follows rst_q one edge
+    later, retaining async assert and blocking acceptance until local release.
+    New valid is protocol control, not completion/visibility authority.
+    """
+    and2=sum((1 << (i-1).bit_length())-1 for i in range(1,nw))
+    nand2=2*and2+4*nw+16
+    buffers=2*nw+16
+    gross=0.37908+nand2*0.08748+buffers*0.10206
+    return dict(schema='opentallas.dsrom.wfc.header_cut_price.v1',
+      NW=nw, MACs_per_cycle=0, replicas=1, added_FF_bits=1,
+      padded_AND2_gates=and2, XOR_bits=nw, NAND2_reservation=nand2,
+      buffer_reservation=buffers, cell_growth_budget_um2=2*gross,
+      old_cell_removal_credit_um2=0, new_memory_ports=0,
+      boundary_bits_per_edge_delta=0, internal_parallel_carry_wires=and2+nw,
+      added_routing_tracks=and2+nw+buffers,
+      additional_per_job_cycles=0, additional_cold_warm_release_cycles=1,
+      total_received_job_delta_cycles=3,
+      latency_composition='reset admission +1 per release, source job +2, received job +3 from control pipeline; no per-job position increment edge',
+      target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+      parent_slot_fit=False, SS_FF_closed=False, P_and_R_ready=False, adopted=False)
