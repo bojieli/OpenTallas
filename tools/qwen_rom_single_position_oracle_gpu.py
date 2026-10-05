@@ -62,19 +62,29 @@ def run(a):
     released = json.loads(a.released_oracle.read_text())
     require(released['tp'] == 4 and released['layers'] == 36 and released['kv_format'] == 'fp8',
             'released full TP4 reference required')
-    require(released['tokens_sha256'] == a.tokens_sha256 and released['prep_sha256'] == a.prep_sha256,
-            'actual prompt or decoded weights differ from released reference')
+    require(released['tokens_sha256'] == a.tokens_sha256, 'actual prompt differs from released reference')
+    require(sha(a.decoded_pins) == a.decoded_pins_sha256, 'retained image pins changed')
+    image_pins = json.loads(a.decoded_pins.read_text())
     for name, digest in released['oracle_source_sha256'].items():
         require(sha(ROOT/name) == digest, 'released golden source changed: '+name)
     require(torch.cuda.is_available(), 'CUDA only, no CPU fallback')
     prep = json.loads((a.prep / 'prep.json').read_text())
     for entry in prep['images']:
+        pins = (image_pins['layer_image_sha256'][f"L{entry['layer']}"][entry['die']]
+                if entry['kind'] == 'layer' else image_pins[f"head_die{entry['die']}"]['image_sha256'])
+        require(all(pins[name] == digest for name,digest in entry['image_sha256'].items()),
+                'decoded matrix/scale/constant source differs from retained image')
+        if entry['kind'] == 'layer':
+            require(prep['programs'][f"layer_d{entry['die']}"]['program_sha256'] == pins['program.hex'] and
+                    prep['programs'][f"layer_d{entry['die']}"]['segments_sha256'] == pins['segments.hex'],
+                    'actual native layer program differs from decoded source')
         require(sha(a.prep / entry['npz']) == entry['npz_sha256'], 'decoded image changed')
     require({(e['kind'], e['layer'], e['die']) for e in prep['images']} ==
             {('layer', n, d) for n in range(36) for d in range(4)} |
             {('head', -1, d) for d in range(4)}, '36 layers plus head on all four ranks required')
     m = gpu.GpuTP(gpu.torch_golden(torch.device('cuda:0')), a.prep, range(36), head=True)
     head_programs, head_hashes = gpu.head_programs(prep)
+    require(head_hashes == released['head_program_sha256'], 'released head program changed')
     require(sha(a.preload) == a.preload_sha256, 'actual embedding preload changed')
     words = [int(s, 16) for s in a.preload.read_text().split() if not s.startswith('@')]
     require(len(words) == 4096, 'one actual embedding row required')
@@ -92,6 +102,9 @@ def run(a):
                   layers=36, head=True, tp=4, groups=6144, su_width_arith=1024, kv_format='fp8',
                   positions=[a.position], tokens_used=tokens[:a.position + 1], tokens_sha256=a.tokens_sha256,
                   input_book_sha256=a.inputs_sha256, prep_sha256=a.prep_sha256,
+                  decoded_image_pins_sha256=a.decoded_pins_sha256,
+                  historical_released_prep_sha256=released['prep_sha256'],
+                  decoded_source_join='all148 image payload pins and all layer/head instruction hashes matched; fresh metadata',
                   head_program_sha256=head_hashes, per_position={str(a.position):frame},
                   oracle_source_sha256={str(Path(__file__).relative_to(ROOT)):sha(__file__),
                       **{name:sha(ROOT/name) for name in (
@@ -156,9 +169,9 @@ def run(a):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    for name in ('inputs', 'prep', 'tokens', 'preload', 'reference', 'released-oracle', 'history-directory', 'out'):
+    for name in ('inputs', 'prep', 'tokens', 'preload', 'reference', 'released-oracle', 'decoded-pins', 'history-directory', 'out'):
         p.add_argument('--'+name, type=Path, required=True)
-    for name in ('inputs-sha256', 'prep-sha256', 'tokens-sha256', 'preload-sha256', 'reference-sha256', 'released-oracle-sha256'):
+    for name in ('inputs-sha256', 'prep-sha256', 'tokens-sha256', 'preload-sha256', 'reference-sha256', 'released-oracle-sha256', 'decoded-pins-sha256'):
         p.add_argument('--'+name, required=True)
     p.add_argument('--position', type=int, required=True)
     p.add_argument('--token', type=int, required=True)
