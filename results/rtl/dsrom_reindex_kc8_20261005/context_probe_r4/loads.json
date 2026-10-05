@@ -1,0 +1,1871 @@
+{
+  "source_commit": "6c13365a5",
+  "scope": "62 historical harness launch nets: reset, drain0, req673..704, list748..775; direct load only, not full downstream buffer tree or parent endpoints",
+  "units": "fF; range reported by OpenSTA, not a scalar worst-corner replacement",
+  "loads": {
+    "ss": {
+      "rst_q$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.832773,
+          1.166422
+        ],
+        "wire_capacitance_fF": [
+          2.102567,
+          2.102567
+        ],
+        "total_capacitance_fF": [
+          2.93534,
+          3.268989
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[0]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.972624,
+          2.543547
+        ],
+        "wire_capacitance_fF": [
+          0.285703,
+          0.285704
+        ],
+        "total_capacitance_fF": [
+          2.258327,
+          2.829251
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[673]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.263122,
+          3.013234
+        ],
+        "wire_capacitance_fF": [
+          1.032043,
+          1.032043
+        ],
+        "total_capacitance_fF": [
+          3.295165,
+          4.045277
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[674]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.643372,
+          0.996763
+        ],
+        "wire_capacitance_fF": [
+          3.085322,
+          3.085322
+        ],
+        "total_capacitance_fF": [
+          3.728694,
+          4.082085
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[675]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          0.907809,
+          0.907809
+        ],
+        "total_capacitance_fF": [
+          2.401989,
+          2.8785
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[676]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.643372,
+          0.996763
+        ],
+        "wire_capacitance_fF": [
+          6.279314,
+          6.279314
+        ],
+        "total_capacitance_fF": [
+          6.922686,
+          7.276076
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[677]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.643372,
+          0.996763
+        ],
+        "wire_capacitance_fF": [
+          6.932903,
+          6.932904
+        ],
+        "total_capacitance_fF": [
+          7.576275,
+          7.929667
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[678]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.612993,
+          2.025531
+        ],
+        "wire_capacitance_fF": [
+          1.582002,
+          1.582002
+        ],
+        "total_capacitance_fF": [
+          3.194994,
+          3.607533
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[679]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.17378,
+          1.63006
+        ],
+        "wire_capacitance_fF": [
+          1.746925,
+          1.746925
+        ],
+        "total_capacitance_fF": [
+          2.920706,
+          3.376986
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[680]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          1.253007,
+          1.253007
+        ],
+        "total_capacitance_fF": [
+          2.747187,
+          3.223698
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[681]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          2.836217,
+          2.836218
+        ],
+        "total_capacitance_fF": [
+          4.330398,
+          4.806909
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[682]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          7.385361,
+          7.385361
+        ],
+        "total_capacitance_fF": [
+          8.87954,
+          9.356051
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[683]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          3.401386,
+          3.401386
+        ],
+        "total_capacitance_fF": [
+          4.895566,
+          5.372077
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[684]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.06164,
+          1.575154
+        ],
+        "wire_capacitance_fF": [
+          11.408452,
+          11.408452
+        ],
+        "total_capacitance_fF": [
+          12.470092,
+          12.983606
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[685]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.910594,
+          2.52156
+        ],
+        "wire_capacitance_fF": [
+          2.848771,
+          2.848771
+        ],
+        "total_capacitance_fF": [
+          4.759365,
+          5.370331
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[686]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          4.184131,
+          4.184132
+        ],
+        "total_capacitance_fF": [
+          5.678311,
+          6.154822
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[687]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          3.308328,
+          3.308329
+        ],
+        "total_capacitance_fF": [
+          4.802508,
+          5.279019
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[688]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          8.227507,
+          8.227508
+        ],
+        "total_capacitance_fF": [
+          9.721686,
+          10.198198
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[689]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.355635,
+          0.355635
+        ],
+        "total_capacitance_fF": [
+          1.514114,
+          1.764201
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[690]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          6.321568,
+          6.321568
+        ],
+        "total_capacitance_fF": [
+          7.815748,
+          8.292259
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[691]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.173068,
+          1.6275
+        ],
+        "wire_capacitance_fF": [
+          0.254088,
+          0.254088
+        ],
+        "total_capacitance_fF": [
+          1.427156,
+          1.881588
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[692]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.596795,
+          0.596795
+        ],
+        "total_capacitance_fF": [
+          1.755274,
+          2.005361
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[693]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.910594,
+          2.52156
+        ],
+        "wire_capacitance_fF": [
+          4.35735,
+          4.35735
+        ],
+        "total_capacitance_fF": [
+          6.267944,
+          6.878911
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[694]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          1.273488,
+          1.273488
+        ],
+        "total_capacitance_fF": [
+          2.767668,
+          3.244179
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[695]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          0.13884,
+          0.138841
+        ],
+        "total_capacitance_fF": [
+          1.63302,
+          2.109532
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[696]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.643372,
+          0.996763
+        ],
+        "wire_capacitance_fF": [
+          3.086448,
+          3.086449
+        ],
+        "total_capacitance_fF": [
+          3.72982,
+          4.083212
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[697]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          1.694466,
+          1.694466
+        ],
+        "total_capacitance_fF": [
+          3.188646,
+          3.665157
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[698]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          0.190274,
+          0.190274
+        ],
+        "total_capacitance_fF": [
+          1.684453,
+          2.160965
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[699]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          6.075938,
+          6.075939
+        ],
+        "total_capacitance_fF": [
+          7.570118,
+          8.04663
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[700]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          2.534423,
+          2.534423
+        ],
+        "total_capacitance_fF": [
+          4.028603,
+          4.505114
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[701]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          10.977456,
+          10.977456
+        ],
+        "total_capacitance_fF": [
+          12.471636,
+          12.948147
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[702]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          7.877089,
+          7.877089
+        ],
+        "total_capacitance_fF": [
+          9.371268,
+          9.847779
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[703]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.643372,
+          0.996763
+        ],
+        "wire_capacitance_fF": [
+          5.709177,
+          5.709177
+        ],
+        "total_capacitance_fF": [
+          6.352549,
+          6.705939
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[704]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.49418,
+          1.970691
+        ],
+        "wire_capacitance_fF": [
+          7.760074,
+          7.760074
+        ],
+        "total_capacitance_fF": [
+          9.254253,
+          9.730764
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[748]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.172676,
+          0.172676
+        ],
+        "total_capacitance_fF": [
+          1.384309,
+          1.652979
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[749]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.237832,
+          0.237832
+        ],
+        "total_capacitance_fF": [
+          1.449465,
+          1.718135
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[750]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.133599,
+          0.133599
+        ],
+        "total_capacitance_fF": [
+          1.345232,
+          1.613902
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[751]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.352885,
+          0.352885
+        ],
+        "total_capacitance_fF": [
+          1.564518,
+          1.833188
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[752]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.162297,
+          0.162297
+        ],
+        "total_capacitance_fF": [
+          1.320776,
+          1.570863
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[753]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.055778,
+          0.055778
+        ],
+        "total_capacitance_fF": [
+          1.267411,
+          1.536081
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[754]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.108798,
+          0.108798
+        ],
+        "total_capacitance_fF": [
+          1.320431,
+          1.589101
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[755]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.176262,
+          0.176262
+        ],
+        "total_capacitance_fF": [
+          1.334741,
+          1.584828
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[756]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.158949,
+          0.15895
+        ],
+        "total_capacitance_fF": [
+          1.317428,
+          1.567516
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[757]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.240565,
+          0.240566
+        ],
+        "total_capacitance_fF": [
+          1.452198,
+          1.720868
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[758]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.194887,
+          0.194887
+        ],
+        "total_capacitance_fF": [
+          1.353366,
+          1.603453
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[759]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.158643,
+          0.158643
+        ],
+        "total_capacitance_fF": [
+          1.370276,
+          1.638946
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[760]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.162652,
+          0.162652
+        ],
+        "total_capacitance_fF": [
+          1.374285,
+          1.642955
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[761]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.099924,
+          0.099924
+        ],
+        "total_capacitance_fF": [
+          1.311557,
+          1.580227
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[762]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.132339,
+          0.132339
+        ],
+        "total_capacitance_fF": [
+          1.343972,
+          1.612642
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[763]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.168929,
+          0.168929
+        ],
+        "total_capacitance_fF": [
+          1.380562,
+          1.649232
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[764]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.14432,
+          0.14432
+        ],
+        "total_capacitance_fF": [
+          1.302799,
+          1.552886
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[765]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.154125,
+          0.154125
+        ],
+        "total_capacitance_fF": [
+          1.365758,
+          1.634428
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[766]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.102143,
+          0.102143
+        ],
+        "total_capacitance_fF": [
+          1.313776,
+          1.582446
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[767]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.126027,
+          0.126027
+        ],
+        "total_capacitance_fF": [
+          1.337659,
+          1.60633
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[768]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.129043,
+          0.129043
+        ],
+        "total_capacitance_fF": [
+          1.287522,
+          1.537609
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[769]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.466206,
+          0.466206
+        ],
+        "total_capacitance_fF": [
+          1.677839,
+          1.946509
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[770]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.17949,
+          0.17949
+        ],
+        "total_capacitance_fF": [
+          1.391123,
+          1.659793
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[771]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.331538,
+          0.331538
+        ],
+        "total_capacitance_fF": [
+          1.543171,
+          1.811841
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[772]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.158479,
+          1.408566
+        ],
+        "wire_capacitance_fF": [
+          0.121452,
+          0.121452
+        ],
+        "total_capacitance_fF": [
+          1.279931,
+          1.530018
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[773]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.20835,
+          0.208351
+        ],
+        "total_capacitance_fF": [
+          1.419983,
+          1.688653
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[774]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.103143,
+          0.103143
+        ],
+        "total_capacitance_fF": [
+          1.314776,
+          1.583446
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[775]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.211633,
+          1.480303
+        ],
+        "wire_capacitance_fF": [
+          0.102492,
+          0.102492
+        ],
+        "total_capacitance_fF": [
+          1.314124,
+          1.582795
+        ],
+        "direct_loads": 2
+      }
+    },
+    "ff": {
+      "rst_q$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.041352,
+          1.377229
+        ],
+        "wire_capacitance_fF": [
+          2.102567,
+          2.102567
+        ],
+        "total_capacitance_fF": [
+          3.143919,
+          3.479796
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[0]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.43577,
+          3.04169
+        ],
+        "wire_capacitance_fF": [
+          0.285703,
+          0.285704
+        ],
+        "total_capacitance_fF": [
+          2.721473,
+          3.327394
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[673]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.739557,
+          3.598058
+        ],
+        "wire_capacitance_fF": [
+          1.032043,
+          1.032043
+        ],
+        "total_capacitance_fF": [
+          3.7716,
+          4.630101
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[674]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.760179,
+          1.153717
+        ],
+        "wire_capacitance_fF": [
+          3.085321,
+          3.085322
+        ],
+        "total_capacitance_fF": [
+          3.845501,
+          4.239039
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[675]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          0.907809,
+          0.907809
+        ],
+        "total_capacitance_fF": [
+          2.7145,
+          3.250776
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[676]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.760179,
+          1.153717
+        ],
+        "wire_capacitance_fF": [
+          6.279314,
+          6.279314
+        ],
+        "total_capacitance_fF": [
+          7.039493,
+          7.433031
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[677]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.760179,
+          1.153717
+        ],
+        "wire_capacitance_fF": [
+          6.932904,
+          6.932904
+        ],
+        "total_capacitance_fF": [
+          7.693083,
+          8.08662
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[678]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.00898,
+          2.41764
+        ],
+        "wire_capacitance_fF": [
+          1.582001,
+          1.582002
+        ],
+        "total_capacitance_fF": [
+          3.590981,
+          3.999642
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[679]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.472601,
+          1.912106
+        ],
+        "wire_capacitance_fF": [
+          1.746925,
+          1.746926
+        ],
+        "total_capacitance_fF": [
+          3.219526,
+          3.659032
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[680]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          1.253007,
+          1.253007
+        ],
+        "total_capacitance_fF": [
+          3.059698,
+          3.595974
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[681]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          2.836217,
+          2.836218
+        ],
+        "total_capacitance_fF": [
+          4.642909,
+          5.179184
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[682]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          7.38536,
+          7.385361
+        ],
+        "total_capacitance_fF": [
+          9.192051,
+          9.728328
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[683]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          3.401386,
+          3.401386
+        ],
+        "total_capacitance_fF": [
+          5.208077,
+          5.744353
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[684]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.271093,
+          1.837433
+        ],
+        "wire_capacitance_fF": [
+          11.408451,
+          11.408452
+        ],
+        "total_capacitance_fF": [
+          12.679544,
+          13.245885
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[685]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.32491,
+          3.018314
+        ],
+        "wire_capacitance_fF": [
+          2.848771,
+          2.848771
+        ],
+        "total_capacitance_fF": [
+          5.173681,
+          5.867085
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[686]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          4.184131,
+          4.184132
+        ],
+        "total_capacitance_fF": [
+          5.990822,
+          6.527099
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[687]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          3.308328,
+          3.308329
+        ],
+        "total_capacitance_fF": [
+          5.115019,
+          5.651296
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[688]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          8.227506,
+          8.227507
+        ],
+        "total_capacitance_fF": [
+          10.034196,
+          10.570473
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[689]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.355635,
+          0.355635
+        ],
+        "total_capacitance_fF": [
+          1.776934,
+          2.014581
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[690]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          6.321568,
+          6.321568
+        ],
+        "total_capacitance_fF": [
+          8.128259,
+          8.664536
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[691]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.467521,
+          1.912926
+        ],
+        "wire_capacitance_fF": [
+          0.254088,
+          0.254088
+        ],
+        "total_capacitance_fF": [
+          1.721609,
+          2.167014
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[692]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.596795,
+          0.596795
+        ],
+        "total_capacitance_fF": [
+          2.018094,
+          2.255741
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[693]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          2.32491,
+          3.018314
+        ],
+        "wire_capacitance_fF": [
+          4.35735,
+          4.357351
+        ],
+        "total_capacitance_fF": [
+          6.682261,
+          7.375665
+        ],
+        "direct_loads": 4
+      },
+      "u_l.q[694]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          1.273488,
+          1.273488
+        ],
+        "total_capacitance_fF": [
+          3.080179,
+          3.616455
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[695]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          0.13884,
+          0.138841
+        ],
+        "total_capacitance_fF": [
+          1.945531,
+          2.481807
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[696]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.760179,
+          1.153717
+        ],
+        "wire_capacitance_fF": [
+          3.086448,
+          3.086449
+        ],
+        "total_capacitance_fF": [
+          3.846627,
+          4.240166
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[697]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          1.694466,
+          1.694466
+        ],
+        "total_capacitance_fF": [
+          3.501157,
+          4.037433
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[698]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          0.190273,
+          0.190274
+        ],
+        "total_capacitance_fF": [
+          1.996964,
+          2.533241
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[699]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          6.075938,
+          6.075939
+        ],
+        "total_capacitance_fF": [
+          7.882629,
+          8.418906
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[700]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          2.534423,
+          2.534423
+        ],
+        "total_capacitance_fF": [
+          4.341114,
+          4.87739
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[701]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          10.977455,
+          10.977456
+        ],
+        "total_capacitance_fF": [
+          12.784146,
+          13.320423
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[702]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          7.877088,
+          7.877089
+        ],
+        "total_capacitance_fF": [
+          9.683779,
+          10.220056
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[703]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          0.760179,
+          1.153717
+        ],
+        "wire_capacitance_fF": [
+          5.709177,
+          5.709177
+        ],
+        "total_capacitance_fF": [
+          6.469356,
+          6.862894
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[704]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.806691,
+          2.342967
+        ],
+        "wire_capacitance_fF": [
+          7.760074,
+          7.760074
+        ],
+        "total_capacitance_fF": [
+          9.566765,
+          10.103041
+        ],
+        "direct_loads": 3
+      },
+      "u_l.q[748]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.172676,
+          0.172676
+        ],
+        "total_capacitance_fF": [
+          1.658969,
+          1.938632
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[749]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.237832,
+          0.237832
+        ],
+        "total_capacitance_fF": [
+          1.724125,
+          2.003788
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[750]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.133599,
+          0.133599
+        ],
+        "total_capacitance_fF": [
+          1.619892,
+          1.899555
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[751]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.352885,
+          0.352885
+        ],
+        "total_capacitance_fF": [
+          1.839178,
+          2.118841
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[752]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.162297,
+          0.162297
+        ],
+        "total_capacitance_fF": [
+          1.583596,
+          1.821243
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[753]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.055778,
+          0.055778
+        ],
+        "total_capacitance_fF": [
+          1.542071,
+          1.821734
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[754]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.108798,
+          0.108798
+        ],
+        "total_capacitance_fF": [
+          1.595091,
+          1.874754
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[755]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.176262,
+          0.176262
+        ],
+        "total_capacitance_fF": [
+          1.597561,
+          1.835208
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[756]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.15895,
+          0.15895
+        ],
+        "total_capacitance_fF": [
+          1.580249,
+          1.817896
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[757]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.240565,
+          0.240565
+        ],
+        "total_capacitance_fF": [
+          1.726858,
+          2.006521
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[758]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.194887,
+          0.194887
+        ],
+        "total_capacitance_fF": [
+          1.616186,
+          1.853833
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[759]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.158643,
+          0.158643
+        ],
+        "total_capacitance_fF": [
+          1.644936,
+          1.924599
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[760]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.162652,
+          0.162652
+        ],
+        "total_capacitance_fF": [
+          1.648945,
+          1.928608
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[761]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.099924,
+          0.099924
+        ],
+        "total_capacitance_fF": [
+          1.586217,
+          1.86588
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[762]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.132339,
+          0.132339
+        ],
+        "total_capacitance_fF": [
+          1.618632,
+          1.898295
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[763]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.168929,
+          0.168929
+        ],
+        "total_capacitance_fF": [
+          1.655222,
+          1.934885
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[764]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.14432,
+          0.14432
+        ],
+        "total_capacitance_fF": [
+          1.565619,
+          1.803266
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[765]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.154125,
+          0.154125
+        ],
+        "total_capacitance_fF": [
+          1.640418,
+          1.920081
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[766]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.102143,
+          0.102143
+        ],
+        "total_capacitance_fF": [
+          1.588436,
+          1.868099
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[767]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.126026,
+          0.126027
+        ],
+        "total_capacitance_fF": [
+          1.612319,
+          1.891983
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[768]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.129043,
+          0.129044
+        ],
+        "total_capacitance_fF": [
+          1.550342,
+          1.78799
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[769]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.466206,
+          0.466206
+        ],
+        "total_capacitance_fF": [
+          1.952499,
+          2.232162
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[770]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.17949,
+          0.17949
+        ],
+        "total_capacitance_fF": [
+          1.665783,
+          1.945446
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[771]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.331538,
+          0.331538
+        ],
+        "total_capacitance_fF": [
+          1.817831,
+          2.097494
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[772]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.421299,
+          1.658946
+        ],
+        "wire_capacitance_fF": [
+          0.121452,
+          0.121452
+        ],
+        "total_capacitance_fF": [
+          1.542751,
+          1.780398
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[773]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.208351,
+          0.208351
+        ],
+        "total_capacitance_fF": [
+          1.694644,
+          1.974307
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[774]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.103143,
+          0.103143
+        ],
+        "total_capacitance_fF": [
+          1.589436,
+          1.869099
+        ],
+        "direct_loads": 2
+      },
+      "u_l.q[775]$_DFF_P_": {
+        "pin_capacitance_fF": [
+          1.486293,
+          1.765956
+        ],
+        "wire_capacitance_fF": [
+          0.102492,
+          0.102492
+        ],
+        "total_capacitance_fF": [
+          1.588785,
+          1.868448
+        ],
+        "direct_loads": 2
+      }
+    }
+  }
+}

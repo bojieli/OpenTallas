@@ -1,0 +1,313 @@
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+RC setup
+worst slack max -45.79
+RC hold
+worst slack min 40.75
+RC failing setup 132 hold 0 of 54597
+RC group dr_ready_in max
+Startpoint: u_l.q[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.hoh[47]$_SDFFE_PP0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 477.03  477.03   clock network delay (propagated)
+   0.00  477.03 ^ u_l.q[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  94.35  571.38 ^ u_l.q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  42.20  613.59 v _283046_/Y (INVx3_ASAP7_75t_R)
+ 124.98  738.57 v place33629/Y (BUFx6f_ASAP7_75t_R)
+ 158.49  897.05 v u_dut.g_head_local[2].u_select/_106_/Y (AND2x4_ASAP7_75t_R)
+  62.15  959.21 v u_dut.g_head_local[2].u_select/_214_/Y (OA211x2_ASAP7_75t_R)
+  39.22  998.43 ^ u_dut.g_head_local[2].u_select/_215_/Y (AOI21x1_ASAP7_75t_R)
+  43.41 1041.84 ^ _296235_/Y (OR2x2_ASAP7_75t_R)
+  37.79 1079.63 ^ _296236_/Y (OA211x2_ASAP7_75t_R)
+   0.04 1079.67 ^ u_dut.hoh[47]$_SDFFE_PP0P_/D (DFFHQNx2_ASAP7_75t_R)
+        1079.67   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+ 445.96 1278.96   clock network delay (propagated)
+ -60.00 1218.96   clock uncertainty
+   4.00 1222.96   clock reconvergence pessimism
+        1222.96 ^ u_dut.hoh[47]$_SDFFE_PP0P_/CLK (DFFHQNx2_ASAP7_75t_R)
+ -15.31 1207.65   library setup time
+        1207.65   data required time
+---------------------------------------------------------
+        1207.65   data required time
+        -1079.67   data arrival time
+---------------------------------------------------------
+         127.98   slack (MET)
+
+
+RC group dr_ready_in min
+Startpoint: u_l.q[0]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_l.q[0]$_DFF_P_ (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 453.61  453.61   clock network delay (propagated)
+   0.00  453.61 ^ u_l.q[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  89.59  543.20 v u_l.q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  47.88  591.08 v _450139_/Y (XNOR2x2_ASAP7_75t_R)
+   0.02  591.10 v u_l.q[0]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         591.10   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 477.03  477.03   clock network delay (propagated)
+  25.00  502.03   clock uncertainty
+ -23.42  478.61   clock reconvergence pessimism
+         478.61 ^ u_l.q[0]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  19.74  498.34   library hold time
+         498.34   data required time
+---------------------------------------------------------
+         498.34   data required time
+        -591.10   data arrival time
+---------------------------------------------------------
+          92.76   slack (MET)
+
+
+RC group req_rdy_in max
+Startpoint: u_l.q[692]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.fq_rp[51][2]$_SDFFE_PN0P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 470.67  470.67   clock network delay (propagated)
+   0.00  470.67 ^ u_l.q[692]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  87.68  558.35 v u_l.q[692]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  74.11  632.45 v place34541/Y (BUFx2_ASAP7_75t_R)
+  87.64  720.10 v _288504_/Y (AND2x2_ASAP7_75t_R)
+  68.73  788.82 v _288505_/Y (OR3x1_ASAP7_75t_R)
+  53.64  842.46 v place29324/Y (BUFx2_ASAP7_75t_R)
+  74.49  916.95 v _288507_/Y (OR3x1_ASAP7_75t_R)
+  55.00  971.95 v _288508_/Y (OR2x2_ASAP7_75t_R)
+  43.42 1015.37 ^ _446799_/Y (XNOR2x2_ASAP7_75t_R)
+  27.86 1043.24 ^ _446800_/Y (AND2x2_ASAP7_75t_R)
+   0.04 1043.28 ^ u_dut.fq_rp[51][2]$_SDFFE_PN0P_/D (DFFHQNx1_ASAP7_75t_R)
+        1043.28   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+ 444.96 1277.96   clock network delay (propagated)
+ -60.00 1217.96   clock uncertainty
+   4.00 1221.96   clock reconvergence pessimism
+        1221.96 ^ u_dut.fq_rp[51][2]$_SDFFE_PN0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -15.21 1206.75   library setup time
+        1206.75   data required time
+---------------------------------------------------------
+        1206.75   data required time
+        -1043.28   data arrival time
+---------------------------------------------------------
+         163.46   slack (MET)
+
+
+RC group req_rdy_in min
+Startpoint: u_l.q[689]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_l.q[689]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 446.27  446.27   clock network delay (propagated)
+   0.00  446.27 ^ u_l.q[689]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  82.88  529.14 v u_l.q[689]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  45.97  575.12 v _450476_/Y (XNOR2x2_ASAP7_75t_R)
+   0.03  575.15 v u_l.q[689]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         575.15   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 468.34  468.34   clock network delay (propagated)
+  25.00  493.34   clock uncertainty
+ -22.07  471.27   clock reconvergence pessimism
+         471.27 ^ u_l.q[689]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  19.72  490.99   library hold time
+         490.99   data required time
+---------------------------------------------------------
+         490.99   data required time
+        -575.15   data arrival time
+---------------------------------------------------------
+          84.16   slack (MET)
+
+
+RC group lr_data_in max
+Startpoint: u_l.q[772]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][10]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 475.64  475.64   clock network delay (propagated)
+   0.00  475.64 ^ u_l.q[772]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  84.34  559.98 v u_l.q[772]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  37.59  597.57 v hold38171/Y (BUFx2_ASAP7_75t_R)
+  11.10  608.67 ^ _281279_/Y (INVx1_ASAP7_75t_R)
+   0.04  608.71 ^ u_dut.e1_blk[0][10]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         608.71   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+ 453.00 1286.00   clock network delay (propagated)
+ -60.00 1226.00   clock uncertainty
+   7.52 1233.52   clock reconvergence pessimism
+        1233.52 ^ u_dut.e1_blk[0][10]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -14.62 1218.90   library setup time
+        1218.90   data required time
+---------------------------------------------------------
+        1218.90   data required time
+        -608.71   data arrival time
+---------------------------------------------------------
+         610.20   slack (MET)
+
+
+RC group lr_data_in min
+Startpoint: u_l.q[774]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_dut.e1_blk[0][12]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 451.51  451.51   clock network delay (propagated)
+   0.00  451.51 ^ u_l.q[774]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  80.95  532.46 ^ u_l.q[774]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  15.48  547.94 v _281277_/Y (INVx1_ASAP7_75t_R)
+   0.04  547.98 v u_dut.e1_blk[0][12]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         547.98   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 474.68  474.68   clock network delay (propagated)
+  25.00  499.68   clock uncertainty
+ -22.35  477.33   clock reconvergence pessimism
+         477.33 ^ u_dut.e1_blk[0][12]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  20.52  497.85   library hold time
+         497.85   data required time
+---------------------------------------------------------
+         497.85   data required time
+        -547.98   data arrival time
+---------------------------------------------------------
+          50.13   slack (MET)
+
+
+RC group lr_port_out max
+Startpoint: u_dut.run$_SDFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_c.q[1683]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 476.41  476.41   clock network delay (propagated)
+   0.00  476.41 ^ u_dut.run$_SDFF_PN0_/CLK (DFFHQNx2_ASAP7_75t_R)
+  91.88  568.30 v u_dut.run$_SDFF_PN0_/QN (DFFHQNx2_ASAP7_75t_R)
+  49.31  617.61 v place34612/Y (BUFx3_ASAP7_75t_R)
+  68.25  685.85 ^ _248419_/Y (INVx1_ASAP7_75t_R)
+  65.31  751.16 ^ place34538/Y (BUFx6f_ASAP7_75t_R)
+  42.36  793.52 v _248420_/Y (NAND3x1_ASAP7_75t_R)
+  35.13  828.65 v place30702/Y (BUFx2_ASAP7_75t_R)
+  65.62  894.27 v _248421_/Y (OR3x1_ASAP7_75t_R)
+  49.30  943.57 v place27432/Y (BUFx2_ASAP7_75t_R)
+  28.82  972.40 ^ _248423_/Y (INVx1_ASAP7_75t_R)
+   0.17  972.56 ^ u_c.q[1683]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         972.56   data arrival time
+
+ 833.00  833.00   clock core_clk (rise edge)
+ 447.49 1280.49   clock network delay (propagated)
+ -60.00 1220.49   clock uncertainty
+   4.00 1224.49   clock reconvergence pessimism
+        1224.49 ^ u_c.q[1683]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -22.65 1201.84   library setup time
+        1201.84   data required time
+---------------------------------------------------------
+        1201.84   data required time
+        -972.56   data arrival time
+---------------------------------------------------------
+         229.28   slack (MET)
+
+
+RC group lr_port_out min
+Startpoint: u_dut.occ[4]$_SDFFE_PP0P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_c.q[1683]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+ 449.88  449.88   clock network delay (propagated)
+   0.00  449.88 ^ u_dut.occ[4]$_SDFFE_PP0P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  86.09  535.97 v u_dut.occ[4]$_SDFFE_PP0P_/QN (DFFHQNx1_ASAP7_75t_R)
+  33.76  569.73 ^ _248420_/Y (NAND3x1_ASAP7_75t_R)
+  31.20  600.93 ^ place30702/Y (BUFx2_ASAP7_75t_R)
+  41.01  641.94 ^ _248421_/Y (OR3x1_ASAP7_75t_R)
+  44.87  686.81 ^ place27432/Y (BUFx2_ASAP7_75t_R)
+  22.69  709.50 v _248423_/Y (INVx1_ASAP7_75t_R)
+   0.14  709.64 v u_c.q[1683]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         709.64   data arrival time
+
+   0.00    0.00   clock core_clk (rise edge)
+ 470.34  470.34   clock network delay (propagated)
+  25.00  495.34   clock uncertainty
+ -12.54  482.80   clock reconvergence pessimism
+         482.80 ^ u_c.q[1683]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  16.67  499.46   library hold time
+         499.46   data required time
+---------------------------------------------------------
+         499.46   data required time
+        -709.64   data arrival time
+---------------------------------------------------------
+         210.17   slack (MET)
+
+
+RC end
