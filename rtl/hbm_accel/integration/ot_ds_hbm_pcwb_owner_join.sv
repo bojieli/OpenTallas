@@ -36,11 +36,12 @@ module ot_ds_hbm_pcwb_owner_join #(
     // row association check (service_clk), on the parent's row/descriptor ports
     input  wire        row_acc,                 // row_v && row_r at the parent
     input  wire [6:0]  row_die, input wire [19:0] row_pos,
-    output reg         assoc_fault
+    output reg         assoc_fault,
+    output wire        source_window_owned
 );
     assign o_rank = 7'(DIE); assign o_stack = 2'(STACK);
     generate if (!ENABLE) begin : off
-        assign db_rdy_eff = db_rdy; assign owner_v = 1'b0;
+        assign db_rdy_eff = db_rdy; assign owner_v = 1'b0; assign source_window_owned = 1'b0;
         always @* begin o_job = 0; o_gen = 0; o_pos = 0; assoc_fault = 1'b0; end
     end else begin : on
         reg step_done, acc_q, req_t, ack_s1, ack_s2;              // clk_sm
@@ -70,5 +71,7 @@ module ot_ds_hbm_pcwb_owner_join #(
                 if (row_acc && (row_pos != o_pos || row_die != 7'(DIE))) assoc_fault <= 1'b1;   // sticky
             end
         assign owner_v = want && !assoc_fault;
+        // Admission window closes at release; stale parent-held context cannot admit the next frame.
+        assign source_window_owned = bound && !assoc_fault;
     end endgenerate
 endmodule
