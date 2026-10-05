@@ -31,6 +31,8 @@ def main():
     ap.add_argument("--name", required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--image", default="openroad/orfs:latest")
+    ap.add_argument("--interface-sdc", type=Path,
+                    help="source-pinned interface constraints without leaf IO exceptions, for parent timing views")
     ap.add_argument("--tmp-dir", type=Path,
                     help="job-local host scratch to bind at /tmp; sets container TMPDIR=/tmp")
     a = ap.parse_args()
@@ -44,6 +46,13 @@ def main():
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = base.relative_to(orfs)
     rec = dict(name=a.name, orfs_dir=str(orfs), corners={})
+    if a.interface_sdc is not None:
+        interface_sdc = a.interface_sdc.resolve()
+        if not interface_sdc.is_file():
+            ap.error("--interface-sdc must be an existing source-pinned constraint file")
+        tmp_args += ["-v", f"{interface_sdc}:/interface.sdc:ro"]
+        rec["interface_sdc"] = dict(path=str(interface_sdc), sha256=sha(interface_sdc),
+                                    purpose="interface timing extraction, not a new leaf signoff verdict")
     for c in ("ss", "ff"):
         libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{x}" for x in LIBS[c])
         lef = f"write_abstract_lef /out/{a.name}.lef\n" if c == "ss" else ""
@@ -51,7 +60,7 @@ def main():
 read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
 {libs}
 read_db /in/{rel}/6_final.odb
-read_sdc /in/{rel}/6_final.sdc
+read_sdc {"/interface.sdc" if a.interface_sdc is not None else f"/in/{rel}/6_final.sdc"}
 read_spef /in/{rel}/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd {'max' if c == 'ss' else 'min'}]"
