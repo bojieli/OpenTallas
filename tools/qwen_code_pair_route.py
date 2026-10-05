@@ -28,9 +28,26 @@ def main():
     for f in ('mapped.v', 'mapped.json'):
         shutil.copy2(mapped / f, work / f)
     shutil.copytree(slot, work / 'slot')
-    design = json.loads((mapped / 'mapped.json').read_text())['modules']['ot_qwen_hbm_code_pair_context']
-    cells = design['cells']
-    names = {n: v['bits'][0] for n, v in design['netnames'].items() if len(v['bits']) == 1}
+    # Yosys JSON does not contain mapped-library port directions, and its
+    # anonymous names differ from write_verilog. Use the actual physical names
+    # and scalar/concatenation wiring in the retained Verilog itself.
+    v = (mapped / 'mapped.v').read_text()
+    def signal(s):
+        return s.strip().lstrip('\\')
+    cells = {}
+    for match in re.finditer(r'^\s{2}(\w+)\s+(\S+)\s*\((.*?)^\s{2}\);', v, re.M | re.S):
+        kind, name, body = match.groups()
+        connections = {}
+        for pin, expr in re.findall(r'\.(\w+)\((.*?)\)', body, re.S):
+            expr = expr.strip()
+            connections[pin] = ([signal(x) for x in expr[1:-1].split(',')][::-1]
+                                if expr.startswith('{') else [signal(expr)])
+        outputs = {'rd_out'} if kind.startswith('ot_sram_') else {'QN'} if kind.startswith('DFF') else {'Y'}
+        cells[name.lstrip('\\')] = dict(type=kind, connections=connections,
+            port_directions={p: 'output' if p in outputs else 'input' for p in connections})
+    for i, (dest, origin) in enumerate(re.findall(r'^\s*assign\s+(\S+)\s*=\s*(.*?);', v, re.M)):
+        cells[f'alias{i}'] = dict(type='alias', connections={'Y': [signal(dest)], 'A': [signal(origin)]},
+                                 port_directions={'Y': 'output', 'A': 'input'})
     drivers = {}
     for name, cell in cells.items():
         for pin, bits in cell['connections'].items():
@@ -51,13 +68,6 @@ def main():
         return frozenset(x for p, bits in cell['connections'].items()
                          if cell['port_directions'][p] == 'input' for b in bits for x in leaves(b))
 
-    # The Verilog writer renames auto-generated JSON cells. Bind by their actual
-    # scalar QN net, not an invented register name or cell ordering assumption.
-    v = (mapped / 'mapped.v').read_text()
-    q_to_inst = {}
-    for match in re.finditer(r'DFFHQNx1_ASAP7_75t_R\s+(\S+)\s*\((.*?)\);', v, re.S):
-        q = re.search(r'\.QN\(\s*(.*?)\s*\)', match[2]).group(1).strip().lstrip('\\')
-        q_to_inst[names[q]] = match[1].lstrip('\\')
     groups = defaultdict(list)
     bindings = []
     data_positions = [p - 1 for p in range(1, 72) if p & (p - 1)]
@@ -72,7 +82,7 @@ def main():
         macro = next(iter(macros))
         m = re.search(r'column\[(\d+)\].bank\[(\d+)\]', macro)
         key = f'{m[1]},{m[2]}'
-        inst = q_to_inst[cell['connections']['QN'][0]]
+        inst = name
         groups[key].append(inst)
         indices = {i for n, i in macro_bits}
         if macro.endswith('data_store'):
