@@ -8,11 +8,13 @@
     "last_write_visible_edges": null,
     "mandatory_baseline_fix_separate": true,
     "matched_policy": "Use SAME selected provider in serialized and47FF cases. Static case prices actual access/initialization without per-token host writes for a general image; mutable fallback prices accepted writes and positive last-write visibility beforeGO. Never overwrite active owned data.",
+    "mutable_programming_cost_applied": false,
     "net_optional_field_gain_us": null,
     "once_per_fresh_actor": true,
     "optional_adoption_threshold_rate_gain_percent": 1,
+    "per_token_host_programming_required": false,
     "programming_overlap_proved": false,
-    "provider_selection": "NOT SELECTED: current software assignments do not mandate mutable hardware. Prefer validated general static image; RAM fallback only if necessary.",
+    "provider_selection": "Static resident image selected for Epicurus physical-provider binding; mutable source-arm pricing is inactive for this case.",
     "shared_prefix_overwrite": true,
     "source": "tools/runtime/dsrom/s81_minimum_qe.cpp::Impl::inputs",
     "update_payload_bytes": "16 +6*actual_stream_word_count",
@@ -92,11 +94,23 @@
     },
     "clock_to_Q_ps": null,
     "external_interface": "OT_PQ_ROM_PORTS: rom_pa0/1, rom_pq0/1, rom_sa, rom_sq",
-    "immutable_capacity_status": "SOURCE LINKER PENDING: reported unique8/7 bodies of at most256 words fit the stream catalog; unshared41400 append count is not immutable impossibility. Arendt validates byte-identical bodies, existing SBASE linking, same-phase all-command descriptor stability and dynamic operand bases before admission; no phase/key/algorithm change.",
+    "immutable_capacity_status": "SOURCE CATALOG READY per Arendt: stage37/38 full624/626 canonical phases and keys, conflicts0, no descriptor dynamic fields in PHROM; exact existing-body sharing with fixed SBASE. Unshared41400 append count was not a capacity impossibility.",
     "immutable_per_token_write_policy": "No host-write charge for a validated general hardware image. Price actual access and initialization; do not infer zero delay from capacity fit.",
     "loaded_combinational_access_ps": null,
     "preferred_provider": "Static physical provider if general source-bound image is validated; mutable RAM fallback only if actually needed.",
     "required_source_binding": "Compile-time full-parent phase/stream image from same canonical phase/key namespace and Arendt schedules; keep simultaneous phase reads and source latency. Bind actual synthesized ROM access or its real hard view before contextual route.",
+    "resident_catalog": {
+      "image_directory": "/srv/opentallas-scratch/codex/arendt-all40-source-schedules-20261005/immutable_stages_r1",
+      "provenance": "Arendt owner handoff; image bytes/provider enrollment not independently claimed by this record",
+      "stage37": {
+        "distinct_body_words": 1208,
+        "phases": 624
+      },
+      "stage38": {
+        "distinct_body_words": 1144,
+        "phases": 626
+      }
+    },
     "selected_hard_abstract": null,
     "selected_synth_immutable_image": null,
     "source_read_latency": "Combinational lookup, captured by existing source flops; no extra edge",
@@ -146,7 +160,7 @@
     "physical/dsrom_recovery_field/ot_v41_pq_spine_screen.sv": "b8291acbf963b925d2457cd3830d5242f6925d3655b01c73bd58066ad7a7a892",
     "results/rtl/dsrom_recovery_20261004/issuer_parent_binding/inputs/issuer_model_84528.json": "4a91d72727547c3e11f2203862346283c74a40e9146fb88f57a62dd61009fb53",
     "rtl/v41die/ot_v41_spine_pq_w17w10.sv": "0595a27f197dc81df0cd9bb4d1dbbeb40c3437219e73698b414c819618cfe3e6",
-    "tools/dsrom_recovery_issuer_parent_binding.py": "dc0206e322a5c3d6732415993a3a44520c434466bebe322333c94d6ff5eb0838",
+    "tools/dsrom_recovery_issuer_parent_binding.py": "3fa0ccc1ce41537d1f07799145693c9af45ee7037f345eb20b0c4f8adf7e99b4",
     "tools/dsrom_s81_fulldie.py": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955",
     "tools/dsrom_s81_target_field_controls.py": "c1225b52e153ea37ca4765acc464076f0773aad532e15a33ce4eea905f78f65f",
     "tools/runtime/dsrom/s81_minimum_qe.cpp": "19624fe35fdb80ed58a18213b7eafdf83aecfa2db4f7d42803b9bcd5c1c3647d",
