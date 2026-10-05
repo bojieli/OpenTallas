@@ -137,6 +137,16 @@ def join(root, manifest, target):
         decision_required="Bind current accelerator die/core/service rectangle; existing right-size edge uses8.5mm/PHY but actual LEF is12.000096mm. Historical GPU slots are not current component slots.")
     alloc = record(root, refs["allocation"])[target] if refs["allocation"] else None
     loader = loader_allocation(alloc, geometry, width)
+    if refs.get("isolated_loader_slot"):
+        isolated = record(root, refs["isolated_loader_slot"])
+        require(isolated["name"] == "service.loader" and not isolated["actual_fit"],
+                "isolated loader allocation must retain provisional status")
+        loader.update(isolated_closure_input=isolated,
+                      isolated_reserved_area_um2=isolated["outer_area_um2"],
+                      full_parent_anchor_bound=False)
+        # This area is a concrete service debit for either target. It does
+        # not imply a bound parent rectangle or transfer old failed STA.
+        loader["required_slot_before_repair_um2"] = isolated["outer_area_um2"]
     common = dict(stacks_per_die=4, pseudo_channels_per_stack=32,
                   pseudo_channels_per_die=128,
                   phy_count=4, phy_outline_grade=phy["footprint"]["area_basis"]["grade"],
@@ -204,6 +214,8 @@ def join(root, manifest, target):
                       resident_macro_area_um2=None, sm_per_die=None,
                       clock_domains_ps=dict(compute=q["memory_system"]["core_clock_ps"],
                                             controller=q["memory_system"]["hbm_ctl_clock_ps"]))
+        if refs.get("payload_store_geometry"):
+            common["payload_store_geometry"] = record(root, refs["payload_store_geometry"])
         require(q["design_point"]["tp"] == 4, "selected Qwen measured TP is not4")
         common.update(source_portmap=portmap["Qwen"], loader_source_portmap=portmap["loader"],
                       tiles_per_die=portmap["Qwen"]["component_census_per_die"]["tiles"],
