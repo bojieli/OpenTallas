@@ -9663,3 +9663,14 @@ def ha2_tu_owner_adapter_model():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.model()
+
+
+def hbm_su_fused_endpoint_model():
+    """Default-off actual fused-SU endpoint pre-build sizing; unqualified."""
+    import importlib.util
+    from pathlib import Path
+    path = Path(__file__).with_name('hbm_accel_su_fused_model.py')
+    spec = importlib.util.spec_from_file_location('hbm_su_fused_price', path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.model()
