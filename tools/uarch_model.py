@@ -8770,8 +8770,8 @@ def hbm_w2_publication_model():
     recipe = root / 'results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS'
     seq_path = recipe / 'case/seq.hex'
     alloc_path = recipe / 'case/private_alloc.svh'
-    prepare_path = root / 'tools/hubble_w2_connected_runtime.py'
-    connected_gate_path = root / 'rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv'
+    prepare_path = inputs / 'released_connected_runtime.py'
+    connected_gate_path = inputs / 'released_connected_gate.sv'
     expected_inputs = {
         seq_path: '1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9',
         alloc_path: '0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82',
@@ -8904,7 +8904,14 @@ def hbm_w2_publication_model():
     if (candidate['verdict'] != 'PASS_COMPONENT_EXACT' or candidate['release_edge'] != 196
         or candidate['rows'] != 4 or candidate['FP32_words'] != 32):
         raise ValueError('W2 minimum actual-shape terminal changed')
-    paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json']
+    parent_context_path = root / 'results/rtl/hbm_die_takeover_20261005/selected_parent_context.json'
+    parent_context = json.loads(parent_context_path.read_text())
+    # Actual owner context is explicit about missing child allocation/loaded CTS.
+    if (parent_context['W2']['usable_slot_bbox_um'] is not None
+        or parent_context['channels']['available_W2_tracks'] is not None
+        or parent_context['clock']['actual_parent_clock_constraint'] is not None):
+        raise ValueError('W2 owner binding changed: consume actual allocation before admission')
+    paths += [successor, candidate_dir / 'result.json', candidate_dir / 'source.json', parent_context_path]
     return dict(schema='opentallas.hbm.w2.publication.v1', default_enabled=False,
         source_sha256={str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         source_commits=dict(enrolled_sink='73526d5e84129417914832e858dc78610e225800',
@@ -8985,6 +8992,8 @@ def hbm_w2_publication_model():
                                         '/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json'],
             inspected_existing_sources=['tools/hbm_accel_sm_v_floorplan.py', 'results/floorplan/hbm_gpu/v41_hbm_die.json'],
             owner_existing_floorplan_source_sha256='1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df',
+            actual_owner_context='results/rtl/hbm_die_takeover_20261005/selected_parent_context.json#W2/channels/clock',
+            parent_owner_measured_missing=True,
             missing_physical_keys=['W2 parent_instance/replica mapping', 'W2 parent_slot_bbox_um', 'W2 clk_sm clock/uncertainty constraint binding',
                                    'W2 boundary corridor layers/pitch/usable tracks and competing allocations']),
         timing=dict(target_clock_ps=833.333, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,

@@ -2,6 +2,7 @@
   "adopted": false,
   "area": {
     "FF_proxy_um2": 0.2916,
+    "actual_owner_context": "results/rtl/hbm_die_takeover_20261005/selected_parent_context.json#W2/channels/clock",
     "actual_parent_slot_bbox_um": null,
     "binding_owner": "Turing 01a10dba-5786-7d01-b636-797f591b5657 (existing dieplan takeover; Claude limit confirmed)",
     "codec_basis": "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json#SRAM_protection_candidate.pair_cell_body_um2",
@@ -26,6 +27,7 @@
       "/home/ubuntu/wt-claude-hbmsm/results/floorplan/hbm_gpu/v41_hbm_die.json"
     ],
     "parent_instance_path": "ot_ds_hbm_cluster20_integrated.g_on.g_die[d].u_w2_sink",
+    "parent_owner_measured_missing": true,
     "planned_50pct_placement_um2": 51850.85829000001,
     "planned_cell_body_um2": 24690.884900000005,
     "slot_fit": null
@@ -316,6 +318,7 @@
   "source_sha256": {
     "results/floorplan/hbm_gpu/v41_hbm_die.json": "2229bc061adb256390aa6113fc6a0d4bbc70ca05108d81f20c2437284629ad67",
     "results/physical/hbm_w2_sink_registered_terminal_20261005/r1/endpoint_groups.json": "3ab6043317f55791134fda188d64515611084309fb1c52edaa966485b043c0c8",
+    "results/rtl/hbm_die_takeover_20261005/selected_parent_context.json": "ba6a5f733c54e3aebcb0e63c776dac5901f3b1f5179057208063f3095c1a531d",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/build/command.json": "c34f7ed2e812b7c8768e4db40b9e9f7e8121b3882c19464885ca27c4cade79b9",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/build/runtime.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/build/runtime.log": "45fb34e72aceda6787bc58eb63b97885d2a9fbcf9b91cbf04466a9de214524ea",
@@ -328,10 +331,10 @@
     "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
     "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e",
     "results/uarch/hbm_w2_publication_20261005/inputs/original_f835_sink.sv": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",
+    "results/uarch/hbm_w2_publication_20261005/inputs/released_connected_gate.sv": "1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e",
+    "results/uarch/hbm_w2_publication_20261005/inputs/released_connected_runtime.py": "b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f",
     "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_w2_result_sink.sv": "f49e1fd09ba9a50cca20f675094c2470ef90e162a08aa9b76fd32c2478f92375",
-    "rtl/test/hbm_accel/integrated_20261005/tb_hbm_integrated_gu_w2_hubble.sv": "1b89c72997ca02eccd4992358d748bcad93f89b435304c3b5358a0ab02162e6e",
-    "tools/hbm_accel_sm_v_floorplan.py": "44086afc377ac93856e65cc7a32e731b07f40e1e94ea6ea843202e7da4763b73",
-    "tools/hubble_w2_connected_runtime.py": "b364eb89a5c5d3a210cecb44cab41e7c6df0bdebb02b141556bfd33f7f2cb00f"
+    "tools/hbm_accel_sm_v_floorplan.py": "1220a8ab77d53a4bd0bac98cf988cee3b116ae6186ab3faf2329d14b949538df"
   },
   "storage": {
     "independent_GO_ledger_added": false,
