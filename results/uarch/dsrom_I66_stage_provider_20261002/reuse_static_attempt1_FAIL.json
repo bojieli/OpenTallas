@@ -1,6 +1,0 @@
-{
-  "command": "python3 tools/dsrom_I66_stage_provider.py --out results/uarch/dsrom_I66_stage_provider_20261002/model.json",
-  "error": "ValueError: dynamic reducer extent",
-  "scope": "No runtime/build or numerical comparison. Analyzer rejected nonzero constant r_so; source permits fixed scalar reducer row stride. Successor computes full fixed output extent instead.",
-  "verdict": "FAIL_STATIC_ANALYZER"
-}

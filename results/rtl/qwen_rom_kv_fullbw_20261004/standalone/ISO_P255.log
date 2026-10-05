@@ -1,4 +1,0 @@
-STATS ISO_P255 hbm_act=512 rd=4096 wr=136 refpb=336 violations=0 max_landing=8 rsp_tile_stall=942 fill_sectors=4096 wr_sectors=136 wr_lat_max=29
-PASS ISO_P255 "P":255,"fill_cycles":119,"fill_sectors":4096,"sectors_per_cycle":34.42,"tb_s_at_1p2ghz":1.322,"kv_ok_after_start":452,"su_drain_wait":387,"violations":0 : slices and token HBM codes exact
-KV_SERVICE4_STANDALONE PASS
-{"cases":[{"name":"ISO_P255","pass":true,"P":255,"fill_cycles":119,"fill_sectors":4096,"sectors_per_cycle":34.42,"tb_s_at_1p2ghz":1.322,"kv_ok_after_start":452,"su_drain_wait":387,"violations":0,"detail":"slices and token HBM codes exact"}],"status":"pass"}
