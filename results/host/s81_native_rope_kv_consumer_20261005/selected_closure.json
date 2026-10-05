@@ -1,0 +1,12 @@
+{
+  "selected_object": "/home/ubuntu/arch-s81-native-rope-kv-consumer-r3/s81_minimum_l20_kv_factory.o",
+  "source_scope": "native endpoint, existing wide WINDOW, one enclosing TU",
+  "supersedes": "r2 object: stale shared-H76 packed-KV header lacked a60 pendingdescriptor fix; do not enroll r2",
+  "source_pins": {
+    "s81_minimum_kv.hpp": "b9722fb35300183b76a75ea57ce20d67866f36e2429cf5f80bed9492c9237562",
+    "s81_minimum_l20_kv_factory.cpp": "289ba5bc183cee36eec28487554ab4e55a6940f3223780b42150235aa8a0efef",
+    "s81_minimum_l20_kv_factory.hpp": "d6da6fba0f7a1ebb168cd99a9a032cb3668b33370ca07ed0c83d6e68d6244fbd"
+  },
+  "runtime_claim": false,
+  "native_libraries_rebuilt": false
+}

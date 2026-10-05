@@ -1,0 +1,3 @@
+POSITIVE physical_writes=4 checked_ACKs=4 raw_ACKs=4 reads=4 held=284 native=5
+PASS initial_source_install oldread_write readback hold foreign_response HEAD_CACHE_OFF
+src/tb_qwen_finite_vm_adapter.sv:93: $finish called at 3036000 (1ps)

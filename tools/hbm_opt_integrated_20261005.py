@@ -173,13 +173,85 @@ def prepare(config, root, profile):
                 headline_clock_eligible=bool(enabled) and all(
                     not levers[name]['physical_holds'] for name in enabled),
                 full_token_measured=False, composition_owner='Maxwell',
-                die_floorplan_owner='Claude')
+                die_floorplan_owner='Claude',
+                index_order_source_join=index_order_source_files(config, root)
+                    if config.get('index_order_adapter') else None)
 
 
 def save(path, record):
     with Path(path).open('x') as f:
         json.dump(record, f, indent=2)
         f.write('\n')
+
+
+def index_order_source_files(config, root):
+    """Join Sagan's measured adapter sources without granting enclosing enable.
+
+    W15 scores and IDs are separate words. Their checked pair formatter and the
+    exclusive gather/publication owner remain Sagan/parent dependencies; source
+    enrollment must never treat that storage as interleaved adapter responses.
+    """
+    spec = config['index_order_adapter']
+    sources, origins, errors = source_inventory(spec, root)
+    binding = spec['component_binding']
+    errors.extend(exact_errors(binding, root))
+    return dict(source_paths=spec['source_paths'], source_sha256=sources,
+                source_origins=origins,
+                ordered_source_files=[str(root / name) for name in spec['source_paths']],
+                source_holds=errors, component_exact=not errors,
+                component_geometry={'N': 2, 'NPER': 16},
+                target_geometry={'N': 96, 'NPER': 512},
+                formatter=spec['formatter'],
+                enclosing_holds=spec['enclosing_holds'],
+                enclosing_ready=False, parameters={'ENABLE': 0},
+                global_ordered_gather_qualified=False,
+                planning=spec['planning'], rate_credit=False)
+
+
+def expert_w2_service_inputs(config, root, layer, service_dir):
+    """Bind existing Hubble service bytes/configuration; grant no arithmetic credit.
+
+    The production caller consumes these literal files together. No legacy seam
+    reconstruction, router inference, activation generation or build is performed.
+    """
+    item = config['levers']['expert_workgroup']
+    _, _, errors = source_inventory(item, root)
+    spec = item['service_binding']
+    receipt = root / spec['receipt']
+    if not receipt.is_file() or sha(receipt) != spec['receipt_sha256']:
+        raise ValueError('missing/changed W2 service receipt')
+    record = json.loads(receipt.read_text())
+    if record['status'] != 'PASS_SERVICE_BYTES_ONLY':
+        raise ValueError('W2 byte service did not pass')
+    for name, expected in record['source_sha256'].items():
+        candidate = item['source_candidates'].get(name)
+        if candidate and candidate['sha256'] != expected:
+            errors.append('selected source differs from measured W2 service: ' + name)
+    cases = [c for c in record['cases'] if c['layer'] == layer]
+    if len(cases) != 1 or not cases[0]['exact_bytes'] or cases[0]['exit'] != 0:
+        raise ValueError('missing exact released layer service case')
+    case = cases[0]
+    service_dir = Path(service_dir).resolve()
+    files = {}
+    for name in ('w2.hex', 'cfg_lines.hex', 'cfg_lut.hex'):
+        path = service_dir / name
+        if not path.is_file() or sha(path) != case['input_sha256'][name]:
+            errors.append('missing/changed released W2 service input: ' + name)
+        files[name] = str(path)
+    if errors:
+        raise ValueError('; '.join(errors))
+    counts = [int(x, 16) for x in Path(files['cfg_lines.hex']).read_text().split()]
+    lut = [int(x, 16) for x in Path(files['cfg_lut.hex']).read_text().split()]
+    if counts != spec['counts'] or len(lut) != spec['transport_lines_per_expert']:
+        raise ValueError('literal W2 configuration differs from enrolled service')
+    # Consume the owner's exact line ownership; do not regenerate a uniform map.
+    return dict(layer=layer, die=case['die'], stack=case['stack'], ids=case['ids'],
+                files=files, input_sha256={n: case['input_sha256'][n] for n in files},
+                cfg_lines=counts, cfg_lut=lut, receipt_sha256=spec['receipt_sha256'],
+                source_sha256=record['source_sha256'],
+                scope='released W2 byte delivery and literal configuration only',
+                arithmetic_qualified=False, rate_credit=False,
+                production_provider_connected=False, adopted=False)
 
 
 def run(config, root, profile, out, workload_names=None):
@@ -252,16 +324,29 @@ def run(config, root, profile, out, workload_names=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('step', choices=['plan', 'run'])
+    parser.add_argument('step', choices=['plan', 'run', 'w2-service'])
     parser.add_argument('--config', type=Path, default=DEFAULT_CONFIG)
     parser.add_argument('--root', type=Path, default=ROOT)
     parser.add_argument('--profile', choices=['default_off', 'candidate_on', 'admitted_closed'],
                         default='default_off')
     parser.add_argument('--out', type=Path)
+    parser.add_argument('--layer', type=int, choices=[3, 20])
+    parser.add_argument('--service-dir', type=Path,
+                        help='Existing Hubble released W2 service directory; no generation')
     parser.add_argument('--workload', action='append', choices=['ds_1m', 'qwen_8k'],
                         help='Run ready workload without waiting for another unbound executable')
     args = parser.parse_args()
     config = json.loads(args.config.read_text())
+    if args.step == 'w2-service':
+        if args.layer is None or args.service_dir is None:
+            parser.error('w2-service requires --layer and --service-dir')
+        record = expert_w2_service_inputs(config, args.root.resolve(), args.layer,
+                                         args.service_dir)
+        if args.out:
+            save(args.out, record)
+        else:
+            print(json.dumps(record, indent=2))
+        return 0
     if args.step == 'run':
         if args.out is None:
             parser.error('run requires a fresh --out directory')

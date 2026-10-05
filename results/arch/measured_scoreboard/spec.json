@@ -10,11 +10,9 @@
  ],
  "headline": [
   "qwen_rom.operating_mode_8k",
-  "qwen_rom.ar_tok_s_8k_stream4",
-  "qwen_rom.ar_tok_s_8k_stream4_wirebound",
+  "qwen_rom.actual_fulltoken_cycles_8k_stream4",
   "qwen_rom.dspark_tok_s_8k_stream4",
   "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
-  "qwen_rom.ar_over_h100_tp8_8k",
   "ds_rom.ar_tok_s_1m",
   "ds_rom.mtp_tok_s_1m",
   "ds_rom.measured_share_of_ar",
@@ -982,7 +980,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -993,7 +991,7 @@
    "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05"
+   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1004,7 +1002,7 @@
    "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1015,7 +1013,7 @@
    "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": ""
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1037,7 +1035,7 @@
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "as-built S81 microarchitecture, before the recovery levers"
+   "note": "as-built S81 microarchitecture, before the recovery levers; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1092,7 +1090,7 @@
    "pointer": "MTP.verify_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1114,7 +1112,7 @@
    "pointer": "MTP.II_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -1279,7 +1277,7 @@
    "pointer": "MTP.tau",
    "unit": "tokens/step",
    "status": "partial",
-   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows"
+   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
@@ -3923,23 +3921,23 @@
    "target": "qwen_rom",
    "section": "rate",
    "key": "operating_mode_8k",
-   "label": "Qwen ROM operating mode at 8K (HEADLINE mode: AR on STREAM4; DSpark built, exact, off)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
-   "pointer": "verdict",
+   "label": "Actual Qwen ROM full-token operating mode at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "operating_mode",
    "unit": "verdict",
-   "status": "composed_from_measured",
-   "note": "AR_MODE: no DSpark variant beats AR on STREAM4 (baseline 0.704x, MERGE_SU 0.742x, MERGE_SU np3 0.691-0.744x); free-draft bound 0.969x; derivation docs/ANALYTICAL_REPORT.md"
+   "status": "measured",
+   "note": "Native STREAM4 tile, NEAR_HBM0, DSparkOFF; full36+HEAD process0/drained. Clock not SS/FF qualified; no MTP credit."
   },
   {
    "target": "qwen_rom",
    "section": "rate",
    "key": "ar_tok_s_8k_stream4",
-   "label": "HEADLINE. AR per-user rate at 8K on the 4-stack full-bandwidth KV path (STREAM4); the Qwen ROM operating mode",
+   "label": "Historical STREAM4 composed rate at assumed clock; superseded cycle basis",
    "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
    "pointer": "stream4.tok_per_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "7 + E + L0 iso (6,489) + 35 x chained L1/L2 (5,282, early_go prefetch + posted write-back, fill 1,311 cyc exposed 0) + head + 37 = 194,498 cycles; L0..L2 exact at P8191 vs GPU golden; E/head from P255 (position independent); KV fill 3.72 TB/s = 93% of 4-stack peak"
+   "note": "Historical194498-cycle component projection retained, not current full-token measurement or qualified clock/rate. Actual selected run193955cycles; measured headline reports cycles. No MTP credit."
   },
   {
    "target": "qwen_rom",
@@ -4082,6 +4080,72 @@
    "unit": "cycles",
    "status": "measured",
    "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_increment_cycles",
+   "label": "Paired W2 interval reduction versus source-matched PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.measured_component_saved_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_ar_projection_us",
+   "label": "Paired W2 incremental exposed AR projection",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.incremental_AR_projection_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_cycles_8k_stream4",
+   "label": "Actual STREAM4 full36+HEAD token at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "actual_fulltoken_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_current_KV_checks",
+   "label": "Actual current-KV rank/layer checks after ACK drain",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "current_KV_checks",
+   "unit": "checks",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_next_token",
+   "label": "Actual full-token argmax on all4 ranks",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "next_token",
+   "unit": "token",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_head_cycles",
+   "label": "Actual HEAD accepted stage duration",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "head_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
   }
  ],
  "derived": [
@@ -4753,9 +4817,9 @@
   {
    "target": "qwen_rom",
    "lever": "STREAM4 4-stack KV fill",
-   "verdict": "ADOPT (operating path)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
-   "numbers": "token 194,498 cycles = 6,169.7 tok/s, 2.99x REAL_MEM; chained layer 5,282 = compute bound 5,283",
+   "verdict": "selected functional path; full-token numerical PASS, physical unqualified",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "numbers": "193955cycles/full36+HEAD, all144 layer outputs/currentKV checks, token18/logit42282b99, drained/process0; no qualified rate/MTP credit",
    "figures": [
     "qwen_rom.stream4_L0_cycles_P8191",
     "qwen_rom.stream4_fill_TBps",
@@ -5066,18 +5130,6 @@
    "target": "qwen_rom",
    "item": "Native STREAM4 multi-position tagged-row hook (qwen_stream4_wire_native_tagged_rows) for the combined die",
    "owner": "Claude",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Combined P8191 L0 run host SIGSEGV; L0 prefix->near->OAR/MLPAR->head join on produced state",
-   "owner": "Laplace (Codex)",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Export L3..L35 P8191 prior KV from the live TP4 GPU oracle for full36",
-   "owner": "Laplace (Codex) / Claude retains GPU output",
    "path": "/tmp/claude-review-20261003/codex_notes.txt"
   },
   {

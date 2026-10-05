@@ -295,6 +295,8 @@ def main():
     ap.add_argument("--out", type=Path, default=REC / "composition.json")
     ap.add_argument('--joint-record', type=Path)
     ap.add_argument('--joint-layouts', type=Path)
+    ap.add_argument('--paired-record', type=Path)
+    ap.add_argument('--combined-record', type=Path)
     a = ap.parse_args()
     S = setup()
     ar0, mm0, rows1, rows6 = gate_rows(S)
@@ -337,6 +339,94 @@ def main():
             class_proxy='historical ATTN3 representative prefix retained; all-layer group substitution is modeled coverage',
             SS_FF_admitted=False, adopted=False, full_token_gain_measured=False,
             qualified_headline_rate=None, Qwen_provider_bound=False, Qwen_opt3_enabled=False)
+    if a.paired_record:
+        assert 'joint_PQ_XMAP' in out
+        paired = json.loads(a.paired_record.read_text())
+        fixture_path = a.paired_record.parent/'fixture.json'
+        fixture = json.loads(fixture_path.read_text())
+        controls_path = a.paired_record.parent/'changed_hook_cases.json'
+        controls = json.loads(controls_path.read_text())
+        assert paired['status'] == 'pass' and paired['runtime_returncode'] == 0
+        assert not paired['mismatches'] and not paired['extra']
+        assert paired['original_output_rows'] == paired['actual_output_rows'] == 86
+        assert fixture['baseline_result_sha256'] == sha(pqd/'ar_l20_f1.json')
+        assert len(fixture['composite_descriptors']) == 28
+        assert fixture['logical_op_labels'][24:27] == [[24,25], [26,27], [28,29]]
+        assert len(paired['ops']) == 28
+        for op, desc in enumerate(fixture['composite_descriptors']):
+            actual = paired['ops'][str(op)]
+            assert actual['fault'] == 0 and actual['results'] == desc[0]
+            assert actual['lines'] == actual['consumed'] == desc[4]
+        first, last = fixture['w2_groups'][0], fixture['w2_groups'][-1]
+        assert paired['ops'][str(last)]['t_done']-paired['ops'][str(first)]['t_load0'] == paired['paired_w2_cycles']
+        assert paired['incremental_cycles_saved'] == paired['baseline_pq_w2_cycles']-paired['paired_w2_cycles']
+        assert all(c['pass_check'] and c['runtime_returncode'] == 0 for c in controls.values())
+        assert controls['ordinary_flag_off']['faults'] == [0]
+        assert controls['illegal_pair_shape']['faults'] == [1]
+        assert controls['ordinary_flag_off']['executable_sha256'] == controls['illegal_pair_shape']['executable_sha256']
+        ar_joint = out['joint_PQ_XMAP']['target_clock_projection']['AR']
+        w2 = ar_joint['groups']['W2']
+        assert w2['layers'] == 40
+        assert w2['pq_group_cycles'] == paired['baseline_pq_w2_cycles'] == fixture['baseline_w2_cycles']
+        saved = (paired['baseline_pq_w2_cycles']-paired['paired_w2_cycles'])*w2['layers']/F_SM*1e6
+        assert saved > 0
+        old_ar = ar_joint['remaining_target_clock_us']
+        new_ar = old_ar-saved
+        gain = 100*(old_ar/new_ar-1)
+        out['paired_W2_increment'] = dict(
+            inputs={rel(p):sha(p) for p in (a.paired_record, fixture_path, controls_path,
+                    a.paired_record.parent/'source_pin.json', a.paired_record.parent/'source.commit')},
+            baseline='source-matched joint PQ+XMAP; W2 group unchanged from production PQ',
+            measured_component_old_cycles=paired['baseline_pq_w2_cycles'],
+            measured_component_new_cycles=paired['paired_w2_cycles'],
+            measured_component_saved_cycles=paired['incremental_cycles_saved'],
+            authoritative_exposed_W2_groups=w2['layers'],
+            target_clock_hz=F_SM, target_period_ns=1e9/F_SM,
+            incremental_AR_projection_us=saved, prior_joint_AR_projection_us=old_ar,
+            candidate_AR_projection_us=new_ar, projected_per_user_rate_gain_pct=gain,
+            model_one_percent_threshold_met=gain>=1,
+            accounting='Replace W2 interval only, forty times; unchanged handshake/barrier once; no analytic partial-wave saving added',
+            actual_combined_PQ_XMAP_PACK_measured=False, MTP_increment_us=None,
+            full_token_gain_measured=False, physical_ss_ff_qualified=False,
+            adopted=False, qualified_headline_rate=None,
+            next_integration='Rawls combined configuration must bind actual PACK caller and measure interaction; Erdos component gate is not that combined run')
+        if a.combined_record:
+            combined = json.loads(a.combined_record.read_text())
+            parent = a.combined_record.parent.parent
+            summary_path, terminal_path = parent/'summary.json', parent/'terminal.json'
+            summary = json.loads(summary_path.read_text())
+            terminal = json.loads(terminal_path.read_text())
+            assert summary['result_sha256'] == sha(a.combined_record)
+            assert terminal['status'] == 'pass' and terminal['driver_exit'] == 0 and terminal['source_stable']
+            assert summary['flags'] == dict(ENABLE=1, PQ_ENABLE=1, PACK_W2=1, XMAP=1)
+            assert combined['status'] == 'pass' and combined['accepted'] and combined['beat_counts_exact']
+            assert not combined['mismatches'] and not combined['extra']
+            assert combined['original_output_rows'] == combined['actual_output_rows'] == 86
+            assert len(combined['ops']) == len(combined['activation_loads']) == 28
+            assert summary['original_inputs']['fixture.json'] == sha(fixture_path)
+            baseline_joint = joint['ar_l20']
+            assert summary['baseline_PQ_XMAP_total_cycles'] == baseline_joint['total_cycles']
+            assert combined['total_cycles'] == summary['total_cycles']
+            assert summary['actual_joined_cycle_saving'] == baseline_joint['total_cycles']-combined['total_cycles'] == paired['incremental_cycles_saved']
+            assert combined['paired_w2_cycles'] == paired['paired_w2_cycles'] == summary['paired_W2_cycles']
+            for op, (desc, load) in enumerate(zip(fixture['composite_descriptors'], combined['activation_loads'])):
+                actual = combined['ops'][str(op)]
+                assert actual['results'] == desc[0] and actual['fault'] == 0
+                assert actual['lines'] == actual['consumed'] == desc[4]
+                assert load['op'] == op and load['original_ids'] == fixture['logical_op_labels'][op]
+                assert actual['xload_beats'] == load['actual_beats'] == load['expected_beats']
+            assert combined['ops'][str(last)]['t_done']-combined['ops'][str(first)]['t_load0'] == paired['paired_w2_cycles']
+            inc = out['paired_W2_increment']
+            inc['actual_combined_PQ_XMAP_PACK_measured'] = True
+            inc['combined_measurement'] = dict(
+                inputs={rel(p):sha(p) for p in (a.combined_record, summary_path, terminal_path)},
+                source_commit=summary['source_main_commit'], active_columns=summary['active_columns'],
+                baseline_component_total_cycles=baseline_joint['total_cycles'],
+                candidate_component_total_cycles=combined['total_cycles'],
+                actual_component_saved_cycles=summary['actual_joined_cycle_saving'],
+                original_row_ids_preserved=True, exact_rows=86, exact_activation_beats=True,
+                scope='simultaneous three-lever L20 P1 minimum component; forty-layer exposure remains modeled, not actual full-token execution')
+            inc['next_integration'] = 'P1 combined interaction is measured; P6 PACK exposure and contextual physical closure remain unmeasured. No same-case replay required.'
     # Production records may be composed without rerunning the numeric gates.
     # Keep their benchmark clock and measured scope separate from this target
     # clock program projection and the independent, unmeasured layout forecast.

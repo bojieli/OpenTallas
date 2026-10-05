@@ -1,0 +1,32 @@
+{
+  "registered_model_commit": "e72bb27c1",
+  "registered_model_sha256": "2b8549978ac73cd8bb35b8810c65fec7d5cba782369faca7230815602a34520c",
+  "construction": "whole-native virtual-edge staging; CAP1 original installed SM0 LSU337/273 and NC4 AW3 backend",
+  "exec_ff_bits": 900811,
+  "borrow_ff_bits": 3452,
+  "actual_ff_bits": 904263,
+  "registered_reserved_ff_bits": 905416,
+  "encoder_instances": 7345,
+  "decoder_instances": 5178,
+  "registered_codec_pairs": 7312,
+  "extra_pairs_conservatively_priced": 33,
+  "pair_cell_body_um2": 288.50904,
+  "extra_pair_body_mm2": 0.00952079832,
+  "conservative_placement_mm2": 5.4720518444040005,
+  "component_envelope_mm2": 6.72,
+  "parent_reserved_slot": null,
+  "physical_qualification": false,
+  "adopted": false,
+  "composed_gain": null,
+  "held_request_encode_edges": 2,
+  "held_request_decode_edges": 3,
+  "held_response_encode_edges": 2,
+  "held_response_decode_edges": 3,
+  "inventory_policy": "Retain full registered FF reservation and all original decoder cost; add 33 complete codec pairs, 50% placement utilization, 2% guard. No credit unused decoder/cache reservations.",
+  "known_physical_gaps": [
+    "Prior-debt SECDED ledger combinational update is functional-only, not held2/3 physically qualified.",
+    "Control/config/loader validity checks do not establish mutable-state physical protection qualification.",
+    "6.72 envelope is not an actual parent reserved slot; no routed corridor or SS60/FF25 closure."
+  ],
+  "measurement_scope": "Minimum unchanged native/fused HCpost exact1M four-op chain, actual CP/no RESULT status2 and finite installed-provider classes; no full cluster compile."
+}
