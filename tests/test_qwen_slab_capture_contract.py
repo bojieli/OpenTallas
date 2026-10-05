@@ -40,6 +40,12 @@ class CaptureContract(unittest.TestCase):
         p["ss"]["wire"] = [150, 20]
         with self.assertRaises(ValueError): subject.path_slacks(p)
 
+    def test_infinite_or_unknown_arrival_refused(self):
+        for value in (float("inf"), float("nan"), None):
+            p = self.path()
+            p["ss"]["capture_clock"] = [1000, value]
+            with self.assertRaises(ValueError): subject.path_slacks(p)
+
     def test_scope_and_once_only_capture(self):
         r = subject.model()
         self.assertEqual(r["capture"]["new_ff_bits"], 0)

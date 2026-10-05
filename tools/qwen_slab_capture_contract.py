@@ -7,6 +7,7 @@ The numerical parent is not yet an installed mesochronous ready/valid parent.
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
 import qwen_slab_share_splitface_l7 as previous
 
@@ -49,10 +50,11 @@ def path_slacks(p):
         c = p[corner]
         for k in ("launch_clock", "capture_clock", "clk_q", "wire"):
             lo, hi = c[k]
-            if lo < 0 or hi < lo:
+            if not all(isinstance(v, (int, float)) and math.isfinite(v) for v in (lo, hi)) or lo < 0 or hi < lo:
                 raise ValueError("invalid finite " + corner + "/" + k)
     ss, ff = p["ss"], p["ff"]
-    if ss["setup"] < 0 or ff["hold"] < 0:
+    if not all(isinstance(v, (int, float)) and math.isfinite(v) and v >= 0
+               for v in (ss["setup"], ff["hold"])):
         raise ValueError("negative cell constraint")
     setup = (833.333 + ss["capture_clock"][0] - 60 - ss["setup"]
              - ss["launch_clock"][1] - ss["clk_q"][1] - ss["wire"][1])
