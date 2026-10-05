@@ -7950,6 +7950,56 @@ def dsrom_wfc_local_control_price(maxu=866, nw=21, flit=512, txq=4):
                 obligations='Keep each group copy local; preserve queue priority/debt and reset edges; measure the same fullshape context and routed channel/area limits. Reservation is not guaranteed physical fit.')
 
 
+
+def dsrom_wfc_completion_ready_price(nw=21, txq=4):
+    """Conditional same-edge completion-ready lookahead, not an adopted repair.
+
+    A registered predicate must equal F(current state), computed from the
+    exact next running/TX state/read-inflight/queue count on the preceding edge.
+    Registering F(current state) instead adds an edge and is not this recipe.
+    Actual parent completion/data launch clocks and arrivals remain required.
+    """
+    qb = max(1, (txq - 1).bit_length())
+    count_bits = qb + 1
+    arithmetic_nand2 = 2 * count_bits * 9
+    state_mux_nand2 = 5 * 3 * 4
+    running_mux_nand2 = 8
+    predicate_nand2 = 24
+    nand2 = arithmetic_nand2 + state_mux_nand2 + running_mux_nand2 + predicate_nand2
+    ff = 1
+    buffers = 3 + 16  # new CLK/reset/D plus distributed completion control.
+    gross = ff*0.37908 + buffers*0.10206 + nand2*0.08748
+    return dict(adopted=False, implementation_selected=False,
+                source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='d02775f0047629d103892db3a9d04563b75cf922d899ffa48da435f41024e790',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json',
+                target_period_ps=833, SS_setup_uncertainty_ps=60, FF_hold_uncertainty_ps=25,
+                replicas=1, MACs_per_cycle=0, new_FF_bits=ff,
+                new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                new_external_boundary_bits_per_cycle=0,
+                new_pipeline_edges=0, single_user_token_latency_delta_cycles=0,
+                queue_depth_delta=0, accepted_debt_delta=0, reset_root_copies=0,
+                arithmetic_NAND2_reservation=arithmetic_nand2,
+                TX_state_mux_NAND2_reservation=state_mux_nand2,
+                running_mux_NAND2_reservation=running_mux_nand2,
+                predicate_NAND2_reservation=predicate_nand2,
+                NAND2_equivalent_reservation=nand2, buffer_reservation_cells=buffers,
+                gross_cell_reservation_um2=gross,
+                additional_implementation_reservation_um2=gross,
+                total_cell_growth_budget_um2=2*gross, old_cell_removal_credit_um2=0,
+                new_clock_pin_cap_fF_SS=0.433982, new_reset_pin_cap_fF_SS=0.704025,
+                new_predicate_D_pin_cap_fF_SS=0.527811,
+                additional_state_control_connections_bound=1+3+1+count_bits+1+1,
+                completion_control_buffer_leaf_sink_reservation=32,
+                actual_parent_launch_clock=None, actual_parent_completion_max_arrival_ps=None,
+                actual_parent_completion_min_arrival_ps=None,
+                actual_parent_result_data_arrival_ps=None, actual_parent_routed_record=None,
+                measured_gain_ps=None, routed_area_fit=False, routing_capacity_proven=False,
+                component_exactness=False, SS_FF_closed=False, build_ready=False,
+                blocker='Selected native parent completion/data launch-clock and min/max arrival binding absent. No uncontrolled capture edge or IO policy change.',
+                semantics='ready_q(t)=running(t)&&TX_IDLE(t)&&!rd_inflight(t)&&(txq_n(t)+2<=TXQ); compute ready_q(t+1) from EXACT original next state including q_push/tx_pop and ordered assignments, clear with rst_q; job_done(t)=core_done(t)&&ready_q(t).')
+
+
 def qwen_core_decode_pipeline_candidate(aw=24, nw=18, instruction_bits=1024, instructions=1, replicas=1):
     """Held FIFO word -> position -> selectors/shift -> /ODD -> NEXT.
 
