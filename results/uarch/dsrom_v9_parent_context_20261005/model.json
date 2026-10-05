@@ -1,0 +1,139 @@
+{
+  "schema": "opentallas.dsrom.v9.parent_clock_context.v1",
+  "generator_sha256": "15cf878d915db0905b9ac8c0d403c49680de963e3462d73329a64a1fa528d966",
+  "input_hashes": {
+    "results/uarch/dsrom_v9_parent_context_20261005/inputs/loaded_ports.json": "8699cc526b94493460b95b89e2ae0f9aaa0c66b690d2bc586270a0863a5a8a6f",
+    "results/rtl/dsrom_recovery_20261004/physcost/layer/floorplan.json": "d12baf9d01d3f86deb5ed02463dd505b7a832eac2697c7c468acf07bdd843423",
+    "results/uarch/dsrom_v9_parent_context_20261005/inputs/source.sha256": "b4c4299dbef3584aa2b068722bfa4d4fce077ee32ed3efea52dbf9b7d03ddd07",
+    "results/uarch/dsrom_v9_parent_context_20261005/terminal_profiles.json": "5dc3ca88132de18e29cd3238cf29efeb079f8f472b0eacf9ca0e64c3e48bc765"
+  },
+  "source": {
+    "v9": "f284118df",
+    "QX10": "0032b7355",
+    "QX10_vehicle": "Z18a",
+    "QX10_ODB": "existing immutable 4_cts.odb; no re-synthesis or route",
+    "SS_FF_load_basis": "real mapped downstream Liberty pin sums in existing CTS DB; no capacitance guessed"
+  },
+  "scope": "actual v9 broadcast/loader/root-input registers, QX10 input/gate/reset/output registers, one full D64 first return node",
+  "excluded": "remaining QX engine, later return network and whole field; terminal interfaces retain known source clocks and loads",
+  "full_slot_um": [
+    1040.256,
+    239.76
+  ],
+  "die_um": [
+    1040.256,
+    239.76
+  ],
+  "reserved_QX_frame_um": [
+    510.84,
+    151.2
+  ],
+  "reserved_QX_bbox_um": [
+    527.256,
+    44.28,
+    1038.096,
+    195.48
+  ],
+  "parent_cell_bbox_um": [
+    2.16,
+    2.16,
+    525.096,
+    237.6
+  ],
+  "parent_available_um2": 123120.05184,
+  "mapping_density": 0.5,
+  "register_bits_upper": 20000,
+  "actual_first_return_node_queue_bits": 8320,
+  "broadcast": {
+    "bits": 1630,
+    "stages": 3,
+    "BST": 2,
+    "RPT": 1,
+    "reset": true
+  },
+  "clocks": {
+    "period_ps": 833.3333333333334,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "root": "core_clk on actual clk; Qfree",
+    "gated": "g_qx.g_cg.u_cg.u_icg/GCLK, combinational passed core_clk edges",
+    "source_loaded_cuts": {
+      "SS": {
+        "gated_engine_terminal_cap_fF": 4.3713,
+        "actual_downstream_pins": "{delaybuf_0_core_clk A BUFx24_ASAP7_75t_R 2.185650} {clkbuf_regs_1_core_clk A BUFx24_ASAP7_75t_R 2.185650}",
+        "primary_input_bits": 606
+      },
+      "FF": {
+        "gated_engine_terminal_cap_fF": 5.2147,
+        "actual_downstream_pins": "{delaybuf_0_core_clk A BUFx24_ASAP7_75t_R 2.607350} {clkbuf_regs_1_core_clk A BUFx24_ASAP7_75t_R 2.607350}",
+        "primary_input_bits": 606
+      }
+    },
+    "propagated": true,
+    "insertion_ps": null,
+    "actual_clock_wire_cap_fF": null,
+    "conditional_terminal_budget_ps": {
+      "min": 360,
+      "max": 727,
+      "basis": "existing QX source vehicle; actual remaining-cone arrivals unqualified"
+    }
+  },
+  "area": {
+    "FF_cell_upper_um2": 14580.0,
+    "combinational_upper_um2": 6000,
+    "conditional_fanout8_clock_buffer_upper": 2860,
+    "conditional_clock_cell_upper_um2": 833.9760000000001,
+    "cell_upper_um2": 21413.976,
+    "placement_upper_um2": 42827.952,
+    "mapping_must_fit": true,
+    "routed_fit_proven": false
+  },
+  "ports": {
+    "broadcast_source_bits": 1630,
+    "configuration_ROM_bytes_per_cycle": 6,
+    "remaining_engine_XS_bits": 549,
+    "pair_result_bits": 126,
+    "root_result_capture_bits": 69,
+    "reset_copies": 8,
+    "source_bound_terminal_loading": "results/uarch/dsrom_v9_parent_context_20261005/terminal_profiles.json",
+    "per_bit_child_loading_qualified": false,
+    "observation_terminal_downstream_loading_qualified": false
+  },
+  "routing": {
+    "local_data_cut_tracks": 809,
+    "signal_layers": "M2-M7",
+    "clock_layers": "M7-M8",
+    "physical_channel_capacity_qualified": false,
+    "whole_element_frame_not_shrunk": true,
+    "route_must_validate_actual_PG_and_channel_capacity": true
+  },
+  "compute": {
+    "new_MACs_per_cycle": 0,
+    "new_rounding_points": 0,
+    "replicas": 1,
+    "full_QX_MACs_and_four_ROMs": "remain the QX10 owner dependency; no omitted-hardware credit"
+  },
+  "latency": {
+    "added_source_pipeline_edges": 0,
+    "projected_register_edges_are_existing": true,
+    "existing_v9_baseline_record": "results/rtl/dsrom_field_spine_20261004/field_baseline_v9.json",
+    "first_return_node_cycles": 6,
+    "minimum_context_is_not_full_matvec_latency": true,
+    "reprice_AR_MTP": false,
+    "adoption_credit": 0
+  },
+  "resource": {
+    "host": "EPYC1",
+    "expected_peak_GiB": 8,
+    "cores": 4,
+    "justification": "<=20k state bits, one return node, no QX compute synthesis or whole-die database",
+    "admission": "unchanged host guard plus fresh measured CPU/RAM/disk before actual execution",
+    "wall_file_AS_limits": "none"
+  },
+  "parent_only_mapping_admitted": true,
+  "full_QX_context_admitted": false,
+  "full_field_build_admitted": false,
+  "missing_input_clocks": true,
+  "remaining_dependency": "qualified full-shape QX10 LEF/SS/FF timing and exact gate from live Z18; all terminal arrival/child clock-tree qualification still outstanding",
+  "physical_closed": false
+}

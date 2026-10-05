@@ -9622,3 +9622,9 @@ def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None,parent_c
             physical_characterization_admitted=result['parent_association_join']['measured'],
             adoption=False)
     return result
+
+
+def dsrom_v9_parent_context_model():
+    """Full-slot source register/clock cut, with actual loaded QX10 ports."""
+    from dsrom_v9_parent_context import model
+    return model(Path(__file__).resolve().parents[1])
