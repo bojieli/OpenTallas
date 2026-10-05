@@ -296,6 +296,7 @@ def main():
     ap.add_argument('--joint-record', type=Path)
     ap.add_argument('--joint-layouts', type=Path)
     ap.add_argument('--paired-record', type=Path)
+    ap.add_argument('--combined-record', type=Path)
     a = ap.parse_args()
     S = setup()
     ar0, mm0, rows1, rows6 = gate_rows(S)
@@ -389,6 +390,43 @@ def main():
             full_token_gain_measured=False, physical_ss_ff_qualified=False,
             adopted=False, qualified_headline_rate=None,
             next_integration='Rawls combined configuration must bind actual PACK caller and measure interaction; Erdos component gate is not that combined run')
+        if a.combined_record:
+            combined = json.loads(a.combined_record.read_text())
+            parent = a.combined_record.parent.parent
+            summary_path, terminal_path = parent/'summary.json', parent/'terminal.json'
+            summary = json.loads(summary_path.read_text())
+            terminal = json.loads(terminal_path.read_text())
+            assert summary['result_sha256'] == sha(a.combined_record)
+            assert terminal['status'] == 'pass' and terminal['driver_exit'] == 0 and terminal['source_stable']
+            assert summary['flags'] == dict(ENABLE=1, PQ_ENABLE=1, PACK_W2=1, XMAP=1)
+            assert combined['status'] == 'pass' and combined['accepted'] and combined['beat_counts_exact']
+            assert not combined['mismatches'] and not combined['extra']
+            assert combined['original_output_rows'] == combined['actual_output_rows'] == 86
+            assert len(combined['ops']) == len(combined['activation_loads']) == 28
+            assert summary['original_inputs']['fixture.json'] == sha(fixture_path)
+            baseline_joint = joint['ar_l20']
+            assert summary['baseline_PQ_XMAP_total_cycles'] == baseline_joint['total_cycles']
+            assert combined['total_cycles'] == summary['total_cycles']
+            assert summary['actual_joined_cycle_saving'] == baseline_joint['total_cycles']-combined['total_cycles'] == paired['incremental_cycles_saved']
+            assert combined['paired_w2_cycles'] == paired['paired_w2_cycles'] == summary['paired_W2_cycles']
+            for op, (desc, load) in enumerate(zip(fixture['composite_descriptors'], combined['activation_loads'])):
+                actual = combined['ops'][str(op)]
+                assert actual['results'] == desc[0] and actual['fault'] == 0
+                assert actual['lines'] == actual['consumed'] == desc[4]
+                assert load['op'] == op and load['original_ids'] == fixture['logical_op_labels'][op]
+                assert actual['xload_beats'] == load['actual_beats'] == load['expected_beats']
+            assert combined['ops'][str(last)]['t_done']-combined['ops'][str(first)]['t_load0'] == paired['paired_w2_cycles']
+            inc = out['paired_W2_increment']
+            inc['actual_combined_PQ_XMAP_PACK_measured'] = True
+            inc['combined_measurement'] = dict(
+                inputs={rel(p):sha(p) for p in (a.combined_record, summary_path, terminal_path)},
+                source_commit=summary['source_main_commit'], active_columns=summary['active_columns'],
+                baseline_component_total_cycles=baseline_joint['total_cycles'],
+                candidate_component_total_cycles=combined['total_cycles'],
+                actual_component_saved_cycles=summary['actual_joined_cycle_saving'],
+                original_row_ids_preserved=True, exact_rows=86, exact_activation_beats=True,
+                scope='simultaneous three-lever L20 P1 minimum component; forty-layer exposure remains modeled, not actual full-token execution')
+            inc['next_integration'] = 'P1 combined interaction is measured; P6 PACK exposure and contextual physical closure remain unmeasured. No same-case replay required.'
     # Production records may be composed without rerunning the numeric gates.
     # Keep their benchmark clock and measured scope separate from this target
     # clock program projection and the independent, unmeasured layout forecast.
