@@ -174,8 +174,6 @@ module ot_hdc_v41_fh_ctx #(
             .clk(clk), .index_in(am_idx), .lane_in(iw_e[LW-1:0]),
             .index_q(index_local[ix]), .mask_q(index_mask_local[ix]));
     end
-    wire [G*W*32-1:0] iw_data_old = {{(G*W-1){32'd0}}, {{(32-NW){1'b0}}, am_idx[mp*NW +: NW]}} << (32 * iw_e[LW-1:0]);
-    wire [G*W-1:0]    iw_mask_old = {{(G*W-1){1'b0}}, 1'b1} << iw_e[LW-1:0];
     wire [G*W*32-1:0] iw_data;
     wire [G*W-1:0] iw_mask;
     for (genvar ix=0; ix<G*W; ix=ix+1) begin : g_index_word

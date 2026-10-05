@@ -39,7 +39,9 @@ module ot_hdc_v41_fh_macro_ctx #(
     output reg  [G*AW-1:0]   o_addr,
     output reg  [G*W-1:0]    o_mask,
     output reg  [G*W*32-1:0] o_data,
-    output wire              fault
+    output wire              fault,
+    output reg [G*W*32+G*W+G*AW+G-1:0] result_capture,
+    output wire [(1+32+NW)*(G*W/2)-1:0] argmax_level1
 );
     wire [G*W*32-1:0] ra_q;
     wire [G*W-1:0] mem_valid,mem_corrected,mem_poison,mem_committed;
@@ -79,5 +81,18 @@ module ot_hdc_v41_fh_macro_ctx #(
     for(genvar l=0;l<G*W;l=l+1) begin : g_leaf_fault
         localparam integer CW=1+32+NW;
         assign leaf[l*CW+:CW]={child_leaf[l*CW+CW-1]&&!fault,child_leaf[l*CW+:CW-1]};
+    end
+    // Actual result-port receiving registers and the first existing argmax
+    // tree level bound this child. They add loads, not production stages.
+    always @(posedge clk) result_capture <= {o_we,o_addr,o_mask,o_data};
+    for(genvar p=0;p<G*W/2;p=p+1) begin : g_argmax_consumer
+        localparam integer CW=1+32+NW;
+        wire [CW-1:0] x0=leaf[CW*(2*p)+:CW];
+        wire [CW-1:0] x1=leaf[CW*(2*p+1)+:CW];
+        wire x0_wins=x0[CW-1]&&(!x1[CW-1]||x0[CW-2-:32]>x1[CW-2-:32]||
+            (x0[CW-2-:32]==x1[CW-2-:32]&&x0[NW-1:0]<x1[NW-1:0]));
+        reg [CW-1:0] c;
+        always @(posedge clk) c<=x0_wins?x0:x1;
+        assign argmax_level1[CW*p+:CW]=c;
     end
 endmodule

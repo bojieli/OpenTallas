@@ -31,9 +31,11 @@ foreach inst [$block getInsts] {
     # One region per lane contains its actual macro, encoder, corrected return
     # and capture registers. The head's shared tag/control stays outside groups.
     set region [odb::dbRegion_create $block "fh_lane_$b"]
+    $region setRegionType EXCLUSIVE
     odb::dbBox_create $region [expr {int(($xx-1)*$dbu)}] [expr {int(($yy-1)*$dbu)}] \
         [expr {int(($xx+225)*$dbu)}] [expr {int(($yy+65)*$dbu)}]
-    set group [odb::dbGroup_create $region "fh_lane_$b"]
+    set group [odb::dbGroup_create $block "fh_lane_$b"]
+    $region addGroup $group
     $group addInst $inst
     foreach cell [$block getInsts] {
         set cn [string map [list "\\" ""] [$cell getName]]

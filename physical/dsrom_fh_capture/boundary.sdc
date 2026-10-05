@@ -4,3 +4,6 @@ set_false_path -from [get_ports {s3_v_in a_tag_p_in[*] res_in[*] go_fus i_iaddr[
 # Actual consumer data/valid/row/address registers represent the next parent
 # stage; output stand-ins are not a parent or full-target timing proof.
 set_false_path -to [all_outputs]
+# Internal consumers and macros supply their real pin loads. These observation
+# ports do not model an additional off-context receiver or output pad.
+set_load 0 [all_outputs]
