@@ -54,14 +54,14 @@ def prepare(out):
         archive_sha256=hashlib.sha256((base/'actual_results.tar.gz').read_bytes()).hexdigest(),
         rows=9216,spans=768,experts=[41,65],files={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in out.glob('*.hex')}),indent=2)+'\n')
 
-def run(work):
+def run(work,metadata_only=False):
     # Icarus is sufficient for this real minimum SIMT component; no wholeloader,
     # matrix arithmetic variant or downstream SwiGLU numerical build occurs.
     pins={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources()}
     (work/'source_pins.json').write_text(json.dumps(pins,indent=2)+'\n')
-    for enabled in (1,0):
+    for enabled in ((1,) if metadata_only else (1,0)):
         log=work/f'build_{enabled}.log'
-        cmd=['iverilog','-g2012','-s',TOP,'-P'+TOP+'.EXPORT='+str(enabled),'-o',str(work/f'gate_{enabled}.vvp')]+(['-DGU_METADATA_FAULTS'] if enabled else [])+[str(ROOT/p) for p in sources()]
+        cmd=['iverilog','-g2012','-s',TOP,'-P'+TOP+'.EXPORT='+str(enabled),'-P'+TOP+'.METADATA_ONLY='+str(int(metadata_only)),'-o',str(work/f'gate_{enabled}.vvp')]+(['-DGU_METADATA_FAULTS'] if enabled else [])+[str(ROOT/p) for p in sources()]
         with log.open('w') as f:rc=subprocess.run(cmd,cwd=ROOT,stdout=f,stderr=subprocess.STDOUT).returncode
         if rc:return rc
         with (work/f'run_{enabled}.log').open('w') as f:
@@ -70,6 +70,6 @@ def run(work):
     return 0
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',type=Path);p.add_argument('--run',type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--prepare',type=Path);p.add_argument('--run',type=Path);p.add_argument('--metadata-only',action='store_true');a=p.parse_args()
     if a.prepare:prepare(a.prepare.resolve())
-    if a.run:raise SystemExit(run(a.run.resolve()))
+    if a.run:raise SystemExit(run(a.run.resolve(),a.metadata_only))

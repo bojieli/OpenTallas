@@ -1,0 +1,117 @@
+{
+  "current_model_source_sha256": "e775035780fe893cec3378e763ac1fc361a04668bd73f264a720100c0e72f2a0",
+  "HA2": {
+    "default_off": true,
+    "NC": 8,
+    "LANES": 16,
+    "PFMAX": 384,
+    "OFMAX": 48,
+    "INJ": 2,
+    "peer_ports": 8,
+    "BF16": 1,
+    "LAT": 7,
+    "SLOTREG": 1,
+    "arithmetic_MACs_per_cycle": 0,
+    "FP32_adds_per_issue": 112,
+    "unchanged_golden_tree_levels": 3,
+    "unchanged_RNE_BF16_pack": true,
+    "operand_storage_bits": 196608,
+    "hub_bytes_per_cycle": 128,
+    "peer_bytes_per_cycle": 512,
+    "output_bytes_per_cycle": 64,
+    "incoming_boundary_bits": 5448,
+    "result_boundary_bits": 532,
+    "selected_read_slice_bits": 32,
+    "read_selector_replicas": 128,
+    "read_onehot_FF_bits": 6144,
+    "added_read_selector_FF_floor_um2": 1791.5904,
+    "removed_wide_binary_read_mux_credit_um2": 0,
+    "current_fullshape_synth_cells": 4082861,
+    "current_fullshape_synth_cell_um2": 490159.0422,
+    "conservative_cell_upper_before_buffer_delta_um2": 491950.6326,
+    "area_and_read_tracks_within_existing_hb_coll_not_yet_qualified": true,
+    "replica_read_wire_bits": 196608,
+    "read_slice_select_fanout_bits": 32,
+    "own_index_decode": "valid f: J*OF <= f < (J+1)*OF; local slot f-J*OF, exactly equals quotient/remainder branch",
+    "operand_selector_update": "look ahead only to existing next rptr, including arm; no new data stage",
+    "new_cycles_per_flit": 0,
+    "new_cycles_per_collective": 0,
+    "composed_new_token_ns": 0,
+    "retained_reducer_cycles": 23,
+    "current_unadopted_TU_model_cycles": 22,
+    "retained_SLOTREG_delta_vs_TU_model_cycles": 1,
+    "current_executed_ARs": 40,
+    "retained_SLOTREG_W19_token_delta_ns": 33.333333333333336,
+    "new_cut_W19_token_delta_ns": 0,
+    "current_program": "results/rtl/w19_hbm_tp96_program_oreduce.json",
+    "current_program_sha256": "46ee701ff29d956050db2da9b2bd9a8eff6cd87d278a35e4b181cfc2913b245b",
+    "current_executed_collectives": 265,
+    "retained_reducer_hz": 1200000000.0,
+    "targets": {
+      "qwen_rom": {
+        "applicable": false,
+        "new_token_ns": 0
+      },
+      "v41_rom": {
+        "applicable": false,
+        "new_token_ns": 0
+      },
+      "qwen_hbm": {
+        "applicable": true,
+        "new_token_ns": 0
+      },
+      "v41_hbm": {
+        "applicable": true,
+        "new_token_ns": 0
+      }
+    },
+    "clock_period_ps": 833,
+    "SS_setup_uncertainty_ps": 60,
+    "FF_hold_uncertainty_ps": 25,
+    "fullshape_changed_source_exact": false,
+    "contextual_SS_FF": false,
+    "external_parent_clocks_loads": false,
+    "adopted": false
+  },
+  "endpoint": {
+    "default_off": true,
+    "evidence": "own changed-source route-r1 actual CTS sw[2] -> qualified TXmask bit, -370.23ps; intermediate, not final",
+    "local_control_replicas": 16,
+    "comparator_input_bits": 8,
+    "compute_MACs_per_cycle": 0,
+    "memory_bytes_per_cycle_added": 0,
+    "external_boundary_bits_added": 0,
+    "local_advance_fanout_bits": 40,
+    "added_state_FF_bits": 0,
+    "comparator_gate_upper_per_replica": 48,
+    "added_comb_cell_upper_um2": 153.60000000000002,
+    "physical_buffer_delta_um2": null,
+    "actual_parent_track_fit": false,
+    "new_cycles_per_record": 0,
+    "new_cycles_per_collective": 0,
+    "composed_new_token_ns": 0,
+    "readiness": "same-cycle actual FIFO readiness, never tied/predicted",
+    "targets": {
+      "qwen_rom": {
+        "applicable": false,
+        "new_token_ns": 0
+      },
+      "v41_rom": {
+        "applicable": false,
+        "new_token_ns": 0
+      },
+      "qwen_hbm": {
+        "applicable": true,
+        "new_token_ns": 0
+      },
+      "v41_hbm": {
+        "applicable": true,
+        "new_token_ns": 0
+      }
+    },
+    "fullshape_exact": false,
+    "contextual_SS_FF": false,
+    "adopted": false
+  },
+  "adopted": false
+}

@@ -1,0 +1,504 @@
+{
+  "default_enabled": false,
+  "adopted": false,
+  "parent_qualified": false,
+  "physical_status": "route_r9 pending; component reports cannot substitute full-parent qualification",
+  "cap_um2": 37452.2,
+  "period_ps": 833.333,
+  "SS_setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "input_sha256": {
+    "results/rtl/dsrom_reindex_parent_20261005/gather_r8_PASS/gather.json": "b6bf9b7294474f298dfefe2565c6c065d49af81a8404acdf52810a8ea4b16100",
+    "results/rtl/dsrom_reindex_parent_20261005/integration_r9_PASS/record.json": "755bbf4da4f10140a229566e99895775cea09926a167221fe568a8441bda8575",
+    "results/rtl/dsrom_reindex_candidates_20261004/gather.json": "95fa544764160d4a7a665796c2ca9c543374672ed3971bb37ab78ad09dc3ba9c",
+    "results/rtl/dsrom_reindex_kc8_20261005/gate_PASS/gather.json": "6e21effc7a04b94ba04721efa21b8db8a5515386c4b2a3bd8b27946d855995e9",
+    "tools/dsrom_reindex_parent_compose.py": "522145eec6fa76d283e7e722cc4c1747cdf78ca106fcbc86604586e3c800ece4",
+    "tools/dsrom_reindex_parent_model.py": "db678d5509a21852462edacae969b91a3a814712a42c322c64fda7371ed1ce65",
+    "tools/uarch_model.py": "daa8538ceda95a3a260b99356f25661b563176f3a6b9f6d033badfe5bb716c7a"
+  },
+  "baseline_composer_inputs": {
+    "results/rtl/dsrom_1m_allmeasured_20261004/field.json": "57e49af663cb5ace1235d12c13f5a95743d180e7395d7bbe90e9cef5d7ea297d",
+    "results/rtl/dsrom_1m_allmeasured_20261004/su.json": "26ebdffa021c36d278d9e55c07affb85f696448ccf258412d5e4257ce12a5a65",
+    "results/rtl/dsrom_1m_allmeasured_20261004/head.json": "404264a42c6e1faa0635d38e3f29b2e1cb34e028b0562c6d720dd91c8be15cce",
+    "results/rtl/dsrom_1m_allmeasured_20261004/links.json": "13757346b2039c2794c00996871b98fbcd5747783a81f501a0eb140404824a4b",
+    "results/rtl/dsrom_1m_allmeasured_20261004/cand_select.json": "76af1b31c74dab2438ef87564a14f0588ec258b880e6a5238458869f44534218",
+    "results/rtl/dsrom_1m_allmeasured_20261004/engram.json": "c874ce62fd2253e36bdcb0420697229f9658cd239518d3ad99fd8345f6b4155e",
+    "results/rtl/dsrom_1m_allmeasured_20261004/embed.json": "154f7248d8bf7a789b846c7e73268e895335b4082078dc4af21a1b152fbcc2e6",
+    "results/rtl/dsrom_1m_allmeasured_20261004/su_cdc.json": "641395e891d004439cdd0ede1d9ceca8a6011391ebb79d63d3e7fe31b3a2d6df",
+    "results/rtl/dsrom_1m_allmeasured_20261004/su_qdq_wired.json": "aaa6b190af2192499fe13f13f93803080dacc7746739470371adef905e850129",
+    "results/rtl/dsrom_1m_allmeasured_20261004/draft_blocks.json": "3d4837a6cbdffce831ab48dc8a7677ff7e8eae2ef03cf7e84f985129e5d01775",
+    "results/rtl/dsrom_recovery_20261004/levers/draft.json": "41536d2be5bc8dc53fbaf6dfe5507fde73a27ade011b9d4eaed8c7dd575b082a",
+    "results/rtl/dsrom_recovery_20261004/levers/draft_sweep.json": "fbe1a6a49ba9ad0f62054c04a9edcfe4de79f03ec8a3b9916610c40e151028c2",
+    "results/rtl/dsrom_recovery_20261004/levers/field.json": "472b34fe32089222d2c10819e7c543822316c431d87a6fd3b92bbf5771b23600",
+    "results/rtl/dsrom_recovery_20261004/levers/field_spine.json": "0d785a9bc3172fd2bd921d90546804ab8213a29e674a3ce3185120feee754608",
+    "results/rtl/dsrom_recovery_20261004/levers/field_spine_pq.json": "d87125723eaf70b4a8157bbba60841ebeed1787ba3094441901621c9f9550d96",
+    "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
+    "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
+    "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
+    "results/rtl/dsrom_recovery_20261004/levers/su_hcpost.json": "26082ac33d3c4fac170a19a79efb67da0cc4b6792589c368d2c572cb414a4341",
+    "results/rtl/dsrom_recovery_20261004/levers/su_norm.json": "21c959a53ebee360f6c50102dae7fcc877fcc239086e6c24039d0f7d7fa4979c",
+    "results/rtl/dsrom_recovery_20261004/levers/su_routeract.json": "0648152478fa23ad5dc04d6c05ef3dc4b648742c72ea04c100b215a802a43fd8",
+    "results/rtl/dsrom_recovery_20261004/levers/su_softmax.json": "264666bbf72fec3983c1535416983faead2e41c016d8933cb4bae8497db30731",
+    "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "fb6e7c3420b6b935253d9d517ae5b104ceb0ffd4650f87507181b0e1d3da5903",
+    "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
+    "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
+    "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
+    "results/rtl/dsrom_fused_draft_head_20261004/l1_compose.json": "aa7c78726595290552e17201782429a761ee51667de1ca3f73d72b7995a62051",
+    "results/rtl/dsrom_1m_measured_20261004/reader.json": "580267417a12eb4873a7e611757a9745557255009eab8cfd126c00468c36f26e",
+    "results/rtl/dsrom_1m_measured_20261004/ckv_lat259.json": "b0c2fc5669ea796735053b841486da31224ba56b1c286625a723a4ec3f42d0cf",
+    "results/rtl/dsrom_reindex_candidates_20261004/gather.json": "95fa544764160d4a7a665796c2ca9c543374672ed3971bb37ab78ad09dc3ba9c",
+    "results/rtl/dsrom_reindex_candidates_20261004/select.json": "1b6fc6822b9f211af799335153f1b4a952ce35fc62ff0342a3929e791fcdf315",
+    "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9"
+  },
+  "composer_tools": {
+    "tools/dsrom_1m_allmeasured.py": "c7aeb690326f6167bea94c6caebebd980cc60fcd3be7be7bc17cc1e64e66ada5",
+    "tools/dsrom_1m_measure.py": "bf3feec72e3211c22cc9d08616ecac10a50b2a43a2035e15676a91c3ee056a67"
+  },
+  "measured_gather_cycles": 739,
+  "retained_KC8_cycles": 738,
+  "composer_production_input_cycles": 757,
+  "added_cycles_vs_KC8": 1,
+  "gather_delta_cycles_vs_production": -18,
+  "reindex_nodes": [
+    {
+      "node": "L24.attn.idx.score",
+      "gather_cycles": 739,
+      "composer_gather_cycles": 757,
+      "before_us": 0.6957813333333334,
+      "after_us": 0.6807813333333333,
+      "gather_delta_cycles": -18
+    },
+    {
+      "node": "L28.attn.idx.score",
+      "gather_cycles": 739,
+      "composer_gather_cycles": 757,
+      "before_us": 0.6957813333333334,
+      "after_us": 0.6807813333333333,
+      "gather_delta_cycles": -18
+    },
+    {
+      "node": "L32.attn.idx.score",
+      "gather_cycles": 739,
+      "composer_gather_cycles": 757,
+      "before_us": 0.6957813333333334,
+      "after_us": 0.6807813333333333,
+      "gather_delta_cycles": -18
+    },
+    {
+      "node": "L36.attn.idx.score",
+      "gather_cycles": 739,
+      "composer_gather_cycles": 757,
+      "before_us": 0.6957813333333334,
+      "after_us": 0.6807813333333333,
+      "gather_delta_cycles": -18
+    }
+  ],
+  "token_component_delta_vs_KC8_us": 0.0033333333333333335,
+  "same_rank_stage_observations": [
+    {
+      "job": 0,
+      "position": 1048574,
+      "default_off_done": 842,
+      "parent_done": 843,
+      "observed_delta_cycles": 1,
+      "keys": 2024
+    },
+    {
+      "job": 1,
+      "position": 1048575,
+      "default_off_done": 775,
+      "parent_done": 778,
+      "observed_delta_cycles": 3,
+      "keys": 4040
+    }
+  ],
+  "stage_scope": "Existing two-job fullshape directed stage measurements: scorer stand-in, unchanged golden mdrop/globalIDs; no fresh replay and no native S81 qualification",
+  "stage_delta_is_not_assumed_one_cycle": true,
+  "baseline": {
+    "AR_us": 592.926,
+    "MTP": {
+      "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159 (results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5))",
+      "stage_busy_top": [
+        {
+          "first": "L19.ffn.hc_pre",
+          "hop": "L20.substage_hop0",
+          "busy_us": 24.2243
+        },
+        {
+          "first": "L13.ffn.hc_pre",
+          "hop": "L14.substage_hop0",
+          "busy_us": 21.2223
+        },
+        {
+          "first": "L7.ffn.hc_pre",
+          "hop": "L8.substage_hop0",
+          "busy_us": 20.5285
+        },
+        {
+          "first": "L1.ffn.hc_pre",
+          "hop": "L2.substage_hop0",
+          "busy_us": 18.4077
+        },
+        {
+          "first": "L27.ffn.hc_pre",
+          "hop": "L28.substage_hop0",
+          "busy_us": 14.0827
+        },
+        {
+          "first": "L31.ffn.hc_pre",
+          "hop": "L32.substage_hop0",
+          "busy_us": 14.0827
+        }
+      ],
+      "worst_stage": {
+        "first": "L19.ffn.hc_pre",
+        "hop": "L20.substage_hop0",
+        "busy_us": 24.2243
+      },
+      "II_us": 25.081,
+      "verify_us": 718.33,
+      "draft_us": 119.211,
+      "draft_terms": {
+        "block5_us": 38.3718,
+        "blocks_us": 83.992,
+        "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+        "head_occ_us": 6.9892,
+        "r_markov": 0.00781
+      },
+      "seed_commit_us": 3.217,
+      "step_us": 840.758,
+      "MTP_tok_s": 4946.7,
+      "tau": 4.159,
+      "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
+      "mtp_over_ar": 2.933,
+      "tau_sensitivity": {
+        "published": {
+          "tau": 3.8879,
+          "MTP_tok_s": 4624.3,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+        },
+        "published_low": {
+          "tau": 3.43,
+          "MTP_tok_s": 4079.7,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+        },
+        "published_high": {
+          "tau": 4.31748,
+          "MTP_tok_s": 5135.2,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+        }
+      },
+      "physical_qualified": false,
+      "qualified_headline_rate": null,
+      "wavefront_implementation": {
+        "decision_record": "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json",
+        "decision_sha256": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9",
+        "source_commit": "34223b7b0",
+        "verdict": "REJECT_THREE_STAGE_VARIANTS_ESCALATE_CLAUDE_STRUCTURAL_CONTROL_REDESIGN",
+        "variants": [
+          {
+            "utilization": 0.4,
+            "ss_incontext_ps": -150.8,
+            "ss_internal_ps": -62.4,
+            "ff_hold_ps": 11.0,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 5
+            }
+          },
+          {
+            "utilization": 0.45,
+            "ss_incontext_ps": -105.4,
+            "ss_internal_ps": -29.8,
+            "ff_hold_ps": 10.5,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 24
+            }
+          },
+          {
+            "utilization": 0.5,
+            "ss_incontext_ps": -65.0,
+            "ss_internal_ps": -1.5,
+            "ff_hold_ps": 11.1,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 4
+            }
+          }
+        ],
+        "modeled_interval_retained": true,
+        "implementation_adopted": false,
+        "reset_recovery_is_causal": false,
+        "reason": "Same-edge core_done/job_done decode drives TXQ4 x FLIT512 payload capture; internal user-position or TX occupancy/write-select control remains failing. MAXU866 user position21bits =18186 statebits plus866 validbits in28 groups. Source cone rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:296,398-400,628-645,681-707. No actual reset recovery failure: raw u50 asynchronous recovery +188.1ps. Actual parent producer clock/arrival/load remains unbound; virtual incontext is surrogate, not fulltop qualification.",
+        "redesign_owner": "CLAUDE",
+        "additional_capture_edge_calendar_price": null,
+        "rule": "MTP interval/rate remains modeled composition; any redesign capture edge must be explicitly priced before adoption. No fourth recipe or reset-recovery credit."
+      }
+    }
+  },
+  "conditional_KC8_reference": {
+    "AR_us": 592.863,
+    "MTP": {
+      "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159 (results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5))",
+      "stage_busy_top": [
+        {
+          "first": "L19.ffn.hc_pre",
+          "hop": "L20.substage_hop0",
+          "busy_us": 24.2243
+        },
+        {
+          "first": "L13.ffn.hc_pre",
+          "hop": "L14.substage_hop0",
+          "busy_us": 21.2223
+        },
+        {
+          "first": "L7.ffn.hc_pre",
+          "hop": "L8.substage_hop0",
+          "busy_us": 20.5285
+        },
+        {
+          "first": "L1.ffn.hc_pre",
+          "hop": "L2.substage_hop0",
+          "busy_us": 18.4077
+        },
+        {
+          "first": "L27.ffn.hc_pre",
+          "hop": "L28.substage_hop0",
+          "busy_us": 14.0669
+        },
+        {
+          "first": "L31.ffn.hc_pre",
+          "hop": "L32.substage_hop0",
+          "busy_us": 14.0669
+        }
+      ],
+      "worst_stage": {
+        "first": "L19.ffn.hc_pre",
+        "hop": "L20.substage_hop0",
+        "busy_us": 24.2243
+      },
+      "II_us": 25.081,
+      "verify_us": 718.266,
+      "draft_us": 119.211,
+      "draft_terms": {
+        "block5_us": 38.3718,
+        "blocks_us": 83.992,
+        "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+        "head_occ_us": 6.9892,
+        "r_markov": 0.00781
+      },
+      "seed_commit_us": 3.217,
+      "step_us": 840.694,
+      "MTP_tok_s": 4947.1,
+      "tau": 4.159,
+      "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
+      "mtp_over_ar": 2.933,
+      "tau_sensitivity": {
+        "published": {
+          "tau": 3.8879,
+          "MTP_tok_s": 4624.6,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+        },
+        "published_low": {
+          "tau": 3.43,
+          "MTP_tok_s": 4080.0,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+        },
+        "published_high": {
+          "tau": 4.31748,
+          "MTP_tok_s": 5135.6,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+        }
+      },
+      "physical_qualified": false,
+      "qualified_headline_rate": null,
+      "wavefront_implementation": {
+        "decision_record": "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json",
+        "decision_sha256": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9",
+        "source_commit": "34223b7b0",
+        "verdict": "REJECT_THREE_STAGE_VARIANTS_ESCALATE_CLAUDE_STRUCTURAL_CONTROL_REDESIGN",
+        "variants": [
+          {
+            "utilization": 0.4,
+            "ss_incontext_ps": -150.8,
+            "ss_internal_ps": -62.4,
+            "ff_hold_ps": 11.0,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 5
+            }
+          },
+          {
+            "utilization": 0.45,
+            "ss_incontext_ps": -105.4,
+            "ss_internal_ps": -29.8,
+            "ff_hold_ps": 10.5,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 24
+            }
+          },
+          {
+            "utilization": 0.5,
+            "ss_incontext_ps": -65.0,
+            "ss_internal_ps": -1.5,
+            "ff_hold_ps": 11.1,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 4
+            }
+          }
+        ],
+        "modeled_interval_retained": true,
+        "implementation_adopted": false,
+        "reset_recovery_is_causal": false,
+        "reason": "Same-edge core_done/job_done decode drives TXQ4 x FLIT512 payload capture; internal user-position or TX occupancy/write-select control remains failing. MAXU866 user position21bits =18186 statebits plus866 validbits in28 groups. Source cone rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:296,398-400,628-645,681-707. No actual reset recovery failure: raw u50 asynchronous recovery +188.1ps. Actual parent producer clock/arrival/load remains unbound; virtual incontext is surrogate, not fulltop qualification.",
+        "redesign_owner": "CLAUDE",
+        "additional_capture_edge_calendar_price": null,
+        "rule": "MTP interval/rate remains modeled composition; any redesign capture edge must be explicitly priced before adoption. No fourth recipe or reset-recovery credit."
+      }
+    }
+  },
+  "conditional_production_parent": {
+    "AR_us": 592.866,
+    "MTP": {
+      "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 4.159 (results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5))",
+      "stage_busy_top": [
+        {
+          "first": "L19.ffn.hc_pre",
+          "hop": "L20.substage_hop0",
+          "busy_us": 24.2243
+        },
+        {
+          "first": "L13.ffn.hc_pre",
+          "hop": "L14.substage_hop0",
+          "busy_us": 21.2223
+        },
+        {
+          "first": "L7.ffn.hc_pre",
+          "hop": "L8.substage_hop0",
+          "busy_us": 20.5285
+        },
+        {
+          "first": "L1.ffn.hc_pre",
+          "hop": "L2.substage_hop0",
+          "busy_us": 18.4077
+        },
+        {
+          "first": "L27.ffn.hc_pre",
+          "hop": "L28.substage_hop0",
+          "busy_us": 14.0677
+        },
+        {
+          "first": "L31.ffn.hc_pre",
+          "hop": "L32.substage_hop0",
+          "busy_us": 14.0677
+        }
+      ],
+      "worst_stage": {
+        "first": "L19.ffn.hc_pre",
+        "hop": "L20.substage_hop0",
+        "busy_us": 24.2243
+      },
+      "II_us": 25.081,
+      "verify_us": 718.27,
+      "draft_us": 119.211,
+      "draft_terms": {
+        "block5_us": 38.3718,
+        "blocks_us": 83.992,
+        "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+        "head_occ_us": 6.9892,
+        "r_markov": 0.00781
+      },
+      "seed_commit_us": 3.217,
+      "step_us": 840.698,
+      "MTP_tok_s": 4947.1,
+      "tau": 4.159,
+      "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
+      "mtp_over_ar": 2.933,
+      "tau_sensitivity": {
+        "published": {
+          "tau": 3.8879,
+          "MTP_tok_s": 4624.6,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+        },
+        "published_low": {
+          "tau": 3.43,
+          "MTP_tok_s": 4079.9,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+        },
+        "published_high": {
+          "tau": 4.31748,
+          "MTP_tok_s": 5135.6,
+          "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+        }
+      },
+      "physical_qualified": false,
+      "qualified_headline_rate": null,
+      "wavefront_implementation": {
+        "decision_record": "results/rtl/dsrom_wfc_r12_fanout_20261005/physical_rejection/decision.json",
+        "decision_sha256": "2adc2c61d464932f97cd3b31d8ce6860c96c079dd7722f33903d0fd0c00fdae9",
+        "source_commit": "34223b7b0",
+        "verdict": "REJECT_THREE_STAGE_VARIANTS_ESCALATE_CLAUDE_STRUCTURAL_CONTROL_REDESIGN",
+        "variants": [
+          {
+            "utilization": 0.4,
+            "ss_incontext_ps": -150.8,
+            "ss_internal_ps": -62.4,
+            "ff_hold_ps": 11.0,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 5
+            }
+          },
+          {
+            "utilization": 0.45,
+            "ss_incontext_ps": -105.4,
+            "ss_internal_ps": -29.8,
+            "ff_hold_ps": 10.5,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 24
+            }
+          },
+          {
+            "utilization": 0.5,
+            "ss_incontext_ps": -65.0,
+            "ss_internal_ps": -1.5,
+            "ff_hold_ps": 11.1,
+            "drc": 0,
+            "drv": {
+              "max_cap_violations": 0,
+              "max_fanout_violations": 0,
+              "max_slew_violations": 4
+            }
+          }
+        ],
+        "modeled_interval_retained": true,
+        "implementation_adopted": false,
+        "reset_recovery_is_causal": false,
+        "reason": "Same-edge core_done/job_done decode drives TXQ4 x FLIT512 payload capture; internal user-position or TX occupancy/write-select control remains failing. MAXU866 user position21bits =18186 statebits plus866 validbits in28 groups. Source cone rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv:296,398-400,628-645,681-707. No actual reset recovery failure: raw u50 asynchronous recovery +188.1ps. Actual parent producer clock/arrival/load remains unbound; virtual incontext is surrogate, not fulltop qualification.",
+        "redesign_owner": "CLAUDE",
+        "additional_capture_edge_calendar_price": null,
+        "rule": "MTP interval/rate remains modeled composition; any redesign capture edge must be explicitly priced before adoption. No fourth recipe or reset-recovery credit."
+      }
+    }
+  }
+}
