@@ -131,7 +131,7 @@ p.write_text(s.replace(needle,'source /work/cts_membership.tcl\\n'+needle))
             command[-1] = command[-1].replace('make DESIGN_CONFIG=/work/config.mk',
                 'make '+shlex.join(keep)+' DESIGN_CONFIG=/work/config.mk',1)
             if args.bind_inserted_cells:
-                command[-1] = 'python3 /work/bind_cts_membership.py && '+command[-1]
+                command[-1] = 'python3 /work/bind_cts_membership.py || exit $?; '+command[-1]
         return original_run(command, **kwargs)
     driver.run = run
     rc = driver.main(argv)
