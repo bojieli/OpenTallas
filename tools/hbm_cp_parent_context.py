@@ -125,6 +125,10 @@ def corner_sta(orfs, output):
     original=base.script
     def script(corner,relative,macros):
         text=original(corner,relative,macros)
+        # Remove the ideal network budget only; actual CTS propagation supplies it.
+        # Source phase remains the original zero and SS60/FF25 stay unchanged.
+        text=text.replace('set_propagated_clock [all_clocks]',
+            'set_clock_latency 0 [all_clocks]\nset_propagated_clock [all_clocks]')
         text=text.replace('foreach p [get_pins -hierarchical */D]', 'foreach p [all_registers -data_pins]')
         check='max' if corner=='ss' else 'min'
         extra = """
