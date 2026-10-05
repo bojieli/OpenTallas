@@ -1274,6 +1274,11 @@ def dsrom_reindex_kc7_model():
         admission="one original semantic gate then one extracted contextual route; no adoption before complete closure")
 
 
+def dsrom_reindex_production_parent_model():
+    from dsrom_reindex_parent_model import model
+    return model()
+
+
 def dsrom_reindex_kc8_model():
     """Claude's cycle-identical structural repair, priced before its sole route."""
     # 6 kept WB128 copies plus 8 grouped room flags. No removed-cell credit:
@@ -1402,6 +1407,7 @@ DEDICATED = dict(
         reindex_ready_boundary_successor=dsrom_reindex_kc7_model(),
         reindex_parallel_closure=dsrom_reindex_kc7_parallel_model(),
         reindex_grouped_room_write_enable_successor=dsrom_reindex_kc8_model(),
+        reindex_production_parent=dsrom_reindex_production_parent_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -10128,6 +10134,63 @@ def hbm_r5a_protected_pipeline_model():
             parent_context=False,adopted=False))
 
 
+def hbm_r5a_p2_stack_context_model():
+    """Price source-owned real P2 caller/receiver before RTL, not an IO fixture.
+
+    Static layout is loaded exactly once per cold reset and held throughout the
+    stream. Reconfiguration requires reset/drain by the enclosing owner; this
+    minimum context does not claim legacy task/lease completion.
+    """
+    leaf=hbm_r5a_protected_pipeline_model()
+    ff=dict(configuration_SECC=100*72,configuration_valid_and_fault=4,
+        descriptor_code_and_valid=74,notice_dual_rail=2,
+        PC_issued_returned_counters=32*16*4,PC_codec_slot=32*362,
+        PC_sticky_fault=64,SM_coded_slot=8*1154,
+        SM_capture_payload_parity_valid=8*(1024+16+2),SM_sticky_fault=16,
+        status_synchronizers=8)
+    bits=sum(ff.values());cell=bits*DFF_UM2+60000
+    return dict(item=6,enabled_default=False,prebuild=True,
+        source='additive ot_hbm_accel_expert_stack_p2; old tagged256 stack/service/crossing unchanged',
+        shape=dict(NPC=32,NSM=8,DEPTH=512,CRED=32,replicas_per_die=4),
+        compute=dict(MACs_per_cycle=0,rounding_changes=0,reduction_changes=0),
+        ports_bytes_per_cycle=dict(raw_HBM=32*32,coded_HBM=32*45,SM_capture=8*128,
+            configuration_write=800,configuration_held_read=800),
+        boundaries_bits_per_cycle=dict(leaf_descriptor=72,leaf_return=32*360,
+            leaf_SM=8*1024,configuration=6400,notice=1,
+            physical_external_raw_return=32*(256+16+1),
+            physical_external_ordinal=32*16,physical_external_SM=8*(1024+2)),
+        cuts=dict(descriptor_encode=1,return_encode=1,SM_encode=1,SM_decode_capture=1,
+            descriptor_capacity=1,PC_return_capacity=1,SM_endpoint_capacity=2,
+            existing_credit_per_PC=32,configuration_updates='once per cold reset before acceptance',
+            configuration_protection='100 held W6 SECDED64 words, bounds checked by real leaf',
+            PC_identity='complemented issued/returned ordinal registers, actual col_v issue debt; supplied PHY response ordinal must equal next return and debt must be nonzero',
+            SM_protection='16 W6 SECDED64 held words then corrected1024 capture with16 parity bits; double errors or held parity/valid faults refuse publication'),
+        state=dict(FF_bits_by_class=ff,FF_bits_total=bits),
+        replication=dict(descriptor_fanout=1,PC_encoders=32,SM_receivers=8,
+            config_leaf_local_replicas=32,global_unregistered_payload_mux=False),
+        area=dict(additional_standard_cell_ceiling_um2=cell,
+            combined_standard_cell_ceiling_um2=leaf['area']['standard_cell_upper_um2']+cell,
+            macro_count=96,macro_area_um2=leaf['area']['macro_area_um2'],
+            required_placement_um2=(leaf['area']['standard_cell_upper_um2']+cell+leaf['area']['macro_area_um2'])/.35*1.15,
+            child_slot_fit_pending_Turing=True,clock_PG_and_native_channel_update_pending=True),
+        routing=dict(old_leaf_boundary_tracks=27488,new_outer_typed_port_tracks_pending=True,
+            track_capacity_requires_actual_parent_update=True),
+        latency=dict(added_clk_edges=3,added_hclk_edges=1,
+            fixed_added_ns=3/1.2+1.024,configuration_setup_edges=1,
+            configuration_initialization_not_per_fetch=True,
+            per_token_40fetch_added_us=40*(3/1.2+1.024)/1000,
+            expression='measured P2 leaf first-access + descriptor1clk + return1hclk + receiver2clk + actual phase/backpressure; stalls measured, never free',
+            first_access_criterion_ns=140,criterion_independent_of_token_gain=True,
+            current_R3_first_access_ns=150.423,estimated_context_first_access_ns=153.947,
+            estimated_composed_gain_us=13.023-40*(3/1.2+1.024)/1000,
+            measured_context=False),
+        targets={k:dict(applicable=k.endswith('_hbm'),added_ns_per_fetch=3/1.2+1.024 if k.endswith('_hbm') else 0)
+            for k in ('qwen_rom','v41_rom','qwen_hbm','v41_hbm')},
+        clocks=dict(stream_ps=833.333333333,service_ps=1024,setup_uncertainty_ps=60,
+            hold_uncertainty_ps=25,source_owned_register_relations=True,actual_CTS_and_loads_pending=True),
+        gates=dict(exact=False,physical=False,performance=False,adopted=False))
+
+
 def hbm_smh_local_grt_price(boxes, reservation=0.5):
     """No new hardware: reserve tracks at measured SRAM-edge congestion only."""
     area=sum((b[2]-b[0])*(b[3]-b[1]) for b in boxes)
@@ -10270,6 +10333,20 @@ def dsrom_window_parent_boundary_model():
     Routed WINDOW leaf dimensions, clock load and SS/FF arcs are required
     inputs after its terminal; aggregate attention area is not a subslot.
     """
+    import re
+    macro_name = 'ot_sram_1r1w_256x256_m2_r2c2'
+    macro_dir = Path('physical/asap7_memory_macros') / macro_name
+    macro = json.loads((ROOT/macro_dir/f'{macro_name}.json').read_text())
+    corner_views = {}
+    for corner in ('ss', 'ff'):
+        lib = (ROOT/macro_dir/f'{macro_name}_{corner}.lib').read_text()
+        assert 'time_unit : "1ps"' in lib and 'capacitive_load_unit (1, ff)' in lib
+        values = re.search(r'cell_rise\s*\(mc_delay\)\s*\{.*?values\s*\((.*?)\);', lib, re.S)
+        clkq = [float(x) for x in re.findall(r'[0-9]+\.[0-9]+', values.group(1))]
+        cap = float(re.search(r'pin \(clk\).*?capacitance\s*:\s*([0-9.]+)', lib, re.S).group(1))
+        corner_views[corner] = dict(clk_cap_fF=cap, clkQ_table_min_ps=min(clkq),
+            clkQ_table_max_ps=max(clkq), min_period_ps=macro['timing'][corner]['min_period_ps'],
+            basis='own predictive compiled corner Liberty; full slew/load table, not routed capture qualification')
     d, td, nl, trows, bw, pwords = 512, 32, 4, 640, 2, 1
     tiles = nl * (d // td)
     rowbits = (d // 32) * 265
@@ -10298,6 +10375,8 @@ def dsrom_window_parent_boundary_model():
         'rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv',
         'rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv',
     ]
+    sources += [str(macro_dir/f'{macro_name}{suffix}') for suffix in
+                ('.json', '.lef', '_bb.v', '_ss.lib', '_ff.lib')]
     return dict(item=4, status='SOURCE_PRICED_WAIT_WINDOW_TERMINAL_AND_ALLOCATION',
         scope='actual packed-block producer/native lifecycle and first attention captures; no whole S81',
         source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
@@ -10309,13 +10388,18 @@ def dsrom_window_parent_boundary_model():
             all_projected_R0_FF_bits=r0_all, all_projected_E1_FF_bits=e_all,
             capture_control_upper_FF_bits=capture_control_upper, FF_upper_bits=ff_upper,
             FF_cell_floor_um2=ff_upper*DFF_UM2),
-        memory=dict(name='ot_sram_1r1w_256x256_m2_r2c2', macros=nl*slices,
+        memory=dict(name=macro_name, macros=nl*slices,
             implementation='existing actual SRAM_MACRO branch; bind its own aligned LEF and SS/FF views',
             logical_payload_bits=trows*rowbits, physical_capacity_bits=nl*slices*256*256,
             write_ports=nl*slices, read_ports=nl*slices, bytes_per_physical_port_per_cycle=32,
             physical_read_bytes_per_cycle=nl*slices*32, physical_write_bytes_per_cycle=nl*slices*32,
             logical_read_bytes_per_cycle=nl*rowbits/8, logical_write_bytes_per_cycle=nl*rowbits/8,
-            actual_macro_area_um2=None, SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
+            actual_macro_area_um2=nl*slices*macro['area']['macro_area_um2'],
+            macro_dimensions_um=[macro['area']['macro_width_um'],macro['area']['macro_height_um']],
+            corner_views=corner_views,
+            total_macro_clk_cap_fF={c:nl*slices*x['clk_cap_fF'] for c,x in corner_views.items()},
+            pin_alignment_required='existing ot_macro_track_snap placement and assertion per actual orientation',
+            SS_clkQ_qualified=False, mutable_memory_protection_retained_required=True),
         communication=dict(WINDOW_to_staging_bits_per_cycle=nl*rowbits,
             staging_to_E1_bits_per_cycle=e_operands, E1_to_R0_bits_per_cycle=r0_operands,
             producer_payload_bits_per_cycle=264, producer_identity_bits_per_cycle=10+21+4,
