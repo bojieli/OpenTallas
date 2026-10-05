@@ -50,20 +50,14 @@ module ot_hdc_v41x_attn_hgrp_s #(
     localparam integer LAT_CORE = FML + 7 * FPL + FPL * LV;
 
     // -- R0: boundary registers (this group's copy)
-    reg              r_ld_v, r_ld_mode;
-    reg [BW-1:0]     r_ld_bank;
-    reg [7:0]        r_ld_grp;
-    reg [PWORDS*TD*16-1:0] r_ld_w;
-    reg              r_ld_w2v;
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
     reg [TD*18-1:0]  r_ib;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin r_ld_v <= 1'b0; r_iv <= 1'b0; end
-        else begin r_ld_v <= ld_v; r_iv <= iv; end
+        if (!rst_n) r_iv <= 1'b0;
+        else r_iv <= iv;
     end
     always @(posedge clk) begin
-        r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w; r_ld_w2v <= ld_w2v;
         r_ibank <= ibank; r_ib <= ib;
     end
 
@@ -109,6 +103,18 @@ module ot_hdc_v41x_attn_hgrp_s #(
     // -- per head of the group (tile head index hh = gid*HG + gh)
     generate
         for (gh = 0; gh < HG; gh = gh + 1) begin : g_h
+            // this head's own copy of the stationary-load R0 registers (the shared copy's ~1,000-bit word and its
+            // write decode spread over the group; one copy per head keeps each load path local, same cycle)
+            // (ot_hdc_v41x_kreg: kept hierarchy, so synthesis cannot merge the equal copies back into one)
+            wire             r_ld_v, r_ld_mode;
+            wire [BW-1:0]    r_ld_bank;
+            wire [7:0]       r_ld_grp;
+            wire [PWORDS*TD*16-1:0] r_ld_w;
+            wire             r_ld_w2v;
+            ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_n), .d(ld_v), .q(r_ld_v));
+            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_n),
+                .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
+            ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_n), .d(ld_w), .q(r_ld_w));
             // the head's tile index hh = gid*HG + gh and the group one-hot, registered from the static gid port
             // (constant after reset release: the registers only take gid out of the load paths)
             reg [7:0]      hh;

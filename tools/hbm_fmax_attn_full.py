@@ -20,7 +20,7 @@ import subprocess
 import time
 from pathlib import Path
 
-SOURCES = ['rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv', 'rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv',
+SOURCES = ['rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv', 'rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv', 'rtl/hdc/v41x/ot_hdc_v41x_kreg.sv',
            'rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv',
            'rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv', 'rtl/hdc/v41x/ot_hdc_v41x_attn.sv',
            'rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv',

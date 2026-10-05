@@ -154,19 +154,20 @@ module ot_hdc_v41x_attn_tile_l #(
         r_ld_mode <= ld_mode; r_ld_bank <= ld_bank; r_ld_grp <= ld_grp; r_ld_w <= ld_w; r_ld_w2v <= ld_w2v;
         r_ibank <= ibank; r_ib <= ib;
     end
+    // two-stage registered fold (every R0 bit stays a live sink; no deep XOR tree in one cycle)
     integer i;
     reg [H*32-1:0] f;
+    reg [H*32-1:0] f_r;
+    reg [10:0]     c_r;
     always @* begin
         f = {H*32{1'b0}};
         for (i = 0; i < PWORDS*TD*16; i = i + 1) f[i % (H*32)] = f[i % (H*32)] ^ r_ld_w[i];
         for (i = 0; i < TD*18; i = i + 1) f[(i * 7) % (H*32)] = f[(i * 7) % (H*32)] ^ r_ib[i];
     end
-    reg [31:0] f32;
-    integer j;
     always @(posedge clk) begin
-        f32 = 32'd0;
-        for (j = 0; j < H; j = j + 1) f32 = f32 ^ f[j*32 +: 32];
-        oy <= {H{f32 ^ {20'd0, r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp, r_ld_bank[0]}}};
+        f_r <= f;
+        c_r <= {r_ld_v, r_ld_mode, r_ld_w2v, r_ld_grp};
+        oy <= f_r ^ {H{21'd0, c_r}};
         oflt <= {H{r_ibank[0]}};
     end
 endmodule
@@ -208,8 +209,11 @@ module ot_hdc_v41x_qaddf #(parameter integer LAT = 3, parameter integer F12 = 0)
     output wire [31:0] y,
     output wire        fault
 );
-    assign y = a ^ b;
-    assign fault = v & a[31] & b[31];
+    // registered stand-in for the LAT-deep add (one register, then LAT - 1 delay): the merge / lane-tree
+    // structure keeps its real register boundaries, without the FP datapath
+    reg [32:0] r;
+    always @(posedge clk) r <= {v & a[31] & b[31], a ^ b};
+    ot_hdc_v41x_dly #(.W(33), .D(LAT - 1)) u_d (.clk(clk), .d(r), .q({fault, y}));
 endmodule
 
 module ot_hdc_v41x_qaddl #(parameter integer LAT = 3) (
@@ -221,8 +225,11 @@ module ot_hdc_v41x_qaddl #(parameter integer LAT = 3) (
     output wire [31:0] y,
     output wire        fault
 );
-    assign y = a ^ b;
-    assign fault = v & a[31] & b[31];
+    // registered stand-in for the LAT-deep add (one register, then LAT - 1 delay): the merge / lane-tree
+    // structure keeps its real register boundaries, without the FP datapath
+    reg [32:0] r;
+    always @(posedge clk) r <= {v & a[31] & b[31], a ^ b};
+    ot_hdc_v41x_dly #(.W(33), .D(LAT - 1)) u_d (.clk(clk), .d(r), .q({fault, y}));
 endmodule
 
 module ot_hdc_v41x_dly #(parameter integer W = 1, parameter integer D = 0) (

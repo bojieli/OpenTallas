@@ -592,6 +592,8 @@ module ot_hdc_v41x_attn_s #(
     wire [15:0]   rd_row0 = qk_go ? qk_row : (fl_blk * TD + fl_cnt * NL);
     wire [NL*ROWW-1:0] rd_q;           // NSTAGE = 1: the one read port
     wire [NL*ROWW-1:0] rd_q_qk, rd_q_fl;   // q.k rows / fill rows (NSTAGE = 2: two buffers, read concurrently)
+    wire [NL*ROWW-1:0] st_q0, st_q1;       // NSTAGE = 2: the two buffers' read data (TRX: muxed per tile)
+    wire               st_fbuf_r, st_bbuf_r;
     reg  [15:0]   rd_r0;
     reg  [AW-1:0] rd_addr_r;          // REPL = 2: the staging read one cycle after the decision
     reg           rd_qk2;
@@ -627,6 +629,7 @@ module ot_hdc_v41x_attn_s #(
         always @(posedge clk) begin fbuf_r <= fbuf; bbuf_r <= bbuf; end
         assign rd_q_qk = ((XD != 0) ? fbuf_rr : fbuf_r) ? q1 : q0;
         assign rd_q_fl = ((XD != 0) ? bbuf_rr : bbuf_r) ? q1 : q0;
+        assign st_q0 = q0; assign st_q1 = q1; assign st_fbuf_r = fbuf_r; assign st_bbuf_r = bbuf_r;
         assign rd_q = rd_q_qk;
     end else begin : g_stage1
         ot_hdc_v41x_attn_staging #(.D(D), .NL(NL), .TROWS(TROWS), .SRAM_MACRO(SRAM_MACRO)) u_stage (
@@ -634,6 +637,7 @@ module ot_hdc_v41x_attn_s #(
             .rd_addr((XD != 0) ? rd_addr_r : rd_addr), .rd_data(rd_q));
         assign rd_q_qk = rd_q;
         assign rd_q_fl = rd_q;
+        assign st_q0 = rd_q; assign st_q1 = rd_q; assign st_fbuf_r = 1'b0; assign st_bbuf_r = 1'b0;
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin rd_qk <= 1'b0; rd_fill <= 1'b0; end
@@ -705,15 +709,36 @@ module ot_hdc_v41x_attn_s #(
                 assign w_pad[gl] = (XD != 0) ? fpad_d1[gl] : (REPL != 0) ? ((row_fl_c + gl) >= T_p) : ((r0_fl + gl) >= T_p);
             end
             if (PHYS == 0 && TRX != 0 && REPL != 0) begin : g_x
+                // NSTAGE = 2: this tile's own copies of the front / back staging-buffer selects (the shared
+                // fbuf_rr / bbuf_rr fanned out to every tile's fill and q.k operands)
+                wire [NL*GW-1:0] w_gx;
+                wire [TD*18-1:0] qk_x;
+                if (NSTAGE == 2) begin : g_bs
+                    wire bs, fs;
+                    ot_hdc_v41x_kreg #(.W(2), .R(0)) u_sel (.clk(clk), .rst_n(rst_n),
+                        .d((XD != 0) ? {st_bbuf_r, st_fbuf_r} : {bbuf, fbuf}), .q({bs, fs}));
+                    wire [NL*ROWW-1:0] qf = bs ? st_q1 : st_q0;
+                    wire [NL*ROWW-1:0] qq = fs ? st_q1 : st_q0;
+                    for (gl = 0; gl < NL; gl = gl + 1) begin : g_g
+                        assign w_gx[gl*GW +: GW] = qf[gl*ROWW + ((gk*DPT) / 32) * GW +: GW];
+                    end
+                    for (gs = 0; gs < TD; gs = gs + 1) begin : g_e
+                        assign qk_x[gs*18 +: 18] = elem(qq[(gk / S)*ROWW + (((gk % S)*TD + gs) / 32) * GW +: GW],
+                                                        ((gk % S)*TD + gs) % 32, qpad_s[gk / S]);
+                    end
+                end else begin : g_bs1
+                    assign w_gx = w_g;
+                    assign qk_x = qk_ib[gk*TD*18 +: TD*18];
+                end
                 ot_hdc_v41x_attn_tr_x #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32)) u_tr (
                     .clk(clk), .rst_n(rst_n),
                     .w_en_i((XD != 0) ? fill_wr : (fl_go && ((NSTAGE == 2) || !qk_go))),
                     .w_half_i((XD != 0) ? fill_blk_d[0] : fl_blk[0]),
                     .w_cnt_i((XD != 0) ? fill_cnt_d : fl_cnt),
-                    .w_pad_i(w_pad), .w_g(w_g),
+                    .w_pad_i(w_pad), .w_g(w_gx),
                     .r_half_i((XD != 0) ? iss_blk_d[0] : iss_blk[0]),
                     .r_c_i((XD != 0) ? iss_c_d : iss_c),
-                    .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_ib[gk*TD*18 +: TD*18]),
+                    .sel_i((XD != 0) ? pv_go_d : pv_go), .qk_ib(qk_x),
                     .col(tr_col[gk*TD*18 +: TD*18]), .eib(eib_t));
             end else if (PHYS == 0) begin : g_real
                 ot_hdc_v41x_attn_tr #(.TD(TD), .DPT(DPT), .NL(NL), .XOFF((gk*DPT) % 32), .REPL(REPL)) u_tr (
@@ -967,26 +992,7 @@ module ot_hdc_v41x_attn_s #(
     end
 endmodule
 
-// A register in its own kept hierarchy: duplicate copies of one signal stay separate cells (yosys merges equal
-// flip-flops inside a flattened module whatever their wire attributes).  R = 1: asynchronous active-low reset to 0.
-(* keep_hierarchy *)
-module ot_hdc_v41x_kreg #(
-    parameter integer W = 1,
-    parameter integer R = 0
-) (
-    input  wire         clk,
-    input  wire         rst_n,
-    input  wire [W-1:0] d,
-    output reg  [W-1:0] q
-);
-    generate if (R != 0) begin : g_r
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) q <= {W{1'b0}};
-            else q <= d;
-    end else begin : g_n
-        always @(posedge clk) q <= d;
-    end endgenerate
-endmodule
+// (ot_hdc_v41x_kreg, the kept-hierarchy register: rtl/hdc/v41x/ot_hdc_v41x_kreg.sv, which a build lists)
 
 // ---------------------------------------------------------------------------
 // Per-tile TRANSPOSER for REPL >= 1 with the read and write selects decoded and duplicated (engine TRX = 1):

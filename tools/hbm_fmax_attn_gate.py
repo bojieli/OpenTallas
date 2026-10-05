@@ -58,7 +58,7 @@ def use(streaming: bool):
     if streaming:
         C.RTL_TILE, C.RTL_ENG, C.TB_ENG = V / "ot_hdc_v41x_attn_tile_lat.sv", V / "ot_hdc_v41x_attn_s.sv", \
             T / "tb_hdc_v41x_attn_s.sv"
-        base = [V / "ot_hdc_v41x_attn_tile_s.sv", V / "ot_hdc_v41x_attn_tile.sv", V / "ot_hdc_v41x_attn.sv", *C.LIB,
+        base = [V / "ot_hdc_v41x_kreg.sv", V / "ot_hdc_v41x_attn_tile_s.sv", V / "ot_hdc_v41x_attn_tile.sv", V / "ot_hdc_v41x_attn.sv", *C.LIB,
                 *FPLIB]
         C.lib = lambda f=3: list(base)
     else:
