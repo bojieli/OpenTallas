@@ -1,6 +1,6 @@
 #!/bin/bash
 set -euo pipefail
-R=/srv/opentallas-scratch/codex/qwen-rom-core-takeover-20261005
+R=${ROM_CONTEXT_ROOT:-/srv/opentallas-scratch/codex/qwen-rom-core-takeover-20261005}
 cd "$R/src"
 python3 tools/qwen_rom_core_takeover_context.py --retained "$R/retained_context" --out "$R/context_prepare"
 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -q -s "$R/context_prepare/prepare.ys" > "$R/context_prepare/yosys.log" 2>&1

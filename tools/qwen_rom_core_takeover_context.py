@@ -15,7 +15,7 @@ oldroot='/srv/opentallas-scratch/claude/qwen-core-decode/src/'
 old=(root/'results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys').read_text()
 lines=[]
 for line in old.splitlines():
-    if line.startswith(('read_liberty','dfflibmap','abc ','setundef','splitnets','tee ','write_verilog')):continue
+    if line.startswith(('dfflibmap','abc ','setundef','splitnets','tee ','write_verilog')):continue
     if line.startswith('read_verilog '):
         f=line.split()[-1].removeprefix(oldroot)
         selected=a.out/'core.sv' if f.startswith('gen/ot_qwen_rom_core_scr_') else (root/f if (root/f).is_file() else a.retained/f)
