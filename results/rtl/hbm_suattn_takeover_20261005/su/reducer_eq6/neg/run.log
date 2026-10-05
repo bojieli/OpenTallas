@@ -1,0 +1,9 @@
+MISMATCH cyc=118 ev ref=1 dut=0 we ref=ff dut=00
+MISMATCH cyc=119 ev ref=0 dut=1 we ref=00 dut=ff
+MISMATCH cyc=127 ev ref=1 dut=0 we ref=01 dut=00
+MISMATCH cyc=128 ev ref=0 dut=1 we ref=00 dut=01
+MISMATCH cyc=133 ev ref=1 dut=0 we ref=ff dut=00
+REDC12 N=64 SL=16 MLAT=6 ALAT=6 RPAD=1 RSL=2 RTAP=1 ROUT=1 cycles=3000 events=381 mismatches=708 fault_cycles ref=1623 dut=1635 busy_end ref=1 dut=1
+[0] %Fatal: tb_neg6.sv:116: Assertion failed in TOP.tb_hdc_v41x_vec_red_c12: REDC12 FAIL
+%Error: rtl/test/tb_neg6.sv:116: Verilog $stop
+Aborting...
