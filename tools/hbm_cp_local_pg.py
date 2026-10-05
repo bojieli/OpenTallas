@@ -18,10 +18,10 @@ def cp_local_pg_model():
         intermediate_via_landings=['M5','M6'], M6_stripes_added=0,
         outer_grid=dict(layers=['M8','M9'],width_um=.48,pitch_um=2.7669,
                         total_PG_metal_fraction=2*.48/2.7669,unchanged=True),
-        raw_M6_core_tracks=675, actual_PDNon_retained_tapcell_projected_M6_tracks=63,
+        raw_M6_core_tracks=675, actual_PDNon_retained_tapcell_projected_M6_tracks=83,
         clock_other_tracks=64, signal_via_tracks=math.ceil(675*.05),
-        residual_M6_core_tracks=675-63-64-math.ceil(675*.05),
-        required_signal_tracks=236, west_signal_entrance_PG_intersections=0,
+        residual_M6_core_tracks=675-83-64-math.ceil(675*.05),
+        PG_to_signal_clearance_um=.072, required_signal_tracks=236, west_signal_entrance_PG_intersections=0,
         PDN_only_shape_connected=True, loaded_IR_qualified=False,
         placement_CTS_route_qualified=False, clock_protection_policy_changed=False)
 
