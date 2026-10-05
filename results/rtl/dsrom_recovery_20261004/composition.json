@@ -246,6 +246,12 @@
      "record": "results/rtl/dsrom_recovery_20261004/levers/hop.json",
      "sha256": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
      "verdict": "REJECT"
+    },
+    {
+     "lever": "su_swiglu",
+     "record": "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json",
+     "sha256": "e13b3b54d938c8818b5bed669f0296d4a6840815f7d87a401f0704bb715b1e07",
+     "verdict": "REJECT"
     }
    ]
   },
@@ -31557,6 +31563,7 @@
   "results/rtl/dsrom_recovery_20261004/levers/head.json": "c54f7bc34cdecbaf873c8bb20d2f62a15c87663b7dfbc676d69ae4c53c79fea1",
   "results/rtl/dsrom_recovery_20261004/levers/hop.json": "ded6fa916a816c63a93564fb32afbc91038a5e859ee81182fb2799fac1636a2b",
   "results/rtl/dsrom_recovery_20261004/levers/router.json": "3c553afce698e41cf94e36406f98a62f5543314bac3d76e933fead6a8c587c45",
+  "results/rtl/dsrom_recovery_20261004/levers/su_swiglu.json": "e13b3b54d938c8818b5bed669f0296d4a6840815f7d87a401f0704bb715b1e07",
   "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json": "47b6dbf89f1772c5bb83c712a2e4a637f6211d42bc17e0633f2b8baeafe5a18f",
   "results/rtl/dsrom_s81_window_bind_20261004/window_load.json": "afe2d8443098eff0b7fe7cd5418e3b5660dc705e3b4f16b4cb9d4518d7ccd6f2",
   "results/rtl/dsrom_wavefront_verify_20261004/record.json": "885d1c3e734bfc3d2357e52f2b6699238311a72936d1bbfcb5ea2e24face0d09",
