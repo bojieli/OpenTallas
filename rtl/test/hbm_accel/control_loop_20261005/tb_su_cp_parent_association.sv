@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // One real CP LAUNCH/END, protected CP + real common borrower + association.
 // Transaction consumer tests wiring/debt, not SU arithmetic or full-token rate.
-module tb_su_cp_parent_association;
+module tb_su_cp_parent_association #(parameter integer PARENT_CONTEXT_TEST=0);
  reg clk=0;always #5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_ready=0;
  reg [7:0] cmd_addr=0;reg [63:0] cmd_data=0;
@@ -32,6 +32,13 @@ module tb_su_cp_parent_association;
   .cpl_job(job),.cpl_generation(gen),.cpl_position(),.sm_done({1'b0,done}),
   .sm_fault({1'b0,cp_fault|association_fault}),.res_v(2'd0),.res_data(64'd0),
   .cpl_v(cpl_v),.cpl_rdy(cpl_ready&&routes_drained));
+ generate if(PARENT_CONTEXT_TEST)begin:context_on
+ ot_hbm_integrated_su_cp_context #(.ENABLE(1),.SU_ENABLE(1),.SU_REGISTERED_OUTPUTS(1),.SU_REGISTERED_STATUS(1),.SU_REGISTERED_BOUNDARY(1),.SU_BALANCED_OWNER_BOUNDARY(1)) binding(
+  .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(live_pc),.cp_job(live_job),.cp_gen(live_gen),.launch_token(live_token),.launch_pos(live_pos),
+  .lease_v(lease_v),.lease_granted(grants[1]),.release_v(release_v),.release_r(releases[1]),.exec_done(exec_done),.exec_fault(1'b0),
+  .retired_original_ops(retired),.shared_fault(shared_fault),.owned(qualified_owned),.pending(pending),.quiet(quiet),.selected(selected),.done(done),.fault(cp_fault),
+  .selected_pc(held_pc),.held_job(held_job),.held_gen(held_gen),.held_token(held_token),.held_pos(held_pos),.exec_owned(exec_owned),.new_request_permit(new_permit),.association_fault(association_fault));
+ end else begin:original
  ot_hbm_integrated_su_cp_bind #(.ENABLE(1),.REGISTERED_OUTPUTS(1),.REGISTERED_STATUS(1),.REGISTERED_BOUNDARY(1),.BALANCED_OWNER_BOUNDARY(1)) binding(
   .clk(clk),.por_n(por_n),.launch_v(launch_v),.launch_pc(live_pc),.cp_job(live_job),.cp_gen(live_gen),.launch_token(live_token),.launch_pos(live_pos),
   .lease_v(lease_v),.lease_granted(grants[1]),.release_v(release_v),.release_r(releases[1]),.exec_done(exec_done),.exec_fault(1'b0),
@@ -40,6 +47,7 @@ module tb_su_cp_parent_association;
  ot_hbm_integrated_su_cp_association #(.ENABLE(1)) association(
   .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),
   .exec_owned(exec_owned),.new_request_permit(new_permit),.fault(association_fault));
+ end endgenerate
  wire off_owned,off_permit,off_fault;
  ot_hbm_integrated_su_cp_association baseline(
   .clk(clk),.por_n(por_n),.raw_grant(grants[1]),.qualified_owned(qualified_owned),
@@ -136,7 +144,7 @@ module tb_su_cp_parent_association;
   repeat(3)begin tick();ck(cpl_v&&!grants[1]&&!exec_owned,"CPL backpressure after actual grant and executor cleanup");end
   cpl_ready=1;tick();drive();cpl_ready=0;
   ck(release_accepts==1&&cpl_accepts==1,"one actual release and CPL");
-  ck(!association.on.associated_q&&association.on.associated_n,"actual grant removal clears association");
+  ck(!exec_owned&&!new_permit&&!association_fault,"actual grant removal clears association outputs");
  end endtask
  integer stage,field;
  initial begin
@@ -146,7 +154,7 @@ module tb_su_cp_parent_association;
   grant_cycle=-1;qualified_cycle=-1;admission_cycle=-1;
   start();transact(-1,0);finish();
   for(stage=0;stage<3;stage=stage+1)for(field=0;field<5;field=field+1)begin reset();start();transact(stage,field);end
-  $display("PASS_CP_PARENT_ASSOCIATION checks=%0d foreign_cases=15 healthy_transactions=2 warm_rearm=1 accepted_debt_drained=17 added_executor_start_edges=1",checks);$finish;
+  $display("PASS_CP_PARENT_ASSOCIATION context=%0d checks=%0d foreign_cases=15 healthy_transactions=2 warm_rearm=1 accepted_debt_drained=17 added_executor_start_edges=1",PARENT_CONTEXT_TEST,checks);$finish;
  end
  // Structural source cuts bound the test; this is not a host/job time limit.
  initial begin repeat(4000)tick();$fatal(1,"finite protocol test deadlocked");end

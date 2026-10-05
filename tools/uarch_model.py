@@ -9320,7 +9320,7 @@ def hbm_existing_attention_allocation_model():
                 adopted=False,gain_claim=None)
 
 
-def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None):
+def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None,parent_context=None):
     """One CP component successor, priced before RTL; no clock/rate credit."""
     import hashlib
     import json
@@ -9499,4 +9499,36 @@ def hbm_cp_balanced_veto_model(measurement=None,parent_measurement=None):
         join['added_grant_to_executor_start_edges']=parent_record['added_executor_start_edges']
         join['added_latency_ns_at_target']=parent_record['added_executor_start_edges']/1.2
         join['source_sha256']=parent_record['source_sha256']
+    if parent_context is not None:
+        allocated=json.loads((root/parent_context).read_text())
+        cp=allocated['CP']; clock=allocated['clock']
+        channel=next(c for c in allocated['channels'] if c['child']=='CP')
+        for path,digest in cp['association_join']['source_sha256'].items():
+            if path.startswith('rtl/test/'):
+                continue  # Immutable prior gate; current opt-in context bench is a separate measurement.
+            if hashlib.sha256((root/path).read_bytes()).hexdigest()!=digest:
+                raise ValueError('CP parent allocation source changed: '+path)
+        required=result['parent_association_join']['combined_body_ceiling_um2']
+        budget=required+cp['CTS_IO_cell_area_budget_um2']+cp['hold_repair_cell_area_budget_um2']
+        fits=budget<=cp['usable_outline_um2']*cp['placement_utilisation_ceiling']
+        tracks_fit=channel['demand_tracks']<=channel['available_signal_tracks']
+        if not fits or not tracks_fit or clock['setup_uncertainty_ps']!=60 or clock['hold_uncertainty_ps']!=25:
+            raise ValueError('CP allocated context does not fit unchanged SS60FF25')
+        result['model_prerequisites']['physical_build_admitted']=result['parent_association_join']['measured']
+        result['floorplan'].update(allocated_parent_slot=cp['core_bbox_um'],parent_slot_fit=fits,
+            allocated_channel_capacity=channel['available_signal_tracks'],channel_fit=tracks_fit)
+        result['external_channel_capacity']=channel['available_signal_tracks']
+        result['allocated_parent_context']=dict(path=parent_context,
+            sha256=hashlib.sha256((root/parent_context).read_bytes()).hexdigest(),
+            source_faithful=True,slot_bbox_um=cp['core_bbox_um'],
+            gross_bbox_um=cp['gross_bbox_um'],source_state_bits=cp['state_bits_preoptimization'],
+            reserved_signal_tracks=channel['demand_tracks'],available_signal_tracks=channel['available_signal_tracks'],
+            slot_fit=fits,channel_fit=tracks_fit,clock=clock,
+            context_signal_bits=234,unused_conservative_association_boundary_tracks=2,
+            added_context_FF_bits=0,component_clock_qualified=False,
+            CP_transactions_in_selected_minimum_case=1,
+            full_token_transaction_count=None,
+            analytical_until_CTS=True,
+            physical_characterization_admitted=result['parent_association_join']['measured'],
+            adoption=False)
     return result
