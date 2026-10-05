@@ -49,7 +49,36 @@
     "route_label": "collctx_f12x_r6",
     "status": "NOT CLOSED: best routed SS -4.23 ps r2r (6 pins: TX lane mask dmask -> TX FIFO write data), FF +4.13 ps (XREG=1)",
     "false_path_io": "yes: the ctx wrapper registers every port on both sides exactly as HA3's ot_hbm_accel_coll_port_ctx does (SM coll_* registers, link-pipe first stage); clk_link tied to clk_sm (pessimistic for the Gray pointers)",
-    "continuation": "handed to Codex (GOODALL, main 43eb3f728): ot_gpu_coll_endpoint_f12_txmask TX_MASK_LA=1 XREG=1 route; Claude's equivalent r7 (registered look-ahead per-word lane mask, source snapshot routes/collctx_f12x_r7_src/, exact on tb_gpu_coll bench/coll_f12_r7.json) was routing on agidock128 (collctx_f12x_r7) and EPYC (colldie_f12_r8) at handoff"
+    "continuation": "handed to Codex (GOODALL, main 43eb3f728): ot_gpu_coll_endpoint_f12_txmask TX_MASK_LA=1 XREG=1 route; Claude's equivalent r7 (registered look-ahead per-word lane mask, source snapshot routes/collctx_f12x_r7_src/, exact on tb_gpu_coll bench/coll_f12_r7.json) was routing on agidock128 (collctx_f12x_r7) and EPYC (colldie_f12_r8) at handoff",
+    "selected_successor": {
+     "module": "ot_gpu_coll_endpoint_f12_txmask",
+     "parameters": {
+      "TX_MASK_LA": 1,
+      "XREG": 1,
+      "NL": 128,
+      "LANES": 16,
+      "R": 2,
+      "RDUP": 8
+     },
+     "frozen_source_commit": "0b545b7b9",
+     "source_sha256": "b1138c336623ba2e9aed2db415f049d53053cf28a1dfedb1f8e1f832c1d2d364",
+     "installed": false,
+     "selection": "sole intended legacy parent successor, conditional on actual contextual SS/FF verdict; do not also install Claude tm_q snapshot",
+     "physical_job": "hbm-collective-txmask-full128-route-20261005-r2.service",
+     "physical_output": "/srv/opentallas-scratch/jobs/goodall-collective-txmask-route-0b545b7b9-r2",
+     "io_context": "all IO timed, no false-path IO; explicit registered context, 540um square",
+     "clock_policy": "0.833ns SS setup60ps / FF hold25ps, tied clk_sm and clk_link in this physical context only",
+     "added_clk_sm_per_collective": 2,
+     "added_cycles_per_record": 0,
+     "token_price_ns_at_265_collectives": 441.6666666666667,
+     "price_scope": "prospective legacy collective replacement; no TU or HA8 measured clock/rate substitution",
+     "retained_comparison_routes": [
+      "collctx_f12x_r7 on ot-agidock128: Claude tm_q, registered context with IO false paths",
+      "colldie_f12_r8 on ot-epyc1tb: Claude tm_q, standalone all IO timed"
+     ],
+     "next_action": "collect all retained terminal results/critical cones; install only the selected successor through actual legacy parent and its matched owner mux after contextual acceptance; do not update closing_clocks without installed-parent evidence",
+     "variant_policy": "no new candidate or route during retained jobs; apply three-variant escalation limit to actual failed internal cone, not unrelated IO/clock contexts"
+    }
    },
    "fix_summary": "zero-latency: replicated one-hot FIFO read/write selects (keep_hierarchy), look-ahead write enables, owner select x16, idle-replicated capture, registered per-word lane mask, per-slice asmb strobes; pipelining: RX record register (+1) and XREG select register (+1)",
    "cycles_added": "+2 clk_sm per collective (RX), 0 per record, 0 on TX",

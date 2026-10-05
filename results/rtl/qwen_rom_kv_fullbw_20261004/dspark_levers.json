@@ -2,8 +2,21 @@
  "lever1_merge_su": {
   "what": "stream ops with no DYN term issued once for the p positions (region-major VM layout, rows = p positions at the region stride); tools/qwen_rom_verify_program_w12.py --merge-su (default off; default output byte-identical to img_p4)",
   "ops_merged": "sum-of-squares X, rsqrt RX (x2), rsqrt RS, recip RZ, residual (x2), GU scale, SiLU (rows)",
-  "np4": {"instructions": "101 -> 74", "su_ops": "74 -> 47", "verify_layer": "17,197 -> 15,971 (-1,226, -7.1%)", "step2_after_rollback": 16124, "exact": "all 40 checks (X of 4 positions x 4 dies x 2 steps, KV blocks, commit/rollback)"},
-  "np3": {"verify_layer": 13104, "exact": "12 checks"}
+  "np4": {
+   "instructions": "101 -> 74",
+   "su_ops": "74 -> 47",
+   "verify_layer": "17,197 -> 15,971 (-1,226, -7.1%)",
+   "step2_after_rollback": 16124,
+   "exact": "all 40 checks (X of 4 positions x 4 dies x 2 steps, KV blocks, commit/rollback)"
+  },
+  "np3": {
+   "verify_layer": 13104,
+   "exact": "12 checks"
+  },
+  "np2": {
+   "verify_layer": 9942,
+   "exact": "8 checks"
+  }
  },
  "lever2_shared_kv_passes": {
   "verdict": "NO GAIN, not built",
