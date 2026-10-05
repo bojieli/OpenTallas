@@ -9656,3 +9656,72 @@ def dsrom_v9_parent_context_model():
     """Full-slot source register/clock cut, with actual loaded QX10 ports."""
     from dsrom_v9_parent_context import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def dsrom_window_full_block_pipeline_model():
+    """Item4 pre-build sizing of actual full 128-row WINDOW, never a reduced pilot.
+
+    Storage is explicitly implemented as FF cells and row feedback muxes.  This
+    price does not claim an SRAM macro or a source-qualified enclosing die.
+    """
+    npc, banks, cols, depth, rowb = 32, 4, 17, 32, 4224
+    raw = banks * depth * rowb
+    # Five elastic decode stages preserve every beat and its original identity.
+    decode_upper = npc * 5 * (256+13+4+12+24+7+12+5+2)
+    winner = banks*cols*npc
+    column_payload = banks*rowb
+    write_enable = banks*cols*depth
+    ack = npc*(256+13+4+12+1)
+    read_extra = banks*3*rowb  # four parallel eight-entry reads, then final select
+    writer_control_upper = 2048
+    job_control_upper = 1024
+    added = (decode_upper + winner + column_payload + write_enable + ack +
+             read_extra + writer_control_upper + job_control_upper)
+    # Real screen is a conservative retained baseline, including its boundary FFs.
+    baseline = 568089.142192
+    ff_area = added*DFF_UM2
+    mux_area_upper = (column_payload*npc + raw + banks*rowb*31)*.2
+    cell_budget = baseline+ff_area+mux_area_upper
+    placement_budget = cell_budget/.5*1.15 # explicit CTS/repair/routing headroom
+    clock = 1.2e9
+    return dict(item=4, status='PREBUILD_ONLY_DEFAULT_OFF', shape=dict(NPC=npc,
+        banks=banks, columns_per_bank=cols, rows_per_bank=depth, row_bits=rowb),
+        arithmetic=dict(MACs_per_cycle=0, rounding_changes=0, golden_reduction_changes=0),
+        memory=dict(implementation='actual FF arrays with explicit per-row write enables; no inferred SRAM credit',
+            payload_FF_bits=raw, payload_FF_cell_floor_um2=raw*DFF_UM2,
+            write_ports=banks*cols, max_write_bytes_per_cycle=banks*(16*32+16),
+            read_ports=banks*cols, max_read_bytes_per_cycle=banks*rowb/8,
+            write_feedback_mux_bits=raw, read_mux_2to1_bits=banks*rowb*31,
+            protection='retain bounds, user/full-row tags, order, duplicate landing, poison and transaction identities; no original SRAM/HBM/link protection removed'),
+        pipeline=dict(decode_stages=5, decode_FF_upper_bits=decode_upper,
+            winner_FF_bits=winner, column_payload_FF_bits=column_payload,
+            row_write_enable_FF_bits=write_enable, ack_FF_upper_bits=ack,
+            extra_read_FF_bits=read_extra, writer_control_upper_bits=writer_control_upper,
+            job_control_upper_bits=job_control_upper, added_FF_upper_bits=added,
+            qualified_ready='current elastic occupancy and downstream transfer; never permission cached across mutation',
+            acceptance_debt='retain accepted original beat identities through actual memory write and stream engine drain'),
+        communication=dict(response_boundary_bits_per_cycle=npc*(256+13+4+2),
+            landing_data_bits_per_cycle=column_payload,
+            read_boundary_bits_per_cycle=banks*rowb,
+            replicas=banks*cols, per_column_winner_inputs=npc,
+            landing_mux_2to1_bits=column_payload*(npc-1),
+            writer_fanout='registered per-column payload and per-row enable; decode cannot drive payload array directly',
+            track_demand_lower_bound=npc*(256+13+4+2)+banks*rowb,
+            actual_parent_channel_capacity=None, parent_channel_fit=False),
+        area=dict(retained_prelayout_cell_um2=baseline, new_FF_upper_um2=ff_area,
+            mux_upper_um2=mux_area_upper, cell_upper_um2=cell_budget,
+            physical_core_reservation_um2=placement_budget, actual_parent_slot=None,
+            parent_slot_fit=False),
+        latency=dict(job_admission_added_cycles_upper=4, landing_added_cycles_upper=7,
+            read_added_cycles=1, writer_added_cycles_per_block_upper=8,
+            rows_per_job=128, blocks_in_own_row=16, own_row_added_cycles_upper=128,
+            added_layer_cycles_upper=4+7+32+128,
+            added_layer_ns_upper=(4+7+32+128)/clock*1e9,
+            token_layers=61, token_added_us_upper=(4+7+32+128)*61/clock*1e6,
+            baseline_token_us=604.3, rate_loss_upper_pct=100*(4+7+32+128)*61/clock*1e6/604.3,
+            mandatory_clock_closure=True, measured=False),
+        clock=dict(period_ps=1e12/clock, SS_setup_uncertainty_ps=60,
+            FF_hold_uncertainty_ps=25, real_FF_clkQ_from_corner_liberty=True,
+            parent_phase_insertion_and_terminal_loads_qualified=False),
+        gates=dict(fullshape_exact=False, routed_SS_FF=False, parent_context_closed=False,
+            adoption=False))
