@@ -189,7 +189,7 @@ module tb_chip_v41x_karb_local_equiv #(parameter bit FENCE = 1'b1);
         repeat (5) @(posedge clk); rst_n = 1;
         fork
             begin wait (d0 && d1 && d2); repeat (4100) @(posedge clk); $display("DONE"); $finish; end
-            begin repeat (tmo) @(posedge clk); $display("TIMEOUT mono=%0d local=%0d pipe=%0d", d0, d1, d2); $finish; end
+            begin repeat (tmo) @(posedge clk); $display("TIMEOUT mono=%0d local=%0d pipe=%0d", d0, d1, d2); $fatal(1, "EQUIVALENCE_TERMINAL_TIMEOUT"); end
         join_any
     end
 endmodule
