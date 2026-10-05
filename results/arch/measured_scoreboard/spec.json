@@ -9,6 +9,9 @@
   "gpu_ds"
  ],
  "headline": [
+  "qwen_rom.ar_tok_s_8k_stream4",
+  "qwen_rom.ar_tok_s_8k_stream4_wirebound",
+  "qwen_rom.dspark_tok_s_8k_stream4",
   "qwen_rom.ar_tok_s_8k_realmem",
   "qwen_rom.dspark_tok_s_8k",
   "qwen_rom.ar_tok_s_8k_wirebound",
@@ -3666,6 +3669,39 @@
    "unit": "fraction",
    "status": "composed_from_measured",
    "note": ""
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_stream4",
+   "label": "AR per-user rate at 8K on the 4-stack full-bandwidth KV path (STREAM4)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
+   "pointer": "stream4.tok_per_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "7 + E + L0 iso (6,489) + 35 x chained L1/L2 (5,282, early_go prefetch + posted write-back, fill 1,311 cyc exposed 0) + head + 37 = 194,498 cycles; L0..L2 exact at P8191 vs GPU golden; E/head from P255 (position independent); KV fill 3.72 TB/s = 93% of 4-stack peak"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_stream4_wirebound",
+   "label": "AR per-user rate at 8K on STREAM4 with the die-floorplan wire-stage bound (measured-bound value)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
+   "pointer": "wire_bound.bound_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "194,498 + 6,363 (wire_bound_8k deltas: 176 a layer pass, 27 a head); stage counts are floorplan geometry, no routed-path STA"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "dspark_tok_s_8k_stream4",
+   "label": "DSpark per-user accepted rate at 8K on STREAM4 (verify measured exact on STREAM4)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json",
+   "pointer": "per_user_accepted_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "verify L0 17,197 exact on STREAM4 (P8187..8190, commit 1, rollback) x36 + verify head; draft from the REAL_MEM record; tau third-party 3.1445; below AR-with-prefetch (0.763x): verify not weight-reusing (ME 1.47x/2.09x)"
   }
  ],
  "derived": [

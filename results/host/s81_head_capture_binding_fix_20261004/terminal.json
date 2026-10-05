@@ -1,0 +1,19 @@
+{
+  "source_pin": "0613be50f",
+  "phases": [
+    {
+      "phase": "compile",
+      "exit_code": 0,
+      "wall_seconds": 5.7991111278533936
+    },
+    {
+      "phase": "link",
+      "exit_code": 0,
+      "wall_seconds": 1.8985204696655273
+    }
+  ],
+  "exit_code": 0,
+  "scope": "host capture pulse binding only; no runtime/no native rebuild",
+  "peak_rss_kib": 419756,
+  "source_sha256": "7876363a0a3d42f78847ef154a9a1c609180c31607d5a8ac59e7b146ed363568"
+}

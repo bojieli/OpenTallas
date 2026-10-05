@@ -226,12 +226,49 @@ def main():
     parser.add_argument('--trace',action='store_true')
     parser.add_argument('--capture',action='store_true')
     parser.add_argument('--source-kvt-stride',action='store_true')
+    parser.add_argument('--baseline-config',type=Path,
+                        help='consume Claude-owned baseline config for the selected layer parent')
     args=parser.parse_args()
     binding=ParentBinding(args.owner,args.selected,args.model_pin,args.interface_pin,
                           payload_interface=args.payload_interface, released_return_binding=args.released_return_binding)
+    baseline = None
+    if args.baseline_config:
+        baseline=json.loads(args.baseline_config.read_text())
+        if baseline.get('schema')!='opentallas.dsrom-baseline-config.v1':
+            raise ValueError('unsupported owner baseline config')
+        selected=json.loads((ROOT/baseline['selection_successor']).read_text())
+        p=selected['parameters']
+        for key in ('S81_CAPTURE','S81_HOST_WORKSPACE','COLL_ACCEPTED_POP','PKG_WAVE'):
+            if p.get(key)!=1:
+                raise ValueError('owner baseline requires '+key+'=1')
+        if args.head or args.drain:
+            raise ValueError('baseline layer selection cannot add rejected head or unselected drain')
+        if args.stage is not None and args.stage!=selected['snapshot_stage']:
+            raise ValueError('baseline stage must match owner-selected phase/native binding')
+        args.stage=selected['snapshot_stage']
+        args.trace=bool(p['S81_COMMAND_TRACE'])
+        args.accepted_pop=args.workspace=args.capture=args.source_kvt_stride=True
     result=install(binding,args.original_export,args.output,drain=args.drain,
                    head=args.head,trace=args.trace,stage=args.stage,accepted_pop=args.accepted_pop,
                    workspace=args.workspace,capture=args.capture,kvt_source_stride=args.source_kvt_stride)
+    if baseline is not None:
+        from dsrom_wavefront_install import install as install_wave
+        result=install_wave(result,Path(args.output)/'wave',enable=True,win=p['PKG_WAVE_WIN'])
+        # Consume the owner's remaining layer flags, without claiming its
+        # separately listed pending bindings have been installed by this path.
+        for flag in selected['verilator_args']:
+            if flag.startswith('-G'):
+                key,value=flag[2:].split('=',1)
+                if key in result['parameters']:
+                    if int(value)!=result['parameters'][key]:
+                        raise ValueError('baseline flag conflicts with installed source: '+key)
+                    continue
+                result['parameters'][key]=int(value)
+            if flag not in result['verilator_args']:
+                result['verilator_args'].append(flag)
+        result['baseline_config']=str(args.baseline_config.resolve())
+        result['baseline_config_sha256']=hashlib.sha256(args.baseline_config.read_bytes()).hexdigest()
+        result['baseline_pending_bindings']=selected['baseline']['not_in_this_die_yet']
     result['allocation_receipts']=binding.receipts
     text=json.dumps(result,default=str,indent=2)+'\n'
     receipt=Path(args.output)/'sources.json'

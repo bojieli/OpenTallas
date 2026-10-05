@@ -13,10 +13,11 @@ ABI='combined-stream4-layer-v1'
 initialized=predecessor.initialized
 
 
-def emit(root=ROOT, *, dspark=False):
+def emit(root=ROOT, *, dspark=False, full_decoder=False):
+    if full_decoder and not dspark:raise ValueError("full decoder requires actual DSpark/ACCEPT model")
     if dspark:
         import qwen_rom_combined_dspark_runtime_emit as block
-        src=block.emit(root)
+        src=block.emit(root,full_decoder=full_decoder)
         top=block.TOP
     else:
         src=predecessor.emit(root)
@@ -25,6 +26,13 @@ def emit(root=ROOT, *, dspark=False):
         nonlocal src
         if src.count(old)!=1:raise ValueError('STREAM4 source anchor missing/ambiguous: '+old[:90])
         src=src.replace(old,new)
+    # Selected Vdie/Vtile/Vcoll/Vhbm each report threads()==1. Keep the
+    # independent RtPool workers; avoid a default internal pool per context.
+    replace('    RtPool pool(threads);', '''    RtPool pool(threads);
+    for(int w=0;w<pool.size();++w)pool.ctx(w)->threads(1);''')
+    replace('    VerilatedContext dctx[D], cctx;', '''    VerilatedContext dctx[D], cctx;
+    for(int d=0;d<D;++d)dctx[d].threads(1);
+    cctx.threads(1);''')
     replace('#include "combined_driver.hpp"','#include "stream4_clock_driver.hpp"')
     replace('#include "hbm_stack_binding.hpp"','#include "stream4_runtime_binding.hpp"')
     src=src.replace('CombinedHBM','CombinedStream4')
@@ -45,6 +53,10 @@ def emit(root=ROOT, *, dspark=False):
                 if(!die[d]->clk)ch|=qwen_combined::wire_stream4_kv_free(*die[d],actual_mlp_base[d]);
             }''')
     if dspark:
+        replace('                load_images(mem[d], stages[cur].dir[d],stages[cur].layer>=0);', '''                load_images(mem[d], stages[cur].dir[d],stages[cur].layer>=0);
+                die[d]->rm_kv_free=0;
+                actual_mlp_base[d]=stages[cur].layer>=0?
+                    qwen_combined::stream4_mlp_program_base(mem[d].desc):0;''')
         replace('all_done&=layer_fences[d].can_retire(sample(d));',
                 'all_done&=layer_fences[d].can_retire(sample(d))&&qwen_combined::stream4_layer_terminal(*die[d]);')
     else:
@@ -70,5 +82,6 @@ def emit(root=ROOT, *, dspark=False):
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True)
     p.add_argument('--dspark',action='store_true')
+    p.add_argument('--full-decoder',action='store_true')
     a=p.parse_args()
-    with a.out.open('x') as stream:stream.write(emit(dspark=a.dspark))
+    with a.out.open('x') as stream:stream.write(emit(dspark=a.dspark,full_decoder=a.full_decoder))
