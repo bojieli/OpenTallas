@@ -12,7 +12,7 @@ def model():
     counter_saved=32*128*2-4*128*5
     response_saved=32*128-8*32*(7+1+2+1+1)
     extra=dict(request_FIFO=33*(61+4),response_check=8*32*2,
-               drain_metadata=4*79-4*(16+28)+3+4,decoded_FIFO=8*254,list_header_and_result_checks=14+14+28+1,list_capture=banks*70+4*70+70+70+12+2*14*6+8*12*2,
+               drain_metadata=4*79-4*(16+28)+3+4,decoded_FIFO=0,list_header_and_result_checks=14+14+28+1,list_capture=banks*70+4*70+70+70+12+2*14*6+8*12*2,
                pending_and_metadata_checks=3*128,local_half_copies=2*2*(95+40+7+128+1))
     net_ff=sum(extra.values())-counter_saved-response_saved-256
     return dict(status='PREBUILD_DEFAULT_OFF',default_enabled=False,shape=dict(NPC=npc,WB=128,DF=8,LSW=3,lists=slots,entries_per_list=entries,local_block_bits=lbw),
@@ -25,11 +25,11 @@ def model():
             latency_cycles=6,SS_clkQ_ps=m['timing']['ss']['clk_to_q_ps'],FF_clkQ_ps=m['timing']['ff']['clk_to_q_ps'],
             read_capture='real macro output -> local70-bit capture -> four-way partial select -> final select -> syndrome register -> corrected/address-checked payload register; no IO falsepaths'),
         source_cuts=dict(counters_per_slot=4,counter_bits_including_check=5,code_channel_counter_index='(pseudo_channel XOR slot_fold)[1:0], only for admitted pending code channels',
-            response_local_groups=8,response_fanout_bound=16,request_FIFO_entries_per_PC=1,drain_reserved_entries=4,drain_metadata_code="SECDED79 per71-bit finite output header; pointers/count checked; actual key SRAM data path unchanged",half_die_copy_stages=1,half_copy_bits_per_lane=271,half_copy_lanes=4,dispatch_inflight_pairs=3,decoded_FIFO_entries=16,
+            response_local_groups=8,response_fanout_bound=16,request_FIFO_entries_per_PC=1,drain_reserved_entries=4,drain_metadata_code="SECDED79 per71-bit finite output header; pointers/count checked; actual key SRAM data path unchanged",half_die_copy_stages=1,half_copy_bits_per_lane=271,half_copy_lanes=4,dispatch_inflight_pairs=3,decoded_FIFO_entries=8,
             response_completion='four distinct beat bits per actual code channel; row-hit scheduler may reorder beats; protected mask resets only after all four accepted',counter_FF_removed=counter_saved,response_FF_removed=response_saved,redundant_write_enable_FF_removed=256,added_FF=extra,net_FF_delta=net_ff,
             protection='SRAM SECDED; counter check bits; pending/metadata checks; full tag/beat identity; finite occupancy and reservation checks, no invented clears or credits'),
         latency=dict(list_extra_cycles=5,request_extra_cycles=1,dispatch_extra_cycles=1,drain_extra_cycles=1,
-            fixed_added_cycles_upper=8,worst_pairs_per_stack=1024,dispatch_FIFO_room_policy='six free slots for three in-flight pairs',
+            fixed_added_cycles_upper=8,decoded_occupancy_cut="retain8 real pairs, counting all reads in flight; pipe+head+FIFO share that conserved allocation; no drop or credit",decoded_peak_pairs_per_cycle_upper=1,decoded_sustained_pairs_per_cycle_lower_bound=8/13,worst_pairs_per_stack=1024,decoded_stall_cycles_per_stack_upper=640,decoded_stall_token_us_upper=4*640*833.333/1e6,dispatch_FIFO_room_policy='six free slots for three in-flight pairs',
             throughput_cycles_must_be_measured=True,token_reindex_layers=4,token_fixed_added_ns_upper=4*8*833.333/1000,
             composed_current_token_us=604.3,composed_fixed_delta_us=4*8*833.333/1e6,measured=False),
         area=dict(control_cell_cap_um2=37452.2,retained_KC8_cells_um2=37615.4,estimated_FF_delta_um2=net_ff*ffa,
