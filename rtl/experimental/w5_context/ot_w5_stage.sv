@@ -325,7 +325,7 @@ module ot_w5_sched #(
     output wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] snapshot
 );
     wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;
-    reg [TW-1:0] cnt;
+    (* keep, dont_touch *) reg [TW-1:0] cnt;
     (* keep, dont_touch *) reg          cnt_v;
     (* keep, dont_touch *) reg [7:0]    idle;
     always @(posedge clk or negedge rst_n)
