@@ -59,7 +59,8 @@ module tb_qwen_kv_land_merge;
         #1 clk = 1; #1 clk = 0;                                  // the order of cycle 0
         p_ce = 0;
         for (t = 0; t < N; t = t + 1) begin
-            tail_lm = (($urandom % 4) == 0) ? 128'd0 : ((128'd1 << (8 * ($urandom % 16))) - 128'd1);
+            // the open tile's mask changes only at a layer start (no landed beats in that cycle)
+            if (t % 64 == 0) tail_lm = (($urandom % 4) == 0) ? 128'd0 : ((128'd1 << (8 * ($urandom % 16))) - 128'd1);
             for (i = 0; i < NSRC; i = i + 1) begin
                 reg [3:0] q;
                 s_v[i] = ($urandom % 3) != 0;
@@ -82,6 +83,7 @@ module tb_qwen_kv_land_merge;
                     s_q4[i*4 +: 4] = q;
                 end
             end
+            if (t % 64 == 0) s_v = 0;
             tok_v = ($urandom % 8) == 0; tok_loc = LW'($urandom); tok_data = {16{$urandom}}; tok_mask = {16{$urandom}};
             rr_n = ($urandom % 2) ? PW'(rr + 1) : PW'($urandom);   // the service's rr counts; random also
             #1;
@@ -100,6 +102,7 @@ module tb_qwen_kv_land_merge;
         end
         $display("%s cycles=%0d grants=%0d multi_grant_cycles=%0d refusals=%0d mismatches=%0d",
                  bad == 0 ? "LAND_MERGE_LOCKSTEP PASS" : "LAND_MERGE_LOCKSTEP FAIL", N, grants, combines, refusals, bad);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

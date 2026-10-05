@@ -1,0 +1,46 @@
+{
+  "pid": 1350878,
+  "host": "ot-epyc2",
+  "source_commit": "2b05908b2d9fd50447513e4a8ee11d428cbd5940",
+  "worktree": "/srv/opentallas/repos/euclid-svc-aq-block-nonempty-2b059-20261005",
+  "output": "/srv/opentallas-scratch/jobs/euclid-svc-aq-block-nonempty-route-r1",
+  "source_pins": {
+    "rtl/hbm_accel/svc/aq_block_nonempty_cut/ot_hbm_r14_stream_pc_aq_block_nonempty_cut.sv": "08a3185fd50316145ce1145e7719eca3bf46f7e30b116acbb71710884b5966a2",
+    "rtl/hbm_accel/svc/aq_block_nonempty_cut/ot_hbm_r14_stream_stack_aq_block_nonempty_cut.sv": "b0ae1b6eef73f107b98e8d5ae09f84586665b0ed3e95b9a28ab88ecc6f0962f1",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_block_nonempty_lockstep.sv": "4ded200bbda23774f97028a53d9b61805cb46ba1322aa84168c87b011427767c",
+    "tools/svc_aq_block_nonempty_lockstep.sh": "41de5e6e88cfe9886be1b7c07bc2bb2255d8f79ce53754a30c60184f981ec2bc",
+    "results/uarch/hbm_stream_aq_block_nonempty_cut_20261005/model.json": "c895273d4a804a65ab64abb1b181efbdc6ec5ca750076da960155db0de6289b5"
+  },
+  "tool_sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+  "headroom": {
+    "mem_available": "MemAvailable:   1106809716 kB",
+    "disk_free_bytes": 387543715840,
+    "load": [
+      18.63037109375,
+      26.71875,
+      28.1689453125
+    ]
+  },
+  "admission_GiB": 16,
+  "make_jobs": 16,
+  "timeouts": "explicit unlimited synth and flow env+CLI; CPU/AS/FSIZE unlimited; no RAM/wall cap",
+  "constraints": {
+    "period_ns": 0.833,
+    "setup_ps": 60,
+    "hold_ps": 25,
+    "io_fraction": 0,
+    "utilization": 40,
+    "place_density": 0.6,
+    "hold_margin_ns": 0.01
+  },
+  "scope": "unchanged NCH1/twoPC actualgrant/context; not full128 parent timing",
+  "gate_status": "actual200kPASS original/off/on everyedge mirror and calendar; scalar guard/order identity; finaloverride runtime coverage0 explicit",
+  "gate_hashes": {
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "exact/result.txt": "b4a6b7511ec73f37cde7d9873586fa7decb9a6cc94a6ce9bd7bbb887c1d536de",
+    "exact/pc0_seed1.log": "84f524f789bc3969adace062bb870485e813315f19b54c13cddeb7929e05dd41",
+    "exact/pc1_seed2.log": "71314828a8af6116784f95553d320535492002334e83145d95e55f0f9fdf8b91"
+  },
+  "failure_policy": "one redesigned route; stop onfailure and report actual limiting cone, no rescue",
+  "started_at": "2026-10-05T05:42:28.964427+00:00"
+}

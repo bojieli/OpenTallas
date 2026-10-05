@@ -1,0 +1,10 @@
+KVN_IMPORT_ACK rank=0 cycle=630
+KVN_IMPORT_ACK rank=1 cycle=1257
+KVN_IMPORT_ACK rank=2 cycle=1884
+KVN_IMPORT_ACK rank=3 cycle=2511
+QE_ACCEPT I20 rank=0 cycle=5582
+QE_ACCEPT I20 rank=1 cycle=5582
+QE_ACCEPT I20 rank=2 cycle=5582
+QE_ACCEPT I20 rank=3 cycle=5582
+QE_BOUNDARY I20 native_drain_cycle=8672 readback_cycle=18912
+KQUANT_COMPLETE actual_native_I19_KVN512_to_native_I20_KVQ512 fresh_VM_ACK ranks=4 I18_coefficients_SIM_ONLY WINDOW_current_commit_NOT_claimed scope=component_NO_field_I14_or_fulltoken_or_physical_timing

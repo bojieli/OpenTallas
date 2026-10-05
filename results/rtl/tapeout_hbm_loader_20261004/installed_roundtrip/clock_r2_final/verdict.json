@@ -1,0 +1,37 @@
+{
+  "source_pin": "678080161ea0376862015ba03602c814b7c856ab",
+  "scope": "old32-bit ND1 isolated loader route; not high-address/current full die",
+  "flow_completed": true,
+  "wrapper_exit": 0,
+  "engineering_verdict": "REJECT_TIMING",
+  "adopted": false,
+  "setup_ss_slack_ps": -3672.04,
+  "hold_ff_slack_ps": 10.39,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "critical_path": {
+    "domain": "mem_clk 833ps",
+    "start": "g_on.g_die[0].u_store.g_on.retired[2]",
+    "end": "g_on.g_die[0].u_store.g_on.mcrc[26]",
+    "arrival_ps": 4799.36,
+    "required_ps": 1127.33,
+    "slack_ps": -3672.04
+  },
+  "secondary_path": {
+    "domain": "core_clk 1000ps",
+    "start": "g_on.g_die[0].u_store.g_on.u_data.g_on.u_fifo.rbin[2]",
+    "end": "g_on.g_die[0].u_store.g_on.crc_got[24]",
+    "slack_ps": -3585.81
+  },
+  "standard_cell_area_um2": 23294.1,
+  "isolated_core_area_um2": 68379.6,
+  "max_slew_violations": 8,
+  "drc_errors": 0,
+  "antenna_violations": 0,
+  "crc_matrix_recipe_selected": false,
+  "crc_matrix_build_gate": false,
+  "exact_missing_binding": "Kant actual reserved loader slot/corridor/port locality and repair budget; no build from isolated core or FF-only state floor",
+  "async_functional_qualified": true,
+  "physical_cdc_bus_skew_qualified": false,
+  "no_new_clock_route": true
+}

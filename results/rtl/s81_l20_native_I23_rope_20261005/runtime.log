@@ -1,0 +1,11 @@
+ROPE_SOURCE_SCOPE SIM_ONLY_I18_coefficient_staging native_SU=1 position=1048575 kind=1 native_HBM_prefetch=0
+Q_IMPORT_ACK rank=0 cycle=9750
+Q_IMPORT_ACK rank=1 cycle=19497
+Q_IMPORT_ACK rank=2 cycle=29244
+Q_IMPORT_ACK rank=3 cycle=38991
+SU_ACCEPT I23 rank=0 cycle=45134
+SU_ACCEPT I23 rank=1 cycle=45134
+SU_ACCEPT I23 rank=2 cycle=45134
+SU_ACCEPT I23 rank=3 cycle=45134
+SU_BOUNDARY I23 native_drain_cycle=51305 readback_cycle=215145
+QROPE_COMPLETE actual_Q8192_to_native_I23 tails1024 fresh_VM_ACK exportedQ8192 ranks=4 SIM_ONLY_coefficients scope=component_NO_field_I14_or_fulltoken_or_physical_timing

@@ -73,7 +73,7 @@ module tb_seq_vp_la_equiv;
     always @(posedge clk) done_q <= rst_n && done[0];
     always @(posedge clk) begin
         if (rst_n && cycles > STEPS * 4000) begin
-            $display("STALL e=%0d st=%0d steps=%0d cycles=%0d mism=%0d", e, d[0].u.st, n_done, cycles, mism); $display("FAIL"); $finish;
+            $display("STALL e=%0d st=%0d steps=%0d cycles=%0d mism=%0d", e, d[0].u.st, n_done, cycles, mism); $display("FAIL"); $fatal(1, "EQUIVALENCE_TERMINAL_STALL");
         end
         if (rst_n) begin
             start <= 1'b0; core_done <= 1'b0; core_fault <= 1'b0; r_valid <= 1'b0; r_last <= 1'b0; r_err <= 1'b0;
@@ -113,6 +113,7 @@ module tb_seq_vp_la_equiv;
                             $display("EQUIV steps=%0d cycles=%0d wide_ar=%0d records=%0d full8_steps=%0d fault_steps=%0d mismatches=%0d",
                                      n_done, cycles, n_wide, n_rec, n_rec8, n_fault_steps, mism);
                             if (mism == 0) $display("PASS"); else $display("FAIL");
+                            if (mism != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
                             $finish;
                         end
                         e <= E_GAP; wait_n = $urandom % 3;

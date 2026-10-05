@@ -1,0 +1,19 @@
+canonical source objects loaded
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/emit.py", line 17, in <module>
+    result=execution.emit_current_stage_candidate(base/'candidate',expert_ids_by_node=eids)
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/src/tools/dsrom_s81_execution_binding.py", line 178, in emit_current_stage_candidate
+    return emit_current_stage_candidate(self, out, stage=stage, layer=layer,
+        expert_ids_by_node=expert_ids_by_node, context=context)
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/src/tools/dsrom_s81_source_plan_emit.py", line 168, in emit_current_stage_candidate
+    from uarch_model import dsrom_source_fragment_calendar
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/src/tools/uarch_model.py", line 36, in <module>
+    import arch_budget_v41 as A  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/src/tools/arch_budget_v41.py", line 64, in <module>
+    import decode_critical_path as D  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/arendt-stage37-producer-keys-20261005-r1/src/tools/decode_critical_path.py", line 64, in <module>
+    from opentallas.critical_path import PackageLevel  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'opentallas'

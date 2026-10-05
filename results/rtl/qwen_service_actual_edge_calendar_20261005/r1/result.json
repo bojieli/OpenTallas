@@ -1,0 +1,38 @@
+{
+  "verdict": "FAIL_PHYSICAL_TIME_DRAM_ELIGIBILITY",
+  "tool_exit": 0,
+  "scope": "one original actual PC+exact parent fractional clock; isolated credit-return consumer, not actual full parent",
+  "first_observed_tCCD_S": {
+    "edge": 37,
+    "current_fs": 119999952,
+    "previous_fs": 119166619,
+    "actual_interval_fs": 833333,
+    "required_interval_fs": 1024000
+  },
+  "columns": 256,
+  "tCCD_S_violations": 194,
+  "controller_fault": 0,
+  "not_proved": "earliest violation across all DRAM rules, full parent demand calendar, SSFF pulse/CDC/clocktree",
+  "source_sha256": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf",
+    "rtl/test/hbm_accel/clock_calendar/tb_qwen_service_actual_edges.sv": "605beebb8ffb0f976a3b9e27c61c9e9d539578625df1f47440677dc1cad4e2a7"
+  },
+  "raw_sha256": {
+    "runtime.log": "1440a4735d7152df90c8ac11349a9d7efa1c23bfb8341a000c74e2ecab95bbdf",
+    "launch.json": "eb475995287e46d887605fc7d241fec409668382af70e1cccf5c3c4e1c3dfa8a",
+    "exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "repair_admission": false,
+  "prospective_minimum_guard": {
+    "added_state_bits_per_pc": 1,
+    "pcs": 128,
+    "register_cell_floor_um2": 37.3248,
+    "clock_reset_and_mux_wires": "unknown; prospective unadmitted",
+    "extra_minimum_column_gap_service_edges": 1,
+    "conservative_per_pc_max_bytes_per_service_edge": 16,
+    "conservative_per_pc_peak_bytes_per_second": 15625000000.0,
+    "unchanged_peak_bytes_per_second": 31250000000.0,
+    "whole_token_latency": "actual exposed demand and competing command/refresh calendar needed; unknown"
+  },
+  "decision": "No guard implementation: stall must prevent PC queue/credit/timer advancement on rejected column and include all row/column physical-time constraints; external col_v masking invalid. Escalate actual generated clock/eligibility design to Claude with Sagan calendar owner."
+}

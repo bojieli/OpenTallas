@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.rtl.dsrom_wf_close.stage_acceptance.v1",
+  "verdict": "PASS_STAGE_ONLY",
+  "recorded_at": "2026-10-05T03:33:41.669574+00:00",
+  "source_commit": "3963c2f30",
+  "source_basis": "9f4dfd7be6842611a6f58662d7ec4c4b98a6adcc with only rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv restored from Arendt d2a24e9d2c7a0e8561361baea08c1c5dd06384f4",
+  "controller_sha256": "26d07e2e852779ed85cf5538b205d1ded6cd593e3567012797a45e1c252975ba",
+  "host": "ot-epyc2",
+  "run_dir": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/stage_reset1_w1",
+  "prepared_input_read_only": "/mnt/epyc1-scratch/claude/dsrom-wavefront/stage",
+  "command": [
+    "python3",
+    "tools/dsrom_wf_close.py",
+    "stage",
+    "--from",
+    "/mnt/epyc1-scratch/claude/dsrom-wavefront/stage",
+    "--scratch",
+    "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/stage_reset1_w1",
+    "--wave",
+    "1"
+  ],
+  "build_seconds": 82.0,
+  "runtime_returncode": 0,
+  "run_seconds": 39.0,
+  "acceptance": "Original L20 ISA expected payloads, squash/reissue outputs and final state pass; six messages, out_mismatch0. No range guard, geometry, golden source or arithmetic modification.",
+  "text_reference_comparison": "Text is not byte-identical: first job header/payload/core-start observation is one cycle later, its done is identical; all subsequent job cycles identical. $finish includes a new source path. Golden bit checks, not text equality, establish stage acceptance.",
+  "unchanged_failed_predecessor": "results/rtl/dsrom_wf_close_20261004/stage9_w1_failure/",
+  "physical_qualification": "PENDING for corrected source; old R11 applies only to9f4dfd7be",
+  "latency_scope": "No target-rate claim; measured job-cycle deltas retained in comparison.json.",
+  "artifacts_sha256": {
+    "comparison.json": "0985375877c37984f07c61d41e68e36bfefd6f8661b39a8f5a446ccb6bb6de97",
+    "obj_stage_w1/build_cmd.json": "33a13b99bcffa2e8b348ad319704ade7cbaa37cff825e58915ffcc80bb11189e",
+    "obj_stage_w1/build_seconds.txt": "739ca1e200bfb270b12cbf9fa346fc8d17d4093e09492cbd9cb7909bd06ca3f2",
+    "out_stage_w1.txt": "7a919138be16c6a5ee9daf5f75da3522304770068300e601ba77ac23ddbb9353",
+    "prepare_stage.json": "4b56d2c72c0bf43df25462a08e1308ef58dbc9dc0bc9aa289dc63992dff22459",
+    "run_stage_w1.rc": "8e6c40fd8470805519f9d64403e86adbb2d2e4a8dd5942ae7fd770695bdcc939",
+    "stage_cfg.svh": "ca7b532c4f8fb82b2d8daf0a6d2f0e2983f596c103a77e4cb029f2b5a0f34ba1",
+    "stage_w1.json": "8e875dc0154ea3dbb4e4253e33ab2b48cc1b97af1541a4c74483f7150ff1f1f2"
+  }
+}

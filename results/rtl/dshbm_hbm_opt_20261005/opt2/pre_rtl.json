@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.dshbm.wavepack.prertl.v1",
+  "default_enabled": false,
+  "basis": "PQ opt1, main e23dd61fb; only opt2 delta",
+  "registers": {
+    "slot": 16,
+    "second_context": 51,
+    "counts": 42,
+    "pair_request": 76,
+    "distribution": 212,
+    "gather": 512,
+    "combine": 480,
+    "stack": 232,
+    "output": 3,
+    "total_incremental_bits": 1624
+  },
+  "ports": {
+    "weight_response_bits": 1088,
+    "request_address_bits": 32,
+    "reqs_per_cycle": 1,
+    "x_read_ports_per_leaf": 1,
+    "x_write_ports_per_leaf": 1,
+    "added_memory_ports": 0,
+    "extra_boundary_metadata_bits": 1
+  },
+  "clock": {
+    "period_ps": 833.333333,
+    "ss_uncertainty_ps": 60,
+    "ff_uncertainty_ps": 25,
+    "additional_clock_sinks": 1624
+  },
+  "mux": {
+    "pair_request_address_mux_bits": 32,
+    "cursor_context_mux_bits": 30,
+    "per_line_format_select_fanout": 4,
+    "metadata_replication": 32,
+    "new_arithmetic_macs": 0
+  },
+  "memory": {
+    "added_macros": 0,
+    "existing_x_depth": 128,
+    "simultaneous_contexts": "explicit disjoint installed spans, refused otherwise"
+  },
+  "latency": {
+    "chunk_revisit_edges": 8,
+    "added_arithmetic_edges": 0,
+    "setup_edges": "must be measured with production opt1",
+    "target_w2_pairs": 3,
+    "issue_wave_reduction": 3,
+    "theoretical_issue_cycles_removed": 192,
+    "measured_composed_ar_gain": null,
+    "measured_composed_mtp_gain": null
+  },
+  "physical": {
+    "ff_area_um2": null,
+    "loaded_clock_cap_ff": null,
+    "track_capacity": null,
+    "slot_fit": null,
+    "ss_slack_ps": null,
+    "ff_slack_ps": null,
+    "required": "actual mapped delta and contextual SS/FF; no free fanout/clock credit"
+  },
+  "production_interface_bound": false,
+  "engine_build_admitted": false,
+  "adoption": false,
+  "source_interface": "Euclid pq_production_20261005 same module names; ENABLE0/PQ_ENABLE0 default; posted start/start_ready/op_xb7; pinned prototype unchanged",
+  "rtl_status": "not written; source interface and physical inventory unresolved, no hardware admission from compiler check",
+  "compiler_checks": "5 unittest PASS; address/ownership only, not RTL exactness or measured gain"
+}

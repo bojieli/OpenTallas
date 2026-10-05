@@ -1,0 +1,6 @@
+PASS mode=0 events=7 reserve/commit=4 baseline_cycles=49 candidate_cycles=53 delta=4 live_gate_wait=0 token=06003 value=3f800000
+PASS mode=1 events=7 reserve/commit=4 baseline_cycles=49 candidate_cycles=61 delta=12 live_gate_wait=8 token=06003 value=3f800000
+PASS mode=2 events=7 reserve/commit=4 baseline_cycles=49 candidate_cycles=53 delta=4 live_gate_wait=0 token=06003 value=3f800000
+PASS mode=3 events=48 reserve/commit=24 baseline_cycles=310 candidate_cycles=334 delta=24 live_gate_wait=0 token=000f9 value=40000000
+PASS registered issue/commit actual P8191 head + mixed descriptors/ready/chase/barrier/reset pending; reset_seen=1
+rtl/test/tb_qwen_rom_dec_commit.sv:103: $finish called at 5500000 (1ps)

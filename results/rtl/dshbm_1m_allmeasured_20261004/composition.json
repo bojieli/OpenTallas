@@ -52,7 +52,7 @@
   "select": 2.792
  },
  "MTP": {
-  "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.by_draft_tokens.5 (published: vLLM PR #57432 TP4 (acc:VLLM_57432))",
+  "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
   "verify_p6_us": 839.23,
   "walk_p6_us": 763.0399,
   "union_model_us": {
@@ -62,8 +62,8 @@
   "draft_us": 45.28,
   "seed_commit_us": 3.567,
   "step_us": 888.077,
-  "tau": 3.8879,
-  "mtp_tok_s": 4377.9,
+  "tau": 4.159,
+  "mtp_tok_s": 4683.2,
   "verify_summary": {
    "total_us": 839.23,
    "tok_s": 1191.6,
@@ -104,7 +104,7 @@
    "select": 16.76
   }
  },
- "MTP_tok_s": 4377.9,
+ "MTP_tok_s": 4683.2,
  "at_closing_clocks": {
   "clocks": {
    "sm": {
@@ -177,9 +177,9 @@
    "swiglu": 8.32,
    "select": 2.792
   },
-  "MTP_tok_s": 3436.1,
+  "MTP_tok_s": 3675.7,
   "MTP": {
-   "tau_source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.by_draft_tokens.5 (published: vLLM PR #57432 TP4 (acc:VLLM_57432))",
+   "tau_source": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5)",
    "verify_p6_us": 1082.633,
    "walk_p6_us": 1006.4428,
    "union_model_us": {
@@ -189,8 +189,8 @@
    "draft_us": 45.28,
    "seed_commit_us": 3.567,
    "step_us": 1131.48,
-   "tau": 3.8879,
-   "mtp_tok_s": 3436.1,
+   "tau": 4.159,
+   "mtp_tok_s": 3675.7,
    "verify_summary": {
     "total_us": 1082.633,
     "tok_s": 923.7,
@@ -236,7 +236,7 @@
   "status": "measured with rule-derived wire stages BCAST 6 / RET 6",
   "AR_us": 462.017,
   "AR_tok_s": 2164.4,
-  "MTP_tok_s": 4453.6,
+  "MTP_tok_s": 4764.2,
   "ar_gain_pct": -0.43,
   "mtp_gain_pct": 1.73,
   "area": "+1,024 light lanes ~ +7.5 mm2/die pre-layout (dshbm_local_chains wide lever)",
@@ -302,10 +302,22 @@
    "us": 0.15
   }
  ],
- "tau_superseded": {
-  "tau": 4.159,
-  "mtp_tok_s": 4683.2,
-  "note": "own 6-class mix tau (superseded by the owner rule)"
+ "tau_sensitivity": {
+  "published": {
+   "tau": 3.8879,
+   "MTP_tok_s": 4377.9,
+   "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.primary (acc:VLLM_57432; dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024))"
+  },
+  "published_low": {
+   "tau": 3.43,
+   "MTP_tok_s": 3862.3,
+   "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.low"
+  },
+  "published_high": {
+   "tau": 4.31748,
+   "MTP_tok_s": 4861.6,
+   "source": "results/speculative/third_party_acceptance_20261004/acceptance.json models.deepseek_v41.range.high"
+  }
  },
  "still_modelled_other": [
   {
@@ -339,7 +351,7 @@
   {
    "term": "acceptance tau",
    "us": null,
-   "why": "published third-party (DSpark block 5, vLLM PR 57432), not an RTL quantity"
+   "why": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic (owner 6-class workload blend (adopted 2026-10-05); harmonic, greedy, gamma 5); not an RTL quantity (published V4.1 3.8879 and range 3.43-4.32 in tau_sensitivity)"
   },
   {
    "term": "hc_mixes, compressor, cand_apply, Engram/candidate-merge collectives",
@@ -18976,7 +18988,7 @@
   "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json": "cf2c7fe6f7b8543ebbcb6fcfbb90b434e3ce3e586d61a525ae9d99b930da65ca",
   "results/rtl/dshbm_baseline_measured_20261004/program.json": "a6218d2da6578bc36d510ba925091fc19272a33211a03f10efedd1b72a799491",
   "results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json": "b89fb9d3ea1320fb7dec6edfdbb2bac5ef1b771876a1ac2d659fda750f1c2056",
-  "results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json": "5f3f019d77a03cd44abf2a09da82052c5c0f289b3b8f65f673c946c01b29aafd",
+  "results/rtl/hbm_accel_fmax_inventory_20261004/inventory.json": "a4ca1fa88d90b32518dbad41c76c971f644bf81ca81b768a6f4fd9aab8b91888",
   "results/rtl/hbm_accel_ha3_20261004/verdict.json": "98b1bcad6f675396c4557473191dc9bebfa27c021f5f62ca4af5deb2f301cace",
   "results/rtl/dshbm_dspark_draft_20261004/composition.json": "05881c208b0e9e93b213c2e75a7ea8ab9cf9ba18b61c7212e27a332be1122ab8",
   "results/rtl/dshbm_baseline_measured_20261004/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_v2.json": "053884b36f814be7f2a179dfce9ddd3ae935d24ca10eb1eb47f481a20877a01b",
@@ -18987,6 +18999,6 @@
   "results/rtl/dshbm_local_chains_20261004/su/su_N1024_M256_b4r5m4a3_dpi_beh_su_cases_p6om_ildr.json": "abb8607487000187d443c1a3f813073137f5036742e4a63fdd6e7d1cf9d2625c"
  },
  "tool_sha256": {
-  "tools/dshbm_1m_allmeasured.py": "aceca984195bc11c2480da2b49a263bfe15910f1b0735b7c2fa5882e9410346b"
+  "tools/dshbm_1m_allmeasured.py": "f817f8d63e4e9b23621e161c20f3fff37be05879258b9f67387be069466f3d3d"
  }
 }

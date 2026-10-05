@@ -1,0 +1,23 @@
+{
+  "classification": "HOST_YOSYS_ABC_EMPTY_PIPE_PROTOCOL_STALL",
+  "source_or_architecture_failure": false,
+  "at": "2026-10-05T12:51:32.549147+00:00",
+  "parent": {
+    "pid": 1138783,
+    "cmdline": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r2/work/synth.ys ",
+    "status": "Name:\tyosys\nUmask:\t0002\nState:\tS (sleeping)\nTgid:\t1138783\nNgid:\t0\nPid:\t1138783\nPPid:\t1138735\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t64\nGroups:\t27 109 1000 \nNStgid:\t1138783\nNSpid:\t1138783\nNSpgid:\t1138700\nNSsid:\t1138700\nKthread:\t0\nVmPeak:\t 1418972 kB\nVmSize:\t 1257772 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   94152 kB\nVmRSS:\t   90004 kB\nRssAnon:\t   64992 kB\nRssFile:\t   25012 kB\nRssShmem:\t       0 kB\nVmData:\t  103496 kB\nVmStk:\t     308 kB\nVmExe:\t   24552 kB\nVmLib:\t    5688 kB\nVmPTE:\t     348 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t1/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000000007\nSigCgt:\t0000000100000000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t99\nnonvoluntary_ctxt_switches:\t1\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+    "wchan": "anon_pipe_read",
+    "stat": "1138783 (yosys) S 1138735 1138700 1138700 0 -1 4194304 26303 0 0 0 96 5 0 0 20 0 1 0 18579056 1287958528 22174 18446744073709551615 99637994987520 99638020127545 140720882290352 0 0 0 0 7 0 1 0 0 17 126 0 0 0 0 0 99638027201904 99638027342120 99638847549440 140720882297918 140720882298055 140720882298055 140720882298814 0\n"
+  },
+  "child": {
+    "pid": 1138886,
+    "cmdline": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc -s ",
+    "status": "Name:\tyosys-abc\nUmask:\t0002\nState:\tS (sleeping)\nTgid:\t1138886\nNgid:\t0\nPid:\t1138886\nPPid:\t1138783\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t64\nGroups:\t27 109 1000 \nNStgid:\t1138886\nNSpid:\t1138886\nNSpgid:\t1138700\nNSsid:\t1138700\nKthread:\t0\nVmPeak:\t   48312 kB\nVmSize:\t   48312 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t   25896 kB\nVmRSS:\t   25896 kB\nRssAnon:\t   10076 kB\nRssFile:\t   15820 kB\nRssShmem:\t       0 kB\nVmData:\t   15348 kB\nVmStk:\t     140 kB\nVmExe:\t   18396 kB\nVmLib:\t    4280 kB\nVmPTE:\t     132 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t1/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000000007\nSigCgt:\t0000000008386000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t4\nnonvoluntary_ctxt_switches:\t0\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+    "wchan": "poll_schedule_timeout.constprop.0",
+    "stat": "1138886 (yosys-abc) S 1138783 1138700 1138700 0 -1 4194304 2987 0 0 0 18 0 0 0 20 0 1 0 18579151 49471488 6091 18446744073709551615 102626398633984 102626417471237 140731485442640 0 0 0 0 7 137912320 1 0 0 17 127 0 0 0 0 0 102626421351184 102626422075860 102626427092992 140731485445250 140731485445315 140731485445315 140731485446074 0\n"
+  },
+  "pipe_bytes": {
+    "ABC_input": 0,
+    "ABC_output": 0
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "classification": "OBSERVER_ASSERTION_ERROR",
+  "immutable_original_verdict": "FAIL_FUNCTIONAL",
+  "source_basis": "Original ot_hbm_accel_loader_addr.sv req_wstrb=FFFFFFFF regardless req_we; original STORE req_wstrb=0. Read strobes do not authorize writes: req_we remains0.",
+  "fix": "Assert unchanged LOAD readback FFFFFFFF and STORE0 qualified by actual tag owner bit15; no candidate RTL edits",
+  "candidate_unchanged": true,
+  "basis288_executed_before_fault": true,
+  "no_route_launched": true
+}

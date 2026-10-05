@@ -302,6 +302,178 @@ def cmd_argmax(a):
 
 
 # ------------------------------------------------------------------------------------------------------------
+# recovery lever "head": the ROM-read-rate bundle (rtl/v41rom/ot_dsrom_head_bundle.sv), one bundle of 128 rows
+# ------------------------------------------------------------------------------------------------------------
+TB_BUNDLE = "rtl/test/dsrom_sys/tb_dsrom_1m_head_bundle.sv"
+BUNDLE_RTL = ["rtl/v41rom/ot_dsrom_head_bundle.sv", "rtl/v41rom/ot_dsrom_head_elem.sv", "rtl/v41rom/ot_v41_fadd.sv",
+              "rtl/common/ot_prefix.sv", "rtl/v41rom/ot_v41_bmul2.sv", "rtl/v41rom/ot_dsrom_bmul3.sv", "rtl/hdc/ot_hdc_delay.sv",
+              "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v"]
+BUNDLE_ROWS, SK, NW = 128, gate.FAST_LAT, 8192
+BUNDLE0 = (GOLD_TOKEN // BUNDLE_ROWS) * BUNDLE_ROWS          # 21,888: the bundle holding the golden argmax row
+BUNDLES_RANK = ROWS_RANK / BUNDLE_ROWS                         # 252.5 (2,525 ROM4096 a rank, as S81)
+
+
+def skewed_image(L):
+    """L[g, j]: lane j (BF16 bits) of logical word g (8,192 x 16).  Physical word p lane j holds logical word
+    (p - SK * (j mod 8)) mod 8192 (the systolic chain skew stored in the ROM image)."""
+    p = np.arange(NW)[:, None]
+    j = np.arange(16)[None, :]
+    return L[(p - SK * (j % 8)) % NW, np.broadcast_to(j, (NW, 16))]
+
+
+def write_macro(img, work: Path, inst: str):
+    for bk in (0, 1):
+        words = {}
+        for adr in range(NW // 2):
+            v = 0
+            for j in range(16):
+                v |= int(img[2 * adr + bk, j]) << (16 * j)
+            words[adr] = v
+        gate.viamap(words, work / f"{inst}_{bk}.viamap.hex", 4096)
+
+
+def cmd_bundle(a):
+    setup_gate()
+    work = a.work / "lmhead_bundle"
+    work.mkdir(parents=True, exist_ok=True)
+    xf, logits = golden_x()
+    x16 = (G.bits(xf).astype(np.uint32) >> 16).astype(np.uint64)
+    ck = Ckpt(SNAP)
+    m = gate.Mat(ck, "head", "bf16", BUNDLE_ROWS, K, r0=BUNDLE0)
+    u = np.asarray(m.u16, dtype=np.uint64)
+    for q in range(4):                                         # A: rows 32q + k, K 0..4095, 256 words a row
+        write_macro(skewed_image(u[32 * q:32 * q + 32, :4096].reshape(NW, 16)), work, f"ha{q}")
+    perm = np.array([32 * (n % 4) + n // 4 for n in range(BUNDLE_ROWS)])     # B row order n = 4k + q
+    write_macro(skewed_image(u[perm, 4096:].reshape(NW, 16)), work, "hb")
+
+    def slices(xx, n):
+        return "".join("".join(f"{int(v):04x}" for v in xx[16 * i:16 * i + 16][::-1]) + "\n" for i in range(n))
+    (work / "xa.hex").write_text(slices(x16[:4096], 256))
+    (work / "xb.hex").write_text(slices(x16[4096:], 64))
+    out = work / "obj"
+    exe = out / "Vtb_dsrom_1m_head_bundle"
+    if not exe.exists():
+        subprocess.run([str(gate.VERILATOR), "--binary", "--timing", "-j", "8", "-Wno-fatal", "-Wno-lint",
+                        "-Wno-style", "-O2", "--top-module", "tb_dsrom_1m_head_bundle", "-Mdir", str(out),
+                        str(ROOT / TB_BUNDLE)] + [str(ROOT / p) for p in BUNDLE_RTL],
+                       check=True, cwd=work, stdout=subprocess.DEVNULL)
+    r = subprocess.run([str(exe), f"+DIR={work}", f"+OT_ROM_DIR={work}", f"+ROW0={BUNDLE0}"],
+                       capture_output=True, text=True, check=True)
+    (work / "sim.log").write_text(r.stdout)
+    A, Lg, B, res = {q: [] for q in range(4)}, {q: [] for q in range(4)}, [], None
+    for line in r.stdout.splitlines():
+        t = line.split()
+        if t and t[0] == "A":
+            A[int(t[1])].append((int(t[2], 16), int(t[3])))
+        elif t and t[0] == "L":
+            Lg[int(t[1])].append((int(t[2], 16), int(t[3])))
+        elif t and t[0] == "B":
+            B.append((int(t[2], 16), int(t[3])))
+        elif t and t[0] == "RES":
+            res = dict(row=int(t[1]), bits=int(t[2], 16), fault=int(t[3]), cycle=int(t[4]))
+    g = np.load(a.work / "roots_rank0.npz")
+    i0 = BUNDLE0 - RANK * ROWS_RANK
+    ga = g["root4096"][i0:i0 + BUNDLE_ROWS].astype(np.uint32)
+    gb = g["root1024"][i0:i0 + BUNDLE_ROWS].astype(np.uint32)
+    gbp = G.bits(G.add(G.add(G.from_bits(gb), np.float32(0)), np.float32(0))).astype(np.uint32)
+    gl = G.bits(logits[BUNDLE0:BUNDLE0 + BUNDLE_ROWS]).astype(np.uint32)
+    okA = sum(len(A[q]) == 32 and all(A[q][k][0] == ga[32 * q + k] for k in range(32)) for q in range(4))
+    okA_rows = sum(A[q][k][0] == ga[32 * q + k] for q in range(4) for k in range(min(32, len(A[q]))))
+    okB_rows = sum(B[n][0] == gbp[perm[n]] for n in range(min(BUNDLE_ROWS, len(B))))
+    okL_rows = sum(Lg[q][k][0] == gl[32 * q + k] for q in range(4) for k in range(min(32, len(Lg[q]))))
+    gbest = int(np.argmax(logits[BUNDLE0:BUNDLE0 + BUNDLE_ROWS])) + BUNDLE0
+    exact = (okA_rows == okB_rows == okL_rows == BUNDLE_ROWS and res is not None and res["fault"] == 0
+             and res["row"] == gbest == GOLD_TOKEN and res["bits"] == int(G.bits(logits[GOLD_TOKEN])))
+    out = dict(rows=[BUNDLE0, BUNDLE0 + BUNDLE_ROWS], root4096_exact=int(okA_rows), padded_root1024_exact=int(okB_rows),
+               logits_exact=int(okL_rows), elements_complete=int(okA), result=res, golden_bundle_argmax=gbest,
+               exact=bool(exact),
+               cycles=dict(first_A_root=min(A[q][0][1] for q in range(4)), last_A_root=max(A[q][-1][1] for q in range(4)),
+                           last_B_root=B[-1][1], last_logit=max(Lg[q][-1][1] for q in range(4)),
+                           result=res["cycle"] if res else None,
+                           rom_read_span=NW + 7 * SK, issue_offset=2),
+               checkpoint_header_sha256=ck.pins)
+    (work / "result.json").write_text(json.dumps(out, indent=1) + "\n")
+    print(json.dumps(out))
+
+
+def _route(path: Path):
+    """SS setup / FF hold summary of one routed element (tools/run_abi3_physical.py record)."""
+    d = json.loads(path.read_text())
+    c = [x for x in d["acceptance"]["checks"] if x.get("stage") == "place_and_route"][0]
+    keys = ("setup_wns_ns", "setup_violations", "hold_wns_ns", "hold_violations", "drc_errors", "max_slew_violations",
+            "max_cap_violations", "max_fanout_violations", "antenna_violating_nets", "timing_met", "physically_clean")
+    return dict(record=str(path.resolve().relative_to(ROOT)), status=d["status"], closed=d["status"] in ("met", "pass"),
+                **{k: c.get(k) for k in keys})
+
+
+def cmd_lever(a):
+    """Recovery lever record (opentallas.dsrom-recovery.lever.v1) from the bundle result and the two element routes."""
+    if a.output.exists():
+        raise SystemExit("refuse to overwrite a verdict")
+    b = json.loads(a.bundle.read_text())
+    old = json.loads((ROOT / "results/rtl/dsrom_1m_allmeasured_20261004/head.json").read_text())
+    nodes = node_params()
+    lm = nodes["head.lm_head"]
+    cyc = b["cycles"]
+    # labelled additions (not routed): the model's broadcast/VM wire stages beyond the bench's BST 2, and the rank's
+    # compare-tree levels above one bundle (ceil(log2(252.5)) = 8, one registered compare a level, as measured)
+    wire = lm["_uarch"]["wire"] - 2
+    rank_levels = math.ceil(math.log2(BUNDLES_RANK))
+    lm_cyc = cyc["last_logit"] + wire
+    am_cyc = (cyc["result"] - cyc["last_logit"]) + rank_levels
+    lm_us, am_us = lm_cyc / F_ELEM * 1e6, am_cyc / F_ELEM * 1e6
+    routes = {k: _route(Path(p)) for k, p in (("A", a.route_a), ("B", a.route_b))}
+    closed = all(r["closed"] for r in routes.values())
+    exact = bool(b["exact"])
+    rec = dict(
+        schema="opentallas.dsrom-recovery.lever.v1", lever="head",
+        verdict="ADOPT" if exact and closed else "REJECT", exact=exact,
+        ss_ff=dict(clock_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                   flow="tools/run_abi3_physical.py routed (ORFS WC=SS setup, WC+BC=FF hold repair, ADDER_MAP_FILE off, "
+                        "PP 2-cycle macro read physical/abi3/v41_w10_elem_pp_multicycle.sdc, 2 x ot_rom_4096x274_m8)",
+                   elements=routes, closed=closed),
+        nodes={"head.lm_head": dict(us=round(lm_us, 4), cls="measured", source=(
+                   f"ot_dsrom_head_bundle (5 logical macros, 16 BF16 mult/macro, skewed ROM, streaming tree, join) "
+                   f"go->last logit {cyc['last_logit']} cyc measured + {wire} labelled wire cyc @1.2 GHz; every bundle "
+                   f"of the rank runs in lockstep (252.5 bundles = 2,525 ROM4096)")),
+               "head.argmax": dict(us=round(am_us, 4), cls="measured", source=(
+                   f"in-element lowest-id first-max + 2-level bundle compare tree measured "
+                   f"({cyc['result'] - cyc['last_logit']} cyc after the last logit) + {rank_levels} labelled rank "
+                   f"compare levels (1 cyc each, same node)"))},
+        info=dict(head_stage_occupancy_us=round(lm_us, 4), head_argmax_drain_us=round(am_us, 4),
+                  occupancy_basis=("measured per-position lm_head sweep: go -> last logit of one bundle (all bundles in "
+                                   "lockstep) + labelled wire; the DSpark draft heads and the verify head use the SAME "
+                                   "array and the same occupancy (no separate draft head die group assumed)")),
+        measurement=dict(
+            vehicle=("rtl/v41rom/ot_dsrom_head_bundle.sv on bench " + TB_BUNDLE + ": rows "
+                     f"{BUNDLE0}..{BUNDLE0 + BUNDLE_ROWS - 1} of rank 0 (the bundle holding the golden argmax 21,946), "
+                     "4 A elements (K 0..4095, 32 rows each) + 1 B element (K 4096..5119, 128 rows), golden xf, "
+                     "released head.weight (skewed ROM images)"),
+            bundle=b, lm_head_cycles=lm_cyc, argmax_cycles=am_cyc,
+            labelled_additions=dict(wire_cycles=wire, rank_compare_levels=rank_levels,
+                                    basis="model head.lm_head _uarch wire 36 minus the bench's BST 2; "
+                                          "ceil(log2(252.5 bundles)) compare levels; not routed -- LABELLED"),
+            old=dict(lm_head_us=old["lm_head"]["us_1p2GHz"], argmax_drain_us=round((32320 - 408 + old["argmax"]["cycles"]) / F_SERIAL * 1e6, 3),
+                     head_stage_occupancy_us=old["wavefront"]["head_stage_occupancy_us_per_position"]),
+            model_lm_head_us=round(lm["issue_us"] + lm["depth_us"] + lm["ctrl_us"], 3),
+            storage=("same 2,525 ROM4096 a rank as S81 (A elements: 32 rows x 256 words = 8,192 words; B: 128 rows x 64 "
+                     "words = 8,192): zero spare words; the ROM image is a static permutation of the released payload "
+                     "(row/K placement + systolic lane skew SK*(j mod 8))"),
+            unmeasured=["routed x broadcast to the rank's head dies and the cross-die compare tree (labelled cycles)",
+                        "argmax_merge across ranks (parent collective, unchanged)",
+                        "occupancy for k positions: one position measured; the element streams (no per-position state "
+                        "beyond the tree registers), occupancy taken as the full go->last-logit latency (conservative)"]),
+        simulator=f"verilator 5.050 ({gate.VERILATOR})",
+        source_commit=subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip(),
+        source_sha256={p: sha(ROOT / p) for p in [*BUNDLE_RTL, TB_BUNDLE, "tools/dsrom_1m_head.py", "tools/hdc_golden_v41.py",
+                                                  "physical/abi3/v41_w10_elem_pp_multicycle.sdc"]})
+    a.output.parent.mkdir(parents=True, exist_ok=True)
+    a.output.write_text(json.dumps(rec, indent=1) + "\n")
+    print(json.dumps(dict(verdict=rec["verdict"], exact=exact, closed=closed, lm_head_us=rec["nodes"]["head.lm_head"]["us"],
+                          argmax_us=rec["nodes"]["head.argmax"]["us"])))
+
+
+# ------------------------------------------------------------------------------------------------------------
 def node_params():
     """head.* node parameters of the S81 graph (tools/dsrom_1m_measure.s58_graph), in us and 1.2 GHz cycles."""
     if NODES.exists():
@@ -575,20 +747,24 @@ def cmd_stream_build(a):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sp = ap.add_subparsers(dest="cmd", required=True)
-    for c in ("golden", "lmhead", "argmax", "record", "stream-model", "stream-build"):
+    for c in ("golden", "lmhead", "argmax", "record", "stream-model", "stream-build", "bundle", "lever"):
         p = sp.add_parser(c)
-        if c != 'stream-model':
+        if c not in ("stream-model", "lever"):
             p.add_argument("--work", type=Path, required=True)
+        if c == "lever":
+            p.add_argument("--bundle", type=Path, required=True)
+            p.add_argument("--route-a", required=True)
+            p.add_argument("--route-b", required=True)
         if c == "lmhead":
             p.add_argument("--sched", choices=sorted(SCHED), required=True)
             p.add_argument("--build-only", action="store_true")
-        if c == "record":
+        if c in ("record", "lever"):
             p.add_argument("--output", type=Path, required=True)
         if c == 'stream-build':
             p.add_argument('--jobs', type=int, default=4)
     a = ap.parse_args(argv)
-    return dict(golden=cmd_golden, lmhead=cmd_lmhead, argmax=cmd_argmax,
-                record=cmd_record, **{'stream-model': cmd_stream_model, 'stream-build': cmd_stream_build})[a.cmd](a)
+    return dict(golden=cmd_golden, lmhead=cmd_lmhead, argmax=cmd_argmax, record=cmd_record, bundle=cmd_bundle,
+                lever=cmd_lever, **{'stream-model': cmd_stream_model, 'stream-build': cmd_stream_build})[a.cmd](a)
 
 
 if __name__ == "__main__":

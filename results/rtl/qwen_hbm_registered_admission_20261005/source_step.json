@@ -1,0 +1,43 @@
+{
+  "status": "SOURCE_CANDIDATE_COMPONENT_PASS_NOT_ADOPTED",
+  "original_source_commit": "3471c0a3b4789b5703cbb75e063bffb3d362a425",
+  "actual_source_tree": "/srv/opentallas-scratch/claude/hbm-fmax-qcore/src_c11",
+  "original_four_source_hashes_independently_match": true,
+  "source_cone": "spine registered wrom_addr -> OPT3 segment/availability -> me_mem_ok -> me_en -> me_o_we AND me_en -> vw_me_we",
+  "repair": "ADMISSION_PIPE=1 SAMPLE match/available/no-read; REDUCE into one-edge grant; invalidate on next engine edge; same grant required by core instruction issue; existing output address/data/mask retain alignment",
+  "unsafe_shortcuts_rejected": [
+    "strobe-only output pipeline",
+    "stale registered permission on changed address",
+    "IO false path"
+  ],
+  "source_conditions": [
+    "request held whenever engine clock stopped",
+    "monotonic same-token window arrivals",
+    "segment configuration stable across held request",
+    "reset cancels grants"
+  ],
+  "component": {
+    "host": "ot-epyc2",
+    "path": "/srv/opentallas-scratch/codex/hubble-qcore-admission-component-r1",
+    "tool": "iverilog -g2012 + vvp",
+    "status": "PASS",
+    "checks": [
+      "no stale early grant",
+      "at least three clocks between accepted advances",
+      "resident and arriving HBM requests",
+      "same accepted cmax/Gray retirement as OPT3",
+      "same source fault and KV gate",
+      "reset cancels captured permission"
+    ]
+  },
+  "python_checks": "6 PASS: TP2/TP4 price, strict counts, emitted original inverse and same-edge issue binding",
+  "latency": "II3: +2 clocks per engine advance; absolute token penalty unknown until measured advance count",
+  "open": [
+    "full core accepted-output/instruction exactness",
+    "full-context SS60/FF25 timing",
+    "mapped comb/cell/route area and slot",
+    "actual engine advances and composed token rate"
+  ],
+  "physical_admission": false,
+  "default_off": true
+}

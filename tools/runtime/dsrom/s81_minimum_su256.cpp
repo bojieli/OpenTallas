@@ -165,8 +165,8 @@ struct NativeSu {
      for(unsigned p=0;p<4;++p){
       uint64_t address=p==0?a:p==2&&leaf.i_cpair?(a^1u):
        uint64_t(base[p])+uint64_t(out)*so[p]+uint64_t((p==1||p==3)&&leaf.i_bhalf?i/2:i)*si[p];
-      require(address<(1u<<19),"actual SU source VM19 alias");
-      if(src[p]==0){if(!staged.count(address))unique.insert(address);}
+      require(address<(1ull<<30),"actual SU effective address30 overflow");
+      if(src[p]==0){require(address<(1u<<19),"actual SU source VM19 alias");if(!staged.count(address))unique.insert(address);}
       else (void)external(src[p],address,p);
      }
     }

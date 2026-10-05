@@ -1,0 +1,174 @@
+{
+  "schema": "opentallas.dsrom.expert-transport.v1",
+  "verdict": "PASS_ENDPOINT_PAYLOAD_ONLY",
+  "source_commit": "5bdbbee2fd209e313844fcf35673f65939798f42",
+  "model": {
+    "clock_domain": "streaming",
+    "clock_hz": 1200000000.0,
+    "defines": {
+      "FB": 64,
+      "CH": 156,
+      "CHU": 11,
+      "CRED": 512,
+      "SEQW": 10,
+      "CREDU": 64,
+      "SEQWU": 8
+    },
+    "cases": {
+      "gu_return": {
+        "payload_B": 2304,
+        "payload_flits": 36
+      },
+      "w2_input": {
+        "payload_B": 4608,
+        "payload_flits": 72
+      }
+    },
+    "endpoint_bytes_per_cycle": 64,
+    "board_vendor_ns": 130.0,
+    "ucie_vendor_ns": 8.5,
+    "wire_cycles": 90,
+    "phy_Bps": 171294117647.05884,
+    "rule": "Measured last_flit includes vendor delay lines. Add only PHY serialization beyond endpoint plus 90 wire cycles, once. No interpolation; no collective or concurrent-group measurement.",
+    "model_basis": "Existing RECOVERY_HOPS endpoint/calendar and Arendt GU2304B/W2input4608B boundary",
+    "baseline_record": "results/rtl/dsrom_recovery_20261004/draft/rlinks.json",
+    "baseline_sha256": "b1cd51670614f282153496f32c0f6e1e4904fffb81bf5243929fcde37f28ffd5",
+    "endpoint_source_sha256": {
+      "rtl/test/dsrom_sys/tb_dsrom_1m_hop.sv": "3e2cf11992ff00284207ff28a356c19cfefc415cfd43ee9d71b5d02f90385a7b",
+      "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+      "rtl/dsrom_sys/ot_dsrom_link_chan.sv": "48707d46a11d11a38669e8bb77fa6fdeb129357e30f4c587f0cc5e1d308ef835",
+      "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+    }
+  },
+  "hops": {
+    "gu_return": {
+      "payload_B": 2304,
+      "exact": true,
+      "fields": {
+        "case": "gu_return",
+        "result": "PASS",
+        "bytes": 2304,
+        "flits": 36,
+        "fb": 64,
+        "ch": 156,
+        "chu": 11,
+        "credits": 512,
+        "seqw": 10,
+        "credits_u": 64,
+        "seqw_u": 8,
+        "sent": 36,
+        "rcvd": 36,
+        "mism": 0,
+        "extra": 0,
+        "fault1": 0,
+        "fault2": 0,
+        "first_in": 2,
+        "last_in": 37,
+        "first_flit": 179,
+        "last_flit": 214,
+        "leg1_first_flit": 162,
+        "leg1_last_flit": 197,
+        "out_span": 35,
+        "in_span": 35,
+        "credit_stalls1": 0,
+        "credit_stalls2": 0,
+        "retx1": 0,
+        "retx2": 0,
+        "crc1": 0,
+        "crc2": 0,
+        "max_replay_occ1": 36,
+        "max_replay_occ2": 29,
+        "seed": 81
+      },
+      "summary": "HOP_SUMMARY case=gu_return result=PASS bytes=2304 flits=36 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=36 rcvd=36 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=37 first_flit=179 last_flit=214 leg1_first_flit=162 leg1_last_flit=197 out_span=35 in_span=35 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=36 max_replay_occ2=29 seed=81",
+      "measured_rtl_cycles_including_vendor": 214,
+      "measured_endpoint_cycles": 47,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "vendor_budget_ns": {
+        "board": 130.0,
+        "ucie": 8.5
+      },
+      "phy_serialization_cycles": 16.14065934065934,
+      "phy_serialization_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 304,
+      "total_us": 0.2533333333333333,
+      "components_us": {
+        "endpoint": 0.03916666666666667,
+        "vendor": 0.1391666666666667,
+        "phy_extra": 0.0,
+        "wire": 0.075
+      }
+    },
+    "w2_input": {
+      "payload_B": 4608,
+      "exact": true,
+      "fields": {
+        "case": "w2_input",
+        "result": "PASS",
+        "bytes": 4608,
+        "flits": 72,
+        "fb": 64,
+        "ch": 156,
+        "chu": 11,
+        "credits": 512,
+        "seqw": 10,
+        "credits_u": 64,
+        "seqw_u": 8,
+        "sent": 72,
+        "rcvd": 72,
+        "mism": 0,
+        "extra": 0,
+        "fault1": 0,
+        "fault2": 0,
+        "first_in": 2,
+        "last_in": 73,
+        "first_flit": 179,
+        "last_flit": 250,
+        "leg1_first_flit": 162,
+        "leg1_last_flit": 233,
+        "out_span": 71,
+        "in_span": 71,
+        "credit_stalls1": 0,
+        "credit_stalls2": 0,
+        "retx1": 0,
+        "retx2": 0,
+        "crc1": 0,
+        "crc2": 0,
+        "max_replay_occ1": 72,
+        "max_replay_occ2": 29,
+        "seed": 81
+      },
+      "summary": "HOP_SUMMARY case=w2_input result=PASS bytes=4608 flits=72 fb=64 ch=156 chu=11 credits=512 seqw=10 credits_u=64 seqw_u=8 sent=72 rcvd=72 mism=0 extra=0 fault1=0 fault2=0 first_in=2 last_in=73 first_flit=179 last_flit=250 leg1_first_flit=162 leg1_last_flit=233 out_span=71 in_span=71 credit_stalls1=0 credit_stalls2=0 retx1=0 retx2=0 crc1=0 crc2=0 max_replay_occ1=72 max_replay_occ2=29 seed=81",
+      "measured_rtl_cycles_including_vendor": 250,
+      "measured_endpoint_cycles": 83,
+      "vendor_cycles": {
+        "board": 156,
+        "ucie": 11
+      },
+      "vendor_budget_ns": {
+        "board": 130.0,
+        "ucie": 8.5
+      },
+      "phy_serialization_cycles": 32.28131868131868,
+      "phy_serialization_extra_cycles": 0,
+      "wire_cycles": 90,
+      "total_cycles": 340,
+      "total_us": 0.2833333333333334,
+      "components_us": {
+        "endpoint": 0.06916666666666667,
+        "vendor": 0.1391666666666667,
+        "phy_extra": 0.0,
+        "wire": 0.075
+      }
+    }
+  },
+  "tool_sha256": "299cbc31f2072c518d52ff085fa8e31dbeff36ad4f6ec2d6b99bc363daf8ed37",
+  "helper_sha256": "8fcd3e605884489815c3131daaff8ec2e675475b0fdf49e7e7d665594e619df9",
+  "scope": "Hash-pattern payload order/data/last checks on one idle endpoint message. Not actual GU provider or six-group fanout, mutable context/visibility/consumer calendar, SS60/FF25 or token qualification.",
+  "physical_qualified": false,
+  "adoption": false
+}

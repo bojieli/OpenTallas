@@ -1,0 +1,18 @@
+{
+  "kind": "icarus",
+  "params": {
+    "LOCKSTEP": 0,
+    "SEED": 4,
+    "MAXU": 64,
+    "USERS": 50,
+    "CLAT": 40,
+    "PDLY": 30,
+    "PLEN": 4
+  },
+  "exit_code": 0,
+  "passed": true,
+  "terminal_lines": [
+    "EQUIV STATS source=1 lockstep=0 maxu=64 users=50 cycles=98748 fin=90559/98697 issues=1797/1776 rejects=151/151 squashed=147/126 committed_ok=1650/1650 err=0/0 fault_cyc=0/0 mism=0",
+    "EQUIV PASS"
+  ]
+}

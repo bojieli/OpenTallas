@@ -1,0 +1,87 @@
+{
+  "status": "FAIL_SS_SETUP_NOT_ADOPTED",
+  "source_commit": "1e646051941a907b6c991c2451d873630a5483c0",
+  "source_pins": [
+    {
+      "path": "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_pc_aq_slot_ready_cut.sv",
+      "sha256": "4b1fc50a599072467a26cfe4e1e26d89b98f230b79ec643b13c9eb1ceb609bc2",
+      "size_bytes": 37987
+    },
+    {
+      "path": "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_stack_aq_slot_ready_cut.sv",
+      "sha256": "b80638055afdd559d9ce956c740827b7d8fe87d95d06096e67f70d83e70a06d5",
+      "size_bytes": 4328
+    }
+  ],
+  "completed_at": "2026-10-05T05:08:21.473758+00:00",
+  "route_completed": true,
+  "corner_completed": true,
+  "ss_setup_ps": -18.713476,
+  "ff_hold_ps": 9.96013,
+  "combined_flow_hold_ps": 8.77387,
+  "physical": {
+    "antenna_violating_nets": 0.0,
+    "antenna_violating_pins": 0.0,
+    "drc_errors": 0.0,
+    "hold_violations": 0.0,
+    "hold_wns_ns": 0.008773870000000001,
+    "max_cap_violations": 0.0,
+    "max_fanout_violations": 0.0,
+    "max_slew_violations": 0.0,
+    "met": false,
+    "physically_clean": true,
+    "scope": "post-route, extracted parasitics",
+    "setup_violations": 30.0,
+    "setup_wns_ns": -0.0187135,
+    "signal_integrity_clean": true,
+    "stage": "place_and_route",
+    "timing_met": false
+  },
+  "cell_area_um2": 4016.31,
+  "current_path": "PC1 blk[4] -> blk zero-reduction / refresh next-state -> rdyr_n[10] -> slot3 ready capture",
+  "startpoint": "on.pc[1].u.on.blk[4]",
+  "endpoint": "on.pc[1].u.on.aq_slot_ready_q[3]",
+  "odb_sha256": "923f4acd77a8cb482702d0b1f88264f4130b7d981f8af7289a450a3308bc3e12",
+  "spef_sha256": "7d7adfeec7e8959df4fa197ea1483d1c079d092201f9ff5c88c77f682908c248",
+  "sdc_sha256": "111209856e59d1c302e999531c8446db1af574888d3e3b2713efd0fc10a8adf7",
+  "constraints": {
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "io_fraction": 0,
+    "scope": "inherited two-PC boundary, not full parent"
+  },
+  "attempts": [
+    {
+      "name": "AQ hold",
+      "ss_ps": -32.88
+    },
+    {
+      "name": "head ready",
+      "ss_ps": -25.83
+    },
+    {
+      "name": "slot ready",
+      "ss_ps": -18.713476
+    }
+  ],
+  "attempt_count": 3,
+  "escalation": "CLAUDE",
+  "fourth_variant_started": false,
+  "six_predicates_selected": false,
+  "gate_record": "results/rtl/svc_aq_slot_ready_cut_20261005/semantic_r1/terminal.json",
+  "model_record": "results/uarch/hbm_stream_aq_slot_ready_cut_20261005/model.json",
+  "candidate_choice": "Unselected source-derived blk_nonempty mirror; model-only, no RTL or route admission",
+  "raw_file_sha256": {
+    "corner.log": "437dd6076393f3861f283c3ab558d4615019af36530e4df9a6b112181f881eed",
+    "corner_sta.json": "0e25da4f40522ecb78847d98da20f9755ba64086316802fbdf46b9503a972505",
+    "exit": "9c2eda766e635ce14d27fe9f20e6279edf15e3eb94c8d9d93b5c48a9cef61456",
+    "launch.json": "493610acfb2519085507a448b7b718a54cb7328121601f91dc35da21236b071f",
+    "mapped_path_cells.txt": "b9b44b98272d26386d019aafb7f32a4cc4a11339a5fd97e45669015c6d2f1f2d",
+    "physical.json": "9bdb0f1e56494919d48ae209f194d097d9c509368c79f59aa0000f55c1ac8592",
+    "route.log": "084007e1b8e630aa5c45a8a3d643b5d7523dfea6f6ccd7c9a9157256939ff516",
+    "run.sh": "e4cbd658fa622f49999b0b3dafd1a2073d008e6fcacf757f64da4273ee63ebcf",
+    "w18_sta_ff.log": "29de89ff5f7d660c95b02d94b12b05c19f319c15d0d20c9116e64e46932cb07f",
+    "w18_sta_ss.log": "da37bf6f62dd6e79b52aaaa89e28831d186185c99eb5d84bb33d064ee43bd4aa"
+  }
+}

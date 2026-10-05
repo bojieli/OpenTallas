@@ -1,0 +1,16 @@
+{
+  "schema": "hbrom.nc1.first-synthesis-failure.v1",
+  "verdict": "FLOW_CHECK_FAILURE_PRESERVED",
+  "source_commit": "ac1af6715a0f4472ce3188ede5c8b82db0ee34e5",
+  "elapsed_s": 782.6651806890004,
+  "maxrss_KiB": 3087472,
+  "returncode": 1,
+  "problem_count": 12220,
+  "cause": "Recipe omitted standard-cell liberty declarations; check -assert could not infer mapped stdcell pin directions after ABC. No timing result.",
+  "correction": "Read SS liberty with -lib after ABC and preserve mapped.precheck.il before check; same RTL and parameters.",
+  "remote_run": "ot-epyc2:/srv/opentallas-scratch/hbrom/cluster-20261005/nc1-calibration-ac1af6715-run1",
+  "record_sha256": "21301f6fd1b2a3009564c77b12009a5722ea98f3f40c1a769c1d61401ec6a019",
+  "synth_log_sha256": "c4258a63b71f4e5b252826cca81709c63b502138961d6dffbbb39c18d79d1196",
+  "scope": "Original full-shape reused matrix engine only, unprotected mutable SRAM, no ROM mux/network, no RF/SIMD/scratch service; never entire modeled cluster qualification.",
+  "physical_closure": false
+}

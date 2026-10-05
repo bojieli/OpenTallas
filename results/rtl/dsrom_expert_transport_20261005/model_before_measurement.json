@@ -1,0 +1,38 @@
+{
+  "clock_domain": "streaming",
+  "clock_hz": 1200000000.0,
+  "defines": {
+    "FB": 64,
+    "CH": 156,
+    "CHU": 11,
+    "CRED": 512,
+    "SEQW": 10,
+    "CREDU": 64,
+    "SEQWU": 8
+  },
+  "cases": {
+    "gu_return": {
+      "payload_B": 2304,
+      "payload_flits": 36
+    },
+    "w2_input": {
+      "payload_B": 4608,
+      "payload_flits": 72
+    }
+  },
+  "endpoint_bytes_per_cycle": 64,
+  "board_vendor_ns": 130.0,
+  "ucie_vendor_ns": 8.5,
+  "wire_cycles": 90,
+  "phy_Bps": 171294117647.05884,
+  "rule": "Measured last_flit includes vendor delay lines. Add only PHY serialization beyond endpoint plus 90 wire cycles, once. No interpolation; no collective or concurrent-group measurement.",
+  "model_basis": "Existing RECOVERY_HOPS endpoint/calendar and Arendt GU2304B/W2input4608B boundary",
+  "baseline_record": "results/rtl/dsrom_recovery_20261004/draft/rlinks.json",
+  "baseline_sha256": "b1cd51670614f282153496f32c0f6e1e4904fffb81bf5243929fcde37f28ffd5",
+  "endpoint_source_sha256": {
+    "rtl/test/dsrom_sys/tb_dsrom_1m_hop.sv": "3e2cf11992ff00284207ff28a356c19cfefc415cfd43ee9d71b5d02f90385a7b",
+    "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+    "rtl/dsrom_sys/ot_dsrom_link_chan.sv": "48707d46a11d11a38669e8bb77fa6fdeb129357e30f4c587f0cc5e1d308ef835",
+    "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+  }
+}

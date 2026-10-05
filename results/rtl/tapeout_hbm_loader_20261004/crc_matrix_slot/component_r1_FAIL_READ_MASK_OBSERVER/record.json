@@ -1,0 +1,30 @@
+{
+  "source_pin": "94cc829e1ad89d9241bf4f3fad4b0b7f91caea83",
+  "scope": "ND1 ADDR37 STACK2, fullDMA64 two sectors, CRC_MATRIX1 basis288 LOAD_VERIFY+STORE with actualACKdebt and byte masks; explicit stacklocal service map, no currentfulltop or clock claim",
+  "sources": {
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_crc.sv": "f24ed1615e7318d7a4870679b1dec8ffbf058b1c6a61a490fa6cb64fc17710a8",
+    "rtl/hbm_accel/loader/ot_hbm_accel_store_addr_crc.sv": "a8be0328f970784f1d3ecd6272a18dfedabd038d94b8231ed05fb6cb51a22a33",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_host_addr_crc.sv": "d450a51a266d310be76cc8f4691532c22fe43c93ffafdbb3fb37cfd5b03adaca",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_to_service.sv": "12e260d14e8e768c14c6092dee791bf626057ffff2a492695aa80f309f3af3dc",
+    "rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv": "656a8c7d71aca1910843a1e8b4c1cad8ff205bf2d70aa6c352b98ac2f5e6f90b",
+    "rtl/gpu_sys/ot_gpu_cdc_fifo.sv": "54176f6738eeb818cee9b3d1e49e8c1f4d4e36bd47990eeb1322f40d32765d86",
+    "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+    "rtl/test/hbm_accel/tb_hbm_accel_loader_high_addr_crc.sv": "087fec455acb463a70822ec0ec776e4dda7c046e44fabb26285b7ac6ee7268b9"
+  },
+  "parameters": {
+    "ADDR_W": 37,
+    "STACK_W": 2,
+    "SECTOR_W": 34,
+    "STACK_BYTES": 22500000000,
+    "ND": 1,
+    "CRC_MATRIX": 1
+  },
+  "physical_qualified": false,
+  "build_rc": 0,
+  "build_seconds": 5.0501487879992055,
+  "verdict": "FAIL_FUNCTIONAL",
+  "run_rc": 1,
+  "terminal_lines": [
+    "%Error: /srv/opentallas-scratch/codex/item8-hbm-loader-20261004/src_crc_matrix/rtl/test/hbm_accel/tb_hbm_accel_loader_high_addr_crc.sv:50: Verilog $stop"
+  ]
+}

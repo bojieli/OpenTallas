@@ -1,0 +1,25 @@
+{
+  "schema": "hbm.cp.balanced-veto.exact.v1",
+  "verdict": "PASS_EXACT_ONLY",
+  "source_commit": "2c384412f275a1e0d4777aff3996050b934a6786",
+  "checks": 8713,
+  "phase_fault_cases": 342,
+  "CPL": 1,
+  "prelease_edges": 5,
+  "grant_edges": 1,
+  "rearm_edges": 1,
+  "added_edges": 0,
+  "peak_RSS_KiB": 7936,
+  "elapsed": "0:06.47",
+  "parameters": {
+    "ENABLE": 1,
+    "REGISTERED_OUTPUTS": 1,
+    "REGISTERED_STATUS": 1,
+    "REGISTERED_BOUNDARY": 1,
+    "GROUPED_OWNER_BOUNDARY": 0,
+    "BALANCED_OWNER_BOUNDARY": 1
+  },
+  "context_qualified": false,
+  "adopted": false,
+  "selection": "best serial flag0 preserved; failed grouped candidate not selected; no semantic relaxation"
+}

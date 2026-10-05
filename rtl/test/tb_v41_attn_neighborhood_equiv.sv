@@ -160,6 +160,7 @@ module tb_v41_attn_neighborhood_equiv;
         @(negedge clk);
         $display("V41_ATTN_NEIGHBORHOOD_EQUIV %s sram_macro=%0d cycles=%0d rsp=%0d lane_hits=%0d fills=%0d stg_reads=%0d errors=%0d",
                  errors == 0 ? "PASS" : "FAIL", SRAM_MACRO, cyc, rsp_n, hits, fills_done, stg_reads, errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
     always @(posedge clk) if (rst_n) begin

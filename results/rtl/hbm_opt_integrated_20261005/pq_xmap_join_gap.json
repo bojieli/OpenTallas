@@ -1,0 +1,43 @@
+{
+  "scope": "Read-only actual WIP integration source inspection, not an RTL failure/qualification record. Peer owners alone edit source.",
+  "observation": "Production issuer xa includes op_xb in its cursors; current XMAP top still adds xb_q at s1 and does not forward new issuer parameters/input.",
+  "selected_source_snapshots_sha256": {
+    "/tmp/euclid-hbm-opt1-production-20261005/rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+    "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv": "3279784a52e1594fb9f130e6d706d3e1229eb73faff9685394b3871da5fe7db6"
+  },
+  "sources_committed_at_inspection": false,
+  "production_issuer_evidence": {
+    "path": "/tmp/euclid-hbm-opt1-production-20261005/rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+    "op_xb_input_line": 49,
+    "base_registered_line": 253,
+    "absolute_cursor_reset_lines": [
+      258,
+      260
+    ],
+    "wrap_base_line": 290
+  },
+  "xmap_caller_evidence": {
+    "path": "/home/ubuntu/pauli-hbm-opt3-layout/rtl/hbm_accel/sm/ot_hbm_accel_sm_pq_xmap.sv",
+    "issuer_instance_line": 149,
+    "missing_connections": [
+      "ENABLE",
+      "PQ_ENABLE",
+      "op_xb"
+    ],
+    "extra_base_add_line": 171,
+    "expression": "s1_xa <= xa + xb_q;"
+  },
+  "inferred_interaction": "Naive substitution either leaves default-disabled production issue/unbound op_xb or double-adds nonzero ring base. No simulator result is asserted.",
+  "required_owner_join": [
+    "Euclid production top selects Pauli XMAP leaf with actual forwarding, or Pauli explicit default-off production issuer hook forwards enables/op_xb and uses absolute xa only in production mode.",
+    "Preserve producing-column G1 select, current ring disjoint/dependency waits, negative test, and nonzero-base/wrap stress."
+  ],
+  "heavy_job_launched": false,
+  "new_combined_cycles": null,
+  "delivered_to": [
+    "Euclid",
+    "Pauli",
+    "Kepler"
+  ],
+  "no_peer_RTL_changes": true
+}

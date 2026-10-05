@@ -349,6 +349,7 @@ module tb_mac_lane_pipe_equiv;
             $display("PASS mac_lane_pipe: %0d descriptors including five FP8 pairings and four refusals, write streams and error codes identical to ot_a3_mac_lane", cases);
         else
             $display("FAIL mac_lane_pipe: %0d mismatches over %0d descriptors", bad, cases);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

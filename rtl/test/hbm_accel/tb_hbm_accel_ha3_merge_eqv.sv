@@ -24,6 +24,8 @@ module tb_eqv;
         bad++; if (bad<5) $display("MISMATCH it %0d cnt %0d off %h nown %h ok %h/%h f %b/%b", it, cnt[7:0], off, nown, uo.g_on.lane_ok, un.g_on.lane_ok, f0, f1);
       end
     end
-    $display("EQV iterations 3000 mismatches %0d", bad); $finish;
+    $display("EQV iterations 3000 mismatches %0d", bad);
+    if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
+    $finish;
   end
 endmodule

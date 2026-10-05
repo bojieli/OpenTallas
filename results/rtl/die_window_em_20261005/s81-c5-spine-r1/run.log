@@ -1,0 +1,61 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/loads.lef, created 280 library cells
+[INFO ODB-0127] Reading DEF file: /work/top.def
+[INFO ODB-0128] Design: qir
+[INFO ODB-0131]     Created 23800 components and 47600 component-terminals.
+[INFO ODB-0132]     Created 2 special nets and 47600 connections.
+[INFO ODB-0134] Finished DEF file: /work/top.def
+OT_STAT insts=23800
+[ERROR PSM-0025] VDD does not contain any terminals
+OT_PSM net=VDD status=FAIL err=PSM-0025
+[ERROR PSM-0025] VSS does not contain any terminals
+OT_PSM net=VSS status=FAIL err=PSM-0025
+[INFO PSM-0040] All shapes on net VDD are connected.
+[INFO PSM-0015] Reading location of sources from: /work/vsrc_VDD.loc.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 9.23e+00 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.83e-01 V
+Average voltage  : 6.97e-01 V
+Average IR drop  : 3.31e-03 V
+Worstcase IR drop: 1.73e-02 V
+Percentage drop  : 2.48 %
+######################################
+########## EM analysis ###############
+Net                : VDD
+Corner             : default
+Maximum current    : 1.93e-03 A
+Average current    : 1.02e-04 A
+Number of resistors: 2443516
+######################################
+OT_IR net=VDD status=PASS
+[INFO PSM-0040] All shapes on net VSS are connected.
+[INFO PSM-0015] Reading location of sources from: /work/vsrc_VSS.loc.
+########## IR report #################
+Net              : VSS
+Corner           : default
+Total power      : 9.23e+00 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 3.85e-02 V
+Average voltage  : 3.70e-03 V
+Average IR drop  : 3.70e-03 V
+Worstcase IR drop: 3.85e-02 V
+Percentage drop  : 5.49 %
+######################################
+########## EM analysis ###############
+Net                : VSS
+Corner             : default
+Maximum current    : 2.81e-03 A
+Average current    : 1.08e-04 A
+Number of resistors: 2448420
+######################################
+OT_IR net=VSS status=PASS
+OT_TIME psm_s=45

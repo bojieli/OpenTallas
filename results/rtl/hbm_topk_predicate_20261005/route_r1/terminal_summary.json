@@ -1,0 +1,61 @@
+{
+  "status": "FAIL_SSFF_PRESERVED_NO_ADOPTION",
+  "source_commit": "e9be87a1fc6c3f432b324d051c9171d9c60a7220",
+  "supervisor": 920536,
+  "terminal": "NATURAL_EXIT_ROUTE0_CORNER0_ENGINEERING_FAIL",
+  "SS_setup_slack_ps": -259.39,
+  "FF_hold_slack_ps": -3.08,
+  "SS_output_slack_ps": -57.980843,
+  "SS_input_register_slack_ps": 35.1,
+  "DRC": 0,
+  "standard_cell_area_um2": 28519.8,
+  "core_area_um2": 81987.7,
+  "sequential_area_um2": 9723.47,
+  "latency_cycles": 23,
+  "II": 1,
+  "functional_gate": "PASS2000_ZERO_MISMATCH",
+  "adopted": false,
+  "setup_path": {
+    "start": "u_selector.g_node[3].m.c1.q[276]",
+    "end": "u_selector.g_node[3].m.c2.q[277]",
+    "source": "rtl/gpu/ot_gpu_router_topk.sv ot_gpu_topk_cs J2",
+    "comparison_width": 42,
+    "clock_Q_ps": 97.14,
+    "comparison_cells_ps": 684.24,
+    "selection_and_buffer_cells_ps": 214.19,
+    "data_net_delay_ps_rounded": 9.5,
+    "data_delay_ps": 1005.07
+  },
+  "hold_path": {
+    "start": "u_selector.lane_fin[1][217]",
+    "end": "u_selector.g_node[7].m.s0[91]",
+    "clock_Q_ps": 43.3,
+    "data_logic_and_net_ps": 16.67,
+    "arrival_ps": 328.71,
+    "required_ps": 331.8
+  },
+  "next_mandatory_cones": [
+    "42-bit merge unsigned compare/select",
+    "SS output boundary",
+    "FF lane_fin to merge s0 short data path"
+  ],
+  "remote_retained_context": "ot-epyc2:/srv/opentallas-scratch/jobs/peirce-topk-predicate-route-r1",
+  "dependency_release": false,
+  "file_sha256": {
+    "5_route_drc.rpt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "6_finish.rpt": "03af4ac97d945e7e03952389361a98bc1ea7ad8deb0e069653e79bc1675c8ee3",
+    "admission.txt": "5174d8b6de33135d26bd232f81a007de96799d801799d502fda1e3332d008f92",
+    "config.mk": "c913eb8a110cf4e570dc618f01c5c18575ab8e77ca4e9ea5bb8aebd98aea75f2",
+    "constraint.sdc": "6160b1d47e326c9e6c0f081a7dc34f67fb156e3fb6dd4ec1c2ff41620e2c7c86",
+    "corner.log": "00d392129cd0823357f42a21652eb47c5d32dab146fac03debf29e3fb5e78416",
+    "corner_sta.json": "4d523d902cbc972835f5f267bfc526ddb00a97d79439105b06b0f77b595a7a81",
+    "exit": "9c2eda766e635ce14d27fe9f20e6279edf15e3eb94c8d9d93b5c48a9cef61456",
+    "metadata.json": "963067515ed86816276323383571afe17a8c1b8a3dba176a3bf0bbd9014731e9",
+    "physical.json": "cd012f2b64f88be50b49b3d0a39e3b84ff18be1c6bb8547252335171394cdfcc",
+    "run.sh": "6237f28e804ccb792c88be77a740559c45cd432eeb03a204d4a515652cc4e836",
+    "w18_sta_ff.log": "cb05c5abb3d227c8f918c9a014ff92e2edeb32884fb13688f016a9721b895cae",
+    "w18_sta_ff.tcl": "59963ed70ee01e8be8e2ed2209e178cc697acc2b6756f88918ebce9ac42f8a25",
+    "w18_sta_ss.log": "d3a1785a90c2cfb31f73fb2fd8dd08e023de0865e80b3db39f2ec0620e2cf04f",
+    "w18_sta_ss.tcl": "813e20845e779b97b3b08b3a32c1d4280292712fc41a9d4121a707694c733e8f"
+  }
+}

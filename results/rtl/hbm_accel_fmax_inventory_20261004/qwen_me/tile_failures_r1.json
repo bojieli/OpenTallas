@@ -1,0 +1,328 @@
+{
+  "context": {
+    "adopted": false,
+    "both_standalone_routes_false_path_io": true,
+    "enclosing_boundary_qualification": false,
+    "next_action": "Claude source-owned diagnosis of these actual cones plus DRV/clock context; no blind recipe, replay, restart or clock relaxation.",
+    "vehicle_P8191_TP2": {
+      "L0_cycles": 6743,
+      "L2_cycles": 33108,
+      "reference": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/vehicle",
+      "scope": "Existing exact vehicle evidence only; no TP4/full36/head or SSFF transfer"
+    }
+  },
+  "policy": {
+    "hold_corner": "FF",
+    "hold_uncertainty_ps": 25,
+    "period_ps": 833,
+    "setup_corner": "SS",
+    "setup_uncertainty_ps": 60
+  },
+  "records": [
+    {
+      "DRV": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 15
+      },
+      "antenna": 0,
+      "case": "tile_tp2_t4",
+      "closes_signoff": false,
+      "completed_at": "2026-10-05T08:07:52.864192+00:00",
+      "context_latency": {
+        "ACC_LAT": 7,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "RTL_changed": false,
+        "TREE_LAT": 7,
+        "new_edges": 0,
+        "scope": "Existing source schedule retained, no added cut or recipe selected. Clock does not close; no measured physical token latency or clock lowering credited."
+      },
+      "corner_exit": 0,
+      "drc": 0,
+      "hold_ff": {
+        "check": "hold",
+        "corner": "ff",
+        "errors": [],
+        "odb_sha256": "c0ebb8e33247c11178358d1d5f086aa6bea59e22dc8889e9c72f921e3c03466f",
+        "sdc_sha256": "4b7bb3018fedab25622dab579831eed7ffcff8fb5775404ba08019260eea0979",
+        "spef_sha256": "7a1141bf361296a8fd2fe11784c732cbac49ce2ad9a47280f5a67845a1a2c382",
+        "tns_ps": 0.0,
+        "violating_d_pins": 0,
+        "worst_input_to_reg_slack_ps": Infinity,
+        "worst_output_port_slack_ps": 1000000000.0,
+        "worst_reg_to_reg_slack_ps": 0.93,
+        "worst_register_d_slack_ps": 0.928924,
+        "worst_slack_ps": 0.93
+      },
+      "mapped_area": {
+        "cells": 650355,
+        "core_um2": 248826,
+        "excludes": "weight/code macros, VM, spine, service, parent routes/PG/clock; no parent fit claim",
+        "logic_tiles_per_die": 1536,
+        "replicated_logic_cell_mm2_only": 128.274432,
+        "replicated_logic_core_mm2_only": 382.196736,
+        "sequential_um2": 35487.6,
+        "standard_cell_um2": 83512
+      },
+      "parameters": {
+        "ACC_LAT": 7,
+        "CODE_BANKS": 10,
+        "FAST_ISSUE": 1,
+        "GT": 6144,
+        "IREG": 1,
+        "KV_LOCAL": 0,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "NREG": 1,
+        "NW": 18,
+        "SMIN": 6,
+        "TREE_LAT": 7
+      },
+      "process_exit": 0,
+      "setup_ss": {
+        "check": "setup",
+        "corner": "ss",
+        "errors": [],
+        "odb_sha256": "c0ebb8e33247c11178358d1d5f086aa6bea59e22dc8889e9c72f921e3c03466f",
+        "sdc_sha256": "4b7bb3018fedab25622dab579831eed7ffcff8fb5775404ba08019260eea0979",
+        "spef_sha256": "7a1141bf361296a8fd2fe11784c732cbac49ce2ad9a47280f5a67845a1a2c382",
+        "tns_ps": -4521.4,
+        "violating_d_pins": 189,
+        "worst_input_to_reg_slack_ps": Infinity,
+        "worst_output_port_slack_ps": 1000000000.0,
+        "worst_reg_to_reg_slack_ps": -83.83,
+        "worst_register_d_slack_ps": -83.8255,
+        "worst_slack_ps": -83.83
+      },
+      "source_pins": [
+        {
+          "path": "rtl/hdc/ot_hdc_fpu.sv",
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fastfp.sv",
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_delay.sv",
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_sfu.sv",
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_matvec.sv",
+          "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+          "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+          "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_prefix.sv",
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+          "sha256": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_w12_arith.sv",
+          "sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        }
+      ],
+      "verdict": "FAIL",
+      "worst_cone_source_semantics": "s3_x[94] = group2 BF16 exponent bit30, shared across16 lane multipliers; ot_qwen_w12_bmul dec()+signed exponent addition ->s1_e[8]. Hold is final registered add bypass-code ->y[18] OAI22.",
+      "worst_cones": {
+        "ff": {
+          "endpoint": "u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.y[18]$_DFF_PN0_",
+          "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/w18_sta_ff.log",
+          "startpoint": "u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.u_cc.g_r.r[51]$_DFF_PN0_"
+        },
+        "ss": {
+          "endpoint": "u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_",
+          "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp2_t4/w18_sta_ss.log",
+          "startpoint": "u_me.s3_x[94]$_SDFF_PN0_"
+        }
+      }
+    },
+    {
+      "DRV": {
+        "max_cap_violations": 0,
+        "max_fanout_violations": 0,
+        "max_slew_violations": 6
+      },
+      "antenna": 0,
+      "case": "tile_tp4_t4",
+      "closes_signoff": false,
+      "completed_at": "2026-10-05T07:35:40.117892+00:00",
+      "context_latency": {
+        "ACC_LAT": 7,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "RTL_changed": false,
+        "TREE_LAT": 7,
+        "new_edges": 0,
+        "scope": "Existing source schedule retained, no added cut or recipe selected. Clock does not close; no measured physical token latency or clock lowering credited."
+      },
+      "corner_exit": 0,
+      "drc": 0,
+      "hold_ff": {
+        "check": "hold",
+        "corner": "ff",
+        "errors": [],
+        "odb_sha256": "296f2f9e4f091283dc6eb6caebbb3f7b6158f1eba402c593ebfb2f69c09da8ea",
+        "sdc_sha256": "8a43c8da96e5f67aec74db5d9b391723d8e4d5e8b85b623778c187620e9a9abd",
+        "spef_sha256": "d099ea945968d22b4a8ab983a29d273fa34a173a320f46ed72d73620fe3a4643",
+        "tns_ps": -1.6,
+        "violating_d_pins": 1,
+        "worst_input_to_reg_slack_ps": Infinity,
+        "worst_output_port_slack_ps": 1000000000.0,
+        "worst_reg_to_reg_slack_ps": -1.64,
+        "worst_register_d_slack_ps": -1.640743,
+        "worst_slack_ps": -1.64
+      },
+      "mapped_area": {
+        "cells": 633744,
+        "core_um2": 243948,
+        "excludes": "weight/code macros, VM, spine, service, parent routes/PG/clock; no parent fit claim",
+        "logic_tiles_per_die": 1536,
+        "replicated_logic_cell_mm2_only": 124.8182784,
+        "replicated_logic_core_mm2_only": 374.704128,
+        "sequential_um2": 34731.1,
+        "standard_cell_um2": 81261.9
+      },
+      "parameters": {
+        "ACC_LAT": 7,
+        "CODE_BANKS": 5,
+        "FAST_ISSUE": 1,
+        "GT": 6144,
+        "IREG": 1,
+        "KV_LOCAL": 0,
+        "KV_PREP": 3,
+        "MEM_EXTRA": 1,
+        "MUL_LAT": 6,
+        "NREG": 1,
+        "NW": 18,
+        "SMIN": 7,
+        "TREE_LAT": 7
+      },
+      "process_exit": 0,
+      "setup_ss": {
+        "check": "setup",
+        "corner": "ss",
+        "errors": [],
+        "odb_sha256": "296f2f9e4f091283dc6eb6caebbb3f7b6158f1eba402c593ebfb2f69c09da8ea",
+        "sdc_sha256": "8a43c8da96e5f67aec74db5d9b391723d8e4d5e8b85b623778c187620e9a9abd",
+        "spef_sha256": "d099ea945968d22b4a8ab983a29d273fa34a173a320f46ed72d73620fe3a4643",
+        "tns_ps": -465.2,
+        "violating_d_pins": 63,
+        "worst_input_to_reg_slack_ps": Infinity,
+        "worst_output_port_slack_ps": 1000000000.0,
+        "worst_reg_to_reg_slack_ps": -18.91,
+        "worst_register_d_slack_ps": -18.908098,
+        "worst_slack_ps": -18.91
+      },
+      "source_pins": [
+        {
+          "path": "rtl/hdc/ot_hdc_fpu.sv",
+          "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+          "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fastfp.sv",
+          "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_delay.sv",
+          "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_sfu.sv",
+          "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_matvec.sv",
+          "sha256": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_me_array_w12.sv",
+          "sha256": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_rom_tile_w12.sv",
+          "sha256": "2f56c08aae8c37f52399b4683c2e424b645e77543766c640578b9c8edba6e64a"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+          "sha256": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+          "sha256": "e0fad4ad833a7de2839e713e43159c6d04d37f70e66ca19fb4ec1c7a73bc6fc7"
+        },
+        {
+          "path": "rtl/hdc/ot_hdc_prefix.sv",
+          "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_w12_matvec.sv",
+          "sha256": "458af5e0d95283c370bf6608112b8af088f5ed45f4506f28e7125f5630e47b2e"
+        },
+        {
+          "path": "rtl/hdc/ot_qwen_w12_arith.sv",
+          "sha256": "e861ebd0de6fe769e9409b9feacb173f20c4c4ae2842218da1b6a3643f7835f4"
+        },
+        {
+          "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+          "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+        }
+      ],
+      "verdict": "FAIL",
+      "worst_cone_source_semantics": "Captured KV offset r_part[9] ->8-row CSA ->AW24 kept prefix sum ->off[group2][21], third KV_PREP edge. Hold captured add A-cut r[95] ->s1_code[12] inverter; separate cone from offset setup.",
+      "worst_cones": {
+        "ff": {
+          "endpoint": "u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.s1_code[12]$_DFF_P_",
+          "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/w18_sta_ff.log",
+          "startpoint": "u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.u_ca.g_r.r[95]$_DFF_PN0_"
+        },
+        "ss": {
+          "endpoint": "u_me.genblk2.g_kv_addr_prep.off[2][21]$_DFF_P_",
+          "raw_log": "results/rtl/hbm_accel_fmax_inventory_20261004/qwen_me/routes/tile_tp4_t4/w18_sta_ss.log",
+          "startpoint": "u_me.genblk2.g_kv_addr_prep.g_off[2].r_part[9]$_DFF_P_"
+        }
+      }
+    }
+  ],
+  "schema": "opentallas.qwen-me.two-tile-terminal-failures.v1",
+  "source_unchanged": true,
+  "verdict": "FAIL"
+}
