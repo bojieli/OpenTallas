@@ -22,7 +22,7 @@ module tb_hbm_qwen_code_pair_join;
  o.id.producer=64'h12345678;o.id.transport=9;o.id.caller=16'h8123;
  o.id.client=16;o.id.irs_serial=n+1;o.physical_tag=12'(n);o.beat=5'(n%16);
  o.data=payload[n];expected=o.id;sv=1;
- @(posedge sc);#1;while(!sr)begin @(posedge sc);#1;if(fault)$fatal(1,"delivery fault n=%0d",n);end
+ @(posedge sc);while(!sr)begin @(posedge sc);if(fault)$fatal(1,"delivery fault n=%0d",n);end
  @(negedge sc);sv=0;@(posedge sc);#1;
  end endtask
  task read_word(input integer n);
