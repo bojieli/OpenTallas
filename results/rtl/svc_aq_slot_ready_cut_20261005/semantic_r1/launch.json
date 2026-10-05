@@ -1,0 +1,26 @@
+{
+  "pid": 1049020,
+  "source_commit": "1e646051941a907b6c991c2451d873630a5483c0",
+  "host": "ot-epyc2",
+  "worktree": "/srv/opentallas/repos/euclid-svc-aq-slot-ready-1e646-20261005",
+  "output": "/srv/opentallas-scratch/jobs/euclid-svc-aq-slot-ready-semantic-r1",
+  "pins": {
+    "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_pc_aq_slot_ready_cut.sv": "4b1fc50a599072467a26cfe4e1e26d89b98f230b79ec643b13c9eb1ceb609bc2",
+    "rtl/hbm_accel/svc/aq_slot_ready_cut/ot_hbm_r14_stream_stack_aq_slot_ready_cut.sv": "b80638055afdd559d9ce956c740827b7d8fe87d95d06096e67f70d83e70a06d5",
+    "rtl/test/hbm_fmax_svc/tb_svc_aq_slot_ready_lockstep.sv": "3590cc5854e3ec426be8a331eda4c70033033e0f15e064a068112786df478229",
+    "tools/svc_aq_slot_ready_lockstep.sh": "98f2311c0fd600ff1f417cf5771bf5381952caf231e4b763fa4e27118e99593f",
+    "results/uarch/hbm_stream_aq_slot_ready_cut_20261005/model.json": "9e387cf7736698aae91324c58a9e8d041bb650d49ac80da5d80c1848f100b63c",
+    "tools/uarch_model.py": "20697a0185d9cb66232e9f84f3a75d95bc64bf28b1d7dc6fdff8b305bce6e2f3"
+  },
+  "admission_GiB": 2,
+  "caps": null,
+  "gate": "200kcycles twoPCs default0+enable1 vs49fa; alloutputs realgrantcreditrefreshwarmreset +validslot/headinvariant+queuede bt",
+  "timestamp": "2026-10-05T04:58:04.984490+00:00",
+  "MemAvailable": "MemAvailable:   1011692164 kB",
+  "disk_free_bytes": 433671983104,
+  "load": [
+    33.43408203125,
+    39.837890625,
+    47.22314453125
+  ]
+}

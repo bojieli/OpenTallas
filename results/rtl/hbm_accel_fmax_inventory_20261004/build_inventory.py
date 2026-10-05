@@ -90,6 +90,20 @@ if ctl_path.exists():
                   "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/sim_spec3_s8/run.log",
                   note="Retained terminal reports 2 mismatches although exit0; positive routed slack does not permit adoption", owner="Claude (exactness escalation)"))
 
+
+# New source-selected spec successor: historical failed spec_f3 stays blocked.
+spec_path = pathlib.Path(__file__).parent / "ctl_spec_token_edge_20261005/closure.json"
+if spec_path.exists():
+    spec = json.loads(spec_path.read_text())
+    row = r(spec["module"] + " " + spec["label"] + " (source-selected)", "DS", "ctl", "closed_variant",
+            "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_spec_token_edge_20261005/corner_sta.json",
+            spec["SS_register_ps"], spec["FF_hold_ps"], P, "routed",
+            spec["cycle_scope"], owner="Sagan (Codex item9 ctl); Pauli semantic source")
+    row.update(canonical_module=spec["module"], parameters=spec["parameters"],
+               source_pins=spec["source_pins"], ss_worst_slack_ps=spec["SS_worst_ps"],
+               cycle_delta=0, complete_accelerator_qualified=False)
+    rows.append(row)
+
 limiter = {
  "as_built_sm_clock_ghz": 0.5897,
  "set_by": "ot_gpu_bulk_copy (DS line 1088) consume loop cons_p -> 1024:1 full[cons_p] -> take: screen 590 MHz (-863 ps at 0.833 ns), "

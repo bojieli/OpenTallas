@@ -28,5 +28,10 @@
     "placed_cells_um2": 22022.5,
     "core_area_um2": 68379.6,
     "status": "LIVE_PARTIAL_NOT_ROUTED"
-  }
+  },
+  "maximum_slot_cell_utilization": 0.55,
+  "required_slot_area_before_additional_repair_um2_ESTIMATE": 45670.16756363636,
+  "available_slot_cell_area_um2": null,
+  "additional_repair_cell_budget_um2": null,
+  "utilization_source": "pinned clock_r2 config.mk PLACE_DENSITY=0.55; no density change"
 }
