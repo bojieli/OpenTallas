@@ -289,15 +289,32 @@ def cmd_bind_schedules(a):
             source = execution.source.nodes[node]
             rank_dispatches=[]
             for rank in range(4):
-                dispatch=execution.dispatch(node,rank,expert_ids=eids if b["selector_slot"] is not None else None)
                 resolved=execution.source.resolve(node,rank,expert_ids=eids if b["selector_slot"] is not None else None)
+                try:
+                    dispatch=execution.dispatch(node,rank,expert_ids=eids if b["selector_slot"] is not None else None)
+                except ValueError as error:
+                    if str(error)!="original native ME admission fails":
+                        raise
+                    from dsrom_native_weight_address_join import me_failures
+                    # Record source/CFG geometry even when ORIGINAL native ME
+                    # cannot issue. This is NOT an admitted/emitted command.
+                    dispatch=dict(fragments=[])
+                    for rf in resolved["fragments"]:
+                        m=rf["matrix"]; row=execution.stage_join.by_identity[(L,m["alias"])]
+                        dispatch["fragments"].append(dict(stage=row["stage"],rank=rank,
+                            die_id=rf["die_id"],phase=row["phase"],key=row["key"],
+                            gather_local_rows=rf["gather_local_rows"],ordered_K=rf["ordered_K"],
+                            source_matrix_sha256=row["matrix_sha256"],
+                            cfg_logical_range=[25*row["phase"],25*(row["phase"]+1)],
+                            native_dispatch_refused=True,native_admission_failures=me_failures(source["instruction"]),
+                            source_instruction=source["instruction"]))
                 fragments=[]
                 for f,rf in zip(dispatch["fragments"],resolved["fragments"]):
                     m=rf["matrix"]
                     record={k:v for k,v in f.items() if k not in ("word","original_word")}
                     record.update(alias=m["alias"],tensor=m["tensor"],
                                   source_rank_slice=rf["source_slice"],
-                                  emitted_word_sha256=hashlib.sha256(f["word"].to_bytes(256,"little")).hexdigest())
+                                  emitted_word_sha256=hashlib.sha256(f["word"].to_bytes(256,"little")).hexdigest() if "word" in f else None)
                     fragments.append(record)
                     if rank==0:
                         matrix_sources.setdefault(m["alias"],[]).append(dict(
@@ -316,6 +333,8 @@ def cmd_bind_schedules(a):
             stages={m["stage"] for m in mats}
             if len(stages)!=1:
                 raise ValueError((L,grp,"existing emitter requires single stage",stages))
+            if any(m["K"]!=mats[0]["K"] or (m["fmt"]=="bf16")!=(mats[0]["fmt"]=="bf16") for m in mats):
+                raise ValueError((L,grp,"existing emitter K/format grouping changed"))
             groups=phase_groups(mats)
             for group in groups:
                 name=f"L{L}.{grp}"+("" if len(groups)==1 else "."+"+".join(m["alias"] for m in group))
@@ -340,7 +359,9 @@ def cmd_bind_schedules(a):
             phases=phases,rank=0,region_bounds=rb,bf_sites=sorted(bfs),
             allocation="canonical S81 NP2417/BF519/R128; NO R93 remap",
             source_schedule_bound=True,native_execution_qualified=False,
-            internal_activation_payloads_provided=False,accepted_runtime_journal=None)
+            internal_activation_payloads_provided=False,accepted_runtime_journal=None,
+            native_dispatch_refusals=[dict(node=n["node"],failures=r["fragments"][0]["native_admission_failures"])
+                for n in native for r in n["ranks"][:1] if r["fragments"][0].get("native_dispatch_refused")])
         path=out/f"L{L:02d}.json.gz"
         path.write_bytes(gzip.compress(json.dumps(record,sort_keys=True,separators=(",",":")).encode(),mtime=0))
         files.append(dict(layer=L,path=path.name,sha256=sha(path),
