@@ -99,7 +99,7 @@ module tb_hbm_accel_gu_retirement #(parameter integer EXPORT=1);
     accept=1;accepted=1;exports++;
     @(negedge clk);accept=0;
    end
-   wait(done||fault);if(fault || (EXPORT && !terminal)) $fatal(1,"terminal fault/missing GU completion span=%0d",span);
+   wait(done||fault);@(negedge clk);if(fault || (EXPORT && !terminal)) $fatal(1,"terminal fault/missing GU completion span=%0d done=%b fault=%b enrolled=%b seen=%b terminal=%b",span,done,fault,dut.g_on.gu_en,dut.g_on.gu_seen,terminal);
    @(negedge clk);
   end
   if(stores!=9216 || acks!=1536 || (EXPORT && (rows!=9216 || exports!=768))) $fatal(1,"row/ack totals");
