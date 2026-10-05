@@ -1,0 +1,45 @@
+FAILED: FlowError: yosys synthesis failed with exit 1:
+g hashes of 6905 cells of `\ot_hbm_accel_issue_pq_sm_boundary'.
+Finding duplicate cells in `\ot_hbm_accel_issue_pq_sm_boundary'.
+Computing hashes of 6897 cells of `\ot_hbm_accel_issue_pq_sm_boundary'.
+Finding duplicate cells in `\ot_hbm_accel_issue_pq_sm_boundary'.
+<suppressed ~4134 debug messages>
+Finding identical cells in module `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000010'.
+Computing hashes of 2 cells of `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000010'.
+Finding duplicate cells in `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000010'.
+Finding identical cells in module `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000011'.
+Computing hashes of 3 cells of `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000011'.
+Finding duplicate cells in `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000011'.
+Finding identical cells in module `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000000111'.
+Computing hashes of 7 cells of `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000000111'.
+Finding duplicate cells in `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000000111'.
+Finding identical cells in module `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000001'.
+Computing hashes of 1 cells of `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000001'.
+Finding duplicate cells in `$paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000001'.
+Finding identical cells in module `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000010100'.
+Computing hashes of 20 cells of `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000010100'.
+Finding duplicate cells in `$paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000010100'.
+Removed a total of 1378 cells.
+
+9.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+9.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_accel_issue_pq_sm_boundary..
+Finding unused cells or wires in module $paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000010..
+Finding unused cells or wires in module $paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000011..
+Finding unused cells or wires in module $paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000000111..
+Finding unused cells or wires in module $paramod\ot_hbm_accel_bc_kreg\W=s32'00000000000000000000000000000001..
+Finding unused cells or wires in module $paramod\ot_hbm_accel_smv_pipe\W=s32'00000000000000000000000000010100..
+Removed 1339 unused cells and 7029 unused wires.
+<suppressed ~1340 debug messages>
+
+9.23.5. Finished fast OPT passes.
+
+9.24. Executing ABC pass (technology mapping using ABC).
+
+9.24.1. Extracting gate netlist of module `\ot_hbm_accel_issue_pq_sm_boundary' to `<abc-temp-dir>/input.blif'..
+Replacing 1 occurrences of constant undef bits with constant zero bits
+
+ERROR: ABC failed with status F
+
+partial record written to /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r2/physical.json

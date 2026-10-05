@@ -1,0 +1,10 @@
+Actual native r3 link correction, namespace only (original archive untouched):
+lib=/srv/opentallas-scratch/claude/dsrom-suchains/swiglu/work4/obj_swiglu_W64_ROUTED1_NIN33_NOUT23_LM5_LA4_QLAT5_rtl
+cd /srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r3
+ar x "$lib/Vtb_dsrom_su_swiglu__ALL.a" Vtb_dsrom_su_swiglu_vm_classes_15.o
+objcopy --redefine-sym main=retained_generated_main Vtb_dsrom_su_swiglu_vm_classes_15.o
+cp "$lib/Vtb_dsrom_su_swiglu__ALL.a" native_swiglu.a
+ar r native_swiglu.a Vtb_dsrom_su_swiglu_vm_classes_15.o
+g++ /srv/opentallas-scratch2/jobs/hubble-gu-w2-coupled-native-r2/swiglu.o native_swiglu.a "$lib/verilated.o" "$lib/verilated_timing.o" "$lib/verilated_threads.o" -pthread -latomic -o native_swiglu
+
+The retained member contains both model routines and generated main; no whole object is dropped. Actual original/private nm main symbols and SHA256 identities are in receipt.json. Collector compilation flags are preserved in runtime_native_r2_LINK_FAIL/run.sh. Original r2 linker failure is preserved separately. No engine recompilation or RTL regeneration.

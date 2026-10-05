@@ -56,6 +56,7 @@ module tb_fp32_add_deep_equiv;
             b = ($urandom(seed) % 3 == 0) ? {~a[31], a[30:4], r4} : rnd(0);
         end
         $display("EQUIV split=%0d extra=%0d checked=%0d bad=%0d", SPLIT, EXTRA, checked, bad);
+        if (bad != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

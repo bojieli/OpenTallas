@@ -9,13 +9,10 @@
   "gpu_ds"
  ],
  "headline": [
-  "qwen_rom.ar_tok_s_8k_realmem",
-  "qwen_rom.dspark_tok_s_8k",
-  "qwen_rom.ar_tok_s_8k_wirebound",
-  "qwen_rom.dspark_tok_s_8k_wirebound",
-  "qwen_rom.dspark_speedup_vs_ar_8k",
-  "qwen_rom.ar_over_h100_tp8_8k",
-  "qwen_rom.dspark_over_h100_tp8_ar_8k",
+  "qwen_rom.operating_mode_8k",
+  "qwen_rom.actual_fulltoken_cycles_8k_stream4",
+  "qwen_rom.dspark_tok_s_8k_stream4",
+  "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
   "ds_rom.ar_tok_s_1m",
   "ds_rom.mtp_tok_s_1m",
   "ds_rom.measured_share_of_ar",
@@ -45,7 +42,7 @@
    "pointer": "per_user_accepted_tok_s",
    "unit": "tok/s",
    "status": "partial",
-   "note": "HEADLINE. L0 verify/AR/drafter measured exact at P8187..8191 on REAL_MEM one-stack path, x36 composed; tau third-party published (not measured); drafter ingest+Markov priced; no SS/FF of new logic"
+   "note": "SUPERSEDED as headline (2026-10-04): one-stack REAL_MEM path, whose verify shared a KV-fill stall that STREAM4 removed; L0 verify/AR/drafter measured exact at P8187..8191 on REAL_MEM one-stack path, x36 composed; tau third-party published (not measured); drafter ingest+Markov priced; no SS/FF of new logic"
   },
   {
    "target": "qwen_rom",
@@ -67,7 +64,7 @@
    "pointer": "ar.bound_tok_s",
    "unit": "tok/s",
    "status": "partial",
-   "note": "measured REAL_MEM 527,663 cycles + 6,363: worst block word 64 vs RTL tws 38 (+26/ME op), F2 two-beat +1/ME op, hub-stack 53 vs 46 (+7 x 2 a layer); stage counts are floorplan geometry at 430.56 um, no routed-path STA; die GRT not closed"
+   "note": "measured REAL_MEM 527,663 cycles + 6,363: worst block word 64 vs RTL tws 38 (+26/ME op), F2 two-beat +1/ME op, hub-stack 53 vs 46 (+7 x 2 a layer); stage counts are floorplan geometry at 430.56 um, no routed-path STA; die global route closed at b3r16B40 (50-it GRT 0 overflow)"
   },
   {
    "target": "qwen_rom",
@@ -89,7 +86,7 @@
    "pointer": "speedup_vs_ar",
    "unit": "x",
    "status": "partial",
-   "note": "both sides on the REAL_MEM one-stack path"
+   "note": "SUPERSEDED: both sides on the REAL_MEM one-stack path; on STREAM4 DSpark is 0.704x (AR mode)"
   },
   {
    "target": "qwen_rom",
@@ -153,7 +150,7 @@
    "pointer": "headline_numbers.near_hbm_selected_for_build.tokens_per_s",
    "unit": "tok/s",
    "status": "modelled",
-   "note": "MODEL_ONLY; near-HBM not integrated, hub/row-engine P&R FAIL"
+   "note": "MODEL_ONLY; near-HBM attention DROPPED 2026-10-04 (retry_20261004/verdict.json)"
   },
   {
    "target": "qwen_rom",
@@ -618,6 +615,17 @@
   },
   {
    "target": "qwen_rom",
+   "section": "levers",
+   "key": "nearhbm_retry_verdict",
+   "label": "Near-HBM attention final verdict (retry 2026-10-04)",
+   "path": "results/uarch/qwen_nearhbm_attn_rtl_20261003/pnr/retry_20261004/verdict.json",
+   "pointer": "verdict",
+   "unit": "verdict",
+   "status": "measured",
+   "note": "DROP: hub r9 post-CTS WNS -88.95 ps, row engines unplaced at 6 h; KV path stays STREAM4"
+  },
+  {
+   "target": "qwen_rom",
    "section": "energy",
    "key": "energy_per_token_mj_stale",
    "label": "Energy per token, Qwen ROM 8K AR (scenario A)",
@@ -946,8 +954,8 @@
    "section": "rate",
    "key": "ar_tok_s_1m_reindex_partial",
    "label": "Per-user AR tok/s at 1M (adopted: candidate-block gather re-index, CKV lat 259) [superseded by all-measured]",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.AR_tok_s",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.AR_tok_s",
    "unit": "tok/s",
    "status": "partial",
    "note": "Newest record (9db526f58). Context-dependent terms are full-shape RTL at pos 1,048,575; context-independent nodes come from the S81 graph model. Gather adopted (idxkey verdict keeps it as baseline)."
@@ -967,20 +975,53 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m",
-   "label": "Per-user MTP tok/s at 1M (all-measured composition, recovery baseline; wavefront verify + DSpark draft, third-party tau)",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, recovery baseline; wavefront verify + DSpark draft, adopted owner-blend tau)",
    "path": "results/rtl/dsrom_recovery_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_tau_published",
+   "label": "SENSITIVITY: DS ROM MTP tok/s at 1M at the published V4.1 tau 3.8879 (recovery baseline)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.tau_sensitivity.published.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "same step as the headline; vLLM PR #57432 GSM8K-only value, kept as a sensitivity by owner decision 2026-10-05; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_tau_published_low",
+   "label": "SENSITIVITY: DS ROM MTP tok/s at 1M, published V4.1 range low (tau 3.43)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.tau_sensitivity.published_low.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "mtp_tok_s_1m_tau_published_high",
+   "label": "SENSITIVITY: DS ROM MTP tok/s at 1M, published V4.1 range high (tau 4.32)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.tau_sensitivity.published_high.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m_reindex_partial",
-   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, third-party tau) tok/s at 1M [superseded by all-measured]",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.MTP_fused_tok_s",
+   "label": "Per-user speculative (DSpark MTP, L1 fused draft head, owner-blend tau) tok/s at 1M [superseded by all-measured]",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.MTP_fused_tok_s",
    "unit": "tok/s",
    "status": "partial",
    "note": "Draft 105.55 us measured on the reduced vehicle, scaled to full shape by l1_chain_ratio 1.0106."
@@ -989,20 +1030,20 @@
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_tok_s_1m_allmeasured_asbuilt",
-   "label": "Per-user MTP tok/s at 1M (all-measured composition, as built; wavefront verify + DSpark draft, third-party tau)",
+   "label": "Per-user MTP tok/s at 1M (all-measured composition, as built; wavefront verify + DSpark draft, adopted owner-blend tau)",
    "path": "results/rtl/dsrom_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP.MTP_tok_s",
    "unit": "tok/s",
    "status": "composed_from_measured",
-   "note": "as-built S81 microarchitecture, before the recovery levers"
+   "note": "as-built S81 microarchitecture, before the recovery levers; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "mtp_as_built_tok_s_1m",
    "label": "MTP tok/s at 1M, as-built draft",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.as_built_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.as_built_us",
    "unit": "tok/s",
    "status": "partial",
    "note": "Key is named *_us but holds tok/s."
@@ -1012,8 +1053,8 @@
    "section": "rate",
    "key": "mtp_l1l2_nv5_tok_s_1m",
    "label": "MTP at 1M with L1+L2 NV5 batched draft (not closed)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.l1l2_nv5_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.l1l2_nv5_us",
    "unit": "tok/s",
    "status": "unvalidated",
    "note": "L2 SS pre-layout screen fails; needs +4 head dies. Do not headline."
@@ -1034,8 +1075,8 @@
    "section": "rate",
    "key": "ar_us_1m_reindex_partial",
    "label": "AR token latency at 1M [superseded by all-measured]",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].AR_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].AR_us",
    "unit": "us",
    "status": "partial",
    "note": "110 patched nodes add up to 51.27 us measured (72.61 us modelled); the rest is the S81 graph model."
@@ -1049,15 +1090,15 @@
    "pointer": "MTP.verify_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "verify_us_1m_reindex_partial",
    "label": "MTP verify step at 1M [superseded by all-measured]",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].verify_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].verify_us",
    "unit": "us",
    "status": "partial",
    "note": ""
@@ -1071,15 +1112,15 @@
    "pointer": "MTP.II_us",
    "unit": "us",
    "status": "composed_from_measured",
-   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled)"
+   "note": "tools/dsrom_1m_allmeasured.py (default --baseline recovery); still-modelled terms listed in the record (still_modelled); wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
   },
   {
    "target": "ds_rom",
    "section": "rate",
    "key": "wavefront_ii_us_reindex_partial",
    "label": "Wavefront initiation interval [superseded by all-measured]",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.II_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.la.II_us",
    "unit": "us",
    "status": "partial",
    "note": "19.165 before the re-index fix"
@@ -1089,7 +1130,7 @@
    "section": "rate",
    "key": "ar_tok_s_1m_as_built",
    "label": "AR at 1M before re-index fix",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.AR_tok_s",
    "unit": "tok/s",
    "status": "partial",
@@ -1100,7 +1141,7 @@
    "section": "rate",
    "key": "mtp_tok_s_1m_as_built",
    "label": "MTP fused at 1M before re-index fix",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.MTP_fused_tok_s",
    "unit": "tok/s",
    "status": "partial",
@@ -1111,7 +1152,7 @@
    "section": "rate",
    "key": "ar_tok_s_1m_model",
    "label": "S81 analytical model AR at 1M",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "model.AR_tok_s",
    "unit": "tok/s",
    "status": "modelled",
@@ -1122,7 +1163,7 @@
    "section": "rate",
    "key": "ar_tok_s_1m_maskdrop",
    "label": "AR at 1M, mask-drop lever only",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "headline.levers_measured.mask_drop.AR_tok_s",
    "unit": "tok/s",
    "status": "partial",
@@ -1133,8 +1174,8 @@
    "section": "terms",
    "key": "reindex_layer_us",
    "label": "Re-index layer (L24/28/32/36)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_reindex.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_reindex.measured_composed_us",
    "unit": "us",
    "status": "composed_from_measured",
    "note": "24.8 as built"
@@ -1144,8 +1185,8 @@
    "section": "terms",
    "key": "reindex_layer_model_us",
    "label": "Re-index layer model",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_reindex.model_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_reindex.model_us",
    "unit": "us",
    "status": "modelled",
    "note": ""
@@ -1155,8 +1196,8 @@
    "section": "terms",
    "key": "csa1_full_l20_us",
    "label": "L20 global scan layer",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa1_full.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa1_full.measured_composed_us",
    "unit": "us",
    "status": "composed_from_measured",
    "note": "Interim: Codex S81 run owns L20 at 1M (SIM_ONLY so far, no timing)"
@@ -1166,8 +1207,8 @@
    "section": "terms",
    "key": "csa2_full_us",
    "label": "csa2_full layer (L2/L8/L14)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa2_full.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa2_full.measured_composed_us",
    "unit": "us",
    "status": "composed_from_measured",
    "note": ""
@@ -1177,8 +1218,8 @@
    "section": "terms",
    "key": "csa_reuse_us",
    "label": "Re-use layer (csa2/csa1, 30 layers)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.csa2_reuse.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.csa2_reuse.measured_composed_us",
    "unit": "us",
    "status": "composed_from_measured",
    "note": ""
@@ -1188,8 +1229,8 @@
    "section": "terms",
    "key": "head_us",
    "label": "Head in AR path",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].per_layer_type.head.measured_composed_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].per_layer_type.head.measured_composed_us",
    "unit": "us",
    "status": "modelled",
    "note": "Listed in headline.still_modelled; wavefront uses the measured reduced-shape 12.37 us"
@@ -1199,8 +1240,8 @@
    "section": "terms",
    "key": "reindex_occupancy_us",
    "label": "Re-index stage occupancy",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "headline.levers_measured.candidate_gather.reindex_occupancy_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].stage_occupancy_us.reindex",
    "unit": "us",
    "status": "composed_from_measured",
    "note": ""
@@ -1210,7 +1251,7 @@
    "section": "terms",
    "key": "stage_hop_us",
    "label": "Stage-to-stage hop",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "constants.hop_us",
    "unit": "us",
    "status": "modelled",
@@ -1221,7 +1262,7 @@
    "section": "terms",
    "key": "draft_fused_us",
    "label": "DSpark draft, L1 fused head",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "constants.draft.fused_us",
    "unit": "us",
    "status": "composed_from_measured",
@@ -1231,19 +1272,30 @@
    "target": "ds_rom",
    "section": "terms",
    "key": "tau",
-   "label": "DSpark tau (third-party published, gamma 5)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "constants.draft.tau",
+   "label": "DSpark tau (adopted 2026-10-05: owner 6-class workload blend, harmonic, greedy, gamma 5)",
+   "path": "results/rtl/dsrom_recovery_20261004/composition.json",
+   "pointer": "MTP.tau",
+   "unit": "tokens/step",
+   "status": "partial",
+   "note": "OWNER DECISION 2026-10-05: results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json (3 classes our measurement, 3 classes LMSYS V4-Flash published upper bounds); the published V4.1 value 3.8879 (vLLM PR #57432, GSM8K only) and range 3.43-4.32 are SENSITIVITY rows; wavefront controller three variants REJECT_SS/DRV (1d1140f9a); modeled composition only, no physically qualified headline. Claude owns redesign; reset recovery is not causal."
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "tau_published_sensitivity",
+   "label": "SENSITIVITY: published V4.1 DSpark tau (gamma 5)",
+   "path": "results/speculative/third_party_acceptance_20261004/acceptance.json",
+   "pointer": "models.deepseek_v41.primary.tau",
    "unit": "tokens/step",
    "status": "published",
-   "note": "vLLM PR #57432 V4.1-Flash (results/speculative/third_party_acceptance_20261004/acceptance.json); superseded self-measured 4.159"
+   "note": "vLLM PR #57432 (GSM8K only); range 3.43-4.32; was the default 2026-10-04, sensitivity since owner decision 2026-10-05"
   },
   {
    "target": "ds_rom",
    "section": "terms",
    "key": "idx_scan_l20_frac_peak",
    "label": "L20 index scan, fraction of HBM peak",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.index_scan.ratio1_L20.fraction_of_peak",
    "unit": "fraction",
    "status": "measured",
@@ -1254,7 +1306,7 @@
    "section": "terms",
    "key": "idx_scan_l2_frac_peak",
    "label": "Ratio-2 index scan, fraction of peak",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.index_scan.ratio2_L2_L8_L14.fraction_of_peak",
    "unit": "fraction",
    "status": "measured",
@@ -1265,7 +1317,7 @@
    "section": "terms",
    "key": "window_rows_frac_peak",
    "label": "128-row WINDOW load (component reader used in composition)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
    "pointer": "hbm_per_token.window_rows.per_stack.fraction_of_peak",
    "unit": "fraction",
    "status": "measured",
@@ -1302,7 +1354,7 @@
    "pointer": "summary.asbuilt_c1.us_median",
    "unit": "us",
    "status": "measured",
-   "note": "0.06% of peak. NOT in the composition. stream_la refactor binding pending (Codex/Noether)"
+   "note": "Bare prefetch, credits 1. In the S81 chain (credits 8, S81 selection) see window_s81_asbuilt_c8_us; bound successor see window_s81_lf_*"
   },
   {
    "target": "ds_rom",
@@ -1661,8 +1713,8 @@
    "section": "levers",
    "key": "lever_l2_nv5_mtp",
    "label": "L2 NV5 batched draft MTP at 1M (SS fails)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "variants[\"candidate_gather.lat259\"].MTP_tok_s.l1l2_nv5_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259.s81_window_la\"].MTP_tok_s.l1l2_nv5_us",
    "unit": "tok/s",
    "status": "unvalidated",
    "note": ""
@@ -1693,7 +1745,7 @@
    "target": "hbm_ds",
    "section": "rate",
    "key": "mtp_tok_s_baseline_partial",
-   "label": "DS HBM speculative (DSpark MTP, third-party tau) at 1M, measured (superseded by the fully-measured composition)",
+   "label": "DS HBM speculative (DSpark MTP, published tau 3.8879) at 1M, measured (superseded by the fully-measured composition)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.mtp_tok_s",
    "unit": "tok/s",
@@ -1715,12 +1767,12 @@
    "target": "hbm_ds",
    "section": "rate",
    "key": "mtp_tau_baseline_partial",
-   "label": "DSpark acceptance tau (third-party published, gamma 5) (superseded by the fully-measured composition)",
+   "label": "DSpark acceptance tau in the superseded partial record (published 3.8879, gamma 5)",
    "path": "results/rtl/dshbm_baseline_measured_20261004/measured.json",
    "pointer": "mtp_and_accelerator.measured.tau",
    "unit": "tokens/step",
    "status": "published",
-   "note": "results/speculative/third_party_acceptance_20261004/acceptance.json; superseded self-measured 4.159"
+   "note": "superseded record, not recomposed; the composition default is the owner 6-class blend 4.159 (owner decision 2026-10-05)"
   },
   {
    "target": "hbm_ds",
@@ -3344,8 +3396,8 @@
    "section": "terms",
    "key": "measured_patch_us",
    "label": "Sum of full-shape RTL-measured node patches in the AR token (lat259 gather variant)",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "sum:variants[\"candidate_gather.lat259\"].patches|measured_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "sum:variants[\"candidate_gather.lat259.s81_window_la\"].patches|measured_us",
    "unit": "us",
    "status": "measured",
    "note": "the remainder of ar_us_1m is the S81 graph model"
@@ -3355,8 +3407,8 @@
    "section": "terms",
    "key": "measured_patch_model_us",
    "label": "Model time those patched nodes replaced",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "sum:variants[\"candidate_gather.lat259\"].patches|model_us",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "sum:variants[\"candidate_gather.lat259.s81_window_la\"].patches|model_us",
    "unit": "us",
    "status": "modelled"
   },
@@ -3365,8 +3417,8 @@
    "section": "terms",
    "key": "measured_patch_count",
    "label": "Number of measured node patches",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json",
-   "pointer": "len:variants[\"candidate_gather.lat259\"].patches",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "len:variants[\"candidate_gather.lat259.s81_window_la\"].patches",
    "unit": "nodes",
    "status": "measured"
   },
@@ -3380,6 +3432,105 @@
    "unit": "fraction",
    "status": "measured",
    "note": "rest listed in still_modelled"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_asbuilt_c8_us",
+   "label": "WINDOW load per layer, S81 chain as built (credits 8, S81 selection)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.asbuilt_c8\"].load_us_mean",
+   "unit": "us",
+   "status": "measured",
+   "note": "start -> rows staged, 4 refresh phases"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_us_mean",
+   "label": "WINDOW load per layer, S81-bound (stream_la issue per PC + REFpb pull-in)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf\"].load_us_mean",
+   "unit": "us",
+   "status": "measured",
+   "note": "own row written first (S81 order); mean over 64 refresh phases"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_us_max",
+   "label": "WINDOW load per layer, S81-bound, worst refresh phase",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf\"].load_us_max",
+   "unit": "us",
+   "status": "measured",
+   "note": ""
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_sustained_median",
+   "label": "WINDOW load sustained after first access (audit metric, cold rows), median",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf_cold\"].sustained_after_first_access.median",
+   "unit": "fraction",
+   "status": "measured",
+   "note": ">=90% rule; corrected REFpb model, 0 DRAM violations"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_lf_sustained_mean",
+   "label": "WINDOW load sustained after first access (cold rows), mean over refresh phases",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L0.lf_cold\"].sustained_after_first_access.mean",
+   "unit": "fraction",
+   "status": "measured",
+   "note": ""
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "window_s81_own_row_write_scan_cycles",
+   "label": "Own-row write (16 blocks, as-built writer) under the L20 scan",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "summary[\"L20.lf_scan\"].write_cycles.mean",
+   "unit": "cycles@833ps",
+   "status": "measured",
+   "note": "on the critical path in window-only and re-use layers"
+  },
+  {
+   "target": "ds_rom",
+   "section": "terms",
+   "key": "kgather_s81_cycles",
+   "label": "Candidate gather worst rank through the S81 wmux (corrected REFpb)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json",
+   "pointer": "kgather_s81.worst_rank.cycles",
+   "unit": "cycles@833ps",
+   "status": "measured",
+   "note": ""
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_s81_window_asbuilt",
+   "label": "AR tok/s at 1M with the S81 as-built WINDOW refill (credits 8)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "headline.s81_window.asbuilt_c8.AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "what the S81 element as built would give"
+  },
+  {
+   "target": "ds_rom",
+   "section": "rate",
+   "key": "ar_tok_s_1m_pre_window",
+   "label": "AR tok/s at 1M before the window terms (component reader)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "pointer": "variants[\"candidate_gather.lat259\"].AR_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "previous headline basis, superseded"
   },
   {
    "target": "qwen_rom",
@@ -3429,12 +3580,23 @@
    "target": "hbm_ds",
    "section": "rate",
    "key": "mtp_tok_s",
-   "label": "DS HBM speculative (DSpark block 5, third-party tau) at 1M, fully-measured verify",
+   "label": "DS HBM speculative (DSpark block 5, adopted owner-blend tau) at 1M, fully-measured verify",
    "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP_tok_s",
    "unit": "tok/s",
    "status": "partial",
    "note": "verify union increments, draft record (TU-model collectives), seed commit unvalidated"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "mtp_tok_s_tau_published",
+   "label": "SENSITIVITY: DS HBM MTP tok/s at 1M at the published V4.1 tau 3.8879",
+   "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
+   "pointer": "tau_sensitivity.published.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "same step as hbm_ds.mtp_tok_s"
   },
   {
    "target": "hbm_ds",
@@ -3451,12 +3613,12 @@
    "target": "hbm_ds",
    "section": "rate",
    "key": "mtp_tau",
-   "label": "DSpark acceptance tau (third-party, block 5)",
+   "label": "DSpark acceptance tau (adopted 2026-10-05: owner 6-class workload blend, block 5)",
    "path": "results/rtl/dshbm_1m_allmeasured_20261004/composition.json",
    "pointer": "MTP.tau",
    "unit": "tokens/step",
-   "status": "published",
-   "note": "results/speculative/third_party_acceptance_20261004"
+   "status": "partial",
+   "note": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; published 3.8879 = sensitivity"
   },
   {
    "target": "hbm_ds",
@@ -3613,6 +3775,94 @@
    "note": ""
   },
   {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us",
+   "label": "DS HBM MATCHED gate reference AR at 1M (C1 issue slots + C2 per-op drains + C3 x loading measured on the 1.2 GHz SM element; workgroup + fused SU chains credited)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "DS ROM gate bar (~2026-10-07); row corrected+wg+fused_su0.9; inherited 460.053"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us",
+   "label": "DS HBM MATCHED gate reference MTP step (verify6 + draft + seed) at 1M",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "row corrected+wg+su12; the step is tau-independent; union increments modelled (lower bound)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s",
+   "label": "DS HBM MATCHED gate reference MTP useful tok/s",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "at the adopted owner-blend tau (gate.tau)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s_tau_published",
+   "label": "SENSITIVITY: DS HBM MATCHED gate reference MTP tok/s at the published V4.1 tau 3.8879",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_tok_s_tau_sensitivity.published.MTP_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "same step as the gate"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_ar_us",
+   "label": "DS HBM corrected AR (C1-C3 measured, no levers)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "+106.81 us SM correction vs inherited"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_mtp_step_us",
+   "label": "DS HBM corrected MTP step (C1-C3 measured, no levers)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "P6 x loads 137.94 us through the as-built port"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_today",
+   "label": "DS HBM MATCHED AR at today's closing clocks",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_AR_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "SM element route open; SU m6a5 lanes not closed; index path on borrowed shared blocks"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us_today",
+   "label": "DS HBM MATCHED MTP step at today's closing clocks",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_MTP_step_us",
+   "unit": "us",
+   "status": "partial",
+   "note": ""
+  },
+  {
    "target": "hbm_qwen",
    "section": "rate",
    "key": "ar_tok_s_p8191_tp2",
@@ -3666,6 +3916,313 @@
    "unit": "fraction",
    "status": "composed_from_measured",
    "note": ""
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "operating_mode_8k",
+   "label": "Actual Qwen ROM full-token operating mode at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "operating_mode",
+   "unit": "verdict",
+   "status": "measured",
+   "note": "Native STREAM4 tile, NEAR_HBM0, DSparkOFF; full36+HEAD process0/drained. Clock not SS/FF qualified; no MTP credit."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_stream4",
+   "label": "Historical STREAM4 composed rate at assumed clock; superseded cycle basis",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
+   "pointer": "stream4.tok_per_s",
+   "unit": "tok/s",
+   "status": "composed_from_measured",
+   "note": "Historical194498-cycle component projection retained, not current full-token measurement or qualified clock/rate. Actual selected run193955cycles; measured headline reports cycles. No MTP credit."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "ar_tok_s_8k_stream4_wirebound",
+   "label": "AR per-user rate at 8K on STREAM4 with the die-floorplan wire-stage bound (measured-bound value)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/compose_P8191_token.json",
+   "pointer": "wire_bound.bound_tok_s",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "194,498 + 6,363 (wire_bound_8k deltas: 176 a layer pass, 27 a head); stage counts are floorplan geometry, no routed-path STA"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "dspark_tok_s_8k_stream4",
+   "label": "DSpark per-user accepted rate at 8K on STREAM4 (OFF: below AR; verify measured exact on STREAM4, ingest/Markov measured)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.tok_s_upper",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200; tau third-party 3.1445; 0.704x AR"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "rate",
+   "key": "dspark_speedup_vs_ar_8k_stream4",
+   "label": "DSpark speedup vs AR at 8K on STREAM4 (baseline verify program; every measured variant is below 1: DSpark off)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.speedup_vs_ar_upper",
+   "unit": "x",
+   "status": "partial",
+   "note": "MERGE_SU np4 0.742x, MERGE_SU np3 0.691-0.744x; drafter layers on REAL_MEM path, argmax/gather priced"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_breakeven_verify_layer_8k_stream4",
+   "label": "Break-even DSpark verify layer at 8K on STREAM4 (measured 17,197)",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.baseline_np4.break_even_verify_layer_draft_upper",
+   "unit": "cycles",
+   "status": "composed_from_measured"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_merge_su_np4_vs_ar",
+   "label": "DSpark with per-position SU work merged (MERGE_SU, np4) vs AR on STREAM4",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.merge_su_np4.speedup_vs_ar_upper",
+   "unit": "x",
+   "status": "partial",
+   "note": "verify layer 15,971 exact"
+  },
+  {
+   "target": "qwen_rom",
+   "section": "levers",
+   "key": "dspark_merge_su_np3_vs_ar",
+   "label": "DSpark shorter draft (MERGE_SU, np3, tau 2.5441) vs AR on STREAM4, lower-draft bound",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "pointer": "variants.merge_su_np3.speedup_vs_ar_lower",
+   "unit": "x",
+   "status": "partial",
+   "note": "verify layer 13,104 exact; upper-draft bound 0.691x"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_component_us",
+   "label": "Finite-provider Q norm: accepted command to checked completion (component only)",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.accepted_to_observed_completion_us",
+   "unit": "us",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_response_wait_us",
+   "label": "Finite Q request/response waits, including CDC/backend once",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.response_wait_us_including_CDC_backend",
+   "unit": "us",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "finite_q_requests",
+   "label": "Finite Q accepted read/write/publication-readback transactions",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "finite_provider_measured_candidate.request_counts.total",
+   "unit": "requests",
+   "status": "measured",
+   "note": "1280 Q words exact; real borrower/mixed program and physical clock unqualified. Different provider from historical wide-VM fusion; no acceleration credit."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_ar_increment_us",
+   "label": "Joint PQ+XMAP incremental AR group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.AR.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p1_l20_cycles",
+   "label": "Joint PQ+XMAP P1 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.ar_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "joint_pq_xmap_mtp_increment_us",
+   "label": "Joint PQ+XMAP incremental MTP group projection beyond measured PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "joint_PQ_XMAP.target_clock_projection.MTP.incremental_vs_measured_PQ_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Same retained descriptors/fixtures; replace shared groups once. 1.2 GHz target projection, not full-token measurement or SS/FF admission. ATTN3 representative-prefix coverage remains modeled; Qwen opt3 OFF."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "terms",
+   "key": "joint_pq_xmap_p6_l20_cycles",
+   "label": "Joint PQ+XMAP P6 L20 component cycles",
+   "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json",
+   "pointer": "results.p6_l20.result.total_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Minimum component, exact outputs and beat counts at 1 ns simulation clock; not a physically admitted full-token rate."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_increment_cycles",
+   "label": "Paired W2 interval reduction versus source-matched PQ",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.measured_component_saved_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "levers",
+   "key": "paired_w2_ar_projection_us",
+   "label": "Paired W2 incremental exposed AR projection",
+   "path": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/composition.json",
+   "pointer": "paired_W2_increment.incremental_AR_projection_us",
+   "unit": "us",
+   "status": "composed_from_measured",
+   "note": "Actual simultaneous PQ+PACK+XMAP P1 component: 86 exact original rows, 28 descriptor counts/leases and activation beats; 4048->3864, W2 609->425. Replace184cycles once over40 modeled exposed groups at target1.2GHz; no standalone analytic savings. Contextual SSFF/full-token unqualified; MTP PACK exposure unknown."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_cycles_8k_stream4",
+   "label": "Actual STREAM4 full36+HEAD token at P8191",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "actual_fulltoken_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_current_KV_checks",
+   "label": "Actual current-KV rank/layer checks after ACK drain",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "current_KV_checks",
+   "unit": "checks",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_next_token",
+   "label": "Actual full-token argmax on all4 ranks",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "next_token",
+   "unit": "token",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "qwen_rom",
+   "section": "terms",
+   "key": "actual_fulltoken_head_cycles",
+   "label": "Actual HEAD accepted stage duration",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "pointer": "head_cycles",
+   "unit": "cycles",
+   "status": "measured",
+   "note": "One actual selected plainAR STREAM4 full-token run; no extrapolation or rerun, SS/FF and MTP unqualified."
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_die_wire",
+   "label": "DS HBM matched gate AR at 1M with the die-floorplan wire stages (routed bound, GRT i50, 430.56 um/stage)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.rows.gate.AR_priced_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "gate 474.808 + routed die wire: x multicast, barrier tree delta, SU<->endpoint, endpoint<->SerDes, expert fetch, KV/index rows, attention out; stage bounds from routed length, no die-level STA"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_die_wire_floor",
+   "label": "DS HBM matched gate AR at 1M with the die-floorplan wire stages at the Manhattan floor",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "bases.stages_430_manhattan.ds_gate_AR_priced_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "no-detour floor of the same r14b floorplan; the routed bound is the separate figure"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s_die_wire",
+   "label": "DS HBM matched gate MTP tok/s with the die-floorplan wire stages (routed bound)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.rows.gate.MTP_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "same per-token traversals added to the MTP step (P6 verify walk has the AR node sequence); MTP tok/s at the gate tau 4.159"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "die_wire_added_us",
+   "label": "DS HBM die-level wire stages added to the AR token (r14b floorplan, routed bound)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "compositions.ds_matched.added_us",
+   "unit": "us",
+   "status": "partial",
+   "note": "longest-bundle bound at GRT k16 i50 (overflow 0); median 36.78 us and Manhattan floor 25.91 us in wire_stages.json bases (r8: 102.41 / 67.55 / 30.61 at overflow 128)"
+  },
+  {
+   "target": "hbm_ds",
+   "section": "physical",
+   "key": "die_mm2",
+   "label": "HBM accelerator compute die area (r14b floorplan, 858 mm2 reticle)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/floorplan.json",
+   "pointer": "die.mm2",
+   "unit": "mm2",
+   "status": "partial",
+   "note": "placed footprint from measured/placed SM context + labelled estimates; see block_ledger grades"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp4_die_wire",
+   "label": "Qwen HBM accel AR TP4 P8191 with the die collective / KV-hop wire stages",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.b_TP4_iso_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "HA8 W12 vehicle mapped to the SM die collective/service geometry; the W12 tile die is a separate floorplan (Qwen HBM tile die)"
+  },
+  {
+   "target": "hbm_qwen",
+   "section": "rate",
+   "key": "ar_tok_s_p8191_tp2_die_wire",
+   "label": "Qwen HBM accel AR TP2 P8191 with the die collective / KV-hop wire stages",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/wire_stages.json",
+   "pointer": "qwen_8k.a_TP2_same_silicon.ar_tok_s_priced",
+   "unit": "tok/s",
+   "status": "partial",
+   "note": "as TP4"
   }
  ],
  "derived": [
@@ -3700,11 +4257,11 @@
    "key": "ar_over_h100_tp8_8k",
    "label": "Qwen ROM AR / 8x H100 TP8 FP8 AR (both 8K)",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_realmem",
+    "qwen_rom.ar_tok_s_8k_stream4",
     "gpu_qwen.h100_tp8_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR",
+   "note": "not iso-area/iso-power; GPU vLLM 0.11 AR; ROM side = AR on STREAM4 (operating mode)",
    "unit": "x",
    "section": "ratios"
   },
@@ -3713,18 +4270,18 @@
    "key": "ar_over_h100_tp1_8k",
    "label": "Qwen ROM AR / 1x H100 FP8 AR (both 8K)",
    "inputs": [
-    "qwen_rom.ar_tok_s_8k_realmem",
+    "qwen_rom.ar_tok_s_8k_stream4",
     "gpu_qwen.h100_tp1_fp8_decode_8k"
    ],
    "expr": "x0/x1",
-   "note": "not iso-area",
+   "note": "not iso-area; ROM side = AR on STREAM4 (operating mode)",
    "unit": "x",
    "section": "ratios"
   },
   {
    "target": "qwen_rom",
    "key": "dspark_over_h100_tp8_ar_8k",
-   "label": "Qwen ROM DSpark / 8x H100 TP8 FP8 AR (8K)",
+   "label": "Qwen ROM DSpark / 8x H100 TP8 FP8 AR (8K) (SUPERSEDED: REAL_MEM DSpark; DSpark off at 8K)",
    "inputs": [
     "qwen_rom.dspark_tok_s_8k",
     "gpu_qwen.h100_tp8_fp8_decode_8k"
@@ -3870,11 +4427,6 @@
   },
   {
    "target": "qwen_rom",
-   "item": "Headline uses the one-stack REAL_MEM KV path; STREAM4 (4-stack) measured on L0 only, no chained/prefetch layer and no composed STREAM4 token",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/README.md"
-  },
-  {
-   "target": "qwen_rom",
    "item": "Near-HBM attention: RTL with DPI float stand-ins, not integrated; combined P8191 L0 run SIM_ONLY and FAIL (host SIGSEGV); 5,236.6 tok/s is MODEL_ONLY",
    "path": "results/rtl/qwen_combined_P8191_sim_only_20261004/result.json"
   },
@@ -3896,22 +4448,17 @@
   {
    "target": "ds_rom",
    "item": "Context-independent nodes of every layer (ROM projections, MoE, norms, softmax/p.v, hc/Sinkhorn) from the S81 unified-graph model: ~344 of 394.9 us AR",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json"
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json"
   },
   {
    "target": "ds_rom",
    "item": "L20 candidate-block select, stage hop 0.482 us (no PHY), head 13.63 us in AR path, L1+L2 NV5 draft",
-   "path": "results/rtl/dsrom_reindex_candidates_20261004/composition.json"
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json"
   },
   {
    "target": "ds_rom",
    "item": "No native S81 timing: native L20 1M run exact but SIM_ONLY (headline_timing=false)",
    "path": "results/rtl/dsrom_s81_l20_sim_only_20261004/r3_terminal.json"
-  },
-  {
-   "target": "ds_rom",
-   "item": "As-built S81 WINDOW load measures 124.5 us/layer (0.06% of peak) and is NOT in the composition (component reader used)",
-   "path": "results/rtl/hbm_path_bandwidth_audit_20261004/dsrom_window_load.json"
   },
   {
    "target": "ds_rom",
@@ -3992,6 +4539,11 @@
    "target": "hbm_qwen",
    "item": "Collective link LAT (TP4 339 cyc board / TP2 11 cyc UCIe) budget inside ot_rom_oneshot_allreduce; embedding row ~60 cyc not simulated",
    "path": "results/rtl/qwen_hbmacc_p8191_20261004/allmeasured.json"
+  },
+  {
+   "target": "qwen_rom",
+   "item": "DSpark on STREAM4 (off): drafter layers measured on the REAL_MEM path, draft argmax/gather priced, drafter layers at S < 3 bounded; single-pass MAC area is an estimate",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json"
   }
  ],
  "physical_blocks": [
@@ -4313,17 +4865,31 @@
    "ir": "-",
    "ss": "-",
    "ff": "-"
+  },
+  {
+   "target": "hbm_ds",
+   "block": "HBM accelerator compute die r8 (503.7 mm2, 32 SM + hub, die-level GRT/IR)",
+   "path": "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json",
+   "verdict": "floorplan legal + pin access PASS, IR PASS 25.41 mV all windows; GRT i50 overflow 128 (open, handed to Codex)",
+   "area": "503.68 mm2 die",
+   "route": "GRT k16 i50 overflow 128",
+   "ir": "25.41 mV",
+   "ss": "-",
+   "ff": "-"
   }
  ],
  "levers": [
   {
    "target": "qwen_rom",
    "lever": "DSpark speculative decoding",
-   "verdict": "ADOPT",
-   "path": "results/rtl/qwen_dspark_system_20261004/ctx8k/step_composed_ctx8k.json",
-   "numbers": "1.516x at 8K; P255 0.833x superseded",
+   "verdict": "OFF at 8K (AR mode): built and exact, below AR on STREAM4",
+   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json",
+   "numbers": "0.704x baseline, 0.742x MERGE_SU, 0.691-0.744x np3; free-draft 0.969x; break-even verify 10,069 vs 17,197; superseded: P255 0.833x reject, REAL_MEM 1.569x adopt",
    "figures": [
-    "qwen_rom.dspark_speedup_vs_ar_8k"
+    "qwen_rom.dspark_speedup_vs_ar_8k_stream4",
+    "qwen_rom.dspark_breakeven_verify_layer_8k_stream4",
+    "qwen_rom.dspark_merge_su_np4_vs_ar",
+    "qwen_rom.dspark_merge_su_np3_vs_ar"
    ]
   },
   {
@@ -4339,13 +4905,14 @@
   {
    "target": "qwen_rom",
    "lever": "STREAM4 4-stack KV fill",
-   "verdict": "measured, no token verdict yet",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/runtime_P8191/L0_iso/result.json",
-   "numbers": "L0 only (c14759ef1)",
+   "verdict": "selected functional path; full-token numerical PASS, physical unqualified",
+   "path": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json",
+   "numbers": "193955cycles/full36+HEAD, all144 layer outputs/currentKV checks, token18/logit42282b99, drained/process0; no qualified rate/MTP credit",
    "figures": [
     "qwen_rom.stream4_L0_cycles_P8191",
     "qwen_rom.stream4_fill_TBps",
-    "qwen_rom.stream4_fill_pct_peak"
+    "qwen_rom.stream4_fill_pct_peak",
+    "qwen_rom.ar_tok_s_8k_stream4"
    ]
   },
   {
@@ -4621,31 +5188,36 @@
    "figures": [
     "hbm_qwen.ha2_tp2_ar_ns"
    ]
+  },
+  {
+   "target": "ds_rom",
+   "lever": "S81 WINDOW full-bandwidth load (stream_la bound, per-PC issue, REFpb pull-in)",
+   "verdict": "ADOPT",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/composition.json",
+   "numbers": "see ar_tok_s_1m vs ar_tok_s_1m_s81_window_asbuilt",
+   "figures": [
+    "ds_rom.ar_tok_s_1m",
+    "ds_rom.ar_tok_s_1m_s81_window_asbuilt",
+    "ds_rom.window_s81_lf_us_mean"
+   ]
+  },
+  {
+   "target": "hbm_ds",
+   "lever": "Finite-provider Q norm",
+   "verdict": "component exact; unadopted; matched-provider gain unknown",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "numbers": "640 transactions; no free wide ports; current native provider also unpriced",
+   "figures": [
+    "hbm_ds.finite_q_component_us",
+    "hbm_ds.finite_q_response_wait_us"
+   ]
   }
  ],
  "open_items": [
   {
    "target": "qwen_rom",
-   "item": "STREAM4 chained L0-L2 run and composed STREAM4 token at P8191",
-   "owner": "Claude (Qwen 8K load path)",
-   "path": "results/rtl/qwen_rom_kv_fullbw_20261004/README.md"
-  },
-  {
-   "target": "qwen_rom",
    "item": "Native STREAM4 multi-position tagged-row hook (qwen_stream4_wire_native_tagged_rows) for the combined die",
    "owner": "Claude",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Combined P8191 L0 run host SIGSEGV; L0 prefix->near->OAR/MLPAR->head join on produced state",
-   "owner": "Laplace (Codex)",
-   "path": "/tmp/claude-review-20261003/codex_notes.txt"
-  },
-  {
-   "target": "qwen_rom",
-   "item": "Export L3..L35 P8191 prior KV from the live TP4 GPU oracle for full36",
-   "owner": "Laplace (Codex) / Claude retains GPU output",
    "path": "/tmp/claude-review-20261003/codex_notes.txt"
   },
   {
@@ -4680,9 +5252,9 @@
   },
   {
    "target": "ds_rom",
-   "item": "Bind ot_dsrom_window_stream_la into S81 (as built 0.06% of peak)",
-   "owner": "Noether (Codex)",
-   "path": "results/rtl/hbm_path_bandwidth_audit_20261004/summary.json"
+   "item": "Adopt the S81-bound window successor in the S81 runtime (WINDOW_STREAM_LA=1, LA_ISSUE_PC=1, stack controller PULLIN=16 PULLIN_BATCH=16; install_die())",
+   "owner": "Codex S81 runtime owners",
+   "path": "/tmp/claude-review-20261003/codex_notes.txt"
   },
   {
    "target": "ds_rom",
@@ -4692,7 +5264,7 @@
   },
   {
    "target": "ds_rom",
-   "item": "Carry kgather+mdrop into the S81 element for L24/28/32/36",
+   "item": "kgather HBM read bound (wmux client 1, IDX_KGATHER_PORT); still open: gathered-key scoring/select dataflow in the core and mdrop in front of the select",
    "owner": "Codex S81 owners",
    "path": "/tmp/claude-review-20261003/codex_notes.txt"
   },
@@ -4743,6 +5315,18 @@
    "item": "REFpb controller repair: repeated REFpb same bank before tRFCpb, missing tRREFD; memory timing UNQUALIFIED until remeasured",
    "owner": "Claude (wt-hbm-refpb)",
    "path": "/tmp/claude-review-20261003/codex_notes.txt"
+  },
+  {
+   "target": "ds_rom",
+   "item": "Own-row bypass lever: stage the token's own row from the block stream instead of an HBM round trip before the window job (measured own-row write ~0.6 us on the critical path of window-only/re-use layers)",
+   "owner": "unowned (Claude proposal)",
+   "path": "results/rtl/dsrom_s81_window_bind_20261004/window_load.json"
+  },
+  {
+   "target": "hbm_ds",
+   "item": "Bind real borrowed-client program lease, remaining KV/RoPE/quant and dependent publication; measure native/fused with the same finite provider before gain credit",
+   "owner": "Rawls / Euclid / Einstein; Maxwell composition",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json"
   }
  ],
  "missing_baselines": [

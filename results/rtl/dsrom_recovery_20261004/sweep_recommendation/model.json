@@ -1,0 +1,292 @@
+{
+  "additional_draft_missing_measurement": [
+    "star fanout/serialization/credits under concurrent rows",
+    "additional endpoint area and S81 slot/PG/clock/route fit",
+    "replica row reuse caller and return visibility; extra per-row service turnaround unknown",
+    "DP1 co-location bank union and return routing owner binding",
+    "hot/cold partial sum return in unchanged golden order"
+  ],
+  "adoption": false,
+  "baseline": {
+    "AR_us": 620.078,
+    "MTP": {
+      "II_us": 25.762,
+      "MTP_tok_s": 4462.1,
+      "draft_us": 119.211,
+      "step_us": 871.315,
+      "tau": 3.8879,
+      "verify_us": 748.887
+    },
+    "physical_qualified": false
+  },
+  "combined_candidate_AR_us": null,
+  "combined_candidate_MTP": null,
+  "draft_cases": [
+    {
+      "MTP_tok_s": 4206.674,
+      "added_die_mm2": 3356.956,
+      "added_dies": 4,
+      "draft_us": 172.11794,
+      "name": "DP1-EP1"
+    },
+    {
+      "MTP_tok_s": 4330.627,
+      "added_die_mm2": 13427.824,
+      "added_dies": 16,
+      "draft_us": 145.66448,
+      "name": "DP1-EP2"
+    },
+    {
+      "MTP_tok_s": 4395.383,
+      "added_die_mm2": 23498.692,
+      "added_dies": 28,
+      "draft_us": 132.43775,
+      "name": "DP1-EP3"
+    },
+    {
+      "MTP_tok_s": 4462.106,
+      "added_die_mm2": 43640.428,
+      "added_dies": 52,
+      "draft_us": 119.21102,
+      "name": "DP1-EP5"
+    },
+    {
+      "MTP_tok_s": 4248.918,
+      "added_die_mm2": 0,
+      "added_dies": 0,
+      "draft_us": 162.92894,
+      "name": "DP1-co-location-alone"
+    }
+  ],
+  "draft_decision": "Keep EP5 reference for minimum latency; EP2/EP3 reduce area but slow this matched case. DP1 alone analytically dominates EP1 (+0 vs+4 dies,9.189us faster); both physically unqualified. Do not independently add sweep percentages.",
+  "full_die_hold": [
+    "Claude redesigned spine RTL+route",
+    "PQ verdict",
+    "hubPG0.088 IR fix"
+  ],
+  "hot_only_decision": "Timing/packing NULL; frequency census cannot decide adoption.",
+  "inputs_sha256": {
+    "results/rtl/dsrom_expert_transport_20261005/measurement.json": "d4c102c5df326820c487d264e1f222bf5c8b63e33196ded5401ae111762a2107",
+    "results/rtl/dsrom_expert_transport_20261005/native_raw32/measurement.json": "15f6496801b98080eddca7c132f36c8e6ecf4336b98a71440b21fc8519e63683",
+    "results/rtl/dsrom_recovery_20261004/composition.json": "cfa4781093c591b43e5660b84cdee241993251b817dd6fb05654e23987b6346b",
+    "results/rtl/dsrom_recovery_20261004/draft/rlinks.json": "b1cd51670614f282153496f32c0f6e1e4904fffb81bf5243929fcde37f28ffd5",
+    "results/rtl/dsrom_recovery_20261004/expert_placement_sweep/summary.json": "60b3fba5c9695ac6dc976d5d3cf73decfeee60e8dd84c9f55e2a05090be38b1a",
+    "results/rtl/dsrom_recovery_20261004/field_spine_sensitivity.json": "a8d1ae2ecae05be72a38f27ec3424456ffa02340833e617486f206b0c8bf3197",
+    "results/rtl/dsrom_recovery_20261004/levers/draft_sweep.json": "fbe1a6a49ba9ad0f62054c04a9edcfe4de79f03ec8a3b9916610c40e151028c2"
+  },
+  "packed_references_conditional_only": true,
+  "phase_sensitivity": {
+    "candidate_not_baseline": true,
+    "decision": "Up to8 phase edges costs3.120us inside historical PQ candidate projection; budget necessary spine repair, not a measured gain. Claude structural hold unchanged.",
+    "points": [
+      {
+        "AR_us": 514.638,
+        "MTP_tok_s": 5211.0,
+        "extra_edges": 0
+      },
+      {
+        "AR_us": 515.418,
+        "MTP_tok_s": 5204.5,
+        "extra_edges": 2
+      },
+      {
+        "AR_us": 516.198,
+        "MTP_tok_s": 5197.9,
+        "extra_edges": 4
+      },
+      {
+        "AR_us": 516.978,
+        "MTP_tok_s": 5191.4,
+        "extra_edges": 6
+      },
+      {
+        "AR_us": 517.758,
+        "MTP_tok_s": 5184.9,
+        "extra_edges": 8
+      }
+    ],
+    "source": "results/rtl/dsrom_recovery_20261004/field_spine_sensitivity.json"
+  },
+  "placement_cases": [
+    {
+      "added_die_body_mm2": 3356.956,
+      "added_dies": 4,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 4.216666666666667,
+      "groups": 1,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 0.0,
+      "scoped_dominance": {
+        "canonical": true,
+        "reason": "same 4.2166667us field calendar, adds4 dies; original canonical group already installed"
+      }
+    },
+    {
+      "added_die_body_mm2": 6713.912,
+      "added_dies": 8,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 2.1066666666666665,
+      "groups": 2,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 2.1100000000000003,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 10070.868,
+      "added_dies": 12,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 3,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 2.8133333333333335,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 13427.824,
+      "added_dies": 16,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 4,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 2.8133333333333335,
+      "scoped_dominance": {
+        "candidate": 38,
+        "groups": 3,
+        "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+      }
+    },
+    {
+      "added_die_body_mm2": 16784.78,
+      "added_dies": 20,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 5,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 2.8133333333333335,
+      "scoped_dominance": {
+        "candidate": 38,
+        "groups": 3,
+        "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+      }
+    },
+    {
+      "added_die_body_mm2": 20141.736,
+      "added_dies": 24,
+      "canonical_field_only_us": 4.216666666666667,
+      "complete_chain_us": null,
+      "field_only_us": 0.7,
+      "groups": 6,
+      "layer": 3,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 3.5166666666666666,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 3356.956,
+      "added_dies": 4,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 4.216666666666667,
+      "groups": 1,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": -1.1258333333333335,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 6713.912,
+      "added_dies": 8,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 2.1066666666666665,
+      "groups": 2,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 0.9841666666666669,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 10070.868,
+      "added_dies": 12,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 3,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 1.6875,
+      "scoped_dominance": null
+    },
+    {
+      "added_die_body_mm2": 13427.824,
+      "added_dies": 16,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 4,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 1.6875,
+      "scoped_dominance": {
+        "candidate": 38,
+        "groups": 3,
+        "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+      }
+    },
+    {
+      "added_die_body_mm2": 16784.78,
+      "added_dies": 20,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 1.4033333333333333,
+      "groups": 5,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 1.6875,
+      "scoped_dominance": {
+        "candidate": 38,
+        "groups": 3,
+        "reason": "no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY"
+      }
+    },
+    {
+      "added_die_body_mm2": 20141.736,
+      "added_dies": 24,
+      "canonical_field_only_us": 3.0908333333333333,
+      "complete_chain_us": null,
+      "field_only_us": 0.7,
+      "groups": 6,
+      "layer": 20,
+      "maximum_new_exposed_service_budget_to_beat_field_calendar_us": 2.390833333333333,
+      "scoped_dominance": null
+    }
+  ],
+  "promising_candidate_missing_measurement": "One selected actual six-expert owner context must measure raw32 field-input broadcast/fanout, GU returns, native SU/quant and W2 dispatch, final return/ordered combine with real finite endpoint credits and surviving VM write visibility. Match exact group placement, full phase/address/context, all four rank slices, start through dependent consumer-ready; retain endpoint area/loaded clock/PG/route costs. Idle endpoint sums cannot replace this accepted service calendar.",
+  "raw32_idle_endpoint_terms": {
+    "GU_output_raw32": {
+      "cycles": 340,
+      "loaded_service_qualified": false,
+      "payload_B": 4608,
+      "scope": "Exact payload-size endpoint case only; semantic producer/consumer/context not measured",
+      "us": 0.2833333333333333,
+      "vendor_and_wire_already_included": true
+    },
+    "W2_input_raw32": {
+      "cycles": 412,
+      "loaded_service_qualified": false,
+      "payload_B": 9216,
+      "scope": "Exact payload-size endpoint case only; semantic producer/consumer/context not measured",
+      "us": 0.3433333333333333,
+      "vendor_and_wire_already_included": true
+    },
+    "field_input_raw32": {
+      "cycles": 588,
+      "loaded_service_qualified": false,
+      "payload_B": 20480,
+      "scope": "Exact payload-size endpoint case only; semantic producer/consumer/context not measured",
+      "us": 0.49,
+      "vendor_and_wire_already_included": true
+    }
+  },
+  "recommendation": "Discard fresh1-group L3 (same field calendar plus dies); fresh1-group L20 is slower even before links. Eliminate4/5 as field-only dominated by3. Only2/3/6 survive field-calendar screen; no whole-chain selection or all40 extrapolation.",
+  "schema": "opentallas.recovery-three-sweep-recommendation.v1"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "REJECTED_PHYSICAL_CLOSURE",
+  "source_sha": "d60363da160e2a30965f2bfbf66434db289baa74",
+  "setup_ss_ps": -212.81,
+  "hold_ff_ps": 10.06,
+  "clock_period_ns": 0.833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "standard_cell_area_um2": 9747.33,
+  "cells": 74116,
+  "drc": 0,
+  "antenna": 0,
+  "max_slew_violations": 1,
+  "functional": "Previously published element22/22 and controller74/74 plus lint PASS; no rerun",
+  "adopted": false,
+  "next_step": "Claude-designed held-mask/CAM/control path successor required; no SRAM compare recipe attribution or constraint waiver",
+  "remote_artifacts": "ot-epyc2:/srv/opentallas-scratch/codex/boole-item8-bira-20261005/route_v2",
+  "raw_record_note": "Physical generic corner metadata says TT; separate SS/FF STA on the identical ODB/SPEF is authoritative. Raw records preserved verbatim including Infinity for excluded input paths."
+}

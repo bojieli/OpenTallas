@@ -1,0 +1,185 @@
+{
+  "status": "BLOCKED_EXACT_SOURCE_MODEL_CONTRADICTIONS",
+  "adopted": false,
+  "executable_fulltop": null,
+  "source_pins": {
+    "tools/dshbm_1m_allmeasured.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "aceca984195bc11c2480da2b49a263bfe15910f1b0735b7c2fa5882e9410346b"
+    },
+    "tools/dshbm_baseline_measure.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "357f8408c32d5da7cd499bbf83a76bf07b4d943a0f24b9c78a2a195c90cc0978"
+    },
+    "tools/dshbm_1m_coll.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "aa96b2bfeb69653d1b67362a30dce1348530c0fc821f3b7692e4181c82e4beb0"
+    },
+    "tools/qwen_hbmacc_rt_token_w12.py": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "73492ce27f8fccfa434730791bcbafe908916bbb41fea42d7f390dc27be60b86"
+    },
+    "rtl/test/qwen_rom_runtime/ot_qwen_hbmacc_rt_die_w12.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "761799736039b1345140b7d2da2634829baf3adfe4be49477c04af3e815f4618"
+    },
+    "rtl/hbm_accel/qwen/ot_hbmacc_qwen_wstream.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "24f3f13649f31078863b9d82d48c2f2984a1bd3a7eabdbd47c9947a311501cf6"
+    },
+    "rtl/hbm_accel/collective/ot_hbm_accel_hbm_system.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "f40f8da34e2e9c88ff01870f5997cab0cfacb518c966a2723d8ecab8da8ce609"
+    },
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024"
+    },
+    "rtl/gpu_sys/ot_gpu_sys_glue.sv": {
+      "commit": "7f4648052d5855ff078f3b1011ba80f01b3e97bd",
+      "sha256": "ef972587276d1689ac664dd8905ee98f7100c6cb4389075921ec89a1e63ad129"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_hbm_system_loader.sv": {
+      "commit": "67916251b",
+      "sha256": "e91c44c99dc9d0dea62216a903ca44a44339f4dafc955dd3110111ce77a5b79b"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_host.sv": {
+      "commit": "67916251b",
+      "sha256": "ddb758e8aada4579d3210f537957ba61f5bede0569b53f43a76059bd6a45bf0f"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader.sv": {
+      "commit": "67916251b",
+      "sha256": "377dbf6c0230249ec89111e92f9887c84099dbca23f3fdc081410fe01eaa4a91"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_store.sv": {
+      "commit": "67916251b",
+      "sha256": "f34ff2dd74a043e0fb2e2e9ce492ff58dd5bb4099e256d888eab07731387a682"
+    },
+    "rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv": {
+      "commit": "67916251b",
+      "sha256": "656a8c7d71aca1910843a1e8b4c1cad8ff205bf2d70aa6c352b98ac2f5e6f90b"
+    }
+  },
+  "DS_current_model": {
+    "ranks": 96,
+    "SM_per_die_intended_by_current_performance_walk": 32,
+    "authority": "tools/dshbm_1m_allmeasured.py header and dshbm_baseline_measure busiest-of32 rank0",
+    "selected_SM_component": "ot_hbm_accel_sm_v",
+    "component_parameters": {
+      "ENABLE": 1,
+      "SUB": 4,
+      "LBS": 2,
+      "LSB": 16,
+      "NC": 8,
+      "RMAX": 4096
+    },
+    "network_authority": "tools/dshbm_1m_coll.py uses ot_hbm_accel_tu_endpoint plus separately labelled PHY/Tomahawk-Ultra/cable budget",
+    "fulltop_selection_missing": true
+  },
+  "Qwen_current_HA8": {
+    "authority": "tools/qwen_hbmacc_rt_token_w12.py models list + ha8 token_result design_point/memory_system",
+    "TP_choices": [
+      2,
+      4
+    ],
+    "die_top": "ot_qwen_hbmacc_rt_die_w12",
+    "explicit_common_params": {
+      "G": 6144,
+      "NW": 18,
+      "SNW": 18,
+      "QWEN_FULLSHAPE": 1,
+      "ME_IDLE_GATE": 1,
+      "SW": 64,
+      "LV": 7,
+      "XVM": 1,
+      "NWS": 4,
+      "TWS": 30,
+      "ORD": 4
+    },
+    "D": "actual selected tp",
+    "SU_and_tile_params": "TP2 SMIN6 CODE_BANKS10; TP4 SMIN7 CODE_BANKS5; use actual terminal/fmax successor selection, not defaults",
+    "stream_top": "ot_hbmacc_qwen_wstream",
+    "stream_params": {
+      "ENABLE": 1,
+      "NSTK": 4,
+      "REF_MODE": 1,
+      "CRED": 32,
+      "WINW": 160
+    },
+    "PC_count": 128,
+    "PC_count_basis": "localparam NPC=32*NSTK in this stream source; generic memsys NPC means per-stack instead",
+    "SM32_not_applicable": true,
+    "fulltop_selection_missing": true
+  },
+  "contradictions": [
+    {
+      "id": "DS_SM_INTERFACE",
+      "actual": "generic HA3 g_die/g_sm instantiates ot_hbm_accel_simt_sm; measured model uses ot_hbm_accel_sm_v plus dedicated units",
+      "needed_owner_selection": "existing actual SM-cluster enclosing source binding including SU/attention/index/mHC/DSpark interfaces; selecting NSM32 does not replace SM type"
+    },
+    {
+      "id": "DS_NETWORK",
+      "actual": "generic HA3 top uses ot_gpu_coll_system/fabric; current measured walk uses switched-tier TU endpoint; no proven selector join",
+      "needed_owner_selection": "pin adopted TU endpoint/physical fabric and its instance/port counts; do not auto-enable rejected HA3 cut-through/direct-link hypotheses"
+    },
+    {
+      "id": "DS_IDENTITY_AND_POSITION",
+      "actual": "generic loader top has ld_die4, ld_sm4, eng_pos16; loader_host explicitly rejects ND>8",
+      "needed_owner_selection": "existing fullrank hierarchy vs per-die replicated host/loader selection and fullposition transport source; cannot choose ND96/NSM32/MAXPOS1M by override"
+    },
+    {
+      "id": "QWEN_TOP_RESIDENCE",
+      "actual": "HA8 die/tile/coll/wst are separately instantiated/connected by runtime, not a hardware full-die parent containing selected components; SRAM resident421MiB/421.5MiB is model input, not joined macro placement",
+      "needed_owner_selection": "selected W12/fmax parent hardware sources plus tile/VM/code-window residence census and loader port binding"
+    },
+    {
+      "id": "MODEL_JOIN",
+      "actual": "HA0 integration record is unvalidated, adoptedfalse; old HA composition revision2 adoptedrungs[]; current measured DS/HA8 performance records supersede it but do not publish die slot/port/route model",
+      "needed_owner_selection": "join current target selection to per-die slots, mux/fanout, clocks/CDC, service and loader protected-port corridor; no old GPU geometry fallback"
+    },
+    {
+      "id": "CLOCK_BINDING",
+      "actual": "ot_gpu_memsys_adapter hardcodes CLK_PS1000; measured HA8 controller period1024ps, compute833.333ps",
+      "needed_owner_selection": "actual current source-selected clock-domain mapping; no1p2 fullmemory clock inference"
+    }
+  ],
+  "loader_required_residence": {
+    "source": "ot_hbm_accel_loader_host LOADER1",
+    "per_die_instances": {
+      "ot_hbm_accel_loader": 1,
+      "ot_hbm_accel_store": 1
+    },
+    "system_instances": {
+      "ot_hbm_accel_dma64": 1
+    },
+    "one_memory_client_per_die": "load/store arbitrated SAME client; tag15 denotes class; not two clients",
+    "memory_payload_bits": 256,
+    "address_bits": 32,
+    "strobe_bits": 32,
+    "tag_bits": 16,
+    "host_DMA_payload_bits": 64,
+    "CDC": "existing host/mem crossing owned by load/store; retain FIFOs, verify reorder and positive RLAST/B/ACK drain",
+    "load_params": {
+      "BURST": 16,
+      "MAXOUT": 8,
+      "OUTW": 96,
+      "VOUT": 16,
+      "TW": 16,
+      "CDC_AW": 5
+    },
+    "store_params": {
+      "BURST": 16,
+      "MAXOUT": 32,
+      "VOUT": 16,
+      "TW": 16,
+      "CDC_AW": 5
+    },
+    "protected_port_requirement": "loader arbitration, payload+identity/return CDC, host DMA lane and reset/IRQ routes must be separately reserved; do not charge contained RF twice",
+    "slot_rectangle": null,
+    "corridor_capacity": null,
+    "loaded_clock_closure": false,
+    "physical_owner": "Turing component route; Kant slot binding; Claude fullparent selection",
+    "blocked_by": "current fulltarget host/loader hierarchy not selected; current component route is not adopted full-die slot"
+  },
+  "no_new_jobs": true
+}

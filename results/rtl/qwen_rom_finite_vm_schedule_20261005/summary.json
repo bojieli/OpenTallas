@@ -1,0 +1,227 @@
+{
+  "schema": "opentallas.qwen-rom.part2-finite-vm-source-proposal.v1",
+  "default_enabled": false,
+  "RTL_implementation_added": false,
+  "adopted": false,
+  "source_sha256": {
+    "top.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+    "core.sv": "59492b0f4a1c46b86298fbda105d2c79f2db10ac76fde15f74509099e9a6f97e",
+    "array.sv": "cba4d82b66b9560447650e7e4f96ea0662391319efc0d6311bab80d95d9857c5",
+    "part.sv": "2918fc95a2d7bf61f334143dc5682c77398d0c91d5da2970e4989daee41649eb",
+    "top.args.f": "3f594f557fe8261053f73a8130e411d534f517c62c7209ce7d068c7cd2fee2de",
+    "head_program.hex": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+    "L20_program.hex": "23e52eb49a6d8117ed77b8535919e97528c332ea5e838eae5849959f2a758917"
+  },
+  "controller": "core.u_me.u_top ot_qwen_w12_matvec_part PART2",
+  "ports": {
+    "read": {
+      "VA": 64,
+      "VB": 64,
+      "VC": 64,
+      "COLLECTIVE": 16,
+      "VX": 2048
+    },
+    "write": {
+      "ME_masked_vectors": 48,
+      "ME_scalar_seats": 768,
+      "MX": 16,
+      "SU": 64,
+      "REDUCER": 1,
+      "COLLECTIVE": 16
+    },
+    "total_read_seats": 2256,
+    "total_write_seats": 865,
+    "read_return_bytes": 9024,
+    "read_address_enable_bits": 56400,
+    "write_address_data_enable_bits": 49305
+  },
+  "source_priority": {
+    "read": [
+      "VA",
+      "VB",
+      "VC",
+      "COLLECTIVE",
+      "VX"
+    ],
+    "write": [
+      "ME",
+      "MX",
+      "SU",
+      "REDUCER",
+      "COLLECTIVE"
+    ],
+    "read_old_image": true,
+    "later_writer_wins": true,
+    "MX_top_condition": "vw_mx_we, already core-me_en qualified; no extra top me_clk_en condition"
+  },
+  "adapter_parameters": {
+    "ENABLE": 0,
+    "HEAD_CACHE": 0,
+    "NR": 2256,
+    "NW": 865,
+    "VX0": 208,
+    "NVX": 2048,
+    "VM_WORDS": 177808
+  },
+  "literal_read_seat_slices": {
+    "VA": [
+      0,
+      63
+    ],
+    "VB": [
+      64,
+      127
+    ],
+    "VC": [
+      128,
+      191
+    ],
+    "COLLECTIVE": [
+      192,
+      207
+    ],
+    "VX": [
+      208,
+      2255
+    ]
+  },
+  "literal_write_seat_slices": {
+    "ME": [
+      0,
+      767
+    ],
+    "MX": [
+      768,
+      783
+    ],
+    "SU": [
+      784,
+      847
+    ],
+    "REDUCER": [
+      848,
+      848
+    ],
+    "COLLECTIVE": [
+      849,
+      864
+    ]
+  },
+  "backing": {
+    "reused": "one full16 maskedR2+checked controller, no copies",
+    "data_macros": 256,
+    "check_macros": 32,
+    "physical_data_bytes": 2097152,
+    "check_bytes": 262144,
+    "retained_bytes": 711232,
+    "scalar_to_word": "a>>4",
+    "bank": "(a>>4)&3",
+    "row": "(a>>6)&511",
+    "group": "a>>15",
+    "lane": "a&15",
+    "read_window": "four aligned consecutive512-bit words, one CAP1 checked response",
+    "check_layout": "current additive checked controller:2macros/group, each pairs2banks; NOT physical adoption of bank-local historical sidecar layout",
+    "macro_body_mm2": 1.4911581081600003,
+    "checked_read_caller_edges": 9,
+    "verified_write_caller_edges": 28
+  },
+  "priced_component_terms": {
+    "encoded_frame_bits": 224712,
+    "codec_pairs": 3185,
+    "codec_body_mm2": 0.9189012924000001,
+    "pipeline_cut_bits": 11520,
+    "control_allowance_bits": 8192,
+    "FF_body_estimate_mm2": 0.0712740384,
+    "mux_estimate_mm2": 0.048884800000000006,
+    "preliminary_50pct_placement_mm2": 3.6731843828400006,
+    "area_before_remaining_output_XVM_control_protection": true,
+    "loaded_clock_wire_corridor_mm2": null,
+    "parent_home_mm2": null,
+    "slot_fit": false
+  },
+  "grant_binding": {
+    "capture": "immutable PRE-edge requests+original intended ME enable, before lowering grant",
+    "raw_write_hooks": [
+      "core.me_o_we",
+      "core.me_mx_we"
+    ],
+    "source_intent": "original scale_ready && (!core.me_idle || core.me_wake); do not derive capture intent from granted me_en",
+    "ME_grant": "existing me_mem_ok_svc AND actual provider release",
+    "native_capture": "qualified existing me_clk_en, including XVM1/weight/scale/tile/tag response capture",
+    "SU": "hold all3operand windows and entire native SU/controller; SU lacks independent active-op ready",
+    "retirement": "ordered writers physically postverified; real owner/address/mask ACK and consumer publication/read-drain before producer release",
+    "mixed_clock": "Goodall/Laplace own exact PART2 data+tag/credit crossing; no new clock split or CDC policy here",
+    "missing_source_implementation": [
+      "ROM-specific raw-write/gating wrapper against generated59492 source",
+      "matched multi-domain source/tile/collective hold and finite-credit enrollment",
+      "remaining mutable output/XVM/control protection",
+      "physical initialization/published extents before reads"
+    ]
+  },
+  "scope_guard": {
+    "HBM_cost_transfer": false,
+    "HBM_snapshot_keeps2048_reads_per_edge": false,
+    "HEAD_cache_added": false,
+    "numerical_run": false,
+    "new_build": false,
+    "source_rate_claim": null,
+    "physical_admission": false,
+    "Maxwell_unified_registration_required_before_RTL": true
+  },
+  "examples": {
+    "HEAD_PC3": {
+      "read_seats": 2048,
+      "write_seats": 0,
+      "distinct_read_scalars": 2048,
+      "maximum_same_scalar_reuse": 1,
+      "unique_aligned_read_windows": 64,
+      "current_adapter_window_misses": 64,
+      "physical_write_batches": 0,
+      "bank_write_batches": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "conservative_current_adapter_edges": 3829,
+      "source_exact_broadcast_checked_read_edges": 576,
+      "postverified_write_service_edges": 0,
+      "broadcast_dispatch_implemented": false,
+      "broadcast_dispatch_mux_fanout_edges_and_area": null,
+      "calendar_basis": "static current controller9/28+slot/flush costs; no observed ROM trace, no mixed-clock conversion",
+      "pc": 3,
+      "instruction_sha256": "aa0cedca37fc13b39384a4fa267e533e944ffd7a85ee2d1691a94636a1365fb6",
+      "split": 11,
+      "xbase": 8192,
+      "xcs": 2,
+      "scope": "compiled first k0/j0/round0 address obligations; not temporal co-issue or arithmetic execution"
+    },
+    "L20_W1_PC20": {
+      "read_seats": 2048,
+      "write_seats": 768,
+      "distinct_read_scalars": 128,
+      "maximum_same_scalar_reuse": 16,
+      "unique_aligned_read_windows": 64,
+      "current_adapter_window_misses": 1024,
+      "physical_write_batches": 48,
+      "bank_write_batches": [
+        0,
+        0,
+        0,
+        48
+      ],
+      "conservative_current_adapter_edges": 15829,
+      "source_exact_broadcast_checked_read_edges": 576,
+      "postverified_write_service_edges": 1344,
+      "broadcast_dispatch_implemented": false,
+      "broadcast_dispatch_mux_fanout_edges_and_area": null,
+      "calendar_basis": "static current controller9/28+slot/flush costs; no observed ROM trace, no mixed-clock conversion",
+      "pc": 20,
+      "instruction_sha256": "40161e04d301d67e235216d5648bc7ce9a3928e2396292e48f1b77771f0d445b",
+      "split": 7,
+      "xbase": 4096,
+      "xcs": 32,
+      "scope": "compiled first k0/j0/round0 address obligations; not temporal co-issue or arithmetic execution"
+    }
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T12:35:16.606962+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_accel_issue_pq_sm_boundary",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.473,
+    "core_input_delay_min_ns": 0.166666667,
+    "description": "ad-hoc block supplied on the command line",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.323,
+    "output_delay_min_ns": 0.166666667,
+    "parameters": {
+      "ENABLE": 1,
+      "PQ_ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "physical/hbm_opt1_production_20261005/ot_hbm_accel_issue_pq_sm_boundary.sv",
+        "sha256": "ee2f28d83e1092bbdaf7d83821ad346d98e9748b73aea9ef492cb176b2a2b795",
+        "size_bytes": 2903
+      },
+      {
+        "path": "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "sha256": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+        "size_bytes": 16831
+      },
+      {
+        "path": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+        "sha256": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+        "size_bytes": 29816
+      },
+      {
+        "path": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+        "sha256": "f63863a56f7c8929bf862750c095c2951ba340d4bc3bbb1763e27ec1b8f72427",
+        "size_bytes": 13293
+      },
+      {
+        "path": "rtl/gpu/ot_gpu_issue.sv",
+        "sha256": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+        "size_bytes": 7358
+      }
+    ],
+    "top": "ot_hbm_accel_issue_pq_sm_boundary"
+  },
+  "error": "FlowError: yosys synthesis failed with exit 1:\nhbm_accel_smv_chain'.\nParameter \\W = 7\nParameter \\D = 3\nParameter \\RST = 0\nFound cached RTLIL representation for module `$paramod$8b8193651cf0b3d2a85a8624b2c70226d5855331\\ot_hbm_accel_smv_chain'.\nParameter \\W = 2\nParameter \\D = 3\nParameter \\RST = 1\nFound cached RTLIL representation for module `$paramod$c14bc09b6af8eaa998eeefff5441a87eb04ae2a4\\ot_hbm_accel_smv_chain'.\nParameter \\W = 20\nParameter \\D = 3\nParameter \\RST = 0\nFound cached RTLIL representation for module `$paramod$7b5f58e7a6184efdde3e6e2871344a591a276779\\ot_hbm_accel_smv_chain'.\nParameter \\W = 1\nParameter \\D = 3\nParameter \\RST = 1\nFound cached RTLIL representation for module `$paramod$0c503d6fce475895e0ecdcfba1a9d9ececa4e55e\\ot_hbm_accel_smv_chain'.\nParameter \\W = 7\nParameter \\D = 3\nParameter \\RST = 0\nFound cached RTLIL representation for module `$paramod$8b8193651cf0b3d2a85a8624b2c70226d5855331\\ot_hbm_accel_smv_chain'.\nParameter \\ENABLE = 0\nParameter \\IL = 8\nParameter \\RMAX = 4096\nParameter \\XDEPTH = 96\n\n7.8. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_hbm_accel_issue'.\nParameter \\ENABLE = 0\nParameter \\IL = 8\nParameter \\RMAX = 4096\nParameter \\XDEPTH = 96\nGenerating RTLIL representation for module `$paramod$04f2451f42c0c742727f1e8c2266ca099bd720c0\\ot_hbm_accel_issue'.\nParameter \\W = 1\n\n7.9. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_hbm_accel_smv_pipe'.\nParameter \\W = 1\nGenerating RTLIL representation for module `$paramod\\ot_hbm_accel_smv_pipe\\W=s32'00000000000000000000000000000001'.\nParameter \\IL = 8\nParameter \\RMAX = 4096\nParameter \\XDEPTH = 96\n\n7.10. Executing AST frontend in derive mode using pre-parsed AST for module `\\ot_gpu_issue'.\nParameter \\IL = 8\nParameter \\RMAX = 4096\nParameter \\XDEPTH = 96\nGenerating RTLIL representation for module `$paramod$9c379032bbc410475ab5eb508c8d86e8b26a35cf\\ot_gpu_issue'.\nWarning: Replacing memory \\s_xb with list of registers. See /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada/rtl/gpu/ot_gpu_issue.sv:116\nWarning: Replacing memory \\s_g with list of registers. See /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada/rtl/gpu/ot_gpu_issue.sv:116\nWarning: Replacing memory \\s_row with list of registers. See /srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada/rtl/gpu/ot_gpu_issue.sv:116\n\n7.11. Analyzing design hierarchy..\nTop module:  \\ot_hbm_accel_issue_pq_sm_boundary\nUsed module:     $paramod$4964d54835d7d7de6eb2478d3ab471041ba7bdd3\\ot_hbm_accel_issue_pq\nUsed module:     $paramod$59f14468ea61890077849c493cfe13ad55851ea6\\ot_hbm_accel_smv_chain\nUsed module:     $paramod$c14bc09b6af8eaa998eeefff5441a87eb04ae2a4\\ot_hbm_accel_smv_chain\nUsed module:     $paramod$7b5f58e7a6184efdde3e6e2871344a591a276779\\ot_hbm_accel_smv_chain\nUsed module:         \\ot_hbm_accel_smv_pipe\nUsed module:     $paramod$0c503d6fce475895e0ecdcfba1a9d9ececa4e55e\\ot_hbm_accel_smv_chain\nUsed module:     $paramod$8b8193651cf0b3d2a85a8624b2c70226d5855331\\ot_hbm_accel_smv_chain\n\nERROR: Module `\\ot_hbm_accel_bc_kreg' referenced in module `$paramod$59f14468ea61890077849c493cfe13ad55851ea6\\ot_hbm_accel_smv_chain' in cell `\\g_s[1].g_r.u' is not part of the design.\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T12:35:16.191984+00:00",
+  "git": {
+    "commit": "e3cbe9ada25b17eb64c845f094b41d62606b29a9",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_accel_issue_pq_sm_boundary",
+      "--source",
+      "physical/hbm_opt1_production_20261005/ot_hbm_accel_issue_pq_sm_boundary.sv",
+      "--source",
+      "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+      "--source",
+      "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "--source",
+      "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "--source",
+      "rtl/gpu/ot_gpu_issue.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "PQ_ENABLE=1",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--core-input-delay-min-ns",
+      "0.166666667",
+      "--core-input-delay-max-ns",
+      "0.473",
+      "--output-delay-min-ns",
+      "0.166666667",
+      "--output-delay-max-ns",
+      "0.323",
+      "--false-path-from",
+      "rst_n",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "synth,pnr",
+      "--core-utilization",
+      "30",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.01",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "euclid_pq_issue_s1_e3c_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r1/work",
+      "--output",
+      "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-screen-r1/physical.json",
+      "--force"
+    ],
+    "driver": {
+      "commit": "e3cbe9ada25b17eb64c845f094b41d62606b29a9",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "199cba6e4cbb53366b3409201b4d20ba677b5bfc90a29983a583dfada3cf7d29",
+      "tree": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas/jobs-overflow/euclid-hbm-opt1-issue-source-e3cbe9ada"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

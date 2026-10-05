@@ -99,6 +99,7 @@ module tb_fp32_rsqrt_split_equiv;
             $display("PASS tb_fp32_rsqrt_split_equiv %0d arguments identical", checked);
         else
             $display("FAIL tb_fp32_rsqrt_split_equiv %0d of %0d differ", errors, checked);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

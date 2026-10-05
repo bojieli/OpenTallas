@@ -123,7 +123,7 @@ def prepare(native, sectors, allocation, out):
     print('PREPARED_ONE_RETAINED_NATIVE_L20_SM4_PAIR', seq[14:16], flush=True)
 
 
-def build(work, case, donor_sources, jobs):
+def build(work, case, donor_sources, jobs, live_swiglu=False):
     if not 1 <= jobs <= 16:
         raise ValueError('make worker policy 1..16')
     donor = json.loads(donor_sources.read_text())
@@ -135,10 +135,24 @@ def build(work, case, donor_sources, jobs):
             raise ValueError(f'preserve actual retained W2 engine source: {name}')
         paths.append(name)
     paths = list(dict.fromkeys([EXTRA[0]] + paths + EXTRA[1:]))
+    if live_swiglu:
+        # Exact selected numerical source closure, not a replacement arithmetic unit.
+        import dsrom_su_swiglu as SW
+        receipt = ROOT / 'results/rtl/dsrom_recovery_20261004/su_swiglu/r4/run_rtl_W64_NB32_m5a4q5_swiglu.json'
+        retained = json.loads(receipt.read_text())
+        numerical = list(dict.fromkeys(SW.RTL + SW.LIB + [SW.ADD6]))
+        for name in numerical:
+            if sha(ROOT / name) != retained['source_sha256'][name]:
+                raise ValueError('selected numerical producer changed: ' + name)
+        paths = list(dict.fromkeys(paths + numerical))
+        if not (case / 'producer/source_pin.json').is_file():
+            raise ValueError('prepare the retained actual GU boundary before a live producer build')
     work.mkdir(parents=True, exist_ok=False)
     command = ['verilator', '--binary', '--timing', '-O2', '-Wno-fatal',
                '--top-module', TB, '--Mdir', str(work / 'obj'), '-j', str(jobs),
                '-I' + str(case), *[str(ROOT / name) for name in paths]]
+    if live_swiglu:
+        command.insert(1, '-GLIVE_SWIGLU=1')
     (work / 'command.json').write_text(json.dumps(command, indent=2) + '\n')
     (work / 'source_pin.json').write_text(json.dumps(
         {name: sha(ROOT / name) for name in paths}, indent=2) + '\n')
@@ -150,7 +164,7 @@ def build(work, case, donor_sources, jobs):
         raise SystemExit(rc)
 
 
-def run(work, case, original_prefix):
+def run(work, case, original_prefix, live_swiglu=False):
     # Required owner-resolved ORIGINAL NS2 images, prior to installed overlays.
     for partition in range(2):
         if not Path(f'{original_prefix}_d0_p{partition}.hex').is_file():
@@ -160,29 +174,87 @@ def run(work, case, original_prefix):
     args = (case / 'args.txt').read_text().split()
     command = [str(work / 'obj' / ('V' + TB)), f'+DIR={case}',
                f'+gpu_sys_mem_prefix={original_prefix}', *args]
+    if live_swiglu:
+        producer = case / 'producer'
+        pin = json.loads((producer / 'source_pin.json').read_text())
+        for name, digest in pin['prepared_sha256'].items():
+            if sha(producer / name) != digest:
+                raise ValueError('retained GU boundary changed: ' + name)
+        compile_command = json.loads((work / 'command.json').read_text())
+        if '-GLIVE_SWIGLU=1' not in compile_command:
+            raise ValueError('live producer requires its explicitly selected private executable')
+        command += [f'+PRODUCER_DIR={producer}', '+SWIGLU_LIMIT=' + pin['limit_bits']]
     with (work / 'runtime.log').open('w') as log:
         rc = subprocess.run(command, cwd=case, stdout=log,
                             stderr=subprocess.STDOUT).returncode
     (work / 'runtime.exit').write_text(str(rc) + '\n')
-    if rc or 'PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL' not in (work / 'runtime.log').read_text():
+    marker = ('PASS_LIVE_SWIGLU_W2_CONNECTED_PUBLICATION_CPL' if live_swiglu
+              else 'PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL')
+    if rc or marker not in (work / 'runtime.log').read_text():
         raise SystemExit(rc or 1)
+
+
+def prepare_producer(case, retained_gu, router_config):
+    """Copy actual retained GU/route input files, never compute producer outputs.
+
+    Existing native_swiglu input files carry original GU BF16 and source router
+    weights. The SwiGLU/FP8 outputs and x.hex active operands are comparators only.
+    """
+    import struct
+    seq = hexwords(case / 'seq.hex')
+    if len(seq) != 16 or seq[14:16] != [0, 1] or seq[9] != 0 or seq[12] != 16:
+        raise ValueError('only measured original L20 SM4 first pair is admitted')
+    config = json.loads(router_config.read_text())
+    limit = float(config['swiglu_limit'])
+    limit_bits = struct.unpack('<I', struct.pack('<f', limit))[0]
+    if not 0 < limit_bits < 0x7f800000:
+        raise ValueError('actual finite positive source SwiGLU limit required')
+    source_hashes, assembled = {}, {}
+    for name in ('g.mem', 'u.mem', 'w.mem'):
+        words = []
+        for expert in (41, 65):
+            path = retained_gu / f'expert{expert}' / name
+            values = hexwords(path)
+            if len(values) != 2304 or any(v > 0xffffffff or (v & 0x7f800000) == 0x7f800000 for v in values):
+                raise ValueError('retained actual GU/route extent or finite contract: ' + str(path))
+            if name != 'w.mem' and any(v & 0xffff for v in values):
+                raise ValueError('original GU BF16 rounding boundary changed')
+            source_hashes[str(path)] = sha(path)
+            words += values
+        assembled[name] = words
+    out = case / 'producer'
+    out.mkdir(exist_ok=False)
+    for name, words in assembled.items():
+        writehex(out / name, words, 8)
+    source_hashes[str(router_config)] = sha(router_config)
+    (out / 'source_pin.json').write_text(json.dumps(dict(
+        scope='retained actual GU and source route inputs; live SwiGLU only',
+        experts=[41, 65], elements_per_expert=2304,
+        limit_bits=f'{limit_bits:08x}', source_sha256=source_hashes,
+        prepared_sha256={name: sha(out / name) for name in assembled}), indent=2) + '\n')
+    print('PREPARED_RETAINED_GU_FOR_LIVE_SWIGLU_ONLY experts=41,65 elements=4608', flush=True)
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('step', choices=('prepare', 'build', 'run'))
+    p.add_argument('step', choices=('prepare', 'prepare-producer', 'build', 'run'))
     for name in ('native-case', 'sector-case', 'allocation', 'case', 'work', 'donor-sources'):
         p.add_argument('--' + name, type=Path)
     p.add_argument('--jobs', type=int, default=16)
+    p.add_argument('--live-swiglu', action='store_true', help='private default-off numerical boundary join')
+    p.add_argument('--retained-gu', type=Path)
+    p.add_argument('--router-config', type=Path)
     p.add_argument('--original-prefix', type=Path)
     a = p.parse_args()
     if a.step == 'prepare':
         prepare(a.native_case.resolve(), a.sector_case.resolve(),
                 a.allocation.resolve(), a.case.resolve())
+    elif a.step == 'prepare-producer':
+        prepare_producer(a.case.resolve(), a.retained_gu.resolve(), a.router_config.resolve())
     elif a.step == 'build':
-        build(a.work.resolve(), a.case.resolve(), a.donor_sources.resolve(), a.jobs)
+        build(a.work.resolve(), a.case.resolve(), a.donor_sources.resolve(), a.jobs, a.live_swiglu)
     else:
-        run(a.work.resolve(), a.case.resolve(), a.original_prefix.resolve())
+        run(a.work.resolve(), a.case.resolve(), a.original_prefix.resolve(), a.live_swiglu)
 
 
 if __name__ == '__main__':

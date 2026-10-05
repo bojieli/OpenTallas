@@ -1,0 +1,45 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/1_synth.sdc
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            1            297 beecd40d64be7fb5d2a5
+1_synth                   .sdc                             973db61285621d421cdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+Running floorplan.tcl, stage 2_1_floorplan
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/1_synth.odb
+read_sdc /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/1_synth.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 2755
+[INFO IFP-0001] Added 391 rows of 3760 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 207.360 108.000 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 205.200 107.730 ) um
+[INFO IFP-0102] Core area:                        21434.933 um^2
+[INFO IFP-0103] Total instances area:               297.680 um^2
+[INFO IFP-0104] Effective utilization:                0.014
+[INFO IFP-0105] Number of instances:                   2755
+source /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl
+source /src/physical/dsrom_static_provider_context/fastroute.tcl
+[ERROR ODB-0137] In argument -clock_layers, min routing layer is greater than max routing layer.
+Error: floorplan.tcl, 111 ODB-0137
+
+Elapsed time: 0:01.88[h:]min:sec. CPU time: user 1.82 sys 0.05 (99%). Peak memory: 304368KB.
+Elapsed time: 0:01.76[h:]min:sec. CPU time: user 1.78 sys 0.06 (103%). Peak memory: 305784KB.
+make[1]: *** [Makefile:450: do-2_1_floorplan] Error 1
+make: *** [Makefile:450: /work/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_1_floorplan.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/epicurus-static-provider-context-20261005-r3/physical.json

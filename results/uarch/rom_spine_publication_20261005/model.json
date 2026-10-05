@@ -1,0 +1,75 @@
+{
+  "selected_root_boundary": {
+    "ff_bits": 8833,
+    "ff_cell_body_um2": 3348.4136399999998,
+    "placement_floor_um2_at50pct": 6696.8272799999995,
+    "clock_pin_capacitance_ff": 3833.3630059999996,
+    "clock_buffers_wire_energy_w": null,
+    "fault_fanout_buffers_mux_area_um2": null
+  },
+  "E1_component_alternative": {
+    "ff_bits": 128,
+    "ff_cell_body_um2": 48.52224,
+    "placement_floor_um2_at50pct": 97.04448,
+    "clock_pin_capacitance_ff": 55.549696,
+    "clock_buffers_wire_energy_w": null,
+    "fault_fanout_buffers_mux_area_um2": null
+  },
+  "E1_replicated_alternative": {
+    "ff_bits": 309376,
+    "ff_cell_body_um2": 117278.25407999998,
+    "placement_floor_um2_at50pct": 234556.50815999997,
+    "clock_pin_capacitance_ff": 134263.61523199998,
+    "clock_buffers_wire_energy_w": null,
+    "fault_fanout_buffers_mux_area_um2": null
+  },
+  "boundary_payload_bits_per_cycle": 8832,
+  "boundary_payload_bytes_per_cycle": 1104.0,
+  "compute_macs_per_cycle": 0,
+  "VM_commit_payload_bytes_per_cycle": 512,
+  "added_external_boundary_bits_per_cycle": 0,
+  "added_buffered_net_bits": 8833,
+  "root_publication_replica_count": 128,
+  "E1_publication_replica_count": 2417,
+  "result_added_edges_per_phase": 1,
+  "fault_added_edges": 1,
+  "issue_interval_edges": 1,
+  "phase_chain_added_edges": 1,
+  "phase_chain_added_ns": 0.8333333333333334,
+  "parent_busy": "Existing phase/capture ownership through positive VM commit and capture_drained; never a delayed idle credit",
+  "fault_policy": "Aligned fault drives existing warm-quarantine request, inhibits writes, retains accepted debt; prior writes not rolled back",
+  "root_fault_quarantine_fanout": 128,
+  "E1_fault_bank_fanout": 2,
+  "tracks_slot_fit": null,
+  "gate_power_w": null,
+  "source_exactness_pass": false,
+  "connected_consumer_gate_pass": false,
+  "SSFF_closed": false,
+  "physical_admission": false,
+  "liberty": {
+    "path": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+    "sha256": "c6a6d9ad22bfb1bc9cf1c4ac66d09ce575ca18648ce4e50597d92174bc290d78",
+    "cell": "DFFASRHQNx1_ASAP7_75t_R",
+    "area_um2": 0.37908,
+    "clock_capacitance_ff": 0.433982
+  },
+  "source_pins": {
+    "rtl/dsrom_sys/s81_capture_parent/ot_v41_spine_w17w10.sv": "3d1aa0fce697df6601bd8f26e05d19457e4feecad34ad7874341df45337894c6",
+    "rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv": "a0921062ea08456a95f19da8c1ebd029d3e90ad9ee54ca9279082862c7473e5b",
+    "tools/dsrom_s81_capture_parent.py": "f911ab8506942056df9210b9e35bf3336764eabb630e4106c6c12f0f78342a3a"
+  },
+  "pending_binding": [
+    "Paired E1 component to existing selected field return is not installed; selected original ROM return boundary is separate alternative",
+    "Actual VM accepted-phase poison/consume/retire gate must be source-tested with enclosing caller; no retroactive VM rollback",
+    "Maxwell parent clock/earliest binding before route",
+    "Fault/clock fanout buffer+loaded wire and floorplan fit not measured"
+  ],
+  "implemented_source_pins": {
+    "rtl/v41rom/ot_v41_rom_stage_pg_cdc.sv": "d7d3bad33c3d4d627eb7952f90a08a36bc797e3fa46cb4875e464623adf68158",
+    "rtl/dsrom_sys/spine_publication/ot_v41_rom_publication_capture.sv": "27960c3808384ca1e2e4bb6baa4166672f3c9472573c626d4d8fe9ac816c4bf9",
+    "tools/dsrom_s81_spine_publication.py": "c42f0ff676e655a9ab5e3108607da2ceedb360d64e610e4a5ce048d7a5f6c2b4",
+    "tools/dsrom_s81_capture_parent.py": "b88472c28a864a7a06ea76ba7b5ef8964fac91656cb41ab840be994e5a4ec814",
+    "rtl/test/spine_publication/tb_rom_publication_capture.sv": "6bc7b15171e62b36c8c719436c5ed3bbc6b556d1566ca2f11d2f6003535d092f"
+  },
+  "source_unit_gate": "PASS transport/positive VM accept/field+rowerror quarantine retained debt and descriptor; ROOTS1 CAPACITY4 only, not enclosing R128 or E1 equivalence."
+}

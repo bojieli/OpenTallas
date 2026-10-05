@@ -1,0 +1,222 @@
+{
+  "schema": "opentallas.dsrom-reindex.parallel-terminal.v1",
+  "variant": "split2",
+  "status": "FAIL_PHYSICAL_ADMISSION",
+  "adopted": false,
+  "source_commit": "e73b07389f95de8742bff543e6f1212167426dd7",
+  "corners": {
+    "ss": {
+      "exit": 0,
+      "setup_wns_ns": -0.00897,
+      "hold_wns_ns": 0.03879,
+      "setup_tns_ns": -0.06306,
+      "failing_setup_endpoints": 13,
+      "failing_hold_endpoints": 0,
+      "endpoints": 53950,
+      "tap_source_cells": 0,
+      "lw_cells": 0,
+      "worst_setup_slack_ns": -0.00897,
+      "worst_setup_path": {
+        "start": "u_dut.d_left[1]$_DFFE_PP_",
+        "end": "u_dut.hoh[78]$_SDFFE_PP0P_"
+      },
+      "worst_hold_slack_ns": 0.03879,
+      "worst_hold_path": {
+        "start": "u_dut.e3_blk[0][10]$_DFF_P_",
+        "end": "u_dut.e4_blk[0][10]$_DFF_P_"
+      }
+    },
+    "ff": {
+      "exit": 0,
+      "setup_wns_ns": 0.32281,
+      "hold_wns_ns": 0.001,
+      "setup_tns_ns": 0.0,
+      "failing_setup_endpoints": 0,
+      "failing_hold_endpoints": 0,
+      "endpoints": 53950,
+      "tap_source_cells": 0,
+      "lw_cells": 0,
+      "worst_setup_slack_ns": 0.32281,
+      "worst_setup_path": {
+        "start": "rst_q$_DFF_P_",
+        "end": "u_dut.fq_wp[23][1]$_SDFFE_PN0P_"
+      },
+      "worst_hold_slack_ns": 0.001,
+      "worst_hold_path": {
+        "start": "u_dut.pend_c[52][6]$_DFFE_PP_",
+        "end": "u_dut.cpart[52][0]$_DFF_P_"
+      }
+    }
+  },
+  "boundary_groups": {
+    "ss": {
+      "exit": 0,
+      "setup_wns_ps": -8.97,
+      "hold_wns_ps": 38.79,
+      "failing_setup_endpoints": 13,
+      "failing_hold_endpoints": 0,
+      "endpoints": 53950,
+      "groups": {
+        "dr_ready_in": {
+          "setup_slack_ps": 173.35,
+          "hold_slack_ps": 91.54,
+          "start": "u_l.q[0]$_DFF_P_",
+          "end": "u_dut.hoh[114]$_SDFFE_PP0P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        },
+        "req_rdy_in": {
+          "setup_slack_ps": 120.6,
+          "hold_slack_ps": 84.74,
+          "start": "u_l.q[688]$_DFF_P_",
+          "end": "u_dut.fq_n[15][1]$_SDFFE_PN0P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": false
+        },
+        "lr_data_in": {
+          "setup_slack_ps": 602.15,
+          "hold_slack_ps": 49.24,
+          "start": "u_l.q[760]$_DFF_P_",
+          "end": "u_dut.e1_blk[1][12]$_DFF_P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        },
+        "lr_port_out": {
+          "setup_slack_ps": 266.08,
+          "hold_slack_ps": 204.67,
+          "start": "u_dut.run$_SDFF_PN0_",
+          "end": "u_c.q[1683]$_DFF_P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        }
+      }
+    },
+    "ff": {
+      "exit": 0,
+      "setup_wns_ps": 322.81,
+      "hold_wns_ps": 1.0,
+      "failing_setup_endpoints": 0,
+      "failing_hold_endpoints": 0,
+      "endpoints": 53950,
+      "groups": {
+        "dr_ready_in": {
+          "setup_slack_ps": 422.49,
+          "hold_slack_ps": 27.58,
+          "start": "u_l.q[0]$_DFF_P_",
+          "end": "u_dut.hoh[112]$_SDFFE_PP0P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        },
+        "req_rdy_in": {
+          "setup_slack_ps": 443.56,
+          "hold_slack_ps": 23.61,
+          "start": "u_l.q[693]$_DFF_P_",
+          "end": "u_dut.fq_n[20][3]$_SDFFE_PN0P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        },
+        "lr_data_in": {
+          "setup_slack_ps": 696.76,
+          "hold_slack_ps": 7.21,
+          "start": "u_l.q[750]$_DFF_P_",
+          "end": "u_dut.e1_blk[1][2]$_DFF_P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        },
+        "lr_port_out": {
+          "setup_slack_ps": 529.81,
+          "hold_slack_ps": 78.48,
+          "start": "u_dut.run$_SDFF_PN0_",
+          "end": "u_c.q[1683]$_DFF_P_",
+          "external_sides": 1,
+          "budget_needed_ps": 166.60000000000002,
+          "budget_met": true
+        }
+      }
+    }
+  },
+  "flow_multicorner_metrics": {
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "clock_count": 1,
+    "core_area_um2": 93630.5,
+    "die_area_um2": 96201.7,
+    "drc_errors": 0,
+    "flow_error_counts": {
+      "cts__flow__errors__count": 0,
+      "detailedplace__flow__errors__count": 0,
+      "detailedroute__flow__errors__count": 0,
+      "finish__flow__errors__count": 0,
+      "floorplan__flow__errors__count": 0,
+      "globalplace__flow__errors__count": 0,
+      "globalroute__flow__errors__count": 0,
+      "placeopt__flow__errors__count": 0,
+      "synth__flow__errors__count": 0
+    },
+    "fmax_basis": "minimum per-clock ORFS Fmax when available; aggregate otherwise",
+    "fmax_hz": 1187690000.0,
+    "hold_tns_ns": 0.0,
+    "hold_violations": 0,
+    "hold_wns_ns": 0.000683398,
+    "instance_count": 673484,
+    "library_time_unit_ns": 0.001,
+    "macro_area_um2": 0,
+    "macro_count": 0,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 0,
+    "max_slew_violations": 366,
+    "missing_metadata_keys": [],
+    "orfs_aggregate_fmax_hz": 1187690000.0,
+    "per_clock_fmax_hz": {},
+    "power_total_w": 0.304701,
+    "raw_timing_library_units": {
+      "hold_tns_ns": 0,
+      "hold_wns_ns": 0.683398,
+      "setup_tns_ns": -63.0593,
+      "setup_wns_ns": -8.96794
+    },
+    "routed_nets": 238047,
+    "routed_wirelength_um": 1465437,
+    "sequential_area_um2": 15735.7,
+    "sequential_cell_count": 53950,
+    "setup_tns_ns": -0.0630593,
+    "setup_violations": 13,
+    "setup_wns_ns": -0.00896794,
+    "standard_cell_area_um2": 35283.7,
+    "standard_cell_count": 249803,
+    "utilization_fraction": 0.37684,
+    "vias": 2595829
+  },
+  "routed_artifacts_sha256": {
+    "6_final.odb": "4e6ffd5aad9dd45a92b68b7669f559cdd2cc8ab8a3607e6c867bb10cfe5de5f2",
+    "6_final.sdc": "7d37d50f2e803f0401b4a574533cac60673a0da5357ac4758977a8401cb4df5a",
+    "6_final.spef": "099f4e8e0944d6fc063e4de847c7c69db5f03f1360d2f489d89ba61857695cda"
+  },
+  "area": {
+    "actual_cells_um2": 35283.7,
+    "actual_core_um2": 93630.5,
+    "construction_cap_fraction": 0.4,
+    "construction_cap_um2": 37452.2,
+    "construction_cap_met": true,
+    "same_context_kc7_measured_cell_delta_um2": 117.4,
+    "parent_die_slot_reserved": false
+  },
+  "latency": {
+    "source_added_FF": 128,
+    "mapped_endpoint_delta_vs_kc7": 128,
+    "source_added_edges": 0,
+    "actual_exact_cases": 20,
+    "actual_worst_cycles": 738,
+    "qualified_operating_clock": false,
+    "whole_token_rate_qualified": false
+  },
+  "historical_gate_rc_1": "First path-refusal before compile; unchanged source gate_r2 PASS consumed and already archived, never overwrite first failure.",
+  "no_rescue": "Preexisting authorized fanout terminal. Claude kc8 separate structural fix; no further variant."
+}

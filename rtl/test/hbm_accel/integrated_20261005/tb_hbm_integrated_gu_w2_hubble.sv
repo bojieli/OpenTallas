@@ -2,7 +2,7 @@
 // Minimum connected W2 runtime. Retained native GU/SwiGLU packets are inputs;
 // W2 arithmetic, sector service, checked publication and CP retirement run live.
 // expected.hex is comparison ONLY; no lines.hex weight-response shortcut.
-module tb_hbm_integrated_gu_w2_hubble;
+module tb_hbm_integrated_gu_w2_hubble #(parameter integer LIVE_SWIGLU=0);
  `include "private_alloc.svh"
  reg clk=0; always #0.5 clk=~clk;
  reg por_n=0,cmd_we=0,db_v=0,cpl_rdy=0;
@@ -76,8 +76,40 @@ module tb_hbm_integrated_gu_w2_hubble;
  reg [255:0] expected_rows[0:3],captured_rows[0:3];reg [3:0] result_seen=0;
  reg [31:0] source_addresses[0:8191];reg [255:0] source_memory[0:8191];integer nwords;
  reg [1023:0] dir;
- reg start=0,d_valid=0,xw_en=0;wire start_ready,d_ready;
- reg [6:0] xw_addr=0,xw_grp=0;reg [2047:0] xw_data=0;
+ reg start=0,d_valid=0,legacy_xw_en=0;wire start_ready,d_ready;
+ reg [6:0] legacy_xw_addr=0,legacy_xw_grp=0;reg [2047:0] legacy_xw_data=0;
+ wire producer_xw_en,producer_done,producer_fault;
+ wire [6:0] producer_xw_addr,producer_xw_grp,producer_issue_index;
+ wire [4:0] producer_fragment_index;
+ wire [2047:0] producer_xw_data;
+ wire xw_en=LIVE_SWIGLU?producer_xw_en:legacy_xw_en;
+ wire [6:0] xw_addr=LIVE_SWIGLU?producer_xw_addr:legacy_xw_addr;
+ wire [6:0] xw_grp=LIVE_SWIGLU?producer_xw_grp:legacy_xw_grp;
+ wire [2047:0] xw_data=LIVE_SWIGLU?producer_xw_data:legacy_xw_data;
+ reg producer_start=0;
+ reg [31:0] producer_g[0:4607],producer_u[0:4607],producer_w[0:4607];
+ reg [31:0] producer_limit=0;reg [1023:0] producer_dir;
+ wire [2047:0] producer_gbeat,producer_ubeat,producer_wbeat;
+ genvar pl;
+ generate for(pl=0;pl<64;pl=pl+1)begin:g_producer_operands
+  assign producer_gbeat[32*pl+:32]=producer_issue_index<72?producer_g[64*producer_issue_index+pl]:32'd0;
+  assign producer_ubeat[32*pl+:32]=producer_issue_index<72?producer_u[64*producer_issue_index+pl]:32'd0;
+  assign producer_wbeat[32*pl+:32]=producer_issue_index<72?producer_w[64*producer_issue_index+pl]:32'd0;
+ end
+ if(LIVE_SWIGLU)begin:g_live_swiglu
+  ot_hubble_swiglu_w2_capture #(.ENABLE(1)) producer(
+   .clk(clk),.rst_n(por_n),.start(producer_start),
+   .permit(source_permit&&installed&&grants[2]),.frame(FRAME),.op_a(OPA),.op_b(OPB),
+   .g(producer_gbeat),.u(producer_ubeat),.w(producer_wbeat),.lim(producer_limit),
+   .inactive_template(xwords[producer_fragment_index][4095:3152]),
+   .issue_index(producer_issue_index),.fragment_index(producer_fragment_index),
+   .xw_en(producer_xw_en),.xw_addr(producer_xw_addr),.xw_grp(producer_xw_grp),
+   .xw_data(producer_xw_data),.done(producer_done),.fault(producer_fault));
+ end else begin:g_retained_swiglu
+  assign producer_xw_en=0;assign producer_xw_addr=0;assign producer_xw_grp=0;
+  assign producer_xw_data=0;assign producer_done=0;assign producer_fault=0;
+  assign producer_issue_index=0;assign producer_fragment_index=0;
+ end endgenerate
  reg operands_loaded=0;
  wire op_bound=installed&&seq[0]==4&&seq[4]==64&&seq[10]==1&&OPA!=OPB&&
                seq[1]==8&&seq[2]==2&&seq[3]==2&&seq[5]==1&&
@@ -179,7 +211,10 @@ module tb_hbm_integrated_gu_w2_hubble;
  reg [63:0] accepted_native_addresses=0;
  always @(posedge clk)if(por_n)begin
   cycle<=cycle+1;arrive_q<=arrive;
-  if(shared_fault||sink_fault||adapter_fault||native_fault||mem_fault||foreign_rsp)
+  // Retained packets compare ONLY. Active operands come from live numerical q/e.
+  if(LIVE_SWIGLU&&producer_xw_en&&producer_xw_data!==xwords[producer_fragment_index][2048*producer_xw_grp+:2048])
+   $fatal(1,"live SwiGLU FP8 transpose differs from retained native packets");
+  if(shared_fault||sink_fault||adapter_fault||native_fault||mem_fault||foreign_rsp||producer_fault)
    $fatal(1,"connected source fault cycle=%0d native_req=%0d returns=%0d",cycle,native_requests,native_returns);
   if((release_accept||cp_callback||cpl_v)&&(verified!=4||!adapter_drained||!provider_drained))
    $fatal(1,"early release/CPL before real publication/provider drain");
@@ -261,6 +296,16 @@ module tb_hbm_integrated_gu_w2_hubble;
   $readmemh({dir,"/expected_rows.hex"},expected_rows,0,3);
   $readmemh({dir,"/memory_addresses.hex"},source_addresses,0,nwords-1);
   $readmemh({dir,"/memory.hex"},source_memory,0,nwords-1);
+  if(LIVE_SWIGLU)begin
+   if(!$value$plusargs("PRODUCER_DIR=%s",producer_dir)||!$value$plusargs("SWIGLU_LIMIT=%h",producer_limit))
+    $fatal(1,"retained actual GU/route/limit boundary required");
+   $readmemh({producer_dir,"/g.mem"},producer_g,0,4607);
+   $readmemh({producer_dir,"/u.mem"},producer_u,0,4607);
+   $readmemh({producer_dir,"/w.mem"},producer_w,0,4607);
+   for(integer k=0;k<4608;k=k+1)
+    if(producer_g[k][15:0]!=0||producer_u[k][15:0]!=0)
+     $fatal(1,"retained GU boundary must preserve original BF16 rounding");
+  end
   #0.02;
   // Original provider initial image load precedes additive installed overlays.
   $readmemh({dir,"/w2_p0.hex"},provider.g_on.g_s[0].u_part.g_on.u_model.mem);
@@ -288,14 +333,19 @@ module tb_hbm_integrated_gu_w2_hubble;
   if(source_permit)$fatal(1,"source permission before reserve");
   reserve_v=1;wait(reserve_r);@(negedge clk);reserve_v=0;lease_requested=0;
   if(!source_permit)$fatal(1,"missing real four-seat reservation");
-  // Existing packed native FP8 x words; one complete rising edge after last beat.
+  if(LIVE_SWIGLU)begin
+   producer_start=1;@(negedge clk);producer_start=0;
+   wait(producer_done);@(negedge clk);
+  end else begin
+  // Historical retained operand path, default unchanged.
   for(integer half=0;half<2;half=half+1)begin
    for(integer word_index=0;word_index<16;word_index=word_index+1)
     for(integer beat=0;beat<2;beat=beat+1)begin
-     xw_en=1;xw_addr=7'(seq[half==0?9:12]+word_index);xw_grp=7'(beat);
-     xw_data=xwords[half*16+word_index][beat*2048+:2048];@(negedge clk);
+     legacy_xw_en=1;legacy_xw_addr=7'(seq[half==0?9:12]+word_index);legacy_xw_grp=7'(beat);
+     legacy_xw_data=xwords[half*16+word_index][beat*2048+:2048];@(negedge clk);
     end
-   xw_en=0;@(negedge clk);
+   legacy_xw_en=0;@(negedge clk);
+  end
   end
   operands_loaded=1;d_valid=1;#0.001;
   do @(posedge clk);while(!d_ready);
@@ -316,7 +366,86 @@ module tb_hbm_integrated_gu_w2_hubble;
   cpl_rdy=1;@(negedge clk);cpl_rdy=0;
   if(cpl_v||!db_rdy)$fatal(1,"actual CPL take exactly once");
   $display("PASS_NATIVE_W2_CONNECTED_PUBLICATION_CPL rows=4 sectors=%0d requests=%0d returns=%0d writes=%0d readbacks=%0d sharedrelease=%0d cycles=%0d",sector_reads,native_requests,native_returns,writes,verified,released,cycle);
-  $display("SCOPE retained native GU/SwiGLU input boundary; live W2+installed NS2 sectors+protected publication+END/CPL only");
+  if(LIVE_SWIGLU)begin
+   $display("PASS_LIVE_SWIGLU_W2_CONNECTED_PUBLICATION_CPL producers=2 elements=4608 blocks=144");
+   $display("SCOPE retained actual GU/route inputs; live SwiGLU+FP8 transpose+W2+NS2+publication+END/CPL; GU and full token NOT live");
+  end else $display("SCOPE retained native GU/SwiGLU input boundary; live W2+installed NS2 sectors+protected publication+END/CPL only");
   $finish;
  end
+endmodule
+
+// Private two-vector capture/transpose, model-sized before source implementation.
+// ENABLE0 inert; one transaction per reset. No expected numeric inputs.
+module ot_hubble_swiglu_w2_capture #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,start,permit,input wire [72:0] frame,
+ input wire [31:0] op_a,op_b,input wire [2047:0] g,u,w,input wire [31:0] lim,
+ input wire [943:0] inactive_template,
+ output wire [6:0] issue_index,output wire [4:0] fragment_index,
+ output wire xw_en,output wire [6:0] xw_addr,xw_grp,
+ output wire [2047:0] xw_data,output wire done,fault);
+ generate if(!ENABLE)begin:g_off
+  assign issue_index=0;assign fragment_index=0;assign xw_en=0;
+  assign xw_addr=0;assign xw_grp=0;assign xw_data=0;assign done=0;assign fault=0;
+ end else begin:g_on
+  localparam [2:0] IDLE=0,FEED=1,DRAIN=2,WRITE=3,SETTLE=4,DONE=5;
+  reg [2:0] phase=IDLE;
+  reg [6:0] issued=0,captured=0;reg [5:0] written=0;
+  reg [71:0] seen=0;reg bad=0;reg [72:0] held_frame;
+  reg [31:0] held_a,held_b;
+  reg [531:0] packet_beats[0:71]; // full readyless pair; payload not reset
+  wire identity_match=frame==held_frame&&op_a==held_a&&op_b==held_b;
+  wire pv=phase==FEED&&issued<72&&permit&&identity_match&&!bad;
+  wire vo,pfault;wire [511:0] q;wire [19:0] e;wire [1023:0] unused_y;
+  ot_dsrom_su_swiglu #(.W(64),.ROUTED(1),.NIN(33),.NOUT(23),.LM(5),.LA(4),.QLAT(5)) numeric(
+   .clk(clk),.rst_n(rst_n),.v(pv),.g(g),.u(u),.w(w),.lim(lim),
+   .vo(vo),.q(q),.e(e),.y(unused_y),.fault(pfault));
+  assign issue_index=issued;
+  assign fragment_index=written[5:1];
+  wire half=fragment_index[4];wire group_index=fragment_index[3];
+  wire [2:0] t=fragment_index[2:0];
+  reg [4095:0] fragment;
+  integer lane,block_index,beat_index;
+  always @* begin
+   fragment={inactive_template,3152'd0};
+   for(lane=0;lane<8;lane=lane+1)begin
+    block_index=(group_index*8+lane)*8+t;
+    beat_index=(half?36:0)+block_index/2;
+    if(block_index<72)
+     fragment[266*lane+:266]=t[0]?packet_beats[beat_index][531:266]:packet_beats[beat_index][265:0];
+   end
+  end
+  assign xw_en=phase==WRITE&&!bad&&permit&&identity_match;
+  assign xw_addr={2'd0,fragment_index}; // original expert bases0/16, g*8+t
+  assign xw_grp={6'd0,written[0]};
+  assign xw_data=written[0]?fragment[4095:2048]:fragment[2047:0];
+  assign done=phase==DONE&&!bad;assign fault=bad;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin phase<=IDLE;issued<=0;captured<=0;written<=0;seen<=0;bad<=0;held_frame<=0;held_a<=0;held_b<=0;end
+   else begin
+    if(phase!=IDLE&&phase!=DONE&&(!permit||!identity_match))bad<=1;
+    if(start)begin
+     if(phase!=IDLE||!permit||op_a==op_b)bad<=1;
+     else begin held_frame<=frame;held_a<=op_a;held_b<=op_b;phase<=FEED;end
+    end
+    if(pv)begin issued<=issued+1; if(issued==71)phase<=DRAIN;end
+    if(vo)begin
+     if(pfault||captured>=72||captured>=issued||seen[captured]||
+        (phase!=FEED&&phase!=DRAIN))bad<=1;
+     else begin
+      packet_beats[captured]<={e[19:10],q[511:256],e[9:0],q[255:0]};
+      seen[captured]<=1;captured<=captured+1;
+      if(captured==71)begin
+       if(issued!=72||seen[70:0]!={71{1'b1}})bad<=1;
+       else phase<=WRITE;
+      end
+     end
+    end
+    if(xw_en)begin
+     if(captured!=72||seen!={72{1'b1}})bad<=1;
+     else if(written==63)phase<=SETTLE;else written<=written+1;
+    end
+    if(phase==SETTLE)phase<=DONE; // complete rising edge after last xwrite
+   end
+  end
+ end endgenerate
 endmodule

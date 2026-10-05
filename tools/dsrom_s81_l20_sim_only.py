@@ -149,6 +149,9 @@ def capture_h_chain_inputs(ranks, nodes, execution, output, result, *, pause=Tru
 
 
 def main():
+    if M.V.ARITH != 'chunk8' or M.V.FUSE:
+        raise ValueError('S81 caller requires resolved ARITH=chunk8 and FUSE empty; '
+                         f'got ARITH={M.V.ARITH!r}, FUSE={sorted(M.V.FUSE)!r}')
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--head-chain',action='store_true',help='carry produced L20 H/PF directly into released head')
@@ -156,6 +159,8 @@ def main():
     p.add_argument('--native-i0',type=Path,help='actual native_L20_I0.tsv; replace only the measured rank I0')
     p.add_argument('--capture-index-inputs',action='store_true',
                    help='stop before I44 after saving produced I36 and I44 operands for the native join')
+    p.add_argument('--capture-field-inputs',action='store_true',
+                   help='stop before I7; export actual produced I6.XN for native stage37 field actors')
     p.add_argument('--native-index-result',type=Path,
                    help='completed native rank3 I36/I44 directory; consume its actual score output')
     p.add_argument('--native-attention-result',type=Path,
@@ -167,6 +172,10 @@ def main():
     p.add_argument('--capture-h-chain-inputs',action='store_true',
                    help='stop before I75; export produced T/I74, CA/I60, POA/I57 and Y/I72 for native I75->76')
     a = p.parse_args()
+    if a.capture_field_inputs and (a.carry_input or a.head_chain or a.native_index_result or
+            a.native_attention_result or a.capture_index_inputs or a.capture_attention_inputs or
+            a.capture_h_chain_inputs):
+        p.error('--capture-field-inputs requires only the source I0..I6 prefix')
     if a.sim_only_att_endpoint and not a.native_attention_result:
         p.error('--sim-only-att-endpoint requires the actual completed adapter/VM attention result')
     if a.capture_h_chain_inputs and (a.carry_input or a.head_chain or
@@ -224,6 +233,7 @@ def main():
             p.error(str(exc))
     a.output.mkdir(exist_ok=False)
     result = dict(scope='S81.L20.position1048575', functional='SIM_ONLY',
+                  arithmetic_mode=dict(arith=M.V.ARITH, fuse=sorted(M.V.FUSE)),
                   headline_timing=False, completed=False, exact=None,
                   source_stage=37, simulation_ticks=0, native_cycles=None)
     if native_pv is not None:
@@ -314,6 +324,33 @@ def main():
         trace = []
         with (a.output/'operations.jsonl').open('x') as log:
             for pc, node in enumerate(nodes):
+                if a.capture_field_inputs and pc == 7:
+                    writer = nodes[6]
+                    if (result['simulation_ticks'] != 7 or writer['id'] != 'L20.I6' or
+                            'XN' not in writer['instruction'].get('_writes', [])):
+                        raise M.Defect('field input export must follow the actual I6 XN writer')
+                    files = {}
+                    for rank in ranks:
+                        if rank.unwritten or rank.rope_held or rank.V['XN'] != 46464:
+                            raise M.Defect('field input has unresolved source state/address')
+                        values = rank.read(46464 + np.arange(5120), 'produced_I6_XN', 7)
+                        if rank.unwritten:
+                            raise M.Defect('I6 XN input contains unwritten source elements')
+                        path = a.output / f'I6.XN_rank{rank.r}.u32'
+                        M.G.bits(values).astype('<u4').tofile(path)
+                        files[path.name] = M.sha(path)
+                    manifest = dict(scope='produced I0..I6 prefix before native L20.I7/I8',
+                        functional='SIM_ONLY_EXACT', position=1048575, token=16754, stage=37,
+                        source_node=writer['id'], producer=9+list(execution.source.nodes).index(writer['id']),
+                        template_sha256=writer['template_word_sha256'], address=46464, count=5120,
+                        instructions_completed=7, expected_outputs_used=False,
+                        native_publication_qualified=False, files=files,
+                        source_inputs_sha256=execution.input_sha256)
+                    (a.output/'native_field_inputs.json').write_text(json.dumps(manifest,indent=2)+'\n')
+                    result.update(scope='S81.L20.produced_native_field_inputs',
+                        disposition='PAUSED_BEFORE_NATIVE_I7', completed=False, exact=None,
+                        field_inputs=manifest)
+                    return
                 literal = node['instruction']
                 word = M.I.encode(full_shape=True, **{k:tuple(v) if isinstance(v,list) else v
                                                     for k,v in literal.items()})

@@ -1,0 +1,789 @@
+{
+ "adoption": false,
+ "build_admitted": false,
+ "cold_norm": {
+  "CDC": "Existing graph crossings retained once; component bench is not CDC qualification",
+  "VM_publication_lease": null,
+  "adoption": false,
+  "baseline_chain_us": 0.75,
+  "cold_cycles": 288,
+  "cold_us": 0.24,
+  "component_verdict": "FUNCTIONAL_REGISTERED_TRANSPORT_PASS",
+  "final_registered_landing_cycle": 294,
+  "finite_consumer_credits": null,
+  "first_gain_cycle": 6,
+  "gain_cycles": [
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "go_cycle": 16,
+  "loaded_area_mm2": null,
+  "measured_component_delta_us": 0.51,
+  "physical_SS_FF": null,
+  "scope": "Only L20.attn.hc_pre_norm actually exercised; no all-layer/case gain extrapolation",
+  "storage_bits_estimate": 2080373,
+  "warm_cycles": 278,
+  "warm_us": 0.23166666666666666
+ },
+ "combined_adoption": false,
+ "combined_complete_SU": false,
+ "combined_measured_subsets_projection": {
+  "AR_tok_s": 1624.1,
+  "AR_us": 615.712,
+  "MTP": {
+   "II_us": 24.171,
+   "MTP_tok_s": 4526.1,
+   "draft_terms": {
+    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+    "block5_us": 38.3718,
+    "blocks_us": 83.992,
+    "head_occ_us": 6.9892,
+    "r_markov": 0.00781
+   },
+   "draft_us": 119.211,
+   "mtp_over_ar": 2.787,
+   "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
+   "seed_commit_us": 3.217,
+   "stage_busy_top": [
+    {
+     "busy_us": 23.3186,
+     "first": "L19.ffn.hc_pre",
+     "hop": "L20.substage_hop0"
+    },
+    {
+     "busy_us": 21.9062,
+     "first": "L13.ffn.hc_pre",
+     "hop": "L14.substage_hop0"
+    },
+    {
+     "busy_us": 21.2069,
+     "first": "L7.ffn.hc_pre",
+     "hop": "L8.substage_hop0"
+    },
+    {
+     "busy_us": 19.0861,
+     "first": "L1.ffn.hc_pre",
+     "hop": "L2.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L27.ffn.hc_pre",
+     "hop": "L28.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L31.ffn.hc_pre",
+     "hop": "L32.substage_hop0"
+    }
+   ],
+   "step_us": 858.997,
+   "tau": 3.8879,
+   "verify_us": 736.569,
+   "worst_stage": {
+    "busy_us": 23.3186,
+    "first": "L19.ffn.hc_pre",
+    "hop": "L20.substage_hop0"
+   }
+  },
+  "cdc_on_path_us": 4.271,
+  "hardware_qualified": false,
+  "still_modelled": [
+   {
+    "term": "fast->fast mesochronous region crossings (field region <-> hub / IO regions)",
+    "us": null,
+    "why": "no S81 clock-region map of every 1.2 GHz edge; the clocking decision prices them at +661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"
+   },
+   {
+    "term": "light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)",
+    "us": null,
+    "why": "VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"
+   },
+   {
+    "term": "draft blocks: hc.fn (HE FP32 mixes [24, 20480], attn + ffn) x 5 rows",
+    "us": 0.9542,
+    "why": "no HE/hc-engine RTL bench (also modelled in the AR composition); off the critical path unless listed in critical_path"
+   },
+   {
+    "term": "draft blocks: CDC fast->slow crossings on SU nodes",
+    "us": 0.2488,
+    "why": "W18 ratio-FIFO latency, no CDC bench (as AR); includes the quantisers' 37 hub stages"
+   },
+   {
+    "term": "draft blocks: light-FEC PHY (130 ns) + UCIe (10 ns) inside the stage hop",
+    "us": 0.1392,
+    "why": "VENDOR BUDGET (no PHY RTL), as AR"
+   },
+   {
+    "term": "draft blocks: DSpark stage placement",
+    "us": null,
+    "why": "mtp.* is unowned in the S81 canonical binding; this uses L0's allocator placement on a dedicated TP4 group (an owner mapping may differ)"
+   },
+   {
+    "term": "draft blocks: older 127 window rows of each stage",
+    "us": null,
+    "why": "synthetic format-consistent (as the w17 1M state); timing is data-independent"
+   },
+   {
+    "term": "tau 3.8879",
+    "us": null,
+    "why": "published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"
+   }
+  ]
+ },
+ "groups": {
+  "L20.attn.wo_a.st37": {
+   "overlap": {
+    "accepted_to_source_idle_bound_edges": 705,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     270
+    ],
+    "max_last_GO_to_source_idle_edges": 401,
+    "max_stored_absolute_edge": 705,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2048
+   },
+   "serial": {
+    "accepted_to_source_idle_bound_edges": 871,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     436
+    ],
+    "max_last_GO_to_source_idle_edges": 401,
+    "max_stored_absolute_edge": 871,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2048
+   }
+  },
+  "L20.ffn.down.st37": {
+   "overlap": {
+    "accepted_to_source_idle_bound_edges": 831,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     136,
+     169,
+     134,
+     169
+    ],
+    "max_last_GO_to_source_idle_edges": 189,
+    "max_stored_absolute_edge": 831,
+    "phases": 5,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 6400
+   },
+   "serial": {
+    "accepted_to_source_idle_bound_edges": 1274,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     261,
+     261,
+     261,
+     261
+    ],
+    "max_last_GO_to_source_idle_edges": 196,
+    "max_stored_absolute_edge": 1274,
+    "phases": 5,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 6400
+   }
+  },
+  "L20.ffn.down.st38": {
+   "overlap": {
+    "accepted_to_source_idle_bound_edges": 394,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     136
+    ],
+    "max_last_GO_to_source_idle_edges": 224,
+    "max_stored_absolute_edge": 394,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2560
+   },
+   "serial": {
+    "accepted_to_source_idle_bound_edges": 521,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     261
+    ],
+    "max_last_GO_to_source_idle_edges": 226,
+    "max_stored_absolute_edge": 521,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2560
+   }
+  },
+  "L20.ffn.experts_gu.st37": {
+   "overlap": {
+    "accepted_to_source_idle_bound_edges": 988,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     234,
+     206,
+     206
+    ],
+    "max_last_GO_to_source_idle_edges": 308,
+    "max_stored_absolute_edge": 988,
+    "phases": 4,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 4608
+   },
+   "serial": {
+    "accepted_to_source_idle_bound_edges": 1483,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     371,
+     371,
+     371
+    ],
+    "max_last_GO_to_source_idle_edges": 336,
+    "max_stored_absolute_edge": 1483,
+    "phases": 4,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 4608
+   }
+  },
+  "L20.ffn.experts_gu.st38": {
+   "overlap": {
+    "accepted_to_source_idle_bound_edges": 576,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     234
+    ],
+    "max_last_GO_to_source_idle_edges": 308,
+    "max_stored_absolute_edge": 576,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2304
+   },
+   "serial": {
+    "accepted_to_source_idle_bound_edges": 741,
+    "downstream_accepted_lease": null,
+    "max_GO_step_edges": [
+     34,
+     371
+    ],
+    "max_last_GO_to_source_idle_edges": 336,
+    "max_stored_absolute_edge": 741,
+    "phases": 2,
+    "regions": 128,
+    "root_barrier_qualified": false,
+    "rows": 2304
+   }
+  }
+ },
+ "inputs": {
+  "results/rtl/dsrom_recovery_20261004/decision_gate/inputs/field_pq.json": "533c07728818f25b881bff38164d9e0e5a1fb39462bcad544e83ae096398c54c",
+  "results/rtl/dsrom_recovery_20261004/paired_field_gate/inputs/field_cone.txt": "663444a09b1939684e3ecada4cab5480a630fed6da4c17d78a31165d18e513b7",
+  "results/rtl/dsrom_recovery_20261004/paired_field_gate/inputs/launch_inputs.json": "78283ff99f3dbf34a466490356f9297ef23d6adffebf926dccd914dea25c8801",
+  "results/rtl/dsrom_recovery_20261004/paired_field_gate/inputs/su_join.json": "85af5e951f5737d31eac74fc2f86250d8b965f348d6daa29eb29d31f23343431",
+  "results/rtl/dsrom_recovery_20261004/paired_field_gate/inputs/summary.json.gz": "515c341106960bfb66ec19b7f25eafff776aee40fe64008448e43b66c556481e",
+  "tools/dsrom_1m_allmeasured.py": "fe00f7b183697337c02e069deec5f6873ce24369e991b4f664c6586763ab5ff5",
+  "tools/dsrom_1m_su.py": "62d0096b88ae6ce5044674fc5cbbcdd82311e0c510e2d949dfca688b1bd40b32",
+  "tools/dsrom_recovery_decision_gate.py": "159feb904805c29b608c1d42fe78f9c7d62d5d3631fef519382608b015843fe0",
+  "tools/dsrom_recovery_paired_field_gate.py": "caaf6b1f3f08e51e45f6cb4f66d067721280585f274134d33490cc67eaf673ba"
+ },
+ "matched_L20_AR_saved_us": 0.9199999999999591,
+ "matched_L20_MTP_rate_change": 0.0018689093578960758,
+ "overlap_charges": {
+  "L20.attn.wo_a.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 705,
+   "total_edges": 785
+  },
+  "L20.ffn.down.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 831,
+   "total_edges": 911
+  },
+  "L20.ffn.down.st38": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 394,
+   "total_edges": 474
+  },
+  "L20.ffn.experts_gu.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 988,
+   "total_edges": 1068
+  },
+  "L20.ffn.experts_gu.st38": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 576,
+   "total_edges": 656
+  }
+ },
+ "overlapped_projection": {
+  "AR_tok_s": 1619.3,
+  "AR_us": 617.562,
+  "MTP": {
+   "II_us": 24.683,
+   "MTP_tok_s": 4503.0,
+   "draft_terms": {
+    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+    "block5_us": 38.3718,
+    "blocks_us": 83.992,
+    "head_occ_us": 6.9892,
+    "r_markov": 0.00781
+   },
+   "draft_us": 119.211,
+   "mtp_over_ar": 2.781,
+   "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
+   "seed_commit_us": 3.217,
+   "stage_busy_top": [
+    {
+     "busy_us": 23.8286,
+     "first": "L19.ffn.hc_pre",
+     "hop": "L20.substage_hop0"
+    },
+    {
+     "busy_us": 21.9062,
+     "first": "L13.ffn.hc_pre",
+     "hop": "L14.substage_hop0"
+    },
+    {
+     "busy_us": 21.2069,
+     "first": "L7.ffn.hc_pre",
+     "hop": "L8.substage_hop0"
+    },
+    {
+     "busy_us": 19.0861,
+     "first": "L1.ffn.hc_pre",
+     "hop": "L2.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L27.ffn.hc_pre",
+     "hop": "L28.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L31.ffn.hc_pre",
+     "hop": "L32.substage_hop0"
+    }
+   ],
+   "step_us": 863.407,
+   "tau": 3.8879,
+   "verify_us": 740.979,
+   "worst_stage": {
+    "busy_us": 23.8286,
+    "first": "L19.ffn.hc_pre",
+    "hop": "L20.substage_hop0"
+   }
+  },
+  "cdc_on_path_us": 4.293,
+  "hardware_qualified": false,
+  "still_modelled": [
+   {
+    "term": "fast->fast mesochronous region crossings (field region <-> hub / IO regions)",
+    "us": null,
+    "why": "no S81 clock-region map of every 1.2 GHz edge; the clocking decision prices them at +661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"
+   },
+   {
+    "term": "light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)",
+    "us": null,
+    "why": "VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"
+   },
+   {
+    "term": "draft blocks: hc.fn (HE FP32 mixes [24, 20480], attn + ffn) x 5 rows",
+    "us": 0.9542,
+    "why": "no HE/hc-engine RTL bench (also modelled in the AR composition); off the critical path unless listed in critical_path"
+   },
+   {
+    "term": "draft blocks: CDC fast->slow crossings on SU nodes",
+    "us": 0.2488,
+    "why": "W18 ratio-FIFO latency, no CDC bench (as AR); includes the quantisers' 37 hub stages"
+   },
+   {
+    "term": "draft blocks: light-FEC PHY (130 ns) + UCIe (10 ns) inside the stage hop",
+    "us": 0.1392,
+    "why": "VENDOR BUDGET (no PHY RTL), as AR"
+   },
+   {
+    "term": "draft blocks: DSpark stage placement",
+    "us": null,
+    "why": "mtp.* is unowned in the S81 canonical binding; this uses L0's allocator placement on a dedicated TP4 group (an owner mapping may differ)"
+   },
+   {
+    "term": "draft blocks: older 127 window rows of each stage",
+    "us": null,
+    "why": "synthetic format-consistent (as the w17 1M state); timing is data-independent"
+   },
+   {
+    "term": "tau 3.8879",
+    "us": null,
+    "why": "published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"
+   }
+  ]
+ },
+ "physical": {
+  "SS_PQ0_ps": -684.06,
+  "SS_PQ1_ps": -722.82,
+  "full_context_qualified": false,
+  "selected_HCPOST": "REJECT_SS -52.47ps; different M6A5 lane gives no qualification",
+  "verdict": "REJECT_CURRENT_FIELD_SCREEN"
+ },
+ "remaining_costs": {
+  "R93_conversion_area": null,
+  "finite_downstream_consumer_credits": null,
+  "installed_context_barrier": null,
+  "new_context_walker_area": null,
+  "routed_clock_fanout_SS_FF": null
+ },
+ "repair_direction": {
+  "added_ROM_reads": 0,
+  "added_boundary_ports": 0,
+  "area_terms": "47FF + up to99mux2 + SAW14 base-add +16bit increment/equality + protection/enable/clock/localwire; not free",
+  "construction": "capture active fam/nbeat/base33 bits and SAW14 exact next-address register at existing can_go; preserve sw and stall/last-beat recurrence",
+  "exactness_required": "registered address equals original st_a during sm_run incl first fill/stalls/last-position wrap; unchanged every actual write/idle",
+  "owner": "Epicurus",
+  "physical_required": "SS60/FF25 separately launch->active, active->address and address->ROM->sw; no closure inferred",
+  "proposed_accepted_II": 1,
+  "proposed_added_cycles": 0,
+  "proposed_raw_FF": 47,
+  "scope": "mandatory shared address cone, not PQ performance rescue",
+  "token_gain_credit": 0
+ },
+ "schema": "opentallas.dsrom-recovery.paired-field-gate.v1",
+ "scope": "Only three actual L20 node families; all other nodes retain baseline. No historical 105us credit, all-layer extrapolation or installed-root barrier qualification.",
+ "serial_charges": {
+  "L20.attn.wo_a.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 871,
+   "total_edges": 951
+  },
+  "L20.ffn.down.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 1274,
+   "total_edges": 1354
+  },
+  "L20.ffn.down.st38": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 521,
+   "total_edges": 601
+  },
+  "L20.ffn.experts_gu.st37": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 1483,
+   "total_edges": 1563
+  },
+  "L20.ffn.experts_gu.st38": {
+   "floorplan_wire_edges_once": 80,
+   "source_bound_edges": 741,
+   "total_edges": 821
+  }
+ },
+ "serialized_projection": {
+  "AR_tok_s": 1616.9,
+  "AR_us": 618.482,
+  "MTP": {
+   "II_us": 24.822,
+   "MTP_tok_s": 4494.6,
+   "draft_terms": {
+    "block5_basis": "full shape: the three DSpark blocks (mtp.0..2, 5 block rows, T = 128 window + 5 block rows) of the golden draft at the 1M anchor (position 1,048,575, y = the 1M reference token), every element measured in full-shape RTL on the released mtp.* weights and the golden's own activations, composed on the S81 graph's sliding-layer (L0) dependency structure with the serial attention section unrolled over the 5 rows. PLACEMENT (stated, not in the S81 binding: mtp.* is an unowned auxiliary obligation there): each DSpark stage on its own TP4 group of S81 layer-class dies, matrices on the S81 allocator's L0 placement (rank 0), one 5-row stage hop into each stage. ROM FIELD: the as-built W17 spine's multi-position phase (np = 4: one phase serves the 5 rows) for the batchable weight ops; routed experts one phase per row.",
+    "block5_us": 38.3718,
+    "blocks_us": 83.992,
+    "head_occ_us": 6.9892,
+    "r_markov": 0.00781
+   },
+   "draft_us": 119.211,
+   "mtp_over_ar": 2.78,
+   "rule": "II = slowest stage busy x (1 + measured handoff 46/11271) + measured hop; verify = AR + 5 II; draft = 3 DSpark blocks + 5 x head occupancy x (1 + Markov/lm_head MACs); tau 3.8879 (third-party published)",
+   "seed_commit_us": 3.217,
+   "stage_busy_top": [
+    {
+     "busy_us": 23.9669,
+     "first": "L19.ffn.hc_pre",
+     "hop": "L20.substage_hop0"
+    },
+    {
+     "busy_us": 21.9062,
+     "first": "L13.ffn.hc_pre",
+     "hop": "L14.substage_hop0"
+    },
+    {
+     "busy_us": 21.2069,
+     "first": "L7.ffn.hc_pre",
+     "hop": "L8.substage_hop0"
+    },
+    {
+     "busy_us": 19.0861,
+     "first": "L1.ffn.hc_pre",
+     "hop": "L2.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L27.ffn.hc_pre",
+     "hop": "L28.substage_hop0"
+    },
+    {
+     "busy_us": 14.7611,
+     "first": "L31.ffn.hc_pre",
+     "hop": "L32.substage_hop0"
+    }
+   ],
+   "step_us": 865.021,
+   "tau": 3.8879,
+   "verify_us": 742.593,
+   "worst_stage": {
+    "busy_us": 23.9669,
+    "first": "L19.ffn.hc_pre",
+    "hop": "L20.substage_hop0"
+   }
+  },
+  "cdc_on_path_us": 4.293,
+  "hardware_qualified": false,
+  "still_modelled": [
+   {
+    "term": "fast->fast mesochronous region crossings (field region <-> hub / IO regions)",
+    "us": null,
+    "why": "no S81 clock-region map of every 1.2 GHz edge; the clocking decision prices them at +661 cycles (0.55 us) a token central (results/uarch/rom_die_clocking_decision_20261003)"
+   },
+   {
+    "term": "light-FEC PHY (130 ns a board hop) and UCIe PHY (10 ns)",
+    "us": null,
+    "why": "VENDOR BUDGET (no PHY RTL); inside the measured+vendor_phy hop terms"
+   },
+   {
+    "term": "draft blocks: hc.fn (HE FP32 mixes [24, 20480], attn + ffn) x 5 rows",
+    "us": 0.9542,
+    "why": "no HE/hc-engine RTL bench (also modelled in the AR composition); off the critical path unless listed in critical_path"
+   },
+   {
+    "term": "draft blocks: CDC fast->slow crossings on SU nodes",
+    "us": 0.2488,
+    "why": "W18 ratio-FIFO latency, no CDC bench (as AR); includes the quantisers' 37 hub stages"
+   },
+   {
+    "term": "draft blocks: light-FEC PHY (130 ns) + UCIe (10 ns) inside the stage hop",
+    "us": 0.1392,
+    "why": "VENDOR BUDGET (no PHY RTL), as AR"
+   },
+   {
+    "term": "draft blocks: DSpark stage placement",
+    "us": null,
+    "why": "mtp.* is unowned in the S81 canonical binding; this uses L0's allocator placement on a dedicated TP4 group (an owner mapping may differ)"
+   },
+   {
+    "term": "draft blocks: older 127 window rows of each stage",
+    "us": null,
+    "why": "synthetic format-consistent (as the w17 1M state); timing is data-independent"
+   },
+   {
+    "term": "tau 3.8879",
+    "us": null,
+    "why": "published third-party acceptance (tools/third_party_tau.py), not an RTL quantity"
+   }
+  ]
+ },
+ "source_commit": "1002323510d8d64bbf90c97d0de7911d724218a5",
+ "swiglu": {
+  "full_shape_exact": true,
+  "rows": [
+   {
+    "adoption": false,
+    "baseline_component_cycles": 347,
+    "baseline_component_us": 0.38555555555555554,
+    "baseline_route_weight_already_fused_as_E2": true,
+    "candidate_activation_cycles": 142,
+    "candidate_component_cycles": 178,
+    "candidate_component_us": 0.14833333333333334,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L0.ffn.swiglu",
+    "conditional_component_delta_us": 0.2372222222222222,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 3456,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 242,
+    "baseline_component_us": 0.2688888888888889,
+    "baseline_route_weight_already_fused_as_E2": false,
+    "candidate_activation_cycles": 134,
+    "candidate_component_cycles": 170,
+    "candidate_component_us": 0.14166666666666666,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L0.ffn.shared_swiglu",
+    "conditional_component_delta_us": 0.12722222222222224,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 576,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 347,
+    "baseline_component_us": 0.38555555555555554,
+    "baseline_route_weight_already_fused_as_E2": true,
+    "candidate_activation_cycles": 142,
+    "candidate_component_cycles": 178,
+    "candidate_component_us": 0.14833333333333334,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L3.ffn.swiglu",
+    "conditional_component_delta_us": 0.2372222222222222,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 3456,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 242,
+    "baseline_component_us": 0.2688888888888889,
+    "baseline_route_weight_already_fused_as_E2": false,
+    "candidate_activation_cycles": 134,
+    "candidate_component_cycles": 170,
+    "candidate_component_us": 0.14166666666666666,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L3.ffn.shared_swiglu",
+    "conditional_component_delta_us": 0.12722222222222224,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 576,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 347,
+    "baseline_component_us": 0.38555555555555554,
+    "baseline_route_weight_already_fused_as_E2": true,
+    "candidate_activation_cycles": 142,
+    "candidate_component_cycles": 178,
+    "candidate_component_us": 0.14833333333333334,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L20.ffn.swiglu",
+    "conditional_component_delta_us": 0.2372222222222222,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 3456,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 242,
+    "baseline_component_us": 0.2688888888888889,
+    "baseline_route_weight_already_fused_as_E2": false,
+    "candidate_activation_cycles": 134,
+    "candidate_component_cycles": 170,
+    "candidate_component_us": 0.14166666666666666,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L20.ffn.shared_swiglu",
+    "conditional_component_delta_us": 0.12722222222222224,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 576,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 347,
+    "baseline_component_us": 0.38555555555555554,
+    "baseline_route_weight_already_fused_as_E2": true,
+    "candidate_activation_cycles": 142,
+    "candidate_component_cycles": 178,
+    "candidate_component_us": 0.14833333333333334,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L24.ffn.swiglu",
+    "conditional_component_delta_us": 0.2372222222222222,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 3456,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   },
+   {
+    "adoption": false,
+    "baseline_component_cycles": 242,
+    "baseline_component_us": 0.2688888888888889,
+    "baseline_route_weight_already_fused_as_E2": false,
+    "candidate_activation_cycles": 134,
+    "candidate_component_cycles": 170,
+    "candidate_component_us": 0.14166666666666666,
+    "candidate_quant_transport_cycles": 36,
+    "chain": "L24.ffn.shared_swiglu",
+    "conditional_component_delta_us": 0.12722222222222224,
+    "extra_route_w_latency_added": false,
+    "golden_exact_elements": 576,
+    "graph_warning": "baseline chain_swiglu already multiplies route weight: Maxwell must check separate graph route_w before composition",
+    "remaining_dependencies": [
+     "silu FP32 dependency chain",
+     "32-lane quantiser reduction",
+     "finite final VM/consumer credits and graph CDC"
+    ]
+   }
+  ],
+  "ss_ff": null,
+  "token_gain": null,
+  "verdict": "UNVALIDATED_COMPONENT_COMPARISON"
+ },
+ "swiglu_route_accounting": {
+  "baseline_source": "tools/dsrom_1m_su.py::chain_swiglu already E2_MULB",
+  "covered_nodes": {
+   "L0.ffn.quant2": "L0.ffn.swiglu",
+   "L0.ffn.route_w": "L0.ffn.swiglu",
+   "L0.ffn.shared_quant": "L0.ffn.shared_swiglu",
+   "L20.ffn.quant2": "L20.ffn.swiglu",
+   "L20.ffn.route_w": "L20.ffn.swiglu",
+   "L20.ffn.shared_quant": "L20.ffn.shared_swiglu",
+   "L24.ffn.quant2": "L24.ffn.swiglu",
+   "L24.ffn.route_w": "L24.ffn.swiglu",
+   "L24.ffn.shared_quant": "L24.ffn.shared_swiglu",
+   "L3.ffn.quant2": "L3.ffn.swiglu",
+   "L3.ffn.route_w": "L3.ffn.swiglu",
+   "L3.ffn.shared_quant": "L3.ffn.shared_swiglu"
+  },
+  "note": "Subset contrast includes removal of duplicate route-weight and fused quant terms; not all hardware speedup.",
+  "separately_counted_route_w_in_historical_graph": true
+ }
+}

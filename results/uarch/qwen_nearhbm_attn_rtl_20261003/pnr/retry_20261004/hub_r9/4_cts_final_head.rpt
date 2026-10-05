@@ -1,0 +1,60 @@
+
+==========================================================================
+cts final report_tns
+--------------------------------------------------------------------------
+tns max -30616.33
+
+==========================================================================
+cts final report_wns
+--------------------------------------------------------------------------
+wns max -88.95
+
+==========================================================================
+cts final report_worst_slack
+--------------------------------------------------------------------------
+worst slack max -88.95
+
+==========================================================================
+cts final report_clock_min_period
+--------------------------------------------------------------------------
+core_clk period_min = 921.95 fmax = 1084.66
+
+==========================================================================
+cts final report_clock_skew
+--------------------------------------------------------------------------
+Clock core_clk
+1210.92 source latency zy_r[126]$_DFF_P_/CLK ^
+-1047.46 target latency zm[231][30]$_DFFE_PP_/CLK ^
+  60.00 clock uncertainty
+ -19.44 CRPR
+--------------
+ 204.03 setup skew
+
+
+==========================================================================
+cts final report_checks -path_delay min
+--------------------------------------------------------------------------
+Startpoint: g_rl[21].u_l/q$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: g_z[2].g_h2[1].u_add.u_cb.g_r.r[53]$_DFF_PN0_
+          (removal check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: min
+Corner: BC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                          0.00    0.00   clock core_clk (rise edge)
+                          0.00    0.00   clock source latency
+     1   22.20    0.00    0.00    0.00 ^ clk (in)
+                                         clk (net)
+                 79.73   25.15   25.15 ^ wire309905/A (BUFx12f_ASAP7_75t_R)
+     1   20.09   12.49   25.31   50.47 ^ wire309905/Y (BUFx12f_ASAP7_75t_R)
+                                         net309902 (net)
+                 71.28   22.07   72.53 ^ wire309904/A (BUFx24_ASAP7_75t_R)
+     1   29.67   14.30   33.08  105.61 ^ wire309904/Y (BUFx24_ASAP7_75t_R)
+                                         net309901 (net)
+                147.64   46.48  152.09 ^ wire309903/A (BUFx24_ASAP7_75t_R)
+     1   29.51   16.78   41.85  193.94 ^ wire309903/Y (BUFx24_ASAP7_75t_R)
+                                         net309900 (net)
+                146.45   46.05  240.00 ^ clkbuf_0_clk/A (BUFx24_ASAP7_75t_R)

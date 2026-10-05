@@ -1,0 +1,3 @@
+read_db /probe/work/orfs/results/asap7/opentallas_ot_v41_static_provider_context_asap7_epicurus_static_context_r1/base/2_3_floorplan_tapcell.odb
+source /probe/regions-corrected.tcl
+exit

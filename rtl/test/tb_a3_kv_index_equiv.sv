@@ -85,6 +85,7 @@ module tb_kv_equiv #(parameter integer SLOTS = 8) ;
                      SLOTS, checked);
         else
             $display("FAIL kv_equiv SLOTS=%0d: %0d of %0d vectors disagree", SLOTS, errors, checked);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

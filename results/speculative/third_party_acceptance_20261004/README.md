@@ -2,12 +2,20 @@
 
 > OWNER RULE 2026-10-04: speculative-decoding acceptance and the DeepSeek-V4.1 GPU decode baseline must come from PUBLISHED THIRD-PARTY sources (MLCommons, LMSys/SGLang, vLLM, model vendors, NVIDIA/AMD, ...), never from our own measurement. OWNER CORRECTION: cite this registry instead of re-researching.
 
-Convention: tau = mean tokens committed per verify step INCLUDING the bonus token (EAGLE/DSpark 'accepted length'). Sources are ids in [`results/external/registry.json`](../../external/registry.json). Read by `tools/third_party_tau.py`, which every composition now uses by default (`OT_TAU_SOURCE=self_measured` reproduces the superseded records).
+Convention: tau = mean tokens committed per verify step INCLUDING the bonus token (EAGLE/DSpark 'accepted length'). Sources are ids in [`results/external/registry.json`](../../external/registry.json). Read by `tools/third_party_tau.py`, which every composition uses (`OT_TAU_SOURCE=adopted` is the default; `third_party` gives the published DS sensitivity; `self_measured` reproduces the superseded records).
 
-| Model | Draft tokens | Primary tau | Grade | Range | Superseded (ours) |
-|---|---|---|---|---|---|
-| Qwen3-8B + DSpark | 3 | **3.1445** | derived-from-published | 2.5649-3.5676 | 3.0375 |
-| DeepSeek-V4.1-Flash + DSpark | 5 | **3.8879** | published | 3.43-4.31748 | 4.159 |
+## Owner decision 2026-10-05
+
+DeepSeek-V4.1 composition default tau = 4.159, the owner 6-class workload blend (harmonic, greedy, gamma 5) in results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json; the published V4.1 value 3.8879 and the published V4.1 gamma-5 range 3.43-4.32 are kept as a SENSITIVITY (OT_TAU_SOURCE=third_party). Qwen3-8B keeps the third-party derived 3.1445.
+
+Reason: OWNER: a single GSM8K dataset (the 3.8879 primary) makes no sense as the headline workload, and several published sources are V4-Flash, not V4.1.
+
+Supersedes: the 2026-10-04 owner rule's DS default (published 3.8879); the third-party figures below are unchanged.
+
+| Model | Draft tokens | Composition default tau | Basis | Published primary (third-party) | Published range | Superseded (ours) |
+|---|---|---|---|---|---|---|
+| Qwen3-8B + DSpark | 3 | **3.1445** | derived-from-published | 3.1445 | 2.5649-3.5676 | 3.0375 |
+| DeepSeek-V4.1-Flash + DSpark | 5 | **4.159** | owner 6-class workload blend (adopted 2026-10-05) | 3.8879 (sensitivity) | 3.43-4.31748 (sensitivity) | - |
 
 ## Qwen3-8B
 
@@ -35,7 +43,9 @@ Corroborating values (other drafters): the RedHat EAGLE-3 card gives k=3 2.13-2.
 
 ## DeepSeek-V4.1-Flash (DSpark, block 5)
 
-Primary 3.8879 (vLLM PR #57432, TP4, same model revision, after the acceptance fix). It is within 1% of the median (3.856) of the published V4.1-Flash gamma-5 set. Mismatch: dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024).
+Composition default: **4.159**, the owner 6-class workload blend (adopted 2026-10-05) (`results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json blends['owner 6-class equal'].greedy.tau_blend_harmonic`). The published values below are kept as a sensitivity.
+
+Published primary 3.8879 (vLLM PR #57432, TP4, same model revision, after the acceptance fix). It is within 1% of the median (3.856) of the published V4.1-Flash gamma-5 set. Mismatch: dataset GSM8K (reasoning) only, greedy, short outputs (<=1,024).
 
 | Source | tau | Conditions |
 |---|---|---|

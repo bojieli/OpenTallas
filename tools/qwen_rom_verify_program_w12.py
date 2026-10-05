@@ -72,10 +72,12 @@ def f32(x):
     return P.f32(x)
 
 
-def vm_map_p(p, h=4096):
+def vm_map_p(p, h=4096, region_major=False):
     """T1 for all p positions first (the all-reduce source, word 0), then one
     copy of every other region of tools/hdc_qwen_fullshape_program_w12.vm_map per
-    position.  p = 1 is that map exactly."""
+    position.  p = 1 is that map exactly.  region_major (MERGE_SU): the p copies of
+    each region are adjacent (copy j at region base + j x aligned size), so an op on
+    the p positions is one op with a position stride."""
     one, _ = FP.vm_map()
     names = [n for n in sorted(one, key=one.get)]
     assert names[0] == 'T1' and one['T1'] == 0
@@ -87,20 +89,35 @@ def vm_map_p(p, h=4096):
     base = h * p
     for j in range(p):
         out[j]['T1'] = j * h
+    if region_major:
         for n in names[1:]:
-            base = (base + W - 1) // W * W
-            out[j][n] = base
-            base += sizes[n]
+            for j in range(p):
+                base = (base + W - 1) // W * W
+                out[j][n] = base
+                base += sizes[n]
+    else:
+        for j in range(p):
+            for n in names[1:]:
+                base = (base + W - 1) // W * W
+                out[j][n] = base
+                base += sizes[n]
     total = (base + W - 1) // W * W
     if p == 1:
         assert out[0] == one and total == total1, 'p = 1 must equal the AR map'
     return out, total
 
 
-def build_verify_layer(lay, p, post_scale_bases=None):
+def build_verify_layer(lay, p, post_scale_bases=None, merge_su=False):
     """Field dicts of the p-position layer (norm-folded TP layer, layer index 0
-    of a single-layer KV window)."""
-    vms, _ = vm_map_p(p)
+    of a single-layer KV window).
+
+    merge_su (default off; region-major VM layout): a stream op with no DYN term
+    is issued ONCE for the p positions instead of p times back to back -- its
+    rows are the p positions' rows (nout x p) at the region's position stride, so
+    every output element is computed by exactly the arithmetic of the per-position
+    op (same inputs, same reduction order); only the issue count changes."""
+    vms, _ = vm_map_p(p, region_major=merge_su)
+    pstride = {n: vms[1][n] - vms[0][n] for n in vms[0]} if p > 1 else {n: 0 for n in vms[0]}
     GR = P.GR
     S_STRIDE = TMAX
     L = 0
@@ -124,8 +141,10 @@ def build_verify_layer(lay, p, post_scale_bases=None):
             f.update(over)
             prog.append((f, tag(reads), tag(writes)))
 
-        def su(reads=(), writes=(), red_writes=(), **f):
+        def su(reads=(), writes=(), red_writes=(), merge=None, **f):
             f = dict(f, unit=I.UNIT_SU, _red_regions=tag(red_writes))
+            if merge is not None:
+                f['_merge'] = merge
             prog.append((f, tag(reads), tag(writes) | tag(red_writes)))
 
         sq = dict(red=I.RED_SUM, red_sq=1, r_base=VM["SSX"])
@@ -133,10 +152,11 @@ def build_verify_layer(lay, p, post_scale_bases=None):
         def rsqrt_rx(n):
             su(su_nout=1, su_nin=1, a_base=VM["SSX"], ma=I.MA_AIMM, imm1=f32(1.0 / n), ad=I.AD_IMM,
                imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RX"],
-               reads={"SSX"}, writes={"RX"})
+               reads={"SSX"}, writes={"RX"}, merge=dict(a="SSX", d="RX"))
 
         # X arrived over the package link: its sum of squares opens the stage
-        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, reads={"X"}, red_writes={"SSX"}, **sq)
+        su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, reads={"X"}, red_writes={"SSX"},
+           merge=dict(a="X", r="SSX"), **sq)
         nh = NH + KV
         me(lay.mat[(L, "qkv")], VM["X"], VM["QKV"], reads={"X"}, writes={"QKVqk", "QKVv"})
         rsqrt_rx(H)
@@ -150,7 +170,7 @@ def build_verify_layer(lay, p, post_scale_bases=None):
            r_base=VM["SS"], r_so=1, reads={"QKVqk", "RX"}, writes={"QKVqk"}, red_writes={"SS"})
         su(su_nout=1, su_nin=nh, a_base=VM["SS"], a_si=1, ma=I.MA_AIMM, imm1=f32(1.0 / HD),
            ad=I.AD_IMM, imm2=f32(lay.eps), sfu=I.SFU_RSQRT, dst=I.DST_VM, d_base=VM["RS"], d_si=1,
-           reads={"SS"}, writes={"RS"})
+           reads={"SS"}, writes={"RS"}, merge=dict(a="SS", d="RS"))
         su(su_nout=nh, su_nin=HD, a_base=VM["QKV"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RS"],
            b_so=1, c_src=I.SRC_ALT, c_base=lay.cb[(L, "qk")], c_so=HD, c_si=1, mc=I.MC_C,
            dst=I.DST_VM, d_base=VM["QN"], d_so=HD, d_si=1, reads={"QKVqk", "RS"}, writes={"QN"})
@@ -204,7 +224,7 @@ def build_verify_layer(lay, p, post_scale_bases=None):
                reads={f"S{h}" for h in range(hb, hb + nb)}, writes={f"ATT{hb}"})
             prog[-1] = (prog[-1][0], prog[-1][1] | vseen, prog[-1][2])
         su(su_nout=1, su_nin=NH, a_base=VM["Z"], a_si=1, sfu=I.SFU_RECIP, dst=I.DST_VM,
-           d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"})
+           d_base=VM["RZ"], d_si=1, reads={"Z"}, writes={"RZ"}, merge=dict(a="Z", d="RZ"))
         su(su_nout=NH, su_nin=HD, a_base=VM["ATT"], a_so=HD, a_si=1, ma=I.MA_AB, b_base=VM["RZ"], b_so=1,
            dst=I.DST_VM, d_base=VM["ATTN"], d_so=HD, d_si=1,
            reads={f"ATT{hb}" for hb in range(0, NH, IL)} | {"RZ"}, writes={"ATTN"})
@@ -212,24 +232,58 @@ def build_verify_layer(lay, p, post_scale_bases=None):
         prog.append(('COLL', 0))
         prog.append(('SCALE', 0))
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"},
+           merge=dict(a="X", c="T1", d="X", r="SSX"), **sq)
         FF, tb = lay.FF, lay.GUB
         me(lay.mat[(L, "gu")], VM["X"], VM["GU"], reads={"X"}, writes={"GUall"})
         rsqrt_rx(H)
         su(su_nout=1, su_nin=2 * FF, a_base=VM["GU"], a_si=1, ma=I.MA_AB, b_base=VM["RX"],
            dst=I.DST_VM, d_base=VM["GU"], d_si=1, reads={"GUall", "RX"},
-           writes={f"GU{r}" for r in range(FF // tb)})
+           writes={f"GU{r}" for r in range(FF // tb)}, merge=dict(a="GU", b="RX", d="GU"))
         su(su_nout=FF // tb, su_nin=tb, a_base=VM["GU"], a_so=2 * tb, a_si=1, ma=I.MA_AIMM, imm1=f32(-1.0),
            sfu=I.SFU_SIGM, c_base=VM["GU"], c_so=2 * tb, c_si=1, mc=I.MC_C, b_base=VM["GU"] + tb,
            b_so=2 * tb, b_si=1, md=I.MD_B, dst=I.DST_VM, d_base=VM["ACT"], d_so=tb, d_si=1,
-           reads={f"GU{r}" for r in range(FF // tb)}, writes={f"ACT{r}" for r in range(FF // tb)})
+           reads={f"GU{r}" for r in range(FF // tb)}, writes={f"ACT{r}" for r in range(FF // tb)},
+           merge=dict(rows=dict(a="GU", b="GU", c="GU", d="ACT")))
         me(lay.mat[(L, "down")], VM["ACT"], VM["T1"], reads={f"ACT{r}" for r in range(FF // tb)},
            writes={"T1"})
         prog.append(('COLL', 1))
         prog.append(('SCALE', 1))
         su(su_nout=1, su_nin=H, a_base=VM["X"], a_si=1, c_base=VM["T1"], c_si=1, ad=I.AD_C,
-           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"}, **sq)
+           dst=I.DST_VM, d_base=VM["X"], d_si=1, reads={"X", "T1"}, writes={"X"}, red_writes={"SSX"},
+           merge=dict(a="X", c="T1", d="X", r="SSX"), **sq)
         return prog
+
+    def merge_op(ops):
+        """one op for the p positions: rows = the p positions' rows at the position stride"""
+        f0 = {k: v for k, v in ops[0][0].items() if k != '_merge'}
+        spec = ops[0][0]['_merge']
+        for j, (fj, _, _) in enumerate(ops):   # the copies differ only by the merged operands' bases
+            for k, v in fj.items():
+                if k in ('_merge', '_red_regions') or k.endswith('_base'):
+                    continue
+                assert v == f0.get(k), f'merge: field {k} differs between positions'
+        f = dict(f0)
+        if 'rows' in spec:
+            n = f0['su_nout']
+            for op, reg in spec['rows'].items():
+                assert pstride[reg] == n * f0[f'{op}_so'], f'merge rows: {reg} stride {pstride[reg]} != {n} x {op}_so'
+            f['su_nout'] = n * p
+        else:
+            assert f0['su_nout'] == 1
+            f['su_nout'] = p
+            for op, reg in spec.items():
+                assert f0.get(f'{op}_so', 0) == 0
+                f[f'{op}_so'] = pstride[reg]
+        for j, (fj, _, _) in enumerate(ops):   # every position's base is the position-0 base + j x stride
+            for k, v in fj.items():
+                if k.endswith('_base') and k != 'c_base' or (k == 'c_base' and fj.get('c_src', 0) != I.SRC_ALT):
+                    if isinstance(v, int) and k[0] in 'abcdr':
+                        reg = (spec['rows'] if 'rows' in spec else spec).get(k[0])
+                        if reg is not None:
+                            assert v == f0[k] + j * pstride[reg], f'merge: {k} of position {j} is not at the stride'
+        f['_red_regions'] = set().union(*(o[0]['_red_regions'] for o in ops))
+        return (dict(f, _pos_off=0), set().union(*(o[1] for o in ops)), set().union(*(o[2] for o in ops)))
 
     per = [layer_ops(j) for j in range(p)]
     assert all(len(x) == len(per[0]) for x in per)
@@ -251,8 +305,11 @@ def build_verify_layer(lay, p, post_scale_bases=None):
             # untracked, as FP.insert_post_tp_scales (applied after scheduling there): the stream
             # unit runs in order, so the residual add behind it reads T1 after it is scaled
             prog.append((f, set(), set()))
+        elif merge_su and p > 1 and isinstance(ops[0][0], dict) and '_merge' in ops[0][0]:
+            prog.append(merge_op(ops))
         else:
             for j, (f, rd, wr) in enumerate(ops):
+                f = {k: v for k, v in f.items() if k != '_merge'}
                 prog.append((dict(f, _pos_off=j), rd, wr))
     prog.append((dict(unit=I.UNIT_END, barrier=1, _coll=(P.COLL_END, 0, 0, lay.row0)), set(), set()))
     return schedule(prog, lay)
@@ -332,11 +389,11 @@ def decode_descriptor(word):
     return d
 
 
-def profile(die, p, matrix_rows, post_scale_bases):
+def profile(die, p, matrix_rows, post_scale_bases, merge_su=False):
     vm, _ = FP.vm_map()
     lay = FP.LayerZero(None, die, matrix_rows)
     with FP.program_geometry(vm):
-        program = build_verify_layer(lay, p, post_scale_bases)
+        program = build_verify_layer(lay, p, post_scale_bases, merge_su=merge_su)
     words, desc = [], []
     for instrs, (kind, vw, nw, row0) in P.segments(program):
         desc.append(encode_descriptor(kind, vw, nw, len(words), row0))
@@ -346,10 +403,10 @@ def profile(die, p, matrix_rows, post_scale_bases):
         for k, v in f.items():
             if not k.startswith('_') and d[k] != v:
                 raise ValueError(f'ISA round trip failed: {k}')
-    _, vm_elems = vm_map_p(p)
+    _, vm_elems = vm_map_p(p, region_major=merge_su)
     return {'die': die, 'p': p, 'program_hex': [f'{x:0256x}' for x in words],
             'descriptor_hex': [f'{x:016x}' for x in desc], 'vm_elems': vm_elems,
-            'x_bases': [m['X'] for m in vm_map_p(p)[0]], 'instructions': len(words),
+            'x_bases': [m['X'] for m in vm_map_p(p, region_major=merge_su)[0]], 'instructions': len(words),
             'me_ops': sum(f['unit'] == I.UNIT_ME for f in program),
             'su_ops': sum(f['unit'] == I.UNIT_SU for f in program)}
 
@@ -411,6 +468,7 @@ def main():
     ap.add_argument('--head-dirs', help='format string {die}: img_tp4 head dirs (head_rom.json geometry); emits the head stage')
     ap.add_argument('--head-src', help='format string {die}: pinned SW64 head stage dirs (crom/matrix links; p = 1 check)')
     ap.add_argument('--manifests', default='')
+    ap.add_argument('--merge-su', action='store_true', help='MERGE_SU: one stream op for the p positions where no DYN term (region-major VM)')
     ap.add_argument('--ar256', default='')
     a = ap.parse_args()
     if I.SU_WIDTH != 64:
@@ -431,7 +489,7 @@ def main():
             nd = []
             for die, src in enumerate(map(Path, dirs)):
                 man = json.loads(Path(a.manifest_dirs.format(layer=n, die=die), f'layer{n}_rom.json').read_text())
-                r = profile(die, a.p, man['matrix_layout'], man['post_tp_scale_bases'])
+                r = profile(die, a.p, man['matrix_layout'], man['post_tp_scale_bases'], merge_su=a.merge_su)
                 dst = a.out / f'{name}-d{die}'
                 dst.mkdir(parents=True, exist_ok=False)
                 (dst / 'program.hex').write_text(''.join(x + '\n' for x in r['program_hex']))

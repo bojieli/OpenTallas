@@ -22,4 +22,16 @@ record `record.json`. Verdict **PASS**:
 | KV 2 rows + 2 cols | repaired; 3 rows: unrepairable (fail) as expected |
 | Mixed ROM + KV fault | ROM macro 1 fail, KV bank 0 repaired |
 
-Area / 1.2 GHz timing of the BIST logic alone (`ot_v41_mbist_shell.sv`): see `shell_route.json` when present.
+## 1.2 GHz timing of the BIST logic (`ot_v41_mbist_shell.sv`: controller + 4 ROM collars + 2 SRAM collars)
+
+- With the original `ot_mbist_rom_collar` (bit-serial CRC loop) the routed shell FAILS: SS setup -3,598.8 ps
+  (226 MHz), worst path `sig -> sig` through the 274-bit fold; 10,503 um2 (`shell_loopcrc_FAIL/`).
+- Successor `rtl/dft/ot_mbist_rom_collar_par.sv` writes the same CRC in matrix form (per-bit parity of constant
+  masks). The element campaign re-run with it gives the identical signatures and verdict (`record.json`;
+  the loop-form run is `record_loopcrc.json`). Its routed shell (`shell_par/`, generic sign-off recipe, false-path IO):
+  **SS setup -515.8 ps (741 MHz), FF hold +10.1 ps -> does NOT close 1.2 GHz.** The ROM collars are no longer
+  limiting; the worst path is inside the shared BIRA (`u_bist.u_bira.cm_r -> cm_pop_r`, the repair-analysis
+  popcount). Std-cell area 9,728 um2 (74,233 cells) for 1 controller + 4 ROM collars + 2 SRAM collars, i.e. 40% of
+  the q element's 24,101 um2 if all of it sat in one element (the controller/BIRA is shared per die in practice).
+  Open: pipeline or multicycle the BIRA analysis (it runs between March passes, not at memory speed) and re-route;
+  not tuned here (owner rule).

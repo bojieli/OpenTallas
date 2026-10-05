@@ -515,6 +515,13 @@ int main(int argc, char** argv) {
         settle(live_all);
         {
             uint32_t cyc = die[0]->cyc;
+            // RT_OPTRACE=1 (default off): die 0's instruction fetch address on every change (op-level profile)
+            static const bool optrace = getenv("RT_OPTRACE") && atoi(getenv("RT_OPTRACE"));
+            static int prev_pa = -1;
+            if (optrace && int(die[0]->dbg_prog_a) != prev_pa) {
+                prev_pa = int(die[0]->dbg_prog_a);
+                printf("OPTRACE cyc=%u prog_a=%d me=%d\n", cyc, prev_pa, int(die[0]->me_clk_en));
+            }
             uint8_t all_done = 1;
             for (int d = 0; d < D; d++) all_done &= die[d]->s_done;
             if (!done_armed) {

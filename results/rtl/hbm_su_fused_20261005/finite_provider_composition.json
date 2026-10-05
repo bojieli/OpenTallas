@@ -1,0 +1,111 @@
+{
+  "CDC_FIFO_debit": "already installed in borrowed SM0 route; retain once, no new ports; outstanding limit1 cannot inherit FIFO throughput8",
+  "HC_nonoverlapped_81_call_payload_floor_us": 350.487,
+  "HC_transport_floor_over_original_benchmark": 7.996509240246406,
+  "RTL_build_admitted": false,
+  "adoption": false,
+  "alternative_Q_KV_staged_service_us": {
+    "kv_norm": 0.09777777777777777,
+    "q_norm": 0.12444444444444444
+  },
+  "alternative_RF_body_mm2": 0.49812185088,
+  "alternative_adapter_reservation_mm2_ESTIMATE": 0.24906652416000002,
+  "alternative_macro_debit": "retain installed RF body once if actually leased; dedicated replica adds 0.49812185088mm2 body before clock/PG/routes",
+  "alternative_remaining_costs": "actual source staging load, CR address namespace, byte-aligned RMW, quant/KV destination, external clock crossings, loaded mux/FF hold and slot",
+  "alternative_source": "rtl/gpu/ot_gpu_rf_service.sv",
+  "authoritative_provider_selection": "results/uarch/hbm_su_finite_provider_20261005/selection.json",
+  "clock_hz_qualified": null,
+  "component_exactness_not_physical_qualification": true,
+  "composed_token_delta_us": null,
+  "decision": "selected sector path is a functional-integration candidate, NOT an acceleration credit; pricing cannot use original fixed-wide bench as physical baseline",
+  "existing_CDC_FIFO_payload_bits": 4880,
+  "headline_rate_gain_percent": null,
+  "original_HC_benchmark_us": 0.5411111111111111,
+  "physical_SS_FF_acceptance": false,
+  "repeated_call_scope": "conditional 81 serial HC calls only; not token delta or proof of current physical provider latency",
+  "rows": [
+    {
+      "explicit_latency_equation": "3200*T_read_roundtrip + 1127*T_write_roundtrip + staging/pack_mux + read_drain + checked_publication + owner_handoff; engine overlap allowed only by accepted dependent-event calendar",
+      "field_to_X_availability_time_us": null,
+      "kind": "hc_norm",
+      "native_and_fused_operand_response_compatibility": false,
+      "physically_qualified": false,
+      "read_sectors_floor": 3200,
+      "roundtrip_definition": "each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again",
+      "serial_sector_payload_floor_us": 4.327,
+      "successful_service_upper_bound_us": null,
+      "write_sectors_floor": 1127
+    },
+    {
+      "explicit_latency_equation": "320*T_read_roundtrip + 282*T_write_roundtrip + staging/pack_mux + read_drain + checked_publication + owner_handoff; engine overlap allowed only by accepted dependent-event calendar",
+      "field_to_X_availability_time_us": null,
+      "kind": "q_norm",
+      "native_and_fused_operand_response_compatibility": false,
+      "physically_qualified": false,
+      "read_sectors_floor": 320,
+      "roundtrip_definition": "each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again",
+      "serial_sector_payload_floor_us": 0.602,
+      "successful_service_upper_bound_us": null,
+      "write_sectors_floor": 282
+    },
+    {
+      "explicit_latency_equation": "128*T_read_roundtrip + 177*T_write_roundtrip + staging/pack_mux + read_drain + checked_publication + owner_handoff; engine overlap allowed only by accepted dependent-event calendar",
+      "field_to_X_availability_time_us": null,
+      "kind": "kv_norm",
+      "native_and_fused_operand_response_compatibility": false,
+      "physically_qualified": false,
+      "read_sectors_floor": 128,
+      "roundtrip_definition": "each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again",
+      "serial_sector_payload_floor_us": 0.305,
+      "successful_service_upper_bound_us": null,
+      "write_sectors_floor": 177
+    },
+    {
+      "explicit_latency_equation": "257*T_read_roundtrip + 226*T_write_roundtrip + staging/pack_mux + read_drain + checked_publication + owner_handoff; engine overlap allowed only by accepted dependent-event calendar",
+      "field_to_X_availability_time_us": null,
+      "kind": "swiglu",
+      "native_and_fused_operand_response_compatibility": false,
+      "physically_qualified": false,
+      "read_sectors_floor": 257,
+      "roundtrip_definition": "each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again",
+      "serial_sector_payload_floor_us": 0.483,
+      "successful_service_upper_bound_us": null,
+      "write_sectors_floor": 226
+    },
+    {
+      "explicit_latency_equation": "3200*T_read_roundtrip + 2560*T_write_roundtrip + staging/pack_mux + read_drain + checked_publication + owner_handoff; engine overlap allowed only by accepted dependent-event calendar",
+      "field_to_X_availability_time_us": null,
+      "kind": "hc_post",
+      "native_and_fused_operand_response_compatibility": false,
+      "physically_qualified": false,
+      "read_sectors_floor": 3200,
+      "roundtrip_definition": "each includes actual request CDC, accepted backend wait/service, matched response CDC and acceptance; do not add CDC again",
+      "serial_sector_payload_floor_us": 5.76,
+      "successful_service_upper_bound_us": null,
+      "write_sectors_floor": 2560
+    }
+  ],
+  "schema": "opentallas.hbm-su-finite-provider.composition.v1",
+  "selected_sector_staging_DFF_floor_mm2": 0.4873125888,
+  "selected_sector_staging_area_scope": "largest fused input/output reserve incl sealed state; before mux/clock/PG/corridor; mutually exclusive command variants, not summed with RF proposal",
+  "selected_transport": {
+    "admission": "must retain owner/exclusive SM-client lease, block new SM execution using actual parent launch admission, count all previous requests/responses and drain before switching; no existing top-level lease pin exported so new enclosing mux/ledger needed",
+    "backend": "reuse same installed memsys_adapter/W2 selection; no new backing array, no synthetic ACK",
+    "byte_strobes": 32,
+    "client": "existing SM0 LSU c=0; borrowed exclusively, no seventh/newclient/extraPC",
+    "clock_contract": "existing clk_sm -> clk_mem two actual domain FIFOs; source comment833ps/1000ps is sizing basis, not installed clock signoff",
+    "initial_outstanding_limit": 1,
+    "parent": "ot_ds_hbm_cluster20.g_on.g_die[d].g_cdc[0].u_x",
+    "publication": "matched real tag+kind response after each write; native/fused terminal alone never releases or publishes; drain borrowed route before owner change",
+    "rates": "one sector per memory edge is ONLY optimistic throughput floor; one-outstanding actual latency sums measured ready waits+full request/response CDC/backend round trips",
+    "request_fifo_entries": 8,
+    "response_fifo_entries": 8,
+    "tag_bits": 16,
+    "width_bits": 256
+  },
+  "smallest_alternative": "existing finite two-read RF with exclusive staged Q/KV working set; limited contiguous commands, not a replacement whole VM",
+  "source_sha256": {
+    "results/uarch/hbm_su_finite_provider_20261005/selection.json": "2b0c0538cd93a74ced482249d2613eaf66e384c16042f212c84454c27fa9e6b7",
+    "rtl/gpu_sys/ot_gpu_mreq_cdc.sv": "f2c21fc96a0e9acd4c0263257ae298a578df1d63a233b1c91fc2f0c72696d59f"
+  }
+}

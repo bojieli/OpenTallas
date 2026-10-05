@@ -1,0 +1,10 @@
+Existing mc3 closure, SOURCE PIN aa198758a44f4457031fd8e2629a7ff9ec3e601b.
+MDROP1, Q4/W16/IW20/KW10 retained original context defaults.
+Main algorithm source already byte-identical (5e74932a...); closure record/context
+was missing. This commit imports original terminal evidence only, NO new job.
+SS60 setup47.16ps; FF25 hold4.52ps; DRC/antenna/slew/cap/fanout0.
+Original groups.json contains min/max for every group, external_sides unchanged:
+out_ready_in sides0, in_ready_out and out_ready_to_in_ready sides1 (166.6ps).
+This is recorded historical context closure, not new whole-token/parent slot admission.
+kgctl remains independently open. All artifacts/source pins retained verbatim.
+Archived exact source/ contains original context, mdrop, unelaborated kgather dependency.

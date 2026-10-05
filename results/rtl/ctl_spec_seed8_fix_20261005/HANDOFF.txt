@@ -1,0 +1,7 @@
+Sagan sole routing/inventory family; Pauli isolated semantic fix only.
+New module rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv has SAME external ports and parameters plus TOKEN_EDGE_FIX default0. Opt in with TOKEN_EDGE_FIX=1 in a fresh actual selected caller. Requires rtl/hdc/ot_hdc_prefix.sv; no numerical or parent-write/reverse/controller source change.
+Source-edge token write and read-before-write semantics preserve original committed token-memory writes across reset. Only token payload is retimed through five source-stage registers. No new grants, token-buffer copies, acceptance callbacks or rollback masking; n_set/current-count/address-pipeline schedule unchanged. Original source/golden/seed8 failure preserved.
+Existing full seed8 bench terminal0 mismatches afterfix; directed reset/rollback/same-edge-write repro confirms legacy/defaultoff failure and fixed0. No other seeds/campaign/route/fullsystem compile launched.
+Enabled estimated FFdelta -197; five-cycle source response latency unchanged. New token read/write/origin arithmetic must receive own SS60/FF25 context measurement; original f3 clock closure is historical for this candidate, no adoption/rate claim.
+Next runnable bounded command, only if consumer needs replay on admitted EPYC2: bash tools/ctl_spec_seed8_fix_bench.sh /srv/opentallas-scratch/codex/pauli-spec-fresh-output
+Actual completed logs and original event trace paths in terminal.json.

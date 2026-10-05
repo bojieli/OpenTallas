@@ -1,0 +1,80 @@
+{
+  "schema": "qwen_code_read_align.v1",
+  "default_enabled": false,
+  "owner": "Erdos read adapter; Sagan caller/span/joint gate; Kant physical",
+  "clock_ps": 833.3333333333,
+  "supported_virtual_banks": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "refused_virtual_banks": [
+    5,
+    6,
+    7
+  ],
+  "columns": 2,
+  "admission": "one outstanding read per column; rd_fire is actual leaf acceptance AND consumer_ready; no idle/ready fabrication",
+  "ports": {
+    "request_bank_bits": 6,
+    "leaf_response_data_bits": 512,
+    "legacy_rom_rd_bits": 2660,
+    "read_payload_bits_per_edge": 512,
+    "response_ready_bits": 2
+  },
+  "state": {
+    "control_payload_bits": 21,
+    "control_code_bits": 72,
+    "held_payload_bits": 512,
+    "held_code_bits": 576,
+    "total_coded_FF_bits": 648,
+    "FF_area_floor_um2": 188.95680000000002
+  },
+  "logic": {
+    "encode64_instances": 9,
+    "decode64_instances": 9,
+    "onehot_bank_steering_bits": 2560,
+    "output_slots": 10,
+    "unused_upper_bits_per_slot": 10,
+    "data_hold_mux_bits": 512,
+    "bank_tag_mux_bits": 12,
+    "decode_loaded_delay_ps": null,
+    "codec_mux_routing_area_um2": null,
+    "positive_cost_unqualified": true,
+    "bank_decode_comparators": 10,
+    "bank_tag_data_fanout_per_column": 1280
+  },
+  "latency": {
+    "leaf_response_edges": 2,
+    "legacy_macro_edges": 1,
+    "MEM_EXTRA_supported": [
+      0,
+      1
+    ],
+    "adapter_extra_edges_MEM_EXTRA0": 0,
+    "adapter_extra_edges_MEM_EXTRA1": 1,
+    "added_edges_vs_same_MEM_EXTRA_original": 1,
+    "single_outstanding_min_accept_spacing_edges_MEM_EXTRA0": 3,
+    "single_outstanding_min_accept_spacing_edges_MEM_EXTRA1": 4,
+    "backpressure_adds_variable_wait": true,
+    "composed_token_delta_edges": null,
+    "throughput_drawback": "bounded integration leaf, not a streaming fulltile adoption; no latency gain claimed",
+    "response_ns_MEM_EXTRA0": 1.6666666666666,
+    "response_ns_MEM_EXTRA1": 2.4999999999998996,
+    "minimum_accept_II_ns_MEM_EXTRA0": 2.4999999999998996,
+    "minimum_accept_II_ns_MEM_EXTRA1": 3.3333333333332,
+    "maximum_payload_bytes_per_core_edge_MEM_EXTRA0": 21.333333333333332,
+    "maximum_payload_bytes_per_core_edge_MEM_EXTRA1": 16.0
+  },
+  "caller_requirements": [
+    "Adapter accepts virtual bank0..4 tags; installed physical-span mapper must refuse uninstalled reads before leaf rd_v; never derive physicalrow by truncation here",
+    "Pass actual leaf rd_v&&rd_r as rd_fire, gated by adapter readiness",
+    "Do not retain legacy tile bank capture unchanged: tags and all x/KV operands must follow MEM_EXTRA+1 together",
+    "ME has no per-read ready pin: only launch after real publication, or caller supplies actual stall alignment; no fake grant",
+    "Responsevalid must gate consumption; disabled leaf/data zeros never count as reads"
+  ],
+  "qualification": "SOURCE_ONLY; existing payload component PASS unchanged; one joint gate owned Sagan; no SSFF or fulltoken adoption",
+  "physical_span_authority": "Sagan installed-grant mapper alone: virtual bank is a response tag, never physical depth bank or guessed row; rd_fire only after actual bound/published leaf acceptance"
+}

@@ -271,7 +271,15 @@ def parse(out: str) -> dict:
     return res
 
 
-def run(scratch: Path) -> dict:
+def run(scratch: Path, bira_pop_pipe: bool = False) -> dict:
+    if bira_pop_pipe:
+        selected = scratch / "ot_mbist_ctrl.sv"
+        text = (ROOT / "rtl/dft/ot_mbist_ctrl_bira_pipe.sv").read_text()
+        selected.write_text(text.replace("module ot_mbist_ctrl_bira_pipe #(", "module ot_mbist_ctrl #(", 1)
+                           .replace("parameter integer POP_PIPE = 0", "parameter integer POP_PIPE = 1", 1))
+        DFT[0] = ROOT / "rtl/dft/ot_mbist_bira_pipe.sv"
+        DFT[1] = selected
+
     # ROM content: random 64-bit data, SECDED to 72 bits, personalised into a via map
     spec = rom_gen.spec_from_sheet(MACROS / M2 / f"{M2}.json")
     rng = random.Random(7)
@@ -417,7 +425,7 @@ def run(scratch: Path) -> dict:
         "scenarios": results,
         "secded": sec,
         "verilator_lint": lint,
-        "input_sha256": {str(p.relative_to(ROOT)): sha(p)
+        "input_sha256": {(str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)): sha(p)
                          for p in (*DFT, *MODELS, TB, TB_SEC, HARNESS, Path(__file__),
                                    ROOT / "tools/mem_compiler/ecc.py", ROOT / "tools/mem_compiler/rom_gen.py")},
     }
@@ -425,10 +433,11 @@ def run(scratch: Path) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--bira-pop-pipe", action="store_true", help="Select default-off BIRA search pipeline")
     ap.add_argument("--output", type=Path, default=OUT)
     args = ap.parse_args()
     with tempfile.TemporaryDirectory() as t:
-        result = run(Path(t))
+        result = run(Path(t), args.bira_pop_pipe)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     bad = [r["name"] for r in result["scenarios"] if not r["pass"]]

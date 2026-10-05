@@ -1,0 +1,258 @@
+{
+  "schema": "opentallas.hbrom.inner-control-plan.v1",
+  "status": "PRICED_PROPOSAL_NOT_IMPLEMENTED_NOT_SIGNOFF",
+  "shape": {
+    "NC": 1,
+    "SUB": 4,
+    "LBS": 2,
+    "LSB": 16,
+    "IL": 8,
+    "RMAX": 4096,
+    "XD": 128,
+    "LEV": 4,
+    "ALAT": 7,
+    "DS": 2,
+    "DG": 3,
+    "DW": 4,
+    "PIO": 2,
+    "STK": 1
+  },
+  "sources_sha256": {
+    "rtl/gpu/ot_gpu_bd_col.sv": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+    "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv": "f63863a56f7c8929bf862750c095c2951ba340d4bc3bbb1763e27ec1b8f72427",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "88e6fd591d576f7082541a41915058e37185cb9d6086c1f0a63af6b51764c024",
+    "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv": "02d3f6bbaa7bf63203b7fedcf4675e5b5f9f3534a5514d37c3c077f22b403f00",
+    "tools/hbrom_control_model.py": "5e8f89183612b6213fddf72fe984a2984f21ebe8d20eb8572192e00f35104115",
+    "tools/hbrom_protection_model.py": "7112def77a3a09d19e6aed325bfb7b6727adaebb2a616ec839b90ed3464302f4"
+  },
+  "inventory": [
+    {
+      "name": "issuer_descriptor",
+      "raw_bits": 38,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "rows_q,c_q,g_q,gs_q",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "issuer_cursors",
+      "raw_bits": 231,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "ph,si,rb/rb_n,gi/gi_n,ti/ti_n,rem,xa_r/xa_n,items_q/wb/wb_n,cr/cr_n,cg,cxb/cxb_n,rsi_q",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "issuer_slot_tables",
+      "raw_bits": 224,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "s_row,s_g,s_xb",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "issuer_predicates_and_outputs",
+      "raw_bits": 62,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "busy,arrive,issuing,valid_mask,next_mask,slot_glast,c_end,g_end,init_q,turn_q,lt_q/lt_n_q/c1_q,lw_q,lg_q/lg_n_q/g1_q,row_ok_q/ls_q",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "issuer_lookahead_products",
+      "raw_bits": 94,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "pp0..pp3,s01,s23",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "issuer_delayed_slot_write",
+      "raw_bits": 33,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+      "signals": "sw_q,sw_slot,sw_row,sw_g,sw_xb,sw_last",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "stack_input_output_metadata",
+      "raw_bits": 31,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "signals": "iv_q,ilast_q,islot_q,itag_q,ov,otag,fault",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "stack_ownership_lookahead",
+      "raw_bits": 72,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "signals": "pend_v,seen,have_q,seen_q; every slot at every level",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "stack_level_pipeline_metadata",
+      "raw_bits": 476,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+      "signals": "meta[last,slot,tag] plus valid delay; pend_d/opa_q are arithmetic flops, not ownership",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "top_boundary_metadata",
+      "raw_bits": 140,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "start,op,rsp valid/tag,release,busy/arrive/released,result valid/fault/row PIO chains",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "top_format_and_s1",
+      "raw_bits": 28,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "fmt_q,s1_v/first/last/tag/xa",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "x_write_metadata",
+      "raw_bits": 250,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "w0_en/addr/oh; DW4, L2, leaf we/wa/woh per SUB4; data codec separate",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "leaf_distribution_metadata",
+      "raw_bits": 536,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "DS2,L2,E3,E4 controls incl all validity/format/tag; x read control/address",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "gather_metadata",
+      "raw_bits": 306,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "G1,DG3,tree-input valid/tag/fault and registered aggregate",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "result_boundary_metadata",
+      "raw_bits": 14,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "rv_q,fault_q,rrow_q",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "credit_channel_descriptor",
+      "raw_bits": 520,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "cred,cnt,wp,rp,mem[DEPTH7],forward valid/data PIO2,return valid PIO2",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "credit_channel_request",
+      "raw_bits": 394,
+      "source": "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+      "signals": "cred,cnt,wp,rp,mem[DEPTH7],forward valid/data PIO2,return valid PIO2",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "tree_tag_valid_pipelines",
+      "raw_bits": 2618,
+      "source": "rtl/gpu/ot_gpu_tree.sv",
+      "signals": "four blockdot LB2 trees, four BF16 L16 trees, one SUB4 combine tree; exclude arithmetic data",
+      "protection_status": "REQUIRES_OPT_IN_DMR_IMPLEMENTATION"
+    },
+    {
+      "name": "column_control_pipeline_allowance",
+      "raw_bits": 4096,
+      "source": "rtl/gpu/ot_gpu_bd_col.sv",
+      "signals": "Bounded allocation 1024 control bits/sub for both column first/last/valid/tag delay paths, sticky faults and bterm control. MUST replace allowance with elaborated inventory before qualification.",
+      "protection_status": "PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY"
+    },
+    {
+      "name": "native_bulk_state_allowance",
+      "raw_bits": 4096,
+      "source": "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+      "signals": "Includes native q_base/len/pointers/count and high-part lookahead, full1024, alloc/cons/used/outstanding, issue/take/active/headfull local kreg copies, response tags, predecode set/clear, bank pointers/full, read parity, output queue reservations/pointers/we. Separate from outer scheduler ownership. MUST replace allowance with elaborated inventory.",
+      "protection_status": "PRICED_ALLOWANCE_REQUIRES_ELABORATED_INVENTORY"
+    }
+  ],
+  "scheme": {
+    "enable_default": 0,
+    "kind": "Isolated control DMR with independent next-state cones; shared arithmetic",
+    "control": "Duplicate every listed stored control field including unused-slot metadata, pipeline valids, formats, tags, pointer lookahead and ownership. Independent control cones must survive synthesis; local comparator covers both replicas before enable/address/retirement effects.",
+    "stack": "Share pend_d and FP32 adders, duplicate pend_v/seen/have_q/seen_q and meta. Compare pending-slot select, operand-select, write-enable/address, go/lone and retirement tags. A control discrepancy poisons the current operation; suppress publication and prevent further external writes.",
+    "fault": "Fail-stop detection, no correction or replay promise. Sticky poison itself duplicated; either asserted copy or disagreement blocks publication. Recover only at verified quiescence.",
+    "scope": "Single control-storage or single independent control-cone divergence; common-mode/equal corruption outside DMR guarantee. No ROM ECC or ROM data parity introduced.",
+    "arithmetic": "Ordinary flipflop arithmetic data, including pend_d/opa_q, accumulators and product/adder pipelines, retains fault-free execution assumption. No duplicate arithmetic requested. Any such state mapped to SRAM must use SRAM protection instead.",
+    "integration": "Outer hbrom_control_model protects NEW scheduler state. This inventory adds native-inner state; physical removal of redundant native bookkeeping can subtract it only with source evidence."
+  },
+  "area": {
+    "raw_control_bits": 14259,
+    "incremental_flops": 14723,
+    "local_compare_groups": 232,
+    "xor2": 14259,
+    "or2": 14027,
+    "nextstate_twoinput_gate_allowance": 57036,
+    "dff_um2": 0.2916,
+    "gate_allowance_um2": 0.3,
+    "incremental_cell_allowance_mm2": 0.0301682268,
+    "incremental_packed_50pct_mm2": 0.0603364536,
+    "status": "Uncharacterized gate and native-bulk/column inventory allowances, not synthesized bound; arithmetic excluded; existing primary control already in NC1 area"
+  },
+  "latency": {
+    "issue_guard_extra": 1,
+    "activation_write_guard_extra": 1,
+    "result_publication_extra": 1,
+    "recurrence_extra": 0,
+    "peak_records_per_cycle": 1,
+    "rule": "Guard adds one matched control+data feed stage before column ingress and one result publication stage. Do NOT insert per-MAC or per-stack-level wait states. Local state/command comparisons inside loops must fit existing cycles at SS; otherwise this proposal is not qualified and must be repriced. Guard valid/address at actual SRAM write edge; mismatch suppresses write before it commits.",
+    "overlap": "Outer scheduler one-cycle ROM issue / activation publish / output publish seals may absorb these SAME physical stages only if netlist proves they coincide; otherwise add cycles. Baseline separate upper allowance is +2 cycles/op plus +1 activation ingress latency; no steady-state issue penalty assumed pending SS."
+  },
+  "explicit_gaps": [
+    "All protection described here absent in original native RTL; external protected wrapper alone cannot see or cover inner pend_v/seen or tag upset.",
+    "Column metadata and native bulk exact elaborated bit inventory still required; allowance cannot establish all-state coverage.",
+    "Shared guard comparators, common inputs, reset and clock common-mode failures remain outside DMR guarantee.",
+    "SECDED codec staging-control metadata must be added to actual protected successor inventory when SRAM agent creates codec pipeline.",
+    "Final netlist must enumerate every sequential CONTROL bit and assign protected replica/check or justified non-control classification; no unclassified mutable-control bits allowed."
+  ],
+  "gates": [
+    "Full K5120/2304 and exact padded reduction golden with finite stalls and format switches",
+    "Fault injection issuer slots/cursors/valids, stack each pend_v/seen and metadata stage, credit FIFO pointers/counts, format, source/row tags, SRAM write address/enables; zero wrong published rows and no wrong memory write",
+    "Fault sticky until quiescent reset, including upset in poison latch itself",
+    "Independent DMR cones not optimized together; source and elaborated state coverage manifests",
+    "Contextual SS setup and FF hold at60ps/25ps; repriced cycles/area >=1percent adoption gate"
+  ],
+  "validation": {
+    "issuer_declaration_bits": 682,
+    "priced_issuer_bits": 682,
+    "issuer_register_declarations": 58,
+    "issuer_width_coverage": "PASS",
+    "supported_full_K_shapes": [
+      {
+        "format": "fp4",
+        "K": 5120,
+        "groups": 3,
+        "records_per_row": 24
+      },
+      {
+        "format": "fp4",
+        "K": 2304,
+        "groups": 2,
+        "records_per_row": 16
+      },
+      {
+        "format": "fp8",
+        "K": 5120,
+        "groups": 5,
+        "records_per_row": 40
+      },
+      {
+        "format": "bf16",
+        "K": 5120,
+        "groups": 10,
+        "records_per_row": 80
+      },
+      {
+        "format": "bf16",
+        "K": 4096,
+        "groups": 8,
+        "records_per_row": 64
+      }
+    ],
+    "scope": "Independent issuer declaration width audit only. Other groups remain formula inventory/explicit allowances; this is not all-state or RTL qualification."
+  }
+}

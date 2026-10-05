@@ -110,6 +110,7 @@ module tb_a3_mhc_pre_tile_equiv;
                      checks, CASES);
         else
             $display("FAIL a3_mhc_pre_tile_equiv: %0d of %0d comparisons differ", errors, checks);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule

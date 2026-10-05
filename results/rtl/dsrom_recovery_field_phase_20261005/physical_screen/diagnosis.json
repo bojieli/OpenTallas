@@ -1,0 +1,60 @@
+{
+  "results": {
+    "spw0": {
+      "status": "FAILED_INTERNAL_SETUP_SCREEN_ONLY",
+      "setup_ss_ps": -684.06,
+      "hold_ff_ps": 3.18,
+      "paths": [
+        "Startpoint: u_sp.sm_tag[0]$_DFFE_PP_",
+        "Endpoint: u_sp.sw[4]$_DFFE_PP_"
+      ],
+      "odb_sha256": "ba03b7266b419a12b0c69179233e5fc7a796e7e836c07600a157faa58a94535c",
+      "spef_sha256": "71cfa36fa890f30f4516b1ca5d4dd13dc3b2fbb613744ed09011632d211e7133"
+    },
+    "spw1": {
+      "status": "FAILED_INTERNAL_SETUP_SCREEN_ONLY",
+      "setup_ss_ps": -722.82,
+      "hold_ff_ps": 3.37,
+      "paths": [
+        "Startpoint: u_sp.sm_tag[0]$_DFFE_PP_",
+        "Endpoint: u_sp.sw[11]$_DFFE_PP_"
+      ],
+      "odb_sha256": "48dab6421584ecbf9d97e9e5ab66f041a87ade167b30a01f8a8377b6ac02d360",
+      "spef_sha256": "e92384c1cc0274f6140d47766932267c00e27359eb3ccee5ee70fb3b1bfbba2a"
+    }
+  },
+  "files_sha256": {
+    "spw0/spw0_corner_sta.json": "c70a81a917a28e81c1ec41787ad9f390fd703dac19c266bc34bcd6f1b11c9e84",
+    "spw0/spw0.json": "b5656f5d229157a25d2ffb358bbad7d6405c61b71777dbc0f5709b61562a5850",
+    "spw0/6_finish.rpt": "b8e89afe4f8a06389b803d02a7558b61b11ab736cb352ebd9f55c5b46e191c58",
+    "spw0/w18_sta_ff.log": "3546ddbdddc564cc89f5d1bc04fd4881f7029b840896008bdc234df7a6f8b375",
+    "spw0/w18_sta_ss.log": "b7068a002c2ac5956d8cf2df6a436dadee3b13bb145395906d98dbc5ea3d2afb",
+    "spw1/spw1_corner_sta.json": "60eb2b27812fe819bfa165755c131a3bd0cfa0c197e1666ed8860a7501567d36",
+    "spw1/spw1.json": "9f528098631dad4f0c2f3465463adc1843caa39b2b52fa5c6a069d13a103425b",
+    "spw1/6_finish.rpt": "39e35cfb4aeb307a5a09788b2072854015fb5679bd37e574080aeb7ac6b1be27",
+    "spw1/w18_sta_ff.log": "0639c06df5039fb384c3a0a582536a5dce5a6f6e4364571ba4fe991baa632806",
+    "spw1/w18_sta_ss.log": "d77d18b58aaadee70853883cfe7604ea50a77577493e1e6a3220f0c51aeafd3f"
+  },
+  "baseline_and_candidate_identical_screen_params": {
+    "R": 16,
+    "KMAX": 256,
+    "PHW": 6,
+    "SAW": 8,
+    "VAW": 19
+  },
+  "physical_clock_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "scope": "Screen has registered IO, false external IO paths, quantiser stub and mutable register-file phase/stream ROM. WC/BC extracted internal paths only; not full context.",
+  "candidate_worst_cone": "sm_tag -> s_pw[sm_tag] mux -> sbase+next_stream_index -> screen strom[st_a] mux -> sw[11]; source equations and routed path establish cone, exact gate-to-source attribution not yet complete.",
+  "open_boundaries": [
+    "actual phase/stream macro clk-q and address setup, native KMAX6144",
+    "actual quantiser data/valid/fault arrival, no stub",
+    "VM read address/data capture and finite ownership-ready",
+    "all128 root return data/valid/tag and committed VM-write/retirement edges",
+    "field configuration/go/broadcast fanout, shadow-bank ownership and return/replay wires",
+    "external IO min/max timing/reset/ICG and selected floorplan clock/PG"
+  ],
+  "adoption": false,
+  "duplicate_physical_launch": false
+}

@@ -1,0 +1,34 @@
+{
+  "kant_source_pin": "67add9d8b633a504f2f3ba3127acab6621ab83ec",
+  "kant_exact_files": {
+    "floorplan.tcl": "f1272882ff8fd8f1ad15fca663cedda69d1ffd8a2559abbe76cc93234222ff8a",
+    "pins.tcl": "27f8abd741b1ec24b24283ead981f0cf7eeeb0774577009d8b76b2b96487cbfe",
+    "pins.json": "0b5a746b6c8ab9054ef3d97ffb0934c1c1eab1f75cbd3fd13bfea3acc382cef7",
+    "model.json": "0afc70285e6e60143c844f249f2fbccdd3ef9d1a2c3f475cef0fb8d24c498f67"
+  },
+  "route_source_pin": "a59187cd5293f7003f5bd5f2468d8bea6ce9e86c",
+  "candidate_source_pin": "94cc829e1ad89d9241bf4f3fad4b0b7f91caea83",
+  "candidate_hashes": {
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_host_addr_crc.sv": "d450a51a266d310be76cc8f4691532c22fe43c93ffafdbb3fb37cfd5b03adaca",
+    "rtl/hbm_accel/loader/ot_hbm_accel_loader_addr_crc.sv": "f24ed1615e7318d7a4870679b1dec8ffbf058b1c6a61a490fa6cb64fc17710a8",
+    "rtl/hbm_accel/loader/ot_hbm_accel_store_addr_crc.sv": "a8be0328f970784f1d3ecd6272a18dfedabd038d94b8231ed05fb6cb51a22a33"
+  },
+  "parameters": {
+    "ENABLE": 1,
+    "ND": 1,
+    "ADDR_W": 37,
+    "STACK_W": 2,
+    "STACK_BYTES": 22500000000,
+    "CRC_MATRIX": 1
+  },
+  "copied_pin_Tcl_exact": true,
+  "copied_pin_json_exact": true,
+  "geometry_matches_final_floorplan_Tcl": true,
+  "route_wrapper_pid": 1223884,
+  "route_driver_pid": 1223885,
+  "work": "/srv/opentallas-scratch/codex/item8-hbm-loader-20261004/crc_slot_r1",
+  "prior_model_metadata_difference": "Final67add model adds ENABLE1 to selected_route_source; actual live route already explicitly ENABLE1. Geometry, hashes, Tcl and all other fields identical; no source/run change required.",
+  "missing_members_policy": "Hard fail32state eachCRC / nonemptyactualexclusivecone / 1410facadepins",
+  "defaults_off": true,
+  "physical_qualified": false
+}

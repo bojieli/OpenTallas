@@ -1,0 +1,55 @@
+FAILED: FlowError: yosys synthesis failed with exit 1:
+nt_kung\WIDTH=32'00000000000000000000000000000010 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000011 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000011 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100000 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000011000 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000011000 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000101 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000101 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000110 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000110 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000100001 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000100001 for cells of type $lcu.
+Using template $paramod\_90_fa\WIDTH=32'00000000000000000000000000000111 for cells of type $fa.
+Using template $paramod\_90_lcu_brent_kung\WIDTH=32'00000000000000000000000000000111 for cells of type $lcu.
+No more expansions possible.
+<suppressed ~3461 debug messages>
+
+7.23. Executing OPT pass (performing simple optimizations).
+
+7.23.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_accel_w2_caller_cut.
+<suppressed ~2434 debug messages>
+
+7.23.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_hbm_accel_w2_caller_cut'.
+Computing hashes of 4565 cells of `\ot_hbm_accel_w2_caller_cut'.
+Finding duplicate cells in `\ot_hbm_accel_w2_caller_cut'.
+Computing hashes of 4436 cells of `\ot_hbm_accel_w2_caller_cut'.
+Finding duplicate cells in `\ot_hbm_accel_w2_caller_cut'.
+Computing hashes of 4416 cells of `\ot_hbm_accel_w2_caller_cut'.
+Finding duplicate cells in `\ot_hbm_accel_w2_caller_cut'.
+Computing hashes of 4409 cells of `\ot_hbm_accel_w2_caller_cut'.
+Finding duplicate cells in `\ot_hbm_accel_w2_caller_cut'.
+<suppressed ~468 debug messages>
+Removed a total of 156 cells.
+
+7.23.3. Executing OPT_DFF pass (perform DFF optimizations).
+
+7.23.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_accel_w2_caller_cut..
+Removed 484 unused cells and 1605 unused wires.
+<suppressed ~485 debug messages>
+
+7.23.5. Finished fast OPT passes.
+
+7.24. Executing ABC pass (technology mapping using ABC).
+
+7.24.1. Extracting gate netlist of module `\ot_hbm_accel_w2_caller_cut' to `<abc-temp-dir>/input.blif'..
+Replacing 4 occurrences of constant undef bits with constant zero bits
+
+ERROR: ABC failed with status F
+
+partial record written to /srv/opentallas-scratch2/codex/boole-w2-caller-sizing-20261005-r2/synthesis.json

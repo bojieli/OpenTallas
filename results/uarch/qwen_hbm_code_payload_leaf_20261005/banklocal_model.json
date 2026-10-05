@@ -1,0 +1,83 @@
+{
+  "schema": "qwen_code_banklocal_capture.v1",
+  "selected": true,
+  "default_enabled": false,
+  "original_leaf_pinned": "3c923b700:rtl/hbm_accel/qwen/payload/ot_qwen_hbm_code_payload_pair.sv",
+  "clock_ps": 833.3333333333333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "rows": 4496,
+  "columns": 2,
+  "physical_banks_per_column": 5,
+  "macros": {
+    "data": 10,
+    "checks": 10,
+    "outline_um2": 162057.8664,
+    "unchanged": true
+  },
+  "state": {
+    "bank_local_read_code_bits": 2880,
+    "central_read_code_bits_replaced": 576,
+    "additional_capture_FF_bits": 2304,
+    "metadata_code_bits": 288,
+    "leaf_control_code_bits": 72,
+    "added_delayed_physical_bank_payload_bits": 6,
+    "leaf_control_payload_bits": 24,
+    "pipeline_control_code_bits": 72,
+    "total_coded_FF_bits_with_pipeline": 3312,
+    "added_FF_area_floor_um2": 671.8464,
+    "total_FF_area_floor_um2": 965.7792000000001
+  },
+  "clock": {
+    "added_capture_clock_sinks": 2304,
+    "macro_clock_sinks": 20,
+    "SS_macro_clock_cap_fF": 173.6752,
+    "FF_macro_clock_cap_fF": 207.464,
+    "conditional_stdcell_clock_cap_proxy_fF_per_sink": 0.433982,
+    "conditional_added_capture_clock_cap_proxy_fF": 999.8945279999999,
+    "actual_mapped_FF_master_cap_and_CTS_wire_unknown": true,
+    "control_6bit_decode_enable_fanout_positive": true
+  },
+  "logic": {
+    "local_checkslot_mux_bits": 320,
+    "local_checkslot_mux2_equivalents": 2240,
+    "capture_hold_mux_bits": 2880,
+    "postcapture_coded_mux_bits": 576,
+    "postcapture_5bank_mux2_equivalents": 2304,
+    "W6_payload_decode_instances": 8,
+    "W6_payload_encode_instances": 4,
+    "virtual_steering_bits": 2560,
+    "virtual_bank_comparators": 10,
+    "proxy_um2_per_mux_or_steering_bit": 4,
+    "gross_mux_and_steering_proxy_um2": 39936,
+    "codec_buffer_route_area_unknown_positive": true
+  },
+  "timing": {
+    "data_macro_SS_clkQ_ps": 691.7716429145595,
+    "check_macro_SS_clkQ_ps": 455.3205489475797,
+    "data_to_local_capture_pre_setup_wire_budget_ps": 81.56169041877376,
+    "one_local_enable_hold_mux_SS_proxy_ps": 47.186482338333334,
+    "data_remaining_after_hold_mux_before_FFsetup_wire_ps": 34.37520808044043,
+    "check_8slot_mux_SS_proxy_ps": 141.559447015,
+    "postcapture_5bank_mux_SS_proxy_ps": 141.559447015,
+    "postcapture_W6_decode_virtualsteer_loaded_delay_unknown": true,
+    "SS_FF_qualified": false
+  },
+  "latency": {
+    "read_edges": 2,
+    "II_core_edges": 1,
+    "extra_edges_vs_central_leaf": 0,
+    "extra_edges_vs_original_macro": 1,
+    "pair_bytes_per_core_edge": 64,
+    "full_token_delta_unknown": true
+  },
+  "alignment": [
+    "read_in/bank/checkslot capture actual accepted physicalrow atE0",
+    "E1 local capture ONLY bank matching old c.bank[p], using that bank old macrodata/check and old c.checkslot[p]",
+    "E1 output physicalbank[p]<=old c.bank[p] only when old read_in[p]; two banks may differ and next issue cannot relabel old payload",
+    "visible receipt only after identical data/check SRAM write edge, original old-read-before-write retained",
+    "postcapture selectedcode decode preserves original W6/tree/rounding; Sagan virtualtags/caller unchanged"
+  ],
+  "adopted": false,
+  "qualification": "one focused reused fixture needed; Sagan sole combinedtile gate; Pauli sole physicalcontext after coherent source/model"
+}

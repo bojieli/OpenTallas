@@ -1,0 +1,26 @@
+CLAUDE qme source-owned diagnosis handoff: TWO TERMINAL FAILURES
+Original engine sources remain byte-identical; no new recipe/replay/route/cut selected.
+Target remains833ps SS60ps setup / FF25ps hold. rc0 is flow completion, not qualification.
+Raw routed SS/FF paths and source hashes are archived per case; corner_sta is authority, not physical.json TT header.
+
+tile_tp2_t4 FAIL
+SS -83.8255ps / FF 0.928924ps
+mapped cells 83512um2 / core 248826um2 / DRV {'max_cap_violations': 0, 'max_fanout_violations': 0, 'max_slew_violations': 15}
+s3_x[94] = group2 BF16 exponent bit30, shared across16 lane multipliers; ot_qwen_w12_bmul dec()+signed exponent addition ->s1_e[8]. Hold is final registered add bypass-code ->y[18] OAI22.
+ss: u_me.s3_x[94]$_SDFF_PN0_ -> u_me.g_lanes.g_grp[2].g_lane[13].g_candidate_mul.u_mul.s1_e[8]$_DFF_P_
+ff: u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.u_cc.g_r.r[51]$_DFF_PN0_ -> u_me.g_lanes.g_grp[0].g_lane[13].g_ladd.u_add.u.y[18]$_DFF_PN0_
+1536 logic tiles/die: cell-only 128.274432mm2; sum of isolated logic cores 382.196736mm2. Excludes code macros/VM/service/parent routing/PG/clock; cannot claim parent fit.
+
+tile_tp4_t4 FAIL
+SS -18.908098ps / FF -1.640743ps
+mapped cells 81261.9um2 / core 243948um2 / DRV {'max_cap_violations': 0, 'max_fanout_violations': 0, 'max_slew_violations': 6}
+Captured KV offset r_part[9] ->8-row CSA ->AW24 kept prefix sum ->off[group2][21], third KV_PREP edge. Hold captured add A-cut r[95] ->s1_code[12] inverter; separate cone from offset setup.
+ss: u_me.genblk2.g_kv_addr_prep.g_off[2].r_part[9]$_DFF_P_ -> u_me.genblk2.g_kv_addr_prep.off[2][21]$_DFF_P_
+ff: u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.u_ca.g_r.r[95]$_DFF_PN0_ -> u_me.g_lvl[1].g_add[31].u_add.g_l.u.u.s1_code[12]$_DFF_P_
+1536 logic tiles/die: cell-only 124.8182784mm2; sum of isolated logic cores 374.704128mm2. Excludes code macros/VM/service/parent routing/PG/clock; cannot claim parent fit.
+
+Source mapping: TP2 matvec.sv731 rounds/masks group2 s3_x; bit94 = group2 bit30 (BF16 exponent MSB), fanout16 lane multipliers. Candidate bmul first exponent FF ot_qwen_w12_arith.sv48-75 dec()+signed exponent sum. Source does not instantiate suspect mul_f12_l6.
+TP4 matvec.sv571-615 g_kv_addr_prep: third KV_PREP stage reduces captured8 AW24 CSA rows then kept-prefix sum; both r_part->off cone and separate hold bypass-code cone must be addressed; 19ps miss plus hold/slew cannot be adopted.
+Existing target params ACC_LAT7/MUL_LAT6/TREE_LAT7/KV_PREP3/MEM_EXTRA1 preserved. No new latency edges here, no selected source fix. Existing TP2 P8191 exact vehicle L0=6743/L2=33108 is conditional component evidence only; no TP4/fulltoken/SSFF transfer.
+Recommended next ownership action: Claude inspect these exact source cones and actual CTS/DRV path context before proposing any bounded opt-in repair; no blind depth/clock/utilization retry.
+Live control/port/tree untouched. CorrectnessHOLD: control has no multiplier; terminal tile MUL_LAT6 binds ot_qwen_w12_bmul, port SCALE_LAT6 binds ot_hdc_fp32_mul_lat. Neither is ot_hdc_fp32_mul_f12_l6; no adoption/new dispatch pending exact binding review.
