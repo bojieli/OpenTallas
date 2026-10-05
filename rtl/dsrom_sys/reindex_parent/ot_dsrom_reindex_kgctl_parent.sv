@@ -177,6 +177,14 @@ module ot_dsrom_reindex_kgctl_parent #(
     reg [4:0]      m_fc  [0:WB-1];
     reg [4:0]      m_f0  [0:WB-1];
     reg [LBW-1:0]  m_blk [0:WB-1];
+    wire [NPC-1:0] clear_code[0:WB-1],clear_scale[0:WB-1];
+    reg [WB-1:0] pending_code_check,pending_scale_check,metadata_check;
+    wire [WB-1:0] slot_bad;
+    generate for(genvar sc=0;sc<WB;sc=sc+1)begin:g_state_checks
+        assign slot_bad[sc]=adm[sc]&&((^pend_c[sc])!=pending_code_check[sc] ||
+            (^pend_s[sc])!=pending_scale_check[sc] ||
+            (^{m_blk[sc],m_j[sc],m_f0[sc],m_fc[sc]})!=metadata_check[sc]);
+    end endgenerate
 
     assign rsp_rdy = {NPC{1'b1}};           // every beat has its slot (allocated at dispatch)
 
@@ -315,6 +323,13 @@ module ot_dsrom_reindex_kgctl_parent #(
             assign rr_bad[rg][rp]=^z;
             for(genvar re=rg*SG;re<(rg+1)*SG;re=re+1)begin:g_e
                 assign rr_oh[rp][re]=z[SW+3]&&(z[SW-1:0]==SW'(re));
+                wire accepted=rr_oh[rp][re]&&!rr_bad[rg][rp]&&adm[re]&&
+                    (rr_kind[rg][rp]?pend_s[re][rp]:(pend_c[re][rp]&&
+                     !(^cntc[re*4+((rp^m_fc[re])&3)])&&
+                     !cntc[re*4+((rp^m_fc[re])&3)][rr_beat[rg][rp*2+:2]]));
+                assign clear_scale[re][rp]=accepted&&rr_kind[rg][rp];
+                assign clear_code[re][rp]=accepted&&!rr_kind[rg][rp]&&
+                     &(cntc[re*4+((rp^m_fc[re])&3)][3:0] | (4'b0001<<rr_beat[rg][rp*2+:2]));
             end
         end
         ot_hdc_v41x_kg_kreg_parent #(.W(NPC*RW)) u_r(.clk(clk),.d(din),.q(rr_q[rg*NPC*RW+:NPC*RW]));
@@ -337,7 +352,7 @@ module ot_dsrom_reindex_kgctl_parent #(
             for (p = 0; p < 2 * NPC; p = p + 1) begin fq_rp[p] <= 0; fq_wp[p] <= 0; fq_n[p] <= 0; end
             for (p = 0; p < 4 * WB; p = p + 1) cntc[p] <= 5'd0;   // empty distinct-beat mask
         end else begin
-            if(memory_fault||(run&&(|half_bad)))fault<=1;
+            if(memory_fault||(run&&((|half_bad)||(|slot_bad))))fault<=1;
             // completion, two cycles late: per-group partials, then their AND (never early: adm_q is
             // registered alongside the partials)
             adm_q <= adm;
@@ -543,24 +558,29 @@ module ot_dsrom_reindex_kgctl_parent #(
             end
         end
         // responses clear pending bits; the dispatch write (one-hot slots, slot copies) then sets them
-        for (p2 = 0; p2 < NPC; p2 = p2 + 1)
-            for (e2 = 0; e2 < WB; e2 = e2 + 1)
-                if (rr_oh[p2][e2] && !rr_bad[e2/SG][p2] && adm[e2] &&
-                    (rr_kind[e2/SG][p2] ? pend_s[e2][p2] :
-                     (pend_c[e2][p2] && !(^cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)]) &&
-                      !cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][rr_beat[e2/SG][p2*2+:2]]))) begin
-                    if (rr_kind[e2/SG][p2]) pend_s[e2][p2] <= 1'b0;
-                    else if (&(cntc[e2*4 + ((p2 ^ m_fc[e2]) & 3)][3:0] | (4'b0001 << rr_beat[e2/SG][p2*2+:2]))) pend_c[e2][p2] <= 1'b0;
-                end
+        for(e2=0;e2<WB;e2=e2+1)begin
+            pending_code_check[e2]<=^pend_c[e2] ^ ^clear_code[e2];
+            pending_scale_check[e2]<=^pend_s[e2] ^ ^clear_scale[e2];
+            for(p2=0;p2<NPC;p2=p2+1)begin
+                if(clear_code[e2][p2])pend_c[e2][p2]<=0;
+                if(clear_scale[e2][p2])pend_s[e2][p2]<=0;
+            end
+        end
         for (e2 = 0; e2 < WB; e2 = e2 + 1)
             for (l2 = 0; l2 < 2; l2 = l2 + 1)
                 begin
-                    if (l2 ? w_oh1_c[e2] : w_oh0_c[e2])
+                    if (l2 ? w_oh1_c[e2] : w_oh0_c[e2])begin
                         {m_blk[e2], m_j[e2], m_f0[e2], m_fc[e2]} <= sl_q[(2*(e2/SG)+l2)*SLW + 2*NPC +: SLW - 2*NPC];
-                    if (l2 ? w_oh1_c[WB + e2] : w_oh0_c[WB + e2])
+                        metadata_check[e2]<=^sl_q[(2*(e2/SG)+l2)*SLW + 2*NPC +: SLW - 2*NPC];
+                    end
+                    if (l2 ? w_oh1_c[WB + e2] : w_oh0_c[WB + e2])begin
                         pend_c[e2] <= sl_q[(2*(e2/SG)+l2)*SLW + NPC +: NPC];
-                    if (l2 ? w_oh1_c[2*WB + e2] : w_oh0_c[2*WB + e2])
+                        pending_code_check[e2]<=^sl_q[(2*(e2/SG)+l2)*SLW + NPC +: NPC];
+                    end
+                    if (l2 ? w_oh1_c[2*WB + e2] : w_oh0_c[2*WB + e2])begin
                         pend_s[e2] <= sl_q[(2*(e2/SG)+l2)*SLW +: NPC];
+                        pending_scale_check[e2]<=^sl_q[(2*(e2/SG)+l2)*SLW +: NPC];
+                    end
                 end
         // request FIFO entries (lane 0 at the write pointer, lane 1 after it)
         for (p2 = 0; p2 < 2 * NPC; p2 = p2 + 1) begin
