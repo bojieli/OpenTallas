@@ -8878,13 +8878,23 @@ def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
     return dict(default_enabled=False, candidate_selected=False,
                 implementation_started=False, route_admitted=False,
                 selection_owner='CLAUDE at three-attempt boundary',
+                objective='mandatory 833ps SS/FF baseline clock repair, not speed optimization',
+                token_speedup_credit=0,
                 pcs=pcs, added_state_bits_per_pc=1,
                 total_added_state_bits=pcs,
                 FF_cell_area_floor_um2=pcs*DFF_UM2,
+                reset_FF_library_master='DFFASRHQNx1_ASAP7_75t_R',
+                reset_FF_body_per_pc_um2=.37908,
+                reset_FF_body_total_um2=pcs*.37908,
+                reset_FF_clock_pin_cap_ff=.433982,
+                reset_FF_reset_pin_cap_ff=.704025,
+                reset_FF_tied_set_pin_cap_ff=1.02641,
+                clock_reset_distribution_area_um2=None,
                 capture_priority_muxes_per_pc_max=3,
                 gross_logic_gate_equivalent_allowance_per_pc=16,
                 gross_logic_area_proxy_per_pc_um2=16*0.2,
                 gross_FF_plus_logic_area_proxy_um2=pcs*(DFF_UM2+16*0.2),
+                reset_FF_plus_logic_body_proxy_um2=pcs*(.37908+16*0.2),
                 extra_clock_sinks_per_pc=1, extra_reset_sinks_per_pc=1,
                 predicate_consumers_per_pc=1,
                 set_clear_control_extra_sinks_per_pc_max=3,
@@ -8907,3 +8917,19 @@ def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
                 loaded_delay_ps=None, full_slot_fit_qualified=False,
                 period_ns=.833, setup_uncertainty_ps=60,
                 hold_uncertainty_ps=25, SSFF_closed=False, adopted=False)
+
+
+def hbm_stream_aq_block_nonempty_selected(*, pcs=128):
+    """Owner-selected mandatory baseline repair; zero speed/adoption credit.
+
+    Supersedes only model-only admission status. Original three failures and
+    review choice remain immutable. Exactly one changed-source route allowed.
+    """
+    record = hbm_stream_aq_block_nonempty_choice(pcs=pcs)
+    record.update(candidate_selected=True,
+                  selection_owner='Explicit owner technical decision after three failed variants',
+                  implementation_started=False, route_admitted=False,
+                  source_gate_required=True,
+                  qualified_route_count_allowed=1,
+                  failure_policy='stop and report actual limiting cone; no rescue')
+    return record
