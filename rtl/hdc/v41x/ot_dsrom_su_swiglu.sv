@@ -14,8 +14,8 @@
 //     a  = t * w            (ROUTED: the routing weight)            ot_hdc_qmul_lat
 // and the unrounded a leaves the lane; the BF16 rounding (round to nearest even on the encoding, the lane's OUT
 // rnd) is the combinational front of the quantiser's input register.  Depth (PRE register -> a):
-//     1 + D_EXP + LA + D_DIV + LM (+ LM routed) = 1 + 72 + 4 + 21 + 5 + 5 = 108 at LM 5 / LA 4 (the 1.2 GHz
-//     copies of the SU's exp and divider, rtl/hdc/v41x/ot_dsrom_su_f12.sv: one and two extra stages).
+//     1 + D_EXP + LA + D_DIV + LM (+ LM routed) = 1 + 76 + 4 + 21 + 5 + 5 = 112 at LM 5 / LA 4 (the 1.2 GHz
+//     copies of the SU's exp and divider, rtl/hdc/v41x/ot_dsrom_su_f12.sv: five and two extra stages).
 //
 // ot_dsrom_su_swiglu: W lanes (W/32 quantiser blocks a vector, W a multiple of 32).  The operands arrive through
 // NIN register stages (the hub traverse in: 22 slow stages x 748/504 = 33 at 1.2 GHz; the last one is the lanes'
@@ -44,7 +44,7 @@ module ot_dsrom_su_swiglu_lane #(
     output wire        vo,
     output wire        fault
 );
-    localparam integer D_EXP = 7 * LM + 8 * LA + 5;   // ot_dsrom_exp_f12
+    localparam integer D_EXP = 7 * LM + 6 * LA + 12 + 5;   // ot_dsrom_exp_f12 (two adds on the 6-stage adder)
     localparam integer D_DIV = 21;                    // ot_dsrom_fdiv_f12
     localparam integer KS = 1;
     localparam integer DEPTH = 1 + D_EXP + LA + D_DIV + LM + (ROUTED != 0 ? LM : 0);
@@ -117,6 +117,7 @@ module ot_dsrom_su_bf16rnd (input wire [31:0] x, output wire [31:0] y);
 endmodule
 
 module ot_dsrom_su_swiglu #(
+    parameter integer QLAT = 5,         // the quantisers' scale multiply latency (5 | 6)
     parameter integer W = 1024,
     parameter integer NIN = 33,
     parameter integer NOUT = 23,
@@ -162,7 +163,7 @@ module ot_dsrom_su_swiglu #(
         ot_dsrom_su_bf16rnd u (.x(a[32*l +: 32]), .y(ab[32*l +: 32]));
     end endgenerate
     generate for (b = 0; b < NB; b = b + 1) begin : g_q
-        ot_dsrom_actquant_f12 u (.clk(clk), .rst_n(rst_n), .v(av[0]), .fp4(1'b0), .x(ab[1024*b +: 1024]), .vo(qv[b]),
+        ot_dsrom_actquant_f12 #(.MLAT(QLAT)) u (.clk(clk), .rst_n(rst_n), .v(av[0]), .fp4(1'b0), .x(ab[1024*b +: 1024]), .vo(qv[b]),
                            .q(qq[256*b +: 256]), .e(qe[10*b +: 10]), .y(qy[512*b +: 512]), .fault(qf[b]));
     end endgenerate
     // ---- hub traverse out
@@ -177,6 +178,7 @@ endmodule
 
 // NB quantiser instances (NB blocks a beat), FP8 or FP4 (E8M0) per beat; ROPE = 1: index-q RoPE front
 module ot_dsrom_su_qbank #(
+    parameter integer QLAT = 5,         // the quantisers' scale multiply latency (5 | 6)
     parameter integer NB = 32,
     parameter integer NIN = 33,
     parameter integer NOUT = 23,
@@ -257,7 +259,7 @@ module ot_dsrom_su_qbank #(
                 assign xb[32*k +: 32] = xr[1024*b + 32*k +: 32];
             end
         end
-        ot_dsrom_actquant_f12 u (.clk(clk), .rst_n(rst_n), .v(vq), .fp4(fp4q), .x(xb), .vo(qv[b]),
+        ot_dsrom_actquant_f12 #(.MLAT(QLAT)) u (.clk(clk), .rst_n(rst_n), .v(vq), .fp4(fp4q), .x(xb), .vo(qv[b]),
                            .q(qq[256*b +: 256]), .e(qe[10*b +: 10]), .y(qy[512*b +: 512]), .fault(qf[b]));
     end endgenerate
     wire [778*NB:0] oq;

@@ -10435,6 +10435,16 @@ def hbm_index_ds20_gather_bridge_model():
         'rtl/gpu_sys/ot_gpu_mreq_cdc.sv','rtl/gpu_sys/ot_gpu_cdc_fifo.sv',
         'rtl/gpu_sys/ot_gpu_memsys.sv','rtl/hdc/kv/ot_hdc_hbm_model.sv']
     return dict(schema='hbm.index.ds20.normal-gather.minimum.v1',default_enabled=False,
+        reported_source_construction=dict(owner='Rawls15:30/15:31 EXEC-only integration',
+            protected_bridge_CP_shared_rows=49,protected_prior_native_rows=36,
+            bridge_CP_shared_FF=3528,prior_native_FF=2592,total_FF=6120,
+            existing_model_ceiling_FF=ff,within_existing_budget=6120<=ff,
+            additional_coding_permission=True,duplicate_borrower_allowed=False,
+            actual_prior_accept_to_original_response_consume_required=True,
+            quiet_edges=3,grant_edges=1,captured_release_edges=2,
+            placement_ceiling_mm2=placement,parent_slot_reserved=False,
+            counts_basis='owner source-construction report; not mapped physical proof',
+            rate_credit=False),
         source_sha256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths},
         source_owner='Rawls enclosing bridges/lease; Sagan plane-major formatter/adapter; Confucius selector unchanged',
         selected_scope='correctness-only, no419cycle or acceleration credit',
@@ -10488,4 +10498,10 @@ def hbm_index_ds20_gather_bridge_model():
 def qwen_w12_common_advance_composition():
     """Literal selected-program clock cut and finite publication pre-RTL budget."""
     from qwen_w12_clock_composition import model
+    return model(Path(__file__).resolve().parents[1])
+
+
+def qwen_rom_stream4_periodic_provider_model():
+    """Periodic controller causal paths and protected finite-ring sizing."""
+    from qwen_rom_periodic_provider_registration import model
     return model(Path(__file__).resolve().parents[1])
