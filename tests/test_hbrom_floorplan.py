@@ -52,3 +52,21 @@ def test_touching_edges_legal_and_unknown_inventory_blocked():
     assert fp.check_rectangles([a,b],[4,2])==[]
     s,i=fixture();i.pop('physical_floorplan');r=fp.derive(s,i)
     assert any('area-derived' in e for e in r['qualification_blockers'])
+
+
+def test_full_free_area_and_shared_cluster_service():
+    s,i=fixture()
+    i['compute']['private_tile_area_mm2']=.05
+    i['compute']['shared_service_area_mm2']=.15
+    i['physical_floorplan'].pop('compute_tile_um')
+    s['candidate']['tiles_per_cluster']=4
+    g=fp.placement_geometry(i,8,4)
+    phy=fp.lef(fp.ROOT/fp.PHY)
+    expected=(25600-400)*(31800-400-2*(phy['height']+40))-8000*5000
+    assert abs(sum(r[2]*r[3] for r in g['regions'])-expected)<1e-5
+    r=fp.derive(s,i)
+    assert r['geometric_fit'],r['geometric_errors']
+    assert r['inventory']['shared_service_reservation']==4
+    shared=[a for a in r['rectangles'] if a['kind']=='shared_service_reservation']
+    assert abs(sum(a['w']*a['h'] for a in shared)-4*.15*1e6)<1e-5
+    assert r['inventory']['compute_sram_reservation']==16

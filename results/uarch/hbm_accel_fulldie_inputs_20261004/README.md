@@ -176,3 +176,14 @@ bounds are explicit. These partial envelopes are not minimum feasible dies.
 No loader coordinates can be emitted safely until actual service geometry,
 port locality and repair capacity fill those bounds. The named service.loader
 allocation and corridor pricing are executable when those real fields arrive.
+
+Turing's actual width-successor price is captured byte-identically under
+providers/loader_width. Full-stack access requires byte ADDR37 encoded as
+stack2/local35, translated by bit slices to sector34+stack2. The current model
+therefore requires MREQ341 at the service boundary (internal byte packet342),
+RSP273 and DMA64. +62 address/validity FFs cost at least18.0792 um2, with guard,
+mux, CDC and repair cost still unknown. The previous loader CRC context cost is
+retained without removal credit; its closure cannot qualify this successor.
+Allocation must include address_guard_mux_CDC_cell_area_um2 and an explicit
+wide_source_price_complete bound before loader geometric admission. The copied
+owner price is default-off/unselected; it does not adopt or implement new RTL.
