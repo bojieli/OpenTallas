@@ -10505,3 +10505,50 @@ def qwen_rom_stream4_periodic_provider_model():
     """Periodic controller causal paths and protected finite-ring sizing."""
     from qwen_rom_periodic_provider_registration import model
     return model(Path(__file__).resolve().parents[1])
+
+
+def hbm_cp_balanced_veto_model():
+    """One CP component successor, priced before RTL; no clock/rate credit."""
+    import hashlib
+    import json
+    from pathlib import Path
+    root = Path(__file__).resolve().parents[1]
+    prior = 'results/rtl/hbm_su_cp_release_20261005/registered_boundary/routed_r1/u25/physical.json'
+    record = json.loads((root / prior).read_text())
+    metrics = record['place_and_route']['metrics']
+    # 192 XORs,48 NOR4,12 NAND4,3 NOR4; seven final output gates,
+    # one independent acceptance gate and64 NAND2-equivalent control allowance.
+    xor_nand2 = 192 * 4
+    tree_nand2 = (48 + 12 + 3) * 4
+    final_nand2 = 8 * 6
+    control_nand2 = 64
+    allowance = (xor_nand2 + tree_nand2 + final_nand2 + control_nand2) * .08748
+    return dict(schema='hbm.cp.balanced-veto.pre-rtl.v1', default_off=True,
+        reference='best serial REGISTERED_BOUNDARY, grouped71533 rejected',
+        prior_physical_sha256=hashlib.sha256((root/prior).read_bytes()).hexdigest(),
+        replicas=1, capacity_transactions=1, MACs_per_cycle=0,
+        additional_memory_ports=0,additional_memory_bytes_per_cycle=0,
+        owner_PC_padding_bits=192,local_owner_compare_input_bits=384,
+        xor_gates=192,nor4_match_leaves=48,nand4_middle=12,nor4_equal64_roots=3,
+        final_output_and4=5,qualified_fault_quiet_outputs=2,
+        independent_release_acceptance_and4=1,control_nand2_allowance=64,
+        tree_compare_levels=4,max_equal64_branch_loads=8,
+        additional_FF_bits=0,baseline_mapped_FF_cells=metrics['sequential_cell_count'],
+        protected_state='original W6 header,18 phase rails,14 status rails,sticky qualification retained',
+        external_boundary_delta_bits_per_cycle=0,additional_external_tracks=0,
+        internal_owner_compare_tracks_lower_bound=384,
+        local_branch_fanout=8,external_channel_capacity='unchanged original port context; local routing unqualified',
+        baseline_routed_body_um2=metrics['standard_cell_area_um2'],
+        conservative_logic_allowance_um2=allowance,removal_credit_um2=0,
+        body_ceiling_um2=metrics['standard_cell_area_um2']+allowance,
+        existing_component_core_um2=metrics['core_area_um2'],
+        body_fits_existing_core_capacity=(metrics['standard_cell_area_um2']+allowance < metrics['core_area_um2']),
+        full_parent_slot_fit=None,area_proxy_basis='NAND2=.08748um2; allowance counts complete replacement logic without subtraction, not mapped proof',
+        prelease_edges=5,grant_edges=1,rearm_edges=1,added_serial_edges=0,
+        release_acceptance='same live192-bit owner,all existing error/status/completion/grant predicates and actual release_r; no output-qualified signal fed through priority next-state chain',
+        phase_implementation='parallel one-hot equations, same original accepted release transition and fault priority',
+        measured_successor_edges=None,composed_latency_delta_ns_at_target=0,
+        target_period_ps=833.333,SS_setup_uncertainty_ps=60,FF_hold_uncertainty_ps=25,
+        context_route='same original full ports,IO20/u25/density.5; only after exact8713 and fresh Kant admission',
+        measured_gain=None,clock_qualified=False,adopted=False,
+        adoption='exact changed gate and SS/FF context required; timing-failed successor rejected without tuning')
