@@ -4,7 +4,11 @@
 // data-dependent): the outputs are compared as sequences, per (macro, segment, position) key, every dut event against
 // the reference's event of that key in order (value, row, segments, error); the walker / FIFO / issue state is still
 // compared cycle by cycle; the fault bit is compared per reset window (did it rise); events still pending when both
-// are in reset are counted (dropped by the reset), and nothing may be pending at the end.
+// are in reset are counted (dropped by the reset), and nothing may be pending at the end.  The output stage reads the
+// row / segment tables when a partial leaves, so SEQ models the S81 spine contract (the next phase's configuration
+// and go only after every row of the previous phase is written): configure() first waits until both elements are
+// quiet -- walkers idle, both macros' trees empty (no queued / staged / in-flight node, nothing held), no tree input
+// for 32 cycles, and no partial pending in the sequence compare.
 // QY exactness bench (2026-10-04): tb_dsrom_qz_exact with dut = ot_v41_rom_elem_q_qy_w10 (QY = 1 by default).  QY
 // reports fault FL = 2 cycles later, so the dut's fault bit is compared with the ref's L + FL cycles earlier (every
 // other field still L) and the post-reset exemption is L + FL + 1 cycles.  Built with QP_CHECK the dut also asserts
@@ -141,6 +145,33 @@ module tb_dsrom_qx_exact;
    seq_pending = 0;
    for (int k = 0; k < 512; k++) seq_pending = seq_pending + rq[k].size() + dq[k].size();
  endfunction
+ // SEQ: element quiet (see the header); the ref's trees are segtree2 (g_tr2), the dut's segtree5 (g_tr5)
+ wire seq_quiet_trees;
+ if (SEQ != 0) begin : g_seqq
+   wire r0 = ref_dut.u_e.g_mac[0].g_tr2.u_tree.qc == 0 && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.x_v && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.sv
+          && !ref_dut.u_e.g_mac[0].g_tr2.u_tree.add_v && ref_dut.u_e.g_mac[0].g_tr2.u_tree.have == 0 && !ref_dut.u_e.g_mac[0].b_v;
+   wire r1 = ref_dut.u_e.g_mac[1].g_tr2.u_tree.qc == 0 && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.x_v && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.sv
+          && !ref_dut.u_e.g_mac[1].g_tr2.u_tree.add_v && ref_dut.u_e.g_mac[1].g_tr2.u_tree.have == 0 && !ref_dut.u_e.g_mac[1].b_v;
+   wire d0 = dut.u_e.g_mac[0].g_tr5.u_tree.qc == 0 && !dut.u_e.g_mac[0].g_tr5.u_tree.x_v && !dut.u_e.g_mac[0].g_tr5.u_tree.y_v
+          && !dut.u_e.g_mac[0].g_tr5.u_tree.sv && !dut.u_e.g_mac[0].g_tr5.u_tree.add_v && dut.u_e.g_mac[0].g_tr5.u_tree.have == 0
+          && !dut.u_e.g_mac[0].b_v;
+   wire d1 = dut.u_e.g_mac[1].g_tr5.u_tree.qc == 0 && !dut.u_e.g_mac[1].g_tr5.u_tree.x_v && !dut.u_e.g_mac[1].g_tr5.u_tree.y_v
+          && !dut.u_e.g_mac[1].g_tr5.u_tree.sv && !dut.u_e.g_mac[1].g_tr5.u_tree.add_v && dut.u_e.g_mac[1].g_tr5.u_tree.have == 0
+          && !dut.u_e.g_mac[1].b_v;
+   assign seq_quiet_trees = r0 && r1 && d0 && d1 && !ref_dut.u_e.walk_busy && !dut.u_e.walk_busy;
+ end else begin : g_nseqq
+   assign seq_quiet_trees = 1'b1;
+ end
+ integer seq_waits = 0;
+ task automatic seq_wait_quiet;
+   integer q;
+   q = 0;
+   while (q < 32) begin
+     @(negedge clk);
+     if (seq_quiet_trees && seq_pending() == 0) q = q + 1; else q = 0;
+   end
+   seq_waits = seq_waits + 1;
+ endtask
  always @(negedge clk) if (SEQ != 0) begin
    for (int m = 0; m < 2; m++) begin
      if (av[m] && rf_rst_n) seq_push(0, m*256 + asg[5*m +: 5]*8 + ap[3*m +: 3], {ad[32*m +: 32], ar[16*m +: 16], an[5*m +: 5], ae[m]});
@@ -197,6 +228,7 @@ module tb_dsrom_qx_exact;
  // mode 0 sparse FP4 two sub-blocks (8-bit wrap), 1 all eight FP8 classes, 2 empty Q family, 3 random
  task automatic configure(input integer mode);
    integer nu,base,fp4,lo,hi,valid,plast,qlast; reg [47:0] d;
+   if (SEQ != 0) seq_wait_quiet;
    plast = (mode==0) ? 2 : (mode==3 ? $urandom%3 : 0);
    qlast = 0;
    for(integer c=0;c<8;c=c+1) begin
