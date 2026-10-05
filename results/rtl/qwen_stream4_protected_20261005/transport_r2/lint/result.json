@@ -1,0 +1,59 @@
+{
+  "verdict": "PASS_FULL128_PHYSICAL_CONTEXT_SYNTHESIS_LINT",
+  "source_commit": "d83f2b647",
+  "host": "ot-epyc2",
+  "root": "/srv/opentallas-scratch2/jobs/codex-qwen-transport-context-d83f2b647",
+  "guard": "unchanged /srv/opentallas-scratch/admit.sh16; same existing pre_guard+actual_exec CPU/RAM/disk/load checks",
+  "admitted_GiB": 16,
+  "actual_exec": {
+    "label": "actual_exec",
+    "UTC": "2026-10-05T23:32:10Z",
+    "load": 52.52880859375,
+    "idle_cpus": 85.47333880229696,
+    "MemAvailable_GiB": 597.9350662231445,
+    "disk_free_GiB": 2180.9566955566406,
+    "need_GiB": 16,
+    "need_CPUs": 2,
+    "need_disk_GiB": 2,
+    "fit": true
+  },
+  "shape": {
+    "PCs": 128,
+    "stacks": 4,
+    "real_R14_NCH": 16,
+    "local_wire_spans": "actual5..14 perPC b3r12 table",
+    "trunk_spans": 41,
+    "sealed_controller_callback_rings": 4
+  },
+  "ENABLE_0_exit": 0,
+  "ENABLE_1_exit": 0,
+  "warnings": {
+    "0": {
+      "PINMISSING": 32,
+      "WIDTHCONCAT": 1
+    },
+    "1": {
+      "PINMISSING": 32,
+      "UNSIGNED": 1,
+      "CMPCONST": 1
+    }
+  },
+  "warning_scope": "unused optional output pins and constant comparisons retained; no LATCH/UNOPTFLAT/MULTIDRIVEN; not physical timing/protection retention qualification",
+  "source_scopes": "no DRAM simulator; actual PHY return/completion/command pins; free CLK plus independent HCLK; parent gated ME outside cut",
+  "physical_qualified": false,
+  "complete_system_fit": false,
+  "producer32_exact": "bbcb and c625 live jobs unchanged; no replay by lint",
+  "numerical_fulltoken_claim": false,
+  "artifact_sha256": {
+    "capacity.jsonl": "3e30e679fcb508b2982fc04135e75c889258db6e429aa19e139f0fe677e023b0",
+    "command_0.json": "d991729965bc1947b55a7ee963890b60b57e996c59148b9eb92762c8c4c10b6a",
+    "command_1.json": "19284d77ab3498363977233b2fc7c390e503d26589a385221da82ae2f80b75e7",
+    "lint.py": "4a1cbc5c221bc1d563352395ea5e0048c4e1fe556bc59fd22134c810a8c674b3",
+    "lint_0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "lint_0.log": "eee48d44627f8e0343bbbfd7f7b85c14a40ef70fb5041c79a503391403000e50",
+    "lint_1.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "lint_1.log": "ec9ff47d3b6b37878aed6c0d07be50acb90bf25ad69bd656d7b138dafaf8538f",
+    "supervisor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
