@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "DECODE_SPLIT_EXACT_PASS_C13_PHYSICAL_RUNNING",
+  "status": "DECODE_SPLIT_EXACT_PASS_C14_PHYSICAL_RUNNING",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -122,7 +122,7 @@
     "physical_closed": false,
     "adopted": false,
     "route": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C12_decode_split",
-    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C13_decode_split"
+    "route_successor": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C14_decode_split"
   },
   "C11_actual_result": {
     "stage": "floorplan, estimated parasitics, before propagated CTS/extracted route",
@@ -145,5 +145,16 @@
     "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
     "successor": "C13_decode_split",
     "reuse": "completed mapped synthesis and floorplan SHA checked; corrected pre-auto MACRO_PLACEMENT_TCL only; no RTL change or resynthesis"
+  },
+  "C13_actual_result": {
+    "terminal_exit": 2,
+    "terminal_reason": "FLW0024 lower-bound density1.88 with fixed SRAMs included in movable-cell fence groups",
+    "all64_macros_placed": true,
+    "qualified": false,
+    "source_recipe": "b55d4ca0c",
+    "diagnosis": "same ODB, remove fixed SRAMs from movable groups only; measured GPL lower-bound density0.12. Coordinates/regions/source math unchanged",
+    "successor": "C14_decode_split",
+    "source_recipe_successor": "650dc3c64",
+    "source_RTL": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d"
   }
 }
