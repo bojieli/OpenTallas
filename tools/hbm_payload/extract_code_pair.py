@@ -6,19 +6,22 @@ import argparse,hashlib,json
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('source',type=Path);p.add_argument('out',type=Path);a=p.parse_args()
 a.out.mkdir(parents=True,exist_ok=True)
-words=[];sectors=[];target=0;index=0
+# Match pinned QwenHex::load: each line is a little-u32 full code word,
+# least-significant hex on the RIGHT; @ directives select code-word rows.
+sectors=[];row=0
 with a.source.open() as f:
  for line in f:
-  for token in line.split():
-   if index==target:
-    words.append(int(token,16));target+=1
-    if len(words)==16:
-     for pair in range(2):sectors.append(sum(words[pair*8+k]<<(k*32) for k in range(8)))
-     words=[]
-     if len(sectors)==1024:break
-     target=(len(sectors)//2)*6144*4
-   index+=1
-  if len(sectors)==1024:break
+  text=line.split('//',1)[0].strip()
+  if not text:continue
+  if text.startswith('@'):
+   row=int(text[1:],16);continue
+  if row!=len(sectors)//2:raise ValueError('selected source span has a hole/duplicate')
+  if len(text)>6144*4*8 or any(c not in '0123456789abcdefABCDEF' for c in text):
+   raise ValueError('source row violates pinned QwenHex geometry')
+  text=text.zfill(128)
+  sectors.extend([int(text[-64:],16),int(text[-128:-64],16)])
+  row+=1
+  if row==512:break
 if len(sectors)!=1024:raise ValueError('incomplete actual L0 image')
 payload=a.out/'returned_payload.hex';payload.write_text(''.join(f'{x:064x}\n' for x in sectors))
 h=hashlib.sha256()
