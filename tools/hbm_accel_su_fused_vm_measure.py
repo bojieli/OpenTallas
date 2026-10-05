@@ -14,7 +14,7 @@ def main():
  a.work.mkdir(parents=True,exist_ok=False)
  plan=bind(a.cases,a.case_index,a.candidate_index,a.work/'fixture')
  if plan['check_words']==0:raise ValueError('retained operations must run before the saved check; not a standalone eligible gate')
- params=dict(plan['params'],MEM_WORDS=plan['memory_words'],CHECK_WORDS=plan['check_words'])
+ params=dict(plan['params'],MEM_WORDS=plan['memory_words'],CR_WORDS=plan['CR_words'],CHECK_WORDS=plan['check_words'])
  src=[S.ROOT/s for s in S.COMMON+S.FP_SRC[a.fp]]+[S.RTL,
   S.ROOT/'rtl/hdc/v41x/ot_dsrom_su_hcpost.sv',S.ROOT/'rtl/hdc/v41x/ot_dsrom_su_swiglu.sv',
   S.ROOT/'rtl/hbm_accel/su/ot_hbm_accel_su_fused_stream.sv',S.ROOT/'rtl/hbm_accel/su/ot_hbm_accel_su_fused_vm.sv',

@@ -2,11 +2,11 @@
 // One source-bound actual saved command through real VM reads/writes.
 module tb_hbm_accel_su_fused_vm #(
  parameter integer KIND=1,N=256,D=1280,RD=0,PUBLISH_QUANT=0,ROUTED=1,
- parameter integer MEM_WORDS=4192,CHECK_WORDS=1280
+ parameter integer MEM_WORDS=4192,CR_WORDS=65536,CHECK_WORDS=1280
 );
  reg clk=0;always #0.416666667 clk=~clk;
  reg rst_n=0,cmd_valid=0;
- reg [31:0] vm[0:MEM_WORDS-1],cr[0:16383],expected[0:CHECK_WORDS-1];
+ reg [31:0] vm[0:MEM_WORDS-1],cr[0:CR_WORDS-1],expected[0:CHECK_WORDS-1];
  reg [31:0] cmd[0:5],cfg[0:31];
  wire cmd_ready,busy,done,fault;
  wire [4*N*24-1:0] ra;wire [4*N-1:0] re;wire [8*N-1:0] rs;
@@ -50,7 +50,7 @@ module tb_hbm_accel_su_fused_vm #(
    if(re[l]) begin
     a=ra[l*24+:24];
     if(rs[l*2+:2]==1) begin
-     if(a>=16384) $fatal(1,"actual CR bound");rq[l*32+:32]<=cr[a];
+     if(a>=CR_WORDS) $fatal(1,"actual CR bound");rq[l*32+:32]<=cr[a];
     end else if(rs[l*2+:2]==0) begin
      if(a>=MEM_WORDS) $fatal(1,"actual VM read bound");rq[l*32+:32]<=vm[a];
     end else $fatal(1,"unbound actual source port");

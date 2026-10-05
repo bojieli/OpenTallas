@@ -84,7 +84,7 @@ def bind(cases_path, case_index, candidate_index, out):
     plan=dict(schema='opentallas.hbm-su-fused-vm-command.v1',cases_sha256=pin,
         case_index=case_index,candidate_index=candidate_index,name=case['name'],kind=kind,
         params=dict(KIND=kind_no,N=n,D=d,RD=0,PUBLISH_QUANT=int(quant),ROUTED=int(routed)),
-        memory_words=size,check_words=len(checks[0][2]) if checks else 0,
+        memory_words=size,CR_words=len(case['cr_lo']),check_words=len(checks[0][2]) if checks else 0,
         source_available_before_command=True,original_op_indexes=group['original_op_indexes'],
         original_ops=record['original_ops'],retained_op_indexes=record['retained_op_indexes'],
         original_order_authoritative=True,VM_command_words=cmd.tolist(),
