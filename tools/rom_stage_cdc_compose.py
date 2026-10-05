@@ -117,7 +117,7 @@ def main() -> int:
         if t["ss_setup_wns_ps"] < 0 or t["ff_hold_wns_ps"] < 0:
             reasons.append(f"always-on block {blk} does not close SS/FF ({t})")
     r4 = tim["R4_pg_reference_wc"]
-    for blk in ("E1_element_wc",):
+    for blk in ("E1_element_wc", "S4_stage_wc"):
         t = tim[blk]
         if t["setup_wns_ps"] < r4["setup_wns_ps"] or t["hold_wns_ps"] < r4["hold_wns_ps"]:
             reasons.append(f"{blk} worse than the PG reference R4 ({t} vs {r4})")
@@ -126,7 +126,7 @@ def main() -> int:
     if not win["wake_fits"]:
         reasons.append("wake does not fit the stage window")
     verdict = ("ADOPT (opt-in, the stage power-gating successor): exact under power cycling, the always-on blocks close "
-               f"SS/FF, element route no worse than R4; residual per element {P[1]['residual'] * 100:.1f}% (1-element "
+               f"SS/FF, E1/S4 routes no worse than R4 (relative acceptance, not full-stage SS/FF closure); residual per element {P[1]['residual'] * 100:.1f}% (1-element "
                f"stage), {P[4]['residual'] * 100:.2f}% (4-element stage), {pe['residual'] * 100:.2f}% at 2,417 elements a "
                "stage (two-point measured decomposition)") if not reasons else "REJECT: " + "; ".join(reasons)
     out = dict(
@@ -149,7 +149,13 @@ def main() -> int:
         wake=dict(rtl_req_to_ready_cycles_max=wmax, rtl_restore_cycles_max=rmax, charge_ns=round(t_charge_ns, 3),
                   wake_cycles=wake_cycles, wake_ns=round(wake_ns, 2), wake_energy_nj=round(e_wake * 1e9, 4),
                   break_even_us=round(t_be_us, 4)),
-        windows={"1M": win}, timing=tim, verdict=verdict,
+        windows={"1M": win}, timing=tim,
+        timing_acceptance=dict(
+            scope="E1/S4 WC timing relative to already-unclosed R4 element; not full-stage SS/FF signoff",
+            reference_setup_wns_ps=r4["setup_wns_ps"], reference_hold_wns_ps=r4["hold_wns_ps"],
+            full_stage_ss_ff_signoff_claim=False,
+            always_on_scope="A1/A4 SS setup and FF hold under unchanged 60/25 ps uncertainties"),
+        verdict=verdict,
         assumptions=["header switch ring, rush limit and domain capacitance as route R3's verdict (rom_stage_pg_compose)",
                      "a stage of 2,417 elements extrapolated linearly from the measured 1- and 4-element stages (the "
                      "shared controller/spine/branch-root power does not grow with K; the per-element parts do)"])
