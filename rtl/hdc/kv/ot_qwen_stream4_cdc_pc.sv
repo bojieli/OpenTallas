@@ -34,7 +34,7 @@ module ot_qwen_stream4_cdc_pc #(
     input  wire             clk,
     input  wire             c_arst_n,
     output reg              l_v,
-    output reg  [16:0]      l_sec,
+    output reg  [16:0]      l_sec,           // driven by the group registers l_q
     output reg  [7:0]       l_row,
     output reg  [255:0]     l_data,
     input  wire             l_pop,
@@ -119,7 +119,25 @@ module ot_qwen_stream4_cdc_pc #(
             if (l_ren) l_v <= 1'b1; else if (l_pop) l_v <= 1'b0;
         end
     end
-    always @(posedge clk) if (l_ren) {l_sec, l_row, l_data} <= lmem[lr_bin[LA-1:0]];
+    // The 281-bit read mux is split into NG column groups, each with its own KEPT copy of the read index
+    // and of l_v (route r1/r2: the shared lr_bin -> 64:1 mux -> l_data path missed by 10 ps on fanout).
+    // A group's output register loads whenever the presented word is free (!l_v || l_pop): when the FIFO
+    // is empty it loads the unwritten slot at the read index, which l_v (= 0) marks invalid.  Identical
+    // l_v / l_* sequence on every valid cycle; zero added cycles.
+    localparam integer NG = 5, GW = (281 + NG - 1) / NG;
+    wire [NG*GW-1:0] l_word;
+    reg  [NG*GW-1:0] l_q;
+    for (genvar gi = 0; gi < NG; gi = gi + 1) begin : lgrp
+        localparam integer LO = gi * GW, HI = (LO + GW > 281) ? 281 : LO + GW;
+        (* keep *) reg [LA-1:0] ix;
+        (* keep *) reg          vg;
+        always @(posedge clk or negedge c_rst_n)
+            if (!c_rst_n) begin ix <= 0; vg <= 1'b0; end
+            else begin ix <= lr_bin_n[LA-1:0]; if (l_ren) vg <= 1'b1; else if (l_pop) vg <= 1'b0; end
+        wire [280:0] row = lmem[ix];
+        always @(posedge clk) if (!vg || l_pop) l_q[HI-1:LO] <= row[HI-1:LO];
+    end
+    always @(*) {l_sec, l_row, l_data} = l_q[280:0];
 
     // =========================== write queue: CLK -> HCLK ===========================
     reg [23:0]     wm_sec  [0:WB-1];
