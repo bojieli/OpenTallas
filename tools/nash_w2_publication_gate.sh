@@ -63,5 +63,11 @@ if test "${NASH_W2_TRANSACTION_PIPELINE:-0}" = 1; then
  if test "$ce_rc" != 0 || ! rg -q 'PASS_CORRECT_PAYLOAD_CE' "$job/payload_ce.log" || ! rg -q 'PASS W2_PUBLICATION_SHARED_CPEND_CPL' "$job/payload_ce.log"; then
   echo 'protected payload CE/release gate failed'; exit 1
  fi
+ "$job/obj/Vtb_hbm_integrated_w2_publication_nash" +CORRECT_SELECTED_PAYLOAD_CE > "$job/selected_payload_ce.log" 2>&1
+ selected_ce_rc=$?
+ printf 'selected_payload_ce_rc=%s\n' "$selected_ce_rc" >> "$job/runtime.rc"
+ if test "$selected_ce_rc" != 0 || ! rg -q 'PASS_CORRECT_PAYLOAD_CE codeword=51' "$job/selected_payload_ce.log" || ! rg -q 'PASS W2_PUBLICATION_SHARED_CPEND_CPL' "$job/selected_payload_ce.log"; then
+  echo 'protected selected-stage CE/release gate failed'; exit 1
+ fi
 fi
 echo 'PASS selected cases; warm-reset/quarantine requires the real enclosing parent gate'

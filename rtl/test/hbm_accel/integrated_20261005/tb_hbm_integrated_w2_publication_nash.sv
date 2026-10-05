@@ -160,16 +160,24 @@ module tb_hbm_integrated_w2_publication_nash;
    protection_injected=1;
   end
   initial begin
-   if($test$plusargs("CORRECT_PAYLOAD_CE"))begin
+   integer ce_word,ce_start,ce_stall_edges;
+   if($test$plusargs("CORRECT_PAYLOAD_CE")||$test$plusargs("CORRECT_SELECTED_PAYLOAD_CE"))begin
+    ce_word=$test$plusargs("CORRECT_SELECTED_PAYLOAD_CE")?51:8;
     wait(provider_pending);@(negedge clk);
-    sink.transaction_pipeline.u_pipe.code[8]=sink.transaction_pipeline.u_pipe.code[8]^72'h1;
+    ce_start=cycle;ce_stall_edges=0;
+    sink.transaction_pipeline.u_pipe.code[ce_word]=sink.transaction_pipeline.u_pipe.code[ce_word]^72'h1;
+    // Check the real accepted-debt owner on every correction service edge.
+    // The selected-stage case targets the payload held for the accepted WR.
     @(negedge clk);
-    if(sink_fault||source_permit||s_req_v||s_rsp_r||!retained||!owner.on.debt[0])
-     $fatal(1,"CE used unchecked permission or lost accepted debt");
-    wait(sink.transaction_pipeline.u_pipe.normal);@(negedge clk);
-    if(sink_fault||sink.transaction_pipeline.u_pipe.ce[8]||!retained)
-     $fatal(1,"CE did not recheck/scrub protected payload");
-    $display("PASS_CORRECT_PAYLOAD_CE held_owner_debt=1 protected_recheck=1");
+    while(!sink.transaction_pipeline.u_pipe.normal)begin
+     if(sink_fault||source_permit||s_req_v||s_rsp_r||!retained||!owner.on.debt[0])
+      $fatal(1,"CE used unchecked permission or lost accepted debt");
+     ce_stall_edges=ce_stall_edges+1;
+     @(negedge clk);
+    end
+    if(sink_fault||sink.transaction_pipeline.u_pipe.ce[ce_word]||!retained||ce_stall_edges==0)
+     $fatal(1,"CE did not hold/recheck/scrub protected payload");
+    $display("PASS_CORRECT_PAYLOAD_CE codeword=%0d start=%0d resume=%0d stall_edges=%0d held_owner_debt=1 protected_recheck=1",ce_word,ce_start,cycle,ce_stall_edges);
    end
   end
  end else if(REGISTERED_SUBBLOCKS)begin:inject_registered
