@@ -411,7 +411,13 @@ module ot_rom_pkg_ctrl_wfc #(
     always @(*) begin
         in_ready = 1'b0; rx_hdr = 1'b0; rx_res = 1'b0; rx_side = 1'b0;
         vm_we = 1'b0; vm_waddr = rx_word;
-        if (rx_st == R_IDLE) begin
+        // The reset root releases one edge after rst_n. Do not advertise an
+        // accepted flit until this controller can retain it on that edge.
+        // Otherwise the sender consumes the header while we are still reset,
+        // and the next payload is decoded as a new header.
+        if (!rst_q) begin
+            in_ready = 1'b0;
+        end else if (rx_st == R_IDLE) begin
             if (in_type == MT_HIDDEN) begin
                 in_ready = !pend; rx_hdr = in_valid && !pend;
             end else if (in_type == MT_SIDE) begin
