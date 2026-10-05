@@ -44,8 +44,32 @@
         "Euclid owns production XMAP forwarding from Pauli leaf; s1_xa<=xa absolute once",
         "Existing stress sequence nonzero-ring-base and wrap case required"
       ],
-      "binding": null,
-      "missing": "Production cursor-fold and selected combined bench source/fixture binding pending."
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606"
+        },
+        "parameters": {
+          "ENABLE": 1,
+          "PQ_ENABLE": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "pass_path": [
+              "candidate_exact"
+            ],
+            "pass_value": true,
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Current production parent exact under PQ+PACK, XMAP0; earlier XMAP1 joint record preserved separately."
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound."
     },
     "format_masked_activation": {
       "owner": "Pauli",
@@ -62,37 +86,174 @@
         "P6 FP4/FP8/BF16 beats 8/4/3; P1 FP4 groups [0,4]",
         "Exclude Pauli legacy/prototype issuer and sm_pq_xmap top from selected production closure"
       ],
-      "binding": null,
-      "missing": "Standalone Pauli leaf positively available at owner source path; Euclid production XMAP forwarding and combined exact executable binding remain pending."
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/ot_hbm_accel_smpq_xmap_leaf.sv": "7f271a0f817c4b057dfc27d85b75821813da9851a73ae27a5ed70ad4d8bfaabb",
+          "rtl/hbm_accel/sm/ot_hbm_accel_activation_pack.sv": "c88ee4f14b0464ab32eab8a5de9e8919aa25081a49d9ce7638f9ca4ca2197a54"
+        },
+        "parameters": {
+          "XMAP": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/summary.json",
+            "sha256": "d322bfb3e71ef5e8555b6a4a96be1596caf7982c359f246528cfbb6eeb3de48b",
+            "pass_path": [
+              "verdict"
+            ],
+            "pass_value": "PASS_PQ_XMAP_8_POSITIVES_EXPECTED_NEGATIVE",
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Cached DS minimum SM component sequences; 1ns simulation only. Not full token or loaded SS/FF clock admission.",
+        "reuse_executable": "/srv/opentallas-scratch2/jobs/rawls-hbm-pq-xmap-joint-20261005-r2/work/build_xmap1/Vtb_hbm_accel_sm_pq_xmap_seq",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Joint exact component gate complete; loaded SS/FF and complete production provider remain unbound.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "target_eligibility": {
+        "ds_1m": "Actual production PQ/XMAP joint gate PASS: four P1/four P6 retained sequences and expected negative.",
+        "qwen_8k": {
+          "enabled": false,
+          "verdict": "INAPPLICABLE_TO_SELECTED_ME_SPINE",
+          "source_bound_record": "results/rtl/qwen_hbm_opt3_activation_layout_20261005/selected_me_binding.json",
+          "record_sha256": "b02a8d80887371c73234d1ae2d1cf48f10b9469067766623412c832778ccd497",
+          "reason": "Selected ME activation interface is already format-exclusive FP32. It reads enabled addressed 32-bit words directly from VM, not the DS multi-format 3152-bit column fragment. No inactive FP4/FP8/BF16 plane is transported to remove."
+        }
+      }
     },
     "partial_wave_packing": {
       "owner": "Erdos",
       "default_enabled": false,
-      "source_paths": [],
-      "hooks": [
-        "PQ dependency",
-        "PAIR requests",
-        "op parity and distinct reducer identity"
+      "source_paths": [
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv",
+        "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv",
+        "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv"
       ],
-      "binding": null,
-      "missing": "Optional: >=1% measured incremental gain over PQ; source/ABI not landed."
+      "hooks": [
+        "PACK_W2=0 hardware default; candidate1 after literal paired receipt and negatives",
+        "8bits same posted queue tuple, capture at h_pop",
+        "Erdos caller request/result joins, original operation identity restored",
+        "XMAP forwarded by caller, actual paired gate XMAP0; combined XMAP1 remains unmeasured"
+      ],
+      "binding": {
+        "source_sha256": {
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_issue_pq.sv": "af0bbb1734e11620d7a91ac7339e1ddb45905487a9c727de6b430f76bd5bca23",
+          "rtl/hbm_accel/sm/pq_production_20261005/ot_hbm_accel_sm_pq.sv": "ea48d9df60fec7729639888413efdb7940afe386625e9e2771edc7ee04536606",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_address_hook.sv": "07e87f99a40303729051e483a4fe08d5d912d67b00ebfd4d44cf840c009dcad1",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_pair_request_join.sv": "0eafaa6fccde0e5add1c40926f50482d87a4fe292882df124ba6bbe5b4473416",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_result_join.sv": "02f7baa92457ad6766eb9cf5f1085ae61c12b99a7ada1bed92e6b5b40f186a8c",
+          "rtl/hbm_accel/sm/wavepack_20261005/ot_hbm_accel_w2_caller.sv": "f9e7c02771419210282e63c1de8a8d1fc5c9882428ff0df674268c3f20765644"
+        },
+        "parameters": {
+          "PACK_W2": 1
+        },
+        "exact_receipts": [
+          {
+            "path": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json",
+            "sha256": "f3d6b54070ee0a7c86c49819b59a8798c0637125c135fa988e3277b24612681a",
+            "pass_path": [
+              "candidate_exact"
+            ],
+            "pass_value": true,
+            "source_pins_path": [
+              "source_pins"
+            ]
+          }
+        ],
+        "physical": null,
+        "scope": "Actual PQ+PACK component, XMAP0. Joint XMAP1 interaction unmeasured; no whole token/physical admission.",
+        "reuse_only_no_standalone_rerun": true
+      },
+      "missing": "Exact PQ+PACK and literal negatives consumed; PQ+PACK+XMAP interaction and physical admission remain unmeasured.",
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt2_source_join.json"
     },
     "expert_workgroup": {
       "owner": "Hubble",
       "default_enabled": false,
       "source_paths": [
+        "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv",
         "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv",
-        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv"
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv",
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv",
+        "tools/dshbm_expert_workgroup_interleave.py",
+        "tools/dshbm_expert_interleave_descriptor.py",
+        "tools/dshbm_expert_workgroup_descriptor.py",
+        "tools/dshbm_expert_interleave_native.py"
       ],
       "hooks": [
-        "real L3/L20 router ids",
-        "8-sector interleave",
-        "desc_j0/desc_keep",
-        "static SM 4k+q descriptors",
-        "real slot-start timestamps"
+        "Fetch s_valid/s_ready/s_data[1024] -> gearbox in_valid/in_ready/in_data.",
+        "Native gearbox out_valid/out_ready/out_data[1088] -> reserved SM response using the original accepted request tag; coupled benchmark has behavioural bookkeeping, not an installed provider.",
+        "cfg_lines is W2-only; cfg_lut maps W2 source lines, supplied by Hubble, never synthesized from A8 GU metadata.",
+        "tools/dshbm_expert_interleave_descriptor.py::compile_descriptors_a8(ids, *, layer, die, input_job, interleave8=False)",
+        "Mandatory W2 eight-sector interleave remains a required owner dependency."
       ],
       "binding": null,
-      "missing": "Baseline files exist; WG implementation and selected native fetch-to-SM gearbox binding pending."
+      "missing": "Opt4A8 sources resolved for inventory only; Hubble GU/W2 exact gate and mandatory W2 eight-sector schedule pending; OFF.",
+      "source_candidates": {
+        "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_la.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "9cc476d9304fde2a44652b0612545c757624112b6d56ef570823d5d16ae0c902"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_la.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "2ac198b09044f1dde428e390792795b5c2b6c642deedd09d25bc89bab0542a08"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_dispatch.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "0b0cfbd03b715f1d3b318911f1fc8d9a8aa7036a147377aec61a3fd6071eeaf1"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_stream_pc_wg.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "99de9572538328ddb493136eb4d6a668a574f444fd69431be68433d7b2628806"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_expert_fetch_stream_wg.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "1ad53dd9d2245fea0cabadcd13d2613d6ec6964e26500b90b61c829da03e89f0"
+        },
+        "rtl/hbm_accel/service/ot_hbm_accel_wg_gearbox.sv": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "574b617644d4eaf00714ca6b74adb485538c753da2b3dbf08b8d1002a23a941c"
+        },
+        "tools/dshbm_expert_workgroup_interleave.py": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "e423065ff214f5c2250adbe6f2d6e8e2e9dabc307594ad1abae7a0086478fc66"
+        },
+        "tools/dshbm_expert_interleave_descriptor.py": {
+          "commit": "7658dbdc5df3f6922bfd5dee5cc76f194bf1b659",
+          "sha256": "d736dfcaba6f4a390e31ae4ac8368fde382779b094559cb141ebf8a986aa3c8e"
+        },
+        "tools/dshbm_expert_workgroup_descriptor.py": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "366f7f56e29053e7ddc487451d27b6eb1bb0538ebfd444275f8e952b5046c97c"
+        },
+        "tools/dshbm_expert_interleave_native.py": {
+          "commit": "e96e33dd4ad3c2d55ab5df3a9268d8827f0e762b",
+          "sha256": "6811620851458f941295a971526fbc00bb8699190287c517c2a62e71da64de4c"
+        }
+      },
+      "eligible_workloads": [
+        "ds_1m"
+      ],
+      "source_join": "results/rtl/hbm_opt_integrated_20261005/opt4a8_source_join.json"
     },
     "fused_su": {
       "owner": "Einstein",
@@ -238,7 +399,10 @@
     },
     "qwen_8k": {
       "context_tokens": 8192,
-      "binding": null
+      "binding": null,
+      "forced_off_levers": [
+        "format_masked_activation"
+      ]
     }
   },
   "host_policy": {

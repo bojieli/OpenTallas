@@ -67,7 +67,7 @@ def main():
                    '--fd', str(child.fileno()), '--owner', str(a.owner),
                    '--checkpoint', str(a.checkpoint), '--kind', 'field',
                    '--node', f'L20.I{pc}', '--source-sha', digest, '--rank', str(a.rank),
-                   '--fragment', str(a.fragment)]
+                   '--fragment', str(a.fragment), '--native-pp-word-order']
             log = (a.output/f'I{pc}.source.log').open('w')
             readers.append(subprocess.Popen(cmd, pass_fds=(child.fileno(),), env=env,
                                             stdout=log, stderr=subprocess.STDOUT))
@@ -100,6 +100,7 @@ def main():
             elapsed_seconds=time.monotonic()-started, numerical_verdict=None,
             full_token=False, native_prefix_timing=False, rank=a.rank,
             fragment=a.fragment, output_base=binding['output_base'], rows=binding['rows'],
+            source_word_order='native_PP_element_order',
             input_path=str(xn), input_sha256=input_hash), indent=2)+'\n')
         return rc
     except Exception as error:
