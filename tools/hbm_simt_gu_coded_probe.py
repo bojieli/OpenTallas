@@ -38,9 +38,11 @@ def main():
    time.sleep(10)
   (w/(stage+'_admission.json')).write_text(json.dumps(dict(load=load,MemAvailable=avail,disk_free=free,
    reservation_GiB=24,cores=8,execution_caps=None,utc=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())),indent=2)+'\n')
+ model=HERE/'results/uarch/hbm_simt_gu_coded_20261005/parallel_repair_before_edit.json'
+ if not model.is_file():model=HERE/'results/uarch/hbm_simt_gu_coded_20261005/physical_probe_prebuild.json'
  files=['rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv','rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv','tools/w18/corner_sta.py']
  (w/'source_binding.json').write_text(json.dumps(dict(source_sha256={f:sha(src/f) for f in files},image=IMAGE,
-  driver_sha256=sha(__file__),model_sha256=sha(HERE/'results/uarch/hbm_simt_gu_coded_20261005/physical_probe_prebuild.json'),
+  driver_sha256=sha(__file__),model_path=str(model.relative_to(HERE)),model_sha256=sha(model),
   scope='192data/216coded state; real encoder/decoder CE feedback, loaded2fF isolated element; parent control/lease/slot unqualified',
   clock_ps=833,SS_setup_ps=60,FF_hold_ps=25,normal_added_cut_edges=0,CE_scrub_minimum_edges=1,
   additional_payload_bits=0),indent=2)+'\n')
