@@ -34,9 +34,10 @@ struct Provider {
   const char* native_i0=std::getenv("DSROM_S81_NATIVE_L20_I0");
   const char* native_index=std::getenv("DSROM_S81_NATIVE_L20_INDEX");
   const char* native_gather=std::getenv("DSROM_S81_NATIVE_L20_GATHER");
+  const char* native_qfield=std::getenv("DSROM_S81_NATIVE_L20_QFIELD");
   const char* native_norm=std::getenv("DSROM_S81_NATIVE_L20_NORM");
   if((native_i0&&std::string(native_i0)=="1")||(native_index&&std::string(native_index)=="1")||
-     (native_gather&&std::string(native_gather)=="1")||(native_norm&&std::string(native_norm)=="1")) {
+     (native_gather&&std::string(native_gather)=="1")||(native_norm&&std::string(native_norm)=="1")||(native_qfield&&std::string(native_qfield)=="1")) {
    if(r.stage!=37)throw std::runtime_error("native L20 I0 requires canonical stage37");
    phase=0;entry=0;return;
   }
