@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hbm-attn-m6h1-replication.v1",
+  "selected": false,
+  "leaf_evidence_origin": "b32d59700 results/rtl/hbm_accel_fmax_inventory_20261004/attn/routes/claude_r1_m6h1_u30",
+  "existing_composition": "DEDICATED.attention; tools/hbm_accel_die_fp.py BLOCKS.attn_tile",
+  "source_configuration": "ot_attn_hgrp_m6h1 H16/HG1/TD32/NBANK5/PWORDS2/FPL6/FML8/F121",
+  "replicas": {
+    "head_groups_per_tile": 16,
+    "engine_tiles": 64,
+    "engine_groups": 1024,
+    "products_per_cycle_per_group": 32,
+    "products_per_cycle_per_tile": 512
+  },
+  "boundaries": {
+    "input_bits": 1618,
+    "input_replica_fanout": 16,
+    "leaf_input_branches": 25888,
+    "output_bits": 529,
+    "load_word_bytes_per_cycle": 128,
+    "packed_ib_bytes_per_cycle": 72,
+    "wrapper_mux_bits": 0,
+    "wrapper_ff_bits": 0,
+    "wrapper_added_cycles": 0,
+    "physical_buffer_area_um2": null,
+    "routing_capacity_tracks": null
+  },
+  "latency": {
+    "core_cycles": 62,
+    "core_cycles_m4": 42,
+    "delta_cycles_vs_m4": 20,
+    "wrapper_delta_cycles": 0,
+    "serial_job_composition": "existing ot_hdc_v41x_attn_s FPL6/FML8 depth model",
+    "full_job_cycles": null,
+    "full_engine_closed": false
+  },
+  "floorplan": {
+    "existing_slot_mm2": 0.5,
+    "leaf_core_area_um2": 84448.9,
+    "leaf_cell_area_um2": 28000.2,
+    "tile_core_area_lower_bound_mm2": 1.3511824,
+    "tile_cell_area_mm2": 0.4480032,
+    "required_over_slot_lower_bound": 2.7023648,
+    "engine_core_area_lower_bound_mm2": 86.4756736,
+    "existing_engine_slot_mm2": 32.0,
+    "halo_and_wiring_area_mm2": null,
+    "slot_fit": false
+  },
+  "leaf_signoff": {
+    "SS_setup_ps": 18.91,
+    "FF_hold_ps": 1.55,
+    "closes_signoff": true,
+    "false_path_io": true,
+    "period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "contextual_pnr_admitted": false,
+  "blocker": "Measured core-area lower bound exceeds existing composed tile slot",
+  "adopted": false,
+  "gain_claim": null,
+  "source_sha256": {
+    "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/physical.json": "da88d59d668fb46a5c2475306d8576cc7e91fd522ec02c49f09d4d757c1fa4a9",
+    "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/corner_sta.json": "159516ce38f6d402d87fd9ebbb9ba6e4fed89a375e1351affed550776924a896",
+    "results/uarch/hbm_attn_m6h1_replication_20261005/inputs/die_inventory.py": "1ca96bbd8f9d26947ebcd650761a50c731b33ea31db849639078340735f6397f"
+  }
+}
