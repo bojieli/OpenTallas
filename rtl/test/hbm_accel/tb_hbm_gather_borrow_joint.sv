@@ -46,6 +46,7 @@ module tb_hbm_gather_borrow_joint;
  reg saved_we;reg [15:0] saved_tag;
  reg corrupt_read=0,foreign_tag=0;
  integer accepted=0,read_sectors=0,write_sectors=0;
+ reg [3:0] previous_state=0;
  localparam [31:0] JOB=32'h12345678, BASE=32'h100000;
  localparam [3:0] GEN=4'h9;
  localparam [16:0] TOKEN=17'd1165;
@@ -90,6 +91,9 @@ module tb_hbm_gather_borrow_joint;
   .idle(idle),.fault(borrow_fault));
  assign m_req_rdy=por_n&&!pending&&!m_rsp_v&&(cycles%4!=0);
  always @(posedge clk)begin
+  if(por_n && bridge.on.state!=previous_state)
+   $display("BRIDGE state=%0d grants=%b start=%b req=%b legal=%b frame=%b shared_fault=%b",bridge.on.state,grants,start_v,req_v,bridge.on.legal,bridge.on.frame_match,borrow_fault);
+  previous_state<=bridge.on.state;
   cycles<=cycles+1;
   if(!por_n)begin pending<=0;m_rsp_v<=0;accepted<=0;read_sectors<=0;write_sectors<=0;end
   else begin
@@ -139,6 +143,7 @@ module tb_hbm_gather_borrow_joint;
   end
   step();start_v=0;
   repeat(18)step();
+  if(bridge_fault||borrow_fault)$fatal(1,"fault before first request state=%0d",bridge.on.state);
   if(grants!==3'b001||!retained||held_job!==JOB||held_gen!==GEN||held_token!==TOKEN||held_pos!==POS)
    $fatal(1,"lease/frame mismatch");
  endtask
