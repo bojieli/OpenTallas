@@ -22,10 +22,12 @@
       "joined_W2_hooks": []
     },
     "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": {
-      "actual_sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "actual_sha256": "bb6731bdf3d07083cc6f5e68e81853f20c16a186ab2b76a0a7c13ba75659bd31",
       "allocation_sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
-      "unchanged_CP_wiring": true,
-      "joined_W2_hooks": []
+      "unchanged_CP_ports": true,
+      "qualified_combinational_successor": true,
+      "added_FF": 0,
+      "added_cycles": 0
     },
     "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": {
       "actual_sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
@@ -46,12 +48,15 @@
       "joined_W2_hooks": []
     },
     "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": {
-      "actual_sha256": "dd131b6d7a8bdb1812afb9133847ae24489e7c65f7c5d78c88e5220c6f7776f7",
+      "actual_sha256": "9527f0245a06c8457a7320d2123b3e6260b875d04e61a0ab58521bfbc0914e74",
       "allocation_sha256": "d730b8d560ac04b9080e404f22b22d08c475ee1121bf6d342b4e7e2135b964bf",
-      "unchanged_CP_wiring": true,
-      "joined_W2_hooks": [
-        ",W2_PROTECTED_TRANSACTION_PIPELINE=0",
-        ",.PROTECTED_TRANSACTION_PIPELINE(W2_PROTECTED_TRANSACTION_PIPELINE)"
+      "parent_reference_commit": "f20f6850d3c262eaa6cd132b3eb2ba9af7ef7a08",
+      "parent_reference_sha256": "b21bb712d3f6a4f89103ffde2977f02ace02dc70b6fcb92d244cbb36176bfb18",
+      "unchanged_CP_ports": true,
+      "unchanged_W2_wiring": true,
+      "joined_CP_hooks": [
+        ",SU_FOUR_COMBINATIONAL_CUTS=0",
+        ",.FOUR_COMBINATIONAL_CUTS(SU_FOUR_COMBINATIONAL_CUTS)"
       ]
     }
   },
@@ -2246,7 +2251,7 @@
     "actual_propagated_insertion_ps": null,
     "actual_skew_ps": null
   },
-  "PG_source": "existing selected service M8/M9 width.48 and svc pitch",
+  "PG_source": "native M1/M2 rails -> M3/M4 local bridge -> M7 -> retained M8/M9; hbm_cp_local_pg model",
   "measured_load_or_CTS": false,
   "adopted": false,
   "parameters": {
@@ -2255,8 +2260,11 @@
     "SU_REGISTERED_OUTPUTS": 1,
     "SU_REGISTERED_STATUS": 1,
     "SU_REGISTERED_BOUNDARY": 1,
-    "SU_BALANCED_OWNER_BOUNDARY": 1
+    "SU_BALANCED_OWNER_BOUNDARY": 1,
+    "SU_FOUR_COMBINATIONAL_CUTS": 1
   },
   "source_faithful_top": "ot_hbm_integrated_su_cp_context",
-  "joint_W2_parent_repeat": false
+  "joint_W2_parent_repeat": false,
+  "four_cut_model": "results/uarch/hbm_cp_fourcut_20261005/model.json",
+  "four_cut_model_sha256": "ab4d9341876f8c55925ca058948e8005348ca1dd969132b8ea01e016cad90a81"
 }

@@ -1,0 +1,18 @@
+{
+  "source_sha256": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "rtl/hbm_accel/collective/ot_hbm_accel_gu_metadata.sv": "11ca2f3f6961e88b4af76ed48da67d9535c3a2688d633c3a9cff8be5a6391cfb",
+    "tools/w18/corner_sta.py": "a21c9e15eed5b03406a2a49e38e4b01582718de92b0feda5e538b599ac52ed29"
+  },
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "driver_sha256": "286a25da6e0b6fe7a83e5f51eaebbe7f451f8b71a20e0cd2a10bb187d5237008",
+  "model_path": "results/uarch/hbm_simt_gu_coded_20261005/parallel_repair_before_edit.json",
+  "model_sha256": "18f77ef6ab00f4c8a43e761ff6f0659caf86d2a3348555f5114f436c464909f6",
+  "scope": "192data/216coded state; real encoder/decoder CE feedback, loaded2fF isolated element; parent control/lease/slot unqualified",
+  "clock_ps": 833,
+  "SS_setup_ps": 60,
+  "FF_hold_ps": 25,
+  "normal_added_cut_edges": 0,
+  "CE_scrub_minimum_edges": 1,
+  "additional_payload_bits": 0
+}

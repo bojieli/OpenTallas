@@ -1,0 +1,26 @@
+{
+  "verdict": "FAIL_ISOLATED_SS_SETUP_FF_HOLD_PASS",
+  "route_rc": 0,
+  "SS_setup_slack_ps": -690.4573579546991,
+  "FF_hold_slack_ps": 34.64274006548251,
+  "R2R_setup_ps": -661.91272,
+  "I2R_setup_ps": -15.938862,
+  "source": "5ff88466a",
+  "cell_area_um2": 815.08,
+  "slot_cell_area_um2": 757.92672,
+  "slot_reservation_exceeded": true,
+  "FFs": 216,
+  "clock_buffers": 20,
+  "clock_inverters": 9,
+  "clock_cell_area_um2": 6.61932,
+  "clock_pin_load_fF": 93.740112,
+  "adopted": false,
+  "parent_context_closed": false,
+  "concrete_paths": [
+    "code[1][66] -> corrected data[108] via syndrome and variable bit correction",
+    "code[1][66] -> code[1][71] via correction/re-encode CE feedback",
+    "next_data[21] -> code[0][71] normal encode overall parity"
+  ],
+  "repair": "Required next source variant: exact parallel per-bit syndrome compare/mask in same W6 format, preserving CE/DUE/encoded authority; no variable-bit correction network or re-encode corrected data on CE; unchanged encode64 normal write and decode64 CE/DUE",
+  "job": "/srv/opentallas-scratch2/scratch/codex/hbmsm-gu-coded-probe-61dbf5943/run"
+}

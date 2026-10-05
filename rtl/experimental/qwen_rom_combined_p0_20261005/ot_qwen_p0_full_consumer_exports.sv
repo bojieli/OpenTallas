@@ -3,7 +3,8 @@
 // All compute, rounding, actual ROM/SRAM ports, stage controls and KV owners
 // are retained. Only the embedded simulation provider is removed and its real
 // typed boundary exported. Same priced model851.8086996; no new hardware,
-// storage or latency. Physical adapter/transport and final token gates remain
+// state or latency. Export loading still needs context qualification.
+// Physical adapter/transport and final token gates remain
 // with the owners; no constant producer returns or unprotected runtime path.
 // Additive full-shape original-AR consumer join. NEAR_HBM=0, DSpark OFF.
 // Existing core/program/ROM/vector/tile/collective semantics retained.
@@ -11,54 +12,7 @@
 // missing real full-width transport are NOT qualified by this module.
 // SOURCE-ONLY donor rtl/test/qwen_rom_runtime/ot_qwen_rom_rt_die_w12_stream4.sv @14dbc8e20 SHA256 d052c15b427eb88a63134edf1646c68ad32554c7b019d5d2c906d6c3754b0f9d
 `timescale 1ns/1ps
-// SIMULATION ONLY.  4-STACK full-bandwidth successor of ot_qwen_rom_rt_die_w12_stream.sv (left
-// byte-identical; this file is selected only by tools/qwen_rom_rt_token_stream4_w12.py).  The KV
-// memory is ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_ack: NSTK = 4 HBM3E stacks a die
-// (128 pseudo-channels, 4 near-HBM stream controllers), the window striped across stacks/PCs/banks
-// in consumption order (P < 8192), with two run-time straps: rm_early_go (the next layer's stream
-// is released when this layer's next program segment starts, i.e. the core is done with the KV
-// slices) and rm_posted_wb (posted token write-back; kv_write_drained not on the HBM write-done;
-// kv_wb_busy reports outstanding write-backs).  Both 0: the predecessor's protocol on 4 stacks.
-// The retained description of the HBM_STREAM die follows.
-//
-// SIMULATION ONLY.  HBM_STREAM successor of the REAL_MEM die ot_qwen_rom_rt_die_w12_rm.sv (left
-// byte-identical; this file is selected only by tools/qwen_rom_rt_token_stream_w12.py).  The only
-// difference is the KV memory: ot_qwen_rt_kv_stream_service + ot_qwen_hbm_stream_ack (the
-// near-HBM streaming controller ot_hbm_r14_stream_stack with stream-aware REFpb, a next-layer
-// notice, 32-sector landing and per-PC write queues, at HBM CK/2 behind a clock crossing)
-// replace ot_qwen_rt_kv_fill_service + ot_qwen_hbm_model_ack.  rm_next_layer is the layer that
-// runs after the current stage (the static decode schedule's notice); 255: none.
-// The retained description of the REAL_MEM die follows.
-//
-// REAL_MEM variant of the W12 runtime die (ot_qwen_rom_rt_die_w12.sv, which is
-// pinned and left byte-identical; this file is selected only by the default-off driver flag
-// --real-mem of tools/qwen_rom_rt_token_w12_rm.py).
-//
-// In ot_qwen_rom_rt_die_w12 every memory is served by the C++ host on demand and the core's
-// readiness inputs are tied high (kv_ok, kv_write_drained, w_ok, emb_ok, me_mem_ok).  Here every
-// memory the die reads is RTL inside the die or inside the tile model, and the readiness inputs
-// are driven by those memory services; the host only PRELOADS contents (ROM images, the HBM
-// model's KV history, the X row) between stages and wires the tile fabric and the collective:
-//
-//   KV           ot_qwen_rt_kv_fill_service + ot_qwen_hbm_model_ack (HBM timing, refresh,
-//                write-done): per-layer fill of the tiles' KV slices, write-through of the
-//                token's K/V with tagged, generation-checked completion.  Core: KV_HBM = 1
-//                (kv_ok gates every KV-sourced op), KV_VEC_WRITE_BRIDGE = 1 (kv_write_drained
-//                gates the next stream op and token retirement).  The tiles are the hardened
-//                element ot_qwen_rom_tile_w12 (KV_LOCAL = 1: the engine reads its own slice SRAM
-//                macros), composed by the host and written through their kvw_* ports from here.
-//   code ROM     the hardened tile's own 2 x CODE_BANKS ot_rom_4096x266_m8 macros (in the tile).
-//   scale ROM    G >> SMIN result-port banks of ot_rom_4096x266_m8 (ot_qwen_rt_rom_bank).
-//   program, segment descriptors, constant ROM, vector memory: RTL arrays with the same
-//                registered-response semantics the host served (the read is the array's
-//                synchronous read; write order as the host committed it).
-//   me_mem_ok    = every engine-side memory service ready (ME_STALL = 1: the engine clock is
-//                enabled only when it is); w_ok / emb_ok = the weight / embedding ROM services'
-//                ready.  The ROM core has W_HBM = 0, so w_ok / emb_ok are driven but not
-//                consulted by the core (they are HBM-weight handshakes).
-//
-// rm_kv_ideal = 1 is the A/B reference: identical die, the KV service's HBM bypassed
-// (kv_ok = token writes landed, kv_write_drained = 1, slices preloaded by the host).
+// Required geometry and owner clock policy remain explicit below.
 module ot_qwen_p0_full_consumer_exports #(
     parameter integer PROTECTED_STREAM4 = 0, // source candidate, opt-in until owner gates pass
     parameter integer BASELINE_AR = 0, // explicit owner selection; off by default
@@ -111,7 +65,7 @@ module ot_qwen_p0_full_consumer_exports #(
     output wire [18:0] stream_d_row,
     output wire [10:0] stream_d_n,
     input wire [NPC-1:0] stream_l_v, stream_w_room, stream_wd_v,
-    output wire [NPC-1:0] stream_l_pop, stream_w_v,
+    output wire [NPC-1:0] stream_l_pop, stream_w_v, stream_wd_accept,
     input wire [NPC*17-1:0] stream_l_sec,
     input wire [NPC*8-1:0] stream_l_row,
     input wire [NPC*256-1:0] stream_l_data,
@@ -120,7 +74,6 @@ module ot_qwen_p0_full_consumer_exports #(
     output wire [NPC*9-1:0] stream_w_tag,
     input wire [NPC*9-1:0] stream_wd_tag,
     input wire producer_fault,
-    input wire [15:0] producer_fault_code,
     input  wire              clk,
     input  wire              hclk, // independent periodic 1024ps controller root
     input  wire              warm_rst_n, // admission pause only; cold POR is rt_rst_n
@@ -379,7 +332,7 @@ module ot_qwen_p0_full_consumer_exports #(
     wire [NPC-1:0] hl_v, hl_pop, hw_v, hw_room, hwd_v;
     wire [NPC*17-1:0] hl_sec; wire [NPC*8-1:0] hl_row; wire [NPC*256-1:0] hl_data, hw_data;
     wire [NPC*24-1:0] hw_sec; wire [NPC*TGWK-1:0] hw_tag, hwd_tag;
-    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code, hbm_code;
+    wire kv_fault, svc_fault, hbm_fault; wire [15:0] svc_code;
     //: a LAYER starts at the stage's first core start (the sequencer starts the core once per program
     //: segment, i.e. again after each collective, within the same layer)
     reg kv_arm;
@@ -439,7 +392,15 @@ module ot_qwen_p0_full_consumer_exports #(
     assign hwd_v=stream_wd_v;
     assign hwd_tag=stream_wd_tag;
     assign hbm_fault=producer_fault;
-    assign hbm_code=producer_fault_code;
+    // Exact existing service ACK identity predicate (service lines608-612).
+    // Export its retirement eligibility; neither valid alone nor a permanent
+    // ready grants permission to release a protected transport transaction.
+    for(genvar p=0;p<NPC;p=p+1)begin:consumer_ACK
+        wire [8:0] tag=hwd_tag[p*9+:9];
+        assign stream_wd_accept[p]=rst_n && hwd_v[p] && tag[8] &&
+            u_kv.w_valid[tag[5:0]] && u_kv.w_gen[tag[5:0]]==tag[7:6] &&
+            u_kv.w_pc[tag[5:0]]==8'(p);
+    end
     assign kv_fault = svc_fault | hbm_fault;
     assign kv_fault_code = svc_code | (hbm_fault ? 16'h8000 : 16'h0);
 
