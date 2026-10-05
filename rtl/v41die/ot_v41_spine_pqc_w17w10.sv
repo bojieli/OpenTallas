@@ -44,6 +44,15 @@
 //     stage), R1 (word), R2 (derived fields) and pushes into a queue behind a registered HEAD entry, so the
 //     streamer's advance cone is need-vs-have of the head's registers only.
 //
+// v9 (2026-10-05, R = 128 closure revision; every class of the routed v8 R = 16 / 128 screens): the FP8 quantiser is
+// ot_dsrom_aq12 (LATENCY 18; the qb / eb row enables are registered one-hots from the spine's own delayed request,
+// 8 kept slice copies); the BF16 x-buffer write is two stages (+1 cycle on the BF16 load) with registered one-hot
+// block enables (16 kept copies); the reader's last max level is a stage R3 (+1 reader cycle, prefetched); the
+// queue's write enable no longer depends on the streamer's advance; the accept writes the slot's wide fields one
+// cycle later from registered copies; the return's rsplit compare is registered before the kept select copies;
+// replica groups of RG = 8 regions; RPT = 1 registered repeater stage on the broadcast out, the root inputs and the
+// row-write outputs (+1 cycle each, measured in the vehicle).
+//
 // The broadcast wire to the regions and the return wire from them are NOT in this module: they are the S81 floorplan's
 // registered wire stages at the measured SS reach of 504 um a stage (results/rtl/dsrom_s81_fulldie_20261004/
 // floorplan.json trunk_stages.stages_at_504, field_one_way 41), charged once per node by the field composition.
@@ -61,7 +70,9 @@ module ot_v41_spine_pqc_w17w10 #(
     parameter integer GAP = 12,
     parameter integer GUARD = 180,
     parameter integer GSLACK = 6,
-    parameter integer RG = 16,           // regions per replica group (return configuration replicas, row-count groups)
+    parameter integer RG = 8,            // regions per replica group (return configuration replicas; v9: 16 -> 8)
+    parameter integer RPT = 1,           // v9: registered repeater stages on the broadcast out, the root inputs and
+                                         // the row-write outputs (long die-scale nets; each adds RPT cycles)
     parameter integer BW = 1 + PHW + 3 + 1 + 1 + 2 + 1 + 8 + 3 + 2 + 256 + 10 + 256 + 10 + 3 + 3 + 1 + 3 + 4 + 32 + 1024
 ) (
     input  wire              clk,
@@ -79,9 +90,9 @@ module ot_v41_spine_pqc_w17w10 #(
     output reg               x_re,
     output reg  [VAW-1:0]    x_addr,
     input  wire [VRD*32-1:0] x_q,
-    output reg  [R-1:0]      w_we,
-    output reg  [R*VAW-1:0]  w_addr,
-    output reg  [R*32-1:0]   w_data,
+    output wire [R-1:0]      w_we,
+    output wire [R*VAW-1:0]  w_addr,
+    output wire [R*32-1:0]   w_data,
     output wire              f_cfg_go,
     output wire [PHW-1:0]    f_cfg_ph,
     output wire [2:0]        f_cfg_np,
@@ -184,6 +195,26 @@ module ot_v41_spine_pqc_w17w10 #(
     reg           a_v, a_v2;
     reg [1:0]     a_tag, a_tag2;
     reg [PHW-1:0] a_ph;
+    // v9: the slot's wide fields are written the cycle after the accept from registered copies of the op inputs,
+    // with the slot enable a registered one-hot (kept, two copies): the accept cone (go, acc -> 4 x ~100 slot
+    // flops) was an SS class at R = 128 (acc -> s_ops).  The fields are read only once the slot's phase word has
+    // landed (two cycles after the accept), so the cycles are unchanged.
+    reg [VAW-1:0] a_xb, a_ob, a_xps, a_ops;
+    reg [1:0]     a_fm;
+    reg [2:0]     a_np;
+    wire [3:0]    a_oh_d = (go && !sv[acc]) ? (4'b0001 << acc) : 4'b0000;
+    wire [7:0]    a_oh;
+    ot_v41_kreg #(.W(4), .AR(1)) u_aoh0 (.clk(clk), .arst_n(rst_n), .d(a_oh_d), .q(a_oh[3:0]));
+    ot_v41_kreg #(.W(4), .AR(1)) u_aoh1 (.clk(clk), .arst_n(rst_n), .d(a_oh_d), .q(a_oh[7:4]));
+    always @(posedge clk) begin
+        a_xb <= i_xbase; a_ob <= i_obase; a_xps <= i_xps; a_ops <= i_ops; a_fm <= i_fmt; a_np <= i_np;
+    end
+    integer ka;
+    always @(posedge clk)
+        for (ka = 0; ka < 4; ka = ka + 1) begin
+            if (a_oh[ka]) begin s_xb[ka] <= a_xb; s_ob[ka] <= a_ob; s_xps[ka] <= a_xps; s_ops[ka] <= a_ops; end
+            if (a_oh[4 + ka]) begin s_ph[ka] <= a_ph; s_fm[ka] <= a_fm; s_np[ka] <= a_np; s_np1[ka] <= 4'(a_np) + 4'd1; end
+        end
     wire [63:0] ph_q0, ph_q1;
 `ifdef OT_PQ_ROM_PORTS
     // macro ports: the NEXT address (a_ph registers it at accept); the macro registers it itself
@@ -217,45 +248,92 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [1:0] aq_vo, aq_f;
     wire [511:0] aq_q;
     wire [19:0]  aq_e;
+    // v9: the FP8 quantiser is ot_dsrom_aq12 (rtl/hdc/v41x/ot_dsrom_aq12.sv: the FP8 path of the pinned
+    // ot_hdc_actquant bit for bit, re-staged for 0.833 ns at SS; LATENCY 18 instead of 13).  The spine passes fp4 = 0
+    // to the pinned module, so the function is the same.
+    localparam integer AQL = 18;
     genvar gq;
     generate for (gq = 0; gq < 2; gq = gq + 1) begin : g_aq
         wire [511:0] unused_y;
         wire signed [9:0] e1;
-        ot_hdc_actquant u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam), .fp4(1'b0),
+        ot_dsrom_aq12 u_aq (.clk(clk), .rst_n(rst_n), .v(rq_v && !rq_fam),
             .x(x_q[1024*gq +: 1024]), .vo(aq_vo[gq]), .q(aq_q[256*gq +: 256]), .e(e1), .y(unused_y),
             .fault(aq_f[gq]));
         assign aq_e[10*gq +: 10] = e1;
     end endgenerate
-    wire [BAW-1:0] aq_blk;
-    wire           aq_par;
-    wire [BAW:0] aqi12;
-    ot_hdc_delay #(.W(BAW + 1), .D(12)) u_aqi (.clk(clk), .rst_n(rst_n), .d({rq_k[BAW+4:5], rq_par}), .q(aqi12));
-    wire [4*(BAW+1)-1:0] aqi;        // the 13th stage in four kept copies (one per 64-bit slice of the qb write)
+    // the qb / eb write and the `have` update are driven from the spine's own copy of the request, delayed to the
+    // quantiser's output cycle, never from the quantiser's vo (v8: vo drove every qb row enable, a single flop with a
+    // 4,096-flop cone, the SS critical class at R = 128):
+    //   AQL - 2 delay registers of {v, block, parity}; then 8 kept copies (one per 32-bit qb slice) and one for the
+    //   `have` update; then, per slice, the row enables decoded into a kept register (row b takes the low half of
+    //   the block pair, row b + 1 the high half), so each enable drives 32 flops.
+    localparam integer NQR = 2 * NBLK;                  // qb rows
+    wire           aq_v_n = rq_v && !rq_fam;
+    wire [BAW+1:0] aqi_d;                               // {v, block, parity} at AQL - 2
+    ot_hdc_delay #(.W(BAW + 2), .D(AQL - 2), .RESET(1)) u_aqi (.clk(clk), .rst_n(rst_n),
+        .d({aq_v_n, rq_k[BAW+4:5], rq_par}), .q(aqi_d));
+    wire [9*(BAW+2)-1:0] aqi;                           // AQL - 1: 8 slice copies + 1 `have` copy
     genvar gq2;
-    generate for (gq2 = 0; gq2 < 4; gq2 = gq2 + 1) begin : g_aqi
-        ot_v41_kreg #(.W(BAW + 1)) u_c (.clk(clk), .arst_n(rst_n), .d(aqi12), .q(aqi[(BAW+1)*gq2 +: BAW+1]));
+    generate for (gq2 = 0; gq2 < 9; gq2 = gq2 + 1) begin : g_aqi
+        ot_v41_kreg #(.W(BAW + 2), .AR(1)) u_c (.clk(clk), .arst_n(rst_n), .d(aqi_d), .q(aqi[(BAW+2)*gq2 +: BAW+2]));
     end endgenerate
-    assign {aq_blk, aq_par} = aqi[BAW:0];
+    wire [8*2*NQR-1:0] qwe;                             // AQL: per slice {hi enables, lo enables}
+    generate for (gq2 = 0; gq2 < 8; gq2 = gq2 + 1) begin : g_qwe
+        wire [BAW+1:0] c = aqi[(BAW+2)*gq2 +: BAW+2];
+        wire [15:0]    b = (c[0] ? 16'(NBLK) : 16'd0) + 16'(c[BAW:1]);
+        reg  [2*NQR-1:0] dec;
+        integer r;
+        always @* for (r = 0; r < NQR; r = r + 1) begin
+            dec[r] = c[BAW+1] && (b == 16'(r));
+            dec[NQR + r] = c[BAW+1] && (b + 16'd1 == 16'(r));
+        end
+        ot_v41_kreg #(.W(2 * NQR), .AR(1)) u_we (.clk(clk), .arst_n(rst_n), .d(dec), .q(qwe[2*NQR*gq2 +: 2*NQR]));
+    end endgenerate
+    wire [BAW+1:0] aqh;                                 // AQL: the `have` copy
+    ot_v41_kreg #(.W(BAW + 2), .AR(1)) u_aqh (.clk(clk), .arst_n(rst_n), .d(aqi[(BAW+2)*8 +: BAW+2]), .q(aqh));
+    wire           aq_wv = aqh[BAW+1];
+    wire [BAW-1:0] aq_blk = aqh[BAW:1];
+    wire           aq_par = aqh[0];
     reg [255:0] qb [0:2*NBLK-1];
     reg [9:0]   eb [0:2*NBLK-1];
     reg [15:0]  bb [0:2*KMAX-1];
     reg [14:0]  have [0:1];
-    // BF16 x-buffer write, registered once
-    reg            bw_v, bw_par;
+    // BF16 x-buffer write (v9: two stages, +1 cycle on the BF16 load path).  Stage A registers each word's high half
+    // and its rounding increment and the written block; stage B increments (prefix incrementers) and decodes the
+    // block into registered one-hot enables, 16 kept copies (one per VRD/16 words); the write is at stage B + 1, and
+    // the buffer's `have` follows the write.  (v8: bw_v -> every bb row enable and q_x -> rounding -> bw_d were SS
+    // classes at R = 128.)
+    reg            bw_v, bw_par;     // stage B (the write and the `have` update are the cycle after)
     reg [13:0]     bw_k;
+    reg            ba_v, ba_par;     // stage A
+    reg [13:0]     ba_k;
+    reg [WBW-1:0]  ba_blk;
+    reg [VRD*16-1:0] ba_hi;
+    reg [VRD-1:0]    ba_inc;
     wire [WBW-1:0] bw_blk_n = WBW'(((rq_par ? KMAX : 0) + 32'(rq_k)) / VRD);
-    wire [4*WBW-1:0] bw_blkc;        // written block (VRD words), four kept copies (one per quarter of the block)
+    localparam integer NBC = (VRD >= 16) ? 16 : VRD;    // enable copies
+    wire [NBC*NWB-1:0] bwe;
+    reg  [NWB-1:0]     bwe_d;
+    integer kbw;
+    always @* for (kbw = 0; kbw < NWB; kbw = kbw + 1) bwe_d[kbw] = ba_v && (ba_blk == WBW'(kbw));
     genvar gbw;
-    generate for (gbw = 0; gbw < 4; gbw = gbw + 1) begin : g_bwb
-        ot_v41_kreg #(.W(WBW)) u_bwb (.clk(clk), .arst_n(rst_n), .d(bw_blk_n), .q(bw_blkc[WBW*gbw +: WBW]));
+    generate for (gbw = 0; gbw < NBC; gbw = gbw + 1) begin : g_bwb
+        ot_v41_kreg #(.W(NWB), .AR(1)) u_bwb (.clk(clk), .arst_n(rst_n), .d(bwe_d), .q(bwe[NWB*gbw +: NWB]));
     end endgenerate
     reg [VRD*16-1:0] bw_d;
-    wire [VRD*16-1:0] bw_rn;         // x_q rounded to BF16 (the pinned rounding increment, prefix incrementers)
+    wire [VRD*16-1:0] bw_rn;         // rounded to BF16 (the pinned rounding increment, prefix incrementers)
     genvar gw;
     generate for (gw = 0; gw < VRD; gw = gw + 1) begin : g_rn
-        ot_v41_inc #(.W(16)) u_rn (.a(x_q[32*gw + 16 +: 16]),
-            .inc(x_q[32*gw + 15] & ((x_q[32*gw +: 15] != 15'd0) | x_q[32*gw + 16])), .y(bw_rn[16*gw +: 16]), .co());
+        ot_v41_inc #(.W(16)) u_rn (.a(ba_hi[16*gw +: 16]), .inc(ba_inc[gw]), .y(bw_rn[16*gw +: 16]), .co());
     end endgenerate
+    integer kbi;
+    always @(posedge clk) begin
+        ba_blk <= bw_blk_n;
+        for (kbi = 0; kbi < VRD; kbi = kbi + 1) begin
+            ba_hi[16*kbi +: 16] <= x_q[32*kbi + 16 +: 16];
+            ba_inc[kbi] <= x_q[32*kbi + 15] & ((x_q[32*kbi +: 15] != 15'd0) | x_q[32*kbi + 16]);
+        end
+    end
 
     // ------------------------------------------------------------------ stream-ROM reader
     reg        rd_run, rd_last;
@@ -300,7 +378,8 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [7:0]    r1_g3 = r1_w[7] ? r1_w[39:32] : 8'd0;
     wire [7:0]    r1_m01 = (r1_g1 > r1_g0) ? r1_g1 : r1_g0;
     wire [7:0]    r1_m23 = (r1_g3 > r1_g2) ? r1_g3 : r1_g2;
-    wire [7:0]    r1_umax = (r1_m23 > r1_m01) ? r1_m23 : r1_m01;
+    // v9: the final max level is in R3 (r1_w -> r2_umax was an SS class at R = 128); +1 reader cycle, hidden by
+    // the prefetch (the 8 credits cover the 7-cycle round trip)
     // need_q = ({u, sv[1], b, 5'd0} + 32) mod 2^15, need_b = ({umax, 7'd0} + 128) mod 2^15 (the pinned formulas);
     // need_q is formed in R2, need_b's increment at the push
     wire [9:0]  r1_nq;
@@ -312,15 +391,24 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [2:0]     r2_pos;
     reg [47:0]    r2_w;
     reg [9:0]     r2_nq;
-    reg [7:0]     r2_umax;
+    reg [7:0]     r2_m01, r2_m23;
     reg [15:0]    r2_b0, r2_b1;
     reg [35:0]    r2_hi;
-    wire [7:0]    r2_nb;
-    ot_v41_inc #(.W(8)) u_nb (.a(r2_umax), .inc(1'b1), .y(r2_nb), .co());
+    // R3: the last max level; need_b's increment at the push
+    reg           r3_v, r3_lp, r3_lo, r3_fam, r3_spar;
+    reg [1:0]     r3_tag;
+    reg [2:0]     r3_pos;
+    reg [47:0]    r3_w;
+    reg [9:0]     r3_nq;
+    reg [7:0]     r3_umax;
+    reg [15:0]    r3_b0, r3_b1;
+    reg [35:0]    r3_hi;
+    wire [7:0]    r3_nb;
+    ot_v41_inc #(.W(8)) u_nb (.a(r3_umax), .inc(1'b1), .y(r3_nb), .co());
     // an entry: {w 48, need 15, spar, lp, lo, fam, tag 2, pos 3, b0 16, b1 16, hi 36}
     localparam integer EW = 48 + 15 + 4 + 2 + 3 + 16 + 16 + 36;
-    wire [EW-1:0] r2_e = {r2_w, r2_fam ? {r2_nb, 7'd0} : {r2_nq, 5'd0}, r2_spar, r2_lp, r2_lo, r2_fam, r2_tag, r2_pos,
-                          r2_b0, r2_b1, r2_hi};
+    wire [EW-1:0] r3_e = {r3_w, r3_fam ? {r3_nb, 7'd0} : {r3_nq, 5'd0}, r3_spar, r3_lp, r3_lo, r3_fam, r3_tag, r3_pos,
+                          r3_b0, r3_b1, r3_hi};
     // queue behind a registered HEAD entry: the streamer reads only the head's registers
     reg [EW-1:0] fq [0:FD-1];
     reg [2:0]  qrp, qwp;
@@ -352,11 +440,11 @@ module ot_v41_spine_pqc_w17w10 #(
         // it as empty through the mask below, exactly as the pinned same-edge clear
         for (kh = 0; kh < 2; kh = kh + 1) if (clr_q[kh]) have_n[kh] = 15'd0;
         if (bw_v) have_n[bw_par] = 15'(bw_k) + 15'(VRD);
-        if (aq_vo[0]) have_n[aq_par] = {aq_blk, 5'd0} + 15'd64;
+        if (aq_wv) have_n[aq_par] = {aq_blk, 5'd0} + 15'd64;
     end
     wire        h_take;                          // the head is (re)loaded this cycle
-    wire [EW-1:0] he_n = !h_take ? he : (qcnt != 4'd0) ? fq[qrp] : r2_e;
-    wire        hv_n = !h_take ? hv : (qcnt != 4'd0) || r2_v;
+    wire [EW-1:0] he_n = !h_take ? he : (qcnt != 4'd0) ? fq[qrp] : r3_e;
+    wire        hv_n = !h_take ? hv : (qcnt != 4'd0) || r3_v;
     // the streamer's control copy (kept): {hv, need, spar, w[0], lp, lo, tag} and both `have` counts
     localparam integer CCW = 1 + 15 + 1 + 1 + 1 + 1 + 2 + 30;
     wire [CCW-1:0] cc;
@@ -466,8 +554,8 @@ module ot_v41_spine_pqc_w17w10 #(
     wire [BW-1:0] bc_in = {bt_cfg, bt_ph, bt_np, bt_go, bt_gobf, bt_tag, bt_xs_v, bt_p, bt_b, bt_sv, bt_q0, bt_e0, bt_q1,
                            bt_e1, bt_pos, bt_pos, bt_xb_v, bt_b, bt_bsv, bt_u, bt_d};
     wire [BW-1:0] bc;
-    generate if (BST > 0) begin : g_bst
-        ot_hdc_delay #(.W(BW), .D(BST), .RESET(1)) u_bst (.clk(clk), .rst_n(rst_n), .d(bc_in), .q(bc));
+    generate if (BST + RPT > 0) begin : g_bst
+        ot_hdc_delay #(.W(BW), .D(BST + RPT), .RESET(1)) u_bst (.clk(clk), .rst_n(rst_n), .d(bc_in), .q(bc));
     end else begin : g_nobst
         assign bc = bc_in;
     end endgenerate
@@ -481,13 +569,21 @@ module ot_v41_spine_pqc_w17w10 #(
     reg [16*R-1:0] q0_bf;
     reg [3*R-1:0]  q0_pos;
     reg [32*R-1:0] q0_f32;
+    // v9: RPT registered repeater stages in front of stage 0 (the root inputs cross the die-scale return wires)
+    wire [R-1:0]   p_v, p_e;
+    wire [16*R-1:0] p_row, p_bf;
+    wire [3*R-1:0] p_pos;
+    wire [32*R-1:0] p_f32;
+    ot_hdc_delay #(.W(R), .D(RPT), .RESET(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(r_v), .q(p_v));
+    ot_hdc_delay #(.W(R + 16*R + 16*R + 3*R + 32*R), .D(RPT)) u_prd (.clk(clk), .rst_n(rst_n),
+        .d({r_e, r_row, r_bf16, r_pos, r_fp32}), .q({p_e, p_row, p_bf, p_pos, p_f32}));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) q0_v <= {R{1'b0}};
-        else q0_v <= r_v;
+        else q0_v <= p_v;
     integer kr0;
     always @(posedge clk) begin
-        q0_e <= r_e; q0_bf <= r_bf16; q0_pos <= r_pos; q0_f32 <= r_fp32;
-        for (kr0 = 0; kr0 < R; kr0 = kr0 + 1) q0_row[14*kr0 +: 14] <= r_row[16*kr0 +: 14];
+        q0_e <= p_e; q0_bf <= p_bf; q0_pos <= p_pos; q0_f32 <= p_f32;
+        for (kr0 = 0; kr0 < R; kr0 = kr0 + 1) q0_row[14*kr0 +: 14] <= p_row[16*kr0 +: 14];
     end
     // per-group replicas of the per-tag return configuration (one-cycle copies of the masters, kept)
     // per tag: {ob, 7 ops, 5 ops, 3 ops, ops, rs, pw63, pw62, fmt == 0, fmt == 1} (CFW bits)
@@ -512,6 +608,9 @@ module ot_v41_spine_pqc_w17w10 #(
     end endgenerate
     // stages 1 and 2, region-local: the row's op tag registered as kept one-hot copies (0: base, 1: 1/3 x stride,
     // 2: 5/7 x stride, 3: rsplit / format / live (valid-gated), 4: row count (valid-gated))
+    reg [R-1:0]     w_we_r;
+    reg [R*VAW-1:0] w_addr_r;
+    reg [R*32-1:0]  w_data_r;
     reg [R-1:0]     q1_v, q1_f;
     reg [R*VAW-1:0] q1_a, q1_p;
     reg [R*32-1:0]  q1_f32;
@@ -522,14 +621,14 @@ module ot_v41_spine_pqc_w17w10 #(
         // PQ = 1: the row's own op tag (row bits [15:14], set by the PQ elements); PQ = 0: the elements return no
         // tag (one op in flight), so the row belongs to the op issued last (registered group copy)
         wire [GRW-1:0] rep = g_rep[GRW*(gk / RG) +: GRW];
-        wire [1:0] rtag = (PQ != 0) ? r_row[16*gk + 14 +: 2] : rep[4*CFW + 4 +: 2];
+        wire [1:0] rtag = (PQ != 0) ? p_row[16*gk + 14 +: 2] : rep[4*CFW + 4 +: 2];
         wire [3:0] ohd = 4'b0001 << rtag;
         wire [19:0] oh;
         ot_v41_kreg #(.W(4)) u_oh0 (.clk(clk), .arst_n(rst_n), .d(ohd), .q(oh[3:0]));
         ot_v41_kreg #(.W(4)) u_oh1 (.clk(clk), .arst_n(rst_n), .d(ohd), .q(oh[7:4]));
         ot_v41_kreg #(.W(4)) u_oh2 (.clk(clk), .arst_n(rst_n), .d(ohd), .q(oh[11:8]));
-        ot_v41_kreg #(.W(4), .AR(1)) u_oh3 (.clk(clk), .arst_n(rst_n), .d(ohd & {4{r_v[gk]}}), .q(oh[15:12]));
-        ot_v41_kreg #(.W(4), .AR(1)) u_oh4 (.clk(clk), .arst_n(rst_n), .d(ohd & {4{r_v[gk]}}), .q(oh[19:16]));
+        ot_v41_kreg #(.W(4), .AR(1)) u_oh3 (.clk(clk), .arst_n(rst_n), .d(ohd & {4{p_v[gk]}}), .q(oh[15:12]));
+        ot_v41_kreg #(.W(4), .AR(1)) u_oh4 (.clk(clk), .arst_n(rst_n), .d(ohd & {4{p_v[gk]}}), .q(oh[19:16]));
         assign oh_cnt[4*gk +: 4] = oh[19:16];
         // stage 0 also selects the op's rsplit and format bits (by the decoded input tag) and registers them
         // (a kept register per region: at PQ = 0 every region of a group selects the same tag, and merged flops would
@@ -584,8 +683,12 @@ module ot_v41_spine_pqc_w17w10 #(
                 q1_f[gk] <= q0_v[gk] && (q0_e[gk] || !live_m);
             end
         // stage 1 also registers the fp32-row select locally (pinned rule)
-        reg        q1_s;
-        always @(posedge clk) q1_s <= fm_m[0] || (fm_m[1] && (row_ge ? fm_m[3] : fm_m[2]));
+        // v9: row_ge and the format bits are registered; the select is formed in front of the kept g_sel copies
+        // (v8: q0_row -> row >= rsplit -> select -> q1_s was an SS class at R = 128)
+        reg        q1_ge;
+        reg [3:0]  q1_fm;
+        always @(posedge clk) begin q1_ge <= row_ge; q1_fm <= fm_m; end
+        wire       q1_s = q1_fm[0] || (q1_fm[1] && (q1_ge ? q1_fm[3] : q1_fm[2]));
         // stage 2: the address add; the select in four kept copies (one per byte of the word), the data forwarded
         wire [VAW-1:0] w_s;
         ot_v41_ksadd #(.W(VAW)) u_w (.a(q1_a[VAW*gk +: VAW]), .b(q1_p[VAW*gk +: VAW]), .cin(1'b0), .s(w_s), .cout());
@@ -602,18 +705,22 @@ module ot_v41_spine_pqc_w17w10 #(
         end
         // stage 3: write
         always @(posedge clk) begin
-            w_addr[VAW*gk +: VAW] <= q2_a;
+            w_addr_r[VAW*gk +: VAW] <= q2_a;
             for (t2 = 0; t2 < 4; t2 = t2 + 1)
-                w_data[32*gk + 8*t2 +: 8] <= q2_sel[t2] ? q2_f32[8*t2 +: 8] : ((t2 < 2) ? 8'd0 : q2_bf[8*(t2-2) +: 8]);
+                w_data_r[32*gk + 8*t2 +: 8] <= q2_sel[t2] ? q2_f32[8*t2 +: 8] : ((t2 < 2) ? 8'd0 : q2_bf[8*(t2-2) +: 8]);
         end
     end endgenerate
     integer kg, kt, kr, kq;
+    // v9: RPT registered repeater stages on the row-write outputs
+    ot_hdc_delay #(.W(R), .D(RPT), .RESET(1)) u_pwv (.clk(clk), .rst_n(rst_n), .d(w_we_r), .q(w_we));
+    ot_hdc_delay #(.W(R*VAW + R*32), .D(RPT)) u_pwd (.clk(clk), .rst_n(rst_n), .d({w_addr_r, w_data_r}),
+                                                     .q({w_addr, w_data}));
     reg [NGR-1:0] q2_f;
     reg [R-1:0]   q2_v;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin w_we <= {R{1'b0}}; q2_v <= {R{1'b0}}; q2_f <= {NGR{1'b0}}; end
+        if (!rst_n) begin w_we_r <= {R{1'b0}}; q2_v <= {R{1'b0}}; q2_f <= {NGR{1'b0}}; end
         else begin
-            q2_v <= q1_v; w_we <= q2_v;
+            q2_v <= q1_v; w_we_r <= q2_v;
             for (kg = 0; kg < NGR; kg = kg + 1) begin
                 q2_f[kg] <= 1'b0;
                 for (kr = 0; kr < RG; kr = kr + 1) if (RG * kg + kr < R && q1_f[RG * kg + kr]) q2_f[kg] <= 1'b1;
@@ -668,8 +775,8 @@ module ot_v41_spine_pqc_w17w10 #(
             t_gap <= '0; t_g1 <= '0; t_g2 <= '0; gap_ok <= 1'b1; guard_ok <= 1'b1;
             cfg_rem <= 6'd0; cfg_ok <= 1'b0;
             bufbusy[0] <= 1'b0; bufbusy[1] <= 1'b0; ev_go <= 1'b0; ev_end <= 1'b0; ev_tag <= 2'd0;
-            a_v <= 1'b0; a_v2 <= 1'b0; bw_v <= 1'b0;
-            rd_run <= 1'b0; cred <= 4'(FD); r0_v <= 1'b0; ra_v <= 1'b0; r1_v <= 1'b0; r2_v <= 1'b0;
+            a_v <= 1'b0; a_v2 <= 1'b0; bw_v <= 1'b0; ba_v <= 1'b0;
+            rd_run <= 1'b0; cred <= 4'(FD); r0_v <= 1'b0; ra_v <= 1'b0; r1_v <= 1'b0; r2_v <= 1'b0; r3_v <= 1'b0;
             qrp <= 3'd0; qwp <= 3'd0; qcnt <= 4'd0; hv <= 1'b0;
             for (ks = 0; ks < 4; ks = ks + 1) begin
                 sv[ks] <= 1'b0; sr[ks] <= 1'b0; s_rd[ks] <= 1'b0; si[ks] <= 1'b0; sd[ks] <= 1'b0; s_rl[ks] <= 19'd0;
@@ -683,8 +790,6 @@ module ot_v41_spine_pqc_w17w10 #(
             a_v <= 1'b0;
             if (go && !sv[acc]) begin
                 sv[acc] <= 1'b1; sr[acc] <= 1'b0; s_rd[acc] <= 1'b0; si[acc] <= 1'b0; sd[acc] <= 1'b0;
-                s_ph[acc] <= i_ph; s_xb[acc] <= i_xbase; s_ob[acc] <= i_obase; s_fm[acc] <= i_fmt;
-                s_np[acc] <= i_np; s_np1[acc] <= 4'(i_np) + 4'd1; s_xps[acc] <= i_xps; s_ops[acc] <= i_ops;
                 a_v <= 1'b1; a_tag <= acc; a_ph <= i_ph;
                 acc <= acc + 2'd1;
             end
@@ -735,7 +840,8 @@ module ot_v41_spine_pqc_w17w10 #(
                 if (ld_end) ld_run <= 1'b0;
                 else ld_k <= ld_kn;
             end
-            bw_v <= rq_v && rq_fam; bw_par <= rq_par; bw_k <= rq_k;
+            ba_v <= rq_v && rq_fam; ba_par <= rq_par; ba_k <= rq_k;
+            bw_v <= ba_v; bw_par <= ba_par; bw_k <= ba_k;
             have[0] <= have_n[0]; have[1] <= have_n[1];
             clr_q[0] <= (ld_st0 && ldt[0] == 1'b0) || (!ld_st0 && ld_st1 && (ld_tag[0] ^ ~ld_pos[0]) == 1'b0);
             clr_q[1] <= (ld_st0 && ldt[0] == 1'b1) || (!ld_st0 && ld_st1 && (ld_tag[0] ^ ~ld_pos[0]) == 1'b1);
@@ -760,16 +866,22 @@ module ot_v41_spine_pqc_w17w10 #(
             r1_v <= ra_v; r1_w <= st_q; r1_lp <= ra_lp; r1_lo <= ra_lo; r1_fam <= ra_fam; r1_tag <= ra_tag;
             r1_pos <= ra_pos;
             // R2: the derived fields registered once more
-            r2_v <= r1_v; r2_w <= r1_w; r2_nq <= r1_nq; r2_umax <= r1_umax; r2_spar <= r1_spar;
+            r2_v <= r1_v; r2_w <= r1_w; r2_nq <= r1_nq; r2_m01 <= r1_m01; r2_m23 <= r1_m23; r2_spar <= r1_spar;
             r2_lp <= r1_lp; r2_lo <= r1_lo; r2_fam <= r1_fam; r2_tag <= r1_tag; r2_pos <= r1_pos;
             r2_b0 <= r1_blk0; r2_b1 <= r1_blk1;
             for (kc = 0; kc < 4; kc = kc + 1)
                 r2_hi[9*kc +: 9] <= (r1_spar ? 9'(KMAX / 128) : 9'd0) + {1'b0, r1_w[8 + 8*kc +: 8]};
             // head / queue: the head takes the queue's oldest entry, else the arriving one (bypass)
+            r3_v <= r2_v; r3_w <= r2_w; r3_nq <= r2_nq; r3_umax <= (r2_m23 > r2_m01) ? r2_m23 : r2_m01;
+            r3_spar <= r2_spar; r3_lp <= r2_lp; r3_lo <= r2_lo; r3_fam <= r2_fam; r3_tag <= r2_tag; r3_pos <= r2_pos;
+            r3_b0 <= r2_b0; r3_b1 <= r2_b1; r3_hi <= r2_hi;
+            // head / queue (v9): every arriving entry is written at qwp; a bypass (the head takes the arriving entry
+            // of an empty queue) also advances qrp, so the queue's write enable does not depend on the streamer's
+            // advance (v8: u_cc -> s_adv -> h_take -> fq enables was an SS class at R = 128)
             he <= he_n; hv <= hv_n;
-            if (h_take && qcnt != 4'd0) qrp <= qrp + 3'd1;
-            if (r2_v && !(h_take && qcnt == 4'd0)) begin fq[qwp] <= r2_e; qwp <= qwp + 3'd1; end
-            qcnt <= qcnt + 4'(r2_v && !(h_take && qcnt == 4'd0)) - 4'(h_take && qcnt != 4'd0);
+            if (h_take && (qcnt != 4'd0 || r3_v)) qrp <= qrp + 3'd1;
+            if (r3_v) begin fq[qwp] <= r3_e; qwp <= qwp + 3'd1; end
+            qcnt <= qcnt + 4'(r3_v) - 4'(h_take && (qcnt != 4'd0 || r3_v));
             cred <= cred - 4'(rd_iss) + 4'(s_adv);
             // go timers (cycles since the last / the previous last beat; identical go cycles).  The stream end is
             // registered (st_end) and the timers are loaded one cycle later with the value they would have had;
@@ -806,16 +918,18 @@ module ot_v41_spine_pqc_w17w10 #(
     // buffers
     integer kw, kq2;
     always @(posedge clk) begin
-        if (aq_vo[0]) begin
-            for (kq2 = 0; kq2 < 4; kq2 = kq2 + 1) begin
-                qb[(aqi[(BAW+1)*kq2] ? NBLK : 0) + 32'(aqi[(BAW+1)*kq2 + 1 +: BAW])][64*kq2 +: 64] <= aq_q[64*kq2 +: 64];
-                qb[(aqi[(BAW+1)*kq2] ? NBLK : 0) + 32'(aqi[(BAW+1)*kq2 + 1 +: BAW]) + 1][64*kq2 +: 64] <= aq_q[256 + 64*kq2 +: 64];
+        for (kq2 = 0; kq2 < 8; kq2 = kq2 + 1)
+            for (kw = 0; kw < NQR; kw = kw + 1) begin
+                if (qwe[2*NQR*kq2 + kw]) qb[kw][32*kq2 +: 32] <= aq_q[32*kq2 +: 32];
+                else if (qwe[2*NQR*kq2 + NQR + kw]) qb[kw][32*kq2 +: 32] <= aq_q[256 + 32*kq2 +: 32];
             end
-            eb[(aq_par ? NBLK : 0) + 32'(aq_blk)] <= aq_e[9:0];
-            eb[(aq_par ? NBLK : 0) + 32'(aq_blk) + 1] <= aq_e[19:10];
+        for (kw = 0; kw < NQR; kw = kw + 1) begin
+            if (qwe[kw]) eb[kw] <= aq_e[9:0];
+            else if (qwe[NQR + kw]) eb[kw] <= aq_e[19:10];
         end
         bw_d <= bw_rn;
-        if (bw_v)
-            for (kw = 0; kw < VRD; kw = kw + 1) bb[{bw_blkc[WBW*(4*kw/VRD) +: WBW], VB'(kw)}] <= bw_d[16*kw +: 16];
+        for (kw = 0; kw < VRD; kw = kw + 1)
+            for (kq2 = 0; kq2 < NWB; kq2 = kq2 + 1)
+                if (bwe[NWB*(NBC*kw/VRD) + kq2]) bb[{WBW'(kq2), VB'(kw)}] <= bw_d[16*kw +: 16];
     end
 endmodule
