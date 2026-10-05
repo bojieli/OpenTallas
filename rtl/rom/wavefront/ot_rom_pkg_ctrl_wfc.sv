@@ -351,89 +351,16 @@ module ot_rom_pkg_ctrl_wfc #(
     reg [UB-1:0] jq_w, jq_r;
     reg [UB:0]   jq_n;
 
-    // -- WAVE (SOURCE): per-user wavefront state (closed implementation) ----------------------
-    localparam integer WQ = 8;                   // issued-token ring (> WIN - 1 live positions)
+    // -- WAVE (SOURCE): the wavefront engine (ot_rom_pkg_ctrl_wfc_src, closed implementation) -------
     localparam integer WF = WAVE && SOURCE;
     initial if (!WAVE) $fatal(1, "ot_rom_pkg_ctrl_wfc: WAVE = 0 is ot_rom_pkg_ctrl_wf (unchanged)");
     initial if (WF && (WIN > 7 || WIN < 1 || RESULT_PARTS != 1))
         $fatal(1, "ot_rom_pkg_ctrl_wfc: WAVE SOURCE needs 1 <= WIN <= 7 and RESULT_PARTS == 1");
-    wire [NW-1:0] w_steps = cfg_prompt_len + cfg_gen_len - 1'b1;
-    wire [NW-1:0] w_steps_m1 = w_steps - 1'b1;
-    reg  [NW-1:0] pr_pos0, pr_pos1;
-    reg  [3:0]    pr_blk0, pr_blk1;
-    reg  [MAXU-1:0] pr0_oh, pr1_oh;              // user of the tag-3 read in flight (one-hot)
-    reg  [MAXU-1:0] res_oh;                      // user of the registered RESULT (one-hot)
-    reg  [NW-1:0] wpre;                          // RESULT's ring slot, read on the header cycle
-    reg           wwr_r;                         // the ring was written on the previous cycle
-    // per-user state, as per-bit vectors over the users (written by g_wf.g_wu)
-    wire [MAXU-1:0] wkt_t [0:NW-1];
-    wire [MAXU-1:0] wnp_t [0:NW-1];
-    wire [MAXU-1:0] er_t  [0:NW-1];
-    wire [MAXU-1:0] slot_t [0:NW-1];             // ring entry at the header's slot
-    wire [MAXU-1:0] blk_t [0:3];
-    wire [MAXU-1:0] k0_t  [0:2];
-    wire [MAXU-1:0] wnf_t [0:2];
-    wire [MAXU-1:0] enc_m [0:USER_W-1];          // constant: users whose index has bit b set
-    wire [MAXU-1:0] ewk, ewf, kv_v, sqnz_v, sq1_v, nf2_v, kteq_v;
-    // lowest eligible user (two-level prefix, groups of 32) -> one-hot; AND-OR reads with it
-    localparam integer GS = 32, NG = (MAXU + GS - 1) / GS;
-    wire [MAXU-1:0] ohwk, ohwf;
-    wire            st_wk_c = |ewk;
-    wire            wf_v = |ewf;
-    wire [USER_W-1:0] wk_u, wf_u;
-    wire [NW-1:0]   tok_wk, pos_wk, pos_wf, r_er, r_prp, w_pre_c;
-    wire [3:0]      blk_wf, r_prb;
-    wire [2:0]      r_k0, r_wnf;
-    wire            r_kv = |(res_oh & kv_v), r_sq = |(res_oh & sqnz_v), r_sq1 = |(res_oh & sq1_v);
-    wire            r_nf2 = |(res_oh & nf2_v), r_kteq = |(res_oh & kteq_v), r_prkv = |(pr1_oh & kv_v);
-    wire [UB-1:0]   in_ub = in_user[UB-1:0];
-    wire [2:0]      in_slot = in_pos[2:0] + 3'd1;
-    wire [MAXU-1:0] in_dec = {{(MAXU-1){1'b0}}, 1'b1} << in_ub;
-    genvar gb, gg;
-    generate if (WAVE && SOURCE) begin : g_rd
-        for (gb = 0; gb < NW; gb = gb + 1) begin : b21
-            assign tok_wk[gb] = |(ohwk & wkt_t[gb]);
-            assign pos_wk[gb] = |(ohwk & wnp_t[gb]);
-            assign pos_wf[gb] = |(ohwf & wnp_t[gb]);
-            assign r_er[gb]   = |(res_oh & er_t[gb]);
-            assign r_prp[gb]  = |(pr1_oh & wnp_t[gb]);
-            assign w_pre_c[gb] = |(in_dec & slot_t[gb]);
-        end
-        for (gb = 0; gb < 4; gb = gb + 1) begin : b4
-            assign blk_wf[gb] = |(ohwf & blk_t[gb]);
-            assign r_prb[gb]  = |(pr1_oh & blk_t[gb]);
-        end
-        for (gb = 0; gb < 3; gb = gb + 1) begin : b3
-            assign r_k0[gb]  = |(res_oh & k0_t[gb]);
-            assign r_wnf[gb] = |(res_oh & wnf_t[gb]);
-        end
-        for (gb = 0; gb < USER_W; gb = gb + 1) begin : bu
-            assign wk_u[gb] = |(ohwk & enc_m[gb]);
-            assign wf_u[gb] = |(ohwf & enc_m[gb]);
-        end
-        wire [NG*GS-1:0] ek = {{(NG*GS-MAXU){1'b0}}, ewk};
-        wire [NG*GS-1:0] ef = {{(NG*GS-MAXU){1'b0}}, ewf};
-        wire [NG-1:0] gak, gaf, gbk, gbf;
-        wire [NG*GS-1:0] ok, of;
-        for (gg = 0; gg < NG; gg = gg + 1) begin : grp
-            wire [GS-1:0] wk = ek[gg*GS +: GS], wf = ef[gg*GS +: GS];
-            assign gak[gg] = |wk;
-            assign gaf[gg] = |wf;
-            if (gg == 0) begin : g0
-                assign gbk[gg] = 1'b0; assign gbf[gg] = 1'b0;
-            end else begin : gn
-                assign gbk[gg] = |gak[gg-1:0]; assign gbf[gg] = |gaf[gg-1:0];
-            end
-            assign ok[gg*GS +: GS] = (wk & ~(wk - 1'b1)) & {GS{!gbk[gg]}};
-            assign of[gg*GS +: GS] = (wf & ~(wf - 1'b1)) & {GS{!gbf[gg]}};
-        end
-        assign ohwk = ok[MAXU-1:0];
-        assign ohwf = of[MAXU-1:0];
-    end else begin : g_nord
-        assign tok_wk = 0; assign pos_wk = 0; assign pos_wf = 0; assign r_er = 0; assign r_prp = 0;
-        assign w_pre_c = 0; assign blk_wf = 0; assign r_prb = 0; assign r_k0 = 0; assign r_wnf = 0;
-        assign wk_u = 0; assign wf_u = 0; assign ohwk = 0; assign ohwf = 0;
-    end endgenerate
+    wire              e_go, e_rfull, e_pr_re, e_tok_v, e_done, e_fault, e_wfi, e_rej, e_sq;
+    wire [NW-1:0]     e_tok, e_pos, e_pr_pos, e_tok_p, e_tok_i;
+    wire [USER_W-1:0] e_user, e_pr_user, e_tok_u;
+    wire [3:0]        e_pr_blk;
+    wire              src_free = !running && !tx_hold_i && !pend && rx_st == R_IDLE;
 
     // reduction of the registered RESULT (combinational)
     reg          fb_v, fb_cont;
@@ -483,7 +410,7 @@ module ot_rom_pkg_ctrl_wfc #(
             end else if (in_type == MT_SIDE) begin
                 in_ready = 1'b1; rx_side = in_valid;
             end else begin
-                in_ready = 1'b1; rx_res = in_valid;          // RESULT (or a bad type)
+                in_ready = !(WF && e_rfull); rx_res = in_valid && in_ready;   // RESULT (or a bad type)
             end
         end else if (rx_st == R_SIDE) begin
             in_ready = 1'b1;
@@ -502,18 +429,18 @@ module ot_rom_pkg_ctrl_wfc #(
         st_rx = (rx_last_word_i || pend) && !running && !tx_hold_i && side_ok && hdr_user < MAXU;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0; st_wk = 1'b0;
         if (SOURCE && !running && !tx_hold_i && !pend && rx_st == R_IDLE) begin
-            st_new = nu_ok && next_u < MAXU;
+            st_new = !WF && nu_ok && next_u < MAXU;
             st_q   = !WAVE && !nu_ok && jq_n != 0;
             st_fb  = !WAVE && !nu_ok && jq_n == 0 && fb_v && fb_cont;
             // WAVE: never on a result's reduction cycle (no same-cycle issue/verify race)
-            st_wk  = WAVE && !nu_ok && st_wk_c && !res_v;
+            st_wk  = WF && e_go;      // the engine's start (a new user or a known-token position)
         end
         core_start = st_rx || st_new || st_q || st_fb || st_wk;
         core_token = FWD_TOKEN ? hdr_tok : {NW{1'b0}}; core_pos = hdr_pos; st_user = hdr_user;
         if (st_new) begin core_token = nu_tok; core_pos = 0; st_user = next_u; end
         if (st_q)   begin core_token = jq_t[jq_r]; core_pos = jq_p[jq_r]; st_user = jq_u[jq_r]; end
         if (st_fb)  begin core_token = fb_tok; core_pos = res_p + 1'b1; st_user = res_u; end
-        if (st_wk)  begin core_token = tok_wk; core_pos = pos_wk; st_user = wk_u; end
+        if (st_wk)  begin core_token = e_tok; core_pos = e_pos; st_user = e_user; end
     end
 
     // -- sequential ---------------------------------------------------------------------
@@ -540,9 +467,8 @@ module ot_rom_pkg_ctrl_wfc #(
             for (u = 0; u < MAXU; u = u + 1) begin
                 rcnt[u] <= 0; rbi[u] <= 0; rbv[u] <= 0; ptok[u] <= 0; side_cnt[u] <= 0;
             end
-            pr_blk <= 0; pr_pos0 <= 0; pr_pos1 <= 0; pr_blk0 <= 0; pr_blk1 <= 0;
+            pr_blk <= 0;
             wf_issue <= 1'b0; wf_reject <= 1'b0; wf_squash <= 1'b0;
-            pr0_oh <= 0; pr1_oh <= 0; res_oh <= 0; wpre <= 0; wwr_r <= 1'b0;
         end else begin
             tok_valid <= 1'b0;
             pr_re <= 1'b0;
@@ -618,37 +544,14 @@ module ot_rom_pkg_ctrl_wfc #(
             end
 
             // (SOURCE && !WAVE: not implemented here -- ot_rom_pkg_ctrl_wf)
-            // ---- SOURCE, WAVE: wavefront issue, in-order results, verify / reject / squash
-            //      (global part; the per-user state updates itself in g_wu below)
+            // ---- SOURCE, WAVE: the engine's registered outputs
             if (SOURCE && WAVE) begin
-                wf_issue <= st_wk; wf_reject <= 1'b0; wf_squash <= 1'b0;
-                wwr_r <= st_wk || st_new;
-                if (rx_res) begin
-                    res_oh <= 0;
-                    if (in_user < MAXU) res_oh[in_user[UB-1:0]] <= 1'b1;
-                    wpre <= w_pre_c;
-                end
-                if (st_new) begin next_u <= next_u + 1'b1; nu_ok <= 1'b0; end
-                // token reads: a new user's first token (tag 1), else the next known token (tag 3)
-                if (!st_new && !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) begin
-                    pr_re <= 1'b1; pr_user <= next_u; pr_pos <= 0; pr_blk <= 0; pr_t0 <= 1; nu_pend <= 1'b1;
-                end else if (wf_v) begin
-                    pr_re <= 1'b1; pr_user <= wf_u; pr_pos <= pos_wf; pr_blk <= blk_wf;
-                    pr_t0 <= 3; pr_u0 <= wf_u; pr0_oh <= ohwf; pr_pos0 <= pos_wf; pr_blk0 <= blk_wf;
-                end else begin
-                    pr_t0 <= 0;
-                end
-                pr_t1 <= pr_t0; pr_u1 <= pr_u0; pr1_oh <= pr0_oh; pr_pos1 <= pr_pos0; pr_blk1 <= pr_blk0;
-                if (pr_t1 == 1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
-                if (res_v) begin
-                    if (res_p != r_er) proto_fault <= 1'b1;
-                    if (r_sq) wf_squash <= 1'b1;
-                    else begin
-                        tok_valid <= 1'b1; tok_user <= res_u; tok_pos <= res_p; tok_id <= fb_idx;
-                        if (!fb_cont) users_done <= users_done + 1'b1;
-                        if (w_rewind || w_rejb) wf_reject <= 1'b1;
-                    end
-                end
+                wf_issue <= e_wfi; wf_reject <= e_rej; wf_squash <= e_sq;
+                pr_re <= e_pr_re;
+                if (e_pr_re) begin pr_user <= e_pr_user; pr_pos <= e_pr_pos; pr_blk <= e_pr_blk; end
+                if (e_tok_v) begin tok_valid <= 1'b1; tok_user <= e_tok_u; tok_pos <= e_tok_p; tok_id <= e_tok_i; end
+                if (e_done) users_done <= users_done + 1'b1;
+                if (e_fault) proto_fault <= 1'b1;
             end
             if (SOURCE && cfg_users > MAXU) proto_fault <= 1'b1;
 
@@ -691,138 +594,24 @@ module ot_rom_pkg_ctrl_wfc #(
         end
     end
 
-    // -- SOURCE && WAVE: global decisions of the registered RESULT ---------------------------
-    wire [2:0] res_slot = res_p[2:0] + 3'd1;
-    wire       w_byp = wwr_r && cur_user == res_u && cur_pos[2:0] == res_slot;
-    wire [NW-1:0] w_tok = w_byp ? cur_tok : wpre;          // token issued at q + 1
-    wire       w_gepl = (res_p + 1'b1) >= cfg_prompt_len;
-    wire       w_live = res_v && !r_sq;
-    wire       w_rewind = w_live && fb_cont && r_nf2 && w_gepl && (w_tok != fb_idx);
-    wire       w_blkb = w_live && fb_cont && !r_nf2 && w_gepl;
-    wire       w_rejb = w_blkb && r_kv && !r_kteq;
-    wire [NW-1:0] w_er_new = res_p + 1'b1 - ((res_v && r_sq && r_sq1) ? NW'(r_k0) : {NW{1'b0}});
-    wire [NW-1:0] w_q1 = res_p + 1'b1;
-    wire       w_g1 = w_steps > 1;                         // (wnp = 1) < steps
-    wire       w_prok = r_prp == pr_pos1 && r_prb == pr_blk1 && !r_prkv;
-    wire       rd_wf = !(!st_new && !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU) && wf_v;
-    genvar gu;
     generate if (WF) begin : g_wf
-        wire [MAXU-1:0] nu_oh = {{(MAXU-1){1'b0}}, 1'b1} << next_u;
-        for (gu = 0; gu < MAXU; gu = gu + 1) begin : g_wu
-            wire [NW-1:0] wnp, wkt, er, rs;
-            wire [3:0]    wblk;
-            wire [2:0]    wnf, k0;
-            (* keep_hierarchy *)
-            ot_rom_pkg_ctrl_wfc_user #(.NW(NW), .WIN(WIN), .WQ(WQ)) u (
-                .clk(clk), .rst_n(rst_q),
-                .isn(st_new && nu_oh[gu]), .isw(st_wk && ohwk[gu]), .isr(rd_wf && ohwf[gu]),
-                .isp(pr_t1 == 3 && pr1_oh[gu]), .isr_res(res_v && res_oh[gu]),
-                .w_g1(w_g1), .w_steps_m1(w_steps_m1), .w_prok(w_prok), .pr_qk(pr_qk), .pr_q(pr_q),
-                .w_er_new(w_er_new), .w_rewind(w_rewind), .w_q1(w_q1), .fb_idx(fb_idx), .w_blkb(w_blkb),
-                .w_rejb(w_rejb), .nu_tok(nu_tok), .in_slot(in_slot),
-                .wnp(wnp), .wkt(wkt), .er(er), .rs(rs), .wblk(wblk), .wnf(wnf), .k0(k0),
-                .e_wk(ewk[gu]), .e_wf(ewf[gu]), .wkv(kv_v[gu]), .sqnz(sqnz_v[gu]), .sq1(sq1_v[gu]),
-                .nf2(nf2_v[gu]), .kteq(kteq_v[gu]));
-            for (gb = 0; gb < NW; gb = gb + 1) begin : t21
-                assign wkt_t[gb][gu] = wkt[gb]; assign wnp_t[gb][gu] = wnp[gb];
-                assign er_t[gb][gu] = er[gb]; assign slot_t[gb][gu] = rs[gb];
-            end
-            for (gb = 0; gb < 4; gb = gb + 1) begin : t4
-                assign blk_t[gb][gu] = wblk[gb];
-            end
-            for (gb = 0; gb < 3; gb = gb + 1) begin : t3
-                assign k0_t[gb][gu] = k0[gb]; assign wnf_t[gb][gu] = wnf[gb];
-            end
-            for (gb = 0; gb < USER_W; gb = gb + 1) begin : tu
-                assign enc_m[gb][gu] = (gu >> gb) & 1;
-            end
-        end
+        ot_rom_pkg_ctrl_wfc_src #(.NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+            .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users), .cfg_prompt_len(cfg_prompt_len),
+            .cfg_gen_len(cfg_gen_len), .core_free(src_free),
+            .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
+            .pr_q(pr_q), .pr_qk(pr_qk),
+            .go(e_go), .tok(e_tok), .pos(e_pos), .user(e_user),
+            .pr_re(e_pr_re), .pr_user(e_pr_user), .pr_pos(e_pr_pos), .pr_blk(e_pr_blk),
+            .tok_v(e_tok_v), .tok_u(e_tok_u), .tok_p(e_tok_p), .tok_i(e_tok_i), .done(e_done),
+            .fault(e_fault), .wfi(e_wfi), .rej(e_rej), .sq(e_sq));
     end else begin : g_nowf
-        assign ewk = 0; assign ewf = 0; assign kv_v = 0; assign sqnz_v = 0; assign sq1_v = 0;
-        assign nf2_v = 0; assign kteq_v = 0;
+        assign e_go = 1'b0; assign e_rfull = 1'b0; assign e_pr_re = 1'b0; assign e_tok_v = 1'b0;
+        assign e_done = 1'b0; assign e_fault = 1'b0; assign e_wfi = 1'b0; assign e_rej = 1'b0; assign e_sq = 1'b0;
+        assign e_tok = 0; assign e_pos = 0; assign e_pr_pos = 0; assign e_tok_p = 0; assign e_tok_i = 0;
+        assign e_user = 0; assign e_pr_user = 0; assign e_tok_u = 0; assign e_pr_blk = 0;
     end endgenerate
 endmodule
 
-// ---------------------------------------------------------------------------
-// One user's wavefront state (ot_rom_pkg_ctrl_wfc, SOURCE && WAVE): a module so
-// that synthesis maps it once (keep_hierarchy) instead of 866 flattened copies.
-// Only the started flag and the two eligibility bits are reset: every other
-// field is written when the user starts (isn) and read only while it is started.
-// ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_user #(
-    parameter integer NW = 16, parameter integer WIN = 6, parameter integer WQ = 8
-) (
-    input  wire          clk, rst_n,
-    input  wire          isn, isw, isr, isp, isr_res,
-    input  wire          w_g1, w_prok, pr_qk, w_rewind, w_blkb, w_rejb,
-    input  wire [NW-1:0] w_steps_m1, pr_q, w_er_new, w_q1, fb_idx, nu_tok,
-    input  wire [2:0]    in_slot,
-    output reg  [NW-1:0] wnp, wkt, er,
-    output wire [NW-1:0] rs,
-    output reg  [3:0]    wblk,
-    output reg  [2:0]    wnf, k0,
-    output reg           e_wk, e_wf, wkv,
-    output wire          sqnz, sq1, nf2, kteq
-);
-    reg [NW-1:0] ring [0:WQ-1];
-    reg [2:0]    wsq;
-    reg          wkp, wkm, stv, lt;
-    assign rs = ring[in_slot];
-    assign sqnz = wsq != 0; assign sq1 = wsq == 3'd1; assign nf2 = wnf >= 3'd2; assign kteq = wkt == fb_idx;
-    reg [NW-1:0] n_wnp, n_wkt, n_er;
-    reg [3:0]    n_wblk;
-    reg [2:0]    n_wnf, n_wsq, n_k0;
-    reg          n_wkv, n_wkp, n_wkm, n_stv, n_lt;
-    always @(*) begin
-        n_wnp = wnp; n_wkt = wkt; n_er = er; n_wblk = wblk; n_wsq = wsq; n_k0 = k0;
-        n_wkv = wkv; n_wkp = wkp; n_wkm = wkm; n_stv = stv || isn; n_lt = lt;
-        n_wnf = wnf + ((isw || isn) ? 3'd1 : 3'd0) - (isr_res ? 3'd1 : 3'd0);
-        if (isn) begin
-            n_wnf = 3'd1; n_wnp = 1; n_wblk = 0; n_wkv = 1'b0; n_wkp = 1'b0; n_wkm = 1'b0; n_wsq = 0; n_er = 0; n_lt = w_g1;
-        end
-        if (isw) begin
-            n_wnp = wnp + 1'b1; n_wkv = 1'b0; n_wkm = 1'b0; n_lt = wnp != w_steps_m1;
-        end
-        if (isr) n_wkp = 1'b1;
-        if (isp) begin
-            n_wkp = 1'b0;
-            if (w_prok) begin
-                if (pr_qk) begin n_wkv = 1'b1; n_wkt = pr_q; end
-                else n_wkm = 1'b1;
-            end
-        end
-        if (isr_res) begin
-            n_er = w_er_new;
-            if (wsq != 0) n_wsq = wsq - 1'b1;
-            else if (w_rewind) begin
-                n_wsq = wnf - 1'b1; n_k0 = wnf - 1'b1;
-                n_wnp = w_q1; n_wblk = wblk + 1'b1; n_lt = 1'b1;
-                n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
-            end else if (w_blkb) begin
-                if (w_rejb) n_wblk = wblk + 1'b1;
-                n_wkv = 1'b1; n_wkt = fb_idx; n_wkm = 1'b0;
-            end
-        end
-    end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            stv <= 1'b0; e_wk <= 1'b0; e_wf <= 1'b0;
-        end else begin
-            stv <= n_stv;
-            e_wk <= n_stv && n_wkv && (n_wnf < WIN) && n_lt;
-            e_wf <= n_stv && !n_wkv && !n_wkp && !n_wkm && n_lt;
-        end
-    end
-    always @(posedge clk) begin
-        wnp <= n_wnp; wkt <= n_wkt; er <= n_er; wblk <= n_wblk; wnf <= n_wnf; wsq <= n_wsq; k0 <= n_k0;
-        wkv <= n_wkv; wkp <= n_wkp; wkm <= n_wkm; lt <= n_lt;
-    end
-    // ring: written on issue (slot wnp mod WQ) and on the user's first issue (slot 0)
-    always @(posedge clk) begin
-        if (isn) ring[0] <= nu_tok;
-        if (isw) ring[wnp[2:0]] <= wkt;
-    end
-endmodule
 
 // ---------------------------------------------------------------------------
 // 32 users' expected HIDDEN positions (ot_rom_pkg_ctrl_wfc): a registered read
@@ -843,5 +632,285 @@ module ot_rom_pkg_ctrl_wfc_upos #(parameter integer NW = 16, parameter integer N
     always @(posedge clk) begin
         if (wr && lo < N) upos[lo] <= wdata;
         if (rd) part <= (lo < N && uval[lo]) ? upos[lo] : {NW{1'b0}};
+    end
+endmodule
+
+// ---------------------------------------------------------------------------
+// ot_rom_pkg_ctrl_wfc_src: the SOURCE wavefront scheduler of
+// ot_rom_pkg_ctrl_wfc for many users (MAXU 866) at 1.2 GHz.  Same per-user
+// state machine as ot_rom_pkg_ctrl_wf (issue known-token positions back to
+// back, up to WIN in flight; verify each result against the token issued at
+// q + 1; reject -> squash + re-issue; feed the argmax back), but every event
+// is a serial read-modify-write of ONE user's record, in 32-user groups:
+//   RD1  every group reads entry ou[4:0] (registered)
+//   RD2  the group ou >> 5 is selected (registered)
+//   EX   the record is updated and written back; a start / prompt read /
+//        committed token leaves on this cycle.
+// Events, in priority order when idle: a queued RESULT, a queued prompt-read
+// return, a new user's first position (single cycle, as the reference), the
+// lowest eligible user's known-token issue, the lowest user needing a prompt
+// read.  The lowest eligible user comes from per-group registered priority
+// encoders and a registered group select, valid 3 cycles after the last
+// record write (settle).  Cost against the reference: an issue, a commit or a
+// verify happens 3-6 cycles later; a stage's job is thousands of cycles.
+// RESULT messages queue (4 deep; in_ready drops at 3 queued).
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_src #(
+    parameter integer NW = 16, parameter integer USER_W = 8, parameter integer UCW = 8,
+    parameter integer MAXU = 16, parameter integer WIN = 6
+) (
+    input  wire              clk, rst_n,
+    input  wire [UCW-1:0]    cfg_users,
+    input  wire [NW-1:0]     cfg_prompt_len, cfg_gen_len,
+    input  wire              core_free,
+    input  wire              res_v,
+    input  wire [USER_W-1:0] res_u,
+    input  wire [NW-1:0]     res_p, res_i,
+    output wire              rfull,
+    input  wire [NW-1:0]     pr_q,
+    input  wire              pr_qk,
+    output wire              go,
+    output wire [NW-1:0]     tok, pos,
+    output wire [USER_W-1:0] user,
+    output wire              pr_re,
+    output wire [USER_W-1:0] pr_user,
+    output wire [NW-1:0]     pr_pos,
+    output wire [3:0]        pr_blk,
+    output wire              tok_v,
+    output wire [USER_W-1:0] tok_u,
+    output wire [NW-1:0]     tok_p, tok_i,
+    output wire              done, fault, wfi, rej, sq
+);
+    localparam integer GS = 32, NG = (MAXU + GS - 1) / GS, GW = (NG > 1) ? $clog2(NG) : 1;
+    // record: [0] started, [1] lt (wnp < steps), [2] wkv, [3] wkp, [4] wkm, [7:5] wnf, [10:8] wsq,
+    // [13:11] k0, [17:14] wblk, then wnp, wkt, er (NW each)
+    localparam integer O_WNP = 18, O_WKT = 18 + NW, O_ER = 18 + 2 * NW, RW = 18 + 3 * NW;
+    localparam [1:0] K_RES = 0, K_PRET = 1, K_ISS = 2, K_RD = 3;
+    localparam [1:0] S_IDLE = 0, S_RD1 = 1, S_RD2 = 2, S_EX = 3;
+
+    // run configuration (held while users are in flight)
+    reg [NW-1:0] steps, steps_m1, plen;
+    always @(posedge clk) begin
+        steps <= cfg_prompt_len + cfg_gen_len - 1'b1; steps_m1 <= cfg_prompt_len + cfg_gen_len - 2'd2;
+        plen <= cfg_prompt_len;
+    end
+
+    // ---- RESULT queue
+    reg [USER_W-1:0] rq_u [0:3];
+    reg [NW-1:0]     rq_p [0:3];
+    reg [NW-1:0]     rq_i [0:3];
+    reg [1:0] rq_w, rq_r; reg [2:0] rq_n;
+    assign rfull = rq_n >= 3'd3;
+    // ---- prompt-read return queue
+    reg [USER_W-1:0] pq_u [0:3];
+    reg [NW-1:0]     pq_pos [0:3];
+    reg [3:0]        pq_blk [0:3];
+    reg [NW-1:0]     pq_q [0:3];
+    reg              pq_k [0:3];
+    reg [1:0] pq_w, pq_r; reg [2:0] pq_n;
+    // prompt reads: tag 1 = new user's first token, 3 = a known-token read
+    reg [1:0] t0, t1; reg [USER_W-1:0] u0, u1; reg [NW-1:0] p0, p1; reg [3:0] b0, b1;
+    // new users
+    reg [UCW-1:0] next_u; reg nu_ok, nu_pend; reg [NW-1:0] nu_tok;
+
+    // ---- groups
+    reg  [1:0]        st, kind;
+    reg  [USER_W-1:0] ou;
+    reg  [2:0]        oslot;
+    reg  [NW-1:0]     o_p, o_i, o_q; reg [3:0] o_b; reg o_k;
+    wire [RW-1:0]     g_rec  [0:NG-1];
+    wire [NW-1:0]     g_ring [0:NG-1];
+    wire [NG-1:0]     g_kany, g_fany;
+    wire [4:0]        g_klo [0:NG-1];
+    wire [4:0]        g_flo [0:NG-1];
+    reg               w_en, w_ren; reg [USER_W-1:0] w_u; reg [RW-1:0] w_rec; reg [2:0] w_slot; reg [NW-1:0] w_data;
+    genvar gi;
+    generate for (gi = 0; gi < NG; gi = gi + 1) begin : g
+        (* keep_hierarchy *)
+        ot_rom_pkg_ctrl_wfc_grp #(.RW(RW), .NW(NW), .N((MAXU - gi * GS) < GS ? (MAXU - gi * GS) : GS)) grp (
+            .clk(clk), .rst_n(rst_n), .rd_lo(ou[4:0]), .rd_slot(oslot), .rec_q(g_rec[gi]), .ring_q(g_ring[gi]),
+            .we(w_en && (w_u >> 5) == gi), .wlo(w_u[4:0]), .wrec(w_rec),
+            .wek(w_rec[0] && w_rec[2] && w_rec[7:5] < WIN && w_rec[1]),
+            .wef(w_rec[0] && !w_rec[2] && !w_rec[3] && !w_rec[4] && w_rec[1]),
+            .rwe(w_ren && (w_u >> 5) == gi), .rslot(w_slot), .rdata(w_data),
+            .k_any(g_kany[gi]), .k_lo(g_klo[gi]), .f_any(g_fany[gi]), .f_lo(g_flo[gi]));
+    end endgenerate
+    // lowest eligible user: registered group select over the groups' registered encoders
+    reg ck_v, cf_v; reg [USER_W-1:0] ck_u, cf_u;
+    integer gg;
+    always @(posedge clk) begin
+        ck_v <= |g_kany; cf_v <= |g_fany; ck_u <= 0; cf_u <= 0;
+        for (gg = NG - 1; gg >= 0; gg = gg - 1) begin
+            if (g_kany[gg]) ck_u <= (gg << 5) | g_klo[gg];
+            if (g_fany[gg]) cf_u <= (gg << 5) | g_flo[gg];
+        end
+    end
+    // the record of ou (RD2 -> EX)
+    reg [RW-1:0] rec; reg [NW-1:0] ring;
+    always @(posedge clk) begin rec <= g_rec[ou >> 5]; ring <= g_ring[ou >> 5]; end
+    wire          r_stv = rec[0], r_lt = rec[1], r_wkv = rec[2], r_wkp = rec[3], r_wkm = rec[4];
+    wire [2:0]    r_wnf = rec[7:5], r_wsq = rec[10:8], r_k0 = rec[13:11];
+    wire [3:0]    r_wblk = rec[17:14];
+    wire [NW-1:0] r_wnp = rec[O_WNP +: NW], r_wkt = rec[O_WKT +: NW], r_er = rec[O_ER +: NW];
+    function automatic [RW-1:0] pack(input stv, input lt, input wkv, input wkp, input wkm, input [2:0] wnf,
+                                     input [2:0] wsq, input [2:0] k0, input [3:0] wblk, input [NW-1:0] wnp,
+                                     input [NW-1:0] wkt, input [NW-1:0] er);
+        pack = {er, wkt, wnp, wblk, k0, wsq, wnf, wkm, wkp, wkv, lt, stv};
+    endfunction
+
+    reg [2:0] settle;
+    // ---- decisions
+    wire nu_start = nu_ok && next_u < MAXU && core_free;           // a new user's first position
+    wire fetch = !nu_ok && !nu_pend && next_u < cfg_users && next_u < MAXU;
+    wire idle_new = st == S_IDLE && rq_n == 0 && pq_n == 0 && nu_start;
+    wire ex = st == S_EX;
+    wire ex_iss = ex && kind == K_ISS && core_free && r_stv && r_wkv && r_wnf < WIN && r_lt;
+    wire ex_rd = ex && kind == K_RD;
+    wire do_fetch = fetch && !ex_rd && !idle_new;
+    assign go = idle_new || ex_iss;
+    assign tok = idle_new ? nu_tok : r_wkt;
+    assign pos = idle_new ? {NW{1'b0}} : r_wnp;
+    assign user = idle_new ? USER_W'(next_u) : ou;
+    assign pr_re = ex_rd || do_fetch;
+    assign pr_user = ex_rd ? ou : USER_W'(next_u);
+    assign pr_pos = ex_rd ? r_wnp : {NW{1'b0}};
+    assign pr_blk = ex_rd ? r_wblk : 4'd0;
+    // RESULT (EX): the reference's verify / reject / squash on the user's record
+    wire          x_res = ex && kind == K_RES;
+    wire          x_cont = (o_p + 1'b1) < steps;
+    wire          x_gepl = (o_p + 1'b1) >= plen;
+    wire          x_sq = r_wsq != 0;
+    wire          x_rew = !x_sq && x_cont && r_wnf >= 3'd2 && x_gepl && ring != o_i;
+    wire          x_blk = !x_sq && x_cont && r_wnf < 3'd2 && x_gepl;
+    wire          x_rejb = x_blk && r_wkv && r_wkt != o_i;
+    assign tok_v = x_res && !x_sq; assign tok_u = ou; assign tok_p = o_p; assign tok_i = o_i;
+    assign done = x_res && !x_sq && !x_cont;
+    assign fault = x_res && o_p != r_er;
+    assign wfi = ex_iss; assign rej = x_res && (x_rew || x_rejb); assign sq = x_res && x_sq;
+
+    always @(*) begin
+        w_en = 1'b0; w_ren = 1'b0; w_u = ou; w_rec = rec; w_slot = r_wnp[2:0]; w_data = r_wkt;
+        if (idle_new) begin
+            w_en = 1'b1; w_ren = 1'b1; w_u = USER_W'(next_u); w_slot = 3'd0; w_data = nu_tok;
+            w_rec = pack(1'b1, steps > 1, 1'b0, 1'b0, 1'b0, 3'd1, 3'd0, 3'd0, 4'd0, 1, {NW{1'b0}}, {NW{1'b0}});
+        end else if (ex_iss) begin
+            w_en = 1'b1; w_ren = 1'b1;
+            w_rec = pack(1'b1, r_wnp != steps_m1, 1'b0, r_wkp, 1'b0, r_wnf + 3'd1, r_wsq, r_k0, r_wblk,
+                         r_wnp + 1'b1, r_wkt, r_er);
+        end else if (ex_rd) begin
+            w_en = 1'b1; w_rec[3] = 1'b1;
+        end else if (ex && kind == K_PRET) begin
+            w_en = 1'b1; w_rec[3] = 1'b0;
+            if (r_wnp == o_p && r_wblk == o_b && !r_wkv) begin
+                if (o_k) begin w_rec[2] = 1'b1; w_rec[O_WKT +: NW] = o_q; end
+                else w_rec[4] = 1'b1;
+            end
+        end else if (x_res) begin
+            w_en = 1'b1;
+            w_rec[7:5] = r_wnf - 3'd1;
+            w_rec[O_ER +: NW] = o_p + 1'b1 - ((r_wsq == 3'd1) ? NW'(r_k0) : {NW{1'b0}});
+            if (x_sq) w_rec[10:8] = r_wsq - 3'd1;
+            else if (x_rew) begin
+                w_rec[10:8] = r_wnf - 3'd1; w_rec[13:11] = r_wnf - 3'd1;
+                w_rec[O_WNP +: NW] = o_p + 1'b1; w_rec[17:14] = r_wblk + 1'b1; w_rec[1] = 1'b1;
+                w_rec[2] = 1'b1; w_rec[O_WKT +: NW] = o_i; w_rec[4] = 1'b0;
+            end else if (x_blk) begin
+                if (x_rejb) w_rec[17:14] = r_wblk + 1'b1;
+                w_rec[2] = 1'b1; w_rec[O_WKT +: NW] = o_i; w_rec[4] = 1'b0;
+            end
+        end
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            st <= S_IDLE; kind <= K_RES; ou <= 0; oslot <= 0; o_p <= 0; o_i <= 0; o_q <= 0; o_b <= 0; o_k <= 1'b0;
+            rq_w <= 0; rq_r <= 0; rq_n <= 0; pq_w <= 0; pq_r <= 0; pq_n <= 0;
+            t0 <= 0; t1 <= 0; u0 <= 0; u1 <= 0; p0 <= 0; p1 <= 0; b0 <= 0; b1 <= 0;
+            next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0; settle <= 0;
+        end else begin
+            settle <= w_en ? 3'd0 : (settle == 3'd3 ? 3'd3 : settle + 1'b1);
+            // RESULT queue
+            if (res_v) begin rq_u[rq_w] <= res_u; rq_p[rq_w] <= res_p; rq_i[rq_w] <= res_i; rq_w <= rq_w + 1'b1; end
+            // prompt reads in flight
+            t0 <= ex_rd ? 2'd3 : do_fetch ? 2'd1 : 2'd0; u0 <= ou; p0 <= r_wnp; b0 <= r_wblk;
+            t1 <= t0; u1 <= u0; p1 <= p0; b1 <= b0;
+            if (do_fetch) nu_pend <= 1'b1;
+            if (t1 == 2'd1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
+            if (t1 == 2'd3) begin
+                pq_u[pq_w] <= u1; pq_pos[pq_w] <= p1; pq_blk[pq_w] <= b1; pq_q[pq_w] <= pr_q; pq_k[pq_w] <= pr_qk;
+                pq_w <= pq_w + 1'b1;
+            end
+            if (idle_new) begin next_u <= next_u + 1'b1; nu_ok <= 1'b0; end
+            // the event engine
+            case (st)
+                S_IDLE: begin
+                    if (rq_n != 0) begin
+                        st <= S_RD1; kind <= K_RES; ou <= rq_u[rq_r]; o_p <= rq_p[rq_r]; o_i <= rq_i[rq_r];
+                        oslot <= rq_p[rq_r][2:0] + 3'd1; rq_r <= rq_r + 1'b1;
+                    end else if (pq_n != 0) begin
+                        st <= S_RD1; kind <= K_PRET; ou <= pq_u[pq_r]; o_p <= pq_pos[pq_r]; o_b <= pq_blk[pq_r];
+                        o_q <= pq_q[pq_r]; o_k <= pq_k[pq_r]; pq_r <= pq_r + 1'b1;
+                    end else if (idle_new) begin
+                        st <= S_IDLE;
+                    end else if (!nu_ok && settle == 3'd3 && ck_v && core_free) begin
+                        st <= S_RD1; kind <= K_ISS; ou <= ck_u;
+                    end else if (settle == 3'd3 && cf_v && !fetch) begin
+                        st <= S_RD1; kind <= K_RD; ou <= cf_u;
+                    end
+                end
+                S_RD1: st <= S_RD2;
+                S_RD2: st <= S_EX;
+                default: st <= S_IDLE;
+            endcase
+            rq_n <= rq_n + (res_v ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n != 0) ? 3'd1 : 3'd0);
+            pq_n <= pq_n + (t1 == 2'd3 ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n == 0 && pq_n != 0) ? 3'd1 : 3'd0);
+        end
+    end
+endmodule
+
+// ---------------------------------------------------------------------------
+// 32 users' wavefront records + issued-token rings (ot_rom_pkg_ctrl_wfc_src):
+// one registered read port (record of rd_lo, ring entry rd_slot), one write
+// port, registered lowest-eligible encoders.  Only the started / eligibility
+// bits are reset (own reset copy); a record is written whole when its user
+// starts and read only after.
+// ---------------------------------------------------------------------------
+module ot_rom_pkg_ctrl_wfc_grp #(parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
+    input  wire          clk, rst_n,
+    input  wire [4:0]    rd_lo,
+    input  wire [2:0]    rd_slot,
+    output reg  [RW-1:0] rec_q,
+    output reg  [NW-1:0] ring_q,
+    input  wire          we,
+    input  wire [4:0]    wlo,
+    input  wire [RW-1:0] wrec,
+    input  wire          wek, wef,
+    input  wire          rwe,
+    input  wire [2:0]    rslot,
+    input  wire [NW-1:0] rdata,
+    output reg           k_any, f_any,
+    output reg  [4:0]    k_lo, f_lo
+);
+    reg          rq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+    reg [RW-1:1] recm [0:N-1];
+    reg [NW-1:0] ringm [0:N*8-1];
+    reg [N-1:0]  stv, ek, ef;
+    always @(posedge clk or negedge rq)
+        if (!rq) begin stv <= 0; ek <= 0; ef <= 0; end
+        else if (we && wlo < N) begin stv[wlo] <= wrec[0]; ek[wlo] <= wek; ef[wlo] <= wef; end
+    always @(posedge clk) begin
+        if (we && wlo < N) recm[wlo] <= wrec[RW-1:1];
+        if (rwe && wlo < N) ringm[{wlo, rslot}] <= rdata;
+        rec_q <= (rd_lo < N) ? {recm[rd_lo], stv[rd_lo]} : {RW{1'b0}};
+        ring_q <= (rd_lo < N) ? ringm[{rd_lo, rd_slot}] : {NW{1'b0}};
+    end
+    integer k;
+    always @(posedge clk) begin
+        k_any <= |ek; f_any <= |ef; k_lo <= 0; f_lo <= 0;
+        for (k = N - 1; k >= 0; k = k - 1) begin
+            if (ek[k]) k_lo <= k;
+            if (ef[k]) f_lo <= k;
+        end
     end
 endmodule

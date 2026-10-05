@@ -27,7 +27,7 @@
 `endif
 module tb_wf_ctrl_equiv;
     parameter integer SOURCE   = 1;
-    parameter integer LOCKSTEP = 1;
+    parameter integer LOCKSTEP = 1;       // SOURCE = 1 with ot_rom_pkg_ctrl_wfc: 0 (its engine retimes events)
     parameter integer MAXU     = 16;
     parameter integer USERS    = 12;
     parameter integer USER_W   = 10;
