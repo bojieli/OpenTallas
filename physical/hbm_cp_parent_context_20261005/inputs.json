@@ -2,6 +2,59 @@
   "schema": "hbm.cp.parent-context.physical-inputs.v1",
   "contract": "results/rtl/hbm_child_contract_20261005/child_reservations.json",
   "contract_sha256": "b8544eef71ced698e5d50c8d409074b5edaebcb85a214b5605fa7393fc643f8f",
+  "checked_sources": {
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": {
+      "actual_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "allocation_sha256": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": {
+      "actual_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+      "allocation_sha256": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_header_decode.sv": {
+      "actual_sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "allocation_sha256": "661a14d1d97590ed122abf0a45c2d6328a811daaa6e3b83efa0b6e0bafcad8ae",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_bind.sv": {
+      "actual_sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "allocation_sha256": "e9b616a88d617052813cc32fdc8b9f159e141a512c9f6cec8f03fc14567db422",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_su_cp_association.sv": {
+      "actual_sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+      "allocation_sha256": "7d6c424e77683b5c20604e403921f4bee79c8c5f4bb77132332dfc7bd8ab21f3",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_prior_debt.sv": {
+      "actual_sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+      "allocation_sha256": "f6ed95d03a4308766df5cc96259cdfe238f981b1ac45c420c6c7eeb067dfb74c",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_hbm_integrated_sm0_borrow.sv": {
+      "actual_sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+      "allocation_sha256": "40a415eb580cbd62c315137acc1a84399d33e80370dffbd3848ba50807443711",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": []
+    },
+    "rtl/hbm_accel/integrated_20261005/ot_ds_hbm_cluster20_integrated.sv": {
+      "actual_sha256": "dd131b6d7a8bdb1812afb9133847ae24489e7c65f7c5d78c88e5220c6f7776f7",
+      "allocation_sha256": "d730b8d560ac04b9080e404f22b22d08c475ee1121bf6d342b4e7e2135b964bf",
+      "unchanged_CP_wiring": true,
+      "joined_W2_hooks": [
+        ",W2_PROTECTED_TRANSACTION_PIPELINE=0",
+        ",.PROTECTED_TRANSACTION_PIPELINE(W2_PROTECTED_TRANSACTION_PIPELINE)"
+      ]
+    }
+  },
   "die_area_um": [
     0,
     0,
