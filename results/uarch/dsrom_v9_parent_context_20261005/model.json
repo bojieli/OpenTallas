@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.dsrom.v9.parent_clock_context.v1",
-  "generator_sha256": "15cf878d915db0905b9ac8c0d403c49680de963e3462d73329a64a1fa528d966",
+  "generator_sha256": "365868f94feda8bcb30d553ada8372915feaa4dcb5fceac6feb72e0f37cd9502",
   "input_hashes": {
     "results/uarch/dsrom_v9_parent_context_20261005/inputs/loaded_ports.json": "8699cc526b94493460b95b89e2ae0f9aaa0c66b690d2bc586270a0863a5a8a6f",
     "results/rtl/dsrom_recovery_20261004/physcost/layer/floorplan.json": "d12baf9d01d3f86deb5ed02463dd505b7a832eac2697c7c468acf07bdd843423",
@@ -132,6 +132,58 @@
   },
   "parent_only_mapping_admitted": true,
   "full_QX_context_admitted": false,
+  "frontend_successor": {
+    "source": "physical/dsrom_v9_parent_context/ot_v41_v9_parent_clock_context_frontend.sv",
+    "loader": "physical/dsrom_v9_parent_context/ot_v41_pair_pq_ld_frontend.sv",
+    "correction": "explicit fault/pend self-hold; original reset/set precedence retained",
+    "generic_FF_state_bits": 6738,
+    "generic_memory_state_bits": 8320,
+    "total_state_bits": 15058,
+    "protective_rails": {
+      "u_ld.fault": [
+        "0"
+      ],
+      "u_ld.pend": [
+        "0"
+      ],
+      "g_qx.g_qo.busy_d": [
+        4197,
+        6601
+      ],
+      "g_qx.g_qo.ff_d": [
+        6602,
+        6603
+      ],
+      "g_qx.g_qo.ffq": [
+        4285
+      ],
+      "g_qx.g_qo.fq": [
+        6515
+      ],
+      "g_qx.g_mac[0].bkf_r": [
+        4282
+      ],
+      "g_qx.g_mac[1].bkf_r": [
+        4283
+      ],
+      "u_return.u_n.fault": [
+        6516
+      ],
+      "sticky_fault": [
+        4198
+      ],
+      "g_qx.g_qb.rst_reg": [
+        4130
+      ]
+    },
+    "count_basis": "results/rtl/dsrom_v9_parent_frontend_fix_20261005/parent_retained_rails.json",
+    "count_basis_sha256": "158d93d2d7913afe4ba6c5943ddb11c25b85edbaff820a4164fe5c69bcae067c",
+    "source_gate": "PASS minimum original/corrected PQ0/PQ1 exact; not full engine/campaign",
+    "new_pipeline_edges": 0,
+    "changed_physical_measured": false,
+    "old_map_r4_functional_credit": false,
+    "old_map_r4_scope": "preserved diagnostic/geometry only: reset-only PQ0 fault/pend lowered to X"
+  },
   "full_field_build_admitted": false,
   "missing_input_clocks": true,
   "remaining_dependency": "qualified full-shape QX10 LEF/SS/FF timing and exact gate from live Z18; all terminal arrival/child clock-tree qualification still outstanding",

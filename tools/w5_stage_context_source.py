@@ -28,7 +28,7 @@ def build():
  pg=pg.replace('endmodule','assign snapshot = {st,idx,cnt,sw_en,iso_n,dom_rst_n,clk_en,pwr_good,fault};\nendmodule')
  sch=kept(renamed(raw[srcs[1]]))
  sch=add_port(sch,'output wire [2*TW+10+3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] snapshot')
- sch=sch.replace('    (* keep, dont_touch *) reg [TW-1:0] cnt;', '    wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;\n    reg [TW-1:0] cnt;')
+ sch=sch.replace('    (* keep, dont_touch *) reg [TW-1:0] cnt;', '    wire [3+((NSUB>1)?$clog2(NSUB+1):1)+16+NSUB+5-1:0] pg_snapshot;\n    (* keep, dont_touch *) reg [TW-1:0] cnt;')
  sch=sch.replace('.clk(clk), .rst_n(rst_n), .req_on(req_on)', '.snapshot(pg_snapshot), .clk(clk), .rst_n(rst_n), .req_on(req_on)')
  sch=sch.replace('endmodule','assign snapshot = {cnt,cnt_v,idle,th,pg_snapshot};\nendmodule')
  # Retain all AO sequential state, not just externally visible status.
@@ -73,7 +73,10 @@ wire ao_clk, bad, quarantine;
 (* keep, dont_touch *) reg sticky=0, sticky_inverse=1;
 generate if (PROTECT!=0) begin:g_checked
     assign bad=|(snap_p^snap_r);
-    assign quarantine=bad|sticky|~sticky_inverse|external_quarantine|(|fault_p);
+    wire settled_alarm;
+    ot_w5_fault_low u_qualify(.clk(aon_clk),.rst_n(rst_n),
+        .alarm(bad|external_quarantine|(|fault_p)),.settled(settled_alarm));
+    assign quarantine=settled_alarm|sticky|~sticky_inverse;
     always @(posedge aon_clk or negedge rst_n)
         if(!rst_n) begin sticky<=0;sticky_inverse<=1;end
         else if(quarantine) begin sticky<=1;sticky_inverse<=0;end

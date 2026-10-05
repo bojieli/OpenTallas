@@ -385,8 +385,8 @@
   "utilization": 0.3,
   "replicated_PC_core_area_mm2": 17.9123768064,
   "complete_interface_core_area_mm2": 17.9179305714,
-  "parent_slot_fit": true,
-  "slot_reason": "Actual b3r12 allocation: two added shoreline bands; all 3225 existing contexts retained. This fits endpoint homes only; service transport is priced separately and is not qualified.",
+  "parent_slot_fit": null,
+  "slot_reason": "Endpoint homes alone fit. Selected finite transport adds its complete positive area charge; central ingress/local legs/PHY and loaded clock homes still require nonoverlapping actual allocation. Scalar area fit is not complete system fit.",
   "previous_slot_source": "results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json",
   "replicated_PC_array_um": [
     4000,
@@ -455,6 +455,1025 @@
     "results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_stream4_cdc_pc.sv": "a97f5b3fd85862509c09f48b43e3b27eec48baac6739e67c71952f5e0b1e9f3a",
     "results/rtl/qwen_stream4_cdc_20261005/takeover_r5/source/ot_qwen_hbm_stream4_cdc.sv": "ec1b680a977f0814130eba93b4768c1f909463fe1c7bcdf4882198356f10b5e7",
     "results/rtl/qwen_rom_stream4_clock_plan_20261005/selected_P0_clock_boundary_r5.json": "efcc0bb0fc2a5f0f902950c42fbe5233ba5e2ca7925959ec261aecccdbfa11fe"
+  },
+  "endpoint_slot_fit": true,
+  "selected_transport": {
+    "schema": "opentallas.qwen.stream4.selected-transport.prebuild.v1",
+    "selected": "four independent sealed 504-bit full-record stack links with protected finite credit pools; existing PC ring codecs reused on local legs",
+    "default_OFF": true,
+    "implemented": false,
+    "NEAR_HBM": 0,
+    "DSpark": false,
+    "ROM_ECC": false,
+    "baseline_plan": "results/rtl/qwen_rom_fulldie_20261003/b3r3/plan_b3r12/plan.json",
+    "actual_service_NWR": 64,
+    "actual_top_WBW": 4,
+    "source_grants": "one rotating PC grant per stack; at most four total; held one-edge grant reserves a queue slot even across warm admission pause",
+    "grant_rotation_bound_CLK_edges": 32,
+    "source_write_ingress": {
+      "payload_bits": 296,
+      "depth": 16,
+      "pointer_bits": 5,
+      "pieces": 7,
+      "coded_bits": 504,
+      "replicas": 4,
+      "total_FF_each": 13992,
+      "coded_memory_FF_each": 8064,
+      "encoder_decoder_DMR_FF_each": 5806,
+      "pointer_control_sync_FF_each": 122,
+      "read_mux_NAND2_each": 22680,
+      "check_NAND2_each": 8880,
+      "fanout8_buffers_each": 1999,
+      "codec_pairs_each": 7,
+      "cell_mm2_each": 0.009064517220000002,
+      "core_mm2_all": 0.12086022960000004,
+      "read_ports": 1,
+      "write_ports": 1,
+      "payload_bytes_per_port_edge": 37.0,
+      "coded_bytes_per_port_edge": 63.0,
+      "II_edges": 1,
+      "encoder_edges": 2,
+      "decoder_edges": 4
+    },
+    "forward_frame_pool": {
+      "payload_bits": 296,
+      "depth": 128,
+      "pointer_bits": 8,
+      "pieces": 7,
+      "coded_bits": 504,
+      "replicas": 4,
+      "total_FF_each": 70536,
+      "coded_memory_FF_each": 64512,
+      "encoder_decoder_DMR_FF_each": 5836,
+      "pointer_control_sync_FF_each": 188,
+      "read_mux_NAND2_each": 192024,
+      "check_NAND2_each": 9024,
+      "fanout8_buffers_each": 10077,
+      "codec_pairs_each": 7,
+      "cell_mm2_each": 0.04120399854,
+      "core_mm2_all": 0.5493866472000001,
+      "read_ports": 1,
+      "write_ports": 1,
+      "payload_bytes_per_port_edge": 37.0,
+      "coded_bytes_per_port_edge": 63.0,
+      "II_edges": 1,
+      "encoder_edges": 2,
+      "decoder_edges": 4
+    },
+    "reverse_frame_pool": {
+      "payload_bits": 288,
+      "depth": 128,
+      "pointer_bits": 8,
+      "pieces": 7,
+      "coded_bits": 504,
+      "replicas": 4,
+      "total_FF_each": 70520,
+      "coded_memory_FF_each": 64512,
+      "encoder_decoder_DMR_FF_each": 5820,
+      "pointer_control_sync_FF_each": 188,
+      "read_mux_NAND2_each": 192024,
+      "check_NAND2_each": 9000,
+      "fanout8_buffers_each": 10075,
+      "codec_pairs_each": 7,
+      "cell_mm2_each": 0.0411970293,
+      "core_mm2_all": 0.549293724,
+      "read_ports": 1,
+      "write_ports": 1,
+      "payload_bytes_per_port_edge": 36.0,
+      "coded_bytes_per_port_edge": 63.0,
+      "II_edges": 1,
+      "encoder_edges": 2,
+      "decoder_edges": 4
+    },
+    "maximum_source_write_entries": 64,
+    "maximum_source_unspent_grants": 4,
+    "frame_pool_includes_inflight_and_held": true,
+    "frame_pool_depth": 128,
+    "control_reserved_entries": 4,
+    "data_frame_admission_limit": 124,
+    "reservation_basis": "one descriptor, one GO, one latest status, one sticky fault per stack; controller consumption ACK and descriptor ordinal retained",
+    "old_backend_WB": 16,
+    "old_backend_LD": 64,
+    "old_backend_AD": 64,
+    "old_backend_CRED": 32,
+    "backend_WB_is_local_only": true,
+    "source_write_debt": "service NWR64 until actual WR acknowledgment; ingress owner transfers atomically to protected global pool, then protected backend WB16; no retirement from raw handoff",
+    "landing_debt": "existing local landing ring transfers to reserved protected return pool; end retirement only at actual service l_pop; never an advisory credit",
+    "write_ACK": "existing AD64 held output requires opt-in explicit ready; no pulse-only output may be multiplexed or dropped",
+    "packets": {
+      "forward": "kind2 + PC5 + payload289; descriptor ordinal3/row19/count11 and GO ordinal3 are packet kinds",
+      "reverse": "kind2 + PC5 + payload281; writeACK9, consumed-descriptor ACK3, and busy/ready/fault status are packet kinds",
+      "seal": "existing W2/W6 PC7(stack identity)/word10(frame slot*7+piece)/kind3 plus protected wrap; destination also checks dynamic PC and address bounds",
+      "kinds_are_protected": true,
+      "frame_identity_and_order_are_checked": true
+    },
+    "trunk_legs": [
+      {
+        "stack": "WS",
+        "actual_link_anchor": "lfifo_WS",
+        "trunk_um": 17500.3,
+        "registered_spans": 41,
+        "original_strip_fan_um": 5071.7,
+        "original_strip_fan_reused": false
+      },
+      {
+        "stack": "WN",
+        "actual_link_anchor": "lfifo_WN",
+        "trunk_um": 17498.2,
+        "registered_spans": 41,
+        "original_strip_fan_um": 5071.7,
+        "original_strip_fan_reused": false
+      },
+      {
+        "stack": "ES",
+        "actual_link_anchor": "lfifo_ES",
+        "trunk_um": 17500.3,
+        "registered_spans": 41,
+        "original_strip_fan_um": 5071.7,
+        "original_strip_fan_reused": false
+      },
+      {
+        "stack": "EN",
+        "actual_link_anchor": "lfifo_EN",
+        "trunk_um": 17498.2,
+        "registered_spans": 41,
+        "original_strip_fan_um": 5071.7,
+        "original_strip_fan_reused": false
+      }
+    ],
+    "local_legs": [
+      {
+        "PC_ID": 0,
+        "stack": "WS",
+        "distance_um": 5902.632000000001,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 1,
+        "stack": "WS",
+        "distance_um": 5360.472000000002,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 2,
+        "stack": "WS",
+        "distance_um": 4818.312000000002,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 3,
+        "stack": "WS",
+        "distance_um": 4276.152000000002,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 4,
+        "stack": "WS",
+        "distance_um": 3733.992000000002,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 5,
+        "stack": "WS",
+        "distance_um": 3191.832000000002,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 6,
+        "stack": "WS",
+        "distance_um": 2649.6720000000005,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 7,
+        "stack": "WS",
+        "distance_um": 2107.5120000000006,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 8,
+        "stack": "WS",
+        "distance_um": 2129.111999999999,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 9,
+        "stack": "WS",
+        "distance_um": 2671.271999999999,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 10,
+        "stack": "WS",
+        "distance_um": 3213.431999999999,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 11,
+        "stack": "WS",
+        "distance_um": 3755.5919999999987,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 12,
+        "stack": "WS",
+        "distance_um": 4297.751999999999,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 13,
+        "stack": "WS",
+        "distance_um": 4839.911999999998,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 14,
+        "stack": "WS",
+        "distance_um": 5382.071999999998,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 15,
+        "stack": "WS",
+        "distance_um": 5924.231999999998,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 16,
+        "stack": "WS",
+        "distance_um": 5581.656000000002,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 17,
+        "stack": "WS",
+        "distance_um": 5039.496000000002,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 18,
+        "stack": "WS",
+        "distance_um": 4497.336000000002,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 19,
+        "stack": "WS",
+        "distance_um": 3955.176000000002,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 20,
+        "stack": "WS",
+        "distance_um": 3413.0160000000024,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 21,
+        "stack": "WS",
+        "distance_um": 2870.8560000000025,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 22,
+        "stack": "WS",
+        "distance_um": 2328.696000000001,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 23,
+        "stack": "WS",
+        "distance_um": 1786.536000000001,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 24,
+        "stack": "WS",
+        "distance_um": 1808.1359999999995,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 25,
+        "stack": "WS",
+        "distance_um": 2350.2959999999994,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 26,
+        "stack": "WS",
+        "distance_um": 2892.455999999999,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 27,
+        "stack": "WS",
+        "distance_um": 3434.615999999999,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 28,
+        "stack": "WS",
+        "distance_um": 3976.775999999999,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 29,
+        "stack": "WS",
+        "distance_um": 4518.935999999999,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 30,
+        "stack": "WS",
+        "distance_um": 5061.095999999999,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 31,
+        "stack": "WS",
+        "distance_um": 5603.2559999999985,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 32,
+        "stack": "WN",
+        "distance_um": 5902.632000000001,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 33,
+        "stack": "WN",
+        "distance_um": 5360.471999999998,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 34,
+        "stack": "WN",
+        "distance_um": 4818.312000000002,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 35,
+        "stack": "WN",
+        "distance_um": 4276.151999999998,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 36,
+        "stack": "WN",
+        "distance_um": 3733.992000000002,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 37,
+        "stack": "WN",
+        "distance_um": 3191.8319999999985,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 38,
+        "stack": "WN",
+        "distance_um": 2649.6720000000023,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 39,
+        "stack": "WN",
+        "distance_um": 2107.511999999999,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 40,
+        "stack": "WN",
+        "distance_um": 2129.1119999999974,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 41,
+        "stack": "WN",
+        "distance_um": 2671.272000000001,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 42,
+        "stack": "WN",
+        "distance_um": 3213.431999999997,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 43,
+        "stack": "WN",
+        "distance_um": 3755.5920000000006,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 44,
+        "stack": "WN",
+        "distance_um": 4297.751999999997,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 45,
+        "stack": "WN",
+        "distance_um": 4839.912,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 46,
+        "stack": "WN",
+        "distance_um": 5382.0719999999965,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 47,
+        "stack": "WN",
+        "distance_um": 5924.232,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 48,
+        "stack": "WN",
+        "distance_um": 5581.656000000002,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 49,
+        "stack": "WN",
+        "distance_um": 5039.495999999998,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 50,
+        "stack": "WN",
+        "distance_um": 4497.336000000002,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 51,
+        "stack": "WN",
+        "distance_um": 3955.1759999999986,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 52,
+        "stack": "WN",
+        "distance_um": 3413.0160000000024,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 53,
+        "stack": "WN",
+        "distance_um": 2870.855999999999,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 54,
+        "stack": "WN",
+        "distance_um": 2328.6960000000026,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 55,
+        "stack": "WN",
+        "distance_um": 1786.5359999999991,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 56,
+        "stack": "WN",
+        "distance_um": 1808.1359999999977,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 57,
+        "stack": "WN",
+        "distance_um": 2350.296000000001,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 58,
+        "stack": "WN",
+        "distance_um": 2892.4559999999974,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 59,
+        "stack": "WN",
+        "distance_um": 3434.616000000001,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 60,
+        "stack": "WN",
+        "distance_um": 3976.775999999997,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 61,
+        "stack": "WN",
+        "distance_um": 4518.936000000001,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 62,
+        "stack": "WN",
+        "distance_um": 5061.095999999997,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 63,
+        "stack": "WN",
+        "distance_um": 5603.256,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 64,
+        "stack": "ES",
+        "distance_um": 5581.656000000003,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 65,
+        "stack": "ES",
+        "distance_um": 5039.496000000003,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 66,
+        "stack": "ES",
+        "distance_um": 4497.336000000003,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 67,
+        "stack": "ES",
+        "distance_um": 3955.176000000003,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 68,
+        "stack": "ES",
+        "distance_um": 3413.0160000000033,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 69,
+        "stack": "ES",
+        "distance_um": 2870.8560000000034,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 70,
+        "stack": "ES",
+        "distance_um": 2328.6960000000017,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 71,
+        "stack": "ES",
+        "distance_um": 1786.5360000000019,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 72,
+        "stack": "ES",
+        "distance_um": 1808.1360000000004,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 73,
+        "stack": "ES",
+        "distance_um": 2350.2960000000003,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 74,
+        "stack": "ES",
+        "distance_um": 2892.456,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 75,
+        "stack": "ES",
+        "distance_um": 3434.616,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 76,
+        "stack": "ES",
+        "distance_um": 3976.776,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 77,
+        "stack": "ES",
+        "distance_um": 4518.936,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 78,
+        "stack": "ES",
+        "distance_um": 5061.096,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 79,
+        "stack": "ES",
+        "distance_um": 5603.255999999999,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 80,
+        "stack": "ES",
+        "distance_um": 5902.631999999998,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 81,
+        "stack": "ES",
+        "distance_um": 5360.471999999998,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 82,
+        "stack": "ES",
+        "distance_um": 4818.311999999998,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 83,
+        "stack": "ES",
+        "distance_um": 4276.151999999998,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 84,
+        "stack": "ES",
+        "distance_um": 3733.9919999999984,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 85,
+        "stack": "ES",
+        "distance_um": 3191.8319999999985,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 86,
+        "stack": "ES",
+        "distance_um": 2649.671999999997,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 87,
+        "stack": "ES",
+        "distance_um": 2107.511999999997,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 88,
+        "stack": "ES",
+        "distance_um": 2129.1119999999955,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 89,
+        "stack": "ES",
+        "distance_um": 2671.2719999999954,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 90,
+        "stack": "ES",
+        "distance_um": 3213.4319999999952,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 91,
+        "stack": "ES",
+        "distance_um": 3755.591999999995,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 92,
+        "stack": "ES",
+        "distance_um": 4297.751999999995,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 93,
+        "stack": "ES",
+        "distance_um": 4839.911999999995,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 94,
+        "stack": "ES",
+        "distance_um": 5382.071999999995,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 95,
+        "stack": "ES",
+        "distance_um": 5924.2319999999945,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 96,
+        "stack": "EN",
+        "distance_um": 5581.656000000003,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 97,
+        "stack": "EN",
+        "distance_um": 5039.495999999999,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 98,
+        "stack": "EN",
+        "distance_um": 4497.336000000003,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 99,
+        "stack": "EN",
+        "distance_um": 3955.1759999999995,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 100,
+        "stack": "EN",
+        "distance_um": 3413.0160000000033,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 101,
+        "stack": "EN",
+        "distance_um": 2870.8559999999998,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 102,
+        "stack": "EN",
+        "distance_um": 2328.6960000000036,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 103,
+        "stack": "EN",
+        "distance_um": 1786.536,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 104,
+        "stack": "EN",
+        "distance_um": 1808.1359999999986,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 105,
+        "stack": "EN",
+        "distance_um": 2350.296000000002,
+        "registered_spans": 6
+      },
+      {
+        "PC_ID": 106,
+        "stack": "EN",
+        "distance_um": 2892.4559999999983,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 107,
+        "stack": "EN",
+        "distance_um": 3434.616000000002,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 108,
+        "stack": "EN",
+        "distance_um": 3976.775999999998,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 109,
+        "stack": "EN",
+        "distance_um": 4518.9360000000015,
+        "registered_spans": 11
+      },
+      {
+        "PC_ID": 110,
+        "stack": "EN",
+        "distance_um": 5061.095999999998,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 111,
+        "stack": "EN",
+        "distance_um": 5603.256000000001,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 112,
+        "stack": "EN",
+        "distance_um": 5902.631999999998,
+        "registered_spans": 14
+      },
+      {
+        "PC_ID": 113,
+        "stack": "EN",
+        "distance_um": 5360.471999999994,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 114,
+        "stack": "EN",
+        "distance_um": 4818.311999999998,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 115,
+        "stack": "EN",
+        "distance_um": 4276.151999999995,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 116,
+        "stack": "EN",
+        "distance_um": 3733.9919999999984,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 117,
+        "stack": "EN",
+        "distance_um": 3191.831999999995,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 118,
+        "stack": "EN",
+        "distance_um": 2649.6719999999987,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 119,
+        "stack": "EN",
+        "distance_um": 2107.511999999995,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 120,
+        "stack": "EN",
+        "distance_um": 2129.1119999999937,
+        "registered_spans": 5
+      },
+      {
+        "PC_ID": 121,
+        "stack": "EN",
+        "distance_um": 2671.271999999997,
+        "registered_spans": 7
+      },
+      {
+        "PC_ID": 122,
+        "stack": "EN",
+        "distance_um": 3213.4319999999934,
+        "registered_spans": 8
+      },
+      {
+        "PC_ID": 123,
+        "stack": "EN",
+        "distance_um": 3755.591999999997,
+        "registered_spans": 9
+      },
+      {
+        "PC_ID": 124,
+        "stack": "EN",
+        "distance_um": 4297.751999999993,
+        "registered_spans": 10
+      },
+      {
+        "PC_ID": 125,
+        "stack": "EN",
+        "distance_um": 4839.911999999997,
+        "registered_spans": 12
+      },
+      {
+        "PC_ID": 126,
+        "stack": "EN",
+        "distance_um": 5382.071999999993,
+        "registered_spans": 13
+      },
+      {
+        "PC_ID": 127,
+        "stack": "EN",
+        "distance_um": 5924.231999999996,
+        "registered_spans": 14
+      }
+    ],
+    "coded_data_FF_per_pipeline_node": 504,
+    "checked_control_FF_per_pipeline_node": 40,
+    "trunk_pipeline_FF": 178432,
+    "local_pipeline_FF": 1309952,
+    "extra_endpoint_DMR_FF": 24136,
+    "global_receiver_and_credit_source_FF": 560,
+    "local_receiver_and_credit_source_FF": 21760,
+    "local_ACK_pipeline_FF": 130032,
+    "local_codec_reuse": {
+      "source": "ot_qwen_s4_protected_pc u_l/u_w/u_a with LOCAL_WIRE_SPANS",
+      "already_charged_in": "mutable_interface rings landing/write/write_done encoder+decoder DMR cuts and codec pairs",
+      "extra_local_encoder_decoder_FF": 0,
+      "extra_local_codec_pairs": 0,
+      "actual_source_placement_required": true,
+      "implemented_default_OFF": true,
+      "ACK_ready": "explicit backpressure at u_a output; retirement on actual mux acceptance",
+      "local_write_no_stall_credit_bound_CLK_edges": 39,
+      "local_write_depth": 16,
+      "local_write_stalls_priced": true,
+      "local_write_peak_records_per_PC_CLK_edge": 0.41025641025641024
+    },
+    "endpoint_mux_demux_NAND2": 301152,
+    "extra_checker_NAND2": 265380,
+    "extra_fanout8_buffers": 234651,
+    "local_codec_pairs": 0,
+    "codec_pair_cell_um2": 288.50904,
+    "pipeline_cell_mm2": 0.55247686362,
+    "local_codec_cell_mm2": 0,
+    "utilization": 0.3,
+    "functional_transport_core_mm2": 3.0611301462,
+    "clock_and_buffer_reserve_core_mm2": 0.30611301462,
+    "total_transport_core_mm2": 3.36724316082,
+    "endpoint_only_die_mm2": 851.80869955584,
+    "endpoint_only_margin_mm2": 6.191300444159992,
+    "conservative_area_charge_die_mm2": 855.17594271666,
+    "scalar_area_budget_fit": true,
+    "physical_slot_fit": null,
+    "complete_system_fit": false,
+    "physical_admission": false,
+    "root_CLK_ps": 833.333,
+    "HCLK_ps": 1024,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "wire_span_um": 430.56,
+    "max_local_spans": 14,
+    "max_trunk_spans": 41,
+    "one_way_visibility_max_CLK_edges": 62,
+    "one_way_visibility_max_ps": 51666.646,
+    "longest_credit_roundtrip_CLK_edges": 121,
+    "frame_pool_covers_no_stall_roundtrip": true,
+    "peak_payload_per_stack_CLK_edge_bytes": 36.125,
+    "peak_coded_per_direction_CLK_edge_bytes": 63.0,
+    "peak_return_records_per_stack_CLK_edge": 1,
+    "peak_return_records_all_stacks_CLK_edge": 4,
+    "MACs_per_edge": 0,
+    "compute_intensity_MAC_per_byte": 0,
+    "communication_intensity": "one full sealed frame per link edge; up to four globally; bounded by downstream ownership and credits",
+    "tracks": {
+      "data_per_stack_duplex": 1008,
+      "valid_poison_dualrail": 8,
+      "credit_dualrail": 32,
+      "fault_dualrail": 4,
+      "clock_shielded": 3,
+      "cold_POR": 1,
+      "total_per_stack": 1056,
+      "actual_horizontal_capacity": 1056,
+      "shared_vertical_two_stack_demand": 2112,
+      "actual_vertical_capacity": 2112,
+      "nominal_margin": 0,
+      "loaded_slew_cap_fanout_and_CTS_qualified": false
+    },
+    "latency_price": {
+      "P8191_minimum_fill_records": 131072,
+      "minimum_fill_CLK_edges_at_four_return_records": 32768,
+      "minimum_fill_ps_at_four_return_records": 27306655.744,
+      "historical_changed_source_fill_edges": 1466,
+      "actual_released_layers": 36,
+      "component_chain_MLP_window_CLK_edges": 3000,
+      "component_chain_minimum_late_prefetch_exposure_CLK_edges": 29768,
+      "full_token_issue_timestamps_known": false,
+      "token_composition": "first exposed fill >=32768 edges plus visibility; later fills >=max(0,32768-actual measured independent MLP window) each; add ordered write/ACK fences and unchanged head/core path once; component MLP3000 is not the actual36-layer calendar",
+      "price": "return bandwidth and PC grant stalls are real; compose into each exposed fill and write visibility fence, retain posted prefetch overlap only when measured",
+      "whole_token_measured": false,
+      "rate_credit": false,
+      "adopted": false
+    },
+    "warm_reset": "closes fresh grants; every issued grant, frame, pointer, decoder and backend owner drains or stays held; POR alone erases",
+    "admission_blockers": [
+      "existing bbcb and corrected c625 actual32 terminals",
+      "implement and exact-test actual shared frame links and protected ready/credit/control endpoints",
+      "allocate nonoverlapping central ingress, local legs, endpoint/control/PHY and clock homes in b3r12; scalar area sum is not slot fit",
+      "loaded SS60/FF25 contextual route with actual independent HCLK and source free/gated clock relation"
+    ],
+    "source_sha256": {
+      "results/rtl/qwen_rom_fulldie_20261003/b3r3/plan_b3r12/plan.json": "b35e079ffc2df3fe8d43116ff602f39ff93f844315087a7d7fc42cf2c238c0fd",
+      "tools/qwen_rom_fulldie.py": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
+      "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv": "843ef0ea8934e9fb3da94c54bb24c75c2e3c8b4b59263148f9e6c4d18aa16e2f",
+      "rtl/hdc/kv/ot_qwen_s4_protected_ring.sv": "a6129b02eb347a0b2063d2b3ce7292d69c8996207add8271ff3dc4d18224866a",
+      "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "a3d9ea57412314505d0f6255b44845a52abe125f15f7a330420b20ab2fb3c4a3",
+      "rtl/hdc/kv/ot_qwen_s4_interface_context.sv": "f680f635ca8558d576e10d58992e6cfbda3c9c57c554367496de45939d466c74",
+      "rtl/hdc/kv/ot_qwen_s4_packet_link.sv": "1bc12bdc6295ecd76820fae929a8c5fa598a0057d13286a772238eca5e5a5639",
+      "rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81"
+    }
   },
   "die_allocation": {
     "schema": "opentallas.qwen.stream4.actual-die-allocation.v1",
@@ -22674,7 +23693,7 @@
       "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
       "tools/qwen_rom_fulldie.py": "84f2e0e915faed46e07101056a99e8d85489431e9b3ad7e48469175cbb9b7118",
       "tools/orfs_allcorner_spef.py": "6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a",
-      "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "1f2f5eaac4c18c8e4c6a4d235acc989a974b464e613159e818fed70aedaf9309",
+      "rtl/hdc/kv/ot_qwen_s4_protected_pc.sv": "a3d9ea57412314505d0f6255b44845a52abe125f15f7a330420b20ab2fb3c4a3",
       "rtl/hdc/kv/ot_qwen_s4_protected_control.sv": "5d77bb9aeac2bbec8784d92798e30bee7f2a5a91752199abf06a11b12c79a098",
       "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_stack.sv": "43b21ddb2a2ae2c61e5aed61b711a1c22e43e274d57c44d917ce69247484230c",
       "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "a2cfb09b7868936ca886c9e92b68f08ecffdd1e8236ee1313f8ffce9d2b33dcf"

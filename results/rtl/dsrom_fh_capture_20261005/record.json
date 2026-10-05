@@ -2,7 +2,7 @@
   "scope": "item2 DS-ROM G4W16 single component capture successor; defaultOFF",
   "adopted": false,
   "physical_closed": false,
-  "status": "EXACT_PASS_PHYSICAL_RUNNING",
+  "status": "EXACT_PASS_SYNTH_PASS_FLOORPLAN_RECIPE_FAILURE",
   "exact_source": "50dcfa9c388028da6296f9db2935073419dc2c9f",
   "memory_source": "55f26355c",
   "route_source": "78cd22c97e9310e6d12dd1036a77c932a934762b",
@@ -86,10 +86,40 @@
     "FF_hold_uncertainty_ps": 25,
     "real_protected_macros": 64,
     "conditional_parent_ports": true,
-    "no_fullparent_qualification": true
+    "no_fullparent_qualification": true,
+    "successor_path": "/srv/opentallas-scratch2/codex/dsrom-fh-capture-20261005/routes/C11_capture",
+    "successor_reuses": "same source mapped netlist,1_synth.odb,1_synth.sdc; corrected initialization mode only"
   },
   "launch_failures": {
     "C10_capture": "realpath new destination absent; exit1 before synthesis",
-    "C10b_capture": "df new destination absent; exit1 before synthesis"
+    "C10b_capture": "df new destination absent; exit1 before synthesis",
+    "C10c_capture": "ORFS mutually exclusive CORE_UTILIZATION and explicit DIE/CORE; synthesisPASS327455instances; no timing verdict"
+  },
+  "synthesis": {
+    "instances": 327455,
+    "macro_count": 64,
+    "total_including_macros_um2": 384307.9506,
+    "std_cells_um2": 53386.273799999966,
+    "sequential_area_um2": 25374.04056,
+    "peak_MiB": 2178.015625,
+    "elapsed_s": 721.51
+  },
+  "decode_split": {
+    "source": "fd25e1e26c8e50f543a200b7bb46346fabc6c72d",
+    "default": 0,
+    "exact_pass": true,
+    "gold4_cycles": 62878,
+    "forced_s1_cycles": 62878,
+    "busy_me": 61845,
+    "added_five_chain_cycles": 25,
+    "accepted_reads": 32512,
+    "released_reads": 32512,
+    "masked_writes": 32352,
+    "corrected_errors": 1,
+    "UE_and_identity_rejected": true,
+    "warm_mask_reset_debt_preserved": true,
+    "model": "results/uarch/dsrom_fh_capture_20261005/decode_split_before_rtl.json",
+    "physical_closed": false,
+    "adopted": false
   }
 }
