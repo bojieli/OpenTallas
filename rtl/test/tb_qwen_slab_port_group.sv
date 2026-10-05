@@ -15,7 +15,7 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
         bank = -1;
         for (c = 0; c < 4; c = c + 1)
             for (b = 0; b < 4; b = b + 1)
-                if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].g_bank[%0d].u_rom", c, b)) bank = c * 4 + b;
+                if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
         if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $finish; end
     end
     function automatic [265:0] word(input integer bank, input [11:0] a);
@@ -34,7 +34,7 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
 endmodule
 
 module tb_qwen_slab_port_group;
-    localparam integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 6, LEAD = 7;
+    parameter integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 6, LEAD = 8;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = !clk;
 
@@ -123,7 +123,7 @@ module tb_qwen_slab_port_group;
         for (cyc = 0; cyc < 3000; cyc = cyc + 1) begin
             seed = cyc * 7 + 3;
             // tag at request time
-            p_v <= (rnd32(seed) % 4) != 0;
+            p_v <= (cyc < 2990) && ((rnd32(seed) % 4) != 0);
             p_last <= (rnd32(seed + 1) % 3) != 0;
             p_wsrc <= (rnd32(seed + 2) % 8) == 0;
             p_mmode <= rnd32(seed + 3) % 2;

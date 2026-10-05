@@ -28,11 +28,11 @@
 //      a column copy (R2) and a per-bank decode register (R3) that drive the
 //      macro pins, the macro output is captured by a flop at its pins (C4), the
 //      captured words are merged per column (M5) and across columns (M6), and
-//      M6 feeds the multiplier.  The request therefore leads the result by
-//      LEAD = 7 cycles instead of 2.  The request depends only on the
-//      instruction tag, which the top already holds that early (pre_tag is a
-//      tap of the s3 tag line, SD - LEAD + OD + XDD >= 0 for SD = MUL_LAT +
-//      ACC_LAT >= 10), so this adds no cycle to an op.
+//      M6 feeds the multiplier.  With the tag arithmetic of 4. the request
+//      leads the result by LEAD = 8 cycles at the pins instead of 2.  The
+//      request depends only on the instruction tag, which the top already
+//      holds that early (pre_tag is a tap of the s3 tag line, SD - LEAD + OD +
+//      XDD >= 0 for SD = MUL_LAT + ACC_LAT >= 13), so this adds no cycle to an op.
 //   2. Multiplier.  ot_hdc_fp32_mul_lat #(MUL_LAT) in place of ot_hdc_fmul
 //      (ot_hdc_fp32_mul_pipe, LAT 5): bit-identical (ot_hdc_fp32_mul_lat ==
 //      ot_hdc_fp32_mul_fast, rtl/test/tb_w11_fp32_mul_lat; ot_hdc_fp32_mul_fast
@@ -41,10 +41,15 @@
 //      LAT 5 pipe routes at ~1.0 GHz SS.  MUL_LAT - 5 cycles are added once per
 //      ME op (the post-scale is on the op's result path).
 //   3. Boundary registers.  Every input is registered once at the element
-//      boundary (one of the spine wire stages TWS/ORD the die already counts).
-//   4. Tag line.  The instruction tag arrives once (at request time) and is
-//      delayed locally to the multiplier and result times; the top carries one
-//      shared copy, so this is conservative in area.
+//      boundary (one of the spine wire stages TWS/ORD the die already counts),
+//      and the reset is distributed through registered copies.
+//   4. Tag arithmetic.  The per-group row tests (nb + GID*W*IL + l < nout, and
+//      the lb form), the scale address and the result address are evaluated
+//      once, two cycles ahead, on explicit prefix adders, and the lane masks and
+//      addresses travel down the tag line (the same predicates; the RTL's
+//      behavioural adds map to ripple chains, abc-re-ripples-adders).
+//   5. Argmax node.  The RTL's node test is one 48-bit prefix compare of
+//      {key, ~row} (identical predicate, see g_alvl).
 // GID is the group's index (the RTL's gb + q, a constant per instance).
 // ---------------------------------------------------------------------------
 module ot_qwen_slab_port_group #(
@@ -93,48 +98,93 @@ module ot_qwen_slab_port_group #(
 );
     localparam integer LW = $clog2(W);
     localparam integer BPC = SCALE_BANKS / COLS;
-    localparam integer LEAD = 7;              // request -> multiplier input (see header, 1.)
-    localparam integer TGW = 7 + 4 + 3 * (NW + 1) + 3 * AW;
+    localparam integer LEAD = 8;              // tag pins -> multiplier input (see header, 1.)
+    localparam integer DW = 20;               // signed width of the row-count differences
+    localparam integer KR = 1 + 1 + 1 + 1 + 1 + 1 + W + AW + NW;   // tag carried past the request stage
 
-    // ---- boundary registers ----------------------------------------------------------------------
-    reg  rst_q;
-    always @(posedge clk) rst_q <= rst_n;     // registered reset release (the element's own)
-    wire rs = rst_q;
-    reg              t_v;
-    reg  [TGW-1:0]   t_tag;
+    // ---- reset distribution: the pin's reset, registered, then one copy per consumer cluster ------------
+    wire rs0, rs, rs_bw, bw_rs;
+    ot_qwen_slab_pg_rcopy #(.AW(1)) u_rs0 (.clk(clk), .gre(rst_n), .addr(1'b0), .gre_q(rs0), .addr_q());
+    ot_qwen_slab_pg_rcopy #(.AW(1)) u_rs  (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rs), .addr_q());
+    ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsb (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rs_bw), .addr_q());
+    ot_qwen_slab_pg_rcopy #(.AW(1)) u_bwr (.clk(bw_clk), .gre(bw_rst_n), .addr(1'b0), .gre_q(bw_rs), .addr_q());
+
+    // ---- boundary registers (cycle 1) ---------------------------------------------------------------
+    reg              t_v, t_last, t_oen, t_amax, t_rmax, t_wsrc, t_mmode;
+    reg  [3:0]       t_split;
+    reg  [NW:0]      t_nb, t_lb, t_nout;
+    reg  [AW-1:0]    t_sbase, t_oa, t_ots;
     reg  [W*32-1:0]  res_q;
     always @(posedge clk) begin
         t_v <= rs ? p_v : 1'b0;
-        t_tag <= {p_last, p_oen, p_amax, p_rmax, p_wsrc, p_mmode, 1'b0, p_split, p_nb, p_lb, p_nout,
-                  p_sbase, p_oa, p_ots};
+        {t_last, t_oen, t_amax, t_rmax, t_wsrc, t_mmode, t_split} <= {p_last, p_oen, p_amax, p_rmax, p_wsrc, p_mmode, p_split};
+        {t_nb, t_lb, t_nout, t_sbase, t_oa, t_ots} <= {p_nb, p_lb, p_nout, p_sbase, p_oa, p_ots};
         res_q <= res_in;
     end
 
-    // ---- tag line: request time (0) -> multiplier time (LEAD) -> result time (LEAD + MUL_LAT) -----
-    wire [TGW-1:0] m_tag, r_tag;
-    wire [LEAD+MUL_LAT:0] vl;
-    reg  [LEAD+MUL_LAT:1] vline;
-    always @(posedge clk) vline <= rs ? {vline[LEAD+MUL_LAT-1:1], t_v} : {(LEAD+MUL_LAT){1'b0}};
-    assign vl = {vline, t_v};
-    ot_hdc_delay #(.W(TGW), .D(LEAD)) u_mt (.clk(clk), .rst_n(rs), .d(t_tag), .q(m_tag));
-    ot_hdc_delay #(.W(TGW), .D(MUL_LAT)) u_rt (.clk(clk), .rst_n(rs), .d(m_tag), .q(r_tag));
+    // ---- D1 (cycle 2): the group's row-count differences, scale address and result address terms -------
+    // RTL: lane l of group GID is in range iff (mmode ? lb + GID*W : nb + GID*W*IL) + l < nout; here
+    // dn / dl = nout - (nb + GID*W*IL) / nout - (lb + GID*W) (exact, DW-bit signed) and lane l iff d > l.
+    localparam [DW-1:0] CDN = 1 - GID * W * IL, CDL = 1 - GID * W;
+    localparam [AW-1:0] CSB = GID * IL;
+    localparam [NW-1:0] CRB = GID * W * IL;
+    wire [DW-1:0] dn, dl;
+    wire [DW-1:0] nb_ext = {{(DW-NW-1){1'b0}}, t_nb};
+    wire [DW-1:0] lb_ext = {{(DW-NW-1){1'b0}}, t_lb};
+    wire [DW-1:0] nout_ext = {{(DW-NW-1){1'b0}}, t_nout};
+    ot_qwen_slab_pg_add3 #(.W(DW)) u_dn (.a(nout_ext), .b(~nb_ext), .c(CDN), .s(dn));
+    ot_qwen_slab_pg_add3 #(.W(DW)) u_dl (.a(nout_ext), .b(~lb_ext), .c(CDL), .s(dl));
+    wire [AW-1:0] sb, ots95;
+    ot_qwen_slab_pg_add3 #(.W(AW)) u_sb (.a(t_sbase), .b({{(AW-NW-1+LW){1'b0}}, t_nb[NW:LW]}), .c(CSB), .s(sb));
+    // GID * ots for the result address (RTL o_addr1 = r_oa + (gb + q) * r_ots)
+    wire [AW-1:0] gots;
+    ot_qwen_slab_pg_cmul #(.W(AW), .K(GID)) u_gots (.a(t_ots), .p(gots));
+    wire [NW-1:0] rb16;
+    ot_hdc_ksadd_k #(.W(NW)) u_rb (.a(t_nb[NW-1:0]), .b(CRB), .cin(1'b0), .s(rb16), .cout());
+    wire [$clog2(GT):0] t_ports = GT >> t_split;
+    reg d_v, d_last, d_oen, d_amax, d_rmax, d_wsrc, d_portok;
+    reg [DW-1:0] d_d;
+    reg [AW-1:0] d_sb, d_sbase, d_oa, d_gots;
+    reg [NW-1:0] d_rb;
+    always @(posedge clk) begin
+        d_v <= rs && t_v;
+        {d_last, d_oen, d_amax, d_rmax, d_wsrc} <= {t_last, t_oen, t_amax, t_rmax, t_wsrc};
+        d_portok <= GID < t_ports;
+        d_d <= t_mmode ? dl : dn;
+        d_sb <= sb; d_sbase <= t_sbase; d_oa <= t_oa; d_gots <= gots; d_rb <= rb16;
+    end
 
-    // ---- scale request (RTL: pre_scale_active / scale_addr), R1 ----------------------------------
-    wire q_last, q_oen, q_amax, q_rmax, q_wsrc, q_mmode, q_pad;
-    wire [3:0] q_split;
-    wire [NW:0] q_nb, q_lb, q_nout;
-    wire [AW-1:0] q_sbase, q_oa, q_ots;
-    assign {q_last, q_oen, q_amax, q_rmax, q_wsrc, q_mmode, q_pad, q_split, q_nb, q_lb, q_nout,
-            q_sbase, q_oa, q_ots} = t_tag;
-    wire [$clog2(GT):0] q_ports = GT >> q_split;
-    wire q_active = t_v && q_last && !q_wsrc && (GID < q_ports) &&
-        (q_mmode ? (q_lb + GID * W < q_nout) : (q_nb + GID * (W * IL) < q_nout));
+    // ---- D2 (cycle 3): lane masks, scale request R1 (RTL pre_scale_active / scale_addr), result address ----
+    wire d_pos = !d_d[DW-1] && (d_d != 0);
+    wire [W-1:0] d_mask;
+    genvar ml;
+    generate for (ml = 0; ml < W; ml = ml + 1) begin : g_dm
+        // d > ml  (d signed, ml < W)
+        assign d_mask[ml] = d_portok && !d_d[DW-1] && ((|d_d[DW-2:LW]) || (d_d[LW-1:0] > ml));
+    end endgenerate
+    wire q_active = d_v && d_last && !d_wsrc && d_portok && d_pos;
+    wire [AW-1:0] oa_sum;
+    ot_hdc_ksadd_k #(.W(AW)) u_oa (.a(d_oa), .b(d_gots), .cin(1'b0), .s(oa_sum), .cout());
     reg          gre1;
     reg [AW-1:0] addr1;
+    reg          k_v;
+    reg [KR-1:0] k_tag;
     always @(posedge clk) begin
         gre1 <= rs && q_active;
-        addr1 <= !q_active ? q_sbase : q_sbase + (q_nb >> LW) + GID * IL;
+        addr1 <= q_active ? d_sb : d_sbase;
+        k_v <= rs && d_v;
+        k_tag <= {d_last, d_oen, d_amax, d_rmax, d_wsrc, d_portok, d_mask, oa_sum, d_rb};
     end
+
+    // ---- tag line: cycle 3 -> multiplier time (cycle LEAD + 1) -> result time (+ MUL_LAT) -----------------
+    localparam integer KD = LEAD - 2;
+    wire [KR-1:0] m_tag, r_tag;
+    reg  [KD+MUL_LAT:1] vline;
+    always @(posedge clk) vline <= rs ? {vline[KD+MUL_LAT-1:1], k_v} : {(KD+MUL_LAT){1'b0}};
+    ot_hdc_delay #(.W(KR), .D(KD)) u_mt (.clk(clk), .rst_n(rs), .d(k_tag), .q(m_tag));
+    ot_hdc_delay #(.W(KR), .D(MUL_LAT)) u_rt (.clk(clk), .rst_n(rs), .d(m_tag), .q(r_tag));
+    wire m_v = vline[KD];
+    wire r_v = vline[KD + MUL_LAT];
 
     // ---- scale ROM: column copies (R2), per-bank decode (R3), macros, pin capture (C4) ------------
     wire [255:0] colq [0:COLS-1];
@@ -178,24 +228,20 @@ module ot_qwen_slab_port_group #(
     always @(posedge clk) m6 <= cacc[COLS];
 
     // ---- post-scale multipliers (RTL g_scale), multiplier time ------------------------------------
-    wire m_last, m_oen, m_amax, m_rmax, m_wsrc, m_mmode, m_pad;
-    wire [3:0] m_split;
-    wire [NW:0] m_nb, m_lb, m_nout;
-    wire [AW-1:0] m_sbase, m_oa, m_ots;
-    assign {m_last, m_oen, m_amax, m_rmax, m_wsrc, m_mmode, m_pad, m_split, m_nb, m_lb, m_nout,
-            m_sbase, m_oa, m_ots} = m_tag;
-    wire m_v = vl[LEAD];
-    wire [$clog2(GT):0] m_ports = GT >> m_split;
+    wire m_last, m_oen, m_amax, m_rmax, m_wsrc, m_portok;
+    wire [W-1:0] m_mask;
+    wire [AW-1:0] m_oa;
+    wire [NW-1:0] m_rb;
+    assign {m_last, m_oen, m_amax, m_rmax, m_wsrc, m_portok, m_mask, m_oa, m_rb} = m_tag;
     wire [W*32-1:0] scaled;
     wire [W-1:0]    mfault;
     generate
         for (si = 0; si < W; si = si + 1) begin : g_mul
-            wire active_lane = (GID < m_ports) &&
-                (m_mmode ? (m_lb + GID * W + si < m_nout) : (m_nb + GID * (W * IL) + si < m_nout));
             wire [1:0] err;
-            wire       vo;
-            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rs),
-                .valid_in(m_v && m_last && active_lane),
+            wire       vo, rsm;
+            ot_qwen_slab_pg_rcopy #(.AW(1)) u_rsm (.clk(clk), .gre(rs0), .addr(1'b0), .gre_q(rsm), .addr_q());
+            ot_hdc_fp32_mul_lat #(.LAT(MUL_LAT)) u_mul (.clk(clk), .rst_n(rsm),
+                .valid_in(m_v && m_last && m_mask[si]),
                 .a(res_q[32*si +: 32]), .b({m_wsrc ? 16'h3F80 : m6[16*si +: 16], 16'd0}),
                 .y(scaled[32*si +: 32]), .err(err), .valid_out(vo));
             assign mfault[si] = vo && (err != 2'd0);
@@ -206,31 +252,21 @@ module ot_qwen_slab_port_group #(
     assign fault = fault_q;
 
     // ---- results (RTL o_*1 / o_*2), result time ---------------------------------------------------
-    wire r_last, r_oen, r_amax, r_rmax, r_wsrc, r_mmode, r_pad;
-    wire [3:0] r_split;
-    wire [NW:0] r_nb, r_lb, r_nout;
-    wire [AW-1:0] r_sbase, r_oa, r_ots;
-    assign {r_last, r_oen, r_amax, r_rmax, r_wsrc, r_mmode, r_pad, r_split, r_nb, r_lb, r_nout,
-            r_sbase, r_oa, r_ots} = r_tag;
-    wire r_v = vl[LEAD + MUL_LAT];
-    wire [$clog2(GT):0] r_ports = GT >> r_split;
-    reg [W-1:0] r_mask;
-    integer ql;
-    always @(*) begin
-        for (ql = 0; ql < W; ql = ql + 1)
-            r_mask[ql] = (GID < r_ports) &&
-                (r_mmode ? (r_lb + GID * W + ql < r_nout) : (r_nb + GID * (W * IL) + ql < r_nout));
-    end
+    wire r_last, r_oen, r_amax, r_rmax, r_wsrc, r_portok;
+    wire [W-1:0] r_mask;
+    wire [AW-1:0] r_oa;
+    wire [NW-1:0] r_rb;
+    assign {r_last, r_oen, r_amax, r_rmax, r_wsrc, r_portok, r_mask, r_oa, r_rb} = r_tag;
     reg ov1, ov2, we1, we2;
     reg [AW-1:0] oa1, oa2;
     reg [W-1:0] om1, om2;
     reg [W*32-1:0] od1, od2;
     always @(posedge clk) begin
         ov1 <= rs && r_v && r_last;
-        we1 <= rs && r_v && r_last && r_oen && (GID < r_ports);
+        we1 <= rs && r_v && r_last && r_oen && r_portok;
         ov2 <= rs && ov1;
         we2 <= rs && we1;
-        oa1 <= r_oa + GID * r_ots;
+        oa1 <= r_oa;
         om1 <= r_mask;
         od1 <= scaled;
         oa2 <= oa1; om2 <= om1; od2 <= od1;
@@ -238,6 +274,8 @@ module ot_qwen_slab_port_group #(
     assign ov = ov2; assign o_we = we2; assign o_addr = oa2; assign o_mask = om2; assign o_data = od2;
 
     // ---- argmax leaves and the group's 4 compare levels (RTL g_leaf / g_alvl) ----------------------
+    // The RTL's node test  x0.v && (!x1.v || k0 > k1 || (k0 == k1 && row0 < row1))  is evaluated as one
+    // 48-bit compare {k0, ~row0} > {k1, ~row1} on an explicit prefix carry (the same predicate).
     function automatic [31:0] okey(input [31:0] v);
         okey = v[31] ? ~v : {1'b1, v[30:0]};
     endfunction
@@ -254,7 +292,9 @@ module ot_qwen_slab_port_group #(
     generate
         for (e = 0; e < W; e = e + 1) begin : g_leaf
             reg [CW-1:0] cq;
-            wire [NW-1:0] row = r_nb[NW-1:0] + GID * (W * IL) + e;
+            localparam [NW-1:0] CE = e;
+            wire [NW-1:0] row;
+            ot_hdc_ksadd_k #(.W(NW)) u_row (.a(r_rb), .b(CE), .cin(1'b0), .s(row), .cout());
             always @(posedge clk) cq <= {r_mask[e], okey(scaled[32*e +: 32]), row};
             assign alv[0][CW*e +: CW] = cq;
         end
@@ -262,8 +302,10 @@ module ot_qwen_slab_port_group #(
             for (e = 0; e < (W >> lv); e = e + 1) begin : g_node
                 wire [CW-1:0] x0 = alv[lv-1][CW*(2*e) +: CW];
                 wire [CW-1:0] x1 = alv[lv-1][CW*(2*e+1) +: CW];
-                wire x0_wins = x0[CW-1] && (!x1[CW-1] || x0[CW-2 -: 32] > x1[CW-2 -: 32] ||
-                               (x0[CW-2 -: 32] == x1[CW-2 -: 32] && x0[NW-1:0] < x1[NW-1:0]));
+                wire gt;
+                ot_hdc_ksadd_k #(.W(32 + NW)) u_cmp (.a({x0[CW-2 -: 32], ~x0[NW-1:0]}),
+                    .b(~{x1[CW-2 -: 32], ~x1[NW-1:0]}), .cin(1'b0), .s(), .cout(gt));
+                wire x0_wins = x0[CW-1] && (!x1[CW-1] || gt);
                 reg [CW-1:0] cq;
                 always @(posedge clk) cq <= x0_wins ? x0 : x1;
                 assign alv[lv][CW*e +: CW] = cq;
@@ -280,13 +322,49 @@ module ot_qwen_slab_port_group #(
     // ---- block-word crossing FIFO (decision C) ----------------------------------------------------
     generate if (BW_FIFO != 0) begin : g_bw
         ot_meso_fifo #(.W(W*32), .ENABLE(1)) u_bw (
-            .wclk(bw_clk), .wrst_n(bw_rst_n), .w_v(bw_v), .w_rdy(bw_rdy), .w_d(bw_d),
-            .rclk(clk), .rrst_n(rs), .r_v(tw_v), .r_rdy(tw_rdy), .r_d(tw_d),
+            .wclk(bw_clk), .wrst_n(bw_rs), .w_v(bw_v), .w_rdy(bw_rdy), .w_d(bw_d),
+            .rclk(clk), .rrst_n(rs_bw), .r_v(tw_v), .r_rdy(tw_rdy), .r_d(tw_d),
             .w_live(bw_w_live), .r_live(bw_r_live), .w_fault(bw_w_fault), .r_fault(bw_r_fault));
     end else begin : g_nobw
         assign bw_rdy = 1'b0; assign tw_v = 1'b0; assign tw_d = {W*32{1'b0}};
         assign bw_w_live = 1'b0; assign bw_r_live = 1'b0; assign bw_w_fault = 1'b0; assign bw_r_fault = 1'b0;
     end endgenerate
+endmodule
+
+// a + b + c (W bits): one carry-save row, then the explicit prefix adder.
+module ot_qwen_slab_pg_add3 #(parameter integer W = 24) (
+    input  wire [W-1:0] a, b, c,
+    output wire [W-1:0] s
+);
+    wire [W-1:0] x = a ^ b ^ c;
+    wire [W-1:0] y = {((a[W-2:0] & b[W-2:0]) | (a[W-2:0] & c[W-2:0]) | (b[W-2:0] & c[W-2:0])), 1'b0};
+    ot_hdc_ksadd_k #(.W(W)) u (.a(x), .b(y), .cin(1'b0), .s(s), .cout());
+endmodule
+
+// p = a * K (W bits) for a constant K: the shifted copies of a for K's set bits, summed by a chain of
+// carry-save rows and one explicit prefix adder (a behavioural constant multiply maps to ripple adders).
+module ot_qwen_slab_pg_cmul #(parameter integer W = 24, parameter integer K = 95) (
+    input  wire [W-1:0] a,
+    output wire [W-1:0] p
+);
+    wire [W-1:0] sv [0:W];
+    wire [W-1:0] cv [0:W];
+    assign sv[0] = {W{1'b0}};
+    assign cv[0] = {W{1'b0}};
+    genvar i;
+    generate
+        for (i = 0; i < W; i = i + 1) begin : g_t
+            if ((K >> i) & 1) begin : g_on
+                wire [W-1:0] t = a << i;
+                assign sv[i+1] = sv[i] ^ cv[i] ^ t;
+                assign cv[i+1] = {((sv[i][W-2:0] & cv[i][W-2:0]) | (sv[i][W-2:0] & t[W-2:0]) | (cv[i][W-2:0] & t[W-2:0])), 1'b0};
+            end else begin : g_off
+                assign sv[i+1] = sv[i];
+                assign cv[i+1] = cv[i];
+            end
+        end
+    endgenerate
+    ot_hdc_ksadd_k #(.W(W)) u (.a(sv[W]), .b(cv[W]), .cin(1'b0), .s(p), .cout());
 endmodule
 
 // Request copies (R2) and per-bank decode registers (R3): kept hierarchy keeps the replicated registers from being
