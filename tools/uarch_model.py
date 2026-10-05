@@ -48,6 +48,25 @@ BF16_MAC_UM2 = 509.352        # arch_budget_v41 unit_areas (ot_mac_bf16_fp32_pip
 DFF_UM2 = 0.2916              # DFFHQNx1 (W5 unit areas, results/floorplan/qwen_o4_unit_areas.json)
 
 
+def dsrom_recovery_decision_gate():
+    """Source-pinned, conditional S81 recovery DAG prices; no hardware adoption.
+
+    The timing authority is dsrom_1m_allmeasured.compose. Missing measured SU
+    costs remain missing rather than becoming zero or inheriting fusion floors.
+    """
+    path = ROOT / "results/rtl/dsrom_recovery_20261004/decision_gate/model.json"
+    record = json.loads(path.read_text())
+    return dict(schema=record["schema"], record=str(path.relative_to(ROOT)),
+                scenarios={k:dict(verdict=v["verdict"], adoption=v["adoption"],
+                    composition_complete=v["composition_complete"],
+                    conditional_cost=v["conditional_cost"], missing=v["missing"])
+                    for k,v in record["scenarios"].items()},
+                historical_contrast=record["historical_contrast"],
+                comparison=record["comparison"],
+                hardware_build_admitted=record["hardware_build_admitted"],
+                full_die_trigger=record["full_die_trigger"])
+
+
 def mbist_bira_pipeline_cost(dmax=256, entries=6, sram_banks=2, clock_ns=0.833):
     """Item8(b) repair-search pipeline; deterministic cycle/bit pricing, no closure claim."""
     chunks = (dmax + 15) // 16
@@ -779,6 +798,68 @@ def network_ledger(d: dict, clock: float):
 # of the L20 (busiest scanning layer) ops at the design's context, which is what evaluate() prices.
 # Shared by the V4.1 ROM and V4.1 HBM dies (the hub region of the W1 floorplan).
 # ---------------------------------------------------------------------------------------------------------
+def dsrom_reindex_kc6_model():
+    """Default-off, zero-edge repair of the source-pinned kc5 baseline control.
+
+    Footprint allowance is conservative NAND2-equivalent construction, not
+    mapped timing/area. The slot is the retained kc5 context core, not a die
+    reservation. Unknown buffers/route occupancy must satisfy explicit bounds.
+    """
+    # Charge all three local head muxes, even though the old body already
+    # contains rotation/hold muxes: no speculative baseline subtraction.
+    nand2 = 768 * 9 + 768 * 4 + 3 * 128 * 4 + 8 * 12
+    gross = round(nand2 * 0.08748, 8)
+    core, cells = 93630.5, 34438.8
+    cell_cap = 0.40 * core
+    return dict(
+        schema="opentallas.dsrom-reindex.kc6-model.v1",
+        selected=False, default_enabled=False, mandatory_baseline_repair=True,
+        parent_source="2d3057fb8", parent_source_sha256=
+        "88864591d588add3b2f23578e778557ece9f53f9bfe7abd698aa15b60938d89d",
+        mechanism=["free-running derived cpart; reset-cleared adm_q/cmp retained",
+                   "FIFO count alternatives with actual late pop selection",
+                   "ready-last head rotation with eight local 16-bit slices"],
+        dimensions=dict(NPC=32, WB=128, DF=8, AW=28, TAGW=16, GS=8),
+        compute=dict(new_macs_per_cycle=0, new_arithmetic_rounding_points=0),
+        ports=dict(list_read_bits=28, list_address_bits=10, list_read_enable_bits=1,
+                   request_bits_per_pc=1+28+4+16, request_ready_bits_per_pc=1,
+                   response_control_bits_per_pc=1+16+4, response_ready_bits_per_pc=1,
+                   unchanged_payload_bytes_per_response_pc=32,
+                   control_only_payload_ports=True,
+                   drain_bits=2+7+14+10+10+28, drain_ready_bits=1,
+                   new_boundary_bits_per_cycle=0, new_memory_bytes_per_cycle=0),
+        replicas=dict(control_per_stack=1, stacks_per_rank=4, ranks=4,
+                      local_head_slices=8, bits_per_slice=16,
+                      new_clock_sinks=0, gross_mux_selectors=768+3*128),
+        state=dict(new_ff_bits=0, retained_cpart_bits=1024,
+                   reset_enable_loads_removed=1024, reset_switching_increases=True,
+                   accepted_debt_reset_policy="unchanged source policy; no new drain proof"),
+        area=dict(gross_nand2_equivalents=nand2, nand2_um2=0.08748,
+                  nand2_basis="TT cell footprint ONLY, not timing",
+                  library_sha256="fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+                  gross_logic_allowance_um2=gross, net_mapped_delta_um2=None,
+                  removed_enable_credit_um2=0, mapped_buffers_um2=None),
+        slot=dict(scope="kc5 register-to-register context core, not parent die",
+                  baseline_core_um2=core, baseline_standard_cells_um2=cells,
+                  max_standard_cell_fraction=0.40,
+                  max_standard_cells_um2=cell_cap,
+                  gross_plus_baseline_um2=round(cells+gross, 8),
+                  remaining_buffer_and_mapping_budget_um2=round(cell_cap-cells-gross, 8),
+                  fit_verified=False,
+                  admission="mapped cells including repair/CTS <= cap; explicit unchanged-core route required"),
+        routing=dict(new_count_alternative_nets_max=768, candidate_head_nets=128,
+                     extra_track_capacity=None, channel_occupancy_measured=False,
+                     acceptance="same slot; zero DRC/antenna/slew/cap/fanout violations"),
+        timing=dict(period_ps=833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                    external_side_budget_ps=166.6, new_registered_edges=0,
+                    new_cdc=0, predicted_token_latency_delta_cycles=0,
+                    same_program_cycles_measured=False, ss_ff_closed=False),
+        adoption=False,
+        blockers=["actual mapped area/buffers must satisfy slot cap",
+                  "unchanged-core routing capacity and SS60/FF25/boundary closure",
+                  "original component exactness and measured cycle reconciliation"])
+
+
 HBM_PC_SECTORS_PER_CYCLE = (1e12 / 1.0339e9) / 1024.0
                                                 # one 32-B burst per 1,024 ps per pseudo-channel (HBM3E 1 TB/s over
                                                 # 32 PCs; rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv) at 967.2 ps/cycle
@@ -803,6 +884,7 @@ DEDICATED = dict(
         hardened_scale=16,                      # 16 chunks per NK=4 slice (+ 4 tails, 1% of a chunk)
     ),
     idx_reader=dict(
+        reindex_control_closure_successor=dsrom_reindex_kc6_model(),
         element="per-pseudo-channel key reader: request generator + reorder slice of ot_hdc_v41x_idx_kctl / "
                 "_kstream_range (one per HBM3E pseudo-channel), 64-key collector ot_hdc_v41x_idx_shard_quarter_collect",
         replicas_fixed=HBM_PCS_DIE,
@@ -7881,6 +7963,64 @@ def qwen_combined_native_mp_commit(*, sw=64, aw=24, fill_lat=8, replicas=4,
                 source='rtl/hdc/kv/ot_qwen_rt_kv_stream4_mp_commit_service.sv')
 
 
+def hbm_loader_install_contract(*, partitions=2, dies=2, queue_depth=4,
+                                reorder_entries=16, cdc_aw=5, host_period_ns=1.0,
+                                service_period_ns=0.833, existing_clients=4, partition_ports=1):
+    """Item8(c) boot/restore/STORE boundaries, before successor RTL/build.
+
+    The adapter distributes an ordered engine request stream to one finite
+    client queue per 128-byte-interleaved partition. It does not invent an
+    NS-fold increase in host bandwidth. STORE waits real AXI B completions.
+    Clock periods are targets, not measured closures; no decode gain claimed.
+    """
+    assert partitions >= 1 and partitions & (partitions-1) == 0
+    assert queue_depth >= 2 and queue_depth & (queue_depth-1) == 0
+    assert cdc_aw >= 2
+    request_bits=1+32+256+32+16
+    response_bits=1+256+16
+    queue_bits=partitions*queue_depth*request_bits
+    reorder_bits=reorder_entries*(256+16+2)
+    cdc_payload_bits=(1<<cdc_aw)*256+4*64+4*68
+    return dict(default_enabled=False, MACs_per_cycle=0,
+                dies=dies, partitions_per_die=partitions,
+                additional_memory_clients_per_die=partition_ports,
+                memory_clients_before=existing_clients,
+                memory_clients_selected=existing_clients+partition_ports,
+                request_bits_per_partition_boundary=request_bits,
+                response_bits_per_partition_boundary=response_bits,
+                peak_memory_payload_bytes_per_edge=32*partitions,
+                ordered_engine_bytes_per_edge=32,
+                host_payload_bits_per_edge=64, engine_payload_bits_per_edge=256,
+                host_AXI_address_bits=64, host_AXI_response_bits=2,
+                host_target_period_ns=host_period_ns,
+                service_target_period_ns=service_period_ns,
+                host_width_ceiling_GBps=8/host_period_ns, engine_width_ceiling_GBps=32/host_period_ns,
+                installed_DMA_serialization="4 actual 64-bit beats per sector; read owner held through RLAST, write owner through B; actual PCIe/AXI response tail must be measured",
+                PCIe5_x16_encoded_ceiling_GBps=32*16*(128/130)/8,
+                PCIe_payload_after_packet_overhead_GBps=None,
+                raw_partition_request_queue_bits_per_die=queue_bits if partition_ports>1 else 0,
+                unselected_partition_recipe_queue_bits_per_die=queue_bits,
+                raw_STORE_reorder_bits_per_die=reorder_bits,
+                raw_STORE_CDC_payload_bits_per_die=cdc_payload_bits,
+                queue_registered_edges=1 if partition_ports>1 else 0, added_CRC_edges=0,
+                reorder_retirement_edges=1,
+                CDC_latency='actual ot_gpu_cdc_fifo two synchronizer edges plus pointer/consumer edges in each direction; measure under both clocks',
+                LOAD_completion='all engine write ACKs, optional ordered readback CRC, then actual completion CDC',
+                STORE_completion='all matched MREQ reads, ordered CDC/W handshakes, all AXI B responses, matching payload/memory CRC',
+                latency_formula='LOAD+STORE measured elapsed host edges*host_period; include finite queue, CDC, memory/refresh, AXI backpressure and B tail',
+                steady_decode_added_cycles=0,
+                steady_decode_clock_or_arbitration_delta='UNKNOWN until selected-context check',
+                mux_demux_cost='installed: one loader client/die at NCL, ND+host AXI arbiter + BAR decoder; optional recipe partition queues are separate until selected',
+                routing_tracks_required='UNKNOWN: boundary bit inventory above; floorplan/channel capacities needed',
+                area_um2='UNKNOWN: queues/reorder/CDC plus control and muxes require actual synthesis',
+                replica_cost='per die; no ROM/ECC changes', floorplan_fit=None,
+                clock_closed=False, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, composed_decode_gain_percent=None,
+                adopted=False,
+                historical_single_client_GBps={'write_only':9.788,'with_readback':4.998},
+                historical_record='results/rtl/tapeout_hbm_loader_20261004/record.json')
+
+
 def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
     """Exact current-queue bank mask cut for the retained AQ row controller.
 
@@ -7909,3 +8049,47 @@ def hbm_stream_aq_current_hold_cut(*, queue_depth=4, pcs=128):
                 interface_and_tags='unchanged accepted push/pop; no payload/visibility or grant changes',
                 SSFF_closed=False, adopted=False,
                 source_basis='svc/closure_handoff_20261004/source_snapshots/49fa1b0886e4_ot_hbm_r14_stream_pc.sv')
+
+
+def hbm_loader_crc_literal_matrix_price(*, state_masks, word_masks, dies=2):
+    """Source-bound recipe only; keep the installed loop until final route selects.
+
+    Four existing folds/die: LOAD host/readback and STORE host/readback.
+    Literal masks implement the same LSB-first CRC32 over one 256-bit sector.
+    XOR inventory is an unshared structural ESTIMATE, not mapped area/timing.
+    """
+    import math
+    if len(state_masks)!=32 or len(word_masks)!=32 or dies<1:
+        raise ValueError('32 exact CRC masks and positive die count required')
+    sp=[m.bit_count() for m in state_masks]
+    wp=[m.bit_count() for m in word_masks]
+    depth=max(max(math.ceil(math.log2(max(1,a))),
+                  math.ceil(math.log2(max(1,b))))+1 for a,b in zip(sp,wp))
+    xors=sum(max(0,a-1)+max(0,b-1)+1 for a,b in zip(sp,wp))
+    sf=max(sum((m>>j)&1 for m in state_masks) for j in range(32))
+    wf=max(sum((m>>j)&1 for m in word_masks) for j in range(256))
+    return dict(recipe_selected=False, adopted=False, default_enabled=False,
+                MACs_per_cycle=0, dies=dies, folds_per_die=4,
+                host_folds_per_die=2, memory_folds_per_die=2,
+                existing_CRC_state_bits_per_die=128, added_state_bits=0,
+                sector_bytes_per_fold=32, initiation_interval_edges=1,
+                added_fold_edges=0, added_memory_ports=0,
+                added_bytes_per_memory_edge=0, new_boundary_bits=0,
+                local_word_bits=256, local_state_bits=32,
+                literal_constant_bits_per_fold=32*(256+32),
+                literal_constants_are_storage=False,
+                unshared_XOR2_equivalents_per_fold_ESTIMATE=xors,
+                unshared_XOR2_equivalents_all_folds_ESTIMATE=xors*4*dies,
+                maximum_balanced_parity_tree_levels_ESTIMATE=depth,
+                maximum_state_bit_output_fanout=sf,
+                maximum_word_bit_output_fanout=wf,
+                mux_demux_delta='no new port mux; CRC function substitution only',
+                acceptance_edge_and_CRC_order='unchanged real LOAD beat/readback retirement and STORE W/data retirement',
+                composed_latency_delta_cycles=0,
+                host_target_period_ns=1.0, memory_target_period_ns=0.833,
+                setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                area_um2=None, area_status='UNKNOWN until synthesis; unshared XOR count is not area',
+                routing_tracks=None, routing_status='UNKNOWN local CRC fanout/wire cost; no new external boundary',
+                floorplan_fit=None, routed_SS_FF=None,
+                composed_gain_percent=None,
+                select_only_if='current installed route final critical path implicates CRC; never infer selection from preliminary floorplan repair')
