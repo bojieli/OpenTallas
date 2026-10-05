@@ -46,8 +46,8 @@
 module ot_qwen_rom_rt_die_w12_vprm #(
     parameter integer VPOS = 1,
     parameter integer ENABLE_ARP = 1,
-    parameter integer SEQ_LA = 0,
-    parameter integer DEC_LA = 0,          // core decode restructure (tools/qwen_rom_core_dec_emit_w12.py)          // sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA)
+    parameter integer SEQ_LA = 0,          // sequencer timing look-ahead (ot_qwen_tp_seq_w12_vp LA)
+    parameter integer DEC_LA = 0,          // core decode restructure (tools/qwen_rom_core_dec_emit_w12.py)
     parameter integer VWA = 16,
     parameter integer VPMAX = 4,
     parameter integer NPROG = 1024,
