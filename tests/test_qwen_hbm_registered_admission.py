@@ -10,7 +10,12 @@ import pytest
 @pytest.mark.parametrize('tp,groups', [(2,96),(4,48)])
 def test_composed_advance_price(tp,groups):
     m=U.qwen_hbm_registered_admission_model(tp,100,4)
-    assert m['added_token_cycles']==200
+    assert m['gross_added_engine_service_cycles']==200
+    assert m['added_token_cycles'] is None and m['added_token_ns'] is None
+    assert m['current_source_full_token_slowdown_upper_bound'] is None
+    assert m['current_source_layer_slowdown_upper_bound'] is None
+    assert m['candidate_verdict']=='REJECTED_AS_SPEED_OPTIMIZATION'
+    assert m['token_speedup'] is None
     assert m['engine_advance_ii']==3
     assert m['added_ff_bits_per_die']==20
     assert m['result_enable_fanout']==groups

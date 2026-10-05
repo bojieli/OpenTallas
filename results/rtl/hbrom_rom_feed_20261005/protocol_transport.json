@@ -1,0 +1,54 @@
+{
+  "status": "PASS_COMPONENT_TRANSPORT_PROTOCOL_NOT_ARITHMETIC_OR_PHYSICAL_SIGNOFF",
+  "geometry": {
+    "pairs": 128,
+    "physical_macros": 256,
+    "streams": 4,
+    "clock_ps": 833,
+    "modeled_ROM_clkq_ps": 744,
+    "capture_cycles": 2,
+    "request_to_response_cycles": 9
+  },
+  "source_sha256": {
+    "rtl/hbrom/ot_hbrom_rom_feed.sv": "2b5c8601e867389b543cfe577d79479203c36d6d111f26fff7d22ec869b0bba9",
+    "rtl/test/hbrom/tb_hbrom_rom_feed.sv": "dba824f81bc02f33dc41f0b731b7bc38ed8049b68d1022d3addfceb4405086d3"
+  },
+  "build_command": "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_hbrom_rom_feed --Mdir /tmp/hbrom-feed-final-build -j 2 -CFLAGS -O0 rtl/hbrom/ot_hbrom_rom_feed.sv rtl/test/hbrom/tb_hbrom_rom_feed.sv",
+  "run_command": "/tmp/hbrom-feed-final-build/Vtb_hbrom_rom_feed",
+  "exit_code": 0,
+  "positive_records": 696,
+  "macro_reads": 2784,
+  "captures": 2784,
+  "simulation_cycles": 1124,
+  "coverage": [
+    "FP4 FP8 BF16 byte-for-byte synthetic transport",
+    "row-slot and group-slot",
+    "partial final row/item waves",
+    "G3,G2,G10,G5",
+    "bankgroups0,1,7,16,31",
+    "sequential operations without reset",
+    "request bubbles",
+    "same-macro issue spacing>=2cycles",
+    "capture exactly2cycles after actual read",
+    "invalid zero-row descriptor rejected",
+    "wrong virtual address rejected",
+    "duplicate live tag rejected",
+    "cancel in-flight suppresses response and drains then reconfigures",
+    "single-copy cursor corruption seals side effects"
+  ],
+  "limitations": [
+    "Synthetic ROM payload tests transport; no claim released-checkpoint arithmetic measured here",
+    "ConnectedNC1 full-shape arithmetic test owned by rtl_vehicle",
+    "SS/FF synthesis/place-route pending",
+    "Behavioral DMR seal tested; physical nonmerge/fault coverage not qualified",
+    "Feed controls only; legacySM mutable state remains separate",
+    "No parent output buffering or x visibility proof in this component"
+  ],
+  "history": {
+    "initial_failure": "initial_cancel_capture_failure.log",
+    "reason": "Canceled request could produce capture enable although launch suppressed. Current source adds actual ROM launch history; final capture counts match reads.",
+    "retained_compiled_failure_sha256": "aacc4ec911892bfeb2194848519f7745ed136581d28a5859339a850d34337817",
+    "retained_compiled_failure_location": "/tmp/hbrom-feed-checks/feed.vvp",
+    "old_source_not_pinned": "Failure record has compiled-binary hash, not current source hashes; current source had changed during old run. Do not attribute old failure to final source."
+  }
+}
