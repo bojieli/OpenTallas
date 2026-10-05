@@ -1,8 +1,10 @@
 `timescale 1ns/1ps
-// Lockstep bench: ot_dshbm_expert_union FAST = 0 (as built) vs FAST = 1, every output compared every cycle on
-// NCASE random unions (1..PM columns of K ids, partial add_en, clustered / spread / edge ids, random out_ready).
+// Stream lockstep: ot_dshbm_expert_union FAST = 0 (as built) vs FAST = 1 on NCASE random unions (1..PM columns of
+// K ids, partial add_en, clustered / spread / edge ids, random out_ready back-pressure).  Per case the emitted
+// {id, mask, last} streams must be equal and the final counts equal; the flush -> first-id latency of each
+// (out_ready high) is recorded.
 module tb_union_lockstep;
-    parameter integer NE = 384, K = 6, PM = 8, IW = 9, NCASE = 3000, SEED = 1;
+    parameter integer NE = 384, K = 6, PM = 8, IW = 9, NCASE = 3000, SEED = 1, MAXE = 64;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg clr = 0, add_v = 0, flush = 0, ordy = 1; reg [2:0] add_col = 0; reg [K*IW-1:0] add_ids = 0; reg [K-1:0] add_en = 0;
@@ -13,13 +15,12 @@ module tb_union_lockstep;
     ot_dshbm_expert_union #(.NE(NE), .K(K), .PM(PM), .IW(IW), .FAST(1)) d1 (.clk(clk), .rst_n(rst_n), .clr(clr),
         .add_v(add_v), .add_col(add_col), .add_ids(add_ids), .add_en(add_en), .flush(flush), .out_v(v1), .out_ready(ordy),
         .out_id(i1), .out_mask(m1), .out_last(l1), .busy(b1), .count(c1));
-    integer bad = 0, emitted = 0, cyc = 0, seed, c, j, k, np, md;
+    reg [IW+PM:0] s0 [0:MAXE-1], s1 [0:MAXE-1];
+    integer e0, e1, f0, f1, tfl, cyc = 0, bad = 0, emitted = 0, lat0 = 0, lat1 = 0, seed, c, j, k, np, md;
     always @(posedge clk) if (rst_n) begin
         cyc = cyc + 1;
-        if (v0 !== v1 || b0 !== b1 || c0 !== c1 || (v0 && (i0 !== i1 || m0 !== m1 || l0 !== l1))) begin
-            bad = bad + 1; if (bad < 10) $display("MISMATCH cyc %0d v %b%b id %0d %0d m %h %h l %b%b b %b%b c %0d %0d", cyc, v0, v1, i0, i1, m0, m1, l0, l1, b0, b1, c0, c1);
-        end
-        if (v0 && ordy) emitted = emitted + 1;
+        if (v0 && ordy) begin if (e0 == 0) f0 = cyc - tfl; s0[e0] = {i0, m0, l0}; e0 = e0 + 1; end
+        if (v1 && ordy) begin if (e1 == 0) f1 = cyc - tfl; s1[e1] = {i1, m1, l1}; e1 = e1 + 1; end
     end
     function integer rid(input integer m);
         integer r;
@@ -27,8 +28,8 @@ module tb_union_lockstep;
             r = $unsigned($random(seed));
             case (m)
                 0: rid = r % NE;
-                1: rid = (r % 40) + 32 * ((r >> 8) % 3);          // clustered in a few words
-                2: rid = (r & 1) ? (NE - 1 - (r >> 4) % 4) : ((r >> 4) % 4);  // edges
+                1: rid = (r % 40) + 32 * ((r >> 8) % 3);
+                2: rid = (r & 1) ? (NE - 1 - (r >> 4) % 4) : ((r >> 4) % 4);
                 default: rid = 32 * ((r >> 3) % (NE / 32)) + (r & 31);
             endcase
         end
@@ -49,11 +50,16 @@ module tb_union_lockstep;
             end
             add_v = 0;
             if ($random(seed) & 1) @(negedge clk);
+            e0 = 0; e1 = 0; tfl = cyc + 1;
             flush = 1; @(negedge clk); flush = 0;
             while (b0 || b1) begin ordy = (c % 3 == 0) ? $random(seed) : 1'b1; @(negedge clk); end
             ordy = 1;
+            if (e0 != e1 || c0 !== c1) begin bad = bad + 1; if (bad < 8) $display("MISMATCH case %0d n %0d %0d count %0d %0d", c, e0, e1, c0, c1); end
+            else for (j = 0; j < e0; j = j + 1) if (s0[j] !== s1[j]) begin bad = bad + 1; if (bad < 8) $display("MISMATCH case %0d item %0d", c, j); end
+            if (c % 3 != 0) begin lat0 = f0; lat1 = f1; end
+            emitted = emitted + e0;
         end
-        $display("LOCKSTEP union cases=%0d emitted=%0d mismatches=%0d", NCASE, emitted, bad);
+        $display("LOCKSTEP union cases=%0d emitted=%0d mismatches=%0d flush_to_first0=%0d flush_to_first1=%0d", NCASE, emitted, bad, lat0, lat1);
         $finish;
     end
 endmodule

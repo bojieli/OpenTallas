@@ -77,6 +77,8 @@ module tb_spec_state_lockstep;
                 // the rl-dependent kinds index RLOG by source (< NSRC) and IK_RD walks (p+1) >> rl rows
                 if (req_kind == 5 || req_kind == 6 || req_kind == 7 || req_kind == 8) req_idx = req_idx % NSRC;
                 if (req_kind == 8) req_pos = $unsigned($random(seed)) % 3000;
+                // window walks run from max(0, p-W+1) to p: a position >= 2^31 (n - 1 at n = 0) would walk 2^32 rows
+                if ((req_kind == 2 || req_kind == 4 || req_kind == 6) && req_pos[31]) req_pos = ~req_pos;
             end
         end
         @(negedge clk); n_set = 0; tw_v = 0; req_v = 0;
