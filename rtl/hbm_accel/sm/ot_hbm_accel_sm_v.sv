@@ -19,7 +19,7 @@
 //   * a registered element boundary (the W13 die budget: inputs land in a flop, outputs leave one), PIO stages each
 //     way between the pins and the hub: one-way pipes for start/op, rsp, release, results, busy, arrive, released;
 //     credit-based pipelined channels (sink FIFO, credit return) for the descriptor and request handshakes.
-// Cycles added (latency only; one issue a cycle and the ring's run-ahead are unchanged), DS = 2, DG = 3, PIO = 2:
+// Cycles added (latency only; one issue a cycle and the ring's run-ahead are unchanged), DS = 3, DG = 3, PIO = 2:
 //   start -> issue +PIO; issue setup +1 (ot_hbm_accel_issue); x read / weight to the column macros +DS+2
 //   (s1, DS stages, L2, leaf E3; ot_gpu_sm_v reads x at the issue edge); column gather +DG+2 (G1, DG, tree input);
 //   results -> pins +PIO; busy / arrive / released -> pins +PIO; release_in -> issue +PIO; HBM read response +PIO,
@@ -41,7 +41,7 @@ module ot_hbm_accel_sm_v #(
                                         // stage (ot_hbm_accel_tc16, bit-identical, 0 cycles); 0 = ot_gpu_tc16;
                                         // likewise the block-dot column with the FP4 decode in its input register
                                         // (ot_hbm_accel_bd_col / ot_hbm_accel_bterm2); 0 = ot_gpu_bd_col
-    parameter integer DS   = 2,         // per-sub distribution stages between s1 and the sub-half copy
+    parameter integer DS   = 3,         // per-sub distribution stages between s1 and the sub-half copy
     parameter integer DW   = 4,         // per-sub x-write stages between the pin register and the sub-half copy
     parameter integer DG   = 3,         // gather stages between a leaf's G1 and its column's tree input
     parameter integer PIO  = 2          // boundary stages between the pins and the hub, each way

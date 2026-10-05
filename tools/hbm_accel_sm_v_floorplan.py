@@ -121,7 +121,7 @@ def main():
             "puts \"ot macro_place: $ot_n macros placed\""]
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "macro_place.tcl").write_text("\n".join(tcl) + "\n")
-    mid = lambda L: (round(L * 0.15, 1), round(L * 0.85, 1))  # noqa: E731
+    mid = lambda L: (round(L * 0.25, 1), round(L * 0.75, 1))  # noqa: E731
     fp = dict(die=[0, 0, die_w, die_h], core=[snap(m / 2, 0.432), snap(m / 2, 0.27), snap(die_w - m / 2, 0.432),
                                              snap(die_h - m / 2, 0.27)],
               tile=dict(w=round(tile_w, 3), h=round(tile_h, 3)), quad=dict(w=round(quad_w, 3), h=round(quad_h, 3)),
