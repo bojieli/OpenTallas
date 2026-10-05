@@ -1,0 +1,31 @@
+{
+  "verdict": "FAIL_AUTOMATIC_DENSITY_QUERY_INITIALIZATION",
+  "source_commit": "e294ad2fa4161af88d740900c8e363cd4a5ed727",
+  "supervisor_pid": 1328547,
+  "terminal_exit": 1,
+  "PG_and_region_construction_pass": true,
+  "placement_optimization_completed": false,
+  "diagnosis": "ORFS PLACE_DENSITY_LB_ADDON=0.05 invokes getUniformTargetDensity; installed Replace::initNesterovPlace constructs empty ungrouped top-level region, unlike doInitialPlace which removes it. Nesterov initial step NaN/Inf GPL-0304, error text suppressed by query redirectStringBegin.",
+  "confidence": "Source-derived exact error origin; census proves all movable members assigned to two regions. Not a hardware timing/fit verdict.",
+  "smallest_correction": "Bypass optional lower-bound density query via empty PLACE_DENSITY_LB_ADDON and use admitted named-slot density0.5; unchanged provider/issuer regions/RTL/PG/clock/load. No penalty tuning or density sweep.",
+  "thread_observation": "Failed query announced128 threads despite NUM_CORES4. New stage hooks set actual placement/CTS worker count4. Previous workers4 admission was requested, not enforced across every tool process.",
+  "official_source_commit": "OpenROAD6cb3f2b704",
+  "physical_closure": false,
+  "sha256": {
+    "region-census.tcl": "3dbb517860fde159e6e6187ade4a0591a9189c6d91023ef1f1aa92924266b1fe",
+    "physical.json": "07bdaf89e37b21ff0d86d8e9bc5d5ed18cf162c7860e9c811a37c5eda5c291d9",
+    "route.log": "e972affa5ba3c25041c6214aa74ac9e1b6b3f1de459e656b70a5d7e79d61578f",
+    "gpl_placerBase_source.cpp": "1e28e9282b1acb18475f6e6cd7dc201ac279a02a1e15f711a7743c4184bca323",
+    "gpl_replace.cpp": "584dfb0cdc1b23d3e7a86fbdaf19a29f93d75aed7a06ea21e9c95c86daeda53f",
+    "launch.json": "3c5d07f532c2cfb137005ee8d1879b40a91dc2dddd3234107073d5694c11c38e",
+    "supervisor.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "terminal.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "gpl_sources_listing.json": "086ad43ec9e21575d523beb52f9d370dfd078aaaf8ae54fb8f7398f6d8f435e6",
+    "region-census.log": "ea5b5a5d31815da61ee40d3efb439262679750cb99fda8201059307a4e6884b9",
+    "gpl_nesterovPlace.cpp": "70e96e3affe700bf72e9fcf3506b32b312ab950f0aa85c1f1b551f54f4d7ad01",
+    "supervise.py": "3cf5929941caf70612cb6cd339d1d9b7d6f5dd23e1b9a609344e312d48c46155",
+    "supervisor.pid": "05e32626f55dff8dc99f34c23bfe7dd12807fe061cee06fd1e3b8210ffe372f5",
+    "driver_args.json": "970c12670001de8e3f0478525ff83d25946e6ad2e41d12672acff479d34cdfed",
+    "admission.json": "8377d3d512220a1adfc75a98fc285dde5491052e1784e044260f70402f796090"
+  }
+}

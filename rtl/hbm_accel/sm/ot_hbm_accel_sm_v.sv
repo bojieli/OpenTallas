@@ -19,10 +19,9 @@
 //   * a registered element boundary (the W13 die budget: inputs land in a flop, outputs leave one), PIO stages each
 //     way between the pins and the hub: one-way pipes for start/op, rsp, release, results, busy, arrive, released;
 //     credit-based pipelined channels (sink FIFO, credit return) for the descriptor and request handshakes.
-// Cycles added (latency only; one issue a cycle and the ring's run-ahead are unchanged), DS = 2, DG = 3, PIO = 2:
+// Cycles added (latency only; one issue a cycle and the ring's run-ahead are unchanged), DS = 3, DG = 3, PIO = 2:
 //   start -> issue +PIO; issue setup +1 (ot_hbm_accel_issue); x read / weight to the column macros +DS+2
 //   (s1, DS stages, L2, leaf E3; ot_gpu_sm_v reads x at the issue edge); column gather +DG+2 (G1, DG, tree input);
-//   streaming stack +1 (STK = 1, ot_hbm_accel_stack's input register);
 //   results -> pins +PIO; busy / arrive / released -> pins +PIO; release_in -> issue +PIO; HBM read response +PIO,
 //   request +PIO+1 (credit channel).  x writes land 2+DW+2 edges after the beat (pin, DW stages, L2, leaf); a
 //   fragment's last beat must precede `start` by >= 1 cycle (the first x read is >= PIO+DS+4 edges after start).
@@ -39,12 +38,13 @@ module ot_hbm_accel_sm_v #(
     parameter integer XD   = 128,
     parameter integer MAX_OUT = 512,
     parameter integer TCK  = 1,         // ENABLE = 1: BF16 column with the bubble gate off the multiplier's first
-                                        // stage (ot_hbm_accel_tc16, bit-identical, 0 cycles); 0 = ot_gpu_tc16
-    parameter integer DS   = 2,         // per-sub distribution stages between s1 and the sub-half copy
+                                        // stage (ot_hbm_accel_tc16, bit-identical, 0 cycles); 0 = ot_gpu_tc16;
+                                        // likewise the block-dot column with the FP4 decode in its input register
+                                        // (ot_hbm_accel_bd_col / ot_hbm_accel_bterm2); 0 = ot_gpu_bd_col
+    parameter integer DS   = 3,         // per-sub distribution stages between s1 and the sub-half copy
     parameter integer DW   = 4,         // per-sub x-write stages between the pin register and the sub-half copy
     parameter integer DG   = 3,         // gather stages between a leaf's G1 and its column's tree input
-    parameter integer PIO  = 2,         // boundary stages between the pins and the hub, each way
-    parameter integer STK  = 1          // 1: ot_hbm_accel_stack (look-ahead levels, +1 cycle); 0: ot_gpu_stack
+    parameter integer PIO  = 2          // boundary stages between the pins and the hub, each way
 ) (
     input  wire                    clk,
     input  wire                    rst_n,
@@ -278,15 +278,9 @@ module ot_hbm_accel_sm_v #(
         ot_gpu_tree #(.N(SUB), .TAGW(TAGW), .ALAT(7)) u_comb (.clk(clk), .rst_n(rst_n), .v(tv_in), .d(td_in),
                                                               .tag(tt_in), .ov(tv), .y(ty), .otag(tt), .fault(tf));
         wire kf;
-        if (STK != 0) begin : g_stk
-            ot_hbm_accel_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
-                .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
-                .itag(tt[TAGW-1:SW+1]), .ov(cv[c]), .y(cy[32*c +: 32]), .otag(crow[RW*c +: RW]), .fault(kf));
-        end else begin : g_stk0
-            ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
-                .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
-                .itag(tt[TAGW-1:SW+1]), .ov(cv[c]), .y(cy[32*c +: 32]), .otag(crow[RW*c +: RW]), .fault(kf));
-        end
+        ot_gpu_stack #(.LEV(LEV), .IL(IL), .TAGW(RW), .ALAT(7)) u_stack (
+            .clk(clk), .rst_n(rst_n), .iv(tv), .d(ty), .ilast(tt[SW]), .islot(tt[SW-1:0]),
+            .itag(tt[TAGW-1:SW+1]), .ov(cv[c]), .y(cy[32*c +: 32]), .otag(crow[RW*c +: RW]), .fault(kf));
         assign cf[c] = gfault | tf | kf;
     end
     assign sv = cv[0];
@@ -496,7 +490,13 @@ module ot_hbm_accel_smv_leaf #(
     wire [31:0] by, fy;
     wire [TAGW-1:0] btag, ftag;
     generate
-        if (LBS == 2 && IL == 8 && TAGW == 16) begin : g_hbd
+        if (LBS == 2 && IL == 8 && TAGW == 16 && TCK != 0) begin : g_hbdk
+            ot_hbm_accel_bd_col u_bd (
+                .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
+                .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq({ix[266 +: 256], ix[0 +: 256]}),
+                .xe({ix[266 + 256 +: 10], ix[256 +: 10]}),
+                .ov(bov), .y(by), .otag(btag), .fault(bfault));
+        end else if (LBS == 2 && IL == 8 && TAGW == 16) begin : g_hbd
             ot_gpu_bd_col u_bd (
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq({ix[266 +: 256], ix[0 +: 256]}),
@@ -509,10 +509,17 @@ module ot_hbm_accel_smv_leaf #(
                 assign xq_s[256*qq +: 256] = ix[qq*266 +: 256];
                 assign xe_s[10*qq +: 10]   = ix[qq*266 + 256 +: 10];
             end
+            if (TCK != 0) begin : g_k
+                ot_hbm_accel_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
+                    .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
+                    .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
+                    .ov(bov), .y(by), .otag(btag), .fault(bfault));
+            end else begin : g_o
             ot_gpu_bd_col #(.LB(LBS), .IL(IL), .TAGW(TAGW)) u_bd (
                 .clk(clk), .rst_n(rst_n), .v(iv_b), .first(ifirst), .last(ilast), .fp4(ifp4), .tag(itag),
                 .wq(iw[0 +: LBS*256]), .we(iw[LBS*256 +: LBS*10]), .xq(xq_s), .xe(xe_s),
                 .ov(bov), .y(by), .otag(btag), .fault(bfault));
+            end
         end
         if (LSB == 16 && TAGW == 16 && IL == 8 && TCK != 0) begin : g_hardk
             ot_hbm_accel_tc16 u_tc (

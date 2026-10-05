@@ -59,13 +59,16 @@ module ot_qwen_kv_land_merge #(
                 E[j][i] <= (j != i) && (PW'(s_port[j*PW +: PW] - rr_n) < PW'(s_port[i*PW +: PW] - rr_n));
     end
     // ---- stage 1: grants ------------------------------------------------------------------
+    // the open tile's mask is static for a layer: its non-zero flag is registered once (r3)
+    reg tail_nz;
+    always @(posedge clk) tail_nz <= |tail_lm;
     reg [3:0] q4 [0:NSRC-1];
     reg [NSRC-1:0] first, same, L [0:NSRC-1];
     reg [LW-1:0] loc_f;
     always @(*) begin
         for (i = 0; i < NSRC; i = i + 1) begin
             // lane quarters: K = two quarters at sel (empty if the tail mask is empty), V = one
-            if (s_isk[i]) q4[i] = (s_ktail[i] && tail_lm == 128'd0) ? 4'd0 : (4'b0011 << s_sel[i*2 +: 2]);
+            if (s_isk[i]) q4[i] = (s_ktail[i] && !tail_nz) ? 4'd0 : (4'b0011 << s_sel[i*2 +: 2]);
             else q4[i] = 4'b0001 << s_sel[i*2 +: 2];
         end
         for (i = 0; i < NSRC; i = i + 1)
@@ -92,7 +95,7 @@ module ot_qwen_kv_land_merge #(
         else begin ce_q <= tok_v || (|s_v); kvw_ce <= ce_q; end
     always @(posedge clk) begin
         g_q <= s_grant; isk_q <= s_isk; kt_q <= s_ktail; sel_q <= s_sel; lm_q <= tail_lm;
-        for (i = 0; i < NSRC; i = i + 1) if (s_grant[i]) beat_q[i*256 +: 256] <= s_beat[i*256 +: 256];
+        beat_q <= s_beat;                    // unconditional: the grant is not an enable of 3k flops
         tok_q <= tok_v; loc_q <= tok_v ? tok_loc : loc_f;
         if (tok_v) begin tokd_q <= tok_data; tokm_q <= tok_mask; end
     end

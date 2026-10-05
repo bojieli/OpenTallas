@@ -17,11 +17,15 @@ python3 tools/run_abi3_physical_persistent.py \
  --io-delay-fraction 0.2 --max-transition-ns --max-fanout 32 \
  --slew-margin-percent 30 --hold-margin-ns 0.01 --stages pnr \
  --die-area 0 0 207.36 108 --core-area 2.16 2.16 205.20 107.73 \
- --routing-layers M2 M7 \
+ --routing-layers M2 M8 --place-density 0.5 \
+ --orfs-var PLACE_DENSITY_LB_ADDON= \
+ --step-tcl PRE_GLOBAL_PLACE_SKIP_IO=physical/dsrom_static_provider_context/threads.tcl \
+ --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_static_provider_context/threads.tcl \
  --step-tcl POST_PDN=physical/dsrom_static_provider_context/regions.tcl \
  --step-tcl PRE_CTS=physical/dsrom_static_provider_context/clock.tcl \
  --step-tcl POST_CTS=physical/dsrom_static_provider_context/clock.tcl \
- --orfs-var ADDER_MAP_FILE= --orfs-var MIN_CLK_ROUTING_LAYER=M8 --orfs-var MAX_CLK_ROUTING_LAYER=M8 \
+ --orfs-var ADDER_MAP_FILE= --orfs-var MIN_CLK_ROUTING_LAYER=M7 \
+ --orfs-var FASTROUTE_TCL=/src/physical/dsrom_static_provider_context/fastroute.tcl \
  --orfs-var PDN_TCL=/src/physical/dsrom_static_provider_context/pdn.tcl \
  --nickname-tag epicurus_static_context_r1 --keep-heavy-artifacts --output "$TASK_ROOT/physical.json" \
  > "$TASK_ROOT/route.log" 2>&1
