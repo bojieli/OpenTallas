@@ -8625,3 +8625,40 @@ def hbm_topk_predicate_lookahead_model():
                 baseline_SS_slack_ps=-362.448517,
                 baseline_FF_slack_ps=3.35,
                 candidate_SSFF_closed=False, adopted=False)
+
+
+def hbm_stream_aq_last_bound_predicate_cut(*, pcs=128):
+    """Conditional mandatory PRE-bound decode repair; not implementation admission.
+
+    Six predicates mirror S<=last on the same accepted descriptor edge.
+    S=0 is constant and S=4 reuses last[2]. Encoded last and all other
+    comparators remain. No row/column/grant edge changes are permitted.
+    """
+    if pcs < 1:
+        raise ValueError('positive physical PC inventory required')
+    return dict(default_enabled=False, candidate_selected=False,
+                implementation_started=False, MACs_per_cycle=0, pcs=pcs,
+                added_state_bits_per_pc=6, total_added_state_bits=6*pcs,
+                FF_cell_area_floor_um2=6*pcs*DFF_UM2,
+                capture_enable_muxes_per_pc_max=6,
+                descriptor_decode_OR2_per_pc_max=5,
+                descriptor_decode_AND2_per_pc_max=5,
+                descriptor_bit_extra_loads_before_sharing=[4,6,6],
+                predicate_fanout_to_bank_sneed=4,
+                clock_reset_extra_sinks_per_pc=6,
+                encoded_last_and_other_comparators_retained=True,
+                new_memory_ports=0, extra_memory_bytes_per_cycle=0,
+                added_boundary_bits=0, added_external_tracks=0,
+                added_row_command_cycles=0, added_column_command_cycles=0,
+                added_grant_cycles=0, added_ACK_cycles=0,
+                composed_single_user_token_delta_cycles=0,
+                output_bytes_per_cycle_max_per_pc=32,
+                area_fit='6FF/PC body floor in existing service slot; full mapped/control/wire fit unknown',
+                added_local_wire_tracks='unmeasured; six four-bank predicate fanouts and descriptor capture enable',
+                loaded_comb_delay_ps=None, clock_reset_buffer_area_um2=None,
+                invariant='ge_last[S] == (S <= last) at every edge including reset and zero-length descriptor underflow',
+                update='same desc_acc as encoded last; reset0 for six nontrivial predicates',
+                source_cone='last -> S<=last -> sneed -> PRE lowest-bank priority -> c_oh',
+                period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25,
+                SSFF_closed=False, adopted=False,
+                build_condition='Only if current head-ready route final verdict requires remaining bounddecode repair')
