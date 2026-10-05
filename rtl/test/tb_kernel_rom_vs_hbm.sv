@@ -121,10 +121,10 @@ module tb_kernel_rom_vs_hbm #(
 
     initial begin
         tick = 0; grants = 0;
-        if (!$value$plusargs("act=%s", act_path)) begin $display("FAIL: +act="); $finish; end
-        if (!$value$plusargs("wgt=%s", wgt_path)) begin $display("FAIL: +wgt="); $finish; end
-        if (!$value$plusargs("exp=%s", exp_path)) begin $display("FAIL: +exp="); $finish; end
-        if (!$value$plusargs("period=%d", refill_period)) begin $display("FAIL: +period="); $finish; end
+        if (!$value$plusargs("act=%s", act_path)) begin $display("FAIL: +act="); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
+        if (!$value$plusargs("wgt=%s", wgt_path)) begin $display("FAIL: +wgt="); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
+        if (!$value$plusargs("exp=%s", exp_path)) begin $display("FAIL: +exp="); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
+        if (!$value$plusargs("period=%d", refill_period)) begin $display("FAIL: +period="); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
         if (!$value$plusargs("passes=%d", npass)) npass = 1;
         if (!$value$plusargs("nopreload=%d", nopreload)) nopreload = 0;
         $readmemh(act_path, act_mem);
@@ -163,7 +163,7 @@ module tb_kernel_rom_vs_hbm #(
                 cycles = cycles + 1;
                 if (stalled) stalls = stalls + 1;
             end
-            if (!done) begin $display("FAIL: timeout"); $finish; end
+            if (!done) begin $display("FAIL: timeout"); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
             @(posedge clk);
         end
         wgt_reload = 1'b1;
@@ -182,6 +182,7 @@ module tb_kernel_rom_vs_hbm #(
             $display("FAIL period=%0d: %0d lanes wrong after %0d cycles, passes=%0d grants=%0d decoupled=%0d banks=%0d nopreload=%0d",
                      refill_period, mism, cycles, npass, grants,
                      REFILL_DECOUPLED, WGT_BANKS, nopreload);
+        if (mism != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 endmodule
