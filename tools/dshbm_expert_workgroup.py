@@ -143,6 +143,46 @@ def checkpoint_reader(checkpoint, layer):
     return read
 
 
+
+def export_weight_rows(checkpoint, layer, expert_ids, out):
+    """Lossless selected tensor-row export, not inference/weight re-encoding."""
+    import json, hashlib
+    from pathlib import Path
+    steer(expert_ids,0)
+    out = Path(out); out.mkdir(parents=True,exist_ok=False)
+    record = dict(layer=layer,expert_ids=list(expert_ids),checkpoint=str(checkpoint.snap),
+                  scope='released selected FP4/UE8M0 bytes only; no inference',tensors=[])
+    read = checkpoint_reader(checkpoint,layer)
+    for expert in expert_ids:
+        for matrix in ('w1','w3'):
+            packed,scales = read(int(expert),matrix,0,2304)
+            for kind,data in [('packed',packed),('scale',scales)]:
+                name=f'expert{expert}_{matrix}.{kind}'
+                raw=data.tobytes(); (out/name).write_bytes(raw)
+                record['tensors'].append(dict(file=name,expert=int(expert),matrix=matrix,
+                    kind=kind,shape=list(data.shape),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest()))
+    (out/'source.json').write_text(json.dumps(record,indent=2)+'\n')
+    return record
+
+
+def exported_weight_reader(root,layer,expert_ids):
+    import json, hashlib
+    from pathlib import Path
+    import numpy as np
+    root=Path(root); record=json.loads((root/'source.json').read_text())
+    if record['layer']!=layer or record['expert_ids']!=list(expert_ids):
+        raise ValueError('exported weight ownership does not match actual routed source IDs')
+    arrays={}
+    for t in record['tensors']:
+        p=root/t['file']
+        if p.stat().st_size!=t['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=t['sha256']:
+            raise ValueError('released raw row export changed: '+str(p))
+        arrays[t['expert'],t['matrix'],t['kind']]=np.memmap(p,mode='r',dtype=np.uint8,shape=tuple(t['shape']))
+    def read(expert,matrix,start,stop):
+        return tuple(arrays[expert,matrix,k][start:stop].copy() for k in ('packed','scale'))
+    return read
+
+
 def run_actual(args):
     """Native unchanged SM bench; real router IDs steer every released row.
 
@@ -164,10 +204,25 @@ def run_actual(args):
     if x.shape != (5120,):
         raise ValueError("activation capture must contain exactly 5120 binary32 words")
     root = Path(args.workdir); root.mkdir(parents=True, exist_ok=False)
-    checkpoint = Checkpoint(args.checkpoint)
-    reader = checkpoint_reader(checkpoint,args.layer)
+    if args.weight_rows:
+        reader = exported_weight_reader(args.weight_rows,args.layer,tuple(int(e) for e in ids))
+    else:
+        checkpoint = Checkpoint(args.checkpoint)
+        reader = checkpoint_reader(checkpoint,args.layer)
     params = dict(ENABLE=1,SUB=4,LBS=2,LSB=16,NC=8,XDEPTH=128,RMAX=256,LEV=4,XB=2)
-    run, command = M.compile_bench('verilator',params,root/'build',args.jobs)
+    if args.native_receipt:
+        receipt=json.loads(Path(args.native_receipt).read_text())
+        if receipt['status']!='PASS_COMPILED_ONLY' or receipt['params']!=params:
+            raise ValueError('compiled SM bench geometry/terminal not enrolled')
+        if any(hashlib.sha256((M.ROOT/p).read_bytes()).hexdigest()!=h
+               for p,h in receipt['source_sha256'].items()):
+            raise ValueError('compiled SM RTL source mismatch')
+        binary=Path(receipt['binary'])
+        if hashlib.sha256(binary.read_bytes()).hexdigest()!=receipt['binary_sha256']:
+            raise ValueError('compiled SM binary changed')
+        run,command=[str(binary)],receipt['command']
+    else:
+        run, command = M.compile_bench('verilator',params,root/'build',args.jobs)
     record = dict(layer=args.layer,position=args.position,router_ids=[d.expert for d in descriptors[::4]],
                   full_model_inference=False,arithmetic='unchanged SM + existing chunk8 golden',
                   source_scope='12 routed gate/up matrices only; no W2/shared-expert/combine credit',
@@ -214,11 +269,14 @@ def run_actual(args):
 if __name__ == '__main__':
     import argparse
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--checkpoint',required=True)
+    w = p.add_mutually_exclusive_group(required=True)
+    w.add_argument('--checkpoint')
+    w.add_argument('--weight-rows')
     p.add_argument('--layer',type=int,choices=(3,20),required=True)
     p.add_argument('--position',type=int,choices=(1048575,),required=True)
     p.add_argument('--activation-u32',required=True)
     p.add_argument('--router-ids-u32',required=True)
     p.add_argument('--workdir',required=True)
     p.add_argument('--jobs',type=int,choices=range(1,17),default=8)
+    p.add_argument('--native-receipt',help='reuse an exact source/parameter/binary-verified completed bench')
     raise SystemExit(run_actual(p.parse_args()))
