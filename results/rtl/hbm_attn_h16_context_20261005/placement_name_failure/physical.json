@@ -1,0 +1,202 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-05T21:55:51.296017+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_attn_tile_m6h1",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_fmax_attn_context/parent.sdc",
+          "sha256": "5e632c4e25d294316b31360c27653468987fa8af4949fd01955d67582a911d76"
+        }
+      ],
+      "lines": [
+        "set_clock_latency -source 0 [get_clocks core_clk]",
+        "set_clock_latency -min 90 [get_clocks core_clk]",
+        "set_clock_latency -max 100 [get_clocks core_clk]",
+        "set ot_inputs [all_inputs -no_clocks]",
+        "set_input_delay -clock core_clk -max 166.6666666666667 $ot_inputs",
+        "set_input_delay -clock core_clk -min 0 $ot_inputs",
+        "set_output_delay -clock core_clk -max 166.6666666666667 [all_outputs]",
+        "set_output_delay -clock core_clk -min 0 [all_outputs]",
+        "set_load 9.673192 [all_outputs]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv",
+        "sha256": "db20bcb84304b9e2141d972bfa58a98ae81c6adc73b7f241dea5b0b6fd8ada04",
+        "size_bytes": 1556
+      }
+    ],
+    "top": "ot_attn_tile_m6h1"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n2 \n        V5 |       1.18e-02 \n        V6 |       8.20e-03 \n        V7 |       8.20e-03 \n        V8 |       6.30e-03 \n        V9 |       6.30e-03 \n----------------------------\nReport metrics stage 2, floorplan final...\n\n==========================================================================\nfloorplan final report_design_area\n--------------------------------------------------------------------------\nDesign area 1390348 um^2 76% utilization.\nsource /work/io_constraints.tcl\nwrite_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.odb\nwrite_sdc -no_timestamp /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n2_1_floorplan             .odb            3            349 406bd60fda869aac2b51\n2_1_floorplan             .sdc                             c4b08c8bfca5ddfd5036\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place\nRunning macro_place.tcl, stage 2_2_floorplan_macro\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\nread_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\nread_liberty -corner WC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ss.lib\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_liberty -corner BC /src/physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1/ot_attn_hgrp_m6h1_ff.lib\nread_db /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.odb\nread_sdc /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_1_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nsource /src/physical/hbm_fmax_attn_context/macro_placement.tcl\n[ERROR MPL-0020] Couldn't find a macro named g_g[0].u_g.\nError: macro_place.tcl, 6 MPL-0020\n\nElapsed time: 0:01.83[h:]min:sec. CPU time: user 1.75 sys 0.09 (100%). Peak memory: 326940KB.\nElapsed time: 0:03.84[h:]min:sec. CPU time: user 4.45 sys 1.85 (164%). Peak memory: 357952KB.\nElapsed time: 0:01.83[h:]min:sec. CPU time: user 1.73 sys 0.10 (99%). Peak memory: 319696KB.\nmake[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1\nmake: *** [Makefile:456: /work/results/asap7/opentallas_ot_attn_tile_m6h1_asap7_codex_h16_nb5_context_r1/base/2_2_floorplan_macro.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-05T21:55:40.052317+00:00",
+  "git": {
+    "commit": "944f6b7364c5354244ba5b4f8e8afdc835d2cb6e",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_attn_tile_m6h1",
+      "--source",
+      "physical/hbm_fmax_attn_context/ot_attn_tile_m6h1.sv",
+      "--macro-view",
+      "ot_attn_hgrp_m6h1=physical/hbm_fmax_attn_context/ot_attn_hgrp_m6h1",
+      "--macro-place-halo",
+      "5",
+      "5",
+      "--clock-period-ns",
+      "0.8333333333333334",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--sdc-append",
+      "physical/hbm_fmax_attn_context/parent.sdc",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "1349.112",
+      "1349.976",
+      "--core-area",
+      "0",
+      "0",
+      "1349.112",
+      "1349.976",
+      "--place-density",
+      "0.50",
+      "--routing-layers",
+      "M2",
+      "M9",
+      "--pin-region",
+      "^(ld_.*|iv|ibank.*|ib.*)$=left",
+      "--pin-region",
+      "^(ov|oy.*|oflt.*)$=right",
+      "--pin-region",
+      "^(clk|rst_n)$=top",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/hbm_fmax_attn_context/macro_placement.tcl",
+      "--orfs-var",
+      "IO_PLACER_H=M8",
+      "--orfs-var",
+      "IO_PLACER_V=M9",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--slew-margin-percent",
+      "30",
+      "--hold-margin-ns",
+      "0.01",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "codex_h16_nb5_context_r1",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_pnr/work",
+      "--output",
+      "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/context_h16_pnr/physical.json"
+    ],
+    "driver": {
+      "commit": "944f6b7364c5354244ba5b4f8e8afdc835d2cb6e",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3",
+      "tree": "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/codex/hbm-suattn-context-20261005/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.8333333333333334,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
