@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.measured_scoreboard.v1",
- "generated_from_commit": "e52fdb1c5",
+ "generated_from_commit": "166fec76d",
  "rule": "OWNER MEASUREMENT RULE (2026-10-04): publish ONLY measured compositions; every term from a measured component, anything modelled listed as unvalidated; measure at the target context only (Qwen3-8B P8191, DeepSeek-V4.1 P1048575).",
  "targets": {
   "qwen_rom": "Qwen3-8B ROM accelerator (8K context, P8191)",
@@ -289,8 +289,8 @@
    "note": "93.4% of 4.000 TB/s peak",
    "value": 3.734,
    "resolved": true,
-   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "18db8eeab0a06141bff72711256dc2ce4c60aef8",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.stream4_fill_pct_peak": {
    "target": "qwen_rom",
@@ -303,8 +303,8 @@
    "pointer": "regex:\\| STREAM4 \\(this\\) \\|[^\\n]*\\| ([\\d.]+ %) \\|",
    "value": "93.4 %",
    "resolved": true,
-   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "18db8eeab0a06141bff72711256dc2ce4c60aef8",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.stream4_bench_P8191_pct": {
    "target": "qwen_rom",
@@ -318,8 +318,8 @@
    "note": "15/15 PASS bench",
    "value": "93.0 %",
    "resolved": true,
-   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "18db8eeab0a06141bff72711256dc2ce4c60aef8",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.kv_ideal_L0_P8191": {
    "target": "qwen_rom",
@@ -333,8 +333,8 @@
    "note": "README only; no committed JSON for this job",
    "value": 5290,
    "resolved": true,
-   "blob": "f45b718a0afbf73b39fdc9e70175b0393bccfe98",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "18db8eeab0a06141bff72711256dc2ce4c60aef8",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.realmem_L0_P8191": {
    "target": "qwen_rom",
@@ -4984,6 +4984,109 @@
    "blob": "0c64ef3fcdb72e83f4f904006013b3a26842e1e2",
    "last_commit": "0ddf4dcba 2026-10-04"
   },
+  "hbm_ds.matched_gate_ar_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us",
+   "label": "DS HBM MATCHED gate reference AR at 1M (C1 issue slots + C2 per-op drains + C3 x loading measured on the 1.2 GHz SM element; workgroup + fused SU chains credited)",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.AR_us",
+   "note": "DS ROM gate bar (~2026-10-07); row corrected+wg+fused_su0.9; inherited 460.053",
+   "value": 474.808,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_gate_mtp_step_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us",
+   "label": "DS HBM MATCHED gate reference MTP step (verify6 + draft + seed) at 1M",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_step_us",
+   "note": "row corrected+wg+su12; tau 3.8879; union increments modelled (lower bound)",
+   "value": 1050.638,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_gate_mtp_tok_s": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_tok_s",
+   "label": "DS HBM MATCHED gate reference MTP useful tok/s",
+   "unit": "tok/s",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.MTP_tok_s",
+   "value": 3700.5,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_corrected_ar_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_ar_us",
+   "label": "DS HBM corrected AR (C1-C3 measured, no levers)",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_AR_us",
+   "note": "+106.81 us SM correction vs inherited",
+   "value": 566.864,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_corrected_mtp_step_us": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_corrected_mtp_step_us",
+   "label": "DS HBM corrected MTP step (C1-C3 measured, no levers)",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.corrected_only_MTP_step_us",
+   "note": "P6 x loads 137.94 us through the as-built port",
+   "value": 1104.861,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_gate_ar_us_today": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_ar_us_today",
+   "label": "DS HBM MATCHED AR at today's closing clocks",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_AR_us",
+   "note": "SM element route open; SU m6a5 lanes not closed; index path on borrowed shared blocks",
+   "value": 596.027,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
+  "hbm_ds.matched_gate_mtp_step_us_today": {
+   "target": "hbm_ds",
+   "section": "rate",
+   "key": "matched_gate_mtp_step_us_today",
+   "label": "DS HBM MATCHED MTP step at today's closing clocks",
+   "unit": "us",
+   "status": "partial",
+   "path": "results/rtl/dshbm_matched_reference_20261005/composition.json",
+   "pointer": "gate.today_MTP_step_us",
+   "value": 1289.398,
+   "resolved": true,
+   "blob": "bb42d00e540221a9342c9aa6fc6514967e61f14e",
+   "last_commit": null
+  },
   "hbm_qwen.ar_tok_s_p8191_tp2": {
    "target": "hbm_qwen",
    "section": "rate",
@@ -5070,8 +5173,8 @@
    "note": "AR_MODE: no DSpark variant beats AR on STREAM4 (baseline 0.704x, MERGE_SU 0.742x, MERGE_SU np3 0.691-0.744x); free-draft bound 0.969x; derivation docs/ANALYTICAL_REPORT.md",
    "value": "AR_MODE",
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.ar_tok_s_8k_stream4": {
    "target": "qwen_rom",
@@ -5115,8 +5218,8 @@
    "note": "verify L0 17,197 exact on STREAM4 x36 + verify head 11,993 + draft 237,050 (5 drafter layers REAL_MEM RTL, heads, ingest 70,032 + Markov 4,968 RTL fac4b889e) + commit 65 = 868,200; tau third-party 3.1445; 0.704x AR",
    "value": 4346.2,
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.dspark_speedup_vs_ar_8k_stream4": {
    "target": "qwen_rom",
@@ -5130,8 +5233,8 @@
    "note": "MERGE_SU np4 0.742x, MERGE_SU np3 0.691-0.744x; drafter layers on REAL_MEM path, argmax/gather priced",
    "value": 0.704,
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.dspark_breakeven_verify_layer_8k_stream4": {
    "target": "qwen_rom",
@@ -5144,8 +5247,8 @@
    "pointer": "variants.baseline_np4.break_even_verify_layer_draft_upper",
    "value": 10069.1,
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.dspark_merge_su_np4_vs_ar": {
    "target": "qwen_rom",
@@ -5159,8 +5262,8 @@
    "note": "verify layer 15,971 exact",
    "value": 0.742,
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "qwen_rom.dspark_merge_su_np3_vs_ar": {
    "target": "qwen_rom",
@@ -5174,8 +5277,8 @@
    "note": "verify layer 13,104 exact; upper-draft bound 0.691x",
    "value": 0.744,
    "resolved": true,
-   "blob": "704ccc5f35da1fb793fabeeea798f437a68ab5c2",
-   "last_commit": "b8031cb09 2026-10-04"
+   "blob": "0d70559cda4ea3085a9805b49a1447cf633398d6",
+   "last_commit": "eac89aba2 2026-10-04"
   },
   "ds_rom.measured_share_of_ar": {
    "target": "ds_rom",
