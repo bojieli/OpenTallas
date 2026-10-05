@@ -522,9 +522,121 @@ def cmd_lever(a):
     return 0
 
 
+def phase_latency_budget(record, extra_cycles):
+    """Exposed per-phase budget, charged before parallel die maximum.
+
+    This is a conservative analytical debit, not a new measurement or a guessed
+    pipeline overlap schedule. Existing measured region/stream/wire terms stay fixed.
+    """
+    if extra_cycles < 0 or int(extra_cycles) != extra_cycles:
+        raise ValueError("extra cycles must be a nonnegative integer")
+    if record["status"] != "pass":
+        raise ValueError("positive historical field measurement required")
+    groups = {}
+    for n in record["nodes"]:
+        if not n["exact"] or not n["phases"]:
+            raise ValueError("missing exact measured phase ownership")
+        base = n["measured_cycles"] + n["wire_stage_cycles_s81_floorplan"]
+        if base != n["total_cycles"]:
+            raise ValueError("measured stream/wire decomposition mismatch")
+        row = dict(node=n["node"], die_stage=n["die_stage"], phases=n["phases"],
+                   phase_count=len(n["phases"]), measured_base_cycles=base,
+                   added_cycles=len(n["phases"]) * extra_cycles,
+                   total_cycles=base + len(n["phases"]) * extra_cycles)
+        groups.setdefault(n["node"], []).append(row)
+    summary = {}
+    for name, rows in groups.items():
+        critical = max(rows, key=lambda n: n["total_cycles"])
+        summary[name] = dict(us=critical["total_cycles"] / CLK * 1e6,
+                             critical_die=critical["die_stage"], dies=rows)
+    if extra_cycles == 0:
+        for n in record["node_summary"]:
+            if abs(summary[n["node"]]["us"] - n["us"]) > 1e-9:
+                raise ValueError("zero-debit replay differs from measured summary")
+    return summary
+
+
+def cmd_sensitivity(a):
+    """Read-only 1M DAG replay; the historical REJECT lever is never changed."""
+    from types import SimpleNamespace
+    import dsrom_1m_allmeasured as A
+    import dsrom_1m_allmeasured_adapters as AD
+    import dsrom_1m_measure as M
+    rec = json.loads(a.record.read_text())
+    plan_binding = None
+    if a.plan_dir:
+        plan_path = a.plan_dir / "plan.json"
+        if sha(plan_path) != rec["plan_sha256"]:
+            raise ValueError("retained plan SHA differs from measured field target")
+        plan = json.loads(plan_path.read_text())
+        plan_binding = dict(path=str(plan_path), sha256=sha(plan_path),
+                            measured_layers=sorted({p["layer"] for p in plan["phases"]}),
+                            measured_plan_phases=len(plan["phases"]), bf_sites=len(plan["bf_sites"]),
+                            full40_native_coverage=False)
+        known_phases = {p["phase"] for p in plan["phases"]}
+        if any(p not in known_phases for n in rec["nodes"] for p in n["phases"]):
+            raise ValueError("measurement references phase absent from retained plan")
+    field = json.loads((REC_DIR / "levers/field.json").read_text())
+    graph, _, _ = M.s58_graph()
+    def replay(candidate=None):
+        args = SimpleNamespace(rec=A.REC, out=None, baseline="recovery", recovery=REC_DIR,
+                               window="s81", hop_tier="light_fec")
+        r = A.compose(args, candidates=() if candidate is None else (candidate,), write_output=False)
+        if r["context"] != 1048576 or r["position"] != 1048575:
+            raise ValueError("sensitivity requires actual 1M target context")
+        return r
+    baseline = replay()
+    points = []
+    for delta in (0, 2, 4, 6, 8):
+        budget = phase_latency_budget(rec, delta)
+        nodes = {}
+        for name in field["nodes"]:
+            head, _, suffix = name.partition(".")
+            representative = name if name in budget else f"L{AD.field_rep(int(head[1:]))}.{suffix}"
+            b = budget[representative]
+            nodes[name] = dict(us=b["us"], cls="conditional_measured_base_plus_model_budget",
+                source=f"{representative}: fixed measured field base + {delta} streaming cycles per phase; "
+                       "per-die debit then parallel maximum, wire once; no pipeline/exactness qualification")
+            if name not in graph.nodes:
+                raise ValueError("field mapping not in canonical 1M graph: " + name)
+        r = replay(dict(lever="field_spine_sensitivity", exact=True, nodes=nodes))
+        points.append(dict(extra_stream_cycles_per_phase=delta, AR_us=r["AR_us"], AR_tok_s=r["AR_tok_s"],
+            MTP=r["MTP"], AR_gain_vs_baseline=r["AR_tok_s"] / baseline["AR_tok_s"] - 1,
+            MTP_gain_vs_baseline=r["MTP"]["MTP_tok_s"] / baseline["MTP"]["MTP_tok_s"] - 1,
+            representative_phase_budgets=budget, mapped_nodes=len(nodes)))
+    out = dict(schema="opentallas.dsrom.field-spine-sensitivity.v1", verdict="ANALYTICAL_ONLY",
+        adoption=False, physical_qualified=False, context=1048576, position=1048575,
+        clock_domain="streaming", clock_hz=CLK, added_edge_ns=1e9/CLK,
+        debit_rule="measured die cycles + ordered phase count * extra cycles; max across parallel dies, "
+                   "then representative mapping and full AR/MTP DAG replay; never per instruction/row/root",
+        assumption="All added phase edges exposed: conservative latency budget, not a redesigned RTL measurement. "
+                   "Historical PQ exactness/measurements retain their original source pins; corrected leaf gates "
+                   "do not requalify the historical full-field measurement. No arithmetic/SSFF/adoption claim.",
+        baseline=dict(AR_us=baseline["AR_us"], AR_tok_s=baseline["AR_tok_s"], MTP=baseline["MTP"]),
+        historical_field_verdict=field["verdict"], measured_spine_rule=rec["spine_rule"],
+        plan_dir_historical=rec["plan_dir"], plan_sha256=rec["plan_sha256"],
+        retained_plan_binding=plan_binding,
+        graph_coverage="Full40 canonical graph uses existing field_rep mapping of seven historical measured layers; "
+                       "not full40 native measurement or BF519 placement requalification",
+        measurement_source_sha256=rec["build_source_sha256"],
+        inputs={**baseline["inputs"], str(a.record.relative_to(ROOT)):sha(a.record),
+                "tools/dsrom_recovery_field.py":sha(Path(__file__)),
+                "tools/dsrom_1m_allmeasured.py":sha(ROOT/"tools/dsrom_1m_allmeasured.py")}, points=points)
+    target = a.out or REC_DIR / "field_spine_sensitivity.json"
+    if target.parent.resolve() == (REC_DIR / "levers").resolve():
+        raise ValueError("sensitivity output belongs outside mutable adopted-lever inventory")
+    if target.exists():
+        raise ValueError("refusing to overwrite existing sensitivity result")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(json.dumps(out, indent=2) + "\n")
+    for point in points:
+        print(point["extra_stream_cycles_per_phase"], point["AR_tok_s"], point["MTP"]["MTP_tok_s"])
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("cmd", choices=("variant", "build", "run", "record", "lever"))
+    ap.add_argument("cmd", choices=("variant", "build", "run", "record", "lever", "sensitivity"))
     ap.add_argument("--ssff", type=Path, default=REC_DIR / "field_pq_ssff.json")
     ap.add_argument("--verdict", default="ADOPT")
     ap.add_argument("--note", default="")
@@ -546,7 +658,7 @@ def main() -> int:
     a = ap.parse_args()
     G.set_arith("chunk8")
     return {"variant": cmd_variant, "build": cmd_build, "run": cmd_run, "record": cmd_record,
-            "lever": cmd_lever}[a.cmd](a)
+            "lever": cmd_lever, "sensitivity": cmd_sensitivity}[a.cmd](a)
 
 
 if __name__ == "__main__":

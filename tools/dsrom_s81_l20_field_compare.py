@@ -17,6 +17,7 @@ from dsrom_s81_execution_binding import CanonicalS81Execution
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--rank', type=int, choices=range(4), default=0)
     p.add_argument('--owner', type=Path, required=True)
     p.add_argument('--checkpoint', type=Path, required=True)
     p.add_argument('--inputs', type=Path, required=True)
@@ -26,7 +27,9 @@ def main():
     if terminal.get('exit_code') != 0:
         raise ValueError('completed native field caller required before comparison')
     manifest = json.loads((a.inputs/'native_field_inputs.json').read_text())
-    path = a.inputs/'I6.XN_rank0.u32'
+    if terminal.get('rank', 0) != a.rank:
+        raise ValueError('completed caller rank differs from requested comparison')
+    path = a.inputs/f'I6.XN_rank{a.rank}.u32'
     if hashlib.sha256(path.read_bytes()).hexdigest() != manifest['files'][path.name]:
         raise ValueError('produced XN changed')
     x = np.fromfile(path, dtype='<u4').view(M.F)
@@ -38,14 +41,14 @@ def main():
     results = []
     for pc in (7, 8):
         node = execution.source.nodes[f'L20.I{pc}']
-        fragments = execution.source.resolve(node['id'], 0)['fragments']
+        fragments = execution.source.resolve(node['id'], a.rank)['fragments']
         if len(fragments) != 1:
             raise ValueError('one full canonical field matrix required')
         matrix = fragments[0]['matrix']
         f = node['instruction']
         raw = M.V._blocked(checkpoint.get(matrix['tensor']),
                            checkpoint.get(matrix['source_scale_tensor']), matrix['tensor'])
-        shard = matrix['rank_slices'][0]
+        shard = matrix['rank_slices'][a.rank]
         r0, r1 = shard['rows']
         c0, c1 = shard['cols']
         w = M.V.Q8(raw.q[r0:r1, c0:c1], raw.e[r0:r1, c0//32:c1//32])
@@ -67,7 +70,7 @@ def main():
             source_template_sha256=node['template_word_sha256'],
             first_differences=[dict(row=int(i), actual=int(actual[i]), reference=int(reference[i]))
                                for i in different[:16]]))
-    record = dict(scope='rank0 stage37 full native I7/I8 on produced SIM_ONLY I6 XN',
+    record = dict(scope=f'rank{a.rank} stage37 full native I7/I8 on produced SIM_ONLY I6 XN', rank=a.rank,
                   position=1048575, token=16754, full_token=False,
                   exact=all(r['bit_mismatches'] == 0 for r in results), results=results,
                   input_sha256=manifest['files'][path.name],
