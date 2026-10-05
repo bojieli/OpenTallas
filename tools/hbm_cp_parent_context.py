@@ -11,10 +11,8 @@ OUT=ROOT/'physical/hbm_cp_parent_context_20261005'
 def prepare():
     r=json.loads((ROOT/CONTRACT).read_text());cp=r['CP'];clock=r['clock']
     c=next(c for c in r['channels'] if c['child']=='CP')
-    for path,digest in cp['association_join']['source_sha256'].items():
-        if path.startswith('rtl/test/'):
-            continue  # Prior gate fixture is not physical RTL.
-        assert hashlib.sha256((ROOT/path).read_bytes()).hexdigest()==digest,path
+    from uarch_model import hbm_cp_validate_allocated_sources
+    checked_sources=hbm_cp_validate_allocated_sources(ROOT,cp)
     OUT.mkdir(parents=True,exist_ok=True)
     gx,gy,gx1,gy1=cp['gross_bbox_um'];cx,cy,cx1,cy1=cp['core_bbox_um']
     assert abs(cx1-cx-43.2)<1e-8 and abs(cy1-cy-43.2)<1e-8
@@ -104,6 +102,7 @@ add_pdn_stripe -grid cp_service -layer M2 -width 0.018 -pitch 0.54 -offset 0 -fo
     (OUT/'pdn.tcl').write_text(pdn)
     record=dict(schema='hbm.cp.parent-context.physical-inputs.v1',contract=CONTRACT,
         contract_sha256=hashlib.sha256((ROOT/CONTRACT).read_bytes()).hexdigest(),
+        checked_sources=checked_sources,
         die_area_um=[0,0,gx1-gx,gy1-gy],core_area_um=[cx-gx,cy-gy,cx1-gx,cy1-gy],
         parent_translation_um=[gx,gy],regions=regions,pins=pins,
         signal_ports=234,power_clock_reset_ports_excluded_from_signal_count=True,
