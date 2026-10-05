@@ -54,9 +54,10 @@
     "targeted_new_cases": [
       "sink_control_UE_after_provider_accept",
       "shared_owner_UE_after_provider_accept",
-      "payload_CE_with_accepted_debt"
+      "payload_CE_with_accepted_debt",
+      "selected_checked_payload_CE_with_accepted_debt"
     ],
-    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json",
+    "terminal": "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json",
     "warm_hook_in_component": false
   },
   "measured_connected_component": {
@@ -184,15 +185,16 @@
   "measured_successor_component": {
     "FP32_words": 32,
     "artifact_sha256": {
-      "CORRUPT_SHARED_OWNER.log": "0229706a6e9b987d996fb1258b0f49a935b8e599d91b788eabfb9d4eb48a8d42",
-      "CORRUPT_SINK_CONTROL.log": "02c8c911162d774701002e3dd438323555a9c0dea78263c7bf6016e023fc2457",
-      "compile.log": "915b2b782f2807efc9336f029d9e2b92a5e931ac1cef5a0b3a0683290e474d76",
-      "corrupt.log": "9f8524cd780513c4c4627e41677f02f3f900da1437dc103940e682432f20758c",
-      "normal.log": "04bbbd63dffd1cb9a9feea9349f0e0b8cbe45c068a7e0769cc79f0e7273e4b4d",
-      "payload_ce.log": "09aeeba90d57e0d35b97f134ed629b9029690ada57475e4339d29ead7f0f1d52",
+      "CORRUPT_SHARED_OWNER.log": "f8b5bc800de787f20bc71bbf82e19b0f82b1fc49a33919e5b2570aabfbc47f1f",
+      "CORRUPT_SINK_CONTROL.log": "4ff55c57d6dfa12b9509082af86c8c4463b58fac548f5e1c6ec770a24abf3b92",
+      "compile.log": "b569393346c501c38e572b5d43fcb04dbc009b18bd2a99b6dccef26567ca6d4f",
+      "corrupt.log": "d5d829fd37e1d2708f0952ce2f175465d4764fcb375941efe4900bf4bcbe1dcd",
+      "normal.log": "be3df73111c2b2f7ddf81ce6f8fe0d865947e8ff7bbaac8969f552f53ec23c95",
+      "payload_ce.log": "c32026c49affd594e3e377a242a4c712ea92f71feff80320eadf5a983b7e8463",
       "run.log": "d7dcd516ff6f0557701cc35f5721f63e57c73621e0324d1e192d62393d8a8081",
-      "runtime.rc": "8d6c81a2117607d9abacfdfdd4cb38794314e8113925d763eea2fafe4b775486",
-      "source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
+      "runtime.rc": "a74a29182314b9eabe3b8f7f215e6c2f5379960d8818ba38ccfc189a7f4fc79d",
+      "selected_payload_ce.log": "a62832e384b85cfe89a0ac022a6dc88c3ae2eeae60e1ae133e65da7955b86900",
+      "source.json": "b4a6d85f0a32d80740e357de0d2746c3f1a064ab2f6325074ac9245480019e12",
       "toolchain.log": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
     },
     "authority_negative_observation_edges": 12,
@@ -215,12 +217,16 @@
     "parent_warm_reset_tested": false,
     "payload_CE": {
       "added_release_edges": 0,
+      "closed_permission_debt_observation_edges": 4,
       "held_owner_debt": true,
       "injected_codeword": 8,
+      "injection_edge": 24,
+      "measured_service_edge_interval": 5,
+      "normal_resume_edge": 29,
       "protected_recheck": true,
       "release_edge": 196,
-      "scope": "reserved ingress payload with provider accepted debt; not a selected-stage injection",
-      "service_can_overlap_other_reserved_row": true
+      "scope": "reserved ingress payload with accepted WR debt",
+      "service_overlaps_existing_provider_wait": true
     },
     "physical_admission": false,
     "physical_binding_complete": false,
@@ -228,8 +234,21 @@
     "request_stall_edges": 2,
     "route_launched": false,
     "rows": 4,
+    "selected_payload_CE": {
+      "added_release_edges": 0,
+      "closed_permission_debt_observation_edges": 4,
+      "held_owner_debt": true,
+      "injected_codeword": 51,
+      "injection_edge": 24,
+      "measured_service_edge_interval": 5,
+      "normal_resume_edge": 29,
+      "protected_recheck": true,
+      "release_edge": 196,
+      "scope": "selected checked payload with accepted WR debt",
+      "service_overlaps_existing_provider_wait": true
+    },
     "shared_releases": 1,
-    "source_commit": "91714b0525e69d6eadb677fdcc3481e61bb3e3c0",
+    "source_commit": "26718de65058e2c94b807e6fd00ebd1f00100080",
     "verdict": "PASS_COMPONENT_EXACT",
     "whole_token": false,
     "writes": 4
@@ -423,8 +442,8 @@
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/private_alloc.svh": "0b88e7445bf0c78a992071850109657691d75393781ff4266be2760b98abab82",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/case/seq.hex": "1e2bffbc2bca24cea9654e7d2d9e53cf6352b6c9edbd26bab6cfeb7f9612c0e9",
     "results/rtl/hubble_native_connected_w2_20261005/runtime_r1_PASS/selected_program_cp_census.json": "b3833a7548aec7bd6e4c3f558bd44e81be6055f595f480ae415acebf0958568e",
-    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json": "4829fac869af50bff19585f4aa2be38ef58aca340f103790978d400c90a47b39",
-    "results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/source.json": "96ab059e9dcbfdb33ae528fe2374427bc6e284ad46b5970e295cf03f5a2e81de",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json": "427a083cf3eeb04f5f06f21d101d730dcc468bb4c7af9e98e36546ace3e5124d",
+    "results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/source.json": "b4a6d85f0a32d80740e357de0d2746c3f1a064ab2f6325074ac9245480019e12",
     "results/uarch/dsrom_native_masked_backend_prepare_20261003/model.json": "bc502284eade59caf77a407dd3a8c974983bbb77c23922050dee5b4902d7a42a",
     "results/uarch/hbm_w2_publication_20261005/inputs/immutable_parent.sv": "f569e6f459a46dcb1bbe0826c99a8aeaefca4fba81ba3c75c65174e7eb90e16e",
     "results/uarch/hbm_w2_publication_20261005/inputs/original_f835_sink.sv": "b0c030d784e9dddd285bfa827548884fdaf881a1256ec1555b1de95685f681c0",

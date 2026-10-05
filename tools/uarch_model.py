@@ -8889,7 +8889,7 @@ def hbm_w2_publication_model():
              root / codec_rel, root / 'tools/hbm_accel_sm_v_floorplan.py',
              root / 'results/floorplan/hbm_gpu/v41_hbm_die.json']
     # Source-pinned minimum component measurement; no connected-parent replay.
-    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS'
+    candidate_dir = root / 'results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS'
     candidate = json.loads((candidate_dir / 'result.json').read_text())
     for name, expected in candidate['artifact_sha256'].items():
         if hashlib.sha256((candidate_dir / name).read_bytes()).hexdigest() != expected:
@@ -9046,8 +9046,8 @@ def hbm_w2_publication_model():
                 'channel length, layer/pitch, residual track allocation after competing trunks'],
             no_slot_or_clock_fit_claim=True),
         measured_successor_component=candidate,
-        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r1_PASS/result.json',
-            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt'],
+        gate=dict(existing_fourrow_inputs_unchanged=True, terminal='results/rtl/w2_transaction_pipeline_20261005/component_r2_PASS/result.json',
+            targeted_new_cases=['sink_control_UE_after_provider_accept', 'shared_owner_UE_after_provider_accept', 'payload_CE_with_accepted_debt', 'selected_checked_payload_CE_with_accepted_debt'],
             assertions='accepted protected debt/tag survives; no new request, owner release or successful CPL; root POR stays high',
             warm_hook_in_component=False,
             immutable_parent_source='inputs/immutable_parent.sv (f835c8641)',
