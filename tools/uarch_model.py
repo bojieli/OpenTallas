@@ -8455,6 +8455,72 @@ def dsrom_wfc_stage_completion_join_price(idw=47, paw=14, nw=21):
                 physical_obligation='Charge this retained result and all comparators/enable/clock/reset buffers in actual parent slot and route required authority ports; no fulltop fit or signoff credit.')
 
 
+def dsrom_wfc_completion_edge_price(nw=21, exposed_completions=6,
+                                   measured_stage_cycles=73670):
+    """Unselected one-edge completion alternatives, priced on a retained trace.
+
+    This is a conditional calendar charge, not a changed RTL measurement.
+    A one-bit hop requires source-held data and identity through the new edge.
+    A finite capture holds the actual producer's token/value plus validity;
+    neither alternative licenses new work to overwrite its request context.
+    """
+    payload = nw + 32
+    choices = {}
+    for name, data_bits in [('parent_held_data_hop', 0),
+                            ('finite_result_capture', payload)]:
+        ff = data_bits + 1
+        # Payload uses unreset FFs, validity uses the existing reset cell type.
+        nand2 = 4*data_bits + 32  # hold mux plus bounded local valid control
+        buffers = 3*ff + 16      # clock/D/reset and distributed local control
+        gross = data_bits*0.2916 + 0.37908 + nand2*0.08748 + buffers*0.10206
+        choices[name] = dict(new_FF_bits=ff, retained_payload_bits=data_bits,
+                            NAND2_reservation=nand2, buffer_reservation_cells=buffers,
+                            gross_cell_reservation_um2=gross,
+                            total_growth_budget_um2=2*gross,
+                            old_cell_removal_credit_um2=0,
+                            new_clock_pin_cap_fF_SS=data_bits*0.446638 + 0.433982,
+                            new_reset_pin_cap_fF_SS=0.704025,
+                            parent_result_hold_required=(data_bits == 0),
+                            request_context_retention_required=True,
+                            new_memory_ports=0, new_memory_bytes_per_cycle=0,
+                            new_external_payload_bits_per_edge=0,
+                            producer_payload_bits_per_capture=payload,
+                            capture_data_local_wire_bits=data_bits,
+                            local_valid_control_bits=1,
+                            routing_capacity_proven=False,
+                            actual_parent_loads=None,
+                            budget_fraction_of_smallest_failed_cell_area=2*gross/15787.9,
+                            actual_parent_slot_fit_proven=False,
+                            excludes_separate_internal_control_repair=True,
+                            added_completion_edges=1)
+    return dict(schema='opentallas.dsrom.wfc.completion_edge_price.v1',
+                model_only=True, implementation_selected=False, adopted=False,
+                source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv',
+                baseline_controller_sha256='601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099',
+                source_terms=['core_done/core_next_token/core_next_val',
+                              'job_done and TXQ payload capture',
+                              'core_free/tx_reading/VM arbitration and request context'],
+                choices=choices, MACs_per_cycle=0,
+                target_period_ps=833, SS_setup_uncertainty_ps=60,
+                FF_hold_uncertainty_ps=25, SS_FF_closed=False,
+                calendar=dict(vehicle='original L20 stage9_w1 dependency retry PASS',
+                              measured_stage_cycles=measured_stage_cycles,
+                              actual_completion_events=exposed_completions,
+                              added_edges_if_every_event_exposed=exposed_completions,
+                              target_period_scale_only_added_ns=exposed_completions*0.833,
+                              fractional_calendar_charge=exposed_completions/measured_stage_cycles,
+                              rate_loss_if_other_edges_unchanged=exposed_completions/(measured_stage_cycles+exposed_completions),
+                              whole_token_exposed_events=None,
+                              whole_token_latency_delta_ns=None,
+                              composition='deltaT=sum(exposed completion hops * actual controller period) + changed service/phase/credit waits; no free overlap or token extrapolation'),
+                physical_gain_measured=False, actual_parent_launch_clock=None,
+                actual_parent_result_hold_contract=None, mapped_area_proven=False,
+                internal_user_position_path_repaired=False,
+                reset_recovery_failure=False,
+                owner_decision='CLAUDE chooses the actual completion/capture contract and separate internal-control repair. No RTL/campaign authorized by this model.',
+                price_source='results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json')
+
+
 def dsrom_wfc_completion_ready_price(nw=21, txq=4):
     """Conditional same-edge completion-ready lookahead, not an adopted repair.
 
