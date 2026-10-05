@@ -430,13 +430,18 @@
       },
       "uarch": {
         "path": "tools/uarch_model.py",
-        "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c"
+        "sha256": "f56faa82eebcc045dd83ebe5b30c4c6c16eb471ea9c64dcafd9500eb63519f9c",
+        "git_commit": "6ceeb4d02310720b93a06e85c0100e9294048ab2"
       }
     },
     "current_die_core_service_budget": null,
     "current_portmap": {
       "path": "results/uarch/hbm_current_target_portmap_20261005/model_portmap.json",
       "sha256": "89f86a1a126c7da0154b428ccfd07975068d0b018af59927b05900940758c59b"
+    },
+    "loader_width_successor": {
+      "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/loader_width/price_before_rtl.json",
+      "sha256": "a2d570c43e766ae74bb5267b9287b55a1d61d0a6faa5cb4d68def78518ff0a1e"
     }
   }
 }

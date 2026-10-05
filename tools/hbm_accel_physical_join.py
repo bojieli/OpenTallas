@@ -6,15 +6,17 @@ while coordinates are unassigned. An owner-pinned allocation adds service slot
 and corridor costs; unknown bounds remain unknown, never zero.
 """
 import argparse
+import hashlib
 import json
 import math
 import re
+import subprocess
 from pathlib import Path
 
 from hbm_accel_fulldie_inputs import ROOT, DEFAULT, record, box, contains, finite, require
 
 
-def loader_allocation(allocation, geometry):
+def loader_allocation(allocation, geometry, width):
     demand = dict(name="service.loader", contained_in="service",
                   memory_clients_per_die=1, request_bits=337, response_bits=273,
                   payload_bytes_per_accepted_memory_edge=32,
@@ -27,8 +29,20 @@ def loader_allocation(allocation, geometry):
                   allocation=None, additional_service_area_um2=None,
                   added_corridor_area_um2=None, added_composed_latency_ns=None,
                   loader_geometric_bound_pass=False)
+    # Required full-address successor is a separate source candidate. Preserve
+    # baseline CRC cost but never transfer its closure to widened packets.
+    demand.update(request_bits=width["request_service_packet_bits"],
+                  internal_request_bits=width["request_internal_packet_bits"],
+                  width_successor_price=width, widened_source_clock_closed=False,
+                  added_address_FF_area_floor_um2=width["FF_area_floor_um2_ESTIMATE"],
+                  additional_address_guard_mux_CDC_area_um2=None)
+    demand["gross_cell_bound_um2"] += width["FF_area_floor_um2_ESTIMATE"]
+    demand["required_slot_before_repair_um2"] = demand["gross_cell_bound_um2"]/geometry["maximum_slot_cell_utilization"]
     if allocation is None:
         return demand
+    finite(allocation["address_guard_mux_CDC_cell_area_um2"], "widened address guard/CDC cost")
+    require(allocation["wide_source_price_complete"] is True, "incomplete widened loader price")
+    demand["gross_cell_bound_um2"] += allocation["address_guard_mux_CDC_cell_area_um2"]
     # This is the existing service budget, not an extra free-standing loader.
     service = box(allocation["service_box_um"], "existing service")
     region = box(allocation["loader_box_um"], "service.loader")
@@ -52,7 +66,7 @@ def loader_allocation(allocation, geometry):
         corridor = box(route["box_um"], "loader corridor")
         require(contains(service, corridor), "corridor outside service allocation")
         require(route["layers"], "missing actual routing layers")
-        bits = {"MREQ":337, "RSP":273, "DMA64":64, "CRC":demand["conservative_crc_cut_tracks"]}[route["name"]]
+        bits = {"MREQ":demand["request_bits"], "RSP":273, "DMA64":64, "CRC":demand["conservative_crc_cut_tracks"]}[route["name"]]
         # Track count uses physical bus widths; no duty-cycle discount. PG,
         # clocks, blockages and existing service wires consume reserved tracks.
         capacity = 0
@@ -92,13 +106,21 @@ def join(root, manifest, target):
     portmap = record(root, refs["current_portmap"])
     phy = record(root, refs["phy"])
     geometry = record(root, refs["loader_geometry"])
+    width = record(root, refs["loader_width_successor"])
     budgets = refs["budget_authorities"]
     old = record(root, budgets["historical_ds" if target == "deepseek" else "historical_qwen"])
     service = record(root, budgets["ds_service_r11" if target == "deepseek" else "qwen_service_r11"])
     # Read the actual existing budget constant without invoking its legacy
     # GPU sizing model, which is explicitly not the selected accelerator.
     from hbm_accel_fulldie_inputs import pinned
-    raw = pinned(root, budgets["uarch"]).decode()
+    uref = budgets["uarch"]
+    if "git_commit" in uref:
+        require(re.fullmatch(r"[0-9a-f]{40}", uref["git_commit"]), "invalid frozen budget commit")
+        raw_bytes = subprocess.check_output(["git", "show", uref["git_commit"]+":"+uref["path"]], cwd=root)
+        require(hashlib.sha256(raw_bytes).hexdigest()==uref["sha256"], "frozen budget source drift")
+        raw = raw_bytes.decode()
+    else:
+        raw = pinned(root, uref).decode()
     shore = re.search(r"HBM_SHORE\s*=\s*dict\(\s*phy_edge_mm=([0-9.]+)", raw)
     corners = re.search(r"corner_mm=([0-9.]+), corner_basis", raw)
     require(shore and corners, "missing existing right-size shoreline budget")
@@ -114,7 +136,7 @@ def join(root, manifest, target):
         DS_service_provider_area_fit=service.get("DS_provider_area_fit") if target=="deepseek" else None,
         decision_required="Bind current accelerator die/core/service rectangle; existing right-size edge uses8.5mm/PHY but actual LEF is12.000096mm. Historical GPU slots are not current component slots.")
     alloc = record(root, refs["allocation"])[target] if refs["allocation"] else None
-    loader = loader_allocation(alloc, geometry)
+    loader = loader_allocation(alloc, geometry, width)
     common = dict(stacks_per_die=4, pseudo_channels_per_stack=32,
                   pseudo_channels_per_die=128,
                   phy_count=4, phy_outline_grade=phy["footprint"]["area_basis"]["grade"],

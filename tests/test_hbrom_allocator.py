@@ -106,3 +106,64 @@ def test_group_slot_addresses_meet_two_cycle_macro_capture():
             assert event['cycle']-previous.get(macro,-100)>=2
             previous[macro]=event['cycle']
     assert count==19*24
+
+
+def test_gate_up_and_all_down_outputs_share_exact_row_owners():
+    ts=[tensor('archive.scale',rows=5,k=1)]
+    ts += [tensor(f'layer.expert{e}.{op}.weight',rows=23 if op!='down' else 31,k=5120 if op!='down' else 2304)
+           for e in range(7) for op in ('gate','up','down')]
+    a=A.allocate(ts,2,3,128)
+    maps={}
+    for r in a['runs']:
+        if r['format']=='raw': continue
+        d=maps.setdefault(r['name'],{})
+        for i in range(r['row_count']):
+            row=r['first_row']+i*r['row_stride']
+            d[row]=(r['rank'],r['tile'])
+            assert d[row]==(row%6//3,row%3)
+    for e in range(7):
+        assert maps[f'layer.expert{e}.gate.weight']==maps[f'layer.expert{e}.up.weight']
+        assert maps[f'layer.expert{e}.down.weight']==maps['layer.expert0.down.weight']
+
+
+def test_calendar_charges_each_matrix_tail_not_combined_rows():
+    ts=[tensor(f'expert{e}.weight',rows=1,k=5120) for e in range(6)]
+    a=A.allocate(ts,1,1,16)
+    cal=A.selected_calendar(a,[t['name'] for t in ts])
+    assert cal['max_cycles']==6*64
+    assert cal['max_cycles']>A.ceildiv(6*3,8)*8*8
+
+
+def test_native_storage_bound_never_claims_padding_holes_as_capacity():
+    ts=[tensor(rows=4)]
+    bound=A.summarize_storage_records(ts,1)
+    actual=A.allocate(ts,1,1,4,rows_per_macro=40)
+    assert bound['total_records']==96
+    assert actual['used_record_highwaters'][0][0]==104
+    assert not actual['fits']
+
+
+@pytest.mark.parametrize('fmt,k,groups',[('fp4',5120,3),('fp4',2304,2),('fp8',5120,5),('bf16',5120,10)])
+@pytest.mark.parametrize('rows',range(1,17))
+def test_dense_source_calendar_tail_recursions(fmt,k,groups,rows):
+    a=A.allocate([tensor(rows=rows,k=k,fmt=fmt)],1,1,32,rows_per_macro=128)
+    events=list(A.source_request_calendar(a,'w.weight',0,0))
+    assert len(events)==rows*groups*8
+    last={}
+    for event in events:
+        for addr in event['addresses']:
+            assert event['cycle']-last.get(addr['macro'],-2)>=2
+            last[addr['macro']]=event['cycle']
+    source_cycles=events[-1]['cycle']+1
+    cal=A.selected_calendar(a,['w.weight'])['tiles'][0]['matrices'][0]
+    assert source_cycles<=cal['source_request_cycles_upper']
+    assert source_cycles<=cal['issue_cycles']
+    assert sum(e['macro_busy_stall_cycles'] for e in events)<=cal['macro_busy_stalls_upper']
+
+
+def test_odd_dense_request_tail_really_stalls_not_bubble_assumption():
+    a=A.allocate([tensor(rows=1,k=5120)],1,1,4)
+    events=list(A.source_request_calendar(a,'w.weight',0,0))
+    assert len(events)==24
+    assert sum(e['macro_busy_stall_cycles'] for e in events)==7
+    assert events[-1]['cycle']+1==31

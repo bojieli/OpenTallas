@@ -98,6 +98,29 @@ def swizzle(fmt, words):
     return result
 
 
+def summarize_storage_records(tensors, tp=1):
+    """Cheap necessary capacity bound, before per-owner/group-tail allocation.
+
+    Omits only allocation holes, never native SM lane padding. Passing this
+    bound is not a fit verdict. Count inline quantized scales through records;
+    separately listed source scale archives remain charged.
+    """
+    total=0; cache={}
+    for tensor in tensors:
+        fmt=normalize_format(tensor.get('format','raw'))
+        k=int(tensor.get('k',tensor.get('K',0)) or 0)
+        matrix=(fmt in ('fp4','fp8','bf16') and k>1 and not tensor.get('is_scale') and not tensor['name'].endswith('.scale'))
+        if matrix:
+            key=(fmt,k)
+            if key not in cache: cache[key]=row_geometry(fmt,k)['records_per_row']
+            records=int(tensor.get('rows') or 1)*cache[key]
+        else: records=ceildiv(int(tensor['bytes']),128)
+        total+=records*int(tensor.get('replicas_per_rank',1))*(tp if tensor.get('replicated',False) else 1)
+    return dict(total_records=total,physical_words=4*total,
+                excludes='per-group tail holes and per-matrix eight-record alignment',
+                is_necessary_bound_only=True)
+
+
 def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=4096, emit_runs=True, layout_mode="padded", emit_summaries=True):
     """Allocate source records; clusters here are independent compute tiles.
 
@@ -129,7 +152,10 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
         for rank in range(tp):
             for tile in range(clusters_per_die):
                 owner=tile if replicated else rank*clusters_per_die+tile
-                first=(owner-rotate)%stride
+                # All executable matrices share source-row ownership. In particular,
+                # gate/up rows and every selected/shared down output row meet at
+                # the same rank/tile; raw archives may rotate for capacity.
+                first=owner if matrix else (owner-rotate)%stride
                 count=0 if first>=logical_rows else 1+(logical_rows-1-first)//stride
                 if not count: continue
                 for replica in range(replicas):
@@ -153,7 +179,7 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
                         cursors[rank][tile]=cur+take*rpr;source+=take*stride;left-=take
         if emit_summaries: summaries.append(dict(name=n,geometry=geom,logical_rows=logical_rows,owners=entries))
         useful+=int(tensor['bytes'])*(tp if replicated else 1)*replicas
-        rotate=(rotate+logical_rows)%stride
+        if not matrix: rotate=(rotate+logical_rows)%stride
     peak=max(max(row) for row in cursors); fits=peak<=groups*depth
     return dict(schema='opentallas.hbrom.allocator.v1',fits=fits,tp=tp,tiles_per_die=clusters_per_die,
                 pairs_per_tile=pairs_per_cluster,rows_per_macro=rows_per_macro,groups_per_tile=groups,
@@ -162,7 +188,7 @@ def allocate(tensors, tp, clusters_per_die, pairs_per_cluster, rows_per_macro=40
                 max_cluster_bytes=peak*128,capacity_bytes_per_rank=groups*depth*128*clusters_per_die,
                 allocated_bytes_per_rank=max(sum(r) for r in cursors)*128,
                 useful_bytes_per_rank=ceildiv(useful,tp),group_tail_padding_records=padding,
-                tensors=summaries,runs=runs,mapping='whole rows; 4-stream SM issue-order padded records; physical group bounded',
+                tensors=summaries,runs=runs,mapping='aligned matrix row modulo rank/tile; 4-stream native SM records; physical group bounded',
                 fit_is_not_physical_qualification=True)
 
 
@@ -203,10 +229,18 @@ def selected_calendar(allocation, names, il=8):
             key=(own['rank'],own['tile']);work[key]=work.get(key,0)+own['rows']
         for key,rows in work.items():
             g=t['geometry']; cycles=ceildiv(rows*g['groups'],il)*il*8 if g else rows
-            value=tiles.setdefault(key,dict(cycles=0,records=0,matrices=[]))
+            value=tiles.setdefault(key,dict(cycles=0,records=0,source_request_cycles_upper=0,matrices=[]))
             records=rows*g['records_per_row'] if g else rows
-            value['cycles']+=cycles;value['records']+=records
-            value['matrices'].append(dict(name=t['name'],rows=rows,cycles=cycles,records=records))
+            # Only final partial IL wave can have odd record count. Each
+            # of seven timestep boundaries may then need one macro-busy wait.
+            # Storage-group boundaries can remove waits, so this is an upper bound.
+            recurrence_stalls=7 if g and (rows*g['groups'])%2 else 0
+            source_upper=records+recurrence_stalls
+            value['cycles']+=max(cycles,source_upper);value['records']+=records
+            value['source_request_cycles_upper']+=source_upper
+            value['matrices'].append(dict(name=t['name'],rows=rows,cycles=max(cycles,source_upper),issue_cycles=cycles,
+                                          records=records,source_request_cycles_upper=source_upper,
+                                          macro_busy_stalls_upper=recurrence_stalls))
     if selected-seen: raise ValueError('unmapped selected tensors: '+str(sorted(selected-seen)))
     return dict(max_cycles=max((v['cycles'] for v in tiles.values()),default=0),
                 tiles=[dict(rank=k[0],tile=k[1],**v) for k,v in sorted(tiles.items())],
@@ -238,6 +272,26 @@ def access_calendar(allocation, name, rank, tile, il=8):
                     addresses=[physical_address(run,source_row,8*group+step,s,allocation['rows_per_macro']) for s in range(4)]
                     yield dict(cycle=cycle,bubble=False,source_row=source_row,group=group,step=step,addresses=addresses)
                 cycle+=1
+
+
+def source_request_calendar(allocation, name, rank, tile, il=8):
+    """Dense bulk-copy requests in issue order, with actual macro busy stalls.
+
+    Bulk copy omits IL bubble slots. Odd final waves can revisit a macro at the
+    next timestep immediately; req_ready must stall until its two-cycle read
+    service permits capture. This generator prices that wait, without a lookup
+    table or changing immutable addresses. Transport/staging credit stalls are
+    separate additional constraints.
+    """
+    last={}; cycle=0; sequence=0
+    for event in access_calendar(allocation,name,rank,tile,il):
+        if event['bubble']: continue
+        earliest=max([cycle]+[last.get(a['macro'],-2)+2 for a in event['addresses']])
+        stalled=earliest-cycle
+        yield dict(event,cycle=earliest,issue_cycle=event['cycle'],request_index=sequence,
+                   macro_busy_stall_cycles=stalled)
+        for a in event['addresses']: last[a['macro']]=earliest
+        cycle=earliest+1;sequence+=1
 
 
 def main():
