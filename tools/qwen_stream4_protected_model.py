@@ -163,8 +163,9 @@ def model(root=ROOT):
     die = allocation(result, root)
     result.update(parent_slot_fit=die['slot_fit'],
         slot_reason='Actual b3r12 allocation: two added shoreline bands; all 3225 existing contexts retained. This fits endpoint homes only; service transport is priced separately and is not qualified.',
-        die_allocation=die,
-        actual_parent_clock_relation=die['source_clocks'])
+        die_allocation=die)
+    result['actual_parent_clock_relation'].update(die['source_clocks'])
+    result['actual_parent_clock_relation']['service_clock']='selected top free-running clk -> u_kv.clk'
     result['physical_gates'].append('full-width protected service transport and real PHY adapter/clock endpoint budgets')
     return result
 

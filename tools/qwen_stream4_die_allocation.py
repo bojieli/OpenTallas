@@ -52,7 +52,7 @@ def allocation(interface, root=ROOT):
             assert y >= halo and y+pch <= die['h']-halo
             assert pcw*pch/1e6 >= interface['per_PC_core_area_mm2']
             pcs.append(dict(PC_ID=stack*32+q,stack=stack,shoreline=st,
-                instance=f'pc[{stack*32+q}].u_cdc',rect_um=[x,y,x+pcw,y+pch],
+                instance=f'selected.pc[{stack*32+q}].u_cdc',rect_um=[x,y,x+pcw,y+pch],
                 core_area_mm2=pcw*pch/1e6,free_clock='clk',memory_clock='hclk',
                 source='rtl/hdc/kv/ot_qwen_s4_protected_pc.sv'))
     shared=interface['shared_descriptor_GO']['required_home_um']
