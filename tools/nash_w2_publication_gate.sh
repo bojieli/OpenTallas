@@ -44,4 +44,16 @@ printf 'corrupt_rc=%s\n' "$negative" >> "$job/runtime.rc"
 if test "$negative" = 0; then echo 'corrupt readback unexpectedly succeeded'; exit 1; fi
 if ! rg -q 'CORRUPT_READBACK_DETECTED' "$job/corrupt.log" || ! rg -q 'EXPECTED_CORRUPT_READBACK_FAIL_CLOSED' "$job/corrupt.log"; then echo 'wrong negative failure'; exit 1; fi
 if ! rg -q 'PASS W2_PUBLICATION_SHARED_CPEND_CPL' "$job/normal.log"; then echo 'normal missing verdict'; exit 1; fi
-echo 'PASS normal + expected nonzero corrupted actual RAM readback'
+# Opt in only for the changed-source gate; do not replay old fixtures merely
+# to qualify these added assertions. Normal/golden payloads and stalls unchanged.
+if test "${NASH_W2_PROTECTION_CASES:-0}" = 1; then
+ for case_name in CORRUPT_SINK_CONTROL CORRUPT_SHARED_OWNER; do
+  "$job/obj/Vtb_hbm_integrated_w2_publication_nash" +"$case_name" > "$job/$case_name.log" 2>&1
+  case_rc=$?
+  printf '%s_rc=%s\n' "$case_name" "$case_rc" >> "$job/runtime.rc"
+  if test "$case_rc" = 0 || ! rg -q 'AUTHORITY_CORRUPTION_ACCEPTED_DEBT_RETAINED' "$job/$case_name.log" || ! rg -q 'EXPECTED_AUTHORITY_CORRUPTION_FAIL_CLOSED' "$job/$case_name.log"; then
+   echo "wrong authority/debt negative: $case_name"; exit 1
+  fi
+ done
+fi
+echo 'PASS selected cases; warm-reset/quarantine requires the real enclosing parent gate'

@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Component fixture: actual CP20, W2 sink, shared protected borrower and byte RAM.
 // Distinct literal payloads are test stimulus, not native arithmetic outputs.
+// This component has root POR only; it does not certify parent warm quarantine.
 module tb_hbm_integrated_w2_publication_nash;
  parameter integer REGISTERED_SUBBLOCKS=0;
  `include "private_alloc.svh"
@@ -42,6 +43,8 @@ module tb_hbm_integrated_w2_publication_nash;
  integer cycle=0,writes=0,reads=0,verified=0,released=0,request_stalls=0,delivery_stalls=0;
  integer provider_age=0,accepted_requests=0,consumed_responses=0;
  reg provider_pending=0,corrupt=0,corrupted=0,cp_callback=0;
+ reg control_corrupt=0,owner_corrupt=0,protection_injected=0;
+ wire protection_negative=control_corrupt||owner_corrupt;
  reg [7:0] ram[0:RAM_BYTES-1];
  wire provider_drained=!provider_pending&&!m_rsp_v&&accepted_requests==consumed_responses;
  wire installed=allocated && BASE_A[5:0]==0 && BASE_B[5:0]==0 &&
@@ -92,11 +95,14 @@ module tb_hbm_integrated_w2_publication_nash;
   if(por_n)begin
    cycle<=cycle+1;
    if(cycle>2000)$fatal(1,"logical progress exhausted: cycle=%0d writes=%0d reads=%0d verified=%0d",cycle,writes,reads,verified);
-   if(shared_fault)$fatal(1,"shared owner fault cycle=%0d",cycle);
-   if(sink_fault&&!corrupt)$fatal(1,"normal sink fault cycle=%0d",cycle);
+   if(shared_fault&&!protection_negative)$fatal(1,"shared owner fault cycle=%0d",cycle);
+   if(sink_fault&&!corrupt&&!protection_negative)$fatal(1,"normal sink fault cycle=%0d",cycle);
    if(m_req_v&&!m_req_ready)request_stalls<=request_stalls+1;
    if(rsp_v[3]&&!delivery_enabled)delivery_stalls<=delivery_stalls+1;
-   if((release_accept||cp_callback||cpl_v)&&verified!=4&&!corrupt)$fatal(1,"early release/CP END before all four payload readbacks");
+   if((release_accept||cp_callback||cpl_v)&&verified!=4&&!corrupt&&
+      (!protection_negative||release_accept||cp_callback||cpl_status==0))$fatal(1,"early release/CP END before all four payload readbacks");
+   if(protection_injected&&(release_accept||cp_callback||(cpl_v&&cpl_status==0)))
+    $fatal(1,"protection corruption released accepted debt or posted successful CPL");
    sm_done<=0;res_v<=0;
    if(release_accept)begin
     if(!provider_drained||!sink_done||verified!=4)$fatal(1,"release without checked provider drain");
@@ -146,9 +152,54 @@ module tb_hbm_integrated_w2_publication_nash;
   if(!source_permit)$fatal(1,"no preGO reservation for no-ready result slot%0d",s);
   result_v=1;result_op=s<2?OPA:OPB;result_row=12'(s%2);result_data=literal_row(s);
  endtask
+ generate if(REGISTERED_SUBBLOCKS)begin:inject_registered
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   // Two parity-invalid copies must fail closed. The routed alias census gives
+   // no independent-physical-copy credit; this is source functional injection.
+   sink.registered_subblocks.control_view.a[0]=~sink.registered_subblocks.control_view.a[0];
+   sink.registered_subblocks.control_view.b[0]=~sink.registered_subblocks.control_view.b[0];
+   protection_injected=1;
+  end
+ end else begin:inject_legacy
+  initial begin
+   wait(control_corrupt);wait(provider_pending);@(negedge clk);
+   sink.on.code[24]=sink.on.code[24]^72'h3;
+   protection_injected=1;
+  end
+ end endgenerate
+ initial begin
+  wait(owner_corrupt);wait(provider_pending);@(negedge clk);
+  owner.on.control_code=owner.on.control_code^72'h3;
+  protection_injected=1;
+ end
  reg [76:0] held_cpl;
+ reg [15:0] debt_tag;reg debt_we;
+ task automatic check_retained_protection_debt;
+  wait(provider_pending);
+  debt_tag=m_req_tag;debt_we=m_req_we;
+  wait(protection_injected);
+  // Allow the real provider/borrower to capture a return, but never retire it
+  // through a corrupt authority. Check the actual existing protected ledger.
+  repeat(12)begin
+   @(negedge clk);
+   if(!por_n||!retained||sink_retire_r||release_accept||released!=0||cp_callback||
+      (cpl_v&&cpl_status==0)||s_req_v||m_req_v)
+    $fatal(1,"accepted debt disappeared or escaped corrupt authority");
+   if(!owner.on.debt[0]||owner.on.debt[19:4]!==debt_tag||owner.on.debt[3]!==debt_we||
+      owner.on.fl[65]||owner.on.fh[65]||owner.on.frame[72:0]!==FRAME)
+    $fatal(1,"protected accepted debt/tag/frame lost after authority corruption");
+  end
+  if(!(shared_fault||sink_fault))$fatal(1,"authority DUE did not assert fault");
+  $display("AUTHORITY_CORRUPTION_ACCEPTED_DEBT_RETAINED control=%0d owner=%0d tag=%h",control_corrupt,owner_corrupt,debt_tag);
+  $fatal(1,"EXPECTED_AUTHORITY_CORRUPTION_FAIL_CLOSED retained_debt=1 releases=0 root_por=1");
+ endtask
  initial begin
   corrupt=$test$plusargs("CORRUPT_READBACK");
+  control_corrupt=$test$plusargs("CORRUPT_SINK_CONTROL");
+  owner_corrupt=$test$plusargs("CORRUPT_SHARED_OWNER");
+  if(integer'(corrupt)+integer'(control_corrupt)+integer'(owner_corrupt)>1)
+   $fatal(1,"select one concrete fault injection per run");
   for(integer k=0;k<RAM_BYTES;k=k+1)ram[k]=8'h6d;
   repeat(3)@(negedge clk);por_n=1;
   repeat(2)@(negedge clk);
@@ -170,7 +221,9 @@ module tb_hbm_integrated_w2_publication_nash;
   @(negedge clk);result_v=0;native_done=1;release_intent=1;
   @(negedge clk);native_done=0;
   if(writes>=4||release_accept||cpl_v)$fatal(1,"early native completion did not precede physical publication");
-  if(corrupt)begin
+  if(protection_negative)begin
+   check_retained_protection_debt();
+  end else if(corrupt)begin
    wait(sink_fault);repeat(2)@(negedge clk);
    if(released!=0||cp_callback||grants[2]!==1)$fatal(1,"corruption released ownership");
    if(cpl_v&&cpl_status==0)$fatal(1,"corruption posted successful completion");
