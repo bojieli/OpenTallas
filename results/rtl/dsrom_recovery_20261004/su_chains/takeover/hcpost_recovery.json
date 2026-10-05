@@ -47,5 +47,26 @@
     "hub_area_um2": null,
     "full_unit_routed_corridor": false
   },
-  "ng256_latency_cycles": null
+  "ng256_latency_cycles": 99,
+  "terminal": {
+    "verdict": "FUNCTIONAL_FULLSHAPE_PASS__PHYSICAL_REJECT_SS",
+    "source_commit": "64b85a8185dd8c0672e272b1def9f499672eca12",
+    "source_clean_verified": true,
+    "run_pid": 1799575,
+    "frontend_pid": 1805547,
+    "pids_gone_verified": true,
+    "cases": 40,
+    "golden_cases": 8,
+    "stress_cases": 32,
+    "checked_words": 819200,
+    "errors": 0,
+    "faults": 0,
+    "registered_output_cycles": 99,
+    "binary_sha256": "be13059ddcace653b0f943bfeae48016d5ff9cbf7da2cc7fe26605860ffc4b7d",
+    "result_sha256": "d8a06ce5b52dea96a01acf1236f27e3ee7a5236d3ea9afc59c5374767f26d8f3",
+    "launcher_exit_rc": "not retained by original unwrapped nohup launcher; terminal data complete and all rows PASS, driver source returns0 on those rows",
+    "build_duration_from_actual_log": "0:30:06.167536",
+    "no_restart_or_parameter_change": true,
+    "adoption": false
+  }
 }
