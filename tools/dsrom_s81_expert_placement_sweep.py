@@ -253,11 +253,101 @@ def run(a):
             source_entries=entries,ROM_catalogues=catalogues,candidates=candidates,summary=summary))
         print(json.dumps(dict(layer=L,canonical=baseline,summary=summary)),flush=True)
     a.output.parent.mkdir(parents=True,exist_ok=True)
+    finish_record(out,a)
     raw=(json.dumps(out,indent=1)+'\n').encode()
     if str(a.output).endswith('.gz'):
         a.output.write_bytes(gzip.compress(raw,mtime=0))
     else:
         a.output.write_bytes(raw)
+    return 0
+
+
+def finish_record(out,a):
+    """Finalize existing cases only; no enumeration, phase, or payload execution."""
+    plan,field,inv=map(read,(a.plan,a.field,a.inventory))
+    measured={p['phase']:p for p in field['phases']}
+    for layer in out['layers']:
+        L=layer['layer']
+        baseline=layer['canonical_baseline']
+        layer['canonical_full_field_node_barrier_sum_us']=layer.pop('canonical_routed_field_node_sum_us',
+            layer.get('canonical_full_field_node_barrier_sum_us'))
+        layer['existing_group_reuse']=dict(capacity_established=False,
+            reason='Fresh-group catalogue excludes other resident tensors. Aggregate canonical free words '
+                   'are not a proof of per-pair intervals, clock/service slots or compatible live controls.',
+            canonical_stages={str(b['stage']):dict(occupied_pairs=inv['occupied_pairs_per_stage'][b['stage']],
+                used_pair_words=inv['used_logical_words_per_stage'][b['stage']],
+                aggregate_remaining_pair_words=2417*8192-inv['used_logical_words_per_stage'][b['stage']]) for b in baseline},
+            cheaper_reuse_claim=False)
+        shared=serial([p for p in plan['phases'] if p['layer']==L and p['group']=='shared.w2'],measured,80)
+        three=min((c for c in layer['candidates'] if c['group_count']==3),
+                  key=lambda c:c['field_node_barrier_calendar_cycles'])
+        for c in layer['candidates']:
+            c['shared_down_unchanged']=shared
+            c['node_barrier_policy']='field-node barrier calendar only; actual SU/quant/lease/publication and source dependencies unbound'
+            c['network']['x_input']=dict(raw_VM_bytes_per_rank=20480, packed_BF16_bytes_per_rank=10240,
+                multicast_copies=c['group_count'], source_bound_hop_cycles=None,
+                conditional_packed_reference_hop_cycles=428,
+                conditional_reference='draft/rlinks x_row requires actual source-owned exact BF16 pack/unpack; absent',
+                reference_wire_cycles=90, placement_loaded_wire_cycles=None)
+            c['network']['GU_return']=dict(raw_VM_bytes_per_expert_per_rank=4608,
+                packed_BF16_bytes_per_expert_per_rank=2304,copies=6,cycles=None)
+            c['network']['W2_input']=dict(raw_VM_bytes_per_expert_per_rank=9216,
+                packed_BF16_bytes_per_expert_per_rank=4608,copies=6,cycles=None)
+            c['network']['returned_down']=dict(bytes_per_expert_per_rank=5120,copies=6,
+                measured_isolated_hop_cycles=348, reference_wire_cycles=90,
+                representation='1280 raw32 VM scalars with BF16-lifted field results',
+                placement_loaded_wire_cycles=None)
+            c['unbound']=['actual multi-endpoint port calendar, loaded wire and endpoint/clock/PG area',
+                '20480B raw32 x transport or actual source-owned exact 10240B BF16 pack/unpack',
+                '4608B raw32 GU return (2304B packed), 9216B raw32 W2 input (4608B packed)',
+                'actual VM writer/publication, input lease, matched ACK, reverse credit and reissue',
+                'route ID/weight framing and identity/exclusion',
+                'retained SU/quant, shared down and ordered combine/allreduce source-dependency calendar',
+                'in-context SS/FF; existing isolated link/wire terms are not new-placement closure']
+            c['field_only_dominated_by']=None
+            if c['group_count'] in (4,5) and c['field_node_barrier_calendar_cycles']>=three['field_node_barrier_calendar_cycles']:
+                c['field_only_dominated_by']=dict(candidate=three['id'],groups=3,
+                    reason='no faster field-node calendar and strictly more added full S81 dies; FIELD ONLY')
+            if L==3 and c['group_count']==1:
+                c['field_only_dominated_by']=dict(canonical=True,
+                    reason='same 4.2166667us field calendar, adds4 dies; original canonical group already installed')
+        for cat in layer['ROM_catalogues'].values():
+            for span in cat['translation']:
+                span.pop('rank_slices',None)
+                span['rank_slice_binding']='source_entries[tensor].rank_slices; all four original slices'
+        layer['calibration_source_identity']={p['phase']:dict(x_source=p['x_source'],
+            x_sha256=plan['x_sha256'][p['phase']],matrices=p['mats']) for p in plan['phases']
+            if p['layer']==L and any(p['group']==f'exp{e}.{k}' for e in layer['experts'] for k in ('gu','w2'))}
+        layer['measured_field_scope']=field['not_measured']
+        for row in layer['summary']:
+            best=layer['candidates'][row['best_candidate']]
+            row['field_only_dominated_by']=best['field_only_dominated_by']
+    out['finalization']=dict(source_commit=a.source_commit,tool_sha256=sha(Path(__file__)),
+        enumeration_repeated=False if a.finalize_from else None,
+        raw_input_sha256=sha(a.finalize_from) if a.finalize_from else None)
+    summary=dict(schema=out['schema'],adopted=False,source_commit=a.source_commit,
+        total_cases=sum(len(L['candidates']) for L in out['layers']),
+        complete_chain_latency_us=None,
+        layers=[dict(layer=L['layer'],experts=L['experts'],
+             canonical_field_node_barrier_sum_us=L['canonical_full_field_node_barrier_sum_us'],
+             canonical_baseline=L['canonical_baseline'],summary=L['summary'],
+             existing_group_reuse=L['existing_group_reuse'],
+             capacity_range=dict(min_max_pair_words=min(c['max_pair_words'] for c in L['ROM_catalogues'].values()),
+                max_max_pair_words=max(c['max_pair_words'] for c in L['ROM_catalogues'].values()),
+                pair_capacity=8192),total_chain_latency_us=None) for L in out['layers']])
+    if a.summary:
+        a.summary.parent.mkdir(parents=True,exist_ok=True)
+        a.summary.write_text(json.dumps(summary,indent=1)+'\n')
+
+
+def finalize(a):
+    out=read(a.finalize_from)
+    assert len(out['layers'])==2 and all(len(L['candidates'])==203 for L in out['layers'])
+    finish_record(out,a)
+    raw=(json.dumps(out,indent=1)+'\n').encode()
+    a.output.parent.mkdir(parents=True,exist_ok=True)
+    a.output.write_bytes(gzip.compress(raw,mtime=0) if str(a.output).endswith('.gz') else raw)
+    print('FINALIZED406 existingcases; no enumeration; output',a.output,flush=True)
     return 0
 
 
@@ -270,9 +360,12 @@ def main():
     p.add_argument('--matrix-map',type=Path,default=CAN/'matrix_map.jsonl.gz')
     p.add_argument('--floorplan',type=Path,default=ROOT/'results/rtl/dsrom_s81_fulldie_20261004/floorplan.json')
     p.add_argument('--links',type=Path,default=REC/'draft/rlinks.json')
+    p.add_argument('--finalize-from',type=Path,help='annotate already computed cases; never enumerate again')
+    p.add_argument('--summary',type=Path)
     p.add_argument('--source-commit',required=True)
     p.add_argument('--output',type=Path,required=True)
-    return run(p.parse_args())
+    a=p.parse_args()
+    return finalize(a) if a.finalize_from else run(a)
 
 
 if __name__=='__main__':
