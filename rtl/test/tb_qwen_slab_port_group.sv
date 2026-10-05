@@ -16,7 +16,7 @@ module ot_rom_4096x266_m8 (input wire clk, input wire ce_in, input wire [11:0] a
         for (c = 0; c < 4; c = c + 1)
             for (b = 0; b < 4; b = b + 1)
                 if (n == $sformatf("tb_qwen_slab_port_group.dut.g_col[%0d].g_bank[%0d].u_rom.p_name", c, b)) bank = c * 4 + b;
-        if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $finish; end
+        if (bank < 0) begin $display("FAIL: cannot parse bank from %s", n); $fatal(1, "EQUIVALENCE_TERMINAL_SETUP_FAIL"); end
     end
     function automatic [265:0] word(input integer bank, input [11:0] a);
         integer l;
@@ -166,6 +166,7 @@ module tb_qwen_slab_port_group;
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
         if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
         else $display("FAIL: %0d errors", errors);
+        if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
     end
 
