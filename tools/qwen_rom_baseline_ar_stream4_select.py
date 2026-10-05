@@ -167,6 +167,11 @@ static FILE* qwen_plain_ar_checked_open(const char* path,const char* mode) {
             host_text = host_text.replace(old, new)
     host_text = host_text.replace('                    return busy ? 4 : 0;',
                                   '                    fflush(stdout);\n                    return busy ? 4 : 0;')
+    progress = '    long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;'
+    if host_text.count(progress) != 1:
+        raise ValueError('caller progress cadence anchor changed')
+    host_text = host_text.replace(progress, progress+
+                                  '\n    if(progress_every<=0)progress_every=4096;')
     if '#include <filesystem>' not in host_text:
         host_text = '#include <filesystem>\n'+host_text
     return host_text
