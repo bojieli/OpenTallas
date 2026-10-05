@@ -98,7 +98,21 @@
     "current_R3_first_access_ns": 150.423,
     "estimated_context_first_access_ns": 153.947,
     "estimated_composed_gain_us": 12.88204,
-    "measured_context": false
+    "measured_context": {
+      "source_commit": "8114a40dc40a8cfd6c18292d20cecf14cba3f396",
+      "record": "results/rtl/hbm_accel_r5a_p2_20261005/r4_STACK_PROTECTION_FAIL/exact.json",
+      "ordinary_cases": 6,
+      "ordinary_pass": true,
+      "first_access_ns": 153.757,
+      "matched_R3_delta_ns": 3.334,
+      "component_gain_us": 12.89,
+      "performance": {
+        "verdict": "FAIL",
+        "first_access_gate_ns": 140.0,
+        "criterion": "all SMs first-expert w1/w3 access, independent of composed token gain"
+      },
+      "protection_pass": false
+    }
   },
   "targets": {
     "qwen_rom": {
@@ -127,7 +141,8 @@
     "actual_CTS_and_loads_pending": true
   },
   "gates": {
-    "exact": false,
+    "exact": true,
+    "protection": false,
     "physical": false,
     "performance": false,
     "adopted": false
