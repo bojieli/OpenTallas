@@ -117,5 +117,50 @@ The closed baseline is 1.4% faster than the as-built pinned spine. That is not b
 spine at PQ=0 loads an op's x at accept, during its configuration wait. The pinned spine loads it after go
 (ot_v41_spine_w17w10 S_GO).
 
-## Physical (SS 60 ps / FF 25 ps at 0.833 ns, routed in context of registered neighbours)
-See SSFF.md.
+## Physical (SS 60 ps / FF 25 ps at 0.833 ns, routed in context of registered neighbours; RTL v8 = final)
+The run directory is ot-epyc1tb:/srv/opentallas-scratch/claude/dsrom-field-spine/phys/out (corner_sta + run records).
+
+| Screen | SS WNS | FF hold WNS | Residual | Std-cell area (screen) |
+|---|---|---|---|---|
+| PQ=0, R=16 | +18.74 ps (0 violators) | -0.18 ps (1 pin: bt_d -> BST stage) | the hold pin | 39,039 um2 |
+| PQ=1, R=16 | +13.98 ps (0 violators) | +0.61 ps | 1 max-slew pin (330 against 320 ps) | 39,226 um2 |
+| PQ=0, R=128 | post-CTS -7.4 ps; routing | | | |
+| PQ=1, R=128 | post-CTS 0.0 ps, post-GRT -13.2 ps; routing | | | |
+| Old spine, for comparison | -684.1 (PQ=0, R=16), -722.8 (PQ=1, R=16), -905.9 (PQ=1, R=128) | | | 28,717 / 28,786 / 53,731 um2 |
+
+The new screen area includes the two-cycle ROM models, the fixture's extra flops, and about 1.6k replica and
+pipeline flops a die. The spine is one block per layer die, so the die cost is about 0.01 mm2.
+
+The kept replica instances are present in the routed R=16 netlists:
+
+| Replica | Instances |
+|---|---|
+| g_ixb | 32 |
+| g_ixq | 8 |
+| g_sel | 64 |
+| u_oh0..4 | 16 each |
+| u_rsfm | 16 |
+| u_cc | 1 |
+| g_aqi | 4 |
+| g_bwb | 4 |
+| g_grp | 1 at R=16 (8 at R=128) |
+
+The remaining work is route iteration only:
+
+- the PQ=1, R=16 slew pin;
+- the PQ=0, R=16 0.18 ps hold pin;
+- the R=128 closure.
+
+Codex owns that loop: /tmp/claude-review-20261003/handoff_to_codex_20261004/dsrom_field_spine_route.md.
+
+## Adoption state (on main)
+| Record | Verdict | AR | MTP |
+|---|---|---|---|
+| levers/field_spine.json (closed baseline, mandatory) | ADOPT | 1,686.5 -> 1,710.8 tok/s | 4,946.7 -> 5,005.9 tok/s |
+| levers/field_spine_pq.json | PENDING_SSFF | 2,056.3 tok/s if adopted (+20.2%) | 5,822.4 tok/s (+16.3%) |
+
+The PQ record is flipped to ADOPT when both PQ=1 screens close. The baseline was measured on main at the time:
+draft, head, router, su_hcpost, su_routeract.
+
+The pinned quantiser ot_hdc_actquant inside the spine is stubbed in the screen, as in the old screen. Its published
+closure is 1.125 GHz TT. It is not part of this redesign.
