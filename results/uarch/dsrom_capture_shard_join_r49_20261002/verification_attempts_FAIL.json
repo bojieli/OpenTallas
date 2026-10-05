@@ -1,8 +1,0 @@
-{
-  "status": "TWO_FAILS_PRESERVED",
-  "reasons": [
-    "directPython intkeys vsJSON strkeys inequality",
-    "canonical sort integer order differs from lexical JSON key order"
-  ],
-  "successor": "normalize current model via JSON serialization then compare exact content; source model unchanged"
-}

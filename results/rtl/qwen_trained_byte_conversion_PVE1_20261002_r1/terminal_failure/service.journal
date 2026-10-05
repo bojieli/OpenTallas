@@ -1,8 +1,0 @@
-Oct 02 13:02:37 ot-pve1 systemd[3829972]: Started /home/ubuntu/.local/qwen-trained-provider-pve1/bin/python /home/ubuntu/otjobs/qwen-trained-byte-conversion-pve1-20261002-r1/launcher.py.
-Oct 02 13:03:52 ot-pve1 systemd[3829972]: hbm-qwen-trained-byte-conversion-pve1-20261002-r1.service: Main process exited, code=exited, status=1/FAILURE
-Oct 02 13:03:52 ot-pve1 systemd[3829972]: hbm-qwen-trained-byte-conversion-pve1-20261002-r1.service: Failed with result 'exit-code'.
-Oct 02 13:03:52 ot-pve1 systemd[3829972]: hbm-qwen-trained-byte-conversion-pve1-20261002-r1.service: Consumed 1min 30.776s CPU time.
-MainPID=0
-Result=exit-code
-ExecMainStatus=1
-ActiveState=failed

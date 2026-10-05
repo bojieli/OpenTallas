@@ -1,6 +1,0 @@
-#!/bin/bash
-cd /srv/opentallas-scratch/claude/fullbw-hbm/src4
-echo "$(date -Is) START L012_ep_p16" >> /srv/opentallas-scratch/claude/fullbw-hbm/jobs/MANIFEST
-RT_PROGRESS=1 /srv/opentallas-scratch/admit.sh 24 -- /usr/bin/time -f "%M %e %U %S" -o /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/time.txt python3 tools/qwen_rom_rt_token_stream4_w12.py --real-mem --stream4   --workdir /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/w --build-dir /srv/opentallas-scratch/claude/fullbw-hbm/build_rt4 --stages /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/stages.txt --oracle /srv/opentallas-scratch/claude/realmem-ctx8k/gold/P8191 --pos 8191 --token 24   --enable-ar256 --coll-depth 256 --hbm-layers 3 --wbw 4 --pullin 16 --threads 4 --x-preload /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/entry.hex --result /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/result.json --early-go --posted-wb > /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/driver.log 2>&1
-echo $? > /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/exit
-echo "$(date -Is) END L012_ep_p16 exit=$(cat /srv/opentallas-scratch/claude/fullbw-hbm/runs/rt/L012_ep_p16/exit)" >> /srv/opentallas-scratch/claude/fullbw-hbm/jobs/MANIFEST

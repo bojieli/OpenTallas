@@ -1,4 +1,0 @@
-BLOCKED id_done=1 count=512 enc_done=0 enc_busy=0 got=0000 go=1 wr_act=1 wr_pending=1 wr_k=0 cv=8 cr=0 cwd=0 accepted=1 visible=0
-[83406672] %Fatal: tb_dsrom_c8_native.sv:84: Assertion failed in tb_dsrom_c8_native: actual C writer failed to publish nine visible sectors
-%Error: /home/ubuntu/otjobs/dsrom-c8/source-14b7b44a5/rtl/test/dsrom_sys/c8/tb_dsrom_c8_native.sv:84: Verilog $stop
-Aborting...

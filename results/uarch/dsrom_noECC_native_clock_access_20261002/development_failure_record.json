@@ -1,8 +1,0 @@
-{
-  "state": "PRESERVED_COLD_DEPENDENCY_FAILURE_NOT_PHYSICAL",
-  "attempt": "/tmp/dsrom-native-clock-access-source-cold-20261002-r1",
-  "exception": "FileNotFoundError: results/uarch/dsrom_noECC_production_context_20261002/inputs/setRC.tcl",
-  "cause": "Inherited manifest had byte-identical enable/input setRC path, but omitted the literal production/input path consumed by the new tool.",
-  "repair": "Explicit added input receipt and fresh r2 source copy; source tool/model unchanged.",
-  "original_failed_attempt_retained": true
-}
