@@ -115,6 +115,7 @@
           },
           "facade": "ot_hbm_accel_loader_host_addr_crc",
           "parameters": {
+            "ENABLE": 1,
             "ND": 1,
             "ADDR_W": 37,
             "STACK_W": 2,
@@ -817,7 +818,7 @@
     },
     "isolated_loader_slot": {
       "path": "results/uarch/hbm_accel_fulldie_inputs_20261004/loader_slot/model.json",
-      "sha256": "22bddeecf89174e4b8a060c9a96fa10c9675895a4015040e9dbca391ff48da9c"
+      "sha256": "0afc70285e6e60143c844f249f2fbccdd3ef9d1a2c3f475cef0fb8d24c498f67"
     }
   },
   "integration": {
