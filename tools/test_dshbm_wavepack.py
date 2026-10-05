@@ -49,6 +49,13 @@ class Packing(unittest.TestCase):
         a = replace(self.a, rows=4, lines=64)
         self.assertIn('P5', pair_refusal(a, self.b))
 
+    def test_live_reducer_keys_refused_without_release_evidence(self):
+        a = replace(self.a, rows=9, groups=1, lines=72)
+        b = replace(self.b, rows=1, groups=1, lines=8, xb=8)
+        self.assertIn('reducer keys', pair_refusal(a, b))
+        self.assertEqual([d['kind'] for d in compile_run([a, b], True)['descriptors']],
+                         ['LINEAR', 'LINEAR'])
+
 
 if __name__ == '__main__':
     unittest.main()
