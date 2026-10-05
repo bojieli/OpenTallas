@@ -161,8 +161,11 @@ def model(root=ROOT):
         source_SHA256={p:hashlib.sha256((root/p).read_bytes()).hexdigest() for p in paths})
     from qwen_stream4_die_allocation import allocation
     die = allocation(result, root)
-    result.update(parent_slot_fit=die['slot_fit'],
-        slot_reason='Actual b3r12 allocation: two added shoreline bands; all 3225 existing contexts retained. This fits endpoint homes only; service transport is priced separately and is not qualified.',
+    from qwen_stream4_transport_model import transport
+    link = transport(die, result, root)
+    result.update(parent_slot_fit=None, endpoint_slot_fit=die['slot_fit'],
+        slot_reason='Endpoint homes alone fit. Selected finite transport adds its complete positive area charge; central ingress/local legs/PHY and loaded clock homes still require nonoverlapping actual allocation. Scalar area fit is not complete system fit.',
+        selected_transport=link,
         die_allocation=die)
     result['actual_parent_clock_relation'].update(die['source_clocks'])
     result['actual_parent_clock_relation']['service_clock']='selected top free-running clk -> u_kv.clk'
