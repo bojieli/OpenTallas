@@ -1,0 +1,269 @@
+{
+  "verdict": "CANCELLED_SUPERSEDED",
+  "reason": "Owner-authorized obsolete-purpose retirement: same frozen60146157 SOURCE1 third-density-only u50 after collected u40/u45 structural/context misses. Not RTL failure, closure, runtime cap, or flow rescue.",
+  "authorized_utc": "2026-10-05T19:17:51.923683+00:00",
+  "source_sha256": "601461579813e5d5f992c5ece1ac79c770b7e973ed87b4c913ea5c3f9655d099",
+  "before_processes": {
+    "937637": {
+      "pid": 937637,
+      "ppid": 1,
+      "state": "S",
+      "start_ticks": "1858958",
+      "command": "bash /srv/opentallas-scratch/codex/dsrom-wf-ctrl/run-fanout-34223b7b0-route-retry1.sh src 50 ",
+      "cwd": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0"
+    },
+    "937710": {
+      "pid": 937710,
+      "ppid": 937637,
+      "state": "S",
+      "start_ticks": "1858962",
+      "command": "python3 tools/dsrom_wf_close.py route --inst src --util 50 --run-dir /srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1 --orfs-var NUM_CORES=16 ",
+      "cwd": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0"
+    },
+    "2280874": {
+      "pid": 2280874,
+      "ppid": 937710,
+      "state": "S",
+      "start_ticks": "1872729",
+      "command": "docker run --rm -v /srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0:/src:ro -v /srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate ",
+      "cwd": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0"
+    }
+  },
+  "container": {
+    "Id": "914fb6ff84e75b96ebbbf9228277aef9ac720a85949af33a48f07a8f9abd9542",
+    "Created": "2026-10-05T07:08:10.934531348Z",
+    "State": {
+      "Status": "running",
+      "Running": true,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": false,
+      "Dead": false,
+      "Pid": 2282403,
+      "ExitCode": 0,
+      "Error": "",
+      "StartedAt": "2026-10-05T07:08:11.002231464Z",
+      "FinishedAt": "0001-01-01T00:00:00Z"
+    },
+    "Mounts": [
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/wt-fanout-34223b7b0",
+        "Destination": "/src",
+        "Mode": "ro",
+        "RW": false,
+        "Propagation": "rprivate"
+      },
+      {
+        "Type": "bind",
+        "Source": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs",
+        "Destination": "/work",
+        "Mode": "",
+        "RW": true,
+        "Propagation": "rprivate"
+      }
+    ],
+    "Path": "bash",
+    "Args": [
+      "-lc",
+      "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate"
+    ]
+  },
+  "container_top_before": "PID                 PPID                STAT                ELAPSED             TIME                COMMAND\n2282403             2282119             Ss                  12:09:40            00:00:00            bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n2283247             2282403             S                   12:09:40            00:00:00            make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 finish metadata-generate\n1119603             2283247             S                   05:13:08            00:00:00            make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-5_2_route\n1119619             1119603             S                   05:13:08            00:00:00            bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route\n1119621             1119619             S                   05:13:08            00:00:00            bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route\n1119640             1119621             S                   05:13:08            00:00:00            /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.json\n1119641             1119640             Sl                  05:13:08            1-07:51:25          /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.json\n",
+  "openroad_before": {
+    "pid": 1119641,
+    "ppid": 1119640,
+    "state": "S",
+    "start_ticks": "4371991",
+    "command": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_2_route.json ",
+    "cwd": null
+  },
+  "openroad_rss_bytes_before": 45393936384,
+  "host_memory_before": {
+    "MemFree": 35198193664,
+    "MemAvailable": 610001362944
+  },
+  "preserved_checkpoints_before": [
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_4_floorplan_pdn.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186547918185549
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_3_place_gp.odb",
+      "bytes": 685528921,
+      "mtime_ns": 1791190677776657130
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_1_floorplan.odb",
+      "bytes": 648439029,
+      "mtime_ns": 1791186516534965876
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/1_synth.odb",
+      "bytes": 648016039,
+      "mtime_ns": 1791184123254731894
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_4_place_resized.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791192242883404768
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_2_floorplan_macro.odb",
+      "bytes": 648439029,
+      "mtime_ns": 1791186523846017051
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_place.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791194006717444289
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_floorplan.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186548815191827
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_1_place_gp_skip_io.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186803219963883
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_1_grt.odb",
+      "bytes": 1319735501,
+      "mtime_ns": 1791209080720403606
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_2_place_iop.odb",
+      "bytes": 693174239,
+      "mtime_ns": 1791186813300033441
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_5_place_dp.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791194005292434568
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/4_1_cts.odb",
+      "bytes": 701465661,
+      "mtime_ns": 1791196301538076311
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_3_floorplan_tapcell.odb",
+      "bytes": 655068814,
+      "mtime_ns": 1791186529187054436
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/4_cts.odb",
+      "bytes": 701465661,
+      "mtime_ns": 1791196303500089639
+    }
+  ],
+  "stop_actions": [
+    {
+      "pid": 937637,
+      "signal": "SIGTERM",
+      "pidfd_identity_verified": true
+    },
+    {
+      "pid": 937710,
+      "signal": "SIGTERM",
+      "pidfd_identity_verified": true
+    },
+    {
+      "container": "914fb6ff84e75b96ebbbf9228277aef9ac720a85949af33a48f07a8f9abd9542",
+      "child_namespace_pid": "1436",
+      "signal": "SIGTERM",
+      "returncode": 0,
+      "stderr": ""
+    }
+  ],
+  "container_running_after": false,
+  "after_processes": [],
+  "active_children_after": [],
+  "host_memory_after": {
+    "MemFree": 77090426880,
+    "MemAvailable": 651893559296
+  },
+  "preserved_checkpoints_after": [
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_4_floorplan_pdn.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186547918185549
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_3_place_gp.odb",
+      "bytes": 685528921,
+      "mtime_ns": 1791190677776657130
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_1_floorplan.odb",
+      "bytes": 648439029,
+      "mtime_ns": 1791186516534965876
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/1_synth.odb",
+      "bytes": 648016039,
+      "mtime_ns": 1791184123254731894
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_4_place_resized.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791192242883404768
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_2_floorplan_macro.odb",
+      "bytes": 648439029,
+      "mtime_ns": 1791186523846017051
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_place.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791194006717444289
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_floorplan.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186548815191827
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_1_place_gp_skip_io.odb",
+      "bytes": 693010511,
+      "mtime_ns": 1791186803219963883
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/5_1_grt.odb",
+      "bytes": 1319735501,
+      "mtime_ns": 1791209080720403606
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_2_place_iop.odb",
+      "bytes": 693174239,
+      "mtime_ns": 1791186813300033441
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/3_5_place_dp.odb",
+      "bytes": 685594621,
+      "mtime_ns": 1791194005292434568
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/4_1_cts.odb",
+      "bytes": 701465661,
+      "mtime_ns": 1791196301538076311
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/2_3_floorplan_tapcell.odb",
+      "bytes": 655068814,
+      "mtime_ns": 1791186529187054436
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/dsrom-wf-ctrl/R12_fanout_34223b7b0_src_u50_launcher_retry1/work/orfs/results/asap7/opentallas_ot_rom_pkg_ctrl_wfc_asap7_src/base/4_cts.odb",
+      "bytes": 701465661,
+      "mtime_ns": 1791196303500089639
+    }
+  ],
+  "stopped_utc": "2026-10-05T19:17:56.047245+00:00",
+  "physical_adopted": false,
+  "full_S81_ready": false
+}
