@@ -8772,3 +8772,52 @@ def hbm_stream_aq_slot_ready_cut(*, pcs=128, queue_depth=4):
                 invariant='for every valid queue slot: ready_q[i] == OR(wq_boh[i] & rdyr_q); current head select equals original wr_bank_rdy',
                 source_constraint='all grant/refresh/open/stale/tRCD next equations unchanged; no stale readiness or earlier visibility',
                 period_ns=0.833, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def dsrom_field_static_provider_price(image_directory):
+    """Current canonical immutable provider plus issuer reservation; no physical credit."""
+    from dsrom_field_static_provider import model
+    return model(image_directory)
+
+
+def hbm_stream_aq_block_nonempty_choice(*, pcs=128):
+    """Unselected zero-edge source choice after THREE failed AQ routes.
+
+    Mirror OR(blk) with exactly the existing set/clear/hold priority, then
+    substitute only ep_start's !OR(blk). No fourth RTL/route admission.
+    Retain all bank-indexed blk consumers and the blk&open cancellation.
+    """
+    if pcs < 1:
+        raise ValueError('positive PC inventory required')
+    return dict(default_enabled=False, candidate_selected=False,
+                implementation_started=False, route_admitted=False,
+                selection_owner='CLAUDE at three-attempt boundary',
+                pcs=pcs, added_state_bits_per_pc=1,
+                total_added_state_bits=pcs,
+                FF_cell_area_floor_um2=pcs*DFF_UM2,
+                capture_priority_muxes_per_pc_max=3,
+                gross_logic_gate_equivalent_allowance_per_pc=16,
+                gross_logic_area_proxy_per_pc_um2=16*0.2,
+                gross_FF_plus_logic_area_proxy_um2=pcs*(DFF_UM2+16*0.2),
+                extra_clock_sinks_per_pc=1, extra_reset_sinks_per_pc=1,
+                predicate_consumers_per_pc=1,
+                set_clear_control_extra_sinks_per_pc_max=3,
+                existing_bank_indexed_blk_and_cancel_reduction_retained=True,
+                removed_gate_area_credit_um2=0,
+                MACs_per_cycle=0, output_bytes_per_cycle_max_per_pc=32,
+                added_memory_bytes_per_cycle=0, added_memory_ports=0,
+                added_boundary_bits_per_cycle=0, added_external_tracks=0,
+                added_command_cycles=0, added_grant_cycles=0,
+                added_ACK_cycles=0, composed_token_delta_cycles=0,
+                zero_edge_price_conditional_on_exact_same_edge_invariant=True,
+                invariant='blk_nonempty_q == OR(blk) after reset and every edge; ep_start and all actual grants unchanged',
+                next_state_priority='REFPB accepted clear wins; otherwise same original LEAD/set, ep_start/set, cancellation/clear, hold',
+                extra_edge_alternative=dict(selected=False,
+                    minimum_added_readiness_edges=1,
+                    composed_token_delta_cycles=None,
+                    eligibility='must revalidate current block/open/timers; stale ready cannot grant',
+                    exactness='unpriced latency-changing alternative; not zero-edge class-A admission'),
+                local_wire_buffer_clock_reset_area_um2=None,
+                loaded_delay_ps=None, full_slot_fit_qualified=False,
+                period_ns=.833, setup_uncertainty_ps=60,
+                hold_uncertainty_ps=25, SSFF_closed=False, adopted=False)
