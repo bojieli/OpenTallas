@@ -68,7 +68,7 @@ lines.append(f'write_verilog -noattr {a.out}/control_context.v')
 (a.out/'prepare.ys').write_text('\n'.join(lines)+'\n')
 (a.out/'inputs.json').write_text(json.dumps(dict(source_sha256=hashlib.sha256(s.encode()).hexdigest(),
     parameter_source='retained AR core_d1v0g; DEC_LA1 VPOS0; no timing exceptions',
-    emitted_source='unmapped actual control after same expose-evert spine/stream boundaries; argmax/chase/run_val retained',
+    emitted_source=('original ROM core plus real ME/SU receiver RTL; capture and feedback retained' if a.retain_receivers else 'unmapped actual control after same expose-evert spine/stream boundaries; argmax/chase/run_val retained'),
     clock_ps=833,setup_uncertainty_ps=60,hold_uncertainty_ps=25,arithmetic_engines_qualified=False,
     actual_receivers_retained=a.retain_receivers,
     receiver_source='original ROM u_me.u_top and g_vsu.u_su; no native696a5 arithmetic substitution',
