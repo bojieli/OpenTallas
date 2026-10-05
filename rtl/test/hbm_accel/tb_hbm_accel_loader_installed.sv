@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 // One actual system loader path: unchanged ot_host_if lower BAR + upper loader
 // BAR + 64-bit DMA + actual per-die memsys. No token run and no HBM image preload.
 module tb_hbm_accel_loader_installed;
@@ -59,8 +59,8 @@ module tb_hbm_accel_loader_installed;
  if(b_pending&&cyc>=b_when&&!mbv)begin mbv<=1;mbe<=error_b?2'b10:2'b0;b_pending=0;end
  end
  // Passive observers on the actual CDC and external ports. No ready/ACK drive.
- `define LD dut.u_loader_host.g_on.g_die[0].u_load.g_on
- `define ST dut.u_loader_host.g_on.g_die[0].u_store.g_on
+ `define LD dut.g_on.u_loader_host.g_on.g_die[0].u_load.g_on
+ `define ST dut.g_on.u_loader_host.g_on.g_die[0].u_store.g_on
  integer lp=0,lc=0,sp=0,sc=0,lpeak=0,speak=0,ls=0,ss=0;
  integer reqs=0,rsps=0,reqstall=0,wstall=0,rtseen=0;
  realtime ltime[128],stime[128],reqtime[128];
