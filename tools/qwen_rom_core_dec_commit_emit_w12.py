@@ -41,10 +41,10 @@ def apply(text):
             am_issue_any <= am_any;
         end
     end else begin : g_am_original
-        always @* begin
-            am_issue_pending = 1'b0; am_issue_idx = 0;
-            am_issue_val = 0; am_issue_any = 0;
-        end
+        assign am_issue_pending = 1'b0;
+        assign am_issue_idx = 0;
+        assign am_issue_val = 0;
+        assign am_issue_any = 0;
     end endgenerate
 '''
     text=text[:first]+replacement+text[end:]
