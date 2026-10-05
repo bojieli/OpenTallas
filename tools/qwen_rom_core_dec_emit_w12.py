@@ -91,7 +91,8 @@ def emit_dec(text: str) -> str:
             raise SystemExit(f"no declaration for decoded field {name}")
 
     def pre(expr: str) -> str:
-        e = expr.replace("`F(", "`FP(").replace("`DYNS(", "`DYNP(").replace("ir[", "pq_r[")
+        e = re.sub(r"`DYNS\(`F\((\w+)\)\)", r"pq_dyn_\1", expr)
+        e = e.replace("`F(", "`FP(").replace("ir[", "pq_r[")
         return e.replace("dyn_tiles_split", "pq_split_rounds")
 
     ctrl = CTRL
@@ -117,6 +118,19 @@ def emit_dec(text: str) -> str:
         return None
 
     decl, push, cpush, load, adders, assigns = [], [], [], [], [], []
+    dsel = sorted(set(re.findall(r"`DYNS\(`F\((\w+)\)\)", body)))
+    dyn_txt = []
+    for f in dsel:
+        dyn_txt.append(f"""    reg  [7:0]    pq_oh_{f};
+    reg  [AW-1:0] pq_dyn_{f};
+    always @(posedge clk) if (DEC_LA != 0 && pend1) pq_oh_{f} <= 8'd1 << prog_q[O_{f} +: W_{f}];
+    always @(*) begin
+        pq_dyn_{f} = {{AW{{1'b0}}}};
+        for (lq = 0; lq < LA_NO; lq = lq + 1)
+            for (lk = 0; lk < 8; lk = lk + 1)
+                pq_dyn_{f} = pq_dyn_{f} | ({{AW{{pq_oh_off[lq] & pq_oh_{f}[lk]}}}} &
+                             ((lk == 6) ? {{{{(AW-NW){{1'b0}}}}, la_rt[lq*16]}} : la_tab[lq*8+lk]));
+    end""")
     for name, expr in stmts:
         w = widths[name]
         decl.append(f"    reg {w + ' ' if w else ''}fqd_{name} [0:7];")
@@ -159,6 +173,11 @@ def emit_dec(text: str) -> str:
     // stage 4 (E4): rounds (0 for an invalid split)
     reg [NW-1:0]    la_rt [0:LA_NO*16-1];
     wire [15:0]  la_inv;
+    wire [NW-1:0] la_po_n [0:LA_NO-1];
+    genvar lap;
+    generate for (lap = 0; lap < LA_NO; lap = lap + 1) begin : g_la_po
+        ot_hdc_ksadd_k #(.W(NW)) u_po (.a(pos_r), .b(lap), .cin(1'b0), .s(la_po_n[lap]), .cout());
+    end endgenerate
     genvar las;
     generate for (las = 0; las < 16; las = las + 1) begin : g_la_inv
         assign la_inv[las] = (W != (1 << LA_WT)) || las > LA_GT || las > LA_WT + LA_GT;
@@ -167,7 +186,7 @@ def emit_dec(text: str) -> str:
     always @(posedge clk) if (DEC_LA != 0) begin
         la_tokh <= tok_r * HID;
         for (lo = 0; lo < LA_NO; lo = lo + 1) begin
-            la_po[lo] <= pos_r + lo[NW-1:0];
+            la_po[lo] <= la_po_n[lo];
             for (ls = 0; ls < 16; ls = ls + 1)
                 la_sh[lo*16+ls] <= la_inv[ls] ? {{LA_SW{{1'b0}}}}
                                               : {{2'b00, (la_po[lo] >> (LA_WT + LA_GT - ls))}} + LA_ODD;
@@ -199,14 +218,26 @@ def emit_dec(text: str) -> str:
         pq_v <= pend1; la_wr_r <= la_wr;
         if (pend1) pq_r <= prog_q;
     end
-    wire [2:0]    pq_vp_off = (VPOS != 0) ? pq_r[{V.POS_OFF_LO} +: {V.POS_OFF_W}] : 3'd0;
-    wire [3:0]    pq_split = pq_r[O_ME_SPLIT +: 4];
-    wire [NW-1:0] pq_split_rounds = la_rt[((VPOS != 0) ? {{pq_vp_off, 4'd0}} : 7'd0) + pq_split];
+    // registered one-hot selects of the staged word (position offset, split, each DYN selector): the table
+    // lookups are AND-OR planes behind registers, no decoder or select fan-out in front of them
+    reg  [7:0]    pq_oh_off;
+    reg  [15:0]   pq_oh_split;
+    reg  [NW-1:0] pq_split_rounds;
+    integer lq, lk;
+    always @(posedge clk) if (DEC_LA != 0 && pend1) begin
+        pq_oh_off   <= 8'd1 << ((VPOS != 0) ? prog_q[{V.POS_OFF_LO} +: {V.POS_OFF_W}] : 3'd0);
+        pq_oh_split <= 16'd1 << prog_q[O_ME_SPLIT +: 4];
+    end
+    always @(*) begin
+        pq_split_rounds = {{NW{{1'b0}}}};
+        for (lq = 0; lq < LA_NO; lq = lq + 1)
+            for (lk = 0; lk < 16; lk = lk + 1)
+                pq_split_rounds = pq_split_rounds | ({{NW{{pq_oh_off[lq] & pq_oh_split[lk]}}}} & la_rt[lq*16+lk]);
+    end
+{chr(10).join(dyn_txt)}
     wire          pq_split_bad = prog_q[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6 && la_inv[prog_q[O_ME_SPLIT +: 4]];
     `define FP(name) pq_r[O_``name +: W_``name]
     `define FQ(name) prog_q[O_``name +: W_``name]
-    `define DYNP(sel) (((sel) == 3'd6) ? {{{{(AW-NW){{1'b0}}}}, la_rt[((VPOS != 0) ? {{pq_vp_off, 4'd0}} : 7'd0)]}} \\
-                      : la_tab[((VPOS != 0) ? {{pq_vp_off, 3'd0}} : 6'd0) + (sel)])
     // decoded-field FIFO: 8 entries, so the entry in NEXT (la_nx) is never overwritten while it is NEXT or
     // stale-NEXT (at most 4 entries are held or in flight behind it); the fetch throttle still counts fq_n.
     reg [2:0] la_wr, la_rd, la_nx;
@@ -235,7 +266,6 @@ def emit_dec(text: str) -> str:
     end
     `undef FP
     `undef FQ
-    `undef DYNP
     // NEXT: control fields are registers (issue reads them); data fields are the NEXT entry of the FIFO
 {chr(10).join(assigns)}
 """
@@ -262,6 +292,13 @@ def emit_dec(text: str) -> str:
     block = re.sub(r"^    reg\s+(\[[^\]]+\])?\s*([^;]+);", redecl, text[di:de], flags=re.M)
     text = text[:di] + block + text[de:]
     text = _sub1("    reg          me_kindk;\n", "    reg          me_kindk_q;\n    wire         me_kindk;\n", text)
+    text = _sub1("                    fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (load ? 3'd1 : 3'd0);\n",
+                 "                    fq_n <= (DEC_LA != 0) ? (load ? la_fqn_l : la_fqn_nl)\n"
+                 "                                          : fq_n + (push ? 3'd1 : 3'd0) - (load ? 3'd1 : 3'd0);\n", text)
+    text = _sub1("    wire push = (st == S_RUN) && pend1;\n",
+                 "    wire push = (st == S_RUN) && pend1;\n"
+                 "    wire [2:0] la_fqn_nl = fq_n + (push ? 3'd1 : 3'd0);      // DEC_LA: fq_n without / with a LOAD\n"
+                 "    wire [2:0] la_fqn_l  = fq_n + (push ? 3'd0 : 3'd7);\n", text)
     # the lm_head chunk argmax: a kept tree comparator on the order keys
     text = _sub1("    wire am_wins = am_any && (!run_any || okey(am_val) > run_key);\n",
                  "    wire la_am_gt;\n"
