@@ -563,6 +563,19 @@ def cmd_sensitivity(a):
     import dsrom_1m_allmeasured_adapters as AD
     import dsrom_1m_measure as M
     rec = json.loads(a.record.read_text())
+    plan_binding = None
+    if a.plan_dir:
+        plan_path = a.plan_dir / "plan.json"
+        if sha(plan_path) != rec["plan_sha256"]:
+            raise ValueError("retained plan SHA differs from measured field target")
+        plan = json.loads(plan_path.read_text())
+        plan_binding = dict(path=str(plan_path), sha256=sha(plan_path),
+                            measured_layers=sorted({p["layer"] for p in plan["phases"]}),
+                            measured_plan_phases=len(plan["phases"]), bf_sites=len(plan["bf_sites"]),
+                            full40_native_coverage=False)
+        known_phases = {p["phase"] for p in plan["phases"]}
+        if any(p not in known_phases for n in rec["nodes"] for p in n["phases"]):
+            raise ValueError("measurement references phase absent from retained plan")
     field = json.loads((REC_DIR / "levers/field.json").read_text())
     graph, _, _ = M.s58_graph()
     def replay(candidate=None):
@@ -602,6 +615,9 @@ def cmd_sensitivity(a):
         baseline=dict(AR_us=baseline["AR_us"], AR_tok_s=baseline["AR_tok_s"], MTP=baseline["MTP"]),
         historical_field_verdict=field["verdict"], measured_spine_rule=rec["spine_rule"],
         plan_dir_historical=rec["plan_dir"], plan_sha256=rec["plan_sha256"],
+        retained_plan_binding=plan_binding,
+        graph_coverage="Full40 canonical graph uses existing field_rep mapping of seven historical measured layers; "
+                       "not full40 native measurement or BF519 placement requalification",
         measurement_source_sha256=rec["build_source_sha256"],
         inputs={**baseline["inputs"], str(a.record.relative_to(ROOT)):sha(a.record),
                 "tools/dsrom_recovery_field.py":sha(Path(__file__)),
